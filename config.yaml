@@ -1,0 +1,24 @@
+config:
+  backup: true
+  banner: false 
+  create: true
+  dotpath: dotfiles
+  keepdot: true
+  link_by_default: false
+  longkey: false
+dotfiles:
+  f_bash_profile:
+    dst: ~/.bash_profile
+    src: bash_profile
+  f_bashrc:
+    dst: ~/.bashrc
+    src: bashrc
+  f_vimrc:
+    dst: ~/.vimrc
+    src: vimrc
+profiles:
+  joppa:
+    dotfiles:
+    - f_bashrc
+    - f_bash_profile
+    - f_vimrc

@@ -22,7 +22,7 @@ echo "Bash is logged into ${OS_NAME}"
 BASEDIR="${HOME}"
 
 # Filnames to include
-INCLUDES=(".bash_aliases" ".bash_functions" ".bash_linux" ".bash_mac")
+INCLUDES=(".bash_aliases" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
 
 # Load includes if they exist
 for file in ${INCLUDES[@]}; do

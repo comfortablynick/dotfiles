@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Return if not Linux
-if [ ${OS_NAME} != "Linux" ] && return;
+[ ${OS_NAME} != "Linux" ] && return;
 
 # PROMPT ------------------------------------------
 source /usr/lib/git-core/git-sh-prompt

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Return if not Windows
-if [ ${OS_NAME} != "Windows" ] && return;
+[ ${OS_NAME} != "Windows" ] && return;
 
 # Git
 alias gpython='cd ~/Git/python'

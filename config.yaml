@@ -13,6 +13,15 @@ dotfiles:
   f_bashrc:
     dst: ~/.bashrc
     src: bashrc
+  f_bash_linux:
+    dst: ~/.bash_linux
+    src: bash_linux
+  f_bash_mac:
+    dst: ~/.bash_mac
+    src: bash_mac
+  f_bash_windows:
+    dst: ~/.bash_windows
+    src: bash_windows
   f_vimrc:
     dst: ~/.vimrc
     src: vimrc
@@ -22,3 +31,11 @@ profiles:
     - f_bashrc
     - f_bash_profile
     - f_vimrc
+    - f_bash_linux
+  uranus:
+    dotfiles:
+    - f_bashrc
+    - f_bash_profile
+    - f_vimrc
+    - f_bash_windows
+

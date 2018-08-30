@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Add bash aliases here for all platforms
+
+# Autocorrect
+alias exif='exit'
+
+# ls
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+
+# file handling
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias cd..='cd ..'
+
+# Git
+alias gpl='git pull'
+alias gph='git push'
+
+# dotdrop
+alias dotdrop='~/dotfiles/dotdrop.sh'
+alias dotgit='git -C ~/dotfiles'
+alias dotsync='dotgit pull; dotgit add -A; dotgit commit; dotgit push; dotdrop install'

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Return if not Windows
+if [ ${OS_NAME} != "Windows" ] && return;
+
+# Git
+alias gpython='cd ~/Git/python'
+alias ggas='cd ~/Git/google-apps-script/sheets'
+alias gcp='cd ~/Git/google-apps-script/sheets/convention-personnel'
+alias gcpr='cd ~/Git/google-apps-script/sheets/convention-personnel-reports'
+alias gdspw='cd ~/Git/google-apps-script/sheets/dspw'

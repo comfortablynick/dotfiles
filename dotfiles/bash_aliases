@@ -18,6 +18,8 @@ alias cp='cp -i'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias cd..='cd ..'
+alias h='cd ~/'
+alias r='cd /'
 
 # Git
 alias gpl='git pull'
@@ -26,4 +28,4 @@ alias gph='git push'
 # dotdrop
 alias dotdrop='~/dotfiles/dotdrop.sh'
 alias dotgit='git -C ~/dotfiles'
-alias dotsync='dotgit pull; dotgit add -A; dotgit commit; dotgit push; dotdrop install'
+alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"

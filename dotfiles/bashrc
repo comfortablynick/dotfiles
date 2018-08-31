@@ -14,9 +14,13 @@ case "$(uname -s)" in
     Darwin*)    OS_NAME=Mac;;
     CYGWIN*)    OS_NAME=Windows;;
     MINGW*)     OS_NAME=Windows;;
-    *)          OS_NAME="UNKNOWN:${uname -s}"
+    *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
-echo "Bash is logged into ${OS_NAME}"
+echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at $(date)"
+
+DEBUG=false
+
+[ ${DEBUG} == true ] && echo "Using .bashrc";
 
 # Location of includes
 BASEDIR="${HOME}"
@@ -24,14 +28,7 @@ BASEDIR="${HOME}"
 # Filnames to include
 INCLUDES=(".bash_aliases" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
 
-# Load includes if they exist
-for file in ${INCLUDES[@]}; do
-		[ -f $BASEDIR/$file ] && source $BASEDIR/$file;
-	done
-	unset file
-
 # don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
 HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
@@ -55,9 +52,7 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
+# uncomment for a colored prompt, if the terminal has the capability 
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
@@ -70,3 +65,10 @@ if [ -n "$force_color_prompt" ]; then
 	color_prompt=
     fi
 fi
+
+# Load includes if they exist
+for file in ${INCLUDES[@]}; do
+		[ -f $BASEDIR/$file ] && source $BASEDIR/$file;
+	done
+	unset file
+

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Add bash aliases here for all platforms
 
+# Debug
+[ ${DEBUG} == true ] && echo "Using .bash_aliases";
+
 # Autocorrect
 alias exif='exit'
 
@@ -20,10 +23,12 @@ alias ...='cd ../..'
 alias cd..='cd ..'
 alias h='cd ~/'
 alias r='cd /'
+alias q='exit'
 
 # Git
 alias gpl='git pull'
 alias gph='git push'
+alias gdiff='git diff'
 
 # dotdrop
 alias dotdrop='~/dotfiles/dotdrop.sh'

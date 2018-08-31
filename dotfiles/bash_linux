@@ -2,6 +2,9 @@
 # Return if not Linux
 [ ${OS_NAME} != "Linux" ] && return;
 
+# Debug
+[ ${DEBUG} == true ] && echo "Using .bash_linux";
+
 # PROMPT ------------------------------------------
 source /usr/lib/git-core/git-sh-prompt
 
@@ -43,13 +46,20 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+# ALIASES -----------------------------------------------------
 
 # some more ls aliases
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+
+# Git
+alias gpython='cd ~/git/python'
+alias ggas='cd ~/git/google-apps-script/sheets'
+alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
+alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
+alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
+alias gdot='cd ~/dotfiles'
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile

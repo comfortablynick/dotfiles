@@ -1,40 +1,44 @@
 config:
   backup: true
-  banner: false 
+  banner: false
   create: true
   dotpath: dotfiles
   keepdot: true
   link_by_default: true
   longkey: false
 dotfiles:
-  f_bash_profile:
-    dst: ~/.bash_profile
-    src: bash_profile
-    link: true
-  f_bashrc:
-    dst: ~/.bashrc
-    src: bashrc
-    link: true
   f_bash_aliases:
     dst: ~/.bash_aliases
-    src: bash_aliases
     link: true
+    src: bash_aliases
+  f_bash_functions:
+    dst: ~/.bash_functions
+    link: true
+    src: .bash_functions
   f_bash_linux:
     dst: ~/.bash_linux
-    src: bash_linux
     link: true
+    src: bash_linux
   f_bash_mac:
     dst: ~/.bash_mac
-    src: bash_mac
     link: true
+    src: bash_mac
+  f_bash_profile:
+    dst: ~/.bash_profile
+    link: true
+    src: bash_profile
   f_bash_windows:
     dst: ~/.bash_windows
-    src: bash_windows
     link: true
+    src: bash_windows
+  f_bashrc:
+    dst: ~/.bashrc
+    link: true
+    src: bashrc
   f_vimrc:
     dst: ~/.vimrc
-    src: vimrc
     link: true
+    src: vimrc
 profiles:
   joppa:
     dotfiles:
@@ -42,6 +46,15 @@ profiles:
     - f_bash_profile
     - f_bash_aliases
     - f_bash_linux
+    - f_bash_functions
+    - f_vimrc
+  thor.local:
+    dotfiles:
+    - f_bashrc
+    - f_bash_profile
+    - f_bash_aliases
+    - f_bash_mac
+    - f_bash_functions
     - f_vimrc
   uranus:
     dotfiles:
@@ -49,13 +62,5 @@ profiles:
     - f_bash_profile
     - f_bash_aliases
     - f_bash_windows
+    - f_bash_functions
     - f_vimrc
-  thor:
-    dotfiles:
-    - f_bashrc
-    - f_bash_profile
-    - f_bash_aliases
-    - f_bash_mac
-    - f_vimrc
-
-

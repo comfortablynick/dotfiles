@@ -4,44 +4,58 @@ config:
   create: true
   dotpath: dotfiles
   keepdot: true
-  link_by_default: false
+  link_by_default: true
   longkey: false
 dotfiles:
   f_bash_profile:
     dst: ~/.bash_profile
     src: bash_profile
+    link: true
   f_bashrc:
     dst: ~/.bashrc
     src: bashrc
+    link: true
   f_bash_aliases:
     dst: ~/.bash_aliases
     src: bash_aliases
+    link: true
   f_bash_linux:
     dst: ~/.bash_linux
     src: bash_linux
+    link: true
   f_bash_mac:
     dst: ~/.bash_mac
     src: bash_mac
+    link: true
   f_bash_windows:
     dst: ~/.bash_windows
     src: bash_windows
+    link: true
   f_vimrc:
     dst: ~/.vimrc
     src: vimrc
+    link: true
 profiles:
   joppa:
     dotfiles:
     - f_bashrc
     - f_bash_profile
-    - f_vimrc
-    - f_bash_linux
     - f_bash_aliases
+    - f_bash_linux
+    - f_vimrc
   uranus:
     dotfiles:
     - f_bashrc
     - f_bash_profile
-    - f_vimrc
-    - f_bash_windows
     - f_bash_aliases
+    - f_bash_windows
+    - f_vimrc
+  thor:
+    dotfiles:
+    - f_bashrc
+    - f_bash_profile
+    - f_bash_aliases
+    - f_bash_mac
+    - f_vimrc
 
 

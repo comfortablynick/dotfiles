@@ -4,7 +4,7 @@
 [ ${OS_NAME} != "Windows" ] && return;
 
 # Debug
-[ ${DEBUG} ] && echo "Using .bash_windows";
+[ ${DEBUG} == true ] && echo "Using .bash_windows";
 
 # Git
 alias gpython='cd ~/Git/python'

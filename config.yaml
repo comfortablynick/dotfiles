@@ -13,6 +13,9 @@ dotfiles:
   f_bashrc:
     dst: ~/.bashrc
     src: bashrc
+  f_bash_aliases:
+    dst: ~/.bash_aliases
+    src: bash_aliases
   f_bash_linux:
     dst: ~/.bash_linux
     src: bash_linux
@@ -32,10 +35,13 @@ profiles:
     - f_bash_profile
     - f_vimrc
     - f_bash_linux
+    - f_bash_aliases
   uranus:
     dotfiles:
     - f_bashrc
     - f_bash_profile
     - f_vimrc
     - f_bash_windows
+    - f_bash_aliases
+
 

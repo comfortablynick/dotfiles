@@ -3,9 +3,13 @@
 # Return if not Windows
 [ ${OS_NAME} != "Windows" ] && return;
 
+# Debug
+[ ${DEBUG} ] && echo "Using .bash_windows";
+
 # Git
 alias gpython='cd ~/Git/python'
 alias ggas='cd ~/Git/google-apps-script/sheets'
 alias gcp='cd ~/Git/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ~/Git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/Git/google-apps-script/sheets/dspw'
+alias gdot='cd ~/dotfiles'

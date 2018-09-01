@@ -48,11 +48,6 @@ fi
 
 # ALIASES -----------------------------------------------------
 
-# some more ls aliases
-alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
-
 # Git
 alias gpython='cd ~/git/python'
 alias ggas='cd ~/git/google-apps-script/sheets'
@@ -60,6 +55,9 @@ alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
 alias gdot='cd ~/dotfiles'
+
+# Python Venv
+alias py='source ~/.pyenv/bin/activate'
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -74,7 +72,6 @@ fi
 
 # PYTHON
 export PYTHONPATH="${PYTHONPATH}:/home/pi/git/python/lib"
-alias config='/usr/bin/git --git-dir=/home/pi/.cfg/ --work-tree=/home/pi'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

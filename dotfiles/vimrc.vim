@@ -12,6 +12,8 @@ Plug 'vim-airline/vim-airline'
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
+Plug 'airblade/vim-gitgutter'
+
 " Typescript syntax highlighting
 Plug 'leafgarland/typescript-vim'
 

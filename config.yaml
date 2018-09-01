@@ -1,5 +1,8 @@
 actions:
-  vundle: vim +VundleClean! +VundleInstall +VundleInstall! +qall
+  pre:
+    vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload; curl
+      -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
+  vim-plug: vim +PlugInstall +qall
 config:
   backup: true
   banner: false
@@ -41,6 +44,9 @@ dotfiles:
     dst: ~/.vimrc
     link: true
     src: vimrc
+    actions:
+       - vim-plug-install
+       - vim-plug
 profiles:
   joppa:
     dotfiles:

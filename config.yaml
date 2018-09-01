@@ -19,7 +19,7 @@ dotfiles:
   f_bash_functions:
     dst: ~/.bash_functions
     link: true
-    src: .bash_functions
+    src: bash_functions.sh
   f_bash_linux:
     dst: ~/.bash_linux
     link: true

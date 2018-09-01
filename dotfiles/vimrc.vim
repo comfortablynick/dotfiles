@@ -17,5 +17,8 @@ Plug 'airblade/vim-gitgutter'
 " Typescript syntax highlighting
 Plug 'leafgarland/typescript-vim'
 
+" Better syntax highlighting, but slow!
+"Plug 'HerringtonDarkholme/yats'
+
 " Initialize plugin system
 call plug#end()

@@ -15,7 +15,7 @@ dotfiles:
   f_bash_aliases:
     dst: ~/.bash_aliases
     link: true
-    src: bash_aliases
+    src: bash_aliases.sh
   f_bash_functions:
     dst: ~/.bash_functions
     link: true
@@ -23,27 +23,27 @@ dotfiles:
   f_bash_linux:
     dst: ~/.bash_linux
     link: true
-    src: bash_linux
+    src: bash_linux.sh
   f_bash_mac:
     dst: ~/.bash_mac
     link: true
-    src: bash_mac
+    src: bash_mac.sh
   f_bash_profile:
     dst: ~/.bash_profile
     link: true
-    src: bash_profile
+    src: bash_profile.sh
   f_bash_windows:
     dst: ~/.bash_windows
     link: true
-    src: bash_windows
+    src: bash_windows.sh
   f_bashrc:
     dst: ~/.bashrc
     link: true
-    src: bashrc
+    src: bashrc.sh
   f_vimrc:
     dst: ~/.vimrc
     link: true
-    src: vimrc
+    src: vimrc.sh
     actions:
        - vim-plug-install
        - vim-plug

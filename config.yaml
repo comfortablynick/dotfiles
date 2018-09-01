@@ -43,7 +43,7 @@ dotfiles:
   f_vimrc:
     dst: ~/.vimrc
     link: true
-    src: vimrc.sh
+    src: vimrc.vim
     actions:
        - vim-plug-install
        - vim-plug

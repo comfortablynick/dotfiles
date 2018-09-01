@@ -5,8 +5,13 @@
 # Debug
 [ ${DEBUG} == true ] && echo "Using .bash_mac";
 
-# Load colors config file
+# Enable color support of ls and read color conifg file
 [ -f ${HOME}/.dircolors ] && eval $(gdircolors ${HOME}/.dircolors);
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Load Git bash
 [ -f ${HOME}/.git-bash-for-mac.sh ] && source ${HOME}/.git-bash-for-mac.sh;

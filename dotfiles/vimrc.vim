@@ -22,3 +22,6 @@ Plug 'leafgarland/typescript-vim'
 
 " Initialize plugin system
 call plug#end()
+
+" NORMAL SETTINGS ================================
+set updatetime=100

@@ -57,7 +57,8 @@ alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
 alias gdot='cd ~/dotfiles'
 
 # Python Venv
-alias py='source ~/.pyenv/bin/activate'
+export VENV_DIR='~/.pyenv/bin'
+alias py="source ${VENV_DIR}/activate"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile

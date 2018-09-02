@@ -1,4 +1,4 @@
-" Plugin Management
+" Plugin Management =============================
 
 " Specify a directory for plugins
 " - Avoid using standard Vim directory names like 'plugin'
@@ -18,7 +18,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'leafgarland/typescript-vim'
 
 " Better syntax highlighting, but slow!
-"Plug 'HerringtonDarkholme/yats'
+" Plug 'HerringtonDarkholme/yats'
+
+Plug 'gabrielelana/vim-markdown'
 
 " Initialize plugin system
 call plug#end()

@@ -23,6 +23,7 @@ alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
 alias gdot='cd ~/dotfiles'
+alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
 
 # Python Venv
 alias py='source ~/env/bin/activate'

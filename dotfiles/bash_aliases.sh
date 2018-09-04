@@ -29,6 +29,7 @@ alias q='exit'
 alias gpl='git pull'
 alias gph='git push'
 alias gdiff='git diff'
+alias gst='git status -s'
 
 # dotdrop
 alias gdot='cd ~/dotfiles'

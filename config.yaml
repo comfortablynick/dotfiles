@@ -16,6 +16,14 @@ dotfiles:
     dst: ~/.bash_aliases
     link: true
     src: bash_aliases.sh
+  f_bash_colors:
+    dst: ~/.bash_colors
+    link: true
+    src: bash_colors.sh
+  f_bash_prompt:
+    dst: ~/.bash_prompt
+    link: true
+    src: bash_prompt.sh
   f_bash_functions:
     dst: ~/.bash_functions
     link: true
@@ -51,6 +59,8 @@ profiles:
   joppa:
     dotfiles:
     - f_bashrc
+    - f_bash_colors
+    - f_bash_prompt
     - f_bash_profile
     - f_bash_aliases
     - f_bash_linux
@@ -59,6 +69,8 @@ profiles:
   thor.local:
     dotfiles:
     - f_bashrc
+    - f_bash_colors
+    - f_bash_prompt
     - f_bash_profile
     - f_bash_aliases
     - f_bash_mac
@@ -67,6 +79,8 @@ profiles:
   uranus:
     dotfiles:
     - f_bashrc
+    - f_bash_colors
+    - f_bash_prompt
     - f_bash_profile
     - f_bash_aliases
     - f_bash_windows

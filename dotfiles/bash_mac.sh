@@ -45,3 +45,18 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+#--------------------------------------------------------------------------
+# MAC FUNCTIONS
+#--------------------------------------------------------------------------
+
+# Show/hide hidden files
+function togglehidden() {
+    ISHIDDEN=$(defaults read com.apple.finder AppleShowAllFiles)
+    if [ $ISHIDDEN == TRUE ]; then
+        defaults write com.apple.finder AppleShowAllFiles FALSE
+    else
+        defaults write com.apple.finder AppleShowAllFiles TRUE
+    fi
+    killall Finder
+}

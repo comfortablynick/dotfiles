@@ -9,6 +9,8 @@ Plug 'junegunn/vim-easy-align'
 
 Plug 'vim-airline/vim-airline'
 
+Plug 'w0rp/ale'
+
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 

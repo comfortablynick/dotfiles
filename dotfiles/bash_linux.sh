@@ -51,6 +51,7 @@ fi
 # Git
 alias gpython='cd ~/git/python'
 alias ggas='cd ~/git/google-apps-script/sheets'
+alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
 alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'

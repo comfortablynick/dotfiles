@@ -31,3 +31,8 @@ function gitgo() {
     fi
 }
 
+# Reset the terminal
+function reload(){
+    reset
+    source ${HOME}/.bashrc
+}

@@ -48,6 +48,10 @@ dotfiles:
     dst: ~/.bashrc
     link: true
     src: bashrc.sh
+  f_dircolors:
+    dst: ~/.dircolors
+    link: true
+    src: dircolors.sh
   f_vimrc:
     dst: ~/.vimrc
     link: true
@@ -65,6 +69,7 @@ profiles:
     - f_bash_aliases
     - f_bash_linux
     - f_bash_functions
+    - f_dircolors
     - f_vimrc
   thor.local:
     dotfiles:
@@ -75,6 +80,7 @@ profiles:
     - f_bash_aliases
     - f_bash_mac
     - f_bash_functions
+    - f_dircolors
     - f_vimrc
   uranus:
     dotfiles:
@@ -85,4 +91,5 @@ profiles:
     - f_bash_aliases
     - f_bash_windows
     - f_bash_functions
+    - f_dircolors
     - f_vimrc

@@ -22,6 +22,9 @@ alias pyenv="source ${VENV_DIR}"
 # Activate venv by default
 source ${VENV_DIR}
 
+# Terminal colors for LS
+eval "$(dircolors -b ${HOME}/.dircolors)"
+
 return;
 # Warnings
 unset _warning_found
@@ -60,14 +63,6 @@ unset _warning
 [[ $(declare -p PS1 2>/dev/null | cut -c 1-11) = 'declare -x ' ]] || \
   export PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[35m\]$MSYSTEM\[\e[0m\] \[\e[33m\]\w\[\e[0m\]\n'"${_ps1_symbol}"' '
 unset _ps1_symbol
-
-# Terminal colors for LS
-eval "$(dircolors -b ${HOME}/.dircolors)"
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
 
 # Fixup git-bash in non login env
 shopt -q login_shell || . /etc/profile.d/git-prompt.sh

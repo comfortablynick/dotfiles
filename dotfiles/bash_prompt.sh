@@ -1,4 +1,8 @@
+#!/usr/bin/env bash
 # GIT-AWARE PROMPT 
+
+# Debug
+[ ${DEBUG} == true ] && echo "Using .bash_prompt";
 
 find_git_branch() {
   # Based on: http://stackoverflow.com/a/13003854/170413

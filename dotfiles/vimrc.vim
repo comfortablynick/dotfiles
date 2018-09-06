@@ -28,4 +28,8 @@ Plug 'gabrielelana/vim-markdown'
 call plug#end()
 
 " NORMAL SETTINGS ================================
+
+" Update more often for gitgutter
 set updatetime=100
+" Display line numbers
+set number

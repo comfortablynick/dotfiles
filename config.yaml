@@ -93,3 +93,15 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_vimrc
+  saturn:
+    dotfiles:
+    - f_bashrc
+    - f_bash_colors
+    - f_bash_prompt
+    - f_bash_profile
+    - f_bash_aliases
+    - f_bash_windows
+    - f_bash_functions
+    - f_dircolors
+    - f_vimrc
+

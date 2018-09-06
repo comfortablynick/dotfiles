@@ -1,3 +1,10 @@
+#!/usr/bin/env bash
+
+# TODO: Find a more efficient way to do this
+
+# Debug
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_colors";
+
 # Regular
 txtblk="$(tput setaf 0 2>/dev/null || echo '\e[0;30m')"  # Black
 txtred="$(tput setaf 1 2>/dev/null || echo '\e[0;31m')"  # Red
@@ -40,3 +47,5 @@ bakwht="$(tput setab 7 2>/dev/null || echo '\e[47m')"  # White
 
 # Reset
 txtrst="$(tput sgr 0 2>/dev/null || echo '\e[0m')"  # Text Reset
+
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_colors"

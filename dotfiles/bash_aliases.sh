@@ -2,7 +2,7 @@
 # Add bash aliases here for all platforms
 
 # Debug
-[ ${DEBUG} == true ] && echo "Using .bash_aliases";
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_aliases";
 
 # Autocorrect
 alias exif='exit'
@@ -42,3 +42,5 @@ alias gdot='cd ~/dotfiles'
 alias dotdrop='~/dotfiles/dotdrop.sh'
 alias dotgit='git -C ~/dotfiles'
 alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"
+
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_aliases"

@@ -20,13 +20,13 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at $(date)"
 
 DEBUG=false
 
-[ ${DEBUG} == true ] && echo "Using .bashrc";
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bashrc";
 
 # Location of includes
 BASEDIR="${HOME}"
 
 # Filnames to include
-INCLUDES=(".bash_aliases" ".bash_colors" ".bash_prompt" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
+INCLUDES=(".bash_aliases" ".bash_prompt" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
 
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
@@ -76,3 +76,4 @@ for file in ${INCLUDES[@]}; do
     done
     unset file
 
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bashrc"

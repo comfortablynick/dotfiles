@@ -2,7 +2,7 @@
 # Helpful bash scripts; loaded by .bashrc
 
 # Debug
-[ ${DEBUG} == true ] && echo "Using .bash_functions";
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_functions";
 
 # Adds, commits, and pushes to git with one command
 function gsync() {
@@ -62,3 +62,10 @@ function reload(){
     reset
     source ${HOME}/.bashrc
 }
+
+# Easily print timestamp
+function timestamp() {
+    date +"%T"
+}
+
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_functions"

@@ -4,7 +4,7 @@
 [ ${OS_NAME} != "Windows" ] && return;
 
 # Debug
-[ ${DEBUG} == true ] && echo "Using .bash_windows";
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_windows";
 
 # Git
 GIT_DIR="${HOME}/Git"
@@ -69,3 +69,6 @@ shopt -q login_shell || . /etc/profile.d/git-prompt.sh
 
 # Fixup git-bash in non login env
 shopt -q login_shell || . /etc/profile.d/git-prompt.sh
+
+[ ${DEBUG} == true ] && echo "Leaving .bash_windows"
+

@@ -3,7 +3,7 @@
 [ ${OS_NAME} != "Mac" ] && return;
 
 # Debug
-[ ${DEBUG} == true ] && echo "Using .bash_mac";
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_mac";
 
 # Enable color support of ls and read color conifg file
 [ -f ${HOME}/.dircolors ] && eval $(gdircolors ${HOME}/.dircolors);
@@ -60,3 +60,5 @@ function togglehidden() {
     fi
     killall Finder
 }
+
+[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_mac"

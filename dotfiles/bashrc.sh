@@ -18,6 +18,7 @@ case "$(uname -s)" in
 esac
 echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at $(date)"
 
+
 DEBUG=false
 
 [ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bashrc";

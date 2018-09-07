@@ -63,6 +63,12 @@ function reload(){
     source ${HOME}/.bashrc
 }
 
+# Reset and print elapsed time for debugging
+function treload(){
+    reset
+    time . "${HOME}/.bashrc"
+}
+
 # Easily print timestamp
 function timestamp() {
     date +"%T"

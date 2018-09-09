@@ -2,19 +2,16 @@
 # Return if not Mac
 [ ${OS_NAME} != "Mac" ] && return;
 
-# Debug
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_mac";
-
 # Enable color support of ls and read color conifg file
 [ -f ${HOME}/.dircolors ] && eval $(gdircolors ${HOME}/.dircolors);
 
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+# alias ls='ls --color=auto'
+# alias grep='grep --color=auto'
+# alias fgrep='fgrep --color=auto'
+# alias egrep='egrep --color=auto'
 
 # Load Git bash
-[ -f ${HOME}/.git-bash-for-mac.sh ] && source ${HOME}/.git-bash-for-mac.sh;
+# [ -f ${HOME}/.git-bash-for-mac.sh ] && source ${HOME}/.git-bash-for-mac.sh;
 
 # Git
 alias gpython='cd ~/git/python'
@@ -26,7 +23,11 @@ alias gdot='cd ~/dotfiles'
 alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
 
 # Python Venv
-alias py='source ~/env/bin/activate'
+export VENV_DIR="${HOME}/env/bin/activate"
+alias py="source ${VENV_DIR}"
+
+# Activate venv by default
+source $VENV_DIR
 
 # Setting PATH for Python 3.6
 PATH="/Library/Frameworks/Python.framework/Versions/3.6/bin:${PATH}"
@@ -60,5 +61,3 @@ function togglehidden() {
     fi
     killall Finder
 }
-
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_mac"

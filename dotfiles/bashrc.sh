@@ -8,6 +8,8 @@
 # If not running interactively exit
 [[ $- != *i* ]] && return
 
+START_TIME="$(date)"
+
 # Check OS
 case "$(uname -s)" in
     Linux*)     OS_NAME=Linux;;
@@ -16,12 +18,9 @@ case "$(uname -s)" in
     MINGW*)     OS_NAME=Windows;;
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
-echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at $(date)"
+echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
-
-DEBUG=false
-
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bashrc";
+[ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Entering .bashrc";
 
 # Location of includes
 BASEDIR="${HOME}"
@@ -71,10 +70,15 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-# Load includes if they exist
+# Load includes if they exist; add timestamp for debug mode
 for file in ${INCLUDES[@]}; do
-        [ -f $BASEDIR/$file ] && source $BASEDIR/$file;
-    done
-    unset file
+    if [ -f $BASEDIR/$file ]; then
+        [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+        source $BASEDIR/$file
+    fi
+done
+unset file
 
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bashrc"
+if [ "$DEBUG_MODE" == true ]; then
+    echo "$(date +"%T.%3N"): Leaving .bashrc"
+fi

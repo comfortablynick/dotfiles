@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # Helpful bash scripts; loaded by .bashrc
 
-# Debug
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_functions";
-
 # Adds, commits, and pushes to git with one command
 function gsync() {
     # Are we in git branch?
@@ -66,6 +63,11 @@ function reload(){
 # Reset and print elapsed time for debugging
 function treload(){
     reset
+    if [[ $1 == 'd' ]]; then
+        export DEBUG_MODE=true
+    else 
+        export DEBUG_MODE=false
+    fi
     time . "${HOME}/.bashrc"
 }
 
@@ -73,5 +75,3 @@ function treload(){
 function timestamp() {
     date +"%T"
 }
-
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_functions"

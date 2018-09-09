@@ -2,9 +2,6 @@
 # Return if not Linux
 [ ${OS_NAME} != "Linux" ] && return;
 
-# Debug
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_linux";
-
 # PROMPT ------------------------------------------
 #source /usr/lib/git-core/git-sh-prompt
 #
@@ -81,5 +78,3 @@ export PYTHONPATH="${PYTHONPATH}:/home/pi/git/python/lib"
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_linux"

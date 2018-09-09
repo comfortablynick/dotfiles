@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # GIT-AWARE PROMPT 
 
-# Debug
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Entering .bash_prompt";
-
 find_git_branch() {
   # Based on: http://stackoverflow.com/a/13003854/170413
   local branch
@@ -46,5 +43,3 @@ export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$
 
 # Default Git enabled root prompt (for use with "sudo -s")
 # export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
-
-[ ${DEBUG} == true ] && echo "$(date +"%T"): Leaving .bash_prompt"

@@ -57,6 +57,7 @@ alias bash-colors-random='bash-colors $(shuf -n1 -i 1-64)';
 # Reset the terminal and source .bashrc
 function reload(){
     reset
+    export DEBUG_MODE=false
     source ${HOME}/.bashrc
 }
 

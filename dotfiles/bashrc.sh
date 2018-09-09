@@ -26,7 +26,7 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 BASEDIR="${HOME}"
 
 # Filnames to include
-INCLUDES=(".bash_aliases" ".bash_prompt" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
+INCLUDES=(".bash_colors" ".bash_aliases" ".bash_prompt" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
 
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth

@@ -1,7 +1,7 @@
 actions:
   pre:
-    vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload; curl
-      -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
+    vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload;
+      curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
   vim-plug: vim +PlugInstall +qall
 config:
   backup: true
@@ -20,10 +20,6 @@ dotfiles:
     dst: ~/.bash_colors
     link: true
     src: bash_colors.sh
-  f_bash_prompt:
-    dst: ~/.bash_prompt
-    link: true
-    src: bash_prompt.sh
   f_bash_functions:
     dst: ~/.bash_functions
     link: true
@@ -40,6 +36,10 @@ dotfiles:
     dst: ~/.bash_profile
     link: true
     src: bash_profile.sh
+  f_bash_prompt:
+    dst: ~/.bash_prompt
+    link: true
+    src: bash_prompt.sh
   f_bash_windows:
     dst: ~/.bash_windows
     link: true
@@ -53,12 +53,16 @@ dotfiles:
     link: true
     src: dircolors.sh
   f_vimrc:
+    actions:
+    - vim-plug-install
+    - vim-plug
     dst: ~/.vimrc
     link: true
     src: vimrc.vim
-    actions:
-       - vim-plug-install
-       - vim-plug
+  f_xonshrc:
+    dst: ~/.xonshrc
+    link: true
+    src: xonshrc.conf 
 profiles:
   joppa:
     dotfiles:
@@ -71,6 +75,20 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_vimrc
+    - f_xonshrc
+  saturn:
+    dotfiles:
+    - f_bashrc
+    - f_bash_colors
+    - f_bash_prompt
+    - f_bash_profile
+    - f_bash_aliases
+    - f_bash_windows
+    - f_bash_linux
+    - f_bash_functions
+    - f_dircolors
+    - f_vimrc
+    - f_xonshrc
   thor.local:
     dotfiles:
     - f_bashrc
@@ -82,6 +100,7 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_vimrc
+    - f_xonshrc
   uranus:
     dotfiles:
     - f_bashrc
@@ -93,15 +112,3 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_vimrc
-  saturn:
-    dotfiles:
-    - f_bashrc
-    - f_bash_colors
-    - f_bash_prompt
-    - f_bash_profile
-    - f_bash_aliases
-    - f_bash_windows
-    - f_bash_functions
-    - f_dircolors
-    - f_vimrc
-

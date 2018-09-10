@@ -33,3 +33,7 @@ call plug#end()
 set updatetime=100
 " Display line numbers
 set number
+
+" Try to fix unreadable colors
+set background=dark
+

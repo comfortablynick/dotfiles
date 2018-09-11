@@ -62,7 +62,7 @@ dotfiles:
   f_xonshrc:
     dst: ~/.xonshrc
     link: true
-    src: xonshrc.conf 
+    src: xonshrc.xsh 
 profiles:
   joppa:
     dotfiles:

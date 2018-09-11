@@ -7,11 +7,11 @@ $AUTO_CD = True
 $AUTO_SUGGEST_IN_COMPLETIONS = True
 $XONSH_AUTOPAIR = True
 $VIRTUALENV_HOME = $HOME
-$XONSH_COLOR_STYLE='default'
+$XONSH_COLOR_STYLE = 'default'
 $DYNAMIC_CWD_WIDTH = '20%'
 $COMPLETIONS_CONFIRM = True
-$LANG="en_US.UTF-8"
-$LC_ALL="en_US.UTF-8"
+$LANG = "en_US.UTF-8"
+$LC_ALL = "en_US.UTF-8"
 
 # Aliases
 # TODO: source this from a separate file like bash?

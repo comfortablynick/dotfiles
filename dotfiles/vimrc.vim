@@ -27,7 +27,12 @@ Plug 'gabrielelana/vim-markdown'
 " Initialize plugin system
 call plug#end()
 
-" NORMAL SETTINGS ================================
+" FILETYPE SETTINGS ==============================
+
+" Treat xonsh like python
+au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
+
+" EDITOR SETTINGS ================================
 
 " Update more often for gitgutter
 set updatetime=100

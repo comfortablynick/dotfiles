@@ -4,7 +4,7 @@ import socket
 # Env variables
 $HOST = socket.gethostname()
 $AUTO_CD = True
-$AUTO_SUGGEST_IN_COMPLETIONS = True
+$XONSH_SHOW_TRACEBACK = True
 $XONSH_AUTOPAIR = True
 $VIRTUALENV_HOME = $HOME
 $XONSH_COLOR_STYLE = 'default'
@@ -25,4 +25,3 @@ xontrib load apt_tabcomplete coreutils distributed jedi vox vox_tabcomplete
 
 if $HOST != 'joppa':
     xontrib load powerline
-

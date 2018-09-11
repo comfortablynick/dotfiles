@@ -42,7 +42,7 @@ TERM xterm*
 #NORMAL 00	# no color code at all
 #FILE 00	# regular file: use no color at all
 RESET 0		# reset to "normal" color
-DIR 01;34	# directory
+DIR 01;34;46	# directory
 LINK 01;36	# symbolic link.  (If you set this to 'target' instead of a
                 # numerical value, the color is as for the file pointed to.)
 MULTIHARDLINK 00	# regular file with more than one link
@@ -68,17 +68,13 @@ EXEC 01;32
 # (and any comments you want to add after a '#')
 
 # If you use DOS-style suffixes, you may want to uncomment the following:
-#.cmd 01;32 # executables (bright green)
-#.exe 01;32
-#.com 01;32
-#.btm 01;32
-#.bat 01;32
-# Or if you want to colorize scripts even if they do not have the
-# executable bit actually set.
-#.sh  01;32
-#.csh 01;32
+.cmd 01;32 # executables (bright green)
+.exe 01;32
+.com 01;32
+.btm 01;32
+.bat 01;32
 
- # archives or compressed (bright red)
+# archives or compressed (bright red)
 .tar 01;31
 .tgz 01;31
 .arc 01;31

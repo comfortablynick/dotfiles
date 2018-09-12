@@ -12,6 +12,7 @@ $DYNAMIC_CWD_WIDTH = '20%'
 $COMPLETIONS_CONFIRM = True
 $LANG = "en_US.UTF-8"
 $LC_ALL = "en_US.UTF-8"
+$MULTILINE_PROMPT = '`·.,¸,.·*¯`·.,¸,.·*¯'
 
 # Aliases
 # TODO: source this from a separate file like bash?
@@ -21,7 +22,10 @@ aliases['xreload'] = 'source ~/.xonshrc'
 source-bash "echo loading xonsh foreign shell"
 
 # Load xontrib plugins
-xontrib load apt_tabcomplete coreutils distributed jedi vox vox_tabcomplete
+plugs = ["apt_tabcomplete", "coreutils", "distributed", "jedi", "vox", "vox_tabcomplete", "powerline"]
 
-if $HOST != 'joppa':
-    xontrib load powerline
+if $HOST == "joppa":
+    del plugs[-1]
+
+for p in plugs:
+    xontrib load @(p)

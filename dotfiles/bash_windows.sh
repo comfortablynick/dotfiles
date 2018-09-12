@@ -19,6 +19,9 @@ alias pyenv="source ${VENV_DIR}"
 # Activate venv by default
 source ${VENV_DIR}
 
+# Add custom path for Python to find modules
+# export PYTHONPATH="${PYTHONPATH}:${GIT_DIR}/python/lib"
+
 # Terminal colors for LS
 eval "$(dircolors -b ${HOME}/.dircolors)"
 

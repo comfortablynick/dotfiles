@@ -12,15 +12,20 @@ alias gcpr='cd ${GIT_DIR}/google-apps-script/sheets/convention-personnel-reports
 alias gdspw='cd ${GIT_DIR}/google-apps-script/sheets/dspw'
 alias gfst='cd ${GIT_DIR}/google-apps-script/sheets/fs-time'
 
+# Add custom path for Python to find modules
+if [ "${PYTHONPATH}" == "" ]; then
+    PYTHONPATH="C:\Users\nmurphy\Git\python\lib"
+else
+    PYTHONPATH="${PYTHONPATH}:C:\Users\nmurphy\Git\python\lib"
+fi
+export PYTHONPATH
+
 # Python Venv 
 VENV_DIR="${HOME}/.pyenv/Scripts/activate"
 alias pyenv="source ${VENV_DIR}"
 
 # Activate venv by default
 source ${VENV_DIR}
-
-# Add custom path for Python to find modules
-# export PYTHONPATH="${PYTHONPATH}:${GIT_DIR}/python/lib"
 
 # Terminal colors for LS
 eval "$(dircolors -b ${HOME}/.dircolors)"

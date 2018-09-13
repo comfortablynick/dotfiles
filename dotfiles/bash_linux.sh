@@ -18,6 +18,8 @@ alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
 alias gdot='cd ~/dotfiles'
 
+alias xo='xonsh'
+
 # PYTHON ------------------------------------------------------
 # Main Venv
 export VENV_DIR="${HOME}/.pyenv/bin/activate"
@@ -35,13 +37,13 @@ export PYTHONPATH="${PYTHONPATH}:${HOME}/git/python/lib"
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
+#if ! shopt -oq posix; then
+#  if [ -f /usr/share/bash-completion/bash_completion ]; then
+#    . /usr/share/bash-completion/bash_completion
+#  elif [ -f /etc/bash_completion ]; then
+#    . /etc/bash_completion
+#  fi
+#fi
 
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

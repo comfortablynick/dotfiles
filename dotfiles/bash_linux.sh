@@ -21,29 +21,13 @@ alias gdot='cd ~/dotfiles'
 alias xo='xonsh'
 
 # PYTHON ------------------------------------------------------
-# Main Venv
-export VENV_DIR="${HOME}/.pyenv/bin/activate"
-if [ -f "${VENV_DIR}" ]; then
-    alias py="source ${VENV_DIR}"
-    # Activate the venv by default
-    source ${VENV_DIR}
-fi
-
-# Path -- add directories to default path
-export PYTHONPATH="${PYTHONPATH}:${HOME}/git/python/lib"
+# Virtual Env
+export WORKON_HOME=${HOME}/.pyenv
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.7
+source /usr/local/bin/virtualenvwrapper_lazy.sh
+workon dev # Activate default venv
 
 # SYSTEM ------------------------------------------------------
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-#if ! shopt -oq posix; then
-#  if [ -f /usr/share/bash-completion/bash_completion ]; then
-#    . /usr/share/bash-completion/bash_completion
-#  elif [ -f /etc/bash_completion ]; then
-#    . /etc/bash_completion
-#  fi
-#fi
 
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -23,12 +23,8 @@ alias xo='xonsh'
 # PYTHON ------------------------------------------------------
 # Virtual Env
 export VENV_DIR=${HOME}/.env
-export WORKON_HOME=${HOME}/.pyenv
-export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.7
-source /usr/local/bin/virtualenvwrapper_lazy.sh
-# workon dev # Activate default venv
 alias denv='source ${VENV_DIR}/dev/bin/activate'
-source "${VENV_DIR}/dev/bin/activate"
+source "${VENV_DIR}/dev/bin/activate" # Activate by default
 
 # SYSTEM ------------------------------------------------------
 

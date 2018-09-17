@@ -5,8 +5,9 @@ import socket
 $HOST = socket.gethostname()
 $AUTO_CD = True
 $XONSH_SHOW_TRACEBACK = True
+$FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
 $XONSH_AUTOPAIR = True
-$VIRTUALENV_HOME = $HOME
+$VIRTUALENV_HOME = $VENV_DIR
 $XONSH_COLOR_STYLE = 'default'
 $DYNAMIC_CWD_WIDTH = '20%'
 $COMPLETIONS_CONFIRM = True
@@ -22,9 +23,17 @@ aliases['xreload'] = 'source ~/.xonshrc'
 source-bash "echo loading xonsh foreign shell"
 
 # Load xontrib plugins
-plugs = ["apt_tabcomplete", "coreutils", "distributed", "jedi", "vox", "vox_tabcomplete", "powerline"]
+plugs = [
+      "apt_tabcomplete",
+      "coreutils",
+      "distributed",
+      "jedi",
+      "vox",
+      "vox_tabcomplete",
+      "powerline",
+     ]
 
-if $HOST == "joppa":
+if $HOST in ("joppa"):
     del plugs[-1]
 
 for p in plugs:

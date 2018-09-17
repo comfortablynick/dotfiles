@@ -16,7 +16,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # file handling
-alias rm='rm -i'
+alias rm='rm -I'
 alias mv='mv -i'
 alias cp='cp -i'
 

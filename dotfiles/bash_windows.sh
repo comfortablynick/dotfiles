@@ -21,11 +21,11 @@ fi
 export PYTHONPATH
 
 # Python Venv 
-VENV_DIR="${HOME}/.pyenv/Scripts/activate"
-alias pyenv="source ${VENV_DIR}"
+VENV_DIR="${HOME}/.env"
+alias denv="source ${VENV_DIR}/windev/Scripts/activate"
 
 # Activate venv by default
-source ${VENV_DIR}
+# source ${VENV_DIR}
 
 # Terminal colors for LS
 eval "$(dircolors -b ${HOME}/.dircolors)"

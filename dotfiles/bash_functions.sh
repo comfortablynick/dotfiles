@@ -2,7 +2,7 @@
 # Helpful bash scripts; loaded by .bashrc
 
 # Adds, commits, and pushes to git with one command
-function gsync() {
+gsync() {
     # Are we in git branch?
     if [[ ! $git_branch ]]; then 
         echo "Not in a repository."
@@ -33,7 +33,7 @@ function gsync() {
 # either set by default aliases or user-defined... When looking
 # for a color theme for a project, bash-colors-random has prooven
 # to effortlessly throw some decent color combination.
-function bash-colors() {
+bash-colors() {
   local SEQNUM=${1:-4}; [[ "$SEQNUM" -eq "0" ]] && SEQNUM=4;
   tput rmam;
   seq -ws ' ' 0 ${SEQNUM} 256 | \xargs -n1 bash -c \
@@ -55,14 +55,14 @@ alias bash-colors-less='bash-colors 2';
 alias bash-colors-random='bash-colors $(shuf -n1 -i 1-64)';
 
 # Reset the terminal and source .bashrc
-function reload(){
+reload() {
     reset
     export DEBUG_MODE=false
     source ${HOME}/.bashrc
 }
 
 # Reset and print elapsed time for debugging
-function treload(){
+treload(){
     reset
     if [[ $1 == 'd' ]]; then
         export DEBUG_MODE=true
@@ -73,12 +73,12 @@ function treload(){
 }
 
 # Easily print timestamp
-function timestamp() {
+timestamp() {
     date +"%T"
 }
 
 # Extract various archive file types
-function extract () {
+extract() {
  if [ -z "$1" ]; then
     # display usage if no parameters given
     echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"

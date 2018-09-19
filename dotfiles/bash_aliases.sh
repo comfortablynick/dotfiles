@@ -7,6 +7,7 @@ alias exif='exit'
 # ls
 alias ls='ls --color=auto'
 alias ll='ls -l --color=auto'
+alias lla='ls -la --color=auto'
 alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
 

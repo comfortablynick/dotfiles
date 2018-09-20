@@ -28,10 +28,7 @@ alias denv='source ${VENV_DIR}/dev/bin/activate'
 source "${VENV_DIR}/dev/bin/activate" # Activate by default
 
 # SYSTEM ------------------------------------------------------
-# TODO: add switch to activate nvm when node is needed
 export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Try to load nvm on demand
 lnvm() {

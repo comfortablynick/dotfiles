@@ -35,11 +35,13 @@ RED="\[\033[0;31m\]"
 CYAN="\[\033[0;36m\]"
 
 # Default Git enabled prompt with dirty state
-# export PS1="\u@\h \w \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
 export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
-# Another variant:
-# export PS1="\[$bldgrn\]\u@\h\[$txtrst\] \w \[$bldylw\]\$git_branch\[$txtcyn\]\$git_dirty\[$txtrst\]\$ "
-
-# Default Git enabled root prompt (for use with "sudo -s")
-# export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
+# Powerline
+POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
+if [ -f `which powerline-daemon` ]; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASH_SELECT=1
+    . "${POWERLINE_ROOT}/bindings/bash/powerline.sh"
+fi

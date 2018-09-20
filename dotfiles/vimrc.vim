@@ -4,25 +4,17 @@
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align'
-
-" Plug 'vim-airline/vim-airline'
-
 Plug 'w0rp/ale'
 
 Plug 'Valloric/YouCompleteMe'
 
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
 Plug 'airblade/vim-gitgutter'
 
 " Typescript syntax highlighting
-Plug 'leafgarland/typescript-vim'
+" Plug 'leafgarland/typescript-vim'
 
 " Better syntax highlighting, but slow!
-" Plug 'HerringtonDarkholme/yats'
+Plug 'HerringtonDarkholme/yats'
 
 Plug 'gabrielelana/vim-markdown'
 
@@ -47,9 +39,21 @@ au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
 
 " Update more often for gitgutter
 set updatetime=100
+
 " Display line numbers
 set number
 
 " Try to fix unreadable colors
 set background=dark
 
+" Indent behavior
+set expandtab
+set smartindent
+set autoindent
+set shiftwidth=4
+set backspace=2
+
+" LINTING SETTINGS ==============================
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'

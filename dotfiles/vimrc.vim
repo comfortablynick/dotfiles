@@ -1,53 +1,40 @@
-" Plugin Management =============================
+" ===============================================
+" ======= VIM / NEOVIM CONFIGURATION ============
+" ===============================================
 
-" Specify a directory for plugins
-" - Avoid using standard Vim directory names like 'plugin'
+
+" PLUGIN MANAGEMENT =============================
 call plug#begin('~/.vim/plugged')
 
-Plug 'vim-airline/vim-airline'
+" Editor/appearance
+Plug 'airblade/vim-gitgutter'           " Inline git status
+Plug 'vim-airline/vim-airline'          " Powerline statusbar
+Plug 'scrooloose/nerdtree'              " File explorer panel
 
-Plug 'w0rp/ale'
+" Coding
+Plug 'w0rp/ale'                         " Linting
+Plug 'Valloric/YouCompleteMe'           " Code completion (compiled)
 
-Plug 'Valloric/YouCompleteMe'
+" Syntax highlighting
+Plug 'HerringtonDarkholme/yats'         " Typescript (better, but slower)
+" Plug 'leafgarland/typescript-vim'     " Typescript (basic, fast)
+Plug 'gabrielelana/vim-markdown'        " Markdown
 
-Plug 'airblade/vim-gitgutter'
-
-" Typescript syntax highlighting
-" Plug 'leafgarland/typescript-vim'
-
-" Better syntax highlighting, but slow!
-Plug 'HerringtonDarkholme/yats'
-
-Plug 'gabrielelana/vim-markdown'
-
-" Initialize plugin system
 call plug#end()
 
-" POWERLINE ======================================
-" set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
-let g:airline_powerline_fonts = 1
-
-" Always show statusline
-set laststatus=2
-
-" Use 256 colors
-set t_Co=256
 
 " FILETYPE SETTINGS ==============================
 
 " Treat xonsh like python
 au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
 
+
 " EDITOR SETTINGS ================================
 
-" Update more often for gitgutter
-set updatetime=100
-
-" Display line numbers
-set number
-
-" Try to fix unreadable colors
-set background=dark
+set laststatus=2                " Always show statusline
+set t_Co=256                    " Use 256 colors (vim only)
+set number                      " Show linenumbers
+set background=dark             " Def colors easier on the eyes
 
 " Indent behavior
 set expandtab
@@ -56,7 +43,28 @@ set autoindent
 set shiftwidth=4
 set backspace=2
 
-" LINTING SETTINGS ==============================
+
+" KEYMAPPING ====================================
+
+" Ctrl+n opens NERDTree
+map <C-n> :NERDTreeToggle<CR>
+
+
+" PLUGIN CONFIGURATION ==========================
+
+" Airline/Powerline
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#ale#enabled = 1
+
+" Ale linter
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_column_always = 1
+let g:ale_completion_enabled = 0
+let g:ale_virtualenv_dir_names = ['.env', '.pyenv', 'env', 'dev', 'virtualenv']
+
+" Gitgutter
+set updatetime=100              " Update more often
+set signcolumn=yes              " Always show; avoid shifting
+

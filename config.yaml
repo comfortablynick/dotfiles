@@ -2,7 +2,10 @@ actions:
   pre:
     vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload;
       curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
+    nvim-plug-install: test -e ~/.local/share/nvim/site/autoload/plug.vim || (mkdir -p ~/.local/share/nvim//site/autoload;
+      curl -fLo ~/.local/share/nvim/site/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
   vim-plug: vim +PlugInstall +qall
+  nvim-plug: nvim +PlugInstall +qall
 config:
   backup: true
   banner: false
@@ -55,7 +58,9 @@ dotfiles:
   f_vimrc:
     actions:
     - vim-plug-install
+    - nvim-plug-install
     - vim-plug
+    - nvim-plug
     dst: ~/.vimrc
     link: true
     src: vimrc.vim

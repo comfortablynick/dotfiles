@@ -4,6 +4,8 @@
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
+Plug 'vim-airline/vim-airline'
+
 Plug 'w0rp/ale'
 
 Plug 'Valloric/YouCompleteMe'
@@ -22,7 +24,8 @@ Plug 'gabrielelana/vim-markdown'
 call plug#end()
 
 " POWERLINE ======================================
-set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
+" set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
+let g:airline_powerline_fonts = 1
 
 " Always show statusline
 set laststatus=2

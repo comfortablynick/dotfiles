@@ -36,3 +36,10 @@ lnvm() {
     [ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh"
     [ -s "${NVM_DIR}/bash_completion" ] && \. "${NVM_DIR}/bash_completion"
 }
+
+# Prefer neovim to vim, if installed
+if [ -x /usr/bin/nvim ]; then
+    alias vim='nvim'
+    alias vvim='vim'
+fi
+

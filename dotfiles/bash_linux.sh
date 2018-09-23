@@ -37,8 +37,3 @@ lnvm() {
     [ -s "${NVM_DIR}/bash_completion" ] && \. "${NVM_DIR}/bash_completion"
 }
 
-# Prefer neovim to vim, if installed
-# Use \vim to override
-if [ command -v nvim 2>/dev/null ]; then
-    alias vim='nvim'
-fi

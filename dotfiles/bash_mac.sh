@@ -11,6 +11,7 @@ alias ggas='cd ~/git/google-apps-script/sheets'
 alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
+alias gdspwe='cd ~/git/google-apps-script/sheets/dspw-email'
 alias gdot='cd ~/dotfiles'
 alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
 

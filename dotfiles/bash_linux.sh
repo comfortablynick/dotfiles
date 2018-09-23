@@ -38,8 +38,7 @@ lnvm() {
 }
 
 # Prefer neovim to vim, if installed
-if [ -x /usr/bin/nvim ]; then
+# Use \vim to override
+if [ command -v nvim 2>/dev/null ]; then
     alias vim='nvim'
-    alias vvim='vim'
 fi
-

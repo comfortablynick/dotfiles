@@ -2,6 +2,9 @@
 " ======= VIM / NEOVIM CONFIGURATION ============
 " ===============================================
 
+" NEOVIM ========================================
+let g:python3_host_prog = '/home/pi/.env/nvim/bin/python'
+
 
 " PLUGIN MANAGEMENT =============================
 call plug#begin('~/.vim/plugged')
@@ -66,8 +69,9 @@ let g:ale_virtualenv_dir_names = ['.env', '.pyenv', 'env', 'dev', 'virtualenv']
 
 " Gitgutter
 set updatetime=100              " Update more often
-" set signcolumn=yes              " Always show; avoid shifting
+set signcolumn=yes              " Always show; avoid shifting
+
 " Always show sign column to avoid shifting on open
-autocmd BufEnter * sign define dummy
-autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+" autocmd BufEnter * sign define dummy
+" autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 

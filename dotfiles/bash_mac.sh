@@ -24,11 +24,9 @@ PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
 
 # Python Venv
-export WORKON_HOME=${HOME}/.pyenv
-export VIRTUALENVWRAPPER_PYTHON="$(which python3)"
-export VIRTUALENVWRAPPER_SCRIPT=/Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
-source /Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
-workon dev # Enter default venv
+VENV_DIR=${HOME}/.env
+alias denv="source ${VENV_DIR}/dev/bin/activate"
+source ${VENV_DIR}/dev/bin/activate
 
 # enable programmable completion features 
 if ! shopt -oq posix; then

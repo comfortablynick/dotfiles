@@ -43,8 +43,8 @@ HISTFILESIZE=2000
 shopt -s checkwinsize
 
 # set default editor
-export VISUAL=vim
-export EDITOR=$VISUAL
+export VISUAL=nvim
+export EDITOR="${VISUAL}"
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then

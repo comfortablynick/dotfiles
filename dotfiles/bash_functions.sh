@@ -113,3 +113,12 @@ extract() {
     done
 fi
 }
+
+# Convert line endings to unix LF style using (n)vim
+convertlf() {
+    for file in $(ls "$1")
+    do
+        sed -i -e 's/\r$//' "${file}"
+        echo "Processed line endings on file: ${file}"
+    done
+}

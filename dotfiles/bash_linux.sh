@@ -23,7 +23,9 @@ alias xo='xonsh'
 
 # PYTHON ------------------------------------------------------
 # Virtual Env
-export VENV_DIR=${HOME}/.env
+export VENV_DIR="${HOME}/.env"
+export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
+export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 alias denv='source ${VENV_DIR}/dev/bin/activate'
 source "${VENV_DIR}/dev/bin/activate" # Activate by default
 

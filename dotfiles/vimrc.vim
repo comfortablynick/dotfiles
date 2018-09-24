@@ -3,8 +3,8 @@
 " ===============================================
 
 " NEOVIM ========================================
-let g:python3_host_prog = '/home/pi/.env/nvim/bin/python'
-
+let g:python_host_prog = '/usr/bin/python'
+let g:python3_host_prog = expand('$HOME/.env/nvim/bin/python')
 
 " PLUGIN MANAGEMENT =============================
 call plug#begin('~/.vim/plugged')
@@ -46,6 +46,11 @@ set autoindent
 set shiftwidth=4
 set backspace=2
 
+" Jump to last position when reopening file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g`\"" | endif
+endif
 
 " KEYMAPPING ====================================
 

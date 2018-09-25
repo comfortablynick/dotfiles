@@ -22,41 +22,42 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
 [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Entering .bashrc";
 
-# Location of includes
-BASEDIR="${HOME}"
 
-# Filnames to include
-INCLUDES=(".bash_colorsx" ".bash_aliases" ".bash_prompt" ".bash_functions" ".bash_linux" ".bash_mac" ".bash_windows")
+# SHELL DEFAULTS ----------------------------------------------------
 
-# don't put duplicate lines or lines starting with space in the history.
-HISTCONTROL=ignoreboth
+BASEDIR="${HOME}"               # Location of includes dir
+HISTCONTROL=ignoreboth          # Ignore duplicate/blank history
+shopt -s histappend             # Don't overwrite history; append
+HISTSIZE=1000                   # Shell history size
+HISTFILESIZE=2000               # Shell history file size
+shopt -s checkwinsize           # Update rows/cols if size changes
+export VISUAL=nvim              # Set default visual editor
+export EDITOR="${VISUAL}"       # Set default text editor
 
-# append to the history file, don't overwrite it
-shopt -s histappend
+# Include files loaded at end of this script
+# Located in $BASEDIR
+INCLUDES=(
+".bash_aliases"                 # Aliases for all OSes
+".bash_prompt"                  # Prompt-specific settings
+".bash_functions"               # General functions 
+".bash_linux"                   # Code to run on Linux 
+".bash_mac"                     # Code to run on Mac 
+".bash_windows"                 # Code to run on Win (Git bash)
+# ".bash_colors"                # Color definitions (slow)
+)
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# set default editor
-export VISUAL=nvim
-export EDITOR="${VISUAL}"
+# PROMPT ------------------------------------------------------------
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability 
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
@@ -69,6 +70,9 @@ if [ -n "$force_color_prompt" ]; then
     color_prompt=
     fi
 fi
+
+
+#INCLUDES ------------------------------------------------------------
 
 # Load includes if they exist; add timestamp for debug mode
 for file in ${INCLUDES[@]}; do

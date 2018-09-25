@@ -40,9 +40,7 @@ export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$
 # Powerline
 POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
 
-# if [ -f `which powerline-daemon` ]; then
-# if [ command -v powerline-daemon 2>/dev/null ]; then
-if hash powerline-daemon; then
+if [ -f "${POWERLINE_ROOT}/bindings/bash/powerline.sh" ]; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1

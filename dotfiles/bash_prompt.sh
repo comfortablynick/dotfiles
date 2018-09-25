@@ -38,7 +38,9 @@ CYAN="\[\033[0;36m\]"
 export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
 # Powerline
-POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
+if [ "$POWERLINE_ROOT" == "" ]; then
+    POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
+fi
 
 if [ -f "${POWERLINE_ROOT}/bindings/bash/powerline.sh" ]; then
 # if [ command -v powerline-daemon 2>/dev/null ]; then

@@ -41,6 +41,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Powerline
+# export POWERLINE_ROOT="/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline"
+
 #--------------------------------------------------------------------------
 # MAC FUNCTIONS
 #--------------------------------------------------------------------------

@@ -38,11 +38,11 @@ export EDITOR="${VISUAL}"       # Set default text editor
 # Located in $BASEDIR
 INCLUDES=(
 ".bash_aliases"                 # Aliases for all OSes
-".bash_prompt"                  # Prompt-specific settings
 ".bash_functions"               # General functions 
 ".bash_linux"                   # Code to run on Linux 
 ".bash_mac"                     # Code to run on Mac 
 ".bash_windows"                 # Code to run on Win (Git bash)
+".bash_prompt"                  # Prompt-specific settings
 # ".bash_colors"                # Color definitions (slow)
 )
 

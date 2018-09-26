@@ -34,6 +34,7 @@ alias gpl='git pull'
 alias gph='git push'
 alias gdiff='git diff'
 alias gst='git status -s'
+alias glog='vim +GV'
 
 # dotdrop
 alias gdot='cd ~/dotfiles'

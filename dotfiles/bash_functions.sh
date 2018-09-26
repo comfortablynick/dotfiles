@@ -13,18 +13,9 @@ gsync() {
             echo "No uncommitted changes."
             git pull
         else 
-            # Commit changes
-            echo "Enter commit message:"
-            read _cmtmsg
-
-            if [[ ! "$_cmtmsg" ]]; then
-                echo "Commit message required! Aborting."
-            else
-                git add .
-                git commit -m "$_cmtmsg"
-                git push
-                git pull
-            fi
+            # If any command fails, abort process
+            # Open .gitcommit in default editor for message
+            git add . && git commit && git push && git pull
         fi
     fi
 }
@@ -112,13 +103,4 @@ extract() {
       fi
     done
 fi
-}
-
-# Convert line endings to unix LF style using (n)vim
-convertlf() {
-    for file in $(ls "$1")
-    do
-        sed -i -e 's/\r$//' "${file}"
-        echo "Processed line endings on file: ${file}"
-    done
 }

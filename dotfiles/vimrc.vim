@@ -42,13 +42,18 @@ Plug 'HerringtonDarkholme/yats'         " Typescript (better, but slower)
 Plug 'gabrielelana/vim-markdown'        " Markdown
 " Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}  " Python (enhanced)
 
+" Git
+Plug 'junegunn/gv.vim'                  " Git log/diff explorer
+Plug 'tpope/vim-fugitive'               " Git wrapper
+
 if has('nvim')
     " Neovim Only -------------------------------
     Plug 'zchee/deoplete-jedi'
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+    " Airline
     Plug 'vim-airline/vim-airline'      " Use airline statusbar for nvim
-    Plug 'vim-airline/vim-airline-themes'   " Theme pack for airline statusbar
-    Plug 'tpope/vim-fugitive'           " Git wrapper; show in statusbar
+    Plug 'vim-airline/vim-airline-themes'
     Plug 'plytophogy/vim-virtualenv'    " Show virtualenv in statusbar
 
     " Theming
@@ -71,8 +76,9 @@ call plug#end()
 
 " Treat xonsh like python
 au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
-set fileformat=unix             " Always use LF and not CRLF
-set encoding=utf-8              " Default to unicode
+
+" Open Git commits in INSERT mode
+autocmd FileType gitcommit exec 'au VimEnter * startinsert'
 
 " EDITOR SETTINGS ================================
 
@@ -95,6 +101,9 @@ set background=dark             " Def colors easier on the eyes
 
 " General
 syntax enable                   " Syntax highlighting on
+set fileformat=unix             " Always use LF and not CRLF
+set encoding=utf-8              " Default to unicode
+set termencoding=utf-8          " Unicode
 set synmaxcol=200               " Don't try to highlight if line > 200 chr
 set laststatus=2                " Always show statusline
 set number                      " Show linenumbers
@@ -108,7 +117,6 @@ set showmatch                   " Show matching pair of brackets (), [], {}
 set updatetime=100              " Update more often (helps GitGutter)
 set signcolumn=yes              " Always show; keep appearance consistent 
 set scrolloff=10                " Lines before/after cursor during scroll
-set termencoding=utf-8          " Unicode
 set ttimeoutlen=10              " How long in ms to wait for key combinations
 
 " Indent behavior
@@ -140,7 +148,6 @@ map <C-n> :NERDTreeToggle<CR>
 " Airline
 if has('nvim')
     let g:airline_extensions = [            
-        \ 'default',
         \ 'tabline', 
         \ 'ale', 
         \ 'branch',

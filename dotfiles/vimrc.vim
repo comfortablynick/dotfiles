@@ -22,7 +22,6 @@ if has('nvim')
     \expand('$NVIM_PY3_DIR/bin/python') " Python3 binary
 else
     " Vim Only ----------------------------------
-    set t_Co=256                        " Use 256 colors (vim only)
     set pyxversion=3                    " Use Python3
     let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
@@ -48,6 +47,14 @@ if has('nvim')
     Plug 'zchee/deoplete-jedi'
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'vim-airline/vim-airline'      " Use airline statusbar for nvim
+    Plug 'vim-airline/vim-airline-themes'   " Theme pack for airline statusbar
+    Plug 'tpope/vim-fugitive'           " Git wrapper; show in statusbar
+    Plug 'plytophogy/vim-virtualenv'    " Show virtualenv in statusbar
+
+    " Theming
+    Plug 'ayu-theme/ayu-vim'
+    Plug 'arcticicestudio/nord-vim'
+    Plug 'morhetz/gruvbox'
 else
     " Vim Only ----------------------------------
     set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
@@ -69,21 +76,40 @@ set encoding=utf-8              " Default to unicode
 
 " EDITOR SETTINGS ================================
 
+" Colors/themes
+if has('nvim')
+    colorscheme gruvbox         " Color Theme
+    let ayucolor = 'mirage'         " For ayu theme
+    let g:nord_italic = 1           " Support italic fonts
+    let g:nord_italic_comments = 1  " Italic comments
+    let g:nord_comment_brightness = 10
+    let g:nord_cursor_line_number_background = 1
+    let g:gruvbox_italic = 1        " Support italic fonts
+    let g:airline_theme = 'gruvbox' " Airline theme (separate from vim)
+else
+    colorscheme default
+endif
+
+set termguicolors               " Display true colors
+set background=dark             " Def colors easier on the eyes
+
+" General
 syntax enable                   " Syntax highlighting on
 set synmaxcol=200               " Don't try to highlight if line > 200 chr
 set laststatus=2                " Always show statusline
 set number                      " Show linenumbers
-set background=dark             " Def colors easier on the eyes
 set visualbell                  " Visual instead of audible
 set nowrap
 set noshowmode                  " Hide default mode text (e.g. -- INSERT -- below statusline)
 set clipboard=unnamed           " Use system clipboard
 set cursorline                  " Show line under cursor's line
+set ruler
 set showmatch                   " Show matching pair of brackets (), [], {}
 set updatetime=100              " Update more often (helps GitGutter)
 set signcolumn=yes              " Always show; keep appearance consistent 
 set scrolloff=10                " Lines before/after cursor during scroll
 set termencoding=utf-8          " Unicode
+set ttimeoutlen=10              " How long in ms to wait for key combinations
 
 " Indent behavior
 set expandtab                   " Expand tab to spaces
@@ -111,10 +137,28 @@ map <C-n> :NERDTreeToggle<CR>
 
 " PLUGIN CONFIGURATION ==========================
 
-" Airline/Powerline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#tabline#enabled=1
+" Airline
+if has('nvim')
+    let g:airline_extensions = [            
+        \ 'default',
+        \ 'tabline', 
+        \ 'ale', 
+        \ 'branch',
+        \ 'hunks',
+        \ 'wordcount',
+        \ 'virtualenv'
+        \ ]
+    let g:airline#extensions#default#section_truncate_width = {
+        \ 'b': 79,
+        \ 'x': 60,
+        \ 'y': 88,
+        \ 'z': 45,
+        \ 'warning': 80,
+        \ 'error': 80,
+        \ }
+    let g:airline_powerline_fonts = 1
+    let g:airline_detect_spelllang = 0
+endif
 
 " Ale linter
 let g:ale_echo_msg_error_str = 'E'
@@ -131,3 +175,5 @@ let NERDTreeIgnore = ['.*\.pyc$']
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif

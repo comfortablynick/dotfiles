@@ -38,3 +38,12 @@ if $HOST in ("joppa"):
 
 for p in plugs:
     xontrib load @(p)
+
+
+def customize_styles():
+    import prompt_toolkit.styles.defaults as defstyle
+    defstyle.PROMPT_TOOLKIT_STYLE.append(('bottom-toolbar', 'noreverse'))
+    defstyle.PROMPT_TOOLKIT_STYLE.append(('completion-menu', 'bg:#444444 #eeeeee'))
+
+
+customize_styles()

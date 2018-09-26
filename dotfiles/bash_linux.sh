@@ -29,6 +29,8 @@ export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 alias denv='source ${VENV_DIR}/dev/bin/activate'
 source "${VENV_DIR}/dev/bin/activate" # Activate by default
 
+export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
+
 # SYSTEM ------------------------------------------------------
 export NVM_DIR="$HOME/.nvm"
 

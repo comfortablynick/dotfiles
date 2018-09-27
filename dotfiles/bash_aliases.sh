@@ -34,7 +34,8 @@ alias gpl='git pull'
 alias gph='git push'
 alias gdiff='git diff'
 alias gst='git status -s'
-alias glog='vim +GV'
+alias glog='vim +GV'                    # Open vim to explore log and diffs
+alias gmg='git stash && git pull && git stash pop'
 
 # dotdrop
 alias gdot='cd ~/dotfiles'
@@ -42,6 +43,6 @@ alias dotdrop='~/dotfiles/dotdrop.sh'
 alias dotgit='git -C ~/dotfiles'
 alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"
 
-# (Neo)vim
+# Use Neovim if it exists on this machine
 hash nvim &> /dev/null && alias vim='nvim'
 

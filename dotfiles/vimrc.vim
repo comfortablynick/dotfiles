@@ -182,8 +182,12 @@ let g:ale_virtualenv_dir_names = ['.env', '.pyenv', 'env', 'dev', 'virtualenv']
 let b:ale_linters = {'python': ['mypy', 'flake8']}
 
 " NERDTree
-let NERDTreeHighlightCursorline = 1
-let NERDTreeIgnore = ['.*\.pyc$']      
+let NERDTreeHighlightCursorline = 1             " Increase visibility of line
+let NERDTreeIgnore = [
+    \ '\.pyc$',
+    \ '^__pycache__$'
+    \ ]
+let NERDTreeShowHidden = 1                      " Show dotfiles
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1

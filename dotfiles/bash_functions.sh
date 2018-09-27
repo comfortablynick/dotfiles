@@ -104,3 +104,22 @@ extract() {
     done
 fi
 }
+
+# Download plugins for Vim and Neovim
+vimsync() {
+    if hash vim 2> /dev/null; then
+        echo "Found Vim; updating plugins..."
+        command vim +PlugInstall +qall
+        echo "Vim plugins updated."
+    else
+        echo "Vim binary not found!"
+    fi
+    if hash nvim 2> /dev/null; then
+        echo "Found Neovim; updating plugins..."
+        command nvim +PlugInstall +qall
+        echo "Neovim plugins updated."
+    else
+        echo "Neovim binary not found!"
+    fi
+    echo "Vim/Neovim plugin sync complete."
+}

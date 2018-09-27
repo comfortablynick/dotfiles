@@ -38,7 +38,7 @@ alias glog='vim +GV'                    # Open vim to explore log and diffs
 alias gmg='git stash && git pull && git stash pop'
 
 # dotdrop
-alias gdot='cd ~/dotfiles'
+alias gdot='cd ~/dotfiles/dotfiles'
 alias dotdrop='~/dotfiles/dotdrop.sh'
 alias dotgit='git -C ~/dotfiles'
 alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"

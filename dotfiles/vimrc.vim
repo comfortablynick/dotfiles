@@ -50,6 +50,7 @@ if has('nvim')
     " Neovim Only -------------------------------
     Plug 'zchee/deoplete-jedi'
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'mhartington/nvim-typescript'
 
     " Airline
     Plug 'vim-airline/vim-airline'      " Use airline statusbar for nvim

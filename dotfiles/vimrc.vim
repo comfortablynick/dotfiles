@@ -84,7 +84,7 @@ autocmd FileType gitcommit exec 'au VimEnter * startinsert'
 
 " Colors/themes
 if has('nvim')
-    colorscheme gruvbox         " Color Theme
+    colorscheme gruvbox             " Color Theme
     let ayucolor = 'mirage'         " For ayu theme
     let g:nord_italic = 1           " Support italic fonts
     let g:nord_italic_comments = 1  " Italic comments
@@ -157,8 +157,8 @@ if has('nvim')
         \ ]
     let g:airline#extensions#default#section_truncate_width = {
         \ 'b': 79,
-        \ 'x': 60,
-        \ 'y': 88,
+        \ 'x': 40,
+        \ 'y': 48,
         \ 'z': 45,
         \ 'warning': 80,
         \ 'error': 80,

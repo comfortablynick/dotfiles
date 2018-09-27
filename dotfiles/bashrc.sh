@@ -33,6 +33,7 @@ HISTFILESIZE=2000               # Shell history file size
 shopt -s checkwinsize           # Update rows/cols if size changes
 export VISUAL=nvim              # Set default visual editor
 export EDITOR="${VISUAL}"       # Set default text editor
+export TERM=screen-256color
 
 # Include files loaded at end of this script
 # Located in $BASEDIR

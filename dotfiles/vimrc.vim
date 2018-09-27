@@ -77,8 +77,12 @@ call plug#end()
 " Treat xonsh like python
 au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
 
-" Open Git commits in INSERT mode
-autocmd FileType gitcommit exec 'au VimEnter * startinsert'
+" Gitcommit files 
+autocmd FileType gitcommit
+    \ exec 'au VimEnter * startinsert'
+autocmd FileType gitcommit
+    \ call deoplete#custom#buffer_option('auto_complete', v:false)
+
 
 " EDITOR SETTINGS ================================
 
@@ -182,5 +186,6 @@ let NERDTreeIgnore = ['.*\.pyc$']
 
 " Deoplete
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#show_docstring = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif

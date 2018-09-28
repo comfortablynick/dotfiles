@@ -214,13 +214,16 @@ let NERDTreeIgnore = [
     \ ]
 let NERDTreeShowHidden = 1                      " Show dotfiles
 
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#jedi#show_docstring = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" Deoplete / Echodoc
+if has('nvim')
+    " Deoplete
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#sources#jedi#show_docstring = 1
+    inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+    autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" Echodoc
-set cmdheight=2                                 " Add extra line for function definition 
-let g:echodoc_enable_at_startup = 1
-set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
+    " Echodoc
+    set cmdheight=2                                 " Add extra line for function definition 
+    let g:echodoc_enable_at_startup = 1
+    set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
+endif

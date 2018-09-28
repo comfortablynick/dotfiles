@@ -2,8 +2,7 @@ actions:
   pre:
     vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload;
       curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
-  vim-plug: vim +PlugInstall +qall
-  nvim-plug: nvim +PlugInstall +qall
+  vim-plug: vimsync
 config:
   backup: true
   banner: false
@@ -12,7 +11,12 @@ config:
   keepdot: true
   link_by_default: true
   longkey: false
+  workdir: ~/.config/dotdrop
 dotfiles:
+  d_config:
+    dst: ~/.vim/config
+    link: true
+    src: .vim/config
   f_bash_aliases:
     dst: ~/.bash_aliases
     link: true
@@ -57,60 +61,44 @@ dotfiles:
     actions:
     - vim-plug-install
     - vim-plug
-    - nvim-plug
     dst: ~/.vimrc
     link: true
     src: vimrc.vim
   f_xonshrc:
     dst: ~/.xonshrc
     link: true
-    src: xonshrc.xsh 
+    src: xonshrc.xsh
 profiles:
-  joppa:
+  core:
     dotfiles:
     - f_bashrc
     - f_bash_colors
     - f_bash_prompt
     - f_bash_profile
     - f_bash_aliases
-    - f_bash_linux
     - f_bash_functions
     - f_dircolors
     - f_vimrc
     - f_xonshrc
   io:
     dotfiles:
-    - f_bashrc
-    - f_bash_colors
-    - f_bash_prompt
-    - f_bash_profile
-    - f_bash_aliases
-    - f_bash_windows
     - f_bash_linux
-    - f_bash_functions
-    - f_dircolors
-    - f_vimrc
-    - f_xonshrc
+    - f_bash_windows
+    - d_config
+    include:
+    - core
+  joppa:
+    dotfiles:
+    - f_bash_linux
+    include:
+    - core
   thor.local:
     dotfiles:
-    - f_bashrc
-    - f_bash_colors
-    - f_bash_prompt
-    - f_bash_profile
-    - f_bash_aliases
     - f_bash_mac
-    - f_bash_functions
-    - f_dircolors
-    - f_vimrc
-    - f_xonshrc
+    include:
+    - core
   uranus:
     dotfiles:
-    - f_bashrc
-    - f_bash_colors
-    - f_bash_prompt
-    - f_bash_profile
-    - f_bash_aliases
     - f_bash_windows
-    - f_bash_functions
-    - f_dircolors
-    - f_vimrc
+    include:
+    - core

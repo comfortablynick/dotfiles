@@ -109,17 +109,22 @@ fi
 vimsync() {
     if hash vim 2> /dev/null; then
         echo "Found Vim; updating plugins..."
-        command vim +PlugInstall +qall
+        command vim +PlugInstall +UpdateRemotePlugins +qall
         echo "Vim plugins updated."
     else
         echo "Vim binary not found!"
     fi
     if hash nvim 2> /dev/null; then
         echo "Found Neovim; updating plugins..."
-        command nvim +PlugInstall +qall
+        command nvim +PlugInstall +UpdateRemotePlugins +qall
         echo "Neovim plugins updated."
     else
         echo "Neovim binary not found!"
     fi
     echo "Vim/Neovim plugin sync complete."
+}
+
+# List octal (numeric) permissions instead of string-based ones
+lso() {
+    ls -l "$@" | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}';
 }

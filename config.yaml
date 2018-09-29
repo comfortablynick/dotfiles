@@ -17,6 +17,10 @@ dotfiles:
     dst: ~/.vim/config
     link: true
     src: .vim/config
+  d_ftplugin:
+    dst: ~/.vim/ftplugin
+    link: true
+    src: .vim/ftplugin
   f_bash_aliases:
     dst: ~/.bash_aliases
     link: true
@@ -81,11 +85,13 @@ profiles:
     - f_vimrc
     - f_xonshrc
     - d_config
+    - d_ftplugin
   io:
     dotfiles:
     - f_bash_linux
     - f_bash_windows
     - d_config
+    - d_ftplugin
     include:
     - core
   joppa:

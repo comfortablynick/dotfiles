@@ -43,6 +43,7 @@ alias dotdrop='~/dotfiles/dotdrop.sh'
 alias dotgit='git -C ~/dotfiles'
 alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"
 
-# Use Neovim if it exists on this machine
-hash nvim &> /dev/null && alias vim='nvim'
+# Vim / Neovim
+alias vdot='cd ~/dotfiles/dotfiles/.vim/config'
+hash nvim &> /dev/null && alias vim='nvim'      # Favor Neovim if it exists on this machine
 

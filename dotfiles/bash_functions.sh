@@ -109,15 +109,19 @@ fi
 vimsync() {
     if hash vim 2> /dev/null; then
         echo "Found Vim; updating plugins..."
-        command vim +PlugInstall +UpdateRemotePlugins +qall
-        echo "Vim plugins updated."
+        command vim +PlugInstall +qall
+        echo "Plugins updated. Updating remote plugins..."
+        command vim +UpdateRemotePlugins +qall
+        echo "Vim updates complete."
     else
         echo "Vim binary not found!"
     fi
     if hash nvim 2> /dev/null; then
         echo "Found Neovim; updating plugins..."
-        command nvim +PlugInstall +UpdateRemotePlugins +qall
-        echo "Neovim plugins updated."
+        command nvim +PlugInstall +qall
+        echo "Plugins updated. Updating remote plugins..."
+        command nvim +UpdateRemotePlugins +qall
+        echo "Neovim updates complete."
     else
         echo "Neovim binary not found!"
     fi

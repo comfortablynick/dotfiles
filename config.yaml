@@ -80,6 +80,7 @@ profiles:
     - f_dircolors
     - f_vimrc
     - f_xonshrc
+    - d_config
   io:
     dotfiles:
     - f_bash_linux

@@ -31,11 +31,7 @@ if has('nvim')
         \ 'for': 'python'
     \ }
 
-    Plug 'mhartington/nvim-typescript',
-    \ {
-        \ 'for': 'typescript',
-        \ 'do': './install.sh'
-    \ }
+      Plug 'mhartington/nvim-typescript', { 'do': [ './install.sh', ':UpdateRemotePlugins' ] }
 
     Plug 'Shougo/deoplete.nvim',
     \ {

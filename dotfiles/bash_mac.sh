@@ -29,7 +29,7 @@ export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
 export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 
 alias denv="source ${VENV_DIR}/dev/bin/activate"
-# source ${VENV_DIR}/dev/bin/activate
+. ${VENV_DIR}/dev/bin/activate
 
 # enable programmable completion features 
 if ! shopt -oq posix; then

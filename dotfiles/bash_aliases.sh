@@ -47,3 +47,5 @@ alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dot
 alias vdot='cd ~/dotfiles/dotfiles/.vim/config'
 hash nvim &> /dev/null && alias vim='nvim'      # Favor Neovim if it exists on this machine
 
+# xonsh
+alias xo='xonsh'

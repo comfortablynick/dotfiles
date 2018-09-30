@@ -18,7 +18,6 @@ alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
 alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
 alias gdspwe='cd ~/git/google-apps-script/sheets/dspw-email'
 
-alias xo='xonsh'
 
 # PYTHON ------------------------------------------------------
 # Virtual Env

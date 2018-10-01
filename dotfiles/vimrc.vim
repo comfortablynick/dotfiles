@@ -24,15 +24,3 @@ for files in config_list
         exec 'source' f
     endfor
 endfor
-
-
-" FILETYPE SETTINGS ==============================
-
-" Treat xonsh like python
-au BufNewFile,BufRead *.xsh,.xonshrc set ft=python
-
-" Gitcommit files 
-autocmd FileType gitcommit
-    \ exec 'au VimEnter * startinsert'
-autocmd FileType gitcommit
-    \ call deoplete#custom#buffer_option('auto_complete', v:false)

@@ -15,6 +15,7 @@ let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 let config_list = [
     \ 'plugins.vim',
     \ 'config.vim',
+    \ 'functions.vim',
     \ 'theme.vim',
     \ 'keymap.vim'
 \ ]

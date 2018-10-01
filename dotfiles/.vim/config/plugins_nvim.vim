@@ -8,7 +8,9 @@ Plug 'zchee/deoplete-jedi',
 
 Plug 'mhartington/nvim-typescript',
 \ { 
-    \ 'do': [ './install.sh', ':UpdateRemotePlugins' ] }
+    \ 'do': [ './install.sh', ':UpdateRemotePlugins' ],
+    \ 'for': 'typescript'
+\ }
 
 Plug 'Shougo/deoplete.nvim',
 \ {

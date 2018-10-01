@@ -20,6 +20,7 @@ alias egrep='egrep --color=auto'
 alias rm='rm -I'
 alias mv='mv -i'
 alias cp='cp -i'
+alias rmdir='rm -rf'                    # Recursively remove dirs
 
 # navigation
 alias ..='cd ..'

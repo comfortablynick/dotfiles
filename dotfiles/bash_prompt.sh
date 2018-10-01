@@ -23,7 +23,6 @@ find_git_dirty() {
   fi
 }
 
-PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
 
 # COLORS
 DEFAULT="\[\033[0;00m\]"
@@ -34,8 +33,6 @@ YELLOW="\[\033[0;33m\]"
 RED="\[\033[0;31m\]"
 CYAN="\[\033[0;36m\]"
 
-# Default Git enabled prompt with dirty state
-export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
 # Powerline
 if [ "$POWERLINE_ROOT" != "" ]; then
@@ -46,4 +43,8 @@ if [ "$POWERLINE_ROOT" != "" ]; then
         POWERLINE_BASH_SELECT=1
         . "${POWERLINE_ROOT}/bindings/bash/powerline.sh"
     fi
+  else
+    # Default Git enabled prompt with dirty state
+    PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+    export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 fi

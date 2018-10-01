@@ -2,7 +2,7 @@
 	"segment_data": {
 		"hostname": {
 			"args": {
-				"only_if_ssh": true
+				"only_if_ssh": false
 			}
 		},
 		"cwd": {

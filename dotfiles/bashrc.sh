@@ -25,26 +25,26 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
 # SHELL DEFAULTS ----------------------------------------------------
 
-BASEDIR="${HOME}"               # Location of includes dir
-HISTCONTROL=ignoreboth          # Ignore duplicate/blank history
-shopt -s histappend             # Don't overwrite history; append
-HISTSIZE=1000                   # Shell history size
-HISTFILESIZE=2000               # Shell history file size
-shopt -s checkwinsize           # Update rows/cols if size changes
-export VISUAL=nvim              # Set default visual editor
-export EDITOR="${VISUAL}"       # Set default text editor
-# export TERM=screen-256color     # This causes vim to freak out
+BASEDIR="${HOME}"                               # Location of includes dir
+HISTCONTROL=ignoreboth                          # Ignore duplicate/blank history
+shopt -s histappend                             # Don't overwrite history; append
+HISTSIZE=1000                                   # Shell history size
+HISTFILESIZE=2000                               # Shell history file size
+shopt -s checkwinsize                           # Update rows/cols if size changes
+export VISUAL=nvim                              # Set default visual editor
+export EDITOR="${VISUAL}"                       # Set default text editor
+export XDG_CONFIG_HOME="$HOME/.config"          # Some scripts look here
 
 # Include files loaded at end of this script
 # Located in $BASEDIR
 INCLUDES=(
-".bash_aliases"                 # Aliases for all OSes
-".bash_functions"               # General functions 
-".bash_linux"                   # Code to run on Linux 
-".bash_mac"                     # Code to run on Mac 
-".bash_windows"                 # Code to run on Win (Git bash)
-".bash_prompt"                  # Prompt-specific settings
-# ".bash_colors"                # Color definitions (slow)
+".bash_aliases"                                 # Aliases for all OSes
+".bash_functions"                               # General functions 
+".bash_linux"                                   # Code to run on Linux 
+".bash_mac"                                     # Code to run on Mac 
+".bash_windows"                                 # Code to run on Win (Git bash)
+".bash_prompt"                                  # Prompt-specific settings
+# ".bash_colors"                                # Color definitions (slow)
 )
 
 

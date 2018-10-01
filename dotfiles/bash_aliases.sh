@@ -36,6 +36,7 @@ alias gdiff='git diff'
 alias gst='git status -s'
 alias glog='vim +GV'                    # Open vim to explore log and diffs
 alias gmg='git stash && git pull && git stash pop'
+alias gsub='git submodule foreach --recursive git pull origin master'
 
 # dotdrop
 alias gdot='cd ~/dotfiles/dotfiles'

@@ -11,8 +11,13 @@ config:
   keepdot: true
   link_by_default: true
   longkey: false
+  showdiff: false
   workdir: ~/.config/dotdrop
 dotfiles:
+  d_after:
+    dst: ~/.vim/after
+    link: true
+    src: .vim/after
   d_config:
     dst: ~/.vim/config
     link: true
@@ -100,6 +105,7 @@ profiles:
     - f_dircolors
     - f_vimrc
     - f_xonshrc
+    - d_after
     - d_config
     - d_ftplugin
     - d_ftdetect
@@ -110,6 +116,7 @@ profiles:
     dotfiles:
     - f_bash_linux
     - f_bash_windows
+    - d_after
     include:
     - core
   joppa:

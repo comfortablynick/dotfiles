@@ -51,6 +51,9 @@ set ignorecase                  " Ignore case while searching
 set smartcase                   " Case sensitive if uppercase in pattern
 set incsearch                   " Move cursor to matched string
 
+" Add shebang if defined
+au BufNewFile * call SetShebang()
+
 " Jump to last position when reopening file
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")

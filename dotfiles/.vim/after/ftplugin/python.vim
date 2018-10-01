@@ -10,3 +10,6 @@ setlocal tabstop=4
 
 " Other
 setlocal backspace=2                 " Backspace behaves as expected
+
+" Set shebang
+autocmd BufNewFile * call SetShebang()

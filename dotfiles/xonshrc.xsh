@@ -18,6 +18,7 @@ $MULTILINE_PROMPT = '`·.,¸,.·*¯`·.,¸,.·*¯'
 # Aliases
 # TODO: source this from a separate file like bash?
 aliases['xreload'] = 'source ~/.xonshrc'
+aliases['ls'] = 'ls --color=auto'
 
 # Source bash aliases, etc.
 source-bash "echo loading xonsh foreign shell"

@@ -25,6 +25,18 @@ dotfiles:
     dst: ~/.vim/ftplugin
     link: true
     src: .vim/ftplugin
+  d_nvim:
+    dst: ~/.config/nvim
+    link: true
+    src: .config/nvim
+  d_powerline:
+    dst: ~/.config/powerline
+    link: true
+    src: .config/powerline
+  d_xonsh:
+    dst: ~/.config/xonsh
+    link: true
+    src: .config/xonsh
   f_bash_aliases:
     dst: ~/.bash_aliases
     link: true
@@ -91,12 +103,13 @@ profiles:
     - d_config
     - d_ftplugin
     - d_ftdetect
+    - d_nvim
+    - d_powerline
+    - d_xonsh
   io:
     dotfiles:
     - f_bash_linux
     - f_bash_windows
-    - d_config
-    - d_ftplugin
     include:
     - core
   joppa:
@@ -107,7 +120,6 @@ profiles:
   thor.local:
     dotfiles:
     - f_bash_mac
-    - d_ftdetect
     include:
     - core
   uranus:

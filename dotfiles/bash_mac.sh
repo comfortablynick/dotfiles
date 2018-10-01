@@ -23,6 +23,10 @@ PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 # Setting PATH for coreutils
 PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
 
+# Language Defaults
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # Python Venv
 export VENV_DIR="${HOME}/.env"
 export NVIM_PY2_DIR="${VENV_DIR}/nvim2"

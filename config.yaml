@@ -17,6 +17,10 @@ dotfiles:
     dst: ~/.vim/config
     link: true
     src: .vim/config
+  d_ftdetect:
+    dst: ~/.vim/ftdetect
+    link: true
+    src: .vim/ftdetect
   d_ftplugin:
     dst: ~/.vim/ftplugin
     link: true
@@ -86,6 +90,7 @@ profiles:
     - f_xonshrc
     - d_config
     - d_ftplugin
+    - d_ftdetect
   io:
     dotfiles:
     - f_bash_linux
@@ -102,6 +107,7 @@ profiles:
   thor.local:
     dotfiles:
     - f_bash_mac
+    - d_ftdetect
     include:
     - core
   uranus:

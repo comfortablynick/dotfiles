@@ -5,11 +5,11 @@
 alias exif='exit'
 
 # ls
-alias ls='ls --color=auto'
-alias ll='ls -l --color=auto'
-alias lla='ls -la --color=auto'
-alias la='ls -A --color=auto'
-alias l='ls -CF --color=auto'
+alias ls='ls -h --color=auto --group-directories-first'
+alias ll='ls -l'
+alias lla='ls -lA'
+alias la='ls -A'
+alias l='ls -CF'
 
 # grep
 alias grep='grep --color=auto'
@@ -23,6 +23,7 @@ alias cp='cp -i'
 alias rmdir='rm -rf'                    # Recursively remove dirs
 
 # navigation
+alias cd..='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias cd..='cd ..'
@@ -47,7 +48,7 @@ alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dot
 
 # Vim / Neovim
 alias vdot='cd ~/dotfiles/dotfiles/.vim/config'
-hash nvim &> /dev/null && alias vim='nvim'      # Favor Neovim if it exists on this machine
+hash nvim &> /dev/null && alias vim='nvim' && alias v='nvim' || alias v='vim'     # Favor Neovim if it exists on this machine
 
 # xonsh
 alias xo='xonsh'

@@ -26,7 +26,6 @@ set encoding=utf-8              " Default to unicode
 set termencoding=utf-8          " Unicode
 set synmaxcol=200               " Don't try to highlight if line > 200 chr
 set laststatus=2                " Always show statusline
-set number                      " Show linenumbers
 set visualbell                  " Visual instead of audible
 set nowrap
 set noshowmode                  " Hide default mode text (e.g. -- INSERT -- below statusline)
@@ -51,11 +50,28 @@ set ignorecase                  " Ignore case while searching
 set smartcase                   " Case sensitive if uppercase in pattern
 set incsearch                   " Move cursor to matched string
 
+" Window Split
+set splitbelow                  " Split below instead of above
+set splitright                  " Split right instead of left
+
+" Line numbering
+set number                      " Show linenumbers
+set relativenumber              " Show relative numbers (hybrid with `number` enabled)
+
+" Toggle to number mode depending on vim mode
+" INSERT:       Turn off relativenumber while writing code
+" NORMAL:       Turn on relativenumber for easy navigation
+" NO FOCUS:     Turn off relativenumber (testing code, etc.)
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+augroup END
+
+" Jump to last position when reopening file
+au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g`\"" | endif
+
 " Add shebang if defined
 au BufNewFile * call SetShebang()
 
-" Jump to last position when reopening file
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal! g`\"" | endif
-endif

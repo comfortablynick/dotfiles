@@ -38,6 +38,10 @@ dotfiles:
     dst: ~/.config/nvim
     link: true
     src: .config/nvim
+  d_omf:
+    dst: ~/.config/omf
+    link: true
+    src: .config/omf
   d_powerline:
     dst: ~/.config/powerline
     link: true
@@ -115,6 +119,7 @@ profiles:
     - d_ftplugin
     - d_ftdetect
     - d_nvim
+    - d_omf
     - d_powerline
     - d_xonsh
   io:
@@ -123,6 +128,7 @@ profiles:
     - f_bash_windows
     - d_after
     - d_fish
+    - d_omf
     include:
     - core
   joppa:

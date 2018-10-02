@@ -1,6 +1,9 @@
 # This file contains fish universal variable definitions.
 SET __fish_init_2_39_8:\x1d
 SET __fish_init_2_3_0:\x1d
+SET __fish_init_3_x:\x1d
+SET _fish_abbr_denv:source\x20\x7e/\x2eenv/dev/bin/activate\x2efish
+SET _fish_abbr_h:cd\x20\x7e/
 SET fish_color_autosuggestion:969896
 SET fish_color_cancel:\x2dr
 SET fish_color_command:b294bb

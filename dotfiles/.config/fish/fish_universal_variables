@@ -2,8 +2,13 @@
 SET __fish_init_2_39_8:\x1d
 SET __fish_init_2_3_0:\x1d
 SET __fish_init_3_x:\x1d
-SET _fish_abbr_denv:source\x20\x7e/\x2eenv/dev/bin/activate\x2efish
-SET _fish_abbr_h:cd\x20\x7e/
+SET _fish_abbr_fc:/c/Users/nmurphy/\x2econfig/fish/
+SET _fish_abbr_g:git
+SET _fish_abbr_ga:git\x20add
+SET _fish_abbr_gc:git\x20commit
+SET _fish_abbr_gd:git\x20diff
+SET abbrs_initialized:\x1d
+SET cgitc_revision:d662bd95a3ea68073503bf9c9f99a7b6a30ab285
 SET fish_color_autosuggestion:969896
 SET fish_color_cancel:\x2dr
 SET fish_color_command:b294bb
@@ -26,7 +31,7 @@ SET fish_color_selection:white\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dbrblack
 SET fish_color_status:red
 SET fish_color_user:brgreen
 SET fish_color_valid_path:\x2d\x2dunderline
-SET fish_greeting:
+SET fish_greeting:\x1d
 SET fish_key_bindings:fish_default_key_bindings
 SET fish_pager_color_completion:\x1d
 SET fish_pager_color_description:B3A06D\x1eyellow

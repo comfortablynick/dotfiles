@@ -86,6 +86,9 @@ for file in ${INCLUDES[@]}; do
 done
 unset file
 
+# Write bash aliases to file for use in fish
+# alias > ~/.config/fish/bash_aliases.fish
+
 if [ "$DEBUG_MODE" == true ]; then
     echo "$(date +"%T.%3N"): Leaving .bashrc"
 fi

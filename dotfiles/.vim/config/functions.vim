@@ -85,7 +85,7 @@ function! SaveAndExecutePython()
 
     " reuse existing buffer window if it exists otherwise create a new one
     if !exists("s:buf_nr") || !bufexists(s:buf_nr)
-        silent execute 'botright new ' . s:output_buffer_name
+        silent execute 'botright vsplit new ' . s:output_buffer_name
         let s:buf_nr = bufnr('%')
     elseif bufwinnr(s:buf_nr) == -1
         silent execute 'botright new'
@@ -104,6 +104,8 @@ function! SaveAndExecutePython()
     setlocal nonumber
     setlocal norelativenumber
     setlocal showbreak=""
+    setlocal wrap
+    setlocal textwidth=0
 
     " clear the buffer
     setlocal noreadonly

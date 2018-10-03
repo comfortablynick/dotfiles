@@ -22,6 +22,10 @@ dotfiles:
     dst: ~/.vim/config
     link: true
     src: .vim/config
+  d_fish:
+    dst: ~/.config/fish
+    link: true
+    src: .config/fish
   d_ftdetect:
     dst: ~/.vim/ftdetect
     link: true
@@ -34,6 +38,10 @@ dotfiles:
     dst: ~/.config/nvim
     link: true
     src: .config/nvim
+  d_omf:
+    dst: ~/.config/omf
+    link: true
+    src: .config/omf
   d_powerline:
     dst: ~/.config/powerline
     link: true
@@ -107,9 +115,11 @@ profiles:
     - f_xonshrc
     - d_after
     - d_config
+    - d_fish
     - d_ftplugin
     - d_ftdetect
     - d_nvim
+    - d_omf
     - d_powerline
     - d_xonsh
   io:
@@ -117,6 +127,8 @@ profiles:
     - f_bash_linux
     - f_bash_windows
     - d_after
+    - d_fish
+    - d_omf
     include:
     - core
   joppa:

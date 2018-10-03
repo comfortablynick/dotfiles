@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-#     _             _           
-#    | |__  __ _ __| |_  _ _ __ 
-#   _| '_ \/ _` (_-< ' \| '_/ _|
-#  (_)_.__/\__,_/__/_||_|_| \__|
-#
+#    _               _
+#   | |__   __ _ ___| |__  _ __ ___
+#   | '_ \ / _` / __| '_ \| '__/ __|
+#  _| |_) | (_| \__ \ | | | | | (__
+# (_)_.__/ \__,_|___/_| |_|_|  \___|
 
 # If not running interactively exit
 [[ $- != *i* ]] && return
@@ -25,12 +25,14 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
 # SHELL DEFAULTS ----------------------------------------------------
 
+stty -ixon                                      # Disable ctrl-s and ctrl-q
 BASEDIR="${HOME}"                               # Location of includes dir
 HISTCONTROL=ignoreboth                          # Ignore duplicate/blank history
 shopt -s histappend                             # Don't overwrite history; append
-HISTSIZE=1000                                   # Shell history size
-HISTFILESIZE=2000                               # Shell history file size
+HISTSIZE=                                       # Shell history size
+HISTFILESIZE=                                   # Shell history file size
 shopt -s checkwinsize                           # Update rows/cols if size changes
+shopt -s autocd                                 # Auto cd if entering dir name at prompt
 export VISUAL=nvim                              # Set default visual editor
 export EDITOR="${VISUAL}"                       # Set default text editor
 export XDG_CONFIG_HOME="$HOME/.config"          # Some scripts look here

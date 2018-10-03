@@ -120,7 +120,8 @@ vimsync() {
         echo "Found Neovim; updating plugins..."
         command nvim +PlugInstall +qall
         echo "Plugins updated. Updating remote plugins..."
-        command nvim +UpdateRemotePlugins +qall
+        # Attempt to "open" typescript file before updating remote
+        command nvim t.ts +UpdateRemotePlugins +qall
         echo "Neovim updates complete."
     else
         echo "Neovim binary not found!"

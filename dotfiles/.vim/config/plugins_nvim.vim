@@ -8,7 +8,8 @@ Plug 'zchee/deoplete-jedi',
 
 Plug 'mhartington/nvim-typescript',
 \ { 
-    \ 'do': [ './install.sh', ':UpdateRemotePlugins' ]
+    \ 'for': [ 'typescript', 'tsx' ],
+    \ 'do': './install.sh'
 \ }
 
 Plug 'Shougo/deoplete.nvim',
@@ -29,7 +30,7 @@ Plug 'Shougo/neco-vim',
   " Airline
 Plug 'vim-airline/vim-airline'                              " Use airline statusbar for nvim
 Plug 'vim-airline/vim-airline-themes'                       " Themes for airline
-Plug 'plytophogy/vim-virtualenv'                            " Show virtualenv in airline
+" Plug 'plytophogy/vim-virtualenv'                            " Show virtualenv in airline
 
 
 " PLUGIN CONFIGURATION ==========================

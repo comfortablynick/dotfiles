@@ -10,6 +10,7 @@ setlocal tabstop=4
 
 " Other
 setlocal backspace=2                 " Backspace behaves as expected
+let python_highlight_all=1           " Highlight all builtins
 
 " Set shebang
 autocmd BufNewFile * call SetShebang()

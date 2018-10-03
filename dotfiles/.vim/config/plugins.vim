@@ -20,6 +20,7 @@ Plug 'w0rp/ale'                                                 " Linting
 " Syntax highlighting
 Plug 'HerringtonDarkholme/yats', { 'for': 'typescript' }        " Typescript
 Plug 'gabrielelana/vim-markdown', { 'for': 'markdown' }         " Markdown
+Plug 'dag/vim-fish'                                             " Fish scripts
 " Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}          " Python (enhanced)
 
 " Git

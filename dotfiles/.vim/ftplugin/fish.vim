@@ -7,4 +7,4 @@ compiler fish
 setlocal textwidth=79
 
 " Enable folding of block structures in fish.
-setlocal foldmethod=expr
+" setlocal foldmethod=expr

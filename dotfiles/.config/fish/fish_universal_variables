@@ -2,11 +2,19 @@
 SET __fish_init_2_39_8:\x1d
 SET __fish_init_2_3_0:\x1d
 SET __fish_init_3_x:\x1d
+SET _fish_abbr_dot:\x7e/dotfiles/dotfiles
 SET _fish_abbr_fc:/c/Users/nmurphy/\x2econfig/fish/
+SET _fish_abbr_funced:funced\x20\x2dis
 SET _fish_abbr_g:git
 SET _fish_abbr_ga:git\x20add
 SET _fish_abbr_gc:git\x20commit
 SET _fish_abbr_gd:git\x20diff
+SET _fish_abbr_gdf:git\x20diff
+SET _fish_abbr_glog:vim\x20\x2bGV
+SET _fish_abbr_gpy:/c/Users/nmurphy/git/python/
+SET _fish_abbr_gst:git\x20status
+SET _fish_abbr_h:/c/Users/nmurphy/
+SET _fish_abbr_vdot:\x7e/dotfiles/dotfiles/\x2evim
 SET abbrs_initialized:\x1d
 SET cgitc_revision:d662bd95a3ea68073503bf9c9f99a7b6a30ab285
 SET fish_color_autosuggestion:969896
@@ -37,3 +45,4 @@ SET fish_pager_color_completion:\x1d
 SET fish_pager_color_description:B3A06D\x1eyellow
 SET fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SET fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
+SET theme_nerd_fonts:yes

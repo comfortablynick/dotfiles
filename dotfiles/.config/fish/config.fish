@@ -3,29 +3,30 @@ set fish_greeting
 
 set -x EDITOR 'nvim'
 set -x VISUAL $EDITOR
+set -x VIRTUAL_ENV_DISABLE_PROMPT 1                     # Default venv prompt doesn't like fish
 
-# Get bash aliases we want to use for now
-source ~/.config/fish/bash_aliases.fish
+# Source foreign shell env variables
+fenv source ~/.bashrc
 
 # Set abbreviations
-if not set -q abbrs_initialized
-  set -U abbrs_initialized
-  echo -n Setting abbreviations...
-  
-  # Apps
-  alias v 'nvim'
-  alias vim 'nvim'
-  alias xo 'xonsh'
+echo -n Setting abbreviations... 
 
-  # Git
-  abbr g 'git'
-  abbr ga 'git add'
-  abbr gc 'git commit'
-  abbr gd 'git diff'
-  abbr glog 'vim +GV'
+# Apps
+alias xo 'xonsh'
 
-  # Directories
-  abbr dot '~/dotfiles/dotfiles'
+# Git
+abbr g 'git'
+abbr ga 'git add'
+abbr gc 'git commit'
+abbr gd 'git diff'
+abbr gst 'git status'
+abbr glog 'vim +GV'
 
-  echo 'Done'
-end
+# Directories
+abbr dot '~/dotfiles/dotfiles'
+abbr vdot '~/dotfiles/dotfiles/.vim'
+
+# Builtins
+abbr funced 'funced -is'
+
+echo 'Done'

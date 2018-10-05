@@ -9,6 +9,13 @@
 " GLOBAL VIM / NEOVIM SETTINGS
 " NOTE: Settings may be overridden by filetype plugins
 
+" SHELL =========================================
+" Vim apparently doesn't care for fish
+" Load bash instead for Vim purposes
+if $SHELL =~# 'bin/fish'
+    set shell=/bin/sh
+endif
+
 " CONFIG FILES ==================================
 let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 

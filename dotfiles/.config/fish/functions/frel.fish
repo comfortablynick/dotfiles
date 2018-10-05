@@ -1,5 +1,6 @@
+# Defined in - @ line 2
 function frel --description 'Reload fish shell'
-	echo "Reloading fish shell..."
-omf reload > /dev/null
-omf reload > /dev/null
+	set_color $fish_color_autosuggestion
+    echo 'Reloading fish shell!'
+    source ~/.config/fish/config.fish
 end

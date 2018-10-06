@@ -57,7 +57,8 @@ abbr l ls
 abbr h $HOME
 abbr dot "$HOME/dotfiles/dotfiles"
 abbr vdot "$HOME/dotfiles/dotfiles/.vim"
-abbr gdot "$HOME/git/python"
+abbr gdot "$HOME/dotfiles/dotfiles"
+abbr gpy "$HOME/git/python"
 abbr pd prevd
 abbr nd nextd
 

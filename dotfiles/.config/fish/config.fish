@@ -50,6 +50,7 @@ abbr gpl 'git pull'
 abbr gph 'git push'
 abbr gst 'git status'
 abbr glog 'vim +GV'                                             # Open interactive git log in vim
+abbr gsync 'git pull; git add .; git commit; git push'          # Replace with real function eventually
 
 # Directories
 abbr l ls

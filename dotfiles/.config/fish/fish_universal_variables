@@ -21,6 +21,7 @@ SET _fish_abbr_gph:git\x20push
 SET _fish_abbr_gpl:git\x20pull
 SET _fish_abbr_gpy:/c/Users/nmurphy/git/python/
 SET _fish_abbr_gst:git\x20status
+SET _fish_abbr_gsync:git\x20pull\x3b\x20git\x20add\x20\x2e\x3b\x20git\x20commit\x3b\x20git\x20push
 SET _fish_abbr_h:/c/Users/nmurphy
 SET _fish_abbr_l:ls
 SET _fish_abbr_nd:nextd

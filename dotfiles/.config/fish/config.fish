@@ -21,6 +21,8 @@ set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
 set -x XDG_CONFIG_HOME "$HOME/.config"
 set -x LC_ALL 'en_US.UTF-8'
 set -x POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
+set -gx CLICOLOR 1
+# set -gx LSCOLORS (dircolors -c "$HOME/.dircolors" | string split ' ')[3]
 
 # Text editor
 set -x EDITOR 'nvim'

@@ -101,6 +101,10 @@ dotfiles:
     dst: ~/.xonshrc
     link: true
     src: xonshrc.xsh
+  f_zshrc:
+    dst: ~/.zshrc
+    link: true
+    src: zshrc.zsh
 profiles:
   core:
     dotfiles:
@@ -113,6 +117,7 @@ profiles:
     - f_dircolors
     - f_vimrc
     - f_xonshrc
+    - f_zshrc
     - d_after
     - d_config
     - d_fish
@@ -129,6 +134,7 @@ profiles:
     - d_after
     - d_fish
     - d_omf
+    - f_zshrc
     include:
     - core
   joppa:

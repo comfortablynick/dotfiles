@@ -24,6 +24,16 @@ set -x POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/pyth
 set -gx CLICOLOR 1
 # set -gx LSCOLORS (dircolors -c "$HOME/.dircolors" | string split ' ')[3]
 
+# WSL (Windows Subsystem for Linux) Fixes
+if test -f /proc/version && grep -q "Microsoft" /proc/version
+
+  # Fix umask value if WSL didn't set it properly.
+  # https://github.com/Microsoft/WSL/issues/352
+  if test (umask) -eq "000" && umask 022
+
+  end
+end
+
 # Text editor
 set -x EDITOR 'nvim'
 set -x VISUAL $EDITOR
@@ -36,8 +46,23 @@ set -x VENV_DIR "$HOME/.env"
 set -x NVIM_PY2_DIR "$VENV_DIR/nvim2"
 set -x NVIM_PY3_DIR "$VENV_DIR/nvim3"
 
-# Fish
-set -g theme_nerd_fonts 'yes'
+# Fish Theme
+# Set options based on ssh connection/term size
+if test -n "$SSH_CONNECTION"
+  set -g theme_nerd_fonts no
+else
+  set -g theme_nerd_fonts yes
+end
+
+# Set options if term windows is narrow-ish
+if test "$COLUMNS" -lt 100
+  set -g theme_newline_cursor yes
+  set -g theme_display_date no
+else
+  set -g theme_newline_cursor no
+  set -g theme_display_date yes
+end
+
 set -g h_color_autosuggestion 969896
 set -g fish_color_cancel -r
 set -g fish_color_command b294bb

@@ -50,6 +50,10 @@ dotfiles:
     dst: ~/.config/xonsh
     link: true
     src: .config/xonsh
+  d_zsh:
+    dst: ~/.config/zsh
+    link: true
+    src: .config/zsh
   f_bash_aliases:
     dst: ~/.bash_aliases
     link: true
@@ -135,6 +139,7 @@ profiles:
     - d_fish
     - d_omf
     - f_zshrc
+    - d_zsh
     include:
     - core
   joppa:

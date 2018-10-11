@@ -81,7 +81,12 @@ if zplug check "bhilburn/powerlevel9k"; then
   DEFAULT_COLOR=$DEFAULT_FOREGROUND
   DEFAULT_USER=$USER
 
-  POWERLEVEL9K_MODE="nerdfont-complete"
+  if [[ -n $SSH_CONNECTION ]]; then
+    POWERLEVEL9K_MODE="default"
+  else
+    POWERLEVEL9K_MODE="nerdfont-complete"
+  fi
+
   POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
   #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_right"
 

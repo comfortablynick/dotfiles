@@ -34,7 +34,7 @@ plugs = [
       "powerline",
      ]
 
-if $HOST in ("joppa"):
+if $HOST in ("joppa", "io"):
     del plugs[-1]
 
 for p in plugs:

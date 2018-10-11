@@ -140,6 +140,8 @@ abbr q exit
 abbr x exit
 abbr quit exit
 
+# Load event functions
+source "$XDG_CONFIG_HOME/fish/functions/on_exit.fish"
 
 set_color brblue; echo 'Done'
 set_color normal

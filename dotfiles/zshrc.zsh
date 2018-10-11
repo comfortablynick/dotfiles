@@ -15,6 +15,7 @@ esac
 # Check for debug mode
 [[ "$DEBUG_MODE" == true ]] && echo "Sourcing .zshrc"
 
+export DOTFILES=$HOME/dotfiles/dotfiles
 export ZDOTDIR=$HOME/.config/zsh
 
 # =============================================================================
@@ -28,6 +29,9 @@ export ZDOTDIR=$HOME/.config/zsh
 # Essential
 source ~/.zplug/init.zsh
 
+# Source all .zsh files in ZDOTDIR
+for config ($ZDOTDIR/*.zsh) source $config
+
 ###############################################################################
 # <-- PLUGINS START ----------------------------->
 
@@ -37,15 +41,16 @@ zplug "plugins/git", from:oh-my-zsh
 
 zplug "zsh-users/zsh-completions"
 
-zplug "zsh-users/zsh-autosuggestions", defer:2
+zplug "zsh-users/zsh-autosuggestions"
 
 # Themes
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme #, if:"[[ ! -n $SSH_CONNECTION ]]"
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme 
 
-# zplug "themes/kennethreitz", from:oh-my-zsh, as:theme, if:"[[ -n $SSH_CONNECTION ]]"
-
-# Must be loaded last
+# Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+zplug "$HOME", from:local, defer:1, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
+zplug "$DOTFILES", from:local, defer:1, use:'bash_mac.sh', if:'[[ $OSTYPE == darwin* ]]'
 
 # <-- PLUGINS END ------------------------------->
 ###############################################################################
@@ -71,7 +76,7 @@ if zplug check "zsh-users/zsh-syntax-highlighting"; then
   ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
   ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
   ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
-  ZSH_HIGHLIGHT_STYLES[function]='fg=cyan'
+  ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
   ZSH_HIGHLIGHT_STYLES[command]='fg=green'
   ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
   ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
@@ -103,8 +108,7 @@ HYPHEN_INSENSITIVE="true"                               # Hyphen and dash will b
 COMPLETION_WAITING_DOTS="true"                          # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                    # Untracked files won't be dirty (for speed)
 
-
-[[ "$DEBUG_MODE" == true ]] && zplug --log && zplug load --verbose || zplug load
+[[ "$DEBUG_MODE" == true ]] && zplug && zplug load --verbose || zplug load
 
 # =============================================================================
 #                                   Aliases
@@ -120,7 +124,7 @@ source_sh() {
 
 source_bash=(
   ~/.bash_aliases
-  ~/.bash_linux
+  # ~/.bash_linux
   ~/.bash_functions
 )
 
@@ -130,8 +134,6 @@ for file in $source_bash
     source_sh $file
   done
 
-# Source all .zsh files in ZDOTDIR
-for config ($ZDOTDIR/*.zsh) source $config
 
 # =============================================================================
 #                                 Functions

@@ -30,10 +30,22 @@ source ~/.zplug/init.zsh
 # <-- PLUGINS START ----------------------------->
 
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
+
 zplug "plugins/git", from:oh-my-zsh
+
 zplug "zsh-users/zsh-completions"
+
 zplug "zsh-users/zsh-autosuggestions"
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
+
+# Themes
+zplug "bhilburn/powerlevel9k", \
+  use:powerlevel9k.zsh-theme, \
+  if:"[[ $SSH_CONNECTION = '' ]]"
+
+zplug "themes/kennethreitz", \
+  from:oh-my-zsh, \
+  as:theme, \ 
+  if:"[[ -n $SSH_CONNECTION != '' ]]"
 
 # Must be loaded last
 zplug "zsh-users/zsh-syntax-highlighting", defer:2

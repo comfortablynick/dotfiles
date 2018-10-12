@@ -1,5 +1,13 @@
 " KEYMAPPING ====================================
 
+" NORMAL
+
+" <Space> :: toggle folds
+noremap <Space> za
+
+" za :: Open all folds
+noremap za zA
+
 " INSERT ----------------------------------------
 
 " `kj` :: escape

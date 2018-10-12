@@ -3,6 +3,7 @@ import socket
 
 # Env variables
 $HOST = socket.gethostname()
+$SHELL_TYPE = 'readline'
 $AUTO_CD = True
 $XONSH_SHOW_TRACEBACK = True
 $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
@@ -41,10 +42,10 @@ for p in plugs:
     xontrib load @(p)
 
 
-def customize_styles():
-    import prompt_toolkit.styles.defaults as defstyle
-    defstyle.PROMPT_TOOLKIT_STYLE.append(('bottom-toolbar', 'noreverse'))
-    defstyle.PROMPT_TOOLKIT_STYLE.append(('completion-menu', 'bg:#444444 #eeeeee'))
+# def customize_styles():
+#    import prompt_toolkit.styles.defaults as defstyle
+#    defstyle.PROMPT_TOOLKIT_STYLE.append(('bottom-toolbar', 'noreverse'))
+#    defstyle.PROMPT_TOOLKIT_STYLE.append(('completion-menu', 'bg:#444444 #eeeeee'))
 
 
 # customize_styles()

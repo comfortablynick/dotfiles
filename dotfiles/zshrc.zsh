@@ -49,14 +49,16 @@ zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
+# Source bash files
+zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
 zplug "$HOME", from:local, defer:1, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
-zplug "$DOTFILES", from:local, defer:1, use:'bash_mac.sh', if:'[[ $OSTYPE == darwin* ]]'
+zplug "$HOME", from:local, defer:1, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
 # <-- PLUGINS END ------------------------------->
 ###############################################################################
 
 # Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
+if ! zplug check; then
   printf "Install missing plugins? [y/N]: "
   if read -q; then
       echo; zplug install
@@ -93,15 +95,6 @@ fi
 # =============================================================================
 # SYSTEM OPTIONS
 
-# WSL (Windows Subsystem for Linux) Fixes
-# if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
-  # Fix WSL umask (Handled in sourced bash file)
-  # [[ "$(umask)" == "000" ]] && umask 022
-  # Don't change priority of background processes with nice.
-  # https://github.com/Microsoft/WSL/issues/1887
-  # unsetopt BG_NICE
-# fi
-
 export LANG=en_US.UTF-8                                 # Default term language setting
 export UPDATE_ZSH_DAYS=7                                # How often to check for ZSH updates
 HYPHEN_INSENSITIVE="true"                               # Hyphen and dash will be interchangeable
@@ -122,10 +115,12 @@ source_sh() {
   emulate sh -c "source $@"
 }
 
+# Currently handled by zplug
 source_bash=(
-  ~/.bash_aliases
-  # ~/.bash_linux
-  ~/.bash_functions
+#  ~/.bash_aliases
+#  ~/.bash_functions
+#  ~/.bash_mac
+#  ~/.bash_windows
 )
 
 for file in $source_bash
@@ -155,3 +150,7 @@ relz() {
   echo "Complete!"
 }
 
+whichvim() {
+  hash nvim &> /dev/null && echo "Found Neovim" || "Did not find Neovim"
+  hash vim &> /dev/null && echo "Found Vim" || "Did not find Vim"
+}

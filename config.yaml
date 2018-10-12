@@ -131,6 +131,7 @@ profiles:
     - d_omf
     - d_powerline
     - d_xonsh
+    - d_zsh
   io:
     dotfiles:
     - f_bash_linux

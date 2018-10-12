@@ -5,3 +5,4 @@ package spark
 package z
 theme bobthefish
 theme default
+theme pure

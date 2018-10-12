@@ -47,4 +47,4 @@ def customize_styles():
     defstyle.PROMPT_TOOLKIT_STYLE.append(('completion-menu', 'bg:#444444 #eeeeee'))
 
 
-customize_styles()
+# customize_styles()

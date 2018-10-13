@@ -1,7 +1,9 @@
 # Defined in - @ line 2
 function dotsync --description 'Sync git dotfile repo'
-	echo "Syncing dotfile repo ... "
-    dotgit pull
+	echo "Updating dotdrop submodule ... "
+    dotgit submodule foreach --recursive git pull origin master
+    echo "Syncing dotfile repo ... "
+    and dotgit pull
     and dotgit add -A
     and dotgit commit
     and dotgit push

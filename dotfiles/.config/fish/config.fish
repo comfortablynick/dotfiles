@@ -140,11 +140,13 @@ abbr gsync 'git pull; git add .; git commit; git push'          # Replace with r
 # }}}
 # Directories {{{
 abbr l ls
+abbr lla la -la
 abbr h $HOME
 abbr dot "$HOME/dotfiles/dotfiles"
 abbr vdot "$HOME/dotfiles/dotfiles/.vim"
 abbr gdot "$HOME/dotfiles/dotfiles"
 abbr gpy "$HOME/git/python"
+abbr gpython "$HOME/git/python"
 abbr pd prevd
 abbr nd nextd
 abbr rmdir rm -rf

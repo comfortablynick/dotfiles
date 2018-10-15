@@ -33,6 +33,18 @@ set -gx CLICOLOR 1                                              # Use colors in 
 set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 
+# PATH
+set -l paths                                                    # User path variable; add any paths to this
+set -a paths "$HOME/bin"                                        # General user binaries
+# Prepend to $PATH if valid directory
+for p in $paths
+  if test -d $p
+    set PATH $p $PATH
+  else
+    echo "PATH: $p is not a valid directory! Check config.fish."
+  end
+end
+
 # Create fish_universal_variables if missing
 test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
   or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
@@ -84,6 +96,8 @@ if test -n "$SSH_CONNECTION"
   echo "SSH connection detected! Setting minimal theme... "
   omf theme pure
 end
+
+set __use_vcprompt                                              # Use vcprompt binary to detect vcs
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"
@@ -164,6 +178,7 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 abbr xo xonsh                                                   # Open xonsh shell
 abbr v vim                                                      # Call vim function (Open Neovim || Vim)
 abbr vvim 'command vim'                                         # Call Vim binary directly
+abbr vw view                                                    # Call view function (vim read-only)
 # }}}
 # Git {{{
 abbr g 'git'
@@ -207,11 +222,13 @@ abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
 # System {{{
-abbr che 'chmod +x'
-abbr chr 'chmod 755'
-abbr q exit
-abbr x exit
-abbr quit exit
+abbr che 'chmod +x'                                             # Make executable
+abbr chr 'chmod 755'                                            # 'Reset' permission in WSL
+abbr q exit                                                     # One key
+abbr x exit                                                     # One key
+abbr quit exit                                                  # Just in case I forget which :)
+abbr path 'set -S PATH'                                         # Print PATH array
+abbr lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 set_color brblue; echo 'Done'; set_color normal
 # }}}

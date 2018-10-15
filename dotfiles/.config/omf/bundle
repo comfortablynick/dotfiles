@@ -1,3 +1,6 @@
+package bass
+package colored-man-pages
 theme bobthefish
+theme budspencer
 theme default
 theme pure

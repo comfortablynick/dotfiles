@@ -141,12 +141,12 @@ abbr vvim 'command vim'                                         # Call Vim binar
 abbr g 'git'
 abbr ga 'git add'
 abbr gc 'git commit'
-abbr gd 'git diff'
-abbr gdf 'git diff'
-abbr gdiff 'git diff'
+abbr gd 'git diff --color-moved=default'
+abbr gdf 'git diff --color-moved=default'
+abbr gdiff 'git diff --color-moved=default'
 abbr gpl 'git pull'
 abbr gph 'git push'
-abbr gst 'git status'
+abbr gst 'git status --color-moved=default'
 abbr glog 'vim +GV'                                             # Open interactive git log in vim
 abbr gsub 'git submodule foreach --recursive git pull origin master'
 abbr gsync 'git pull; git add .; git commit; git push'          # Replace with real function eventually
@@ -178,6 +178,7 @@ source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by de
 # }}}
 # System {{{
 abbr che 'chmod +x'
+abbr chr 'chmod 755'
 abbr q exit
 abbr x exit
 abbr quit exit

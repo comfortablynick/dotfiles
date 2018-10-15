@@ -146,7 +146,8 @@ abbr gdf 'git diff --color-moved=default'
 abbr gdiff 'git diff --color-moved=default'
 abbr gpl 'git pull'
 abbr gph 'git push'
-abbr gst 'git status --color-moved=default'
+abbr gs 'git show --color-moved=default'
+abbr gst 'git status'
 abbr glog 'vim +GV'                                             # Open interactive git log in vim
 abbr gsub 'git submodule foreach --recursive git pull origin master'
 abbr gsync 'git pull; git add .; git commit; git push'          # Replace with real function eventually

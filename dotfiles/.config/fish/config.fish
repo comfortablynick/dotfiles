@@ -38,7 +38,6 @@ set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path 
 
 # }}}
 ## PACKAGES ================================= {{{
-
 # Oh-My-Fish
 # if not functions -q omf
 #   echo "OMF not found; installing... "
@@ -52,6 +51,11 @@ fix_wsl_umask                                                   # Run function t
 
 # }}}
 ## THEME / COLOR OPTIONS ===================== {{{
+if test -n "$SSH_CONNECTION"
+  echo "SSH connection detected! Setting minimal theme... "
+  omf theme pure
+end
+
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"

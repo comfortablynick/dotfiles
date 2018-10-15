@@ -37,8 +37,17 @@ set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path 
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 
 # }}}
+## PACKAGES ================================= {{{
+
+# Oh-My-Fish
+# if not functions -q omf
+#   echo "OMF not found; installing... "
+#   set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME "$HOME/.config"
+#   curl -L https://get.oh-my.fish | fish
+# end
+# }}}
 ## SOURCE ==================================== {{{
-source "$fish_function_path[1]/on_exit.fish"                    # Have to source rather than autoload
+# source "$fish_function_path[1]/on_exit.fish"                    # Have to source rather than autoload
 fix_wsl_umask                                                   # Run function to fix umask
 
 # }}}
@@ -83,7 +92,7 @@ set pure_host_color $pure_color_gray
 set pure_root_color $pure_color_red
 
 # Display options
-set pure_user_host_location 0                                   # Loc of u@h; 0 = end, 1 = beg
+set pure_user_host_location 1                                   # Loc of u@h; 0 = end, 1 = beg
 set pure_separate_prompt_on_error 0                             # Show add'l char if error
 set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
 # }}}
@@ -164,6 +173,7 @@ abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
 # System {{{
+abbr che 'chmod +x'
 abbr q exit
 abbr x exit
 abbr quit exit

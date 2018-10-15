@@ -1,6 +1,5 @@
 package config
-package fonts
-package foreign-env
+package fzf
 package spark
 package z
 theme bobthefish

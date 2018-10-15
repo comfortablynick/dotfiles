@@ -1,6 +1,5 @@
-# Defined in - @ line 2
-function fish_greeting
-  _logo                                                         # Execute logo function
+function fish_greeting -d "Hello user!"
+  _logo
   set_color $fish_color_autosuggestion
   uname -nmsr
   uptime

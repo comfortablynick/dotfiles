@@ -14,15 +14,35 @@
 #                       (JJJ| \UUU)
 #                        (UU)
 
+## NON-INTERACTIVE SHELL ===================== {{{
+if not status --is-interactive
+  exit 0
+end
+
+# Everything below is for interactive shells
 set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
+# }}}
 ## ENVIRONMENT VARIABLES ===================== {{{
 
 # System
-set -gx XDG_CONFIG_HOME "$HOME/.config"                         # In case it isn't set
+set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
+set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
+set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
-# set -gx LSCOLORS (dircolors -c "$HOME/.dircolors" | string split ' ')[3]
+set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
+
+# Create fish_universal_variables if missing
+test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
+  or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
+
+# Fix umask env variable if WSL didn't set it properly.
+if test -f /proc/version && grep -q "Microsoft" /proc/version
+  # https://github.com/Microsoft/WSL/issues/352
+  if test (umask) -eq "000" && umask 022
+  end
+end
 
 # Text editor
 set -gx EDITOR 'nvim'                                           # Default editor
@@ -37,25 +57,33 @@ set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path 
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 
 # }}}
-## PACKAGES ================================= {{{
-# Oh-My-Fish
-# if not functions -q omf
-#   echo "OMF not found; installing... "
-#   set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME "$HOME/.config"
-#   curl -L https://get.oh-my.fish | fish
-# end
+## PACKAGES ================================== {{{
+switch "$FISH_PKG_MGR"
+  case "OMF"
+    # Install OMF if needed
+    if not functions -q omf
+      echo "OMF set as pkg manager but not installed. Installing now... "
+      curl -L https://get.oh-my.fish | fish
+    end
+  case "Fisher"
+    # Fisher
+    if not functions -q fisher
+      echo "Installing fisher for the first time..." >&2
+      curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+      echo "Reload shell to use fisher."
+    end
+  case "*"
+    echo "Unknown package manager"
+end
 # }}}
 ## SOURCE ==================================== {{{
-# source "$fish_function_path[1]/on_exit.fish"                    # Have to source rather than autoload
-fix_wsl_umask                                                   # Run function to fix umask
-
 # }}}
 ## THEME / COLOR OPTIONS ===================== {{{
+# Figure out a way to switch themes manually without omf
 if test -n "$SSH_CONNECTION"
   echo "SSH connection detected! Setting minimal theme... "
   omf theme pure
 end
-
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"
@@ -123,7 +151,7 @@ set -g fish_color_selection 'white'  '--bold'  '--background=brblack'
 set -g fish_color_status red
 set -g fish_color_user brgreen
 set -g fish_color_valid_path --underline
-set -g fish_greeting /c/users/nmurphy/.config/fish/functions/_logo.fish
+# set -g fish_greeting /c/users/nmurphy/.config/fish/functions/_logo.fish
 set -g fish_key_bindings fish_default_key_bindings
 set -g fish_pager_color_completion
 set -g fish_pager_color_description 'b3a06d'  'yellow'
@@ -170,6 +198,7 @@ abbr fc "$XDG_CONFIG_HOME/fish"                                 # Fish config ho
 abbr ffn "$fish_function_path[1]"                               # Fish functions directory
 abbr funced 'funced -is'                                        # Open commandline editor and save function after
 abbr fcf "vim $XDG_CONFIG_HOME/fish/config.fish"                # Edit config.fish
+abbr fishfile "vim $XDG_CONFIG_HOME/fish/fishfile"              # Edit Fisher fishfile
 abbr cm 'command'                                               # Fish has no '\' shortcut for `command`
 # }}}
 # Python {{{
@@ -184,5 +213,5 @@ abbr q exit
 abbr x exit
 abbr quit exit
 # }}}
-# }}}
 set_color brblue; echo 'Done'; set_color normal
+# }}}

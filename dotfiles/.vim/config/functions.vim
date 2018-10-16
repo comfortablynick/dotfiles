@@ -66,10 +66,11 @@ endfunction
 
 
 " Run Python Code in Vim
-" 
+"
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
 vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
+nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
 function! SaveAndExecutePython()
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
@@ -120,5 +121,18 @@ function! SaveAndExecutePython()
     setlocal nomodifiable
 
     " Return to previous (code) window
+    silent execute 'wincmd p'
+endfunction
+
+function! ClosePythonWindow()
+    " Close Python window we opened
+    if bufexists(s:buf_nr)
+        let ui_window_number = bufwinnr(s:buf_nr)
+        if ui_window_number != -1
+            silent execute ui_window_number . 'close'
+        endif
+    endif
+
+    " Return to original window
     silent execute 'wincmd p'
 endfunction

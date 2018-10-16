@@ -1,6 +1,7 @@
 # Defined in - @ line 2
 function ls --description 'List contents of directory'
-	set -l param --color=auto
+	type -q set_lscolors && set_lscolors
+    set -l param --color=auto
     if isatty 1
         set -a param --indicator-style=classify
     end

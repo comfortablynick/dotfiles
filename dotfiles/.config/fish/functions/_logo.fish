@@ -1,4 +1,4 @@
-function _logo
+function _logo --description "Print fish logo"
 	echo '                 '(set_color F00)'___
   ___======____='(set_color FF7F00)'-'(set_color FF0)'-'(set_color FF7F00)'-='(set_color F00)')
 /T            \_'(set_color FF0)'--='(set_color FF7F00)'=='(set_color F00)')

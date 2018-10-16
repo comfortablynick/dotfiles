@@ -36,6 +36,7 @@ set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/pyt
 # PATH
 set -l paths                                                    # User path variable; add any paths to this
 set -a paths "$HOME/bin"                                        # General user binaries
+set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
 # Prepend to $PATH if valid directory
 for p in $paths
   if test -d $p
@@ -128,7 +129,7 @@ set pure_color_blue (set_color brblue)
 set pure_color_cyan (set_color cyan)
 set pure_color_gray (set_color 6c6c6c)
 set pure_color_green (set_color green)
-set pure_color_normal (set_color normal) 
+set pure_color_normal (set_color normal)
 set pure_color_red (set_color red)
 set pure_color_yellow (set_color yellow)
 
@@ -208,7 +209,7 @@ abbr pd prevd
 abbr nd nextd
 abbr rmdir rm -rf
 # }}}
-# Fish {{{ 
+# Fish {{{
 abbr fc "$XDG_CONFIG_HOME/fish"                                 # Fish config home
 abbr ffn "$fish_function_path[1]"                               # Fish functions directory
 abbr funced 'funced -is'                                        # Open commandline editor and save function after
@@ -221,6 +222,11 @@ abbr pysh "$HOME/git/python/shell"                           # Python shell scri
 abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
+## SCRIPTS ================================== {{{
+abbr lst lstest.py
+abbr lsc lscolors.py
+abbr ls2 ls2.py
+# }}}
 # System {{{
 abbr che 'chmod +x'                                             # Make executable
 abbr chr 'chmod 755'                                            # 'Reset' permission in WSL
@@ -231,4 +237,6 @@ abbr path 'set -S PATH'                                         # Print PATH arr
 abbr lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 set_color brblue; echo 'Done'; set_color normal
+# }}}
+## FUNCTIONS ================================ {{{
 # }}}

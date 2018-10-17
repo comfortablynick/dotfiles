@@ -23,8 +23,7 @@ end
 set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
 # }}}
 ## ENVIRONMENT VARIABLES ===================== {{{
-
-# System
+# System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
@@ -32,8 +31,8 @@ set -gx LC_ALL 'en_US.UTF-8'                                    # Default encodi
 set -gx CLICOLOR 1                                              # Use colors in prompt
 set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
-
-# PATH
+# }}}
+# Path {{{
 set -l paths                                                    # User path variable; add any paths to this
 set -a paths "$HOME/bin"                                        # General user binaries
 set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
@@ -56,19 +55,24 @@ if test -f /proc/version && grep -q "Microsoft" /proc/version
   if test (umask) -eq "000" && umask 022
   end
 end
-
-# Text editor
+# }}}
+# Text editor {{{
 set -gx EDITOR 'nvim'                                           # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
-
-# Python Venv
+# }}}
+# Python Venv {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
-
-# Vim/Neovim
+# }}}
+# Vim/Neovim {{{
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
-
+# }}}
+# X Server {{{
+set -gx LIBGL_ALWAYS_INDIRECT 1                                 # Linux X server
+set -gx DISPLAY 0:0                                             # Linux X server display
+sudo /etc/init.d/dbus start > /dev/null ^&1                     # Start bus (suppress all messages)
+# }}}
 # }}}
 ## PACKAGES ================================== {{{
 switch "$FISH_PKG_MGR"
@@ -194,9 +198,10 @@ abbr gs 'git show --color-moved=default'
 abbr gst 'git status'
 abbr glog 'vim +GV'                                             # Open interactive git log in vim
 abbr gsub 'git submodule foreach --recursive git pull origin master'
-abbr gsync 'git pull; git add .; git commit; git push'          # Replace with real function eventually
+abbr gsync 'git pull && git add . && git commit && git push'          # Replace with real function eventually
 # }}}
 # Directories {{{
+abbr - cd
 abbr l ls
 abbr lla la -la
 abbr h $HOME
@@ -222,7 +227,7 @@ abbr pysh "$HOME/git/python/shell"                           # Python shell scri
 abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
-## SCRIPTS ================================== {{{
+# Scripts {{{
 abbr lst lstest.py
 abbr lsc lscolors.py
 abbr ls2 ls2.py
@@ -237,6 +242,10 @@ abbr path 'set -S PATH'                                         # Print PATH arr
 abbr lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 set_color brblue; echo 'Done'; set_color normal
+# }}}
+## KEYBINDINGS ============================== {{{
+# vi-mode with custom keybindings
+set fish_key_bindings fish_user_vi_key_bindings
 # }}}
 ## FUNCTIONS ================================ {{{
 # }}}

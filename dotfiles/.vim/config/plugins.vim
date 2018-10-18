@@ -63,6 +63,11 @@ let g:ale_fixers = {
     \ 'python': [ 'black', 'autopep8' ]
     \ }
 
+" Ale linter settings
+let g:python_flake8_options = {
+    \ '--max-line-length': 88
+    \ }
+
 " NERDTree
 let NERDTreeHighlightCursorline = 1             " Increase visibility of line
 let NERDTreeIgnore = [

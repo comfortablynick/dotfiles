@@ -231,6 +231,8 @@ source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by de
 abbr lst lstest.py
 abbr lsc lscolors.py
 abbr ls2 ls2.py
+abbr lsp 'ls.py -h'
+abbr lsd 'ls.py --debug'
 # }}}
 # System {{{
 abbr che 'chmod +x'                                             # Make executable

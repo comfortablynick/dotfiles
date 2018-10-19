@@ -3,7 +3,7 @@ import socket
 
 # Env variables
 $HOST = socket.gethostname()
-$SHELL_TYPE = 'readline'
+# $SHELL_TYPE = 'ptk2'
 $AUTO_CD = True
 $XONSH_SHOW_TRACEBACK = True
 $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
@@ -36,7 +36,8 @@ plugs = [
      ]
 
 if $HOST in ("joppa", "io"):
-    del plugs[-1]
+    pass
+    # del plugs[-1]
 
 for p in plugs:
     xontrib load @(p)

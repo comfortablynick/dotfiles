@@ -106,9 +106,9 @@ dotfiles:
     link: true
     src: vimrc.vim
   f_xonshrc:
-    dst: ~/.xonshrc
+    dst: ~/.xonshrc_orig
     link: true
-    src: xonshrc.xsh
+    src: xonshrc.py
   f_zshrc:
     dst: ~/.zshrc
     link: true

@@ -70,9 +70,9 @@ set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path 
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 # }}}
 # X Server {{{
-set -gx LIBGL_ALWAYS_INDIRECT 1                                 # Linux X server
-set -gx DISPLAY 0:0                                             # Linux X server display
-sudo /etc/init.d/dbus start > /dev/null ^&1                     # Start bus (suppress all messages)
+# set -gx LIBGL_ALWAYS_INDIRECT 1                                 # Linux X server
+# set -gx DISPLAY 0:0                                             # Linux X server display
+# sudo /etc/init.d/dbus start > /dev/null ^&1                     # Start bus (suppress all messages)
 # }}}
 # }}}
 ## PACKAGES ================================== {{{

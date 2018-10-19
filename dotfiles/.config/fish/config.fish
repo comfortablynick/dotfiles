@@ -30,6 +30,7 @@ set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data locat
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
 set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
+set -gx FISH_SSH_THEME "pure"                                   # Theme to load in omf on SSH
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 # }}}
 # Path {{{
@@ -97,12 +98,10 @@ end
 # }}}
 ## THEME / COLOR OPTIONS ===================== {{{
 # Figure out a way to switch themes manually without omf
-if test -n "$SSH_CONNECTION"
-  echo "SSH connection detected! Setting minimal theme... "
-  omf theme pure
+if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+  echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+  omf theme $FISH_SSH_THEME > /dev/null ^&1
 end
-
-set __use_vcprompt                                              # Use vcprompt binary to detect vcs
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"
@@ -184,6 +183,7 @@ abbr xo xonsh                                                   # Open xonsh she
 abbr v vim                                                      # Call vim function (Open Neovim || Vim)
 abbr vvim 'command vim'                                         # Call Vim binary directly
 abbr vw view                                                    # Call view function (vim read-only)
+abbr o omf                                                      # oh-my-fish
 # }}}
 # Git {{{
 abbr g 'git'

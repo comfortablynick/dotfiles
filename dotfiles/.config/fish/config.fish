@@ -95,6 +95,14 @@ switch "$FISH_PKG_MGR"
 end
 # }}}
 ## SOURCE ==================================== {{{
+set -l externals                                                # Add exteral scripts to this variable
+set -a paths "/usr/local/share/autojump/autojump.fish"          # Autojump Python script
+# Source external scripts if they exist
+for e in $externals
+  if test -e $e
+    source $e
+  end
+end
 # }}}
 ## THEME / COLOR OPTIONS ===================== {{{
 # Figure out a way to switch themes manually without omf
@@ -233,6 +241,8 @@ abbr lsc lscolors.py
 abbr ls2 ls2.py
 abbr lsp 'ls.py -h'
 abbr lsd 'ls.py --debug'
+abbr list 'list -h'
+abbr listd 'list --debug'
 # }}}
 # System {{{
 abbr che 'chmod +x'                                             # Make executable

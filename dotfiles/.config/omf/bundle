@@ -1,5 +1,6 @@
 package bass
 package colored-man-pages
+package hub
 theme bobthefish
 theme budspencer
 theme cbjohnson

@@ -193,6 +193,7 @@ abbr v vim                                                      # Call vim funct
 abbr vvim 'command vim'                                         # Call Vim binary directly
 abbr vw view                                                    # Call view function (vim read-only)
 abbr o omf                                                      # oh-my-fish
+abbr z j                                                        # Use autojump (j) instead of z
 # }}}
 # Git {{{
 abbr g 'git'

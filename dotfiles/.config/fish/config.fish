@@ -95,14 +95,15 @@ switch "$FISH_PKG_MGR"
 end
 # }}}
 ## SOURCE ==================================== {{{
-set -l externals                                                # Add exteral scripts to this variable
-set -a externals "/usr/local/share/autojump/autojump.fish"      # Autojump Python script
+# set -l externals                                                # Add exteral scripts to this variable
+# set -a externals "/usr/local/share/autojump/autojump.fish"      # Autojump Python script (Darwin)
+# set -a externals "/usr/share/autojump/autojump.fish"            # Autojump Python script (Linux)
 # Source external scripts if they exist
-for e in $externals
-  if test -e $e
-    source $e
-  end
-end
+# for e in $externals
+#   if test -e $e
+#     source $e
+#   end
+# end
 # }}}
 ## THEME / COLOR OPTIONS ===================== {{{
 # Figure out a way to switch themes manually without omf
@@ -155,7 +156,7 @@ set pure_separate_prompt_on_error 0                             # Show add'l cha
 set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
 # }}}
 # Fish Colors {{{
-set -g h_color_autosuggestion 969896
+set -g fish_color_autosuggestion 707070
 set -g fish_color_cancel -r
 set -g fish_color_command b294bb
 set -g fish_color_comment f0c674
@@ -236,17 +237,13 @@ abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
 # Scripts {{{
-abbr lst lstest.py
-abbr lsc lscolors.py
-abbr ls2 ls2.py
-abbr lsp 'ls.py -h'
-abbr lsd 'ls.py --debug'
-abbr list 'list -h'
 abbr listd 'list --debug'
+abbr listh 'list --help'
 # }}}
 # System {{{
 abbr che 'chmod +x'                                             # Make executable
 abbr chr 'chmod 755'                                            # 'Reset' permission in WSL
+abbr version 'cat /etc/os-release'                              # Print Linux version info
 abbr q exit                                                     # One key
 abbr x exit                                                     # One key
 abbr quit exit                                                  # Just in case I forget which :)

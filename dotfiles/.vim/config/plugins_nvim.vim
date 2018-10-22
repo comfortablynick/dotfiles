@@ -7,7 +7,7 @@ Plug 'zchee/deoplete-jedi',
 \ }
 
 Plug 'mhartington/nvim-typescript',
-\ { 
+\ {
     \ 'for': [ 'typescript', 'tsx' ],
     \ 'do': './install.sh'
 \ }
@@ -30,15 +30,14 @@ Plug 'Shougo/neco-vim',
   " Airline
 Plug 'vim-airline/vim-airline'                              " Use airline statusbar for nvim
 Plug 'vim-airline/vim-airline-themes'                       " Themes for airline
-" Plug 'plytophogy/vim-virtualenv'                            " Show virtualenv in airline
 
 
 " PLUGIN CONFIGURATION ==========================
 
 " Airline
-let g:airline_extensions = [            
-    \ 'tabline', 
-    \ 'ale', 
+let g:airline_extensions = [
+    \ 'tabline',
+    \ 'ale',
     \ 'branch',
     \ 'hunks',
     \ 'wordcount',
@@ -63,6 +62,6 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Echodoc
 " TODO: Only execute for python/ts/js?
-set cmdheight=1                                 " Add extra line for function definition 
+set cmdheight=1                                 " Add extra line for function definition
 let g:echodoc_enable_at_startup = 1
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'

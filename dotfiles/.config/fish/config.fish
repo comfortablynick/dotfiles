@@ -96,7 +96,7 @@ end
 # }}}
 ## SOURCE ==================================== {{{
 set -l externals                                                # Add exteral scripts to this variable
-set -a paths "/usr/local/share/autojump/autojump.fish"          # Autojump Python script
+set -a externals "/usr/local/share/autojump/autojump.fish"      # Autojump Python script
 # Source external scripts if they exist
 for e in $externals
   if test -e $e

@@ -26,11 +26,8 @@ set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
 # System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
-set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
-set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
-set -gx FISH_SSH_THEME "pure"                                   # Theme to load in omf on SSH
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 # }}}
 # Path {{{
@@ -46,10 +43,6 @@ for p in $paths
   end
 end
 
-# Create fish_universal_variables if missing
-test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
-  or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
-
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version
   # https://github.com/Microsoft/WSL/issues/352
@@ -57,15 +50,22 @@ if test -f /proc/version && grep -q "Microsoft" /proc/version
   end
 end
 # }}}
-# Text editor {{{
-set -gx EDITOR 'nvim'                                           # Default editor
-set -gx VISUAL $EDITOR                                          # Default visual editor
+# Fish {{{
+set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
+set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
+set -gx FISH_SSH_THEME "pure"                                   # Theme to load in omf on SSH
+
+# Create fish_universal_variables if missing
+test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
+  or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
 # }}}
-# Python Venv {{{
+# Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
-# Vim/Neovim {{{
+# Editor {{{
+set -gx EDITOR 'nvim'                                           # Default editor
+set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 # }}}
@@ -96,8 +96,7 @@ end
 # }}}
 ## SOURCE ==================================== {{{
 # set -l externals                                                # Add exteral scripts to this variable
-# set -a externals "/usr/local/share/autojump/autojump.fish"      # Autojump Python script (Darwin)
-# set -a externals "/usr/share/autojump/autojump.fish"            # Autojump Python script (Linux)
+# set -a externals "{PATH TO SCRIPT}"                             # Append to externals variable
 # Source external scripts if they exist
 # for e in $externals
 #   if test -e $e
@@ -255,7 +254,7 @@ set_color brblue; echo 'Done'; set_color normal
 # }}}
 ## KEYBINDINGS ============================== {{{
 # vi-mode with custom keybindings
-set fish_key_bindings fish_user_vi_key_bindings
+# set fish_key_bindings fish_user_vi_key_bindings
 # }}}
 ## FUNCTIONS ================================ {{{
 # }}}

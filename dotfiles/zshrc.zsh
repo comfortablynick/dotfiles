@@ -44,7 +44,7 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 
 # Themes
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme 
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
@@ -102,6 +102,19 @@ COMPLETION_WAITING_DOTS="true"                          # Display dots while loa
 DISABLE_UNTRACKED_FILES_DIRTY="true"                    # Untracked files won't be dirty (for speed)
 
 [[ "$DEBUG_MODE" == true ]] && zplug && zplug load --verbose || zplug load
+
+# WSL (Windows Subsystem for Linux) Fixes
+if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
+
+  # Fix umask value if WSL didn't set it properly.
+  # https://github.com/Microsoft/WSL/issues/352
+  [[ "$(umask)" == "000" ]] && umask 022
+
+  # Don't change priority of background processes with nice.
+  # https://github.com/Microsoft/WSL/issues/1887
+  unsetopt BG_NICE
+
+fi
 
 # =============================================================================
 #                                   Aliases

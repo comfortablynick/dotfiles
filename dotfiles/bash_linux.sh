@@ -11,13 +11,10 @@ if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
   # https://github.com/Microsoft/WSL/issues/352
   [[ "$(umask)" == "000" ]] && umask 022
 
-  # Don't change priority of background processes with nice.
-  # https://github.com/Microsoft/WSL/issues/1887
-  unsetopt BG_NICE
 
 fi
 
-# Source colors from file 
+# Source colors from file
 if [[ -x /usr/bin/dircolors ]]; then
    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
@@ -52,8 +49,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # Try to load nvm on demand
 lnvm() {
-    # Load nvm and nvm bash completions	
+    # Load nvm and nvm bash completions
     [ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh"
     [ -s "${NVM_DIR}/bash_completion" ] && \. "${NVM_DIR}/bash_completion"
 }
-

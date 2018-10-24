@@ -1,7 +1,8 @@
-# dotfile
-Bash dotfiles and other config files
+# dotfiles
+
+- Managed by [dotdrop](https://github.com/deadc0de6/dotdrop)
+- Bash, Fish, ZSH, and Vim dotfiles and other config files
 
 ## TODO
 
-- Add .dircolors
-- Change files to .sh for easier editor recognition?
+- Add individual files in /bin to dotdrop to allow for os-specific configurations

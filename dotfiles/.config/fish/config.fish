@@ -204,8 +204,9 @@ abbr gph 'git push'
 abbr gs 'git show --color-moved=default'
 abbr gst 'git status'
 abbr glog 'vim +GV'                                             # Open interactive git log in vim
+abbr grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
 abbr gsub 'git submodule foreach --recursive git pull origin master'
-abbr gsync 'git pull && git add . && git commit && git push'          # Replace with real function eventually
+abbr gsync 'git pull && git add . && git commit && git push'    # Sync local repo
 # }}}
 # Directories {{{
 abbr - cd

@@ -12,6 +12,8 @@ if zplug check "bhilburn/powerlevel9k"; then
     POWERLEVEL9K_MODE="nerdfont-complete"
   fi
 
+  POWERLEVEL9K_GENERATOR="zsh-async"                            # Experimental async
+
   POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
   #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_right"
 
@@ -39,6 +41,12 @@ if zplug check "bhilburn/powerlevel9k"; then
   POWERLEVEL9K_STATUS_CROSS=true
   POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 
+  zsh_test_custom() {
+    command vcprompt
+  }
+
+  POWERLEVEL9K_CUSTOM_TEST="zsh_test_custom"
+
   #POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="%F{cyan}\u256D\u2500%f"
   #POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{014}\u2570%F{cyan}\uF460%F{073}\uF460%F{109}\uF460%f "
   #POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="╭─%f"
@@ -52,7 +60,7 @@ if zplug check "bhilburn/powerlevel9k"; then
 
   #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context ssh root_indicator dir_writable dir )
   #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon root_indicator context dir_writable dir vcs)
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir vcs)
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir)
   POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs status time virtualenv ssh)
 
   POWERLEVEL9K_VIRTUALENV_BACKGROUND="$(( DEFAULT_BACKGROUND + 4 ))"
@@ -146,4 +154,5 @@ if zplug check "bhilburn/powerlevel9k"; then
   POWERLEVEL9K_LOAD_CRITICAL_VISUAL_IDENTIFIER_COLOR="red"
   POWERLEVEL9K_LOAD_WARNING_VISUAL_IDENTIFIER_COLOR="yellow"
   POWERLEVEL9K_LOAD_NORMAL_VISUAL_IDENTIFIER_COLOR="green"
+
 fi

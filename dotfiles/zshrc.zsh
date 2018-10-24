@@ -1,6 +1,14 @@
 #!/usr/bin/env zsh
-# ZSH CONFIG ====================================
+#            _
+#   ____ ___| |__  _ __ ___
+#  |_  // __| '_ \| '__/ __|
+#  _/ /_\__ \ | | | | | (__
+# (_)___|___/_| |_|_|  \___|
 
+# NON-INTERACTIVE ============================ {{{
+[[ $- != *i* ]] && return                                       # Everything after this line for interactive only
+# }}}
+# ENVIRONMENT ================================ {{{
 START_TIME="$(date)"
 
 # Check OS
@@ -15,14 +23,38 @@ esac
 # Check for debug mode
 [[ "$DEBUG_MODE" == true ]] && echo "Sourcing .zshrc"
 
-export DOTFILES=$HOME/dotfiles/dotfiles
-export ZDOTDIR=$HOME/.config/zsh
+export XDG_CONFIG_HOME="$HOME/.config"                          # Common config dir
+export XDG_DATA_HOME="$HOME/.local/share"                       # Common data dir
+export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile subdir
+export VISUAL=nvim                                              # Set default visual editor
+export EDITOR="${VISUAL}"                                       # Set default text editor
+export LANG=en_US.UTF-8                                         # Default term language setting
+export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
+setopt auto_cd;                                                 # Perform cd if command matches dir
+setopt auto_list;                                               # List choices if unambiguous completion
+setopt auto_pushd;                                              # Push old directory into stack
+setopt pushd_ignore_dups;                                       # Ignore multiple copies of same dir in stack
 
-# =============================================================================
-#                                   Plugins
-# =============================================================================
+HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
+COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
+DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 
-# ZPLUG
+# WSL (Windows Subsystem for Linux) Fixes
+if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
+
+  # Fix umask value if WSL didn't set it properly.
+  # https://github.com/Microsoft/WSL/issues/352
+  [[ "$(umask)" == "000" ]] && umask 022
+
+  # Don't change priority of background processes with nice.
+  # https://github.com/Microsoft/WSL/issues/1887
+  unsetopt BG_NICE
+
+fi
+# }}}
+# PLUGINS ==================================== {{{
+# Zplug Config {{{
 # Download zplug if it doesn't exist
 [[ ! -d ~/.zplug ]] && git clone https://github.com/zplug/zplug ~/.zplug
 
@@ -34,9 +66,8 @@ for config ($ZDOTDIR/functions/*.zsh) source $config
 
 fpath=($ZDOTDIR/completions $fpath)
 # autoload -U compinit && compinit
-
-###############################################################################
-# <-- PLUGINS START ----------------------------->
+# }}}
+# Plugin Definitions {{{
 
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
 
@@ -58,9 +89,8 @@ zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
 zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
 zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
-# <-- PLUGINS END ------------------------------->
-###############################################################################
-
+# }}}
+# Zplug Load {{{
 # Install plugins if there are plugins that have not been installed
 if ! zplug check; then
   printf "Install missing plugins? [y/N]: "
@@ -94,38 +124,13 @@ if zplug check "zsh-users/zsh-syntax-highlighting"; then
   ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
 fi
 
-# =============================================================================
-#                                   Options
-# =============================================================================
-# SYSTEM OPTIONS
-
-export LANG=en_US.UTF-8                                 # Default term language setting
-export UPDATE_ZSH_DAYS=7                                # How often to check for ZSH updates
-HYPHEN_INSENSITIVE="true"                               # Hyphen and dash will be interchangeable
-COMPLETION_WAITING_DOTS="true"                          # Display dots while loading completions
-DISABLE_UNTRACKED_FILES_DIRTY="true"                    # Untracked files won't be dirty (for speed)
-
+# Load zplug
 [[ "$DEBUG_MODE" == true ]] && zplug && zplug load --verbose || zplug load
-
-# WSL (Windows Subsystem for Linux) Fixes
-if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
-
-  # Fix umask value if WSL didn't set it properly.
-  # https://github.com/Microsoft/WSL/issues/352
-  [[ "$(umask)" == "000" ]] && umask 022
-
-  # Don't change priority of background processes with nice.
-  # https://github.com/Microsoft/WSL/issues/1887
-  unsetopt BG_NICE
-
-fi
-
-# =============================================================================
-#                                   Aliases
-# =============================================================================
+# }}}
+# }}}
+# ALIASES ==================================== {{{
 alias zshc='vim ~/.zshrc'
 alias zrel='relz'
-
 
 # Source Aliases in Bash Files
 source_sh() {
@@ -146,14 +151,10 @@ for file in $source_bash
     [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
     source_sh $file
   done
-
-
-# =============================================================================
-#                                 Functions
-# =============================================================================
+# }}}
+# FUNCTIONS ================================== {{{
 
 # relz :: Reload zsh shell
-#
 # Params
 #   -d Debug mode: print verbose debug information
 relz() {
@@ -168,7 +169,9 @@ relz() {
   echo "Complete!"
 }
 
+# whichvim :: Return Neovim if found in system; otherwise vim if found
 whichvim() {
   hash nvim &> /dev/null && echo "Found Neovim" || "Did not find Neovim"
   hash vim &> /dev/null && echo "Found Vim" || "Did not find Vim"
 }
+# }}}

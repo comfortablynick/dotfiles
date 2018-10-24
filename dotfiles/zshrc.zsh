@@ -29,8 +29,11 @@ export ZDOTDIR=$HOME/.config/zsh
 # Essential
 source ~/.zplug/init.zsh
 
-# Source all .zsh files in ZDOTDIR
-for config ($ZDOTDIR/*.zsh) source $config
+# Source all .zsh files in ZDOTDIR/functions
+for config ($ZDOTDIR/functions/*.zsh) source $config
+
+fpath=($ZDOTDIR/completions $fpath)
+# autoload -U compinit && compinit
 
 ###############################################################################
 # <-- PLUGINS START ----------------------------->

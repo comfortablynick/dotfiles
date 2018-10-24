@@ -1,4 +1,5 @@
-#                  ___
+#!/usr/bin/env fish
+#                 ___
 #   ___======____=---=)
 # /T            \_--===)
 # [ \ (0)   \~    \_-==)
@@ -14,7 +15,7 @@
 #                       (JJJ| \UUU)
 #                        (UU)
 
-## NON-INTERACTIVE SHELL ===================== {{{
+# NON-INTERACTIVE SHELL ===================== {{{
 if not status --is-interactive
   exit 0
 end
@@ -22,7 +23,7 @@ end
 # Everything below is for interactive shells
 set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
 # }}}
-## ENVIRONMENT VARIABLES ===================== {{{
+# ENVIRONMENT =============================== {{{
 # System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
@@ -53,9 +54,9 @@ end
 # Fish {{{
 set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
 set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
-set -gx FISH_SSH_THEME "pure"                                   # Theme to load in omf on SSH
+set -gx FISH_SSH_THEME "yimmy"                                   # Theme to load in omf on SSH
 
-# Create fish_universal_variables if missing
+# Create fish_universal_variables if missing (some plugins look for it)
 test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
   or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
 # }}}
@@ -69,13 +70,8 @@ set -gx VISUAL $EDITOR                                          # Default visual
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 # }}}
-# X Server {{{
-# set -gx LIBGL_ALWAYS_INDIRECT 1                                 # Linux X server
-# set -gx DISPLAY 0:0                                             # Linux X server display
-# sudo /etc/init.d/dbus start > /dev/null ^&1                     # Start bus (suppress all messages)
 # }}}
-# }}}
-## PACKAGES ================================== {{{
+# PACKAGES ================================== {{{
 switch "$FISH_PKG_MGR"
   case "OMF"
     # Install OMF if needed
@@ -94,7 +90,7 @@ switch "$FISH_PKG_MGR"
     echo "Unknown package manager"
 end
 # }}}
-## SOURCE ==================================== {{{
+# SOURCE ==================================== {{{
 # set -l externals                                                # Add exteral scripts to this variable
 # set -a externals "{PATH TO SCRIPT}"                             # Append to externals variable
 # Source external scripts if they exist
@@ -104,7 +100,7 @@ end
 #   end
 # end
 # }}}
-## THEME / COLOR OPTIONS ===================== {{{
+# THEMES ==================================== {{{
 # Figure out a way to switch themes manually without omf
 if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
   echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
@@ -154,7 +150,11 @@ set pure_user_host_location 1                                   # Loc of u@h; 0 
 set pure_separate_prompt_on_error 0                             # Show add'l char if error
 set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
 # }}}
-# Fish Colors {{{
+# Yimmy {{{
+set -g yimmy_solarized false                                    # Solarized color scheme
+# }}}
+# }}}
+# COLORS ==================================== {{{
 set -g fish_color_autosuggestion 707070
 set -g fish_color_cancel -r
 set -g fish_color_command b294bb
@@ -177,15 +177,13 @@ set -g fish_color_selection 'white'  '--bold'  '--background=brblack'
 set -g fish_color_status red
 set -g fish_color_user brgreen
 set -g fish_color_valid_path --underline
-# set -g fish_greeting /c/users/nmurphy/.config/fish/functions/_logo.fish
 set -g fish_key_bindings fish_default_key_bindings
 set -g fish_pager_color_completion
 set -g fish_pager_color_description 'b3a06d'  'yellow'
 set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
 set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
-# }}}
-## ABBREVIATIONS ============================= {{{
+# ABBREVIATIONS ============================= {{{
 # Apps {{{
 abbr xo xonsh                                                   # Open xonsh shell
 abbr v vim                                                      # Call vim function (Open Neovim || Vim)
@@ -250,11 +248,11 @@ abbr quit exit                                                  # Just in case I
 abbr path 'set -S PATH'                                         # Print PATH array
 abbr lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
-set_color brblue; echo 'Done'; set_color normal
 # }}}
-## KEYBINDINGS ============================== {{{
+# KEYBINDINGS =============================== {{{
 # vi-mode with custom keybindings
 # set fish_key_bindings fish_user_vi_key_bindings
 # }}}
-## FUNCTIONS ================================ {{{
+# FUNCTIONS ================================= {{{
+set_color brblue; echo 'Done'; set_color normal
 # }}}

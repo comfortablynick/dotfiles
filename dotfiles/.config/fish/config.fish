@@ -207,11 +207,13 @@ abbr glog 'vim +GV'                                             # Open interacti
 abbr grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
 abbr gsub 'git submodule foreach --recursive git pull origin master'
 abbr gsync 'git pull && git add . && git commit && git push'    # Sync local repo
+abbr gunst 'git reset HEAD'                                     # Unstage file
+abbr grmi 'git rm --cached'                                     # Remove from index but keep local
 # }}}
 # Directories {{{
 abbr - cd
-abbr l ls
-abbr lla la -la
+abbr l list
+abbr lla ls -la
 abbr h $HOME
 abbr dot "$HOME/dotfiles/dotfiles"
 abbr vdot "$HOME/dotfiles/dotfiles/.vim"

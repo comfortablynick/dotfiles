@@ -13,6 +13,6 @@ function set_lscolors --description 'Set LS_COLORS variable'
                 break
             end
         end
-        eval (eval "$dir_cmd -c $colorfile" | sed 's/setenv LS_COLORS/set -gx LS_COLORS/')
+        # eval (eval "$dir_cmd -c $colorfile" | sed 's/setenv LS_COLORS/set -gx LS_COLORS/')
     end
 end

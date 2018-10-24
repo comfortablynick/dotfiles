@@ -31,6 +31,8 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
+export THEME="alien"                                            # Current theme to use
+export SSH_THEME="alien-minimal"                                # Theme for SSH connection
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -39,6 +41,8 @@ setopt pushd_ignore_dups;                                       # Ignore multipl
 HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
+
+[[ is_ssh ]] && export THEME=$SSH_THEME
 
 # WSL (Windows Subsystem for Linux) Fixes
 if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
@@ -77,16 +81,20 @@ zplug "zsh-users/zsh-completions"
 
 zplug "zsh-users/zsh-autosuggestions"
 
+zplug "mafredri/zsh-async", from:github
+
 # Themes
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
-# zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, as:theme, if:'[[ $THEME == pl9k ]]'
+zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme, as:theme, if:'[[ $THEME == sorin ]]'
+zplug "eendroroy/alien", as:theme, if:'[[ $THEME == alien ]]'
+zplug "eendroroy/alien-minimal", as:theme, if:'[[ $THEME == alien-minimal ]]'
 
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Source bash files
 zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
-zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
+# zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
 zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
 # }}}
@@ -173,5 +181,14 @@ relz() {
 whichvim() {
   hash nvim &> /dev/null && echo "Found Neovim" || "Did not find Neovim"
   hash vim &> /dev/null && echo "Found Vim" || "Did not find Vim"
+}
+
+# is_ssh :: Return true if in SSH session
+is_ssh() {
+  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    return 0
+  else
+    return 1
+  fi
 }
 # }}}

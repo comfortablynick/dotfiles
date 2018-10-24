@@ -32,6 +32,7 @@ alias r='cd /'
 alias q='exit'
 
 # Git
+alias git='hub'                         # Use hub wrapper
 alias gpl='git pull'
 alias gph='git push'
 alias gdiff='git diff'
@@ -39,6 +40,8 @@ alias gst='git status -s'
 alias glog='vim +GV'                    # Open vim to explore log and diffs
 alias gmg='git stash && git pull && git stash pop'
 alias gsub='git submodule foreach --recursive git pull origin master'
+alias guns='git reset HEAD'             # Unstage $file
+alias gri='git rm --cached'             # Remove from index but keep local copy of $file
 
 # dotdrop
 alias gdot='cd ~/dotfiles/dotfiles'

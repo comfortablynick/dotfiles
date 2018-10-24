@@ -26,6 +26,7 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 # SHELL DEFAULTS ----------------------------------------------------
 
 stty -ixon                                      # Disable ctrl-s and ctrl-q
+stty icrnl
 BASEDIR="${HOME}"                               # Location of includes dir
 HISTCONTROL=ignoreboth                          # Ignore duplicate/blank history
 shopt -s histappend                             # Don't overwrite history; append
@@ -41,9 +42,9 @@ export XDG_CONFIG_HOME="$HOME/.config"          # Some scripts look here
 # Located in $BASEDIR
 INCLUDES=(
 ".bash_aliases"                                 # Aliases for all OSes
-".bash_functions"                               # General functions 
-".bash_linux"                                   # Code to run on Linux 
-".bash_mac"                                     # Code to run on Mac 
+".bash_functions"                               # General functions
+".bash_linux"                                   # Code to run on Linux
+".bash_mac"                                     # Code to run on Mac
 ".bash_windows"                                 # Code to run on Win (Git bash)
 ".bash_prompt"                                  # Prompt-specific settings
 # ".bash_colors"                                # Color definitions (slow)

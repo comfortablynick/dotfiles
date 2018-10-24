@@ -19,6 +19,22 @@ if [[ -x /usr/bin/dircolors ]]; then
    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
+# PATH --------------------------------------------------------
+# Add any directories to PATH here
+EXTRA_PATHS=(
+"$HOME/Git/python/shell"                                        # Python CLI tools
+"$HOME/bin"                                                     # User-defined binaries
+)
+
+# Load them if they exist
+for pth in ${EXTRA_PATHS[@]}; do
+  if [ -d $pth ]; then
+    [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Prepending ${pth} to PATH"
+    export PATH=${pth}:$PATH
+  fi
+done
+unset pth
+
 # ALIASES -----------------------------------------------------
 
 # Git
@@ -44,8 +60,12 @@ fi
 
 export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
 
+# SCRIPTS -----------------------------------------------------
+alias list='list.py'
+
 # SYSTEM ------------------------------------------------------
 export NVM_DIR="$HOME/.nvm"
+export VCPROMPT_FORMAT="%n %b %r %p %u %m"
 
 # Try to load nvm on demand
 lnvm() {

@@ -45,14 +45,15 @@ zplug "zsh-users/zsh-autosuggestions"
 
 # Themes
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
+# zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme
 
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Source bash files
 zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
-zplug "$HOME", from:local, defer:1, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
-zplug "$HOME", from:local, defer:1, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
+zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
+zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
 # <-- PLUGINS END ------------------------------->
 ###############################################################################
@@ -134,6 +135,7 @@ source_bash=(
 #  ~/.bash_functions
 #  ~/.bash_mac
 #  ~/.bash_windows
+~/.bash_linux
 )
 
 for file in $source_bash

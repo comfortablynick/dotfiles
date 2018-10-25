@@ -21,6 +21,7 @@ if not status --is-interactive
 end
 
 # Everything below is for interactive shells
+_logo
 set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
 # }}}
 # ENVIRONMENT =============================== {{{
@@ -52,9 +53,13 @@ if test -f /proc/version && grep -q "Microsoft" /proc/version
 end
 # }}}
 # Fish {{{
-set -gx OMF_PATH "$XDG_DATA_HOME/omf"                           # OMF data location
-set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
-set -gx FISH_SSH_THEME "yimmy"                                   # Theme to load in omf on SSH
+# set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
+if test "$FISH_PKG_MGR" = "OMF"
+  set -gx OMF_PATH "$XDG_DATA_HOME/omf"                         # OMF data location
+end
+set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
+set -gx FISH_THEME "bobthefish"                                 # Regular theme
+set -gx FISH_SSH_THEME "yimmy"                                  # Theme to load in omf on SSH
 
 # Create fish_universal_variables if missing (some plugins look for it)
 test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
@@ -87,7 +92,7 @@ switch "$FISH_PKG_MGR"
       echo "Reload shell to use fisher."
     end
   case "*"
-    echo "Unknown package manager"
+    # echo "Unknown package manager"
 end
 # }}}
 # SOURCE ==================================== {{{
@@ -101,11 +106,16 @@ end
 # end
 # }}}
 # THEMES ==================================== {{{
-# Figure out a way to switch themes manually without omf
-if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
-  echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-  omf theme $FISH_SSH_THEME > /dev/null ^&1
+if test -z "$FISH_PKG_MGR"
+  source $__fish_config_dir/functions/loadtheme.fish
+  if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+    loadtheme $FISH_SSH_THEME
+  else if test -n "$FISH_THEME"
+    loadtheme $FISH_THEME
+  end
 end
+  # omf theme $FISH_SSH_THEME > /dev/null ^&1
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"

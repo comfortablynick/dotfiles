@@ -62,8 +62,11 @@ set -gx FISH_THEME "bobthefish"                                 # Regular theme
 set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
 
 # Create fish_universal_variables if missing (some plugins look for it)
-test -f "$XDG_CONFIG_HOME/fish/fish__variables";
-  or touch "$XDG_CONFIG_HOME/fish/fish_variables"
+#test -f "$XDG_CONFIG_HOME/fish/fish__variables";
+#  or touch "$XDG_CONFIG_HOME/fish/fish_variables"
+for v in (set --show | string replace -rf '^\$([^:[]+).*: set in universal.*' '$1')
+    set -e $v
+end
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
@@ -237,7 +240,7 @@ abbr rmdir rm -rf
 # Fish {{{
 abbr fc "$XDG_CONFIG_HOME/fish"                                 # Fish config home
 abbr ffn "$fish_function_path[1]"                               # Fish functions directory
-abbr funced 'funced -is'                                        # Open commandline editor and save function after
+abbr funced 'funced -s'                                         # Save function after editing automatically
 abbr fcf "vim $XDG_CONFIG_HOME/fish/config.fish"                # Edit config.fish
 abbr fishfile "vim $XDG_CONFIG_HOME/fish/fishfile"              # Edit Fisher fishfile
 abbr cm 'command'                                               # Fish has no '\' shortcut for `command`

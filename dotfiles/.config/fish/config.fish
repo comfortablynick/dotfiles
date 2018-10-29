@@ -59,11 +59,11 @@ if test "$FISH_PKG_MGR" = "OMF"
 end
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
 set -gx FISH_THEME "bobthefish"                                 # Regular theme
-set -gx FISH_SSH_THEME "yimmy"                                  # Theme to load in omf on SSH
+set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
 
 # Create fish_universal_variables if missing (some plugins look for it)
-test -f "$XDG_CONFIG_HOME/fish/fish_universal_variables";
-  or touch "$XDG_CONFIG_HOME/fish/fish_universal_variables"
+test -f "$XDG_CONFIG_HOME/fish/fish__variables";
+  or touch "$XDG_CONFIG_HOME/fish/fish_variables"
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish

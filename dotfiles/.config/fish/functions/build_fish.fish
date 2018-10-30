@@ -1,5 +1,6 @@
+# Defined in /tmp/fish.pVyIAQ/build_fish.fish @ line 2
 function build_fish --description 'Build fish shell from source'
-        set -l fish_repo "$HOME/fish-shell"
+	set -l fish_repo "$HOME/src/fish-shell"
   if test -d $fish_repo
     set -l orig_pwd (pwd)
     echo "Building fish from local source repo at $fish_repo"

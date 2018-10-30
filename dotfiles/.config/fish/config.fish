@@ -15,14 +15,16 @@
 #                       (JJJ| \UUU)
 #                        (UU)
 
-# NON-INTERACTIVE SHELL ===================== {{{
+# SHELL STARTUP ============================= {{{
 if not status --is-interactive
   exit 0
 end
 
 # Everything below is for interactive shells
 _logo
-set_color $fish_color_autosuggestion; echo -n 'Sourcing config.fish...  '
+set_color $fish_color_autosuggestion;
+set -l start_time (get_date)
+echo -n 'Sourcing config.fish...  '
 # }}}
 # ENVIRONMENT =============================== {{{
 # System {{{
@@ -196,79 +198,90 @@ set -g fish_pager_color_description 'b3a06d'  'yellow'
 set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
 set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
+# FUNCTIONS ================================= {{{
+function _ab -d "set global abbreviation" -a abbrev -a expanded
+    abbr -g $abbrev $expanded
+end
+
+# }}}
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
-abbr xo xonsh                                                   # Open xonsh shell
-abbr v vim                                                      # Call vim function (Open Neovim || Vim)
-abbr vvim 'command vim'                                         # Call Vim binary directly
-abbr vw view                                                    # Call view function (vim read-only)
-abbr o omf                                                      # oh-my-fish
-abbr z j                                                        # Use autojump (j) instead of z
+abbr -g xo xonsh                                                   # Open xonsh shell
+abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
+abbr -g vvim 'command vim'                                         # Call Vim binary directly
+abbr -g vw view                                                    # Call view function (vim read-only)
+abbr -g o omf                                                      # oh-my-fish
+abbr -g z j                                                        # Use autojump (j) instead of z
+_ab ttt test
 # }}}
 # Git {{{
-abbr g 'git'
-abbr ga 'git add'
-abbr gc 'git commit'
-abbr gd 'git diff --color-moved=default'
-abbr gdf 'git diff --color-moved=default'
-abbr gdiff 'git diff --color-moved=default'
-abbr gpl 'git pull'
-abbr gph 'git push'
-abbr gs 'git show --color-moved=default'
-abbr gst 'git status'
-abbr glog 'vim +GV'                                             # Open interactive git log in vim
-abbr grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
-abbr gsub 'git submodule foreach --recursive git pull origin master'
-abbr gsync 'git pull && git add . && git commit && git push'    # Sync local repo
-abbr gunst 'git reset HEAD'                                     # Unstage file
-abbr grmi 'git rm --cached'                                     # Remove from index but keep local
+abbr -g g 'git'
+abbr -g ga 'git add'
+abbr -g gc 'git commit'
+abbr -g gd 'git diff --color-moved=default'
+abbr -g gdf 'git diff --color-moved=default'
+abbr -g gdiff 'git diff --color-moved=default'
+abbr -g gpl 'git pull'
+abbr -g gph 'git push'
+abbr -g gs 'git show --color-moved=default'
+abbr -g gst 'git status'
+abbr -g glog 'vim +GV'                                             # Open interactive git log in vim
+abbr -g grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
+abbr -g gsub 'git submodule foreach --recursive git pull origin master'
+abbr -g gsync 'git pull && git add . && git commit && git push'    # Sync local repo
+abbr -g gunst 'git reset HEAD'                                     # Unstage file
+abbr -g grmi 'git rm --cached'                                     # Remove from index but keep local
 # }}}
 # Directories {{{
-abbr - cd
-abbr l list
-abbr lla ls -la
-abbr h $HOME
-abbr dot "$HOME/dotfiles/dotfiles"
-abbr vdot "$HOME/dotfiles/dotfiles/.vim"
-abbr gdot "$HOME/dotfiles/dotfiles"
-abbr gpy "$HOME/git/python"
-abbr gpython "$HOME/git/python"
-abbr pd prevd
-abbr nd nextd
-abbr rmdir rm -rf
+abbr -g - cd
+abbr -g l list
+abbr -g lla ls -la
+abbr -g h $HOME
+abbr -g dot "$HOME/dotfiles/dotfiles"
+abbr -g vdot "$HOME/dotfiles/dotfiles/.vim"
+abbr -g gdot "$HOME/dotfiles/dotfiles"
+abbr -g gpy "$HOME/git/python"
+abbr -g gpython "$HOME/git/python"
+abbr -g pd prevd
+abbr -g nd nextd
+abbr -g rmdir rm -rf
 # }}}
 # Fish {{{
-abbr fc "$XDG_CONFIG_HOME/fish"                                 # Fish config home
-abbr ffn "$fish_function_path[1]"                               # Fish functions directory
-abbr funced 'funced -s'                                         # Save function after editing automatically
-abbr fcf "vim $XDG_CONFIG_HOME/fish/config.fish"                # Edit config.fish
-abbr fishfile "vim $XDG_CONFIG_HOME/fish/fishfile"              # Edit Fisher fishfile
-abbr cm 'command'                                               # Fish has no '\' shortcut for `command`
+abbr -g fc "$XDG_CONFIG_HOME/fish"                                 # Fish config home
+abbr -g ffn "$fish_function_path[1]"                               # Fish functions directory
+abbr -g funced 'funced -s'                                         # Save function after editing automatically
+abbr -g fcf "vim $XDG_CONFIG_HOME/fish/config.fish"                # Edit config.fish
+abbr -g fishfile "vim $XDG_CONFIG_HOME/fish/fishfile"              # Edit Fisher fishfile
+abbr -g cm 'command'                                               # Fish has no '\' shortcut for `command`
 # }}}
 # Python {{{
-abbr pysh "$HOME/git/python/shell"                           # Python shell scripts
-abbr denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
+abbr -g pysh "$HOME/git/python/shell"                              # Python shell scripts
+abbr -g denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
 # Scripts {{{
-abbr listd 'list --debug'
-abbr listh 'list --help'
+abbr -g listd 'list --debug'
+abbr -g listh 'list --help'
 # }}}
 # System {{{
-abbr che 'chmod +x'                                             # Make executable
-abbr chr 'chmod 755'                                            # 'Reset' permission in WSL
-abbr version 'cat /etc/os-release'                              # Print Linux version info
-abbr q exit                                                     # One key
-abbr x exit                                                     # One key
-abbr quit exit                                                  # Just in case I forget which :)
-abbr path 'set -S PATH'                                         # Print PATH array
-abbr lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
+abbr -g che 'chmod +x'                                             # Make executable
+abbr -g chr 'chmod 755'                                            # 'Reset' permission in WSL
+abbr -g version 'cat /etc/os-release'                              # Print Linux version info
+abbr -g q exit                                                     # One key
+abbr -g x exit                                                     # One key
+abbr -g quit exit                                                  # Just in case I forget which :)
+abbr -g path 'set -S PATH'                                         # Print PATH array
+abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 # }}}
 # KEYBINDINGS =============================== {{{
 # vi-mode with custom keybindings
 # set fish_key_bindings fish_user_vi_key_bindings
 # }}}
-# FUNCTIONS ================================= {{{
+# END CONFIG ================================ {{{
+set -l end_time (get_date)
+set -l elapsed (math \($end_time - $start_time\))
+# set -l elapsed (echo $end_time - $start_time | bc)
+echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal
 # }}}

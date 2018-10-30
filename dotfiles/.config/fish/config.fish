@@ -55,20 +55,14 @@ if test -f /proc/version && grep -q "Microsoft" /proc/version
 end
 # }}}
 # Fish {{{
-# set -gx FISH_PKG_MGR "OMF"                                      # Set this here to make things easier
-if test "$FISH_PKG_MGR" = "OMF"
-  set -gx OMF_PATH "$XDG_DATA_HOME/omf"                         # OMF data location
-end
+set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
 set -gx FISH_THEME "bobthefish"                                 # Regular theme
-set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
-
+set -gx FISH_SSH_THEME "bigfish"                                # Theme to load in omf on SSH
 # Create fish_universal_variables if missing (some plugins look for it)
-#test -f "$XDG_CONFIG_HOME/fish/fish__variables";
-#  or touch "$XDG_CONFIG_HOME/fish/fish_variables"
-for v in (set --show | string replace -rf '^\$([^:[]+).*: set in universal.*' '$1')
-    set -e $v
-end
+# for v in (set --show | string replace -rf '^\$([^:[]+).*: set in universal.*' '$1')
+#     set -e $v
+# end
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
@@ -82,8 +76,10 @@ set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path 
 # }}}
 # }}}
 # PACKAGES ================================== {{{
+# Package manager setup {{{
 switch "$FISH_PKG_MGR"
   case "OMF"
+    set -gx OMF_PATH "$XDG_DATA_HOME/omf"
     # Install OMF if needed
     if not functions -q omf
       echo "OMF set as pkg manager but not installed. Installing now... "
@@ -96,9 +92,37 @@ switch "$FISH_PKG_MGR"
       curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
       echo "Reload shell to use fisher."
     end
+  case "FUNDLE"
+      if not functions -q fundle
+          # eval (curl -sfL https://git.io/fxdrv)
+          curl -sfL https://git.io/fxdrv | fish
+      end
   case "*"
     # echo "Unknown package manager"
 end
+# }}}
+# Plugins {{{
+if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+    set FISH_THEME $FISH_SSH_THEME
+end
+# <--- All plugin definitions after this line
+# Themes
+switch $FISH_THEME
+    case "bobthefish"
+        fundle plugin 'oh-my-fish/theme-bobthefish'
+    case "bigfish"
+        fundle plugin 'stefanmaric/bigfish'
+    case "*"
+end
+# Prerequisites for bigfish theme
+fundle plugin 'fisherman/git_util'
+fundle plugin 'fisherman/humanize_duration'
+fundle plugin 'nyarly/fish-lookup'
+
+# <--- All plugin definitions before this line
+fundle init
+# }}}
 # }}}
 # SOURCE ==================================== {{{
 # set -l externals                                                # Add exteral scripts to this variable
@@ -120,7 +144,6 @@ if test -z "$FISH_PKG_MGR"
     loadtheme $FISH_THEME
   end
 end
-  # omf theme $FISH_SSH_THEME > /dev/null ^&1
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"
@@ -165,6 +188,10 @@ set pure_user_host_location 1                                   # Loc of u@h; 0 
 set pure_separate_prompt_on_error 0                             # Show add'l char if error
 set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
 # }}}
+# bigfish {{{
+set -gx glyph_git_on_branch '🜉'
+set -gx glyph_bg_jobs '⚒'
+# }}}
 # Yimmy {{{
 set -g yimmy_solarized false                                    # Solarized color scheme
 # }}}
@@ -199,10 +226,6 @@ set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
 set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
 # FUNCTIONS ================================= {{{
-function _ab -d "set global abbreviation" -a abbrev -a expanded
-    abbr -g $abbrev $expanded
-end
-
 # }}}
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
@@ -212,7 +235,6 @@ abbr -g vvim 'command vim'                                         # Call Vim bi
 abbr -g vw view                                                    # Call view function (vim read-only)
 abbr -g o omf                                                      # oh-my-fish
 abbr -g z j                                                        # Use autojump (j) instead of z
-_ab ttt test
 # }}}
 # Git {{{
 abbr -g g 'git'
@@ -228,7 +250,7 @@ abbr -g gst 'git status'
 abbr -g glog 'vim +GV'                                             # Open interactive git log in vim
 abbr -g grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
 abbr -g gsub 'git submodule foreach --recursive git pull origin master'
-abbr -g gsync 'git pull && git add . && git commit && git push'    # Sync local repo
+abbr -g gsync 'git pull && git commit -a && git push'              # Sync local repo
 abbr -g gunst 'git reset HEAD'                                     # Unstage file
 abbr -g grmi 'git rm --cached'                                     # Remove from index but keep local
 # }}}
@@ -274,6 +296,9 @@ abbr -g path 'set -S PATH'                                         # Print PATH 
 abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 # }}}
+# ALIASES =================================== {{{
+alias git "hub"
+# }}}
 # KEYBINDINGS =============================== {{{
 # vi-mode with custom keybindings
 # set fish_key_bindings fish_user_vi_key_bindings
@@ -281,7 +306,6 @@ abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # END CONFIG ================================ {{{
 set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
-# set -l elapsed (echo $end_time - $start_time | bc)
 echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal
 # }}}

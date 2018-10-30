@@ -1,3 +1,4 @@
+# Defined in /tmp/fish.FMaWES/set_lscolors.fish @ line 2
 function set_lscolors --description 'Set LS_COLORS variable'
 	if not set -q LS_COLORS
         set -l dir_cmd

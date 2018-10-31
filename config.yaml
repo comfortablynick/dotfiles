@@ -18,10 +18,6 @@ dotfiles:
     dst: ~/.vim/after
     link: true
     src: .vim/after
-  d_bin:
-    dst: ~/bin
-    link: true
-    src: bin
   d_config:
     dst: ~/.vim/config
     link: true
@@ -127,7 +123,6 @@ profiles:
     - f_xonshrc
     - f_zshrc
     - d_after
-    - d_bin
     - d_config
     - d_fish
     - d_ftplugin
@@ -144,9 +139,6 @@ profiles:
     - d_after
     - d_fish
     - d_omf
-    - f_zshrc
-    - d_zsh
-    - d_bin
     include:
     - core
   joppa:

@@ -57,8 +57,8 @@ end
 # Fish {{{
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-set -gx FISH_THEME "bobthefish"                                 # Regular theme
-set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
+# set -gx FISH_THEME "bobthefish"                                 # Regular theme
+# set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
@@ -104,20 +104,19 @@ if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
 end
 # <--- All plugin definitions after this line
 # Themes
-switch $FISH_THEME
+switch "$FISH_THEME"
     case "bobthefish"
         fundle plugin 'oh-my-fish/theme-bobthefish'
     case "bigfish"
         fundle plugin 'stefanmaric/bigfish'
         # Prerequisites for bigfish theme
-        fundle plugin 'fisherman/git_util'
-        fundle plugin 'fisherman/humanize_duration'
-        fundle plugin 'nyarly/fish-lookup'
     case "pure"
         fundle plugin 'rafaelrinaldi/pure'
     case "*"
 end
 
+fundle plugin 'fisherman/git_util'
+fundle plugin 'nyarly/fish-lookup'
 # <--- All plugin definitions before this line
 fundle init
 # }}}

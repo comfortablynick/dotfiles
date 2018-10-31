@@ -141,6 +141,10 @@ if test -z "$FISH_PKG_MGR"
     loadtheme $FISH_THEME
   end
 end
+# Git prompt {{{
+set -g __fish_git_prompt_show_informative_status true
+set -g __fish_git_prompt_showcolorhints true
+# }}}
 # bobthefish {{{
 # Set options based on ssh connection/term size
 if test -n "$SSH_CONNECTION"

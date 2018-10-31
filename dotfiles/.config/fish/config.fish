@@ -21,7 +21,7 @@ if not status --is-interactive
 end
 
 # Everything below is for interactive shells
-_logo
+# _logo
 set_color $fish_color_autosuggestion;
 set -l start_time (get_date)
 echo -n 'Sourcing config.fish...  '
@@ -50,7 +50,7 @@ end
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version
   # https://github.com/Microsoft/WSL/issues/352
-  if test (umask) -eq "000" && umask 022
+  if test (umask) -eq "000" && umask "0022"
   end
 end
 # }}}
@@ -58,11 +58,7 @@ end
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
 set -gx FISH_THEME "bobthefish"                                 # Regular theme
-set -gx FISH_SSH_THEME "bigfish"                                # Theme to load in omf on SSH
-# Create fish_universal_variables if missing (some plugins look for it)
-# for v in (set --show | string replace -rf '^\$([^:[]+).*: set in universal.*' '$1')
-#     set -e $v
-# end
+set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
@@ -113,12 +109,14 @@ switch $FISH_THEME
         fundle plugin 'oh-my-fish/theme-bobthefish'
     case "bigfish"
         fundle plugin 'stefanmaric/bigfish'
+        # Prerequisites for bigfish theme
+        fundle plugin 'fisherman/git_util'
+        fundle plugin 'fisherman/humanize_duration'
+        fundle plugin 'nyarly/fish-lookup'
+    case "pure"
+        fundle plugin 'rafaelrinaldi/pure'
     case "*"
 end
-# Prerequisites for bigfish theme
-fundle plugin 'fisherman/git_util'
-fundle plugin 'fisherman/humanize_duration'
-fundle plugin 'nyarly/fish-lookup'
 
 # <--- All plugin definitions before this line
 fundle init
@@ -230,6 +228,7 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
 abbr -g xo xonsh                                                   # Open xonsh shell
+abbr -g vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
 abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
 abbr -g vvim 'command vim'                                         # Call Vim binary directly
 abbr -g vw view                                                    # Call view function (vim read-only)
@@ -269,11 +268,10 @@ abbr -g nd nextd
 abbr -g rmdir rm -rf
 # }}}
 # Fish {{{
-abbr -g fc "$XDG_CONFIG_HOME/fish"                                 # Fish config home
-abbr -g ffn "$fish_function_path[1]"                               # Fish functions directory
+abbr -g fc "$__fish_config_dir"                                    # Fish config home
+abbr -g ffn "$__fish_config_dir/functions"                         # Fish functions directory
 abbr -g funced 'funced -s'                                         # Save function after editing automatically
-abbr -g fcf "vim $XDG_CONFIG_HOME/fish/config.fish"                # Edit config.fish
-abbr -g fishfile "vim $XDG_CONFIG_HOME/fish/fishfile"              # Edit Fisher fishfile
+abbr -g fcf "vim $__fish_config_dir/config.fish"                   # Edit config.fish
 abbr -g cm 'command'                                               # Fish has no '\' shortcut for `command`
 # }}}
 # Python {{{

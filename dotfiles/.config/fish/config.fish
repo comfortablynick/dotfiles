@@ -57,11 +57,11 @@ end
 # Fish {{{
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-# set -gx FISH_THEME "bobthefish"                                 # Regular theme
-# set -gx FISH_SSH_THEME "bobthefish"                             # Theme to load in omf on SSH
+set -gx FISH_THEME "yimmy"
+set -gx FISH_SSH_THEME "yimmy"
 # }}}
 # Python {{{
-set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Default venv prompt doesn't like fish
+set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
@@ -106,17 +106,21 @@ end
 # Themes
 switch "$FISH_THEME"
     case "bobthefish"
-        fundle plugin 'oh-my-fish/theme-bobthefish'
+        # fundle plugin 'oh-my-fish/theme-bobthefish' --if "test 1 = 2"
     case "bigfish"
         fundle plugin 'stefanmaric/bigfish'
         # Prerequisites for bigfish theme
     case "pure"
         fundle plugin 'rafaelrinaldi/pure'
+    case "yimmy"
+        # fundle plugin 'oh-my-fish/theme-yimmy'
     case "*"
 end
-
+fundle plugin 'oh-my-fish/theme-bobthefish' --if 'test $FISH_THEME = bobthefish'
+fundle plugin 'oh-my-fish/yimmy' --if 'test $FISH_THEME = yimmy'
 fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
+fundle plugin 'decors/fish-colored-man'
 # <--- All plugin definitions before this line
 fundle init
 # }}}
@@ -258,7 +262,6 @@ abbr -g grmi 'git rm --cached'                                     # Remove from
 # }}}
 # Directories {{{
 abbr -g - cd
-abbr -g l list
 abbr -g lla ls -la
 abbr -g h $HOME
 abbr -g dot "$HOME/dotfiles/dotfiles"
@@ -283,6 +286,8 @@ abbr -g denv "source $VENV_DIR/dev/bin/activate.fish"              # Default ven
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
 # }}}
 # Scripts {{{
+abbr -g l list
+abbr -g lso 'list -hO'
 abbr -g listd 'list --debug'
 abbr -g listh 'list --help'
 # }}}

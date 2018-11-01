@@ -55,8 +55,15 @@ end
 # Fish {{{
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-set -gx FISH_THEME "bobthefish"
+set -gx FISH_THEME "yimmy"
 set -gx FISH_SSH_THEME "yimmy"
+
+# Get theme from local file
+if test -f $XDG_DATA_HOME/fish/theme
+    read local_theme < $XDG_DATA_HOME/fish/theme
+    echo "Local theme is: $local_theme"
+    set FISH_THEME $local_theme
+end
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
@@ -104,18 +111,17 @@ end
 # Themes
 switch "$FISH_THEME"
     case "bobthefish"
-        # fundle plugin 'oh-my-fish/theme-bobthefish' --if "test 1 = 2"
+        fundle plugin 'oh-my-fish/theme-bobthefish'
     case "bigfish"
         fundle plugin 'stefanmaric/bigfish'
-        # Prerequisites for bigfish theme
     case "pure"
         fundle plugin 'rafaelrinaldi/pure'
     case "yimmy"
         fundle plugin 'oh-my-fish/theme-yimmy'
     case "*"
 end
-fundle plugin 'oh-my-fish/theme-bobthefish' --if 'test $FISH_THEME = bobthefish'
-fundle plugin 'oh-my-fish/yimmy' --if 'test $FISH_THEME = yimmy'
+# fundle plugin 'oh-my-fish/theme-bobthefish' --if 'test $FISH_THEME = bobthefish'
+# fundle plugin 'oh-my-fish/yimmy' --if 'test $FISH_THEME = yimmy'
 fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'

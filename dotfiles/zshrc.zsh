@@ -8,7 +8,7 @@
 # NON-INTERACTIVE ============================ {{{
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
 # }}}
-# ENVIRONMENT ================================ {{{
+# ENVIR ONMENT ================================ {{{
 START_TIME="$(date)"
 
 # Check OS
@@ -156,10 +156,10 @@ source_bash=(
 
 for file in $source_bash
   do
+    [[ ! -f $file ]] && return;
     [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
     source_sh $file
   done
-# }}}
 # FUNCTIONS ================================== {{{
 
 # relz :: Reload zsh shell

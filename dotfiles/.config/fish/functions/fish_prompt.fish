@@ -29,7 +29,7 @@ set -g glyph_nodejs_logo '⬡' # Alternatives: ⬡⌬⏣⬢
 function fish_prompt --description 'bigfish: A long two-lines fish prompt' # {{{
     # Requires to be set before any other set calls
     set -l last_status $status
-    set -l leftPrompt '╭╴ '
+    set -l leftPrompt '╭╴'
     set -l padding ''
     set -l rightPrompt ''
     set -l bottomPrompt '╰╴'
@@ -57,7 +57,7 @@ function fish_prompt --description 'bigfish: A long two-lines fish prompt' # {{{
     end
 
     if test -n "$git_status"
-      set leftPrompt (bf_concat_segments $leftPrompt $leftSep grey normal)
+        # set leftPrompt (bf_concat_segments $leftPrompt $leftSep grey normal)
       set leftPrompt (bf_concat_segments $leftPrompt $git_status normal normal)
     end
 
@@ -92,7 +92,7 @@ function fish_prompt --description 'bigfish: A long two-lines fish prompt' # {{{
     # Assemble second line of the prompt
     if test (whoami) = "root"
         set bottomPrompt (bf_concat_segments $bottomPrompt \
-            "$glyph_superpower$glyph_input_start " red normal)
+            "$glyph_superpower$glyph_input_start" red normal)
     else
         set bottomPrompt (bf_concat_segments $bottomPrompt \
             "$glyph_regular_user$glyph_input_start " grey normal)

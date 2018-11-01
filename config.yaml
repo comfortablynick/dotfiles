@@ -18,6 +18,10 @@ dotfiles:
     dst: ~/.vim/after
     link: true
     src: .vim/after
+  d_bash:
+    dst: ~/.config/bash
+    link: true
+    src: .config/bash
   d_config:
     dst: ~/.vim/config
     link: true
@@ -128,7 +132,6 @@ profiles:
     - d_ftplugin
     - d_ftdetect
     - d_nvim
-    - d_omf
     - d_powerline
     - d_xonsh
     - d_zsh
@@ -136,9 +139,6 @@ profiles:
     dotfiles:
     - f_bash_linux
     - f_bash_windows
-    - d_after
-    - d_fish
-    - d_omf
     include:
     - core
   joppa:
@@ -149,6 +149,7 @@ profiles:
   thor.local:
     dotfiles:
     - f_bash_mac
+    - d_bash
     include:
     - core
   uranus:

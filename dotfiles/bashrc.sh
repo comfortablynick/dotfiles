@@ -50,7 +50,13 @@ INCLUDES=(
 # ".bash_colors"                                # Color definitions (slow)
 )
 
-
+# Source all .bash files in XDG_CONFIG_HOME/bash/functions
+# TODO: combine with "INCLUDES" section
+if [ -d $XDG_CONFIG_HOME/bash/functions ]; then
+  for file in $XDG_CONFIG_HOME/bash/functions/*.bash; do
+    source $file
+  done
+fi
 # PROMPT ------------------------------------------------------------
 
 # set variable identifying the chroot you work in (used in the prompt below)

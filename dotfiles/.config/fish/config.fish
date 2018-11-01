@@ -119,8 +119,17 @@ fundle plugin 'oh-my-fish/yimmy' --if 'test $FISH_THEME = yimmy'
 fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'
+fundle plugin 'jethrokuan/fzf'
 # <--- All plugin definitions before this line
 fundle init
+# }}}
+# System-wide {{{
+# fzf
+if ! test -d "$HOME/.fzf"
+    echo "fzf dir not found. Cloning fzf and installing..."
+    command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --bin --no-update-rc
+end
 # }}}
 # }}}
 # SOURCE ==================================== {{{

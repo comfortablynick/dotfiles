@@ -128,6 +128,7 @@ profiles:
     - f_zshrc
     - d_after
     - d_config
+    - d_bash
     - d_fish
     - d_ftplugin
     - d_ftdetect
@@ -149,7 +150,6 @@ profiles:
   thor.local:
     dotfiles:
     - f_bash_mac
-    - d_bash
     include:
     - core
   uranus:

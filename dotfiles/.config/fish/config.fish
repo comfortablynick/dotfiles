@@ -42,8 +42,6 @@ set -a paths "$HOME/git/python/shell"                           # Shell-like fea
 for p in $paths
   if test -d $p
     set PATH $p $PATH
-  else
-    echo "PATH: $p is not a valid directory! Check config.fish."
   end
 end
 
@@ -113,7 +111,7 @@ switch "$FISH_THEME"
     case "pure"
         fundle plugin 'rafaelrinaldi/pure'
     case "yimmy"
-        # fundle plugin 'oh-my-fish/theme-yimmy'
+        fundle plugin 'oh-my-fish/theme-yimmy'
     case "*"
 end
 fundle plugin 'oh-my-fish/theme-bobthefish' --if 'test $FISH_THEME = bobthefish'

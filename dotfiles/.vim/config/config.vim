@@ -6,19 +6,19 @@ set ttyfast                             " Terminal acceleration
 filetype plugin on                      " Allow loading .vim files for different filetypes
 
 if has('nvim')
-    " Neovim Only -------------------------------
+    " Neovim Only
     set inccommand=split                " Live substitution
-    let g:python_host_prog =  
+    let g:python_host_prog =
     \expand('$NVIM_PY2_DIR/bin/python') " Python2 binary
-    let g:python3_host_prog = 
+    let g:python3_host_prog =
     \expand('$NVIM_PY3_DIR/bin/python') " Python3 binary
 else
-    " Vim Only ----------------------------------
+    " Vim Only
     set pyxversion=3                    " Use Python3
     let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
 
-" General
+" General ---------------------------------------
 
 syntax enable                   " Syntax highlighting on
 set fileformat=unix             " Always use LF and not CRLF
@@ -34,27 +34,27 @@ set cursorline                  " Show line under cursor's line
 set ruler
 set showmatch                   " Show matching pair of brackets (), [], {}
 set updatetime=100              " Update more often (helps GitGutter)
-set signcolumn=yes              " Always show; keep appearance consistent 
+set signcolumn=yes              " Always show; keep appearance consistent
 set scrolloff=10                " Lines before/after cursor during scroll
 set ttimeoutlen=10              " How long in ms to wait for key combinations
 
-" Indent behavior
+" Indent behavior -------------------------------
 set expandtab                   " Expand tab to spaces
 set smartindent                 " Attempt smart indenting
 set autoindent                  " Attempt auto indenting
 set shiftwidth=2                " Indent width in spaces
 set backspace=2                 " Backspace behaves as expected
 
-" Searching & Replacing
+" Searching & Replacing -------------------------
 set ignorecase                  " Ignore case while searching
 set smartcase                   " Case sensitive if uppercase in pattern
 set incsearch                   " Move cursor to matched string
 
-" Window Split
+" Window Split ----------------------------------
 set splitbelow                  " Split below instead of above
 set splitright                  " Split right instead of left
 
-" Line numbering
+" Line numbering --------------------------------
 set number                      " Show linenumbers
 set relativenumber              " Show relative numbers (hybrid with `number` enabled)
 
@@ -68,10 +68,10 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
 augroup END
 
+" Cursor position -------------------------------
 " Jump to last position when reopening file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g`\"" | endif
 
 " Add shebang if defined
 au BufNewFile * call SetShebang()
-

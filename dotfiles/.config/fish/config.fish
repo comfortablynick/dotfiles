@@ -55,7 +55,7 @@ end
 # Fish {{{
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-set -gx FISH_THEME "yimmy"
+set -gx FISH_THEME "bobthefish"
 set -gx FISH_SSH_THEME "yimmy"
 # }}}
 # Python {{{
@@ -155,6 +155,8 @@ end
 # Git prompt {{{
 set -g __fish_git_prompt_show_informative_status true
 set -g __fish_git_prompt_showcolorhints true
+set -g ___fish_git_prompt_char_stagedstate ±
+set -g ___fish_git_prompt_char_stashstate ≡
 # }}}
 # bobthefish {{{
 # Set options based on ssh connection/term size

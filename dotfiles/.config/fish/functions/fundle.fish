@@ -428,3 +428,5 @@ function fundle -d "run fundle"
 			return 1
 	end
 end
+
+# vim:set fdm=expr:fde=getline(v:lnum)=~'^function.*$'?'>1':1:

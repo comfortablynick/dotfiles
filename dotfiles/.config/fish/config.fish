@@ -93,11 +93,10 @@ switch "$FISH_PKG_MGR"
       curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
       echo "Reload shell to use fisher."
     end
-  case "FUNDLE"
-      if not functions -q fundle
-          # eval (curl -sfL https://git.io/fxdrv)
-          curl -sfL https://git.io/fxdrv | fish
-      end
+  # case "FUNDLE"
+  #     if not functions -q fundle
+  #         curl -sfL https://git.io/fxdrv | fish
+  #     end
   case "*"
     # echo "Unknown package manager"
 end
@@ -126,6 +125,7 @@ fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf'
+fundle load 'fisherman/getopts'
 # <--- All plugin definitions before this line
 fundle init
 # }}}
@@ -289,6 +289,7 @@ abbr -g nd nextd
 abbr -g rmdir rm -rf
 # }}}
 # Fish {{{
+abbr -g frel "exec fish"                                           # Better way to reload?
 abbr -g fc "$__fish_config_dir"                                    # Fish config home
 abbr -g ffn "$__fish_config_dir/functions"                         # Fish functions directory
 abbr -g funced 'funced -s'                                         # Save function after editing automatically

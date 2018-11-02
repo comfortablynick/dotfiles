@@ -8,7 +8,7 @@ if has('nvim')
     let g:airline_theme = 'papercolor'     " Airline theme (separate from vim)
 else
     set background=dark
-    colorscheme nord
+    colorscheme ayu
 endif
 
 " Ayucolor
@@ -35,10 +35,10 @@ let g:PaperColor_Theme_Options = {
   \     'default': {
   \       'allow_bold': 1,
   \       'allow_italic': 0,
-  \       'transparent_background': 0
+  \       'transparent_background': 1
   \     },
   \     'default.dark': {
-  \       'transparent_background': 0   
+  \       'transparent_background': 1
   \     }
   \   },
   \  'language': {
@@ -47,3 +47,4 @@ let g:PaperColor_Theme_Options = {
   \      }
   \   }
   \ }
+hi Normal guibg=NONE ctermbg=NONE

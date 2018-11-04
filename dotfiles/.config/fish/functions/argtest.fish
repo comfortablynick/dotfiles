@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.zmFXGh/argtest.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.8J54HB/argtest.fish @ line 2
 function argtest --description 'test of argparse'
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help'
     set -l help_txt "argtest help"
@@ -11,8 +11,11 @@ function argtest --description 'test of argparse'
     set -q _flag_path && echo $_flag_path
     set -q _flag_cond && echo $_flag_cond
 
-    set -l cond_eval (eval $_flag_cond)
-    test $cond_eval && echo "Condition true" || echo "Condition false"
+    if test (eval $_flag_cond)
+        echo "Cond true"
+    else
+        echo "Cond false"
+    end
 
     if test -n "$argv"
         echo $argv

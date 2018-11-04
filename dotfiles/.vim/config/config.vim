@@ -26,6 +26,7 @@ set encoding=utf-8              " Default to unicode
 set termencoding=utf-8          " Unicode
 set synmaxcol=200               " Don't try to highlight if line > 200 chr
 set laststatus=2                " Always show statusline
+set showtabline=2               " Always show tabline
 set visualbell                  " Visual instead of audible
 set nowrap
 set noshowmode                  " Hide default mode text (e.g. -- INSERT -- below statusline)

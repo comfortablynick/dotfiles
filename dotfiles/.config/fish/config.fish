@@ -70,7 +70,7 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
-set -gx EDITOR 'nvim'                                           # Default editor
+set -gx EDITOR 'vim'                                           # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
@@ -125,7 +125,8 @@ fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf'
-fundle load 'fisherman/getopts'
+# plugin 'fisherman/getopts'
+fundle load 'fisherman/getopts' --cond "test 1 = 1"
 # <--- All plugin definitions before this line
 fundle init
 # }}}

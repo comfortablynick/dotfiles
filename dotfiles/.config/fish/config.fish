@@ -126,7 +126,7 @@ fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf'
 # plugin 'fisherman/getopts'
-fundle load 'fisherman/getopts' --cond "test 1 = 1"
+fundle load 'fisherman/getopts' --cond 'test 1 -eq 2'
 # <--- All plugin definitions before this line
 fundle init
 # }}}

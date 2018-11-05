@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.GV01Mt/argtest.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.xqmcm4/argtest.fish @ line 2
 function argtest --description 'test of argparse'
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help'
     set -l help_txt "argtest help"
@@ -12,7 +12,7 @@ function argtest --description 'test of argparse'
     set -q _flag_cond && echo $_flag_cond
 
     # if eval $_flag_cond
-    if echo $_flag_cond | source
+    if echo "$_flag_cond" | source
         echo "Cond true"
     else
         echo "Cond false"

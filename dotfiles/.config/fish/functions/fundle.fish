@@ -366,7 +366,6 @@ function __fundle_plugin -d "add plugin to fundle" -a name
 end
 
 function __fundle_load --d 'add plugin to fundle'
-	echo "entering __fundle_load"
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help' 'd/debug'
     set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH]]"
     test -z "$argv" && echo $help_txt && return 1
@@ -376,17 +375,14 @@ function __fundle_load --d 'add plugin to fundle'
     set -l plugin_url ""
     set -l plugin_path "."
     set -l plugin_cond ""
-    set -l cond_eval true
-    set -l debug false
+    set -l eval_status ""
+    set -l name ""
 
     # Process options
     set -q _flag_help && echo "$help_txt" && return 0
     set -q _flag_url && set plugin_url $_flag_url
     set -q _flag_path && set plugin_path $_flag_path
-    set -q _flag_cond && set plugin_cond $_flag_cond
-    set -q _flag_debug && set debug $_flag_debug
-
-    set -l name ""
+    set -q _flag_cond && set plugin_cond $_flag_cond || set plugin_cond "true"
 
     if test -z "$argv"
         echo "NAME is required!"
@@ -395,22 +391,34 @@ function __fundle_load --d 'add plugin to fundle'
         set name $argv
     end
 
-    set cond_eval (eval $plugin_cond)
+    if echo "$plugin_cond" | source
+        set -l cond_true
+        set eval_debug "Cond true"
 
-    test -z "$plugin_url"; and set plugin_url (__fundle_get_url $name)
-	if not contains $name $__fundle_plugin_names # ; and test $cond_eval
-		set -g __fundle_plugin_names $__fundle_plugin_names $name
-		set -g __fundle_plugin_urls $__fundle_plugin_urls $plugin_url
-		set -g __fundle_plugin_name_paths $__fundle_plugin_name_paths $name:$plugin_path
-	end
-    if test $debug
+        # Process plugin
+        test -z "$plugin_url"; and set plugin_url (__fundle_get_url $name)
+        if not contains $name $__fundle_plugin_names; and set -q $cond_true
+            set -g __fundle_plugin_names $__fundle_plugin_names $name
+            set -g __fundle_plugin_urls $__fundle_plugin_urls $plugin_url
+            set -g __fundle_plugin_name_paths $__fundle_plugin_name_paths $name:$plugin_path
+        end
+    else
+        set eval_debug "Cond false"
+    end
+
+
+    if set -q _flag_debug
+        echo "----- DEBUG OUTPUT -----"
         echo "Fundle args for $name:"
         echo "  Url: $plugin_url"
         echo "  Path: $plugin_path"
-        echo "  Cond: $plugin_cond"
-        set -l is_true ""
-        test $cond_eval && set is_true "true" || set is_true "false"
-        echo "  Cond eval: $is_true"
+        echo "  Cond eval: $eval_debug"
+        echo ""
+        echo "Fundle vars:"
+        echo "  Plugin names: $__fundle_plugin_names"
+        echo "  Plugin urls: $__fundle_plugin_urls"
+        echo "  Plugin name+paths: $__fundle_plugin_name_paths"
+        echo "----- END DEBUG -----"
     end
 end
 

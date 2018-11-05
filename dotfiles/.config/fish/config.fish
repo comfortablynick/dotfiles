@@ -330,7 +330,8 @@ abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 # }}}
 # ALIASES =================================== {{{
-alias git "hub"
+alias git hub
+alias j __fzf_autojump
 # }}}
 # KEYBINDINGS =============================== {{{
 # vi-mode with custom keybindings

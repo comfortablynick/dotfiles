@@ -79,25 +79,25 @@ set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path 
 # PACKAGES ================================== {{{
 # Package manager setup {{{
 switch "$FISH_PKG_MGR"
-  case "OMF"
-    set -gx OMF_PATH "$XDG_DATA_HOME/omf"
-    # Install OMF if needed
-    if not functions -q omf
-      echo "OMF set as pkg manager but not installed. Installing now... "
-      curl -L https://get.oh-my.fish | fish
-    end
-  case "Fisher"
+    case "OMF"
+        set -gx OMF_PATH "$XDG_DATA_HOME/omf"
+        # Install OMF if needed
+        if not functions -q omf
+          echo "OMF set as pkg manager but not installed. Installing now... "
+          curl -L https://get.oh-my.fish | fish
+        end
+    case "Fisher"
     # Fisher
     if not functions -q fisher
-      echo "Installing fisher for the first time..." >&2
-      curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-      echo "Reload shell to use fisher."
+        echo "Installing fisher for the first time..." >&2
+        curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+        echo "Reload shell to use fisher."
     end
-  # case "FUNDLE"
-  #     if not functions -q fundle
-  #         curl -sfL https://git.io/fxdrv | fish
-  #     end
-  case "*"
+    # case "FUNDLE"
+    #     if not functions -q fundle
+    #         curl -sfL https://git.io/fxdrv | fish
+    #     end
+    case "*"
     # echo "Unknown package manager"
 end
 # }}}
@@ -108,7 +108,7 @@ if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
 end
 # <--- All plugin definitions after this line
 # Themes
-switch "$FISH_THEME"
+switch "$FISH_THEMEXXX"
     case "bobthefish"
         fundle plugin 'oh-my-fish/theme-bobthefish'
     case "bigfish"
@@ -119,14 +119,13 @@ switch "$FISH_THEME"
         fundle plugin 'oh-my-fish/theme-yimmy'
     case "*"
 end
-# fundle plugin 'oh-my-fish/theme-bobthefish' --if 'test $FISH_THEME = bobthefish'
-# fundle plugin 'oh-my-fish/yimmy' --if 'test $FISH_THEME = yimmy'
+fundle plugin 'oh-my-fish/theme-bobthefish' --cond 'test $FISH_THEME = bobthefish'
+fundle plugin 'oh-my-fish/yimmy' --cond 'test $FISH_THEME = yimmy'
 fundle plugin 'fisherman/git_util'
 fundle plugin 'nyarly/fish-lookup'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf'
-# plugin 'fisherman/getopts'
-fundle load 'fisherman/getopts' --cond 'test 1 -eq 2'
+fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 # <--- All plugin definitions before this line
 fundle init
 # }}}

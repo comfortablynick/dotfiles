@@ -319,7 +319,7 @@ function __fundle_clean -d "cleans fundle directory"
 	end
 end
 
-function __fundle_plugin -d "add plugin to fundle" -a name
+function __fundle_plugin_orig -d "add plugin to fundle" -a name
 	set -l plugin_url ""
 	set -l plugin_path "."
     set -l if_cond ""
@@ -365,13 +365,12 @@ function __fundle_plugin -d "add plugin to fundle" -a name
 	end
 end
 
-function __fundle_load --d 'add plugin to fundle'
+function __fundle_plugin --d 'add plugin to fundle'
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help' 'd/debug'
     set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH]]"
     test -z "$argv" && echo $help_txt && return 1
     argparse $options -- $argv
 
-	echo $argv
     set -l plugin_url ""
     set -l plugin_path "."
     set -l plugin_cond ""

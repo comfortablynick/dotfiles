@@ -40,9 +40,9 @@ set -a paths "$HOME/bin"                                        # General user b
 set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
 # Prepend to $PATH if valid directory
 for p in $paths
-  if test -d $p
-    set PATH $p $PATH
-  end
+    if test -d $p
+        set PATH $p $PATH
+    end
 end
 
 # Fix umask env variable if WSL didn't set it properly.
@@ -82,6 +82,10 @@ set -gx VISUAL $EDITOR                                          # Default visual
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 # }}}
+# Fuzzy finder {{{
+# Enable fuzzy directory finding
+set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
+# }}}
 # }}}
 # PACKAGES ================================== {{{
 # Package manager setup {{{
@@ -116,14 +120,15 @@ end
 # <--- All plugin definitions after this line
 
 # Themes
-fundle plugin 'oh-my-fish/theme-bobthefish' --cond='[ $FISH_THEME = bobthefish ]'
+fundle plugin 'oh-my-fish/theme-bobthefish' \
+    --cond='[ $FISH_THEME = bobthefish ]'
 fundle plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
 fundle plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
 
 fundle plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
-fundle plugin 'jethrokuan/fzf'
+fundle plugin 'jethrokuan/fzf' # --c='[ echo (type -q fzf) ]'
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 
 # <--- All plugin definitions before this line
@@ -150,7 +155,6 @@ end
 # }}}
 # THEMES ==================================== {{{
 if test -z "$FISH_PKG_MGR"
-  source $__fish_config_dir/functions/loadtheme.fish
   if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
     echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
     loadtheme $FISH_SSH_THEME
@@ -165,55 +169,61 @@ set -g ___fish_git_prompt_char_stagedstate ±
 set -g ___fish_git_prompt_char_stashstate ≡
 # }}}
 # bobthefish {{{
-# Set options based on ssh connection/term size
-if test -n "$SSH_CONNECTION"
-  set -g theme_nerd_fonts no
-else
-  set -g theme_nerd_fonts yes
-end
+if test "$FISH_THEME" = 'bobthefish'
+    # Set options based on ssh connection/term size
+    if test -n "$SSH_CONNECTION"
+      set -g theme_nerd_fonts no
+    else
+      set -g theme_nerd_fonts yes
+    end
 
-# Set options if term windows is narrow-ish
-if test "$COLUMNS" -lt 100
-  set -g theme_newline_cursor yes
-  set -g theme_display_date no
-else
-  set -g theme_newline_cursor no
-  set -g theme_display_date yes
+    # Set options if term windows is narrow-ish
+    if test "$COLUMNS" -lt 100
+      set -g theme_newline_cursor yes
+      set -g theme_display_date no
+    else
+      set -g theme_newline_cursor no
+      set -g theme_display_date yes
+    end
 end
 # }}}
 # Pure Prompt {{{
 # Prompt text
-set pure_symbol_prompt "❯"
-set pure_symbol_git_down_arrow "⇣"
-set pure_symbol_git_up_arrow "⇡"
-set pure_symbol_git_dirty "*"
-set pure_symbol_horizontal_bar "—"
+if test "$FISH_THEME" = 'pure'
+    set pure_symbol_prompt "❯"
+    set pure_symbol_git_down_arrow "⇣"
+    set pure_symbol_git_up_arrow "⇡"
+    set pure_symbol_git_dirty "*"
+    set pure_symbol_horizontal_bar "—"
 
-# Prompt colors
-set pure_color_blue (set_color brblue)
-set pure_color_cyan (set_color cyan)
-set pure_color_gray (set_color 6c6c6c)
-set pure_color_green (set_color green)
-set pure_color_normal (set_color normal)
-set pure_color_red (set_color red)
-set pure_color_yellow (set_color yellow)
+    # Prompt colors
+    set pure_color_blue (set_color brblue)
+    set pure_color_cyan (set_color cyan)
+    set pure_color_gray (set_color 6c6c6c)
+    set pure_color_green (set_color green)
+    set pure_color_normal (set_color normal)
+    set pure_color_red (set_color red)
+    set pure_color_yellow (set_color yellow)
 
-# Colors when connected via SSH
-set pure_username_color $pure_color_yellow
-set pure_host_color $pure_color_gray
-set pure_root_color $pure_color_red
+    # Colors when connected via SSH
+    set pure_username_color $pure_color_yellow
+    set pure_host_color $pure_color_gray
+    set pure_root_color $pure_color_red
 
-# Display options
-set pure_user_host_location 1                                   # Loc of u@h; 0 = end, 1 = beg
-set pure_separate_prompt_on_error 0                             # Show add'l char if error
-set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
+    # Display options
+    set pure_user_host_location 1                                   # Loc of u@h; 0 = end, 1 = beg
+    set pure_separate_prompt_on_error 0                             # Show addl char if error
+    set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
+end
 # }}}
 # bigfish {{{
 set -gx glyph_git_on_branch '🜉'
 set -gx glyph_bg_jobs '⚒'
 # }}}
 # Yimmy {{{
-set -g yimmy_solarized false                                    # Solarized color scheme
+if test "$FISH_THEME" = 'yimmy'
+    set -g yimmy_solarized false                                    # Solarized color scheme
+end
 # }}}
 # }}}
 # COLORS ==================================== {{{
@@ -252,6 +262,7 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 abbr -g xo xonsh                                                   # Open xonsh shell
 abbr -g vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
 abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
+abbr -g n nvim                                                     # Call Neovim directly
 abbr -g vvim 'command vim'                                         # Call Vim binary directly
 abbr -g vw view                                                    # Call view function (vim read-only)
 abbr -g o omf                                                      # oh-my-fish

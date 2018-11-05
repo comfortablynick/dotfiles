@@ -128,7 +128,7 @@ fundle plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
 fundle plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
-fundle plugin 'jethrokuan/fzf' # --c='[ echo (type -q fzf) ]'
+fundle plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 
 # <--- All plugin definitions before this line

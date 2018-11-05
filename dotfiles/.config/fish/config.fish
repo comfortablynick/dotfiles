@@ -64,6 +64,13 @@ if test -f $XDG_DATA_HOME/fish/theme
     echo "Local theme is: $local_theme"
     set FISH_THEME $local_theme
 end
+
+# Get ssh theme from local file
+if test -f $XDG_DATA_HOME/fish/ssh_theme
+    read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
+    echo "Local ssh theme is: $local_ssh_theme"
+    set FISH_SSH_THEME $local_ssh_theme
+end
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
@@ -107,25 +114,18 @@ if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
     set FISH_THEME $FISH_SSH_THEME
 end
 # <--- All plugin definitions after this line
+
 # Themes
-switch "$FISH_THEMEXXX"
-    case "bobthefish"
-        fundle plugin 'oh-my-fish/theme-bobthefish'
-    case "bigfish"
-        fundle plugin 'stefanmaric/bigfish'
-    case "pure"
-        fundle plugin 'rafaelrinaldi/pure'
-    case "yimmy"
-        fundle plugin 'oh-my-fish/theme-yimmy'
-    case "*"
-end
-fundle plugin 'oh-my-fish/theme-bobthefish' --cond 'test $FISH_THEME = bobthefish'
-fundle plugin 'oh-my-fish/yimmy' --cond 'test $FISH_THEME = yimmy'
-fundle plugin 'fisherman/git_util'
-fundle plugin 'nyarly/fish-lookup'
+fundle plugin 'oh-my-fish/theme-bobthefish' --cond='[ $FISH_THEME = bobthefish ]'
+fundle plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
+fundle plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
+
+fundle plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
+fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf'
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
+
 # <--- All plugin definitions before this line
 fundle init
 # }}}

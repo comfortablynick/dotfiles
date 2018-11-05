@@ -367,14 +367,14 @@ end
 
 function __fundle_plugin --d 'add plugin to fundle'
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help' 'd/debug'
-    set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH]]"
+    set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH] [--cond CONDITION]]"
     test -z "$argv" && echo $help_txt && return 1
     argparse $options -- $argv
 
     set -l plugin_url ""
     set -l plugin_path "."
     set -l plugin_cond ""
-    set -l eval_status ""
+    set -l eval_debug ""
     set -l name ""
 
     # Process options
@@ -404,7 +404,6 @@ function __fundle_plugin --d 'add plugin to fundle'
     else
         set eval_debug "Cond false"
     end
-
 
     if set -q _flag_debug
         echo "----- DEBUG OUTPUT -----"

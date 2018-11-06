@@ -77,10 +77,11 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
-set -gx EDITOR 'vim'                                           # Default editor
+set -gx EDITOR 'vim'                                            # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
+set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
 # }}}
 # Fuzzy finder {{{
 # Enable fuzzy directory finding
@@ -265,6 +266,7 @@ abbr -g lp lpass                                                   # LastPass cl
 abbr -g vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
 abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
 abbr -g n nvim                                                     # Call Neovim directly
+abbr -g nv nvim                                                    # Another Neovim
 abbr -g vvim 'command vim'                                         # Call Vim binary directly
 abbr -g vw view                                                    # Call view function (vim read-only)
 abbr -g o omf                                                      # oh-my-fish
@@ -274,12 +276,13 @@ abbr -g z j                                                        # Use autojum
 abbr -g g 'git'
 abbr -g ga 'git add'
 abbr -g gc 'git commit'
-abbr -g gd 'git diff --color-moved=default'
-abbr -g gdf 'git diff --color-moved=default'
-abbr -g gdiff 'git diff --color-moved=default'
+abbr -g gco 'git checkout master'
+abbr -g gd 'git diff'
+abbr -g gdf 'git diff'
+abbr -g gdiff 'git diff'
 abbr -g gpl 'git pull'
 abbr -g gph 'git push'
-abbr -g gs 'git show --color-moved=default'
+abbr -g gs 'git show'
 abbr -g gst 'git status'
 abbr -g glog 'vim +GV'                                             # Open interactive git log in vim
 abbr -g grst 'git reset --hard origin/master'                      # Overwrite local repo with remote

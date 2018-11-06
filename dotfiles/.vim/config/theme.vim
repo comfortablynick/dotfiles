@@ -48,7 +48,7 @@ let g:PaperColor_Theme_Options = {
 
 " SSH Settings
 " Remove background to try to work better with iOS SSH apps
-if $SSH_CONNECTION != ""
+if $SSH_CONNECTION != "" && $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
 endif

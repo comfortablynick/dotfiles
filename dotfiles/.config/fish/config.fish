@@ -77,11 +77,15 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
-set -gx EDITOR 'vim'                                            # Default editor
+set -gx EDITOR nvim                                             # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
+
+# Vim/Neovim color schemes
+set -gx VIM_COLOR gruvbox-dark
+set -gx NVIM_COLOR snow-light
 # }}}
 # Fuzzy finder {{{
 # Enable fuzzy directory finding

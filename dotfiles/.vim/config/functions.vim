@@ -1,6 +1,6 @@
 " VIM / NEOVIM FUNCTIONS
 
-" Add shebang for new file
+" SetShebang() :: add shebang for new file {{{
 function! SetShebang()
 python3 << endpython
 
@@ -21,9 +21,8 @@ if not vim.current.buffer[0].startswith('#!'):
 		vim.current.buffer[0:0] = [ shebang[filetype] ]
 endpython
 endfunction
-
-
-" Get path of current file
+" }}}
+" GetPath() :: get path of current file {{{
 function! GetPath()
 python3 << EOP
 
@@ -33,9 +32,8 @@ file_path = vim.eval("expand('%:p')")
 print(file_path)
 EOP
 endfunction
-
-
-" Set executable bit
+" }}}
+" SetExecutableBit() :: set file as executable by user {{{
 function! SetExecutableBit()
 python3 << EOP
 
@@ -56,22 +54,20 @@ else:
     print(f"File now executable; changed from {old_perms} to {new_perms}")
 EOP
 endfunction
-
-
-" Set shebang and executable bit
+" }}}
+" SetExecutable() :: set shebang and executable bit {{{
 function! SetExecutable()
     call SetExecutableBit()
     call SetShebang()
 endfunction
-
-
-" Run Python Code in Vim
-"
+" }}}
+" Run Python Code in Vim {{{
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
 vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
 nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
+" SaveAndExecutePython() :: save file and execute python in split vim {{{
 function! SaveAndExecutePython()
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
 
@@ -123,7 +119,8 @@ function! SaveAndExecutePython()
     " Return to previous (code) window
     silent execute 'wincmd p'
 endfunction
-
+" }}}
+" ClosePythonWindow() :: close window opened for running python {{{
 function! ClosePythonWindow()
     " Close Python window we opened
     if bufexists(s:buf_nr)
@@ -136,3 +133,5 @@ function! ClosePythonWindow()
     " Return to original window
     silent execute 'wincmd p'
 endfunction
+" }}}
+" }}}

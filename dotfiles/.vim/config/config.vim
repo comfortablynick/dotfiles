@@ -1,5 +1,5 @@
-" APPLICATION SETTINGS ==========================
-
+" VIM / NEOVIM GENERAL CONFIG ====================
+" Application {{{
 set nocompatible                        " Ignore compatibility issues with Vi
 set noswapfile                          " Don't create freaking swap files
 set ttyfast                             " Terminal acceleration
@@ -17,9 +17,8 @@ else
     set pyxversion=3                    " Use Python3
     let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
-
-" General ---------------------------------------
-
+" }}}
+" General {{{
 syntax enable                   " Syntax highlighting on
 set fileformat=unix             " Always use LF and not CRLF
 set encoding=utf-8              " Default to unicode
@@ -38,24 +37,24 @@ set updatetime=100              " Update more often (helps GitGutter)
 set signcolumn=yes              " Always show; keep appearance consistent
 set scrolloff=10                " Lines before/after cursor during scroll
 set ttimeoutlen=10              " How long in ms to wait for key combinations
-
-" Indent behavior -------------------------------
+" }}}
+" Indents {{{
 set expandtab                   " Expand tab to spaces
 set smartindent                 " Attempt smart indenting
 set autoindent                  " Attempt auto indenting
 set shiftwidth=2                " Indent width in spaces
 set backspace=2                 " Backspace behaves as expected
-
-" Searching & Replacing -------------------------
+" }}}
+" Search & replace {{{
 set ignorecase                  " Ignore case while searching
 set smartcase                   " Case sensitive if uppercase in pattern
 set incsearch                   " Move cursor to matched string
-
-" Window Split ----------------------------------
+" }}}
+" Window Split {{{
 set splitbelow                  " Split below instead of above
 set splitright                  " Split right instead of left
-
-" Line numbering --------------------------------
+" }}}
+" Line numbers {{{
 set number                      " Show linenumbers
 set relativenumber              " Show relative numbers (hybrid with `number` enabled)
 
@@ -63,16 +62,18 @@ set relativenumber              " Show relative numbers (hybrid with `number` en
 " INSERT:       Turn off relativenumber while writing code
 " NORMAL:       Turn on relativenumber for easy navigation
 " NO FOCUS:     Turn off relativenumber (testing code, etc.)
+
 augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
 augroup END
-
-" Cursor position -------------------------------
+" }}}
+" Cursor position {{{
 " Jump to last position when reopening file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g`\"" | endif
-
-" Add shebang if defined
+" }}}
+" Shebang {{{
 au BufNewFile * call SetShebang()
+" }}}

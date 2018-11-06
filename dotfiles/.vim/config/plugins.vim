@@ -31,10 +31,10 @@ Plug 'junegunn/gv.vim'                                          " Git log/diff e
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
 
 " Theming
-Plug 'ayu-theme/ayu-vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'morhetz/gruvbox'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'nightsense/snow'
 
 call plug#end()
 

@@ -130,6 +130,7 @@ fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
+fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
 
 # <--- All plugin definitions before this line
 fundle init
@@ -260,6 +261,7 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
 abbr -g xo xonsh                                                   # Open xonsh shell
+abbr -g lp lpass                                                   # LastPass cli
 abbr -g vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
 abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
 abbr -g n nvim                                                     # Call Neovim directly

@@ -319,52 +319,6 @@ function __fundle_clean -d "cleans fundle directory"
 	end
 end
 
-function __fundle_plugin_orig -d "add plugin to fundle" -a name
-	set -l plugin_url ""
-	set -l plugin_path "."
-    set -l if_cond ""
-    set -l if_eval true
-	set -l argv_count (count $argv)
-	set -l skip_next true
-	if test $argv_count -eq 0 -o -z "$argv"
-		echo "usage: fundle plugin NAME [[--url] URL] [--path PATH]"
-		return 1
-	else if test $argv_count -gt 1
-		for i in (__fundle_seq (count $argv))
-			test $skip_next = true; and set skip_next false; and continue
-			set -l arg $argv[$i]
-			switch $arg
-				case '--url'
-					set plugin_url (__fundle_next_arg $i $argv)
-					test $status -eq 1; and echo $plugin_url; and return 1
-					set skip_next true
-				case '--path'
-					set plugin_path (__fundle_next_arg $i $argv)
-					test $status -eq 1; and echo $plugin_path; and return 1
-					set skip_next true
-                case '--if'
-                    set if_cond (__fundle_next_arg $i $argv)
-                    set if_eval (eval $if_cond)
-                    # test $status -eq 1; and echo $plugin_path; and return 1
-                    set skip_next true
-				case '--*'
-					echo "unknown flag $arg"; and return 1
-				case '*'
-					test $i -ne 2; and echo "invalid argument $arg"; and return 1
-					set plugin_url $arg
-			end
-		end
-	end
-	test -z "$plugin_url"; and set plugin_url (__fundle_get_url $name)
-    # test $if_eval && echo "true" || echo "false"
-    # Condition is working right; what do I have to do to get it to install?
-	if not contains $name $__fundle_plugin_names; and test $if_eval
-		set -g __fundle_plugin_names $__fundle_plugin_names $name
-		set -g __fundle_plugin_urls $__fundle_plugin_urls $plugin_url
-		set -g __fundle_plugin_name_paths $__fundle_plugin_name_paths $name:$plugin_path
-	end
-end
-
 function __fundle_plugin --d 'add plugin to fundle'
 	set -l options 'u/url=' 'p/path=' 'c/cond=' 'h/help' 'd/debug'
     set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH] [--cond CONDITION]]"
@@ -389,6 +343,57 @@ function __fundle_plugin --d 'add plugin to fundle'
     else
         set name $argv
     end
+
+    if echo "$plugin_cond" | source
+        set -l cond_true
+        set eval_debug "Cond true"
+
+        # Process plugin
+        test -z "$plugin_url"; and set plugin_url (__fundle_get_url $name)
+        if not contains $name $__fundle_plugin_names; and set -q $cond_true
+            set -g __fundle_plugin_names $__fundle_plugin_names $name
+            set -g __fundle_plugin_urls $__fundle_plugin_urls $plugin_url
+            set -g __fundle_plugin_name_paths $__fundle_plugin_name_paths $name:$plugin_path
+        end
+    else
+        set eval_debug "Cond false"
+    end
+
+    if set -q _flag_debug
+        echo "----- DEBUG OUTPUT -----"
+        echo "Fundle args for $name:"
+        echo "  Url: $plugin_url"
+        echo "  Path: $plugin_path"
+        echo "  Cond eval: $eval_debug"
+        echo ""
+        echo "Fundle vars:"
+        echo "  Plugin names: $__fundle_plugin_names"
+        echo "  Plugin urls: $__fundle_plugin_urls"
+        echo "  Plugin name+paths: $__fundle_plugin_name_paths"
+        echo "----- END DEBUG -----"
+    end
+end
+
+function __fundle_plug --d 'add plugin to fundle'
+    set -l help_txt "usage: fundle plugin NAME [[--url URL ] [--path PATH] [--cond CONDITION]]"
+    test -z "$argv" && echo $help_txt && return 1
+
+    set -l arglist ""
+    set -l plugin_url ""
+    set -l plugin_path "."
+    set -l plugin_cond ""
+    set -l eval_debug ""
+    set -l name ""
+
+    # Process options
+    echo $argv
+    set arglist (string split ", " "$argv")
+
+    # TODO: use awk to parse?
+    for arg in $argv
+        echo "$arg"
+    end
+    return
 
     if echo "$plugin_cond" | source
         set -l cond_true
@@ -481,8 +486,9 @@ function fundle -d "run fundle"
 			__fundle_print_help
 			return 0
 		case "*"
-			__fundle_print_help
-			return 1
+            __fundle_plug $argv
+            # __fundle_print_help
+            return 0
 	end
 end
 

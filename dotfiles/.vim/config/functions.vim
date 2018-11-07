@@ -13,7 +13,8 @@ shebang = {
 	'ruby':       '#!/usr/bin/env ruby',
 	'perl':       '#!/usr/bin/env perl',
 	'php':        '#!/usr/bin/env php',
-        'fish':       '#!/usr/bin/env fish',
+    'fish':       '#!/usr/bin/env fish',
+    'awk':        '#!/bin/awk -f',
 }
 if not vim.current.buffer[0].startswith('#!'):
 	filetype = vim.eval('&filetype')

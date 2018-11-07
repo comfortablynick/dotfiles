@@ -85,7 +85,7 @@ set -gx VIM_SSH_COMPAT 0                                        # Safe term bg i
 
 # Vim/Neovim color schemes
 set -gx VIM_COLOR gruvbox-dark
-set -gx NVIM_COLOR snow-light
+set -gx NVIM_COLOR snow-dark
 # }}}
 # Fuzzy finder {{{
 # Enable fuzzy directory finding
@@ -135,7 +135,7 @@ fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
-fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
+# fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
 
 # <--- All plugin definitions before this line
 fundle init
@@ -184,7 +184,7 @@ if test "$FISH_THEME" = 'bobthefish'
     end
 
     # Set options if term windows is narrow-ish
-    if test "$COLUMNS" -lt 100
+    if test "$COLUMNS" -lt 140
       set -g theme_newline_cursor yes
       set -g theme_display_date no
     else

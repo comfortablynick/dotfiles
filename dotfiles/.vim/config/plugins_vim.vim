@@ -1,12 +1,13 @@
 " Plugins for Vim only
 
 set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
+Plug 'itchyny/lightline.vim'                                    " Statusline
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }         " Code completion (compiled)
 " Plug 'Shougo/deoplete.nvim'                                     " Code completion
 " Plug 'roxma/nvim-yarp'                                          " Required by deoplete
 " Plug 'roxma/vim-hug-neovim-rpc'                                 " Required by deoplete
 
-" YCM settings
+" YouCompleteMe
 let g:ycm_filetype_blacklist = {
       \ 'gitcommit': 1,
       \ 'tagbar': 1,

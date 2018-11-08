@@ -136,3 +136,17 @@ function! ClosePythonWindow()
 endfunction
 " }}}
 " }}}
+" ToggleQf() :: toggle quickfix window {{{
+function! ToggleQf()
+  for buffer in tabpagebuflist()
+    if bufname(buffer) == ''
+      " then it should be the quickfix window
+      cclose
+      return
+    endif
+  endfor
+
+  copen
+endfunction
+nnoremap <silent> qf :call ToggleQf()<cr>
+" }}}

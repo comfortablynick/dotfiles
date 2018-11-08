@@ -61,14 +61,14 @@ set -gx FISH_SSH_THEME "yimmy"
 # Get theme from local file
 if test -f $XDG_DATA_HOME/fish/theme
     read local_theme < $XDG_DATA_HOME/fish/theme
-    echo "Local theme is: $local_theme"
+    # echo "Local theme is: $local_theme"
     set FISH_THEME $local_theme
 end
 
 # Get ssh theme from local file
 if test -f $XDG_DATA_HOME/fish/ssh_theme
     read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
-    echo "Local ssh theme is: $local_ssh_theme"
+    # echo "Local ssh theme is: $local_ssh_theme"
     set FISH_SSH_THEME $local_ssh_theme
 end
 # }}}
@@ -77,7 +77,7 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
-set -gx EDITOR nvim                                             # Default editor
+set -gx EDITOR vim                                              # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim

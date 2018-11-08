@@ -13,6 +13,7 @@ endif
 " Editor/appearance
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
+Plug 'ryanoasis/vim-devicons'                                   " Developer filetype icons
 
 " Linting
 Plug 'w0rp/ale'                                                 " Linting
@@ -41,26 +42,47 @@ call plug#end()
 
 " PLUGIN CONFIGURATION ==========================
 " Ale linter
-let g:ale_close_preview_on_insert = 1           " Close preview window in INSERT mode
-let g:ale_cursor_detail = 0                     " Open preview window when focusing on error
-let g:ale_echo_cursor = 1                       " Either this or ale_cursor_detail need to be set to 1
-let g:ale_cache_executable_check_failures = 1   " Have to restart vim if adding new providers
-let g:ale_lint_on_text_changed = 'never'        " Don't lint while typing (too distracting)
-let g:ale_lint_on_insert_leave = 1              " Lint after leaving insert
-let g:ale_list_window_size = 10                 " Show # of lines of errors
-let g:ale_fix_on_save = 1                       " Apply fixes when saving
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
+let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
+let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
+let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
+let g:ale_cache_executable_check_failures = 1                   " Have to restart vim if adding new providers
+let g:ale_lint_on_text_changed = 'never'                        " Don't lint while typing (too distracting)
+let g:ale_lint_on_insert_leave = 0                              " Lint after leaving insert
+let g:ale_lint_on_enter = 0                                     " Lint when opening file
+let g:ale_list_window_size = 5                                  " Show # of lines of errors
+let g:ale_open_list = 1                                         " Show quickfix list
+let g:ale_set_loclist = 0                                       " Show location list
+let g:ale_set_quickfix = 1                                      " Show quickfix list with errors
+let g:ale_fix_on_save = 1                                       " Apply fixes when saving
+let g:ale_echo_msg_error_str = 'E'                              " Error string prefix
+let g:ale_echo_msg_warning_str = 'W'                            " Warning string prefix
 let g:ale_echo_msg_format = '[%linter%] %s (%severity%%: code%)'
-let g:ale_sign_column_always = 1
-let g:ale_completion_enabled = 0
-let g:ale_virtualenv_dir_names = ['.env', '.pyenv', 'env', 'dev', 'virtualenv']
+let g:ale_sign_column_always = 1                                " Always show column on left side, even with no errors/warnings
+let g:ale_completion_enabled = 0                                " Enable ALE completion if no other completion engines
+let g:ale_virtualenv_dir_names = [
+    \ '.env',
+    \ '.pyenv',
+    \ 'env',
+    \ 'dev',
+    \ 'virtualenv'
+    \ ]
 let g:ale_linters = {
-    \ 'python': [ 'flake8' ]
+    \ 'python':
+    \   [
+    \     'flake8'
+    \   ]
     \ }
 let g:ale_fixers = {
-    \ '*': [ 'remove_trailing_lines', 'trim_whitespace' ],
-    \ 'python': [ 'black', 'autopep8' ]
+    \ '*':
+    \  [
+    \    'remove_trailing_lines',
+    \    'trim_whitespace'
+    \  ],
+    \ 'python':
+    \  [
+    \    'black',
+    \    'autopep8'
+    \  ]
     \ }
 
 " Ale linter settings

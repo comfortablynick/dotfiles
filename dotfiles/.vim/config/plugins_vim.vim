@@ -2,10 +2,16 @@
 
 set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
 Plug 'itchyny/lightline.vim'                                    " Statusline
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }         " Code completion (compiled)
+Plug 'maximbaz/lightline-ale'                                   " ALE status in Lightline
+Plug 'Valloric/YouCompleteMe',                                  " Code completion (compiled on install/update)
+    \ {
+    \   'do': '~/git/python/shell/vimsync.py'
+    \ }
 " Plug 'Shougo/deoplete.nvim'                                     " Code completion
 " Plug 'roxma/nvim-yarp'                                          " Required by deoplete
 " Plug 'roxma/vim-hug-neovim-rpc'                                 " Required by deoplete
+
+" PLUGIN CONFIGURATION ==========================
 
 " YouCompleteMe
 let g:ycm_filetype_blacklist = {

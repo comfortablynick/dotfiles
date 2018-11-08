@@ -77,3 +77,16 @@ au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
 " Shebang {{{
 au BufNewFile * call SetShebang()
 " }}}
+" Quickfix Window {{{
+" Close buffer if quickfix window is last
+au BufEnter * call MyLastWindow()
+function! MyLastWindow()
+  " if the window is quickfix go on
+  if &buftype=="quickfix"
+    " if this window is last on screen quit without warning
+    if winnr('$') < 2
+      quit
+    endif
+  endif
+endfunction
+" }}}

@@ -126,6 +126,7 @@ function! LightlineModified()
 endfunction
 
 function! LL_Mode() abort
+    " TODO: abbreviate mode if < MinWidth
     return LL_IsNerd() ? 'NERD' : lightline#mode()
 endfunction
 
@@ -137,7 +138,7 @@ function! LL_IsNotFile() abort
         \ 'output',
         \ ]
     for item in exclude
-        if &ft =~ item
+        if &ft =~ item || expand('%:t') =~ item
             return 1
             break
         else

@@ -134,6 +134,7 @@ function! LL_IsNotFile() abort
     let exclude = [
         \ 'gitcommit',
         \ 'NERD_tree',
+        \ 'output',
         \ ]
     for item in exclude
         if &ft =~ item
@@ -165,7 +166,7 @@ function! LL_ColNo() abort
 endfunction
 
 function! LL_LineInfo() abort
-    return LL_IsNerd() ? '' :
+    return LL_IsNotFile() ? '' :
         \ printf("%s %s %s %s :%s",
         \ LL_LinePercent(),
         \ g:LL_LineSymbol,

@@ -33,6 +33,7 @@ set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data 
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
+set -q NERD_FONTS || set -gx NERD_FONTS 1
 # }}}
 # Path {{{
 set -l paths                                                    # User path variable; add any paths to this
@@ -181,10 +182,7 @@ set -g ___fish_git_prompt_char_stashstate ≡
 if test "$FISH_THEME" = 'bobthefish'
     # Set options based on ssh connection/term size
     if test -n "$SSH_CONNECTION"
-      set -g theme_nerd_fonts no
-      set -g virtualenv_glyph \u24d4 # ⓔ
-    else
-      set -g theme_nerd_fonts yes
+        set -gx NERD_FONTS 0
     end
 
     # Set options if term windows is narrow-ish

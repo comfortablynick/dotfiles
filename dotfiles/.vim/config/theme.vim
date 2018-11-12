@@ -10,10 +10,10 @@ if $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
     let g:LL_nf = 0
-elseif $NERD_FONTS == 0
+elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
     let g:LL_nf = 0
     let g:LL_pl = 1
-elseif $POWERLINE_FONTS == 0
+elseif ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
     let g:LL_nf = 0
     let g:LL_pl = 0
 else
@@ -22,10 +22,15 @@ else
 endif
 
 " TMUX: doesn't like termguicolors
-if ! empty($TMUX) || $VIM_SSH_COMPAT == 1
-    let termguicolors = 0
+if ! empty($VIM_SSH_COMPAT) && $VIM_SSH_COMPAT == 1
+    set notermguicolors
 else
-    let termguicolors = 1
+    set termguicolors
+endif
+
+if &term =~# '^screen'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 " }}}
 " Theme: Nord {{{

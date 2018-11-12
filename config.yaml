@@ -98,6 +98,14 @@ dotfiles:
     dst: ~/.dircolors
     link: true
     src: dircolors.sh
+  f_local_tmux:
+    dst: ~/.tmux.conf.local
+    link: true
+    src: local.tmux
+  f_tmux_conf:
+    dst: ~/.tmux.conf
+    link: true
+    src: .tmux/.tmux.conf
   f_vimrc:
     actions:
     - vim-plug-install
@@ -123,7 +131,9 @@ profiles:
     - f_bash_aliases
     - f_bash_functions
     - f_dircolors
+    - f_local_tmux
     - f_vimrc
+    - f_tmux_conf
     - f_xonshrc
     - f_zshrc
     - d_after

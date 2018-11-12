@@ -2,7 +2,7 @@
 function parse_plug --description 'parse fundle plugin call'
 	set -l plug "account/repo '{from: gh, if: test 1 -eq 1, after: ./install.py}'"
     echo "Input: $plug"
-    set -l commands (echo $plug |grep -Po '{\K[^{]*(?=})')
+    set -l commands (echo $plug | grep -Po '{\K[^{]*(?=})')
     echo "Raw commands: $commands"
 
     # Parse commands

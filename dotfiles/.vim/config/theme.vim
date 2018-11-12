@@ -1,14 +1,31 @@
 " VIM COLORS/THEMES
 
-" SSH Compatibility {{{
-" Remove background to try to work better with iOS SSH apps
+" Theme Compatibility {{{
+" Defaults
+let g:LL_pl = 1
+let g:LL_nf = 1
+
+" SSH: remove background to try to work better with iOS SSH apps
 if $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
+    let g:LL_nf = 0
+elseif $NERD_FONTS == 0
+    let g:LL_nf = 0
+    let g:LL_pl = 1
+elseif $POWERLINE_FONTS == 0
+    let g:LL_nf = 0
     let g:LL_pl = 0
 else
+    let g:LL_nf = 1
     let g:LL_pl = 1
-    set termguicolors
+endif
+
+" TMUX: doesn't like termguicolors
+if ! empty($TMUX) || $VIM_SSH_COMPAT == 1
+    let termguicolors = 0
+else
+    let termguicolors = 1
 endif
 " }}}
 " Theme: Nord {{{
@@ -107,30 +124,33 @@ let g:lightline = {
         \ }
 " }}}
 " Section definitions {{{
-" ALE Indicators
+" ALE Indicators {{{
 let g:lightline#ale#indicator_checking = '...'
 let g:lightline#ale#indicator_warnings = '⧍'
 let g:lightline#ale#indicator_errors = '✗'
 let g:lightline#ale#indicator_ok = '✓'
-
-" Main sections
-let g:LL_MinWidth = 80                                          " Width for using some expanded sections
+" }}}
+" Main sections {{{
+let g:LL_MinWidth = 100                                          " Width for using some expanded sections
 let g:LL_LineNoSymbol = g:LL_pl ? '' : '␤'
-let g:LL_GitSymbol = g:LL_pl ? '' : [git]
-let g:LL_Branch = g:LL_pl ? '' : '🜉'
-let g:LL_LineSymbol = g:LL_pl ? '☰ ' : 'Ξ'
+let g:LL_GitSymbol = g:LL_nf ? '' : '[git]'
+let g:LL_Branch = g:LL_pl ? '' : '' " '🜉'
+let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ ' " 'Ξ'
 let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'
-
-function! LightlineModified()
+let g:lightline.separator.left = g:LL_pl ? '' : ''
+let g:lightline.separator.right = g:LL_pl ? '' : ''
+let g:lightline.subseparator.left = g:LL_pl ? '' : '|'
+let g:lightline.subseparator.right = g:LL_pl ? '' : '|'
+function! LightlineModified() abort " {{{
     return &ft =~ 'help\|vimfiler' ? '' : &modified ? '[+]' : &modifiable ? '' : '-'
 endfunction
-
-function! LL_Mode() abort
+" }}}
+function! LL_Mode() abort " {{{
     " TODO: abbreviate mode if < MinWidth
     return LL_IsNerd() ? 'NERD' : lightline#mode()
 endfunction
-
-function! LL_IsNotFile() abort
+" }}}
+function! LL_IsNotFile() abort " {{{
     " Return true if not treated as file
     let exclude = [
         \ 'gitcommit',
@@ -146,12 +166,12 @@ function! LL_IsNotFile() abort
         endif
     endfor
 endfunction
-
-function! LL_LinePercent() abort
+" }}}
+function! LL_LinePercent() abort " {{{
     return printf("%3d%%", line('.') * 100 / line('$'))
 endfunction
-
-function! LL_LineNo() abort
+" }}}
+function! LL_LineNo() abort " {{{
     let totlines = line('$')
     let maxdigits = len(string(totlines))
     return printf("%*d/%*d",
@@ -161,12 +181,12 @@ function! LL_LineNo() abort
         \ totlines
         \ )
 endfunction
-
-function! LL_ColNo() abort
+" }}}
+function! LL_ColNo() abort " {{{
     return printf("%3d", col('.'))
 endfunction
-
-function! LL_LineInfo() abort
+" }}}
+function! LL_LineInfo() abort " {{{
     return LL_IsNotFile() ? '' :
         \ printf("%s %s %s %s :%s",
         \ LL_LinePercent(),
@@ -176,23 +196,23 @@ function! LL_LineInfo() abort
         \ LL_ColNo()
         \ )
 endfunction
-
-function! LL_FileType() abort
-    let ftsymbol = g:LL_pl ? WebDevIconsGetFileTypeSymbol() : ''
+" }}}
+function! LL_FileType() abort " {{{
+    let ftsymbol = g:LL_nf ? WebDevIconsGetFileTypeSymbol() : ''
     return winwidth(0) > g:LL_MinWidth ? (&filetype . ' ' . ftsymbol ) : ''
 endfunction
-
-function! LL_FileFormat() abort
-    let ffsymbol = g:LL_pl ? WebDevIconsGetFileFormatSymbol() : ''
+" }}}
+function! LL_FileFormat() abort " {{{
+    let ffsymbol = g:LL_nf ? WebDevIconsGetFileFormatSymbol() : ''
     return LL_IsNotFile() ? '' : winwidth(0) > g:LL_MinWidth ? (&fileformat . ' ' . ffsymbol ) : ''
 endfunction
-
-function! LL_FileEncoding() abort
+" }}}
+function! LL_FileEncoding() abort " {{{
     " Only return a value if != utf-8
     return &fileencoding != 'utf-8' ? &fileencoding : ''
 endfunction
-
-function! LL_HunkSummary() abort
+" }}}
+function! LL_HunkSummary() abort " {{{
     let githunks = GitGutterGetHunkSummary()
     return printf("+%d ~%d -%d",
         \ githunks[0],
@@ -200,16 +220,16 @@ function! LL_HunkSummary() abort
         \ githunks[2]
         \ )
 endfunction
-
-function! LL_ReadOnly() abort
+" }}}
+function! LL_ReadOnly() abort " {{{
     return &ft !~? 'help' && &readonly ? g:LL_ROSymbol : ''
 endfunction
-
-function! LL_IsNerd() abort
+" }}}
+function! LL_IsNerd() abort " {{{
     return expand('%:t') =~ 'NERD_tree'
 endfunction
-
-function! LightlineFilename()
+" }}}
+function! LightlineFilename() " {{{
     let fname = expand('%:t')
     return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
         \ fname == '__Tagbar__' ? g:lightline.fname :
@@ -221,8 +241,8 @@ function! LightlineFilename()
         \ ('' != fname ? fname : '[No Name]') .
         \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
 endfunction
-
-function! LightlineFugitive()
+" }}}
+function! LightlineFugitive() " {{{
     if &ft !~? 'vimfiler' && ! LL_IsNotFile() && exists('*fugitive#head') && winwidth(0) > g:LL_MinWidth
         let branch = fugitive#head()
         return branch !=# '' ? printf("%s %s %s %s",
@@ -236,9 +256,10 @@ function! LightlineFugitive()
 endfunction
 " }}}
 " }}}
+" }}}
+" }}}
 " Vim / Neovim Settings {{{
-
-" Get color theme from env var
+" Get color theme from env var {{{
 if has('nvim')
     let vim_color = $NVIM_COLOR
     if empty(vim_color)
@@ -252,8 +273,8 @@ else
         let vim_color = 'gruvbox-dark'
     endif
 endif
-
-" Set colors based on theme
+" }}}
+" Set colors based on theme {{{
 " vim_baseColor: 'nord-dark' -> 'nord'
 let vim_baseColor = substitute(vim_color, '-dark\|-light', '', '')
 
@@ -264,11 +285,6 @@ let vim_variant = substitute(vim_color, vim_baseColor . '-', '', '')
 exe "colorscheme ".vim_baseColor
 exe "set background=".vim_variant
 let g:airline_theme = get(airline_themes, vim_color, vim_baseColor)
-
-" Lightline
-let g:lightline.separator.left = g:LL_pl ? '' : ''
-let g:lightline.separator.right = g:LL_pl ? '' : ''
-let g:lightline.subseparator.left = g:LL_pl ? '' : '|'
-let g:lightline.subseparator.right = g:LL_pl ? '' : '|'
 let lightline['colorscheme'] = airline_theme
+" }}}
 " }}}

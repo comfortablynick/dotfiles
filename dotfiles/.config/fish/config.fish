@@ -38,6 +38,7 @@ set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/pyt
 set -l paths                                                    # User path variable; add any paths to this
 set -a paths "$HOME/bin"                                        # General user binaries
 set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
+set -a paths "$POWERLINE_ROOT"                                  # Make sure powerline is in path
 # Prepend to $PATH if valid directory
 for p in $paths
     if test -d $p
@@ -125,7 +126,7 @@ end
 # <--- All plugin definitions after this line
 
 # Themes
-fundle plugin 'oh-my-fish/theme-bobthefish' \
+fundle plugin 'comfortablynick/theme-bobthefish' \
     --cond='[ $FISH_THEME = bobthefish ]'
 fundle plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
 fundle plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
@@ -160,6 +161,7 @@ end
 # end
 # }}}
 # THEMES ==================================== {{{
+# Local/SSH theme {{{
 if test -z "$FISH_PKG_MGR"
   if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
     echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
@@ -168,6 +170,7 @@ if test -z "$FISH_PKG_MGR"
     loadtheme $FISH_THEME
   end
 end
+# }}}
 # Git prompt {{{
 set -g __fish_git_prompt_show_informative_status true
 set -g __fish_git_prompt_showcolorhints true
@@ -179,6 +182,7 @@ if test "$FISH_THEME" = 'bobthefish'
     # Set options based on ssh connection/term size
     if test -n "$SSH_CONNECTION"
       set -g theme_nerd_fonts no
+      set -g virtualenv_glyph \u24d4 # ⓔ
     else
       set -g theme_nerd_fonts yes
     end
@@ -190,6 +194,13 @@ if test "$FISH_THEME" = 'bobthefish'
     else
       set -g theme_newline_cursor no
       set -g theme_display_date yes
+    end
+
+    # Tmux shows user/host, so we dont need it here
+    if test -n "$TMUX"
+        set -g theme_display_date no
+        set -g theme_display_user no
+        set -g theme_display_hostname no
     end
 end
 # }}}
@@ -320,12 +331,17 @@ abbr -g cm 'command'                                               # Fish has no
 abbr -g pysh "$HOME/git/python/shell"                              # Python shell scripts
 abbr -g denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
+abbr -g pr 'powerline-daemon --replace'                            # Reload powerline
 # }}}
 # Scripts {{{
 abbr -g l list
 abbr -g lso 'list -hO'
 abbr -g listd 'list --debug'
 abbr -g listh 'list --help'
+# }}}
+# tmux {{{
+# abbr -g te "vim $HOME/.tmux.conf.local"
+abbr -g te "vim $HOME/.tmux.conf.local && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
 # }}}
 # System {{{
 abbr -g che 'chmod +x'                                             # Make executable

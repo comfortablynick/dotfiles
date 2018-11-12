@@ -27,7 +27,7 @@ set -l start_time (get_date)
 echo -n 'Sourcing config.fish...  '
 # }}}
 # ENVIRONMENT =============================== {{{
-# System {{{
+# General System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
@@ -40,6 +40,7 @@ set -l paths                                                    # User path vari
 set -a paths "$HOME/bin"                                        # General user binaries
 set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
 set -a paths "$POWERLINE_ROOT"                                  # Make sure powerline is in path
+
 # Prepend to $PATH if valid directory
 for p in $paths
     if test -d $p
@@ -93,6 +94,12 @@ set -gx NVIM_COLOR snow-dark
 # Enable fuzzy directory finding
 set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
 # }}}
+# TMux {{{
+# Attach to existing tmux or create a new session using custom function
+# if test -z "$TMUX"
+#     tm def
+# end
+# }}}
 # }}}
 # PACKAGES ================================== {{{
 # Package manager setup {{{
@@ -136,6 +143,12 @@ fundle plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
+
+# Node.js
+fundle plugin 'FabioAntunes/fish-nvm'
+fundle plugin 'edc/bass'
+
+# Test
 fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 # fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
 
@@ -148,6 +161,14 @@ if ! test -d "$HOME/.fzf"
     echo "fzf dir not found. Cloning fzf and installing..."
     command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
     ~/.fzf/install --bin --no-update-rc
+end
+
+# nvm
+if ! test -d "$HOME/.nvm"
+    echo "nvm not found. Cloning nvm..."
+    command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
+    cd "$HOME/.nvm"
+    command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
 end
 # }}}
 # }}}

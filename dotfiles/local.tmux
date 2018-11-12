@@ -293,6 +293,7 @@ tmux_conf_copy_to_os_clipboard=false
 # user customizations {{{
 # this is the place to override or undo settings
 
+set -ga terminal-overrides ",xterm-256color:Tc"
 # increase history size
 set -g history-limit 10000
 

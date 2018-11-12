@@ -55,10 +55,10 @@ let g:PaperColor_Theme_Options = {
   \     'default': {
   \       'allow_bold': 1,
   \       'allow_italic': 0,
-  \       'transparent_background': 1
+  \       'transparent_background': 0
   \     },
   \     'default.dark': {
-  \       'transparent_background': 1
+  \       'transparent_background': 0
   \     }
   \   },
   \  'language': {
@@ -75,6 +75,7 @@ let g:airline_themes = {
     \ 'snow-dark': 'snow_dark',
     \ 'snow-light': 'snow_light',
     \ 'papercolor': 'papercolor',
+    \ 'PaperColor': 'PaperColor',
     \ 'gruvbox': 'gruvbox',
     \ }
 " }}}

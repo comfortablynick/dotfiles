@@ -150,7 +150,6 @@ profiles:
     dotfiles:
     - f_bash_linux
     - f_bash_windows
-    - d_themer
     include:
     - core
   joppa:

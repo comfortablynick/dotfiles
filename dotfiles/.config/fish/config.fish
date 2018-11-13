@@ -99,6 +99,11 @@ set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d;
 # if test -z "$TMUX"
 #     tm def
 # end
+
+# Get current session name
+if test -n "$TMUX_PANE"
+    set -gx TMUX_SESSION (tmux list-panes -t "$TMUX_PANE" -F '#S' | head -n1)
+end
 # }}}
 # }}}
 # PACKAGES ================================== {{{

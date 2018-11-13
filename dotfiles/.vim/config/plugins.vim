@@ -13,7 +13,11 @@ endif
 " Editor/appearance
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
-Plug 'ryanoasis/vim-devicons'                                   " Developer filetype icons
+
+if ! $TMUX_SESSION =~ 'ios'
+    " Load plugins that require full terminal
+    Plug 'ryanoasis/vim-devicons'                               " Developer filetype icons
+endif
 
 " Linting
 Plug 'w0rp/ale'                                                 " Linting
@@ -22,7 +26,6 @@ Plug 'w0rp/ale'                                                 " Linting
 Plug 'HerringtonDarkholme/yats', { 'for': 'typescript' }        " Typescript
 Plug 'gabrielelana/vim-markdown', { 'for': 'markdown' }         " Markdown
 Plug 'Soares/fish.vim', { 'for': 'fish' }                       " Fish syntax highlighting
-" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}          " Python (enhanced)
 
 " Formatting
 Plug 'ambv/black', { 'for': 'python' }                          " Python formatter (subset of PEP8)
@@ -36,6 +39,9 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'morhetz/gruvbox'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'nightsense/snow'
+
+" Executing
+Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously
 
 call plug#end()
 

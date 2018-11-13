@@ -14,7 +14,7 @@ endif
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
 
-if ! $TMUX_SESSION =~ 'ios'
+if $NERD_FONTS != 0
     " Load plugins that require full terminal
     Plug 'ryanoasis/vim-devicons'                               " Developer filetype icons
 endif

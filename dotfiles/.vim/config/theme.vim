@@ -1,33 +1,31 @@
 " VIM COLORS/THEMES
 
 " Theme Compatibility {{{
-" Defaults
+" Defaults: turn all fonts and colors ON
 let g:LL_pl = 1
 let g:LL_nf = 1
+set termguicolors
 
 " SSH: remove background to try to work better with iOS SSH apps
 if $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
     let g:LL_nf = 0
-elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
-    let g:LL_nf = 0
-    let g:LL_pl = 1
-elseif ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
+    set notermguicolors
+endif
+
+" FONTS: check env vars to see if we need to turn off nerd/powerline fonts
+if ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
+    " We can turn off both, since NF are a superset of PL fonts
     let g:LL_nf = 0
     let g:LL_pl = 0
-else
-    let g:LL_nf = 1
+elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
+    " Disable NF but keep PL fonts (iOS SSH apps, etc.)
+    let g:LL_nf = 0
     let g:LL_pl = 1
 endif
 
-" TMUX: doesn't like termguicolors
-if ! empty($VIM_SSH_COMPAT) && $VIM_SSH_COMPAT == 1
-    set notermguicolors
-else
-    set termguicolors
-endif
-
+" TMUX: make it work with termguicolors
 if &term =~# '^screen'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -137,12 +135,15 @@ let g:lightline#ale#indicator_errors = '✗'
 let g:lightline#ale#indicator_ok = '✓'
 " }}}
 " Main sections {{{
-let g:LL_MinWidth = 100                                          " Width for using some expanded sections
-let g:LL_LineNoSymbol = g:LL_pl ? '' : '␤'
-let g:LL_GitSymbol = g:LL_nf ? '' : '[git]'
-let g:LL_Branch = g:LL_pl ? '' : '' " '🜉'
-let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ ' " 'Ξ'
-let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'
+" Section settings / glyphs
+let g:LL_MinWidth = 100                                         " Width for using some expanded sections
+let g:LL_LineNoSymbol = g:LL_pl ? '' : '␤'                     " Use  for line no unless no PL fonts
+let g:LL_GitSymbol = g:LL_nf ? '' : '[git]'                    " Use git symbol unless no nerd fonts
+let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)
+let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
+let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'                    " Read-only PL symbol
+
+" Section separators
 let g:lightline.separator.left = g:LL_pl ? '' : ''
 let g:lightline.separator.right = g:LL_pl ? '' : ''
 let g:lightline.subseparator.left = g:LL_pl ? '' : '|'
@@ -189,7 +190,7 @@ function! LL_LineNo() abort " {{{
 endfunction
 " }}}
 function! LL_ColNo() abort " {{{
-    return printf("%3d", col('.'))
+    return printf("%3d", virtcol('.'))
 endfunction
 " }}}
 function! LL_LineInfo() abort " {{{
@@ -204,12 +205,18 @@ function! LL_LineInfo() abort " {{{
 endfunction
 " }}}
 function! LL_FileType() abort " {{{
-    let ftsymbol = g:LL_nf ? WebDevIconsGetFileTypeSymbol() : ''
+    let ftsymbol = g:LL_nf &&
+        \ exists('*WebDevIconsGetFileTypeSymbol') ?
+        \ WebDevIconsGetFileTypeSymbol() :
+        \ ''
     return winwidth(0) > g:LL_MinWidth ? (&filetype . ' ' . ftsymbol ) : ''
 endfunction
 " }}}
 function! LL_FileFormat() abort " {{{
-    let ffsymbol = g:LL_nf ? WebDevIconsGetFileFormatSymbol() : ''
+    let ffsymbol = g:LL_nf &&
+        \ exists('*WebDevIconsGetFileFormatSymbol') ?
+        \ WebDevIconsGetFileFormatSymbol() :
+        \ ''
     return LL_IsNotFile() ? '' : winwidth(0) > g:LL_MinWidth ? (&fileformat . ' ' . ffsymbol ) : ''
 endfunction
 " }}}

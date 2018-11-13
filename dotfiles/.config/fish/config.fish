@@ -33,7 +33,7 @@ set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data 
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
 set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
-set -q NERD_FONTS || set -gx NERD_FONTS 1
+set -gx NERD_FONTS 1
 # }}}
 # Path {{{
 set -l paths                                                    # User path variable; add any paths to this
@@ -64,14 +64,12 @@ set -gx FISH_SSH_THEME "yimmy"
 # Get theme from local file
 if test -f $XDG_DATA_HOME/fish/theme
     read local_theme < $XDG_DATA_HOME/fish/theme
-    # echo "Local theme is: $local_theme"
     set FISH_THEME $local_theme
 end
 
 # Get ssh theme from local file
 if test -f $XDG_DATA_HOME/fish/ssh_theme
     read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
-    # echo "Local ssh theme is: $local_ssh_theme"
     set FISH_SSH_THEME $local_ssh_theme
 end
 # }}}
@@ -80,7 +78,7 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor {{{
-set -gx EDITOR vim                                              # Default editor
+set -gx EDITOR nvim                                             # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
 set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
@@ -88,7 +86,7 @@ set -gx VIM_SSH_COMPAT 0                                        # Safe term bg i
 
 # Vim/Neovim color schemes
 set -gx VIM_COLOR gruvbox-dark
-set -gx NVIM_COLOR snow-dark
+set -gx NVIM_COLOR gruvbox-dark
 # }}}
 # Fuzzy finder {{{
 # Enable fuzzy directory finding
@@ -103,6 +101,7 @@ set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d;
 # Get current session name
 if test -n "$TMUX_PANE"
     set -gx TMUX_SESSION (tmux list-panes -t "$TMUX_PANE" -F '#S' | head -n1)
+    test "$TMUX_SESSION" = 'ios' && set NERD_FONTS 0
 end
 # }}}
 # }}}
@@ -207,9 +206,9 @@ set -g ___fish_git_prompt_char_stashstate ≡
 # bobthefish {{{
 if test "$FISH_THEME" = 'bobthefish'
     # Set options based on ssh connection/term size
-    if test -n "$SSH_CONNECTION"
-        set -gx NERD_FONTS 0
-    end
+    # if test -n "$SSH_CONNECTION"
+    #     set NERD_FONTS 0
+    # end
 
     # Set options if term windows is narrow-ish
     if test "$COLUMNS" -lt 140

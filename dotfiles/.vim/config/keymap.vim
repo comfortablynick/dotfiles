@@ -8,6 +8,8 @@ noremap <Space> za
 " za :: Open all folds
 noremap za zA
 
+" F10 to toggle quickfix window for asyncrun
+noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<cr>
 " INSERT ----------------------------------------
 
 " `kj` :: escape

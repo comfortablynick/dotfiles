@@ -107,3 +107,7 @@ let NERDTreeShowHidden = 1                      " Show dotfiles
 
 " Black
 let g:black_virtualenv = "~/.env/black"      " Black virtualenv location (custom)
+
+" Asyncrun
+let g:asyncrun_open = 6                                         " Show quickfix when executing command
+let g:asyncrun_bell = 1                                         " Ring bell when job finished

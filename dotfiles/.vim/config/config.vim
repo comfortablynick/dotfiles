@@ -20,6 +20,7 @@ endif
 " }}}
 " General {{{
 syntax enable                   " Syntax highlighting on
+colorscheme darkblue
 set fileformat=unix             " Always use LF and not CRLF
 set encoding=utf-8              " Default to unicode
 set termencoding=utf-8          " Unicode

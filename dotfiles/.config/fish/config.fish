@@ -224,6 +224,7 @@ if test "$FISH_THEME" = 'bobthefish'
         set -g theme_display_date no
         set -g theme_display_user no
         set -g theme_display_hostname no
+        set -g theme_newline_cursor yes
     end
 end
 # }}}
@@ -362,9 +363,8 @@ abbr -g lso 'list -hO'
 abbr -g listd 'list --debug'
 abbr -g listh 'list --help'
 # }}}
-# tmux {{{
-# abbr -g te "vim $HOME/.tmux.conf.local"
-abbr -g te "vim $HOME/.tmux.conf.local && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
+# TMux {{{
+abbr -g te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
 # }}}
 # System {{{
 abbr -g che 'chmod +x'                                             # Make executable
@@ -378,7 +378,6 @@ abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 # }}}
 # ALIASES =================================== {{{
-alias git hub
 alias j __fzf_autojump
 # }}}
 # KEYBINDINGS =============================== {{{

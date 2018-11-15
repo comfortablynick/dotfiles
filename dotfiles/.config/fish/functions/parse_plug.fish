@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.OxZZmS/parse_plug.fish @ line 2
+# Defined in /tmp/fish.rIq6QI/parse_plug.fish @ line 2
 function parse_plug --description 'parse fundle plugin call'
 	set -l plug "account/repo '{from: gh, if: test 1 -eq 1, after: ./install.py}'"
     echo "Input: $plug"

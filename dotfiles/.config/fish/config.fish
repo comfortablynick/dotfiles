@@ -36,17 +36,15 @@ set -gx CLICOLOR 1                                              # Use colors in 
 set -gx NERD_FONTS 1
 # }}}
 # Path {{{
-set -l paths                                                    # User path variable; add any paths to this
-set -a paths "$HOME/bin"                                        # General user binaries
-set -a paths "$HOME/git/python/shell"                           # Shell-like features using Python
-set -a paths "$POWERLINE_ROOT"                                  # Make sure powerline is in path
+set -p PATH "$HOME/bin"                                        # General user binaries
+set -p PATH "$HOME/git/python/shell"                           # Shell-like features using Python
 
 # Prepend to $PATH if valid directory
-for p in $paths
-    if test -d $p
-        set PATH $p $PATH
-    end
-end
+# for p in $paths
+#     if test -d $p
+#         set PATH $p $PATH
+#     end
+# end
 
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version
@@ -94,10 +92,6 @@ set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d;
 # }}}
 # TMux {{{
 # Attach to existing tmux or create a new session using custom function
-# if test -z "$TMUX"
-#     tm def
-# end
-
 # Get current session name
 if test -n "$TMUX_PANE"
     set -gx TMUX_SESSION (tmux list-panes -t "$TMUX_PANE" -F '#S' | head -n1)
@@ -105,8 +99,21 @@ if test -n "$TMUX_PANE"
 end
 # }}}
 # Powerline {{{
-set -gx POWERLINE_PATH
-set -p POWERLINE_PATH "/usr/local/lib/python3.7/site-packages/powerline/bindings/tmux/powerline.conf"
+type -q powerline-daemon; and powerline-daemon -q &             # Start powerline-daemon in bg if it exists
+
+# Store root directory for each system (doesn't seem to be needed)
+# set -l pl_dirs
+# set -a pl_dirs "/usr/local/lib/python3.7/site-packages/powerline"
+# set -a pl_dirs "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline"
+#
+# # Loop and make sure it exists
+# for p in $pl_dirs
+#     if test -d $p
+#         set -gx POWERLINE_ROOT $p
+#         powerline-daemon -q
+#         break
+#     end
+# end
 #}}}
 # }}}
 # PACKAGES ================================== {{{

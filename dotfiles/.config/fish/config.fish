@@ -32,7 +32,7 @@ set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard confi
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
-set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
+# set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 set -gx NERD_FONTS 1
 # }}}
 # Path {{{
@@ -196,6 +196,13 @@ if test -z "$FISH_PKG_MGR"
     loadtheme $FISH_THEME
   end
 end
+
+# Set options based on ssh connection/term size
+if test -n "$SSH_CONNECTION"; and test "$COLUMNS" -lt 140
+    # We're probably connecting from iOS
+    set NERD_FONTS 0
+end
+
 # }}}
 # Git prompt {{{
 set -g __fish_git_prompt_show_informative_status true
@@ -205,11 +212,6 @@ set -g ___fish_git_prompt_char_stashstate ≡
 # }}}
 # bobthefish {{{
 if test "$FISH_THEME" = 'bobthefish'
-    # Set options based on ssh connection/term size
-    # if test -n "$SSH_CONNECTION"
-    #     set NERD_FONTS 0
-    # end
-
     # Set options if term windows is narrow-ish
     if test "$COLUMNS" -lt 140
       set -g theme_newline_cursor yes

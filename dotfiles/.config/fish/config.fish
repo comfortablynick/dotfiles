@@ -104,6 +104,10 @@ if test -n "$TMUX_PANE"
     test "$TMUX_SESSION" = 'ios' && set NERD_FONTS 0
 end
 # }}}
+# Powerline {{{
+set -gx POWERLINE_PATH
+set -p POWERLINE_PATH "/usr/local/lib/python3.7/site-packages/powerline/bindings/tmux/powerline.conf"
+#}}}
 # }}}
 # PACKAGES ================================== {{{
 # Package manager setup {{{

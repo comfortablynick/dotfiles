@@ -36,15 +36,10 @@ set -gx CLICOLOR 1                                              # Use colors in 
 set -gx NERD_FONTS 1
 # }}}
 # Path {{{
+# Add any PATH items needed here
+# Fish 3.0 will ignore invalid dirs, so no need to test
 set -p PATH "$HOME/bin"                                        # General user binaries
 set -p PATH "$HOME/git/python/shell"                           # Shell-like features using Python
-
-# Prepend to $PATH if valid directory
-# for p in $paths
-#     if test -d $p
-#         set PATH $p $PATH
-#     end
-# end
 
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version

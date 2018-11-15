@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.pVyIAQ/build_fish.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.BNJxwr/build_fish.fish @ line 2
 function build_fish --description 'Build fish shell from source'
 	set -l fish_repo "$HOME/src/fish-shell"
   if test -d $fish_repo

@@ -70,6 +70,13 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
 augroup END
 " }}}
+" Undo {{{
+" Enable persistent undo with directory
+if has("persistent_undo")
+    set undodir=~/.vim/undo
+    set undofile
+endif
+" }}}
 " Cursor position {{{
 " Jump to last position when reopening file
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")

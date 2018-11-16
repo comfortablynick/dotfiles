@@ -13,6 +13,9 @@ endif
 " Editor/appearance
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }              " Undo tree panel
+Plug '~/.fzf'                                                   " Fuzzy finder
+Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
 
 if $NERD_FONTS != 0
     " Load plugins that require full terminal
@@ -111,3 +114,6 @@ let g:black_virtualenv = "~/.env/black"      " Black virtualenv location (custom
 " Asyncrun
 let g:asyncrun_open = 6                                         " Show quickfix when executing command
 let g:asyncrun_bell = 1                                         " Ring bell when job finished
+
+" Undotree
+let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below

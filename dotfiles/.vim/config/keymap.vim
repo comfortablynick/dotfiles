@@ -1,7 +1,6 @@
 " KEYMAPPING ====================================
 
-" NORMAL
-
+" Normal ----------------------------------------
 " <Space> :: toggle folds
 noremap <Space> za
 
@@ -10,6 +9,10 @@ noremap za zA
 
 " F10 to toggle quickfix window for asyncrun
 noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<cr>
+
+" `F5` :: toggle UndoTree
+noremap <silent><F5> :UndotreeToggle \| :UndotreeFocus<CR>
+
 " INSERT ----------------------------------------
 
 " `kj` :: escape
@@ -21,13 +24,12 @@ inoremap lkj <Esc>`^:w<CR>
 " `;lkj` :: escape + save + quit
 inoremap ;lkj <Esc>`^:wq<CR>
 
-" `Ctrl+n` :: open NERDTree
+" `Ctrl+n` :: toggle NERDTree
 map <C-n> :NERDTreeToggle<CR>
-
 
 " TERMINAL --------------------------------------
 
-" `<Esc>` to exit terminal mode 
+" `<Esc>` to exit terminal mode
 tnoremap <Esc> <C-\><C-n>
 
 " `ALT+{h,j,k,l}` to navigate windows from any mode

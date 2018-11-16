@@ -35,11 +35,11 @@ set -gx CLICOLOR 1                                              # Use colors in 
 # set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 set -gx NERD_FONTS 1
 # }}}
-# Path {{{
+# PATH {{{
 # Add any PATH items needed here
 # Fish 3.0 will ignore invalid dirs, so no need to test
-set -p PATH "$HOME/bin"                                        # General user binaries
-set -p PATH "$HOME/git/python/shell"                           # Shell-like features using Python
+set -p PATH "$HOME/bin"                                         # General user binaries
+set -p PATH "$HOME/git/python/shell"                            # Shell-like features using Python
 
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version
@@ -81,9 +81,28 @@ set -gx VIM_SSH_COMPAT 0                                        # Safe term bg i
 set -gx VIM_COLOR gruvbox-dark
 set -gx NVIM_COLOR gruvbox-dark
 # }}}
-# Fuzzy finder {{{
+# Fuzzy Finder (fzf) {{{
 # Enable fuzzy directory finding
-set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
+set -gx FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
+
+# Install fzf
+if ! test -d "$HOME/.fzf"
+    echo "fzf dir not found. Cloning fzf and installing..."
+    command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --bin --no-update-rc
+else if not type -q fzf
+    echo "fzf dir found, but not installed. Installing..."
+    ~/.fzf/install --bin --no-update-rc
+end
+# }}}
+# Node Version Manager (nvm) {{{
+# nvm
+if ! test -d "$HOME/.nvm"
+    echo "nvm not found. Cloning nvm..."
+    command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
+    cd "$HOME/.nvm"
+    command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
+end
 # }}}
 # TMux {{{
 # Attach to existing tmux or create a new session using custom function
@@ -94,7 +113,10 @@ if test -n "$TMUX_PANE"
 end
 # }}}
 # Powerline {{{
-type -q powerline-daemon; and powerline-daemon -q &             # Start powerline-daemon in bg if it exists
+# Start powerline-daemon in bg if it exists
+if test -n (type powerline-daemon)
+    powerline-daemon -q &
+end
 
 # Store root directory for each system (doesn't seem to be needed)
 # set -l pl_dirs
@@ -110,6 +132,23 @@ type -q powerline-daemon; and powerline-daemon -q &             # Start powerlin
 #     end
 # end
 #}}}
+# }}}
+# FUNCTIONS ================================= {{{
+# Need to be defined early if used in config.fish
+
+# ab :: wrap `abbr` so fish linter doesn't complain
+function ab -d "create global abbreviation"
+    set -l abbrev $argv[1]
+    set -l cmd $argv[2..-1]
+    abbr -g $abbrev $cmd
+end
+
+# j :: alias for __fzf_autojump
+function j; __fzf_autojump $argv; end
+
+# aliases to silence config.fish "errors"
+function fun; fundle $argv; end
+function _loadtheme; loadtheme $argv; end
 # }}}
 # PACKAGES ================================== {{{
 # Package manager setup {{{
@@ -144,42 +183,26 @@ end
 # <--- All plugin definitions after this line
 
 # Themes
-fundle plugin 'comfortablynick/theme-bobthefish' \
+fun plugin 'comfortablynick/theme-bobthefish' \
     --cond='[ $FISH_THEME = bobthefish ]'
-fundle plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
-fundle plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
+fun plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
+fun plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
 
-fundle plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
-fundle plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
-fundle plugin 'decors/fish-colored-man'
-fundle plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
+fun plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
+fun plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
+fun plugin 'decors/fish-colored-man'
+fun plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
 
 # Node.js
-fundle plugin 'FabioAntunes/fish-nvm'
-fundle plugin 'edc/bass'
+fun plugin 'FabioAntunes/fish-nvm'
+fun plugin 'edc/bass'
 
 # Test
-fundle plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
+fun plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 # fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
 
 # <--- All plugin definitions before this line
-fundle init
-# }}}
-# System-wide {{{
-# fzf
-if ! test -d "$HOME/.fzf"
-    echo "fzf dir not found. Cloning fzf and installing..."
-    command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --bin --no-update-rc
-end
-
-# nvm
-if ! test -d "$HOME/.nvm"
-    echo "nvm not found. Cloning nvm..."
-    command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
-    cd "$HOME/.nvm"
-    command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
-end
+fun init
 # }}}
 # }}}
 # SOURCE ==================================== {{{
@@ -197,9 +220,9 @@ end
 if test -z "$FISH_PKG_MGR"
   if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
     echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-    loadtheme $FISH_SSH_THEME
+    _loadtheme $FISH_SSH_THEME
   else if test -n "$FISH_THEME"
-    loadtheme $FISH_THEME
+    _loadtheme $FISH_THEME
   end
 end
 
@@ -304,89 +327,85 @@ set -g fish_pager_color_description 'b3a06d'  'yellow'
 set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
 set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
-# FUNCTIONS ================================= {{{
-# }}}
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
-abbr -g xo xonsh                                                   # Open xonsh shell
-abbr -g lp lpass                                                   # LastPass cli
-abbr -g vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
-abbr -g v vim                                                      # Call vim function (Open Neovim || Vim)
-abbr -g n nvim                                                     # Call Neovim directly
-abbr -g nv nvim                                                    # Another Neovim
-abbr -g vvim 'command vim'                                         # Call Vim binary directly
-abbr -g vw view                                                    # Call view function (vim read-only)
-abbr -g o omf                                                      # oh-my-fish
-abbr -g z j                                                        # Use autojump (j) instead of z
+ab xo xonsh                                                   # Open xonsh shell
+# ab f fzf                                                      # Fuzzy finder
+ab lp lpass                                                   # LastPass cli
+ab vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
+ab v vim                                                      # Call vim function (Open Neovim || Vim)
+ab n nvim                                                     # Call Neovim directly
+ab nv nvim                                                    # Another Neovim
+ab vvim 'command vim'                                         # Call Vim binary directly
+ab vw view                                                    # Call view function (vim read-only)
+ab o omf                                                      # oh-my-fish
+ab z j                                                        # Use autojump (j) instead of z
 # }}}
 # Git {{{
-abbr -g g 'git'
-abbr -g ga 'git add'
-abbr -g gc 'git commit'
-abbr -g gco 'git checkout master'
-abbr -g gd 'git diff'
-abbr -g gdf 'git diff'
-abbr -g gdiff 'git diff'
-abbr -g gpl 'git pull'
-abbr -g gph 'git push'
-abbr -g gs 'git show'
-abbr -g gst 'git status'
-abbr -g glog 'vim +GV'                                             # Open interactive git log in vim
-abbr -g grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
-abbr -g gsub 'git submodule foreach --recursive git pull origin master'
-abbr -g gsync 'git pull && git commit -a && git push'              # Sync local repo
-abbr -g gunst 'git reset HEAD'                                     # Unstage file
-abbr -g grmi 'git rm --cached'                                     # Remove from index but keep local
+ab g 'git'
+ab ga 'git add'
+ab gc 'git commit'
+ab gco 'git checkout master'
+ab gd 'git diff'
+ab gdf 'git diff'
+ab gdiff 'git diff'
+ab gpl 'git pull'
+ab gph 'git push'
+ab gs 'git show'
+ab gst 'git status'
+ab glog 'vim +GV'                                             # Open interactive git log in vim
+ab grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
+ab gsub 'git submodule foreach --recursive git pull origin master'
+ab gsync 'git pull && git commit -a && git push'              # Sync local repo
+ab gunst 'git reset HEAD'                                     # Unstage file
+ab grmi 'git rm --cached'                                     # Remove from index but keep local
 # }}}
 # Directories {{{
-abbr -g - cd
-abbr -g lla ls -la
-abbr -g h $HOME
-abbr -g dot "$HOME/dotfiles/dotfiles"
-abbr -g vdot "$HOME/dotfiles/dotfiles/.vim"
-abbr -g gdot "$HOME/dotfiles/dotfiles"
-abbr -g gpy "$HOME/git/python"
-abbr -g gpython "$HOME/git/python"
-abbr -g pd prevd
-abbr -g nd nextd
-abbr -g rmdir rm -rf
+ab - cd
+ab lla ls -la
+ab h $HOME
+ab dot "$HOME/dotfiles/dotfiles"
+ab vdot "$HOME/dotfiles/dotfiles/.vim"
+ab gdot "$HOME/dotfiles/dotfiles"
+ab gpy "$HOME/git/python"
+ab gpython "$HOME/git/python"
+ab pd prevd
+ab nd nextd
+ab rmdir rm -rf
 # }}}
 # Fish {{{
-abbr -g frel "exec fish"                                           # Better way to reload?
-abbr -g fc "$__fish_config_dir"                                    # Fish config home
-abbr -g ffn "$__fish_config_dir/functions"                         # Fish functions directory
-abbr -g funced 'funced -s'                                         # Save function after editing automatically
-abbr -g fcf "vim $__fish_config_dir/config.fish"                   # Edit config.fish
-abbr -g cm 'command'                                               # Fish has no '\' shortcut for `command`
+ab frel "exec fish"                                           # Better way to reload?
+ab fc "$__fish_config_dir"                                    # Fish config home
+ab ffn "$__fish_config_dir/functions"                         # Fish functions directory
+ab funced 'funced -s'                                         # Save function after editing automatically
+ab fcf "vim $__fish_config_dir/config.fish"                   # Edit config.fish
+ab cm 'command'                                               # Instead of \ bash
 # }}}
 # Python {{{
-abbr -g pysh "$HOME/git/python/shell"                              # Python shell scripts
-abbr -g denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
+ab pysh "$HOME/git/python/shell"                              # Python shell scripts
+ab denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
 source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
-abbr -g pr 'powerline-daemon --replace'                            # Reload powerline
+ab pr 'powerline-daemon --replace'                            # Reload powerline
 # }}}
 # Scripts {{{
-abbr -g l list
-abbr -g lso 'list -hO'
-abbr -g listd 'list --debug'
-abbr -g listh 'list --help'
+ab l list
+ab lso 'list -hO'
+ab listd 'list --debug'
+ab listh 'list --help'
 # }}}
 # TMux {{{
-abbr -g te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
+ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
 # }}}
 # System {{{
-abbr -g che 'chmod +x'                                             # Make executable
-abbr -g chr 'chmod 755'                                            # 'Reset' permission in WSL
-abbr -g version 'cat /etc/os-release'                              # Print Linux version info
-abbr -g q exit                                                     # One key
-abbr -g x exit                                                     # One key
-abbr -g quit exit                                                  # Just in case I forget which :)
-abbr -g path 'set -S PATH'                                         # Print PATH array
-abbr -g lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
+ab che 'chmod +x'                                             # Make executable
+ab chr 'chmod 755'                                            # 'Reset' permission in WSL
+ab version 'cat /etc/os-release'                              # Print Linux version info
+ab q exit                                                     # One key
+ab x exit                                                     # One key
+ab quit exit                                                  # Just in case I forget which :)
+ab path 'set -S PATH'                                         # Print PATH array
+ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
-# }}}
-# ALIASES =================================== {{{
-alias j __fzf_autojump
 # }}}
 # KEYBINDINGS =============================== {{{
 # vi-mode with custom keybindings

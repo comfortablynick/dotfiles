@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.32XOCN/update_fish.fish @ line 2
+# Defined in /tmp/fish.zYnRB7/update_fish.fish @ line 2
 function update_fish --description 'Pull fish source and build'
 	set -l src_dir "$HOME/src/fish-shell"
     git -C "$src_dir" fetch
@@ -6,7 +6,7 @@ function update_fish --description 'Pull fish source and build'
     set -l upstream_hash (git -C "$src_dir" rev-parse 'master@{upstream}')
     if test "$head_hash" != "$upstream_hash"
         git -C "$src_dir" reset --hard origin/master;
-        and build_fish
+        and _build:fish
     else
         echo "Aborted: fish-shell repo has no upstream changes."
     end

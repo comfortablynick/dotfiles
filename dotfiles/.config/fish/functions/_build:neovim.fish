@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.z6EOCH/_build:neovim.fish @ line 2
+# Defined in /tmp/fish.cYLFvq/_build:neovim.fish @ line 2
 function _build:neovim --description 'build neovim from source' --argument src_dir
 	if ! test -d $src_dir
         echo "Source dir not found at $src_dir! Aborting..."

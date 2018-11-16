@@ -16,11 +16,22 @@
 #                        (UU)
 
 # SHELL STARTUP ============================= {{{
+# Non-interactive {{{
 if not status --is-interactive
   exit 0
 end
-
+# }}}
 # Everything below is for interactive shells
+
+# Login only options
+# if status --is-login
+#     # Replace shell with TMUX if available
+#     if test (type tmux; and test -z "$TMUX")
+#         tmux new-session -A -s def;
+#         and kill $fish_pid;
+#     end
+# end
+
 # _logo
 set_color $fish_color_autosuggestion;
 set -l start_time (get_date)

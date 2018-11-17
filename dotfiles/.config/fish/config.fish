@@ -143,6 +143,9 @@ end
 #     end
 # end
 #}}}
+# Todo.txt {{{
+set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
+# }}}
 # }}}
 # FUNCTIONS ================================= {{{
 # Need to be defined early if used in config.fish
@@ -340,17 +343,19 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
-ab xo xonsh                                                   # Open xonsh shell
-# ab f fzf                                                      # Fuzzy finder
-ab lp lpass                                                   # LastPass cli
-ab vcp 'vcprompt -f "%b %r %p %u %m"'                         # Fast git status
-ab v vim                                                      # Call vim function (Open Neovim || Vim)
-ab n nvim                                                     # Call Neovim directly
-ab nv nvim                                                    # Another Neovim
-ab vvim 'command vim'                                         # Call Vim binary directly
-ab vw view                                                    # Call view function (vim read-only)
-ab o omf                                                      # oh-my-fish
-ab z j                                                        # Use autojump (j) instead of z
+ab xo xonsh                                                     # Open xonsh shell
+# ab f fzf                                                        # Fuzzy finder
+ab lp lpass                                                     # LastPass cli
+ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
+ab v vim                                                        # Call vim function (Open Neovim || Vim)
+ab vf 'vim (fzf)'                                               # Find file to open
+ab n nvim                                                       # Call Neovim directly
+ab nv nvim                                                      # Another Neovim
+ab vvim 'command vim'                                           # Call Vim binary directly
+ab vw view                                                      # Call view function (vim read-only)
+ab t todo                                                       # Todo.txt cli
+ab o omf                                                        # oh-my-fish
+ab z j                                                          # Use autojump (j) instead of z
 # }}}
 # Git {{{
 ab g 'git'
@@ -406,6 +411,7 @@ ab listh 'list --help'
 # }}}
 # TMux {{{
 ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
+ab tl tmux ls
 # }}}
 # System {{{
 ab che 'chmod +x'                                             # Make executable

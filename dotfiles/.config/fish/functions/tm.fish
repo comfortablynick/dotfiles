@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.Ltfyi3/tm.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.2G97xm/tm.fish @ line 2
 function tm --description 'attach to existing tmux or create new one' --argument session_name
 	test -n "$session_name" || set -l session_name 'def'
     if type -q tmux
@@ -6,8 +6,8 @@ function tm --description 'attach to existing tmux or create new one' --argument
             tmux new-session -A -s "$session_name";
             and kill $fish_pid;
         else
-            echo "Already in TMUX session!"
-            return 1
+            tmux ls
+            return 0
         end
     else
         echo "TMUX not found!"

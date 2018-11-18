@@ -8,6 +8,7 @@ config:
   banner: false
   create: true
   dotpath: dotfiles
+  ignoreempty: false
   keepdot: true
   link_by_default: true
   longkey: false
@@ -50,6 +51,10 @@ dotfiles:
     dst: ~/.config/powerline
     link: true
     src: .config/powerline
+  d_topydo:
+    dst: ~/.config/topydo
+    link: true
+    src: .config/topydo
   d_xonsh:
     dst: ~/.config/xonsh
     link: true
@@ -139,6 +144,7 @@ profiles:
     - d_ftdetect
     - d_nvim
     - d_powerline
+    - d_topydo
     - d_xonsh
     - d_zsh
   io:

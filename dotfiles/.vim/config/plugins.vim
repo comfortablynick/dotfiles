@@ -16,6 +16,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer 
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }              " Undo tree panel
 Plug '~/.fzf'                                                   " Fuzzy finder
 Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
+" Plug 'tmhedberg/SimpylFold', { 'for': 'python' }                " Improved python folding
 
 if $NERD_FONTS != 0
     " Load plugins that require full terminal
@@ -117,3 +118,7 @@ let g:asyncrun_bell = 1                                         " Ring bell when
 
 " Undotree
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
+
+" SimpylFold (python folding)
+let g:SimpylFold_docstring_preview = 1                          " Show docstring
+let g:SimpylFold_fold_import = 0                                " Fold import statements

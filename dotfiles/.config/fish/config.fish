@@ -344,7 +344,6 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # ABBREVIATIONS ============================= {{{
 # Apps {{{
 ab xo xonsh                                                     # Open xonsh shell
-# ab f fzf                                                        # Fuzzy finder
 ab lp lpass                                                     # LastPass cli
 ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
 ab v vim                                                        # Call vim function (Open Neovim || Vim)
@@ -372,7 +371,7 @@ ab gst 'git status'
 ab glog 'vim +GV'                                             # Open interactive git log in vim
 ab grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
 ab gsub 'git submodule foreach --recursive git pull origin master'
-ab gsync 'git pull && git commit -a && git push'              # Sync local repo
+ab gsync 'git pull && git add . && git commit && git push'              # Sync local repo
 ab gunst 'git reset HEAD'                                     # Unstage file
 ab grmi 'git rm --cached'                                     # Remove from index but keep local
 # }}}

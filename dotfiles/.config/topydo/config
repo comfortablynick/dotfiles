@@ -1,0 +1,113 @@
+; see https://www.topydo.org#Configuration for more info
+
+[topydo]
+default_command             = ls
+filename                    = ~/Dropbox/todo/todo.txt
+archive_filename            = ~/Dropbox/todo/done.txt
+colors                      = auto
+; identifiers can be 'linenumber' or 'text'
+identifiers                 = linenumber
+identifier_alphabet         = 0123456789abcdefghijklmnopqrstuvwxyz
+backup_count                = 5
+
+[add]
+auto_creation_date          = 1
+
+[ls]
+hide_tags                   = id,p,ical
+indent                      = 0
+list_limit                  = -1
+list_format                 = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
+
+[tags]
+tag_start                   = t
+tag_due                     = due
+; tag_star                    = star
+
+[sort]
+keep_sorted                 = 0
+sort_string                 = desc:completed,desc:importance,due,desc:priority
+
+; For calculating importance
+ignore_weekends             = 1
+
+[dep]
+; Add parent projects when adding sub todo items
+append_parent_projects      = 0
+; Add parent contexts when adding sub todo items
+append_parent_contexts      = 0
+
+[edit]
+; Editor to use for the 'edit' subcommand (overrides the EDITOR environment
+; variable, but can be overridden with the TOPYDO_EDITOR environment variable
+; or the -E flag in the edit command)
+; editor = vi
+; Vim tip: enable completion using your complete todo.txt file. Use this as
+; editor command:
+;   vim -c 'autocmd Filetype todo set complete=.,w,b,u,t,i,k~/notes/todo.txt'
+
+[colorscheme]
+; Configure colorscheme. Accepted values are: black, [light-]red, [light-]green,
+; [light-]yellow, [light-]blue, [light-]magenta, [light-]cyan, white
+; [light-]gray, darkgray or numbers from 0 to 255. When number is specified color
+; is matched from Xterm color chart available here:
+; http://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
+; When using values between 16 and 256, make sure to set colors = 256 in the
+; [topydo] section.
+
+; priority_colors = A:cyan,B:yellow,C:blue
+; project_color = red
+; context_color = magenta
+; metadata_color = green
+; link_color = light-cyan
+; focus_background_color = gray
+; marked_background_color = blue
+
+[aliases]
+;showall = ls -x
+;next = ls -n 1
+;top = ls -F '%I %x %P %S %k	%{(}H{)}' -N
+;star = tag {} star 1
+;unstar = tag {} star
+;lsproj = lsprj
+;listprj = lsprj
+;listproj = lsprj
+;listproject = lsprj
+;listprojects = lsprj
+;listcon = lscon
+;listcontext = lscon
+;listcontexts = lscon
+
+[columns]
+column_width = 40
+
+[column_keymap]
+; Keymap configuration for column-mode
+gg = home
+G = end
+j = down
+k = up
+d = cmd del {}
+e = cmd edit {}
+u = cmd revert
+x = cmd do {}
+pp = postpone
+ps = postpone_s
+pr = pri
+m = mark
+<C-a> = mark_all
+. = repeat
+0 = first_column
+$ = last_column
+h = prev_column
+l = next_column
+A = append_column
+I = insert_column
+E = edit_column
+D = delete_column
+Y = copy_column
+L = swap_left
+R = swap_right
+<Left> = prev_column
+<Right> = next_column
+<Esc> = reset

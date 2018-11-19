@@ -16,7 +16,6 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer 
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }              " Undo tree panel
 Plug '~/.fzf'                                                   " Fuzzy finder
 Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
-" Plug 'tmhedberg/SimpylFold', { 'for': 'python' }                " Improved python folding
 
 if $NERD_FONTS != 0
     " Load plugins that require full terminal

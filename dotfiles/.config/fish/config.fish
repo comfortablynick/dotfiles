@@ -43,7 +43,6 @@ set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard confi
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
-# set -gx POWERLINE_ROOT /Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline
 set -gx NERD_FONTS 1
 # }}}
 # PATH {{{
@@ -84,8 +83,16 @@ set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # Editor {{{
 set -gx EDITOR nvim                                             # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
-set -gx NVIM_PY2_DIR "$VENV_DIR/nvim2"                          # Python 2 path for Neovim
-set -gx NVIM_PY3_DIR "$VENV_DIR/nvim3"                          # Python 3 path for Neovim
+
+switch "$hostname"
+    case "thor.local"
+        set -gx NVIM_PY2_DIR "/usr/local/bin/python"
+        set -gx NVIM_PY3_DIR "/usr/local/bin/python3.6"
+    case "*"
+        set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
+        set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
+end
+
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
 
 # Vim/Neovim color schemes

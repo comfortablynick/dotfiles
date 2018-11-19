@@ -9,9 +9,9 @@ if has('nvim')
     " Neovim Only
     set inccommand=split                " Live substitution
     let g:python_host_prog =
-    \expand('$NVIM_PY2_DIR/bin/python') " Python2 binary
+    \expand('$NVIM_PY2_DIR')            " Python2 binary
     let g:python3_host_prog =
-    \expand('$NVIM_PY3_DIR/bin/python') " Python3 binary
+    \expand('$NVIM_PY3_DIR')            " Python3 binary
 else
     " Vim Only
     set pyxversion=3                    " Use Python3

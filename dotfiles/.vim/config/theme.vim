@@ -80,52 +80,57 @@ let g:airline_themes = {
 " Lightline {{{
 " Status bar definition {{{
 let g:lightline = {
-        \ 'active': {
-        \   'left':
-        \     [
-        \        [ 'vim_mode', 'paste' ], [ 'fugitive', 'filename' ],
-        \     ],
-        \   'right':
-        \     [
-        \        [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-        \        [ 'line_info' ], [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
-        \     ]
-        \ },
-        \ 'inactive': {
-        \      'left':
-        \     [
-        \        [ 'filename' ]
-        \     ],
-        \      'right':
-        \     [
-        \        [ 'line_info' ], [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
-        \     ]
-        \ },
-        \ 'component_function': {
-        \   'fugitive': 'LightlineFugitive',
-        \   'filename': 'LightlineFilename',
-        \   'filetype_icon': 'LL_FileType',
-        \   'fileformat_icon': 'LL_FileFormat',
-        \   'fileencoding_non_utf': 'LL_FileEncoding',
-        \   'line_info': 'LL_LineInfo',
-        \   'vim_mode': 'LL_Mode',
-        \ },
-        \ 'component_expand': {
-        \   'linter_checking': 'lightline#ale#checking',
-        \   'linter_warnings': 'lightline#ale#warnings',
-        \   'linter_errors': 'lightline#ale#errors',
-        \   'linter_ok': 'lightline#ale#ok'
-        \ },
-        \ 'component_type': {
-        \   'readonly': 'error',
-        \   'linter_checking': 'left',
-        \   'linter_warnings': 'warning',
-        \   'linter_errors': 'error',
-        \   'linter_ok': 'left'
-        \ },
-        \ 'separator': { 'left': '', 'right': '' },
-        \ 'subseparator': { 'left': '', 'right': '' },
-        \ }
+    \ 'active': {
+    \   'left':
+    \     [
+    \        [ 'vim_mode', 'paste' ],
+    \        [ 'fugitive' ],
+    \        [ 'filename' ],
+    \     ],
+    \   'right':
+    \     [
+    \        [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
+    \        [ 'line_info' ],
+    \        [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
+    \     ]
+    \ },
+    \ 'inactive': {
+    \      'left':
+    \     [
+    \        [ 'filename' ]
+    \     ],
+    \      'right':
+    \     [
+    \        [ 'line_info' ],
+    \        [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
+    \     ]
+    \ },
+    \ 'component_function': {
+    \   'fugitive': 'LL_Fugitive',
+    \   'filename': 'LL_FileName',
+    \   'filetype_icon': 'LL_FileType',
+    \   'fileformat_icon': 'LL_FileFormat',
+    \   'fileencoding_non_utf': 'LL_FileEncoding',
+    \   'line_info': 'LL_LineInfo',
+    \   'vim_mode': 'LL_Mode',
+    \   'venv': 'LL_VirtualEnvName',
+    \ },
+    \ 'component_expand': {
+    \   'linter_checking': 'lightline#ale#checking',
+    \   'linter_warnings': 'lightline#ale#warnings',
+    \   'linter_errors': 'lightline#ale#errors',
+    \   'linter_ok': 'lightline#ale#ok'
+    \ },
+    \ 'component_type': {
+    \   'readonly': 'error',
+    \   'linter_checking': 'left',
+    \   'linter_warnings': 'warning',
+    \   'linter_errors': 'error',
+    \   'linter_ok': 'left'
+    \ },
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '', 'right': '' },
+    \ }
 " }}}
 " Section definitions {{{
 " ALE Indicators {{{
@@ -135,20 +140,22 @@ let g:lightline#ale#indicator_errors = '✗'
 let g:lightline#ale#indicator_ok = '✓'
 " }}}
 " Main sections {{{
-" Section settings / glyphs
-let g:LL_MinWidth = 100                                         " Width for using some expanded sections
+" Section settings / glyphs {{{
+let g:LL_MinWidth = 90                                          " Width for using some expanded sections
+let g:LL_MedWidth = 100                                         " Secondary width for some sections
 let g:LL_LineNoSymbol = g:LL_pl ? '' : '␤'                     " Use  for line no unless no PL fonts
-let g:LL_GitSymbol = g:LL_nf ? '' : '[git]'                    " Use git symbol unless no nerd fonts
+let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                         " Use git symbol unless no nerd fonts
 let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)
 let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'                    " Read-only PL symbol
-
-" Section separators
+" }}}
+" Section separators {{{
 let g:lightline.separator.left = g:LL_pl ? '' : ''
 let g:lightline.separator.right = g:LL_pl ? '' : ''
 let g:lightline.subseparator.left = g:LL_pl ? '' : '|'
 let g:lightline.subseparator.right = g:LL_pl ? '' : '|'
-function! LightlineModified() abort " {{{
+" }}}
+function! LL_Modified() abort " {{{
     return &ft =~ 'help\|vimfiler' ? '' : &modified ? '[+]' : &modifiable ? '' : '-'
 endfunction
 " }}}
@@ -207,9 +214,12 @@ endfunction
 function! LL_FileType() abort " {{{
     let ftsymbol = g:LL_nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
-        \ WebDevIconsGetFileTypeSymbol() :
+        \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
-    return winwidth(0) > g:LL_MinWidth ? (&filetype . ' ' . ftsymbol ) : ''
+    let venv = &ft == 'python' ?
+        \ ' ('.LL_VirtualEnvName().')' :
+        \ ''
+    return winwidth(0) > g:LL_MinWidth ? (&ft . ftsymbol .venv ) : ''
 endfunction
 " }}}
 function! LL_FileFormat() abort " {{{
@@ -217,7 +227,7 @@ function! LL_FileFormat() abort " {{{
         \ exists('*WebDevIconsGetFileFormatSymbol') ?
         \ WebDevIconsGetFileFormatSymbol() :
         \ ''
-    return LL_IsNotFile() ? '' : winwidth(0) > g:LL_MinWidth ? (&fileformat . ' ' . ffsymbol ) : ''
+    return LL_IsNotFile() ? '' : winwidth(0) > g:LL_MedWidth ? (&fileformat . ' ' . ffsymbol ) : ''
 endfunction
 " }}}
 function! LL_FileEncoding() abort " {{{
@@ -242,7 +252,7 @@ function! LL_IsNerd() abort " {{{
     return expand('%:t') =~ 'NERD_tree'
 endfunction
 " }}}
-function! LightlineFilename() " {{{
+function! LL_FileName() abort " {{{
     let fname = expand('%:t')
     return fname == 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
         \ fname == '__Tagbar__' ? g:lightline.fname :
@@ -252,13 +262,13 @@ function! LightlineFilename() " {{{
         \ &ft == 'vimshell' ? vimshell#get_status_string() :
         \ ('' != LL_ReadOnly() ? LL_ReadOnly() . ' ' : '') .
         \ ('' != fname ? fname : '[No Name]') .
-        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+        \ ('' != LL_Modified() ? ' ' . LL_Modified() : '')
 endfunction
 " }}}
-function! LightlineFugitive() " {{{
+function! LL_Fugitive() abort " {{{
     if &ft !~? 'vimfiler' && ! LL_IsNotFile() && exists('*fugitive#head') && winwidth(0) > g:LL_MinWidth
         let branch = fugitive#head()
-        return branch !=# '' ? printf("%s %s %s %s",
+        return branch !=# '' ? printf("%s%s %s %s",
             \ g:LL_GitSymbol,
             \ LL_HunkSummary(),
             \ g:LL_Branch,
@@ -266,6 +276,10 @@ function! LightlineFugitive() " {{{
             \ ) : ''
     endif
     return ''
+endfunction
+" }}}
+function! LL_VirtualEnvName() abort " {{{
+    return !empty($VIRTUAL_ENV) ? split($VIRTUAL_ENV, '/')[-1] : ''
 endfunction
 " }}}
 " }}}

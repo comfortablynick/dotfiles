@@ -80,10 +80,11 @@ end
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
-# Editor {{{
+# Editor (Vim/Neovim) {{{
 set -gx EDITOR nvim                                             # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 
+# Temporary fix to neovim vs. pynvim pip package
 switch "$hostname"
     case "thor.local"
         set -gx NVIM_PY2_DIR "/usr/local/bin/python"

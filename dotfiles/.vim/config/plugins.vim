@@ -1,5 +1,12 @@
-" PLUGIN SETTINGS ===============================
-
+"   ____  _             _                 _
+"  |  _ \| |_   _  __ _(_)_ __  _____   _(_)_ __ ___
+"  | |_) | | | | |/ _` | | '_ \/ __\ \ / / | '_ ` _ \
+"  |  __/| | |_| | (_| | | | | \__ \\ V /| | | | | | |
+"  |_|   |_|\__,_|\__, |_|_| |_|___(_)_/ |_|_| |_| |_|
+"                 |___/
+"
+" Common Vim/Neovim plugins
+" Plugins {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 if has('nvim')
@@ -9,8 +16,7 @@ else
     " Load Vim-only plugins
     exec 'source' vim_home . 'plugins_vim.vim'
 endif
-
-" Editor/appearance
+" Editor/appearance {{{
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }              " Undo tree panel
@@ -21,42 +27,45 @@ if $NERD_FONTS != 0
     " Load plugins that require full terminal
     Plug 'ryanoasis/vim-devicons'                               " Developer filetype icons
 endif
-
-" Linting
+" }}}
+" Linting {{{
 Plug 'w0rp/ale'                                                 " Linting
-
-" Syntax highlighting
+" }}}
+" Syntax highlighting {{{
 Plug 'HerringtonDarkholme/yats', { 'for': 'typescript' }        " Typescript
 Plug 'gabrielelana/vim-markdown', { 'for': 'markdown' }         " Markdown
 Plug 'Soares/fish.vim', { 'for': 'fish' }                       " Fish syntax highlighting
-
-" Formatting
+" }}}
+" Formatting {{{
 Plug 'ambv/black', { 'for': 'python' }                          " Python formatter (subset of PEP8)
-
-" Git
+" }}}
+" Git {{{
 Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
-
-" Theming
+" }}}
+" Theming {{{
 Plug 'arcticicestudio/nord-vim'
 Plug 'morhetz/gruvbox'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'nightsense/snow'
-
-" Executing
+" }}}
+" Terminal/Code Execution {{{
 Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously
-
+" }}}
+" Coding {{{
+Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
+Plug 'Shougo/neosnippet-snippets'                               " Code snippets
+" }}}
 call plug#end()
-
-
-" PLUGIN CONFIGURATION ==========================
-" Ale linter
+" }}}
+" Plugin Configuration {{{
+" Ale linter {{{
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
 let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
 let g:ale_cache_executable_check_failures = 1                   " Have to restart vim if adding new providers
 let g:ale_lint_on_text_changed = 'never'                        " Don't lint while typing (too distracting)
-let g:ale_lint_on_insert_leave = 0                              " Lint after leaving insert
+let g:ale_lint_on_insert_leave = 1                              " Lint after leaving insert
 let g:ale_lint_on_enter = 0                                     " Lint when opening file
 let g:ale_list_window_size = 5                                  " Show # of lines of errors
 let g:ale_open_list = 1                                         " Show quickfix list
@@ -94,12 +103,11 @@ let g:ale_fixers = {
     \  ]
     \ }
 
-" Ale linter settings
 let g:python_flake8_options = {
     \ '--max-line-length': 88
     \ }
-
-" NERDTree
+" }}}
+" NERDTree {{{
 let NERDTreeHighlightCursorline = 1             " Increase visibility of line
 let NERDTreeIgnore = [
     \ '\.pyc$',
@@ -107,17 +115,15 @@ let NERDTreeIgnore = [
     \ '.vscode'
     \ ]
 let NERDTreeShowHidden = 1                      " Show dotfiles
-
-" Black
+" }}}
+" Black {{{
 let g:black_virtualenv = "~/.env/black"      " Black virtualenv location (custom)
-
-" Asyncrun
+" }}}
+" Asyncrun {{{
 let g:asyncrun_open = 6                                         " Show quickfix when executing command
 let g:asyncrun_bell = 1                                         " Ring bell when job finished
-
-" Undotree
+" }}}
+" Undotree {{{
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
-
-" SimpylFold (python folding)
-let g:SimpylFold_docstring_preview = 1                          " Show docstring
-let g:SimpylFold_fold_import = 0                                " Fold import statements
+" }}}
+" }}}

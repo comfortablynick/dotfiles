@@ -40,11 +40,12 @@ set scrolloff=10                " Lines before/after cursor during scroll
 set ttimeoutlen=10              " How long in ms to wait for key combinations
 " }}}
 " Indents {{{
-set expandtab                   " Expand tab to spaces
-set smartindent                 " Attempt smart indenting
-set autoindent                  " Attempt auto indenting
-set shiftwidth=2                " Indent width in spaces
-set backspace=2                 " Backspace behaves as expected
+set expandtab                                                   " Expand tab to spaces
+set smartindent                                                 " Attempt smart indenting
+set autoindent                                                  " Attempt auto indenting
+set shiftwidth=2                                                " Indent width in spaces
+set backspace=2                                                 " Backspace behaves as expected
+let g:vim_indent_cont = shiftwidth()                            " Indent after \ in Vim script
 " }}}
 " Search & replace {{{
 set ignorecase                  " Ignore case while searching

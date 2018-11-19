@@ -1,18 +1,21 @@
-" Plugins for Vim only
-
+"   ____  _             _                 _
+"  |  _ \| |_   _  __ _(_)_ __  _____   _(_)_ __ ___
+"  | |_) | | | | |/ _` | | '_ \/ __\ \ / / | '_ ` _ \
+"  |  __/| | |_| | (_| | | | | \__ \\ V /| | | | | | |
+"  |_|   |_|\__,_|\__, |_|_| |_|___(_)_/ |_|_| |_| |_|
+"                 |___/
+"
+" Vim only
+" Plugins {{{
 set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
 Plug 'itchyny/lightline.vim'                                    " Statusline
 Plug 'maximbaz/lightline-ale'                                   " ALE status in Lightline
 Plug 'Valloric/YouCompleteMe',                                  " Code completion (compiled on install/update)
     \ {
-    \   'do': '~/git/python/shell/vimsync.py'
+    \   'do': 'python3 ~/git/python/shell/vimsync.py'
     \ }
-" Plug 'Shougo/deoplete.nvim'                                     " Code completion
-" Plug 'roxma/nvim-yarp'                                          " Required by deoplete
-" Plug 'roxma/vim-hug-neovim-rpc'                                 " Required by deoplete
-
-" PLUGIN CONFIGURATION ==========================
-
+" }}}
+" Plugin Configuration {{{
 " YouCompleteMe
 let g:ycm_filetype_blacklist = {
       \ 'gitcommit': 1,
@@ -31,3 +34,4 @@ let g:ycm_filetype_specific_completion_to_disable = {
       \ 'gitcommit': 1
       \}
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
+" }}}

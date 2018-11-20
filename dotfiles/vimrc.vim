@@ -19,7 +19,13 @@ endif
 " CONFIG FILES ==================================
 let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 
-let config_list = [ 'config.vim', 'plugins_dein.vim', 'functions.vim', 'theme.vim', 'keymap.vim' ]
+let config_list = [
+    \ 'config.vim',
+    \ 'plugins.vim',
+    \ 'functions.vim',
+    \ 'theme.vim',
+    \ 'keymap.vim',
+    \ ]
 
 for files in config_list
     for f in glob(g:vim_home.files, 1, 1)

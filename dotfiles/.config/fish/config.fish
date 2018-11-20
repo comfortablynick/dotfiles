@@ -81,19 +81,10 @@ set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable defaul
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 # }}}
 # Editor (Vim/Neovim) {{{
-set -gx EDITOR nvim                                             # Default editor
+set -gx EDITOR vim                                              # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
-
-# Temporary fix to neovim vs. pynvim pip package
-switch "$hostname"
-    case "thor.local"
-        set -gx NVIM_PY2_DIR "/usr/local/bin/python"
-        set -gx NVIM_PY3_DIR "/usr/local/bin/python3.6"
-    case "*"
-        set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
-        set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
-end
-
+set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
+set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
 
 # Vim/Neovim color schemes

@@ -1,0 +1,117 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.006  000.006: --- VIM STARTING ---
+000.133  000.127: Allocated generic buffers
+000.294  000.161: locale set
+000.300  000.006: GUI prepared
+000.302  000.002: clipboard setup
+000.309  000.007: window checked
+000.945  000.636: inits 1
+000.981  000.036: parsing arguments
+000.983  000.002: expanding arguments
+001.022  000.039: shell init
+001.421  000.399: Termcap init
+001.446  000.025: inits 2
+001.543  000.097: init highlight
+003.418  000.890  000.890: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+003.703  001.354  000.464: sourcing /usr/share/vim/vim81/syntax/synload.vim
+009.971  000.047  000.047: sourcing /c/Users/nmurphy/.vim/ftdetect/python.vim
+010.207  006.317  006.270: sourcing /usr/share/vim/vim81/filetype.vim
+010.352  008.183  000.512: sourcing /usr/share/vim/vim81/syntax/syntax.vim
+010.433  008.671  000.488: sourcing $VIM/vimrc
+011.472  000.023  000.023: sourcing /usr/share/vim/vim81/filetype.vim
+011.778  000.056  000.056: sourcing /usr/share/vim/vim81/ftplugin.vim
+012.306  000.228  000.228: sourcing /usr/share/vim/vim81/syntax/nosyntax.vim
+012.776  000.141  000.141: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+012.977  000.518  000.377: sourcing /usr/share/vim/vim81/syntax/synload.vim
+013.018  001.036  000.290: sourcing /usr/share/vim/vim81/syntax/syntax.vim
+013.553  000.153  000.153: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+014.043  000.148  000.148: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+014.493  000.150  000.150: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+014.760  001.591  001.140: sourcing /usr/share/vim/vim81/colors/darkblue.vim
+014.941  003.731  001.025: sourcing /c/Users/nmurphy/.vim/config/config.vim
+017.216  001.809  001.809: sourcing /c/Users/nmurphy/.vim/autoload/plug.vim
+017.888  000.282  000.282: sourcing plugins_vim.vim
+019.413  000.281  000.281: sourcing /usr/share/vim/vim81/ftoff.vim
+026.822  000.042  000.042: sourcing /c/Users/nmurphy/.vim/ftdetect/python.vim
+027.479  000.045  000.045: sourcing /c/Users/nmurphy/.vim/plugged/yats/ftdetect/tsx.vim
+027.707  000.043  000.043: sourcing /c/Users/nmurphy/.vim/plugged/yats/ftdetect/typescript.vim
+028.030  000.044  000.044: sourcing /c/Users/nmurphy/.vim/plugged/vim-markdown/ftdetect/markdown.vim
+028.423  000.075  000.075: sourcing /c/Users/nmurphy/.vim/plugged/fish.vim/ftdetect/fish.vim
+028.842  000.043  000.043: sourcing /c/Users/nmurphy/.vim/plugged/vim-fugitive/ftdetect/fugitive.vim
+029.346  000.045  000.045: sourcing /c/Users/nmurphy/.vim/plugged/neosnippet.vim/ftdetect/neosnippet.vim
+029.648  006.704  006.367: sourcing /usr/share/vim/vim81/filetype.vim
+030.514  000.023  000.023: sourcing /usr/share/vim/vim81/ftplugin.vim
+031.386  000.055  000.055: sourcing /usr/share/vim/vim81/indent.vim
+031.602  016.398  007.244: sourcing /c/Users/nmurphy/.vim/config/vim-plug/plugins.vim
+031.962  000.125  000.125: sourcing /c/Users/nmurphy/.vim/config/functions.vim
+034.146  000.155  000.155: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+035.115  000.153  000.153: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+039.476  006.270  005.962: sourcing /c/Users/nmurphy/.vim/plugged/gruvbox/colors/gruvbox.vim
+041.312  000.223  000.223: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+042.463  000.235  000.235: sourcing /usr/share/vim/vim81/syntax/syncolor.vim
+046.831  006.671  006.213: sourcing /c/Users/nmurphy/.vim/plugged/gruvbox/colors/gruvbox.vim
+046.863  014.664  001.723: sourcing /c/Users/nmurphy/.vim/config/theme.vim
+047.219  000.101  000.101: sourcing /c/Users/nmurphy/.vim/config/keymap.vim
+047.250  036.514  001.495: sourcing $HOME/.vimrc
+047.258  000.530: sourcing vimrc file(s)
+048.088  000.160  000.160: sourcing /c/Users/nmurphy/.vim/plugged/lightline.vim/plugin/lightline.vim
+048.724  000.090  000.090: sourcing /c/Users/nmurphy/.vim/plugged/lightline-ale/plugin/lightline/ale.vim
+049.375  000.239  000.239: sourcing /c/Users/nmurphy/.vim/plugged/YouCompleteMe/plugin/youcompleteme.vim
+050.379  000.177  000.177: sourcing /c/Users/nmurphy/.vim/plugged/vim-gitgutter/autoload/gitgutter/utility.vim
+051.350  000.161  000.161: sourcing /c/Users/nmurphy/.vim/plugged/vim-gitgutter/autoload/gitgutter/highlight.vim
+051.870  002.116  001.778: sourcing /c/Users/nmurphy/.vim/plugged/vim-gitgutter/plugin/gitgutter.vim
+052.829  000.565  000.565: sourcing /c/Users/nmurphy/.fzf/plugin/fzf.vim
+053.840  000.579  000.579: sourcing /c/Users/nmurphy/.vim/plugged/fzf.vim/plugin/fzf.vim
+055.524  001.271  001.271: sourcing /c/Users/nmurphy/.vim/plugged/vim-devicons/plugin/webdevicons.vim
+056.888  000.131  000.131: sourcing /c/Users/nmurphy/.vim/plugged/ale/autoload/ale/events.vim
+057.029  001.068  000.937: sourcing /c/Users/nmurphy/.vim/plugged/ale/plugin/ale.vim
+057.879  000.239  000.239: sourcing /c/Users/nmurphy/.vim/plugged/gv.vim/plugin/gv.vim
+058.611  000.280  000.280: sourcing /c/Users/nmurphy/.vim/plugged/vim-fugitive/plugin/fugitive.vim
+060.229  000.958  000.958: sourcing /c/Users/nmurphy/.vim/plugged/asyncrun.vim/plugin/asyncrun.vim
+060.831  000.157  000.157: sourcing /c/Users/nmurphy/.vim/plugged/neosnippet.vim/plugin/neosnippet.vim
+061.500  000.075  000.075: sourcing /usr/share/vim/vim81/plugin/getscriptPlugin.vim
+061.736  000.166  000.166: sourcing /usr/share/vim/vim81/plugin/gzip.vim
+062.034  000.228  000.228: sourcing /usr/share/vim/vim81/plugin/logiPat.vim
+062.160  000.054  000.054: sourcing /usr/share/vim/vim81/plugin/manpager.vim
+062.432  000.196  000.196: sourcing /usr/share/vim/vim81/plugin/matchparen.vim
+062.996  000.484  000.484: sourcing /usr/share/vim/vim81/plugin/netrwPlugin.vim
+063.163  000.059  000.059: sourcing /usr/share/vim/vim81/plugin/rrhelper.vim
+063.304  000.051  000.051: sourcing /usr/share/vim/vim81/plugin/spellfile.vim
+063.536  000.150  000.150: sourcing /usr/share/vim/vim81/plugin/tarPlugin.vim
+063.748  000.138  000.138: sourcing /usr/share/vim/vim81/plugin/tohtml.vim
+063.999  000.168  000.168: sourcing /usr/share/vim/vim81/plugin/vimballPlugin.vim
+064.255  000.173  000.173: sourcing /usr/share/vim/vim81/plugin/zipPlugin.vim
+220.250  155.728  155.728: sourcing /usr/local/lib/python3.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
+220.277  007.627: loading plugins
+220.515  000.238: loading packages
+220.706  000.191: loading after plugins
+220.731  000.025: inits 3
+221.132  000.401: reading viminfo
+221.266  000.134: setup clipboard
+221.275  000.009: setting raw mode
+221.307  000.032: start termcap
+221.404  000.097: clearing screen
+223.434  000.545  000.545: sourcing /c/Users/nmurphy/.vim/plugged/lightline.vim/autoload/lightline.vim
+235.479  000.162  000.162: sourcing /c/Users/nmurphy/.vim/plugged/lightline.vim/autoload/lightline/tab.vim
+237.170  000.192  000.192: sourcing /c/Users/nmurphy/.vim/plugged/lightline.vim/autoload/lightline/colorscheme.vim
+237.732  001.220  001.028: sourcing /c/Users/nmurphy/.vim/plugged/gruvbox/autoload/lightline/colorscheme/gruvbox.vim
+241.812  000.080  000.080: sourcing /c/Users/nmurphy/.vim/plugged/lightline-ale/autoload/lightline/ale.vim
+242.904  000.558  000.558: sourcing /c/Users/nmurphy/.vim/plugged/ale/autoload/ale/engine.vim
+243.623  019.654: opening buffers
+244.160  000.115  000.115: sourcing /c/Users/nmurphy/.vim/plugged/vim-gitgutter/autoload/gitgutter.vim
+244.308  000.570: BufEnter autocommands
+244.316  000.008: editing files in windows
+245.290  000.600  000.600: sourcing /c/Users/nmurphy/.vim/plugged/YouCompleteMe/autoload/youcompleteme.vim
+342.219  003.540  003.540: sourcing /c/Users/nmurphy/.vim/plugged/vim-fugitive/autoload/fugitive.vim
+342.853  094.397: VimEnter autocommands
+342.868  000.015: before starting main loop
+343.741  000.280  000.280: sourcing /c/Users/nmurphy/.vim/plugged/ale/autoload/ale/cursor.vim
+344.594  000.309  000.309: sourcing /c/Users/nmurphy/.vim/plugged/ale/autoload/ale.vim
+348.370  000.443  000.443: sourcing /c/Users/nmurphy/.vim/plugged/vim-gitgutter/autoload/gitgutter/hunk.vim
+349.520  005.620: first screen update
+349.522  000.002: --- VIM STARTED ---

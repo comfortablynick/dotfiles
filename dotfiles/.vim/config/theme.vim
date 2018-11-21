@@ -134,10 +134,10 @@ let g:lightline = {
 " }}}
 " Section definitions {{{
 " ALE Indicators {{{
-let g:lightline#ale#indicator_checking = '...'
-let g:lightline#ale#indicator_warnings = '⧍'
-let g:lightline#ale#indicator_errors = '✗'
-let g:lightline#ale#indicator_ok = '✓'
+let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110" : '...'
+let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
+let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
+let g:lightline#ale#indicator_ok = g:LL_nf ? "\uf00c" : '✓'
 " }}}
 " Main sections {{{
 " Section settings / glyphs {{{

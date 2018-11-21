@@ -43,10 +43,11 @@ set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard confi
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
 set -gx CLICOLOR 1                                              # Use colors in prompt
-set -gx NERD_FONTS 1
+set -gx NERD_FONTS 1                                            # Tells Vim which glyphs to use
+set -gx BROWSER 'w3m'                                           # Text-based browser
 # }}}
 # PATH {{{
-# Add any PATH items needed here
+# Add general PATH items needed here
 # Fish 3.0 will ignore invalid dirs, so no need to test
 set -p PATH "$HOME/bin"                                         # General user binaries
 set -p PATH "$HOME/git/python/shell"                            # Shell-like features using Python
@@ -79,6 +80,10 @@ end
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
 set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
+
+# Set and activate default VENV
+set -l def_venv "$VENV_DIR/dev/bin/activate.fish"
+source $def_venv                                                # Activate by default
 # }}}
 # Editor (Vim/Neovim) {{{
 set -gx EDITOR vim                                              # Default editor
@@ -113,6 +118,7 @@ if ! test -d "$HOME/.nvm"
     cd "$HOME/.nvm"
     command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
 end
+set -p PATH "$HOME/.nvm/versions/node/v11.1.0/bin"
 # }}}
 # TMux {{{
 # Attach to existing tmux or create a new session using custom function
@@ -127,20 +133,6 @@ end
 if test -n (type powerline-daemon)
     powerline-daemon -q &
 end
-
-# Store root directory for each system (doesn't seem to be needed)
-# set -l pl_dirs
-# set -a pl_dirs "/usr/local/lib/python3.7/site-packages/powerline"
-# set -a pl_dirs "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/powerline"
-#
-# # Loop and make sure it exists
-# for p in $pl_dirs
-#     if test -d $p
-#         set -gx POWERLINE_ROOT $p
-#         powerline-daemon -q
-#         break
-#     end
-# end
 #}}}
 # Todo.txt {{{
 set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
@@ -345,11 +337,6 @@ set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 ab xo xonsh                                                     # Open xonsh shell
 ab lp lpass                                                     # LastPass cli
 ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
-ab v vim                                                        # Call vim function (Open Neovim || Vim)
-ab vf 'vim (fzf)'                                               # Find file to open
-ab n nvim                                                       # Call Neovim directly
-ab nv nvim                                                      # Another Neovim
-ab vvim 'command vim'                                           # Call Vim binary directly
 ab vw view                                                      # Call view function (vim read-only)
 ab t todo                                                       # Todo.txt cli
 ab o omf                                                        # oh-my-fish
@@ -360,19 +347,20 @@ ab g 'git'
 ab ga 'git add'
 ab gc 'git commit'
 ab gco 'git checkout master'
+ab gcol 'git checkout (git describe --tags)'                    # Check out latest tag
 ab gd 'git diff'
 ab gdf 'git diff'
 ab gdiff 'git diff'
-ab gpl 'git pull'
+ab gpl 'git pull'                                               
 ab gph 'git push'
 ab gs 'git show'
 ab gst 'git status'
-ab glog 'vim +GV'                                             # Open interactive git log in vim
-ab grst 'git reset --hard origin/master'                      # Overwrite local repo with remote
-ab gsub 'git submodule foreach --recursive git pull origin master'
-ab gsync 'git pull && git add . && git commit && git push'              # Sync local repo
-ab gunst 'git reset HEAD'                                     # Unstage file
-ab grmi 'git rm --cached'                                     # Remove from index but keep local
+ab glog 'vim +GV'                                               # Open interactive git log in vim
+ab grst 'git reset --hard origin/master'                        # Overwrite local repo with remote
+ab gsub 'git submodule foreach --recursive git pull origin master' # Update all submodules
+ab gsync 'git pull && git add . && git commit && git push'      # Sync local repo
+ab gunst 'git reset HEAD'                                       # Unstage file
+ab grmi 'git rm --cached'                                       # Remove from index but keep local
 # }}}
 # Directories {{{
 ab - cd
@@ -397,8 +385,7 @@ ab cm 'command'                                               # Instead of \ bas
 # }}}
 # Python {{{
 ab pysh "$HOME/git/python/shell"                              # Python shell scripts
-ab denv "source $VENV_DIR/dev/bin/activate.fish"              # Default venv
-source "$VENV_DIR/dev/bin/activate.fish"                        # Activate by default
+ab denv "source $def_venv"                                    # Activate venv
 ab pr 'powerline-daemon --replace'                            # Reload powerline
 # }}}
 # Scripts {{{
@@ -410,6 +397,13 @@ ab listh 'list --help'
 # TMux {{{
 ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
 ab tl tmux ls
+# }}}
+# Vim/Neovim {{{
+ab v vim                                                        # Call vim function (Open Neovim || Vim)
+ab vf 'vim (fzf)'                                               # Find file to open
+ab n nvim                                                       # Call Neovim directly
+ab nv nvim                                                      # Another Neovim
+ab vvim 'command vim'                                           # Call Vim binary directly
 # }}}
 # System {{{
 ab che 'chmod +x'                                             # Make executable

@@ -11,10 +11,12 @@ call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 if has('nvim')
     " Load Neovim-only plugins
-    exec 'source' vim_home . 'plugins_nvim.vim'
+    "exec 'source' vim_home . 'plugins_nvim.vim'
+    exec 'source plugins_nvim.vim'
 else
     " Load Vim-only plugins
-    exec 'source' vim_home . 'plugins_vim.vim'
+    " exec 'source' vim_home . 'plugins_vim.vim'
+    exec 'source plugins_vim.vim'
 endif
 " Editor/appearance {{{
 Plug 'airblade/vim-gitgutter'                                   " Inline git status

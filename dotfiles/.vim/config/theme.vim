@@ -45,6 +45,10 @@ let g:airline_themes = {
 " Lightline {{{
 " Status bar definition {{{
 let g:lightline = {
+    \ 'tabline': {
+    \   'left': [[ 'buffers' ]], 
+    \   'right': [[ 'close' ]], 
+    \ },
     \ 'active': {
     \   'left':
     \     [
@@ -83,14 +87,16 @@ let g:lightline = {
     \   'linter_checking': 'lightline#ale#checking',
     \   'linter_warnings': 'lightline#ale#warnings',
     \   'linter_errors': 'lightline#ale#errors',
-    \   'linter_ok': 'lightline#ale#ok'
+    \   'linter_ok': 'lightline#ale#ok',
+    \   'buffers' : 'lightline#bufferline#buffers',
     \ },
     \ 'component_type': {
     \   'readonly': 'error',
     \   'linter_checking': 'left',
     \   'linter_warnings': 'warning',
     \   'linter_errors': 'error',
-    \   'linter_ok': 'left'
+    \   'linter_ok': 'left',
+    \   'buffers': 'tabsel',
     \ },
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' },
@@ -108,10 +114,12 @@ let g:lightline#ale#indicator_ok = g:LL_nf ? "\uf00c" : '✓'
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
 let g:LL_MedWidth = 100                                         " Secondary width for some sections
 let g:LL_LineNoSymbol = g:LL_pl ? '' : '␤'                     " Use  for line no unless no PL fonts
-let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                         " Use git symbol unless no nerd fonts
+let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)
 let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'                    " Read-only PL symbol
+let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
+let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified
 " }}}
 " Section separators {{{
 let g:lightline.separator.left = g:LL_pl ? '' : ''

@@ -11,9 +11,13 @@
 " --------------- Plugin Load -------------------
 " -----------------------------------------------
 " Status line {{{
+" Powerline
 set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
+
+" Lightline
 Plug 'itchyny/lightline.vim'                                    " Statusline
 Plug 'maximbaz/lightline-ale'                                   " ALE status in Lightline
+Plug 'mgee/lightline-bufferline'                                " Buffer line support for Lightline
 " }}}
 " Code completion {{{
 Plug 'Valloric/YouCompleteMe',                                  " Code completion (compiled on install/update)

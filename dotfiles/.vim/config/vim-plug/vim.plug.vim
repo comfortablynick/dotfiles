@@ -18,7 +18,7 @@ Plug 'maximbaz/lightline-ale'                                   " ALE status in 
 " Code completion {{{
 Plug 'Valloric/YouCompleteMe',                                  " Code completion (compiled on install/update)
     \ {
-    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
+    \   'do': 'python3 ~/git/python/shell/vimsync.py -p -y',
     \   'for':
     \       [
     \           'python',

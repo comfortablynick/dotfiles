@@ -5,31 +5,47 @@
 "  |_|   |_|\__,_|\__, |_|_| |_|___(_)_/ |_|_| |_| |_|
 "                 |___/
 "
-" Vim only
-" Plugins {{{
+" Vim Plugins
+
+" -----------------------------------------------
+" --------------- Plugin Load -------------------
+" -----------------------------------------------
+" Status line {{{
 set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
 Plug 'itchyny/lightline.vim'                                    " Statusline
 Plug 'maximbaz/lightline-ale'                                   " ALE status in Lightline
+" }}}
+" Code completion {{{
 Plug 'Valloric/YouCompleteMe',                                  " Code completion (compiled on install/update)
     \ {
-    \   'do': 'python3 ~/git/python/shell/vimsync.py'
+    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
+    \   'for':
+    \       [
+    \           'python',
+    \           'javascript',
+    \           'typescript',
+    \           'cpp',
+    \           'c',
+    \       ],
     \ }
 " }}}
-" Plugin Configuration {{{
-" YouCompleteMe
+" -----------------------------------------------
+" ------------ Plugin Configuration -------------
+" -----------------------------------------------
+" YouCompleteMe {{{
 let g:ycm_filetype_blacklist = {
-      \ 'gitcommit': 1,
-      \ 'tagbar': 1,
-      \ 'qf': 1,
-      \ 'notes': 1,
-      \ 'markdown': 1,
-      \ 'unite': 1,
-      \ 'text': 1,
-      \ 'vimwiki': 1,
-      \ 'pandoc': 1,
-      \ 'infolog': 1,
-      \ 'mail': 1
-      \}
+    \ 'gitcommit': 1,
+    \ 'tagbar': 1,
+    \ 'qf': 1,
+    \ 'notes': 1,
+    \ 'markdown': 1,
+    \ 'unite': 1,
+    \ 'text': 1,
+    \ 'vimwiki': 1,
+    \ 'pandoc': 1,
+    \ 'infolog': 1,
+    \ 'mail': 1
+    \}
 let g:ycm_filetype_specific_completion_to_disable = {
       \ 'gitcommit': 1
       \}

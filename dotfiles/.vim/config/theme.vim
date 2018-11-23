@@ -31,41 +31,6 @@ if &term =~# '^screen'
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 " }}}
-" Theme: Nord {{{
-" (https://github.com/arcticicestudio/nord-vim)
-let g:nord_italic = 1                                           " Support italic fonts
-let g:nord_italic_comments = 0                                  " Italic comments
-let g:nord_underline = 1                                        " Support underline where possible
-let g:nord_comment_brightness = 10                              " Controls % brightness
-let g:nord_cursor_line_number_background = 1                    " Extend highlighted line into the ln column
-" }}}
-" Theme: Gruvbox {{{
-" (https://github.com/morhetz/gruvbox)
-let g:gruvbox_italic = 0                                        " Support italic fonts
-let g:gruvbox_contrast_dark = 'medium'
-let g:gruvbox_contrast_light = 'soft'
-let g:gruvbox_improved_strings = 0
-" }}}
-" Theme: PaperColor {{{
-" https://github.com/NLKNguyen/papercolor-theme
-let g:PaperColor_Theme_Options = {
-  \   'theme': {
-  \     'default': {
-  \       'allow_bold': 1,
-  \       'allow_italic': 0,
-  \       'transparent_background': 0
-  \     },
-  \     'default.dark': {
-  \       'transparent_background': 0
-  \     }
-  \   },
-  \  'language': {
-  \    'python': {
-  \      'highlight_builtins': 1
-  \      }
-  \   }
-  \ }
-" }}}
 " Airline {{{
 " Map colorscheme to airline theme
 let g:airline_themes = {
@@ -89,8 +54,7 @@ let g:lightline = {
     \     ],
     \   'right':
     \     [
-    \        [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-    \        [ 'line_info' ],
+    \        [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'line_info' ],
     \        [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
     \     ]
     \ },
@@ -311,7 +275,11 @@ let vim_variant = substitute(vim_color, vim_baseColor . '-', '', '')
 " Assign to variables
 exe "colorscheme ".vim_baseColor
 exe "set background=".vim_variant
+
+" Set airline theme
 let g:airline_theme = get(airline_themes, vim_color, vim_baseColor)
+
+" Set lightline theme
 let lightline['colorscheme'] = airline_theme
 " }}}
 " }}}

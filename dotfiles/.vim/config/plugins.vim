@@ -21,16 +21,17 @@ endif
 " }}}
 " Plugins {{{
 call dein#begin(expand('$XDG_DATA_HOME/dein'))
-call dein#load_toml('~/.vim/config/dein.toml')
-call dein#end()
-
-filetype plugin indent on
-syntax enable
-set noshowmode                                                  " Don't duplicate mode in echo area
-set cmdheight=1                                                 " Height of echo area
-let g:echodoc_enable_at_startup = 1                             " Enable by default
+" call dein#load_toml('~/.vim/config/dein.toml')
+" call dein#load_toml('~/.vim/config/dein.nvim.toml', {'on_if': 'has("nvim")'})
+" call dein#load_toml('~/.vim/config/dein.vim.toml', {'on_if': '!has("nvim")'})
+" call dein#end()
+"  
+" filetype plugin indent on
+" syntax enable
+" set noshowmode                                                  " Don't duplicate mode in echo area
+" set cmdheight=1                                                 " Height of echo area
 " set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
-finish
+" finish
 
 " Common Plugins {{{
 " Plugin manager
@@ -68,7 +69,8 @@ call dein#add('ambv/black',
 " Linting {{{
 call dein#add('w0rp/ale',
     \ {
-    \  'lazy': 1
+    \  'on_ft': 'python',
+    \  'lazy': 0,
     \ })
 " }}}
 " Color themes {{{
@@ -100,7 +102,12 @@ call dein#add('gabrielelana/vim-markdown',
     \ })
 call dein#add('Soares/fish.vim',
     \ {
-    \  'on_ft': 'fish'
+    \  'on_ft': 'fish',
+    \  'on_if': 0,
+    \ })
+call dein#add('dag/vim-fish',
+    \ {
+    \  'on_ft': 'fish',
     \ })
 call dein#add('cespare/vim-toml',
     \ {

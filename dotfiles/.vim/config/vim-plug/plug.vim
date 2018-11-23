@@ -6,18 +6,21 @@
 "                 |___/
 "
 " Common Vim/Neovim plugins
-" Plugins {{{
+
+" -----------------------------------------------
+" --------------- Plugin Load -------------------
+" -----------------------------------------------
+" BEGIN {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 if has('nvim')
     " Load Neovim-only plugins
-    "exec 'source' vim_home . 'plugins_nvim.vim'
-    exec 'source plugins_nvim.vim'
+    exec 'source' vim_home . 'vim-plug/nvim.plug.vim'
 else
     " Load Vim-only plugins
-    " exec 'source' vim_home . 'plugins_vim.vim'
-    exec 'source plugins_vim.vim'
+    exec 'source' vim_home . 'vim-plug/vim.plug.vim'
 endif
+" }}}
 " Editor/appearance {{{
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
@@ -31,7 +34,7 @@ if $NERD_FONTS != 0
 endif
 " }}}
 " Linting {{{
-Plug 'w0rp/ale'                                                 " Linting
+Plug 'w0rp/ale', {'for': 'python'}                                                 " Linting
 " }}}
 " Syntax highlighting {{{
 Plug 'HerringtonDarkholme/yats', { 'for': 'typescript' }        " Typescript
@@ -57,10 +60,17 @@ Plug 'skywind3000/asyncrun.vim'                                 " Execute comman
 " Coding {{{
 Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
 Plug 'Shougo/neosnippet-snippets'                               " Code snippets
+Plug 'Shougo/echodoc',                                          " Echo completion function definitons
+    \ {
+    \   'do': ':UpdateRemotePlugins',
+    \ }
 " }}}
+" END {{{
 call plug#end()
 " }}}
-" Plugin Configuration {{{
+" -----------------------------------------------
+" ------------ Plugin Configuration -------------
+" -----------------------------------------------
 " Ale linter {{{
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -121,11 +131,18 @@ let NERDTreeShowHidden = 1                      " Show dotfiles
 " Black {{{
 let g:black_virtualenv = "~/.env/black"      " Black virtualenv location (custom)
 " }}}
+" Echodoc {{{
+" TODO: Only execute for python/ts/js?
+set cmdheight=1                                 " Add extra line for function definition
+let g:echodoc_enable_at_startup = 1
+let g:echodoc#type = 'signature'
+set noshowmode
+set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
+" }}}
 " Asyncrun {{{
 let g:asyncrun_open = 6                                         " Show quickfix when executing command
 let g:asyncrun_bell = 1                                         " Ring bell when job finished
 " }}}
 " Undotree {{{
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
-" }}}
 " }}}

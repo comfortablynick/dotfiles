@@ -54,6 +54,7 @@ call echodoc#enable()
 [[plugins]]
 repo = 'ambv/black'
 on_ft = 'python'
+on_cmd = 'Black'
 lazy = 1
 hook_source = '''
 let g:black_virtualenv = "~/.env/black"
@@ -62,7 +63,8 @@ let g:black_virtualenv = "~/.env/black"
 # Linting {{{
 [[plugins]]
 repo = 'w0rp/ale'
-lazy = 1
+on_ft = 'python'
+lazy = 0
 hook_source = '''
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -115,21 +117,61 @@ let g:python_flake8_options = {
 '''
 # }}}
 # Color themes {{{
+# Gruvbox {{{
 [[plugins]]
+# (https://github.com/morhetz/gruvbox)
 repo = 'morhetz/gruvbox'
 merged = 0
-
+hook_source = '''
+let g:gruvbox_italic = 0                                        " Support italic fonts
+let g:gruvbox_contrast_dark = 'medium'
+let g:gruvbox_contrast_light = 'soft'
+let g:gruvbox_improved_strings = 0
+'''
+# }}}
+# Nord {{{
 [[plugins]]
+# (https://github.com/arcticicestudio/nord-vim)
 repo = 'arcticicestudio/nord-vim'
 merged = 0
-
+hook_source = '''
+let g:nord_italic = 1                                           " Support italic fonts
+let g:nord_italic_comments = 0                                  " Italic comments
+let g:nord_underline = 1                                        " Support underline where possible
+let g:nord_comment_brightness = 10                              " Controls % brightness
+let g:nord_cursor_line_number_background = 1                    " Extend highlighted line into the ln column
+'''
+# }}}
+# PaperColor {{{
 [[plugins]]
+# https://github.com/NLKNguyen/papercolor-theme
 repo = 'NLKNguyen/papercolor-theme'
 merged = 0
-
+hook_source = '''
+let g:PaperColor_Theme_Options = {
+  \   'theme': {
+  \     'default': {
+  \       'allow_bold': 1,
+  \       'allow_italic': 0,
+  \       'transparent_background': 0
+  \     },
+  \     'default.dark': {
+  \       'transparent_background': 0
+  \     }
+  \   },
+  \  'language': {
+  \    'python': {
+  \      'highlight_builtins': 1
+  \      }
+  \   }
+  \ }
+'''
+# }}}
+# Snow {{{
 [[plugins]]
 repo = 'nightsense/snow'
 merged = 0
+# }}}
 # }}}
 # Syntax highlighting {{{
 [[plugins]]
@@ -163,100 +205,4 @@ hook_source = '''
 let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 '''
-# }}}
-# Code completion {{{
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-# build = 'nvim -s +"call dein#remote_plugins()"'
-build = 'nvim -c "call dein#remote_plugins()"'
-on_event = 'InsertEnter'
-on_if = 'has("nvim")'
-hook_source = '''
-call deoplete#enable()
-let g:deoplete#sources#jedi#show_docstring = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-'''
-
-[[plugins]]
-repo = 'Shougo/neco-vim'
-on_ft = 'vim'
-on_if = 'has("nvim")'
-
-[[plugins]]
-repo = 'zchee/deoplete-jedi'
-on_ft = 'python'
-on_if = 'has("nvim")'
-
-[[plugins]]
-repo = 'mhartington/nvim-typescript'
-build = './install.sh'
-on_ft = ['typescript', 'tsx']
-on_if = 'has("nvim")'
-
-[[plugins]]
-repo = 'Valloric/YouCompleteMe'
-build = './install.py --ts-completer --clang-completer'
-on_ft = ['python', 'javascript', 'typescript', 'cpp', 'c']
-on_if = '!has("nvim")'
-hook_source = '''
-let g:ycm_filetype_blacklist = {
-    \ 'gitcommit': 1,
-    \ 'tagbar': 1,
-    \ 'qf': 1,
-    \ 'notes': 1,
-    \ 'markdown': 1,
-    \ 'unite': 1,
-    \ 'text': 1,
-    \ 'vimwiki': 1,
-    \ 'pandoc': 1,
-    \ 'infolog': 1,
-    \ 'mail': 1
-    \}
-let g:ycm_filetype_specific_completion_to_disable = {
-    \ 'gitcommit': 1
-    \}
-let g:ycm_autoclose_preview_window_after_completion = 1
-'''
-# }}}
-# Status bar {{{
-[[plugins]]
-repo = 'vim-airline/vim-airline'
-on_if = 'has("nvim")'
-hook_source = '''
-let g:airline_extensions = [
-    \ 'tabline',
-    \ 'ale',
-    \ 'branch',
-    \ 'hunks',
-    \ 'wordcount',
-    \ 'virtualenv'
-    \ ]
-let g:airline#extensions#default#section_truncate_width = {
-    \ 'b': 79,
-    \ 'x': 40,
-    \ 'y': 48,
-    \ 'z': 45,
-    \ 'warning': 80,
-    \ 'error': 80,
-    \ }
-let g:airline_powerline_fonts = 1
-let g:airline_detect_spelllang = 0
-'''
-
-[[plugins]]
-repo = 'vim-airline/vim-airline-themes'
-on_if = 'has("nvim")'
-
-[[plugins]]
-repo = 'itchyny/lightline.vim'
-on_if = '!has("nvim")'
-
-[[plugins]]
-repo = '/usr/local/lib/python3.7/site-packages/powerline/bindings/vim'
-on_if = '!has("nvim")'
-
-[[plugins]]
-repo = 'maximbaz/lightline-ale'
-on_if = '!has("nvim")'
 # }}}

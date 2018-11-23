@@ -86,7 +86,7 @@ set -l def_venv "$VENV_DIR/dev/bin/activate.fish"
 source $def_venv                                                # Activate by default
 # }}}
 # Editor (Vim/Neovim) {{{
-set -gx EDITOR vim                                              # Default editor
+set -gx EDITOR nvim                                             # Default editor
 set -gx VISUAL $EDITOR                                          # Default visual editor
 set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
 set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
@@ -94,12 +94,12 @@ set -gx VIM_SSH_COMPAT 0                                        # Safe term bg i
 
 # Vim/Neovim color schemes
 set -gx VIM_COLOR gruvbox-dark
-set -gx NVIM_COLOR gruvbox-dark
+set -gx NVIM_COLOR papercolor-dark
 # }}}
 # Fuzzy Finder (fzf) {{{
 # Enable fuzzy directory finding
 set -gx FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
-
+set -gx FZF_TMUX 1
 # Install fzf
 if ! test -d "$HOME/.fzf"
     echo "fzf dir not found. Cloning fzf and installing..."
@@ -339,6 +339,7 @@ ab lp lpass                                                     # LastPass cli
 ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
 ab vw view                                                      # Call view function (vim read-only)
 ab t todo                                                       # Todo.txt cli
+ab tp topydo                                                    # Todo.txt Python cli
 ab o omf                                                        # oh-my-fish
 ab z j                                                          # Use autojump (j) instead of z
 # }}}
@@ -351,7 +352,7 @@ ab gcol 'git checkout (git describe --tags)'                    # Check out late
 ab gd 'git diff'
 ab gdf 'git diff'
 ab gdiff 'git diff'
-ab gpl 'git pull'                                               
+ab gpl 'git pull'
 ab gph 'git push'
 ab gs 'git show'
 ab gst 'git status'
@@ -364,6 +365,8 @@ ab grmi 'git rm --cached'                                       # Remove from in
 # }}}
 # Directories {{{
 ab - cd
+ab bcd fzf_cdhist
+ab fcd __fzf_cd
 ab lla ls -la
 ab h $HOME
 ab dot "$HOME/dotfiles/dotfiles"

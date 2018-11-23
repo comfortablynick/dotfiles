@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.gfRXnP/__fzf_autojump.fish @ line 2
+# Defined in /tmp/fish.10ybsy/__fzf_autojump.fish @ line 2
 function __fzf_autojump
 	if test -n "$argv"
         cd (autojump $argv)

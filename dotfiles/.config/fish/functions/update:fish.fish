@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.uYNAxf/update:fish.fish @ line 2
+# Defined in /tmp/fish.vcSBhu/update:fish.fish @ line 2
 function update:fish --description 'Pull fish source and build'
 	set -l src_dir "$HOME/src/fish-shell"
     git -C "$src_dir" fetch

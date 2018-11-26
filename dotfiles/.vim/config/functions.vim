@@ -1,5 +1,10 @@
-" VIM / NEOVIM FUNCTIONS
-
+"    __                  _   _                       _
+"   / _|_   _ _ __   ___| |_(_) ___  _ __  _____   _(_)_ __ ___
+"  | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __\ \ / / | '_ ` _ \
+"  |  _| |_| | | | | (__| |_| | (_) | | | \__ \\ V /| | | | | | |
+"  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
+"
+" Functions
 " SetShebang() :: add shebang for new file {{{
 function! SetShebang()
 python3 << endpython
@@ -73,16 +78,16 @@ function! SaveAndExecutePython()
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
 
     " save and reload current file
-    silent execute "update | edit"
+    silent execute 'update | edit'
 
     " get file path of current file
-    let s:current_buffer_file_path = expand("%")
+    let s:current_buffer_file_path = expand('%')
 
-    let s:output_buffer_name = "Python"
-    let s:output_buffer_filetype = "output"
+    let s:output_buffer_name = 'Python'
+    let s:output_buffer_filetype = 'output'
 
     " reuse existing buffer window if it exists otherwise create a new one
-    if !exists("s:buf_nr") || !bufexists(s:buf_nr)
+    if !exists('s:buf_nr') || !bufexists(s:buf_nr)
         silent execute 'botright vsplit new ' . s:output_buffer_name
         let s:buf_nr = bufnr('%')
     elseif bufwinnr(s:buf_nr) == -1
@@ -92,7 +97,7 @@ function! SaveAndExecutePython()
         silent execute bufwinnr(s:buf_nr) . 'wincmd w'
     endif
 
-    silent execute "setlocal filetype=" . s:output_buffer_filetype
+    silent execute 'setlocal filetype=' . s:output_buffer_filetype
     setlocal bufhidden=delete
     setlocal buftype=nofile
     setlocal noswapfile
@@ -111,7 +116,7 @@ function! SaveAndExecutePython()
     silent %delete _
 
     " add the console output
-    silent execute ".!python3 " . shellescape(s:current_buffer_file_path, 1)
+    silent execute '.!python3 ' . shellescape(s:current_buffer_file_path, 1)
 
     " make the buffer non modifiable
     setlocal readonly
@@ -139,7 +144,7 @@ endfunction
 " ToggleQf() :: toggle quickfix window {{{
 function! ToggleQf()
   for buffer in tabpagebuflist()
-    if bufname(buffer) == ''
+    if bufname(buffer) ==? ''
       " then it should be the quickfix window
       cclose
       return
@@ -149,4 +154,39 @@ function! ToggleQf()
   copen
 endfunction
 nnoremap <silent> qf :call ToggleQf()<cr>
+" }}}
+" AutoCloseQfWin() :: close qf on quit {{{
+function! AutoCloseQfWin()
+  " if the window is quickfix go on
+  if &buftype ==? 'quickfix'
+    " if this window is last on screen quit without warning
+    if winnr('$') < 2
+      quit
+    endif
+  endif
+endfunction
+" }}}
+
+" Autocommands
+" Jump to last cursor position {{{
+" Jump to last position when reopening file
+augroup cursor_position
+    autocmd!
+    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+        \| exe "normal! g`\"" | endif
+augroup END
+
+" }}}
+" Set shebang on new files {{{
+" augroup shebang
+"     autocmd!
+"     autocmd BufNewFile * call SetShebang()
+" augroup END
+" }}}
+" Close quickfix window on Vim exit {{{
+" Close buffer if quickfix window is last
+augroup quickfix
+    autocmd!
+    autocmd BufEnter * call AutoCloseQfWin()
+augroup END
 " }}}

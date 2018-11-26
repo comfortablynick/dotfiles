@@ -6,10 +6,16 @@
 "                 |___/
 "
 " Common Vim/Neovim plugins
+" Helper functions
+" Vim-Plug Cond() {{{
+" Add conditions that aren't supported directly by vim-plug
+function! Cond(cond, ...)
+  let opts = get(a:000, 0, {})
+  return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+endfunction
+" }}}
 
-" -----------------------------------------------
-" --------------- Plugin Load -------------------
-" -----------------------------------------------
+" Plugin definitions
 " BEGIN {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
@@ -23,21 +29,16 @@ endif
 " }}}
 " Editor/appearance {{{
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }          " File explorer panel
-Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }              " Undo tree panel
+Plug 'scrooloose/nerdtree',     { 'on': 'NERDTreeToggle' }      " File explorer panel
+Plug 'mbbill/undotree',         { 'on': 'UndotreeToggle' }      " Undo tree panel
 Plug '~/.fzf'                                                   " Fuzzy finder
 Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
-
-if $NERD_FONTS != 0
-    " Load plugins that require full terminal
-    Plug 'ryanoasis/vim-devicons'                               " Developer filetype icons
-endif
+Plug 'ryanoasis/vim-devicons',  Cond(g:LL_nf)                   " Load devicons if $NERD_FONTS = 1
 " }}}
 " Linting {{{
-Plug 'w0rp/ale',
+Plug 'w0rp/ale',                                                " Async Linting Engine
     \ {
-    \   'for':
-    \   [
+    \   'for': [
     \       'python',
     \       'vim',
     \       'typescript',
@@ -48,12 +49,16 @@ Plug 'w0rp/ale',
     \ }
 " }}}
 " Syntax highlighting {{{
-Plug 'HerringtonDarkholme/yats', { 'for': 'typescript' }        " Typescript
-Plug 'gabrielelana/vim-markdown', { 'for': 'markdown' }         " Markdown
-Plug 'Soares/fish.vim', { 'for': 'fish' }                       " Fish syntax highlighting
+Plug 'HerringtonDarkholme/yats',    { 'for': 'typescript' }     " Typescript
+Plug 'gabrielelana/vim-markdown',   { 'for': 'markdown' }       " Markdown
+Plug 'dag/vim-fish',                { 'for': 'fish' }           " Fish script
 " }}}
-" Formatting {{{
-Plug 'ambv/black', { 'for': 'python' }                          " Python formatter (subset of PEP8)
+"         Formatting {{{
+Plug 'ambv/black',                                              " Python formatter (subset of PEP8)
+    \ { 
+    \   'for': 'python', 
+    \   'on': 'Black',
+    \ }
 " }}}
 " Git {{{
 Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
@@ -68,20 +73,73 @@ Plug 'nightsense/snow'
 " Terminal/Code Execution {{{
 Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously
 " }}}
-" Coding {{{
+" Completion/Snippets {{{
 Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
 Plug 'Shougo/neosnippet-snippets'                               " Code snippets
-Plug 'Shougo/echodoc',                                          " Echo completion function definitons
+Plug 'Shougo/echodoc'                                           " Echo completion function definitons
+
+" Deoplete {{{
+Plug 'zchee/deoplete-jedi',
+    \ Cond(has('nvim'),
+    \ {
+    \   'for': 'python',
+    \ })
+Plug 'mhartington/nvim-typescript',
+    \ Cond(has('nvim'),
+    \ {
+    \   'for':
+    \       [
+    \           'typescript',
+    \           'tsx',
+    \       ],
+    \   'do': './install.sh',
+    \ })
+Plug 'Shougo/deoplete.nvim',
+    \ Cond(has('nvim'),
     \ {
     \   'do': ':UpdateRemotePlugins',
-    \ }
+    \ })
+Plug 'Shougo/neco-vim', Cond(has('nvim'),
+    \ {
+    \   'for': 'vim'
+    \ })
+" }}}
+" YouCompleteMe {{{
+Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
+    \ {
+    \   'do': 'python3 ~/git/python/shell/vimsync.py -p -y',
+    \   'for':
+    \       [
+    \           'python',
+    \           'javascript',
+    \           'typescript',
+    \           'cpp',
+    \           'c',
+    \       ],
+    \ })
+" }}}
+" }}}
+" Status line {{{
+" Airline {{{
+Plug 'vim-airline/vim-airline',         Cond(has('nvim'))
+Plug 'vim-airline/vim-airline-themes',  Cond(has('nvim'))
+" }}}
+" Powerline {{{
+" if !has('nvim')
+"     set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
+" endif
+" }}}
+" Lightline {{{
+Plug 'itchyny/lightline.vim',           Cond(!has('nvim'))
+Plug 'maximbaz/lightline-ale',          Cond(!has('nvim'))
+Plug 'mgee/lightline-bufferline',       Cond(!has('nvim'))
+" }}}
 " }}}
 " END {{{
 call plug#end()
 " }}}
-" -----------------------------------------------
-" ------------ Plugin Configuration -------------
-" -----------------------------------------------
+
+" Plugin configuration
 " Ale linter {{{
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -156,4 +214,56 @@ let g:asyncrun_bell = 1                                         " Ring bell when
 " }}}
 " Undotree {{{
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
+" }}}
+" Airline {{{
+let g:airline_extensions = [
+    \ 'tabline',
+    \ 'ale',
+    \ 'branch',
+    \ 'hunks',
+    \ 'wordcount',
+    \ 'virtualenv'
+    \ ]
+let g:airline#extensions#default#section_truncate_width = {
+    \ 'b': 79,
+    \ 'x': 40,
+    \ 'y': 48,
+    \ 'z': 45,
+    \ 'warning': 80,
+    \ 'error': 80,
+    \ }
+let g:airline_powerline_fonts = 1
+let g:airline_detect_spelllang = 0
+
+" Airline Tabline
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_close_button = 0
+" }}}
+" Deoplete {{{
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#show_docstring = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+augroup deoplete
+    autocmd!
+    autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+augroup end
+" }}}
+" YouCompleteMe {{{
+let g:ycm_filetype_blacklist = {
+    \ 'gitcommit': 1,
+    \ 'tagbar': 1,
+    \ 'qf': 1,
+    \ 'notes': 1,
+    \ 'markdown': 1,
+    \ 'unite': 1,
+    \ 'text': 1,
+    \ 'vimwiki': 1,
+    \ 'pandoc': 1,
+    \ 'infolog': 1,
+    \ 'mail': 1
+    \}
+let g:ycm_filetype_specific_completion_to_disable = {
+      \ 'gitcommit': 1
+      \}
+let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
 " }}}

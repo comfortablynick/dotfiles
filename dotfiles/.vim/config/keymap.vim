@@ -1,6 +1,8 @@
 " KEYMAPPING ====================================
 
-" Normal ----------------------------------------
+" Global {{{
+" `Ctrl+n` :: toggle NERDTree
+noremap <silent> <C-n> :NERDTreeToggle<CR>
 " <Space> :: toggle folds
 noremap <Space> za
 
@@ -11,16 +13,16 @@ noremap za zA
 noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<cr>
 
 " `F5` :: toggle UndoTree
-noremap <silent><F5> :UndotreeToggle \| :UndotreeFocus<CR>
-
+noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
+" }}}
+" Normal mode {{{
 " Split navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-" INSERT ----------------------------------------
-
+" }}}
+" Insert mode {{{
 " `kj` :: escape
 inoremap kj <Esc>`^
 
@@ -30,14 +32,12 @@ inoremap lkj <Esc>`^:w<CR>
 " `;lkj` :: escape + save + quit
 inoremap ;lkj <Esc>`^:wq<CR>
 
-" `Ctrl+n` :: toggle NERDTree
-map <C-n> :NERDTreeToggle<CR>
-
-" TERMINAL --------------------------------------
-
+" }}}
+" Terminal mode {{{
 " `<Esc>` to exit terminal mode
 tnoremap <Esc> <C-\><C-n>
-
+" }}}
+" Window navigation {{{
 " `ALT+{h,j,k,l}` to navigate windows from any mode
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
@@ -51,3 +51,10 @@ nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
+" }}}
+" Tab navigation {{{
+" `t` + {h,l,n}
+nnoremap <silent> th :tabprev<CR>
+nnoremap <silent> tl :tabnext<CR>
+nnoremap <silent> tn :tabnew<CR>
+" }}}

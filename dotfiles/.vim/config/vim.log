@@ -1,0 +1,119 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.007  000.007: --- VIM STARTING ---
+000.119  000.112: Allocated generic buffers
+000.458  000.339: locale set
+000.462  000.004: clipboard setup
+000.472  000.010: window checked
+011.397  010.925: inits 1
+011.516  000.119: parsing arguments
+011.523  000.007: expanding arguments
+014.567  003.044: shell init
+014.890  000.323: Termcap init
+014.909  000.019: inits 2
+015.070  000.161: init highlight
+023.183  000.050  000.050: sourcing /Users/nick/.vim/ftdetect/python.vim
+023.311  007.646  007.596: sourcing /usr/local/share/vim/vim81/filetype.vim
+023.457  000.053  000.053: sourcing /usr/local/share/vim/vim81/ftplugin.vim
+024.688  000.939  000.939: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+024.815  001.158  000.219: sourcing /usr/local/share/vim/vim81/syntax/synload.vim
+024.852  001.289  000.131: sourcing /usr/local/share/vim/vim81/syntax/syntax.vim
+025.302  000.191  000.191: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+025.706  000.190  000.190: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+026.060  000.191  000.191: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+026.248  001.316  000.744: sourcing /usr/local/share/vim/vim81/colors/darkblue.vim
+026.692  011.128  000.824: sourcing /Users/nick/.vim/config/config.vim
+029.114  002.260  002.260: sourcing /Users/nick/.vim/autoload/plug.vim
+029.426  000.040  000.040: sourcing /Users/nick/.vim/config/vim-plug/vim.plug.vim
+035.492  002.303  002.303: sourcing /usr/local/share/vim/vim81/ftoff.vim
+045.626  000.028  000.028: sourcing /Users/nick/.vim/ftdetect/python.vim
+045.793  000.021  000.021: sourcing /Users/nick/.vim/plugged/yats/ftdetect/tsx.vim
+045.848  000.018  000.018: sourcing /Users/nick/.vim/plugged/yats/ftdetect/typescript.vim
+045.960  000.025  000.025: sourcing /Users/nick/.vim/plugged/vim-markdown/ftdetect/markdown.vim
+046.115  000.066  000.066: sourcing /Users/nick/.vim/plugged/vim-fish/ftdetect/fish.vim
+046.237  000.020  000.020: sourcing /Users/nick/.vim/plugged/vim-fugitive/ftdetect/fugitive.vim
+046.403  000.026  000.026: sourcing /Users/nick/.vim/plugged/neosnippet.vim/ftdetect/neosnippet.vim
+046.563  007.492  007.288: sourcing /usr/local/share/vim/vim81/filetype.vim
+046.768  000.020  000.020: sourcing /usr/local/share/vim/vim81/ftplugin.vim
+046.992  000.048  000.048: sourcing /usr/local/share/vim/vim81/indent.vim
+047.280  020.498  008.335: sourcing /Users/nick/.vim/config/plug.vim
+047.602  000.242  000.242: sourcing /Users/nick/.vim/config/functions.vim
+049.677  000.190  000.190: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+050.129  000.184  000.184: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+057.419  009.379  009.005: sourcing /Users/nick/.vim/plugged/papercolor-theme/colors/PaperColor.vim
+059.802  000.367  000.367: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+060.782  000.353  000.353: sourcing /usr/local/share/vim/vim81/syntax/syncolor.vim
+067.712  010.140  009.420: sourcing /Users/nick/.vim/plugged/papercolor-theme/colors/PaperColor.vim
+067.739  020.062  000.543: sourcing /Users/nick/.vim/config/theme.vim
+067.958  000.136  000.136: sourcing /Users/nick/.vim/config/keymap.vim
+067.977  052.636  000.570: sourcing $HOME/.vimrc
+067.982  000.276: sourcing vimrc file(s)
+068.709  000.223  000.223: sourcing /Users/nick/.vim/plugged/vim-gitgutter/autoload/gitgutter/utility.vim
+069.238  000.152  000.152: sourcing /Users/nick/.vim/plugged/vim-gitgutter/autoload/gitgutter/highlight.vim
+069.995  001.776  001.401: sourcing /Users/nick/.vim/plugged/vim-gitgutter/plugin/gitgutter.vim
+070.793  000.663  000.663: sourcing /Users/nick/.fzf/plugin/fzf.vim
+071.829  000.899  000.899: sourcing /Users/nick/.vim/plugged/fzf.vim/plugin/fzf.vim
+072.631  000.125  000.125: sourcing /Users/nick/.vim/plugged/ale/autoload/ale/events.vim
+072.799  000.833  000.708: sourcing /Users/nick/.vim/plugged/ale/plugin/ale.vim
+073.244  000.271  000.271: sourcing /Users/nick/.vim/plugged/gv.vim/plugin/gv.vim
+073.694  000.317  000.317: sourcing /Users/nick/.vim/plugged/vim-fugitive/plugin/fugitive.vim
+075.000  001.092  001.092: sourcing /Users/nick/.vim/plugged/asyncrun.vim/plugin/asyncrun.vim
+075.347  000.209  000.209: sourcing /Users/nick/.vim/plugged/neosnippet.vim/plugin/neosnippet.vim
+075.589  000.094  000.094: sourcing /Users/nick/.vim/plugged/echodoc/plugin/echodoc.vim
+075.831  000.111  000.111: sourcing /Users/nick/.vim/plugged/lightline.vim/plugin/lightline.vim
+076.081  000.074  000.074: sourcing /Users/nick/.vim/plugged/lightline-ale/plugin/lightline/ale.vim
+076.736  000.307  000.307: sourcing /Users/nick/.vim/plugged/lightline-bufferline/autoload/lightline/bufferline.vim
+076.791  000.576  000.269: sourcing /Users/nick/.vim/plugged/lightline-bufferline/plugin/bufferline.vim
+077.474  000.079  000.079: sourcing /usr/local/share/vim/vim81/plugin/getscriptPlugin.vim
+077.729  000.213  000.213: sourcing /usr/local/share/vim/vim81/plugin/gzip.vim
+078.037  000.266  000.266: sourcing /usr/local/share/vim/vim81/plugin/logiPat.vim
+078.121  000.040  000.040: sourcing /usr/local/share/vim/vim81/plugin/manpager.vim
+078.375  000.215  000.215: sourcing /usr/local/share/vim/vim81/plugin/matchparen.vim
+078.948  000.529  000.529: sourcing /usr/local/share/vim/vim81/plugin/netrwPlugin.vim
+079.036  000.028  000.028: sourcing /usr/local/share/vim/vim81/plugin/rrhelper.vim
+079.132  000.045  000.045: sourcing /usr/local/share/vim/vim81/plugin/spellfile.vim
+079.355  000.174  000.174: sourcing /usr/local/share/vim/vim81/plugin/tarPlugin.vim
+079.528  000.121  000.121: sourcing /usr/local/share/vim/vim81/plugin/tohtml.vim
+079.760  000.182  000.182: sourcing /usr/local/share/vim/vim81/plugin/vimballPlugin.vim
+080.027  000.205  000.205: sourcing /usr/local/share/vim/vim81/plugin/zipPlugin.vim
+080.035  003.041: loading plugins
+080.129  000.094: loading packages
+080.171  000.042: loading after plugins
+080.177  000.006: inits 3
+080.541  000.364: reading viminfo
+080.572  000.031: setting raw mode
+080.600  000.028: start termcap
+080.616  000.016: clearing screen
+084.001  000.614  000.614: sourcing /usr/local/share/vim/vim81/ftplugin/python.vim
+084.341  000.056  000.056: sourcing /Users/nick/.vim/after/ftplugin/python.vim
+086.049  001.168  001.168: sourcing /usr/local/share/vim/vim81/syntax/python.vim
+243.352  155.562  155.562: sourcing /Users/nick/.vim/plugged/black/plugin/black.vim
+244.588  000.570  000.570: sourcing /Users/nick/.vim/plugged/YouCompleteMe/plugin/youcompleteme.vim
+245.783  000.034  000.034: sourcing /usr/local/share/vim/vim81/ftplugin/python.vim
+246.109  000.046  000.046: sourcing /Users/nick/.vim/after/ftplugin/python.vim
+246.681  000.214  000.214: sourcing /usr/local/share/vim/vim81/indent/python.vim
+247.018  000.048  000.048: sourcing /usr/local/share/vim/vim81/indent/python.vim
+247.929  000.629  000.629: sourcing /Users/nick/.vim/plugged/lightline.vim/autoload/lightline.vim
+249.052  000.074  000.074: sourcing /Users/nick/.vim/plugged/lightline.vim/autoload/lightline/tab.vim
+249.878  000.288  000.288: sourcing /Users/nick/.vim/plugged/lightline.vim/autoload/lightline/colorscheme.vim
+255.024  004.900  004.900: sourcing /Users/nick/.vim/plugged/lightline.vim/autoload/lightline/colorscheme/PaperColor_dark.vim
+255.037  005.679  000.491: sourcing /Users/nick/.vim/plugged/lightline.vim/autoload/lightline/colorscheme/PaperColor.vim
+261.937  000.096  000.096: sourcing /Users/nick/.vim/plugged/lightline-ale/autoload/lightline/ale.vim
+262.887  000.837  000.837: sourcing /Users/nick/.vim/plugged/ale/autoload/ale/engine.vim
+270.834  005.149  005.149: sourcing /Users/nick/.vim/plugged/vim-fugitive/autoload/fugitive.vim
+273.473  022.081: opening buffers
+273.768  000.157  000.157: sourcing /Users/nick/.vim/plugged/vim-gitgutter/autoload/gitgutter.vim
+274.047  000.417: BufEnter autocommands
+274.050  000.003: editing files in windows
+275.457  001.061  001.061: sourcing /Users/nick/.vim/plugged/YouCompleteMe/autoload/youcompleteme.vim
+324.356  049.245: VimEnter autocommands
+324.365  000.009: before starting main loop
+325.048  000.428  000.428: sourcing /Users/nick/.vim/plugged/ale/autoload/ale/cursor.vim
+325.656  000.417  000.417: sourcing /Users/nick/.vim/plugged/ale/autoload/ale.vim
+333.141  000.714  000.714: sourcing /Users/nick/.vim/plugged/vim-gitgutter/autoload/gitgutter/hunk.vim
+334.357  008.433: first screen update
+334.359  000.002: --- VIM STARTED ---

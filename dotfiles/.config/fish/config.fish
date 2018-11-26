@@ -407,6 +407,7 @@ ab vf 'vim (fzf)'                                               # Find file to o
 ab n nvim                                                       # Call Neovim directly
 ab nv nvim                                                      # Another Neovim
 ab vvim 'command vim'                                           # Call Vim binary directly
+ab vv 'command vim'                                             # Call Vim directly
 # }}}
 # System {{{
 ab che 'chmod +x'                                             # Make executable

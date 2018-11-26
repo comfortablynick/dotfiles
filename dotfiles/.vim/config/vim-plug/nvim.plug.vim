@@ -6,9 +6,8 @@
 "                 |___/
 "
 " Neovim Only
-" -----------------------------------------------
-" --------------- Plugin Load -------------------
-" -----------------------------------------------
+
+" Plugin definitions
 " Code completion {{{
 Plug 'zchee/deoplete-jedi',
     \ {
@@ -36,9 +35,6 @@ Plug 'Shougo/neco-vim',
 Plug 'vim-airline/vim-airline'                              " Use airline statusbar for nvim
 Plug 'vim-airline/vim-airline-themes'                       " Themes for airline<Paste>
 " }}}
-" -----------------------------------------------
-" ------------ Plugin Configuration -------------
-" -----------------------------------------------
 " Airline {{{
 let g:airline_extensions = [
     \ 'tabline',

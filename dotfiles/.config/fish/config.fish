@@ -93,7 +93,7 @@ set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
 
 # Vim/Neovim color schemes
-set -gx VIM_COLOR gruvbox-dark
+set -gx VIM_COLOR PaperColor-dark
 set -gx NVIM_COLOR papercolor-dark
 # }}}
 # Fuzzy Finder (fzf) {{{

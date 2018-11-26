@@ -21,17 +21,17 @@ endif
 " }}}
 " Plugins {{{
 call dein#begin(expand('$XDG_DATA_HOME/dein'))
-" call dein#load_toml('~/.vim/config/dein.toml')
-" call dein#load_toml('~/.vim/config/dein.nvim.toml', {'on_if': 'has("nvim")'})
-" call dein#load_toml('~/.vim/config/dein.vim.toml', {'on_if': '!has("nvim")'})
-" call dein#end()
-"  
-" filetype plugin indent on
-" syntax enable
-" set noshowmode                                                  " Don't duplicate mode in echo area
-" set cmdheight=1                                                 " Height of echo area
-" set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
-" finish
+call dein#load_toml('dein.toml')
+call dein#load_toml('dein.nvim.toml', {'on_if': 'has("nvim")'})
+call dein#load_toml('dein.vim.toml', {'on_if': '!has("nvim")'})
+call dein#end()
+  
+filetype plugin indent on
+syntax enable
+set noshowmode                                                  " Don't duplicate mode in echo area
+set cmdheight=1                                                 " Height of echo area
+set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
+finish
 
 " Common Plugins {{{
 " Plugin manager

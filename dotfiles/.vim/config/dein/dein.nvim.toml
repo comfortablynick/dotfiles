@@ -24,6 +24,8 @@ on_ft = 'python'
 repo = 'mhartington/nvim-typescript'
 build = './install.sh'
 on_ft = ['typescript', 'tsx']
+# on_if = 0
+lazy = 1
 # }}}
 # Status bar {{{
 [[plugins]]

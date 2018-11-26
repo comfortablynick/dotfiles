@@ -6,7 +6,7 @@
 "                 |___/
 "
 " Common Vim/Neovim plugins
-" Helper functions
+" Helper functions {{{
 " Vim-Plug Cond() {{{
 " Add conditions that aren't supported directly by vim-plug
 function! Cond(cond, ...)
@@ -14,8 +14,8 @@ function! Cond(cond, ...)
   return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 " }}}
-
-" Plugin definitions
+" }}}
+" Plugin definitions {{{
 " BEGIN {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
@@ -34,19 +34,21 @@ Plug 'mbbill/undotree',         { 'on': 'UndotreeToggle' }      " Undo tree pane
 Plug '~/.fzf'                                                   " Fuzzy finder
 Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
 Plug 'ryanoasis/vim-devicons',  Cond(g:LL_nf)                   " Load devicons if $NERD_FONTS = 1
+Plug 'christoomey/vim-tmux-navigator',                          " Navigate Vim splits & tmux panes with same keys
+    \ Cond(!empty($TMUX_PANE))
 " }}}
 " Linting {{{
 Plug 'w0rp/ale',                                                " Async Linting Engine
-    \ {
-    \   'for': [
-    \       'python',
-    \       'vim',
-    \       'typescript',
-    \       'javascript',
-    \       'cpp',
-    \       'c',
-    \   ]
-    \ }
+"     \ {
+"     \   'for': [
+"     \       'python',
+"     \       'vim',
+"     \       'typescript',
+"     \       'javascript',
+"     \       'cpp',
+"     \       'c',
+"     \   ]
+"     \ }
 " }}}
 " Syntax highlighting {{{
 Plug 'HerringtonDarkholme/yats',    { 'for': 'typescript' }     " Typescript
@@ -54,11 +56,11 @@ Plug 'gabrielelana/vim-markdown',   { 'for': 'markdown' }       " Markdown
 Plug 'dag/vim-fish',                { 'for': 'fish' }           " Fish script
 " }}}
 "         Formatting {{{
-Plug 'ambv/black',                                              " Python formatter (subset of PEP8)
-    \ { 
-    \   'for': 'python', 
-    \   'on': 'Black',
-    \ }
+" Plug 'ambv/black',                                              " Python formatter (subset of PEP8)
+"     \ {
+"     \   'for': 'python',
+"     \   'on': 'Black',
+"     \ }
 " }}}
 " Git {{{
 Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
@@ -138,8 +140,8 @@ Plug 'mgee/lightline-bufferline',       Cond(!has('nvim'))
 " END {{{
 call plug#end()
 " }}}
-
-" Plugin configuration
+" }}}
+" Plugin configuration {{{
 " Ale linter {{{
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -206,7 +208,7 @@ let g:black_virtualenv = '~/.env/black'      " Black virtualenv location (custom
 " TODO: Only execute for python/ts/js?
 set cmdheight=1                                 " Add extra line for function definition
 let g:echodoc_enable_at_startup = 1
-let g:echodoc#type = 'signature'
+" let g:echodoc#type = 'echo'
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 " }}}
@@ -269,3 +271,5 @@ let g:ycm_filetype_specific_completion_to_disable = {
       \}
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
 " }}}
+" }}}
+" vim:set fdl=1:

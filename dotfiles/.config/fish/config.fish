@@ -15,29 +15,20 @@
 #                       (JJJ| \UUU)
 #                        (UU)
 
-# SHELL STARTUP ============================= {{{
+# SHELL STARTUP {{{
 # Non-interactive {{{
 if not status --is-interactive
   exit 0
 end
-# }}}
 # Everything below is for interactive shells
-
-# Login only options
-# if status --is-login
-#     # Replace shell with TMUX if available
-#     if test (type tmux; and test -z "$TMUX")
-#         tmux new-session -A -s def;
-#         and kill $fish_pid;
-#     end
-# end
-
-# _logo
+# }}}
+# Welcome message {{{
 set_color $fish_color_autosuggestion;
 set -l start_time (get_date)
 echo -n 'Sourcing config.fish...  '
 # }}}
-# ENVIRONMENT =============================== {{{
+# }}}
+# ENVIRONMENT {{{
 # General System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
@@ -138,24 +129,31 @@ end
 set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
 # }}}
 # }}}
-# FUNCTIONS ================================= {{{
-# Need to be defined early if used in config.fish
-
-# ab :: wrap `abbr` so fish linter doesn't complain
+# FUNCTIONS {{{
+# ab :: wrap `abbr` so fish linter doesn't complain {{{
 function ab -d "create global abbreviation"
     set -l abbrev $argv[1]
     set -l cmd $argv[2..-1]
     abbr -g $abbrev $cmd
 end
-
-# j :: alias for __fzf_autojump
-function j; __fzf_autojump $argv; end
-
-# aliases to silence config.fish "errors"
-function fun; fundle $argv; end
-function _loadtheme; loadtheme $argv; end
 # }}}
-# PACKAGES ================================== {{{
+# j :: alias for __fzf_autojump {{{
+function j -d "alias for __fzf_autojump"
+    __fzf_autojump $argv
+end
+# }}}
+# fun :: alias for fundle to silence config.fish errors {{{
+function fun -d "alias for fundle"
+    fundle $argv
+end
+# }}}
+# _loadtheme :: alias for loadtheme to silence config.fish errors {{{
+function _loadtheme -d "alias for loadtheme for config.fish"
+    loadtheme $argv
+end
+# }}}
+# }}}
+# PACKAGES {{{
 # Package manager setup {{{
 switch "$FISH_PKG_MGR"
     case "OMF"
@@ -210,7 +208,8 @@ fun plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
 fun init
 # }}}
 # }}}
-# SOURCE ==================================== {{{
+# SOURCE {{{
+# External scripts {{{
 # set -l externals                                                # Add exteral scripts to this variable
 # set -a externals "{PATH TO SCRIPT}"                             # Append to externals variable
 # Source external scripts if they exist
@@ -220,7 +219,8 @@ fun init
 #   end
 # end
 # }}}
-# THEMES ==================================== {{{
+# }}}
+# THEMES {{{
 # Local/SSH theme {{{
 if test -z "$FISH_PKG_MGR"
   if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
@@ -303,7 +303,8 @@ if test "$FISH_THEME" = 'yimmy'
 end
 # }}}
 # }}}
-# COLORS ==================================== {{{
+# COLORS {{{
+# Fish color {{{
 set -g fish_color_autosuggestion 707070
 set -g fish_color_cancel -r
 set -g fish_color_command b294bb
@@ -326,13 +327,15 @@ set -g fish_color_selection 'white'  '--bold'  '--background=brblack'
 set -g fish_color_status red
 set -g fish_color_user brgreen
 set -g fish_color_valid_path --underline
-set -g fish_key_bindings fish_default_key_bindings
+# }}}
+# Fish pager color {{{
 set -g fish_pager_color_completion
 set -g fish_pager_color_description 'b3a06d'  'yellow'
 set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
 set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
 # }}}
-# ABBREVIATIONS ============================= {{{
+# }}}
+# ABBREVIATIONS {{{
 # Apps {{{
 ab xo xonsh                                                     # Open xonsh shell
 ab lp lpass                                                     # LastPass cli
@@ -377,6 +380,7 @@ ab gpython "$HOME/git/python"
 ab pd prevd
 ab nd nextd
 ab rmdir rm -rf
+ab vico "$HOME/.vim/config"
 # }}}
 # Fish {{{
 ab frel "exec fish"                                           # Better way to reload?
@@ -420,13 +424,17 @@ ab path 'set -S PATH'                                         # Print PATH array
 ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
 # }}}
 # }}}
-# KEYBINDINGS =============================== {{{
-# vi-mode with custom keybindings
+# KEYBINDINGS {{{
+# vi-mode with custom keybindings {{{
 # set fish_key_bindings fish_user_vi_key_bindings
 # }}}
-# END CONFIG ================================ {{{
+# }}}
+# END CONFIG {{{
+# Print config.fish load time {{{
 set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
 echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal
 # }}}
+# }}}
+# vim:set fdl=1:

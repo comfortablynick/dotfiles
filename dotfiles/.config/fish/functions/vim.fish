@@ -1,4 +1,4 @@
-# Defined in - @ line 2
+# Defined in /tmp/fish.I6Rgmk/vim.fish @ line 2
 function vim --description 'Calls Neovim or Vim based on nvim and availability'
 	if type -qf "$EDITOR"
         command $EDITOR $argv

@@ -6,7 +6,7 @@ repo = 'itchyny/lightline.vim'
 
 [[plugins]]
 repo = '/usr/local/lib/python3.7/site-packages/powerline/bindings/vim'
-on_if = 1
+on_if = 0
 lazy = 1
 
 [[plugins]]

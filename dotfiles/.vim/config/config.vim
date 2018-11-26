@@ -19,8 +19,7 @@ if has('nvim')
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
-    let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
-    " '/usr/local/bin/python3.7'
+    let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
 " }}}
 " General {{{

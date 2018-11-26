@@ -8,7 +8,9 @@
 
 " GLOBAL VIM / NEOVIM SETTINGS
 " NOTE: Settings may be overridden by filetype plugins
-
+if &compatible
+    set nocompatible
+endif
 " SHELL =========================================
 " Vim apparently doesn't care for fish
 " Load bash instead for Vim purposes

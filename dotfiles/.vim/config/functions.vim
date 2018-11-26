@@ -4,7 +4,7 @@
 "  |  _| |_| | | | | (__| |_| | (_) | | | \__ \\ V /| | | | | | |
 "  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
 "
-" Functions
+" Functions {{{
 " SetShebang() :: add shebang for new file {{{
 function! SetShebang()
 python3 << endpython
@@ -166,8 +166,33 @@ function! AutoCloseQfWin()
   endif
 endfunction
 " }}}
+function! RunBlack()
+python3 << EOP
+import black
+import time
 
-" Autocommands
+start = time.time()
+fast = bool(int(vim.eval("g:black_fast")))
+line_length = int(vim.eval("g:black_linelength"))
+mode = black.FileMode.AUTO_DETECT
+if bool(int(vim.eval("g:black_skip_string_normalization"))):
+    mode |= black.FileMode.NO_STRING_NORMALIZATION
+buffer_str = '\n'.join(vim.current.buffer) + '\n'
+try:
+    new_buffer_str = black.format_file_contents(buffer_str, line_length=line_length, fast=fast, mode=mode)
+except black.NothingChanged:
+    print(f'Already well formatted, good job. (took {time.time() - start:.4f}s)')
+except Exception as exc:
+    print(exc)
+else:
+    cursor = vim.current.window.cursor
+    vim.current.buffer[:] = new_buffer_str.split('\n')[:-1]
+    vim.current.window.cursor = cursor
+    print(f'Reformatted in {time.time() - start:.4f}s.')
+EOP
+endfunction
+" }}}
+" Autocommands {{{
 " Jump to last cursor position {{{
 " Jump to last position when reopening file
 augroup cursor_position
@@ -190,3 +215,5 @@ augroup quickfix
     autocmd BufEnter * call AutoCloseQfWin()
 augroup END
 " }}}
+" }}}
+" vim:set fdl=1:

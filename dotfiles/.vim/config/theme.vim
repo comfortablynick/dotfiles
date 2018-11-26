@@ -74,10 +74,10 @@ let g:lightline = {
 " }}}
 " Section definitions {{{
 " ALE Indicators {{{
-let g:lightline#ale#indicator_checking = g:LL_nf ? '\uf110' : '...'
-let g:lightline#ale#indicator_warnings = g:LL_nf ? '\uf071 ' : '⧍'
-let g:lightline#ale#indicator_errors = g:LL_nf ? '\uf05e ' : '✗'
-let g:lightline#ale#indicator_ok = '' " g:LL_nf ? '\uf00c' : '✓'
+let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110 " : '...'
+let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
+let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
+let g:lightline#ale#indicator_ok = ''
 " }}}
 " Main sections {{{
 " Section settings / glyphs {{{
@@ -238,11 +238,13 @@ let vim_variant = substitute(vim_color, vim_baseColor . '-', '', '')
 " Assign to variables
 exe 'colorscheme '.vim_baseColor
 exe 'set background='.vim_variant
+let g:statusline_theme = get(g:airline_themes, vim_color, vim_baseColor)
 
 " Set airline theme
-let g:airline_theme = get(airline_themes, vim_color, vim_baseColor)
+let g:airline_theme = tolower(g:statusline_theme)
 
 " Set lightline theme
-let lightline['colorscheme'] = airline_theme
+let lightline['colorscheme'] = g:statusline_theme
 " }}}
 " }}}
+" vim:set fdl=1:

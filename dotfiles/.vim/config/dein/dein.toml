@@ -43,6 +43,7 @@ repo = 'junegunn/fzf.vim'
 [[plugins]]
 repo = 'Shougo/echodoc'
 build = 'nvim -s +"call dein#remote_plugins()"'
+lazy = 1
 hook_source = '''
 let g:echodoc#type = 'signature'
 set noshowmode
@@ -51,20 +52,20 @@ call echodoc#enable()
 '''
 # }}}
 # Formatting {{{
-[[plugins]]
-repo = 'ambv/black'
-on_ft = 'python'
-on_cmd = 'Black'
-lazy = 1
-hook_source = '''
-let g:black_virtualenv = "~/.env/black"
-'''
+# [[plugins]]
+# repo = 'ambv/black'
+# on_ft = 'python'
+# on_cmd = 'Black'
+# lazy = 1
+# hook_source = '''
+# let g:black_virtualenv = "~/.env/black"
+# '''
 # }}}
 # Linting {{{
 [[plugins]]
 repo = 'w0rp/ale'
-on_ft = 'python'
-lazy = 0
+on_ft = ['python','javascript','typescript','vim','cpp','c']
+lazy = 1
 hook_source = '''
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error

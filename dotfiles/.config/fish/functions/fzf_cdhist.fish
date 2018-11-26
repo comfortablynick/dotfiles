@@ -1,10 +1,11 @@
-# Defined in /tmp/fish.vc4GoG/fzf_cdhist.fish @ line 2
+# Defined in /tmp/fish.AAsmpc/fzf_cdhist.fish @ line 2
 function fzf_cdhist --description 'cd to one of the previously visited locations'
 	set -l buf
     for i in (seq 1 (count $dirprev))
         [ $i -eq 0 ]; and return 1
         set -l dir $dirprev[$i]
-        if test -d $dir
+        # Make sure dir exists and is not a duplicate
+        if test -d $dir; and not contains $dir $buf
             set -a buf $dir
         end
     end

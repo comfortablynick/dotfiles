@@ -437,4 +437,3 @@ echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal
 # }}}
 # }}}
-# vim:set fdl=1:

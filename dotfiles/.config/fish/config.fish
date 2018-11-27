@@ -28,6 +28,40 @@ set -l start_time (get_date)
 echo -n 'Sourcing config.fish...  '
 # }}}
 # }}}
+# FUNCTIONS {{{
+# ab :: wrap `abbr` so fish linter doesn't complain {{{
+function ab -d "create global abbreviation"
+    set -l abbrev $argv[1]
+    set -l cmd $argv[2..-1]
+    abbr -g $abbrev $cmd
+end
+# }}}
+# exp :: export env var if no univar exists {{{
+function exp -d "export environment variable if not defined universally"
+    set -l var_name $argv[1]
+    set -l var_value $argv[2..-1]
+    # Set global var if not set universally
+    if not set -qU $var_name
+        set -gx $var_name $var_value
+    end
+end
+# }}}
+# j :: alias for __fzf_autojump {{{
+function j -d "alias for __fzf_autojump"
+    __fzf_autojump $argv
+end
+# }}}
+# fun :: alias for fundle to silence config.fish errors {{{
+function fun -d "alias for fundle"
+    fundle $argv
+end
+# }}}
+# _loadtheme :: alias for loadtheme to silence config.fish errors {{{
+function _loadtheme -d "alias for loadtheme for config.fish"
+    loadtheme $argv
+end
+# }}}
+# }}}
 # ENVIRONMENT {{{
 # General System {{{
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
@@ -77,8 +111,8 @@ set -l def_venv "$VENV_DIR/dev/bin/activate.fish"
 source $def_venv                                                # Activate by default
 # }}}
 # Editor (Vim/Neovim) {{{
-set -gx EDITOR nvim                                             # Default editor
-set -gx VISUAL $EDITOR                                          # Default visual editor
+exp EDITOR nvim                                                 # Default editor
+exp VISUAL $EDITOR                                              # Default visual editor
 set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
 set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
@@ -127,30 +161,6 @@ end
 #}}}
 # Todo.txt {{{
 set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
-# }}}
-# }}}
-# FUNCTIONS {{{
-# ab :: wrap `abbr` so fish linter doesn't complain {{{
-function ab -d "create global abbreviation"
-    set -l abbrev $argv[1]
-    set -l cmd $argv[2..-1]
-    abbr -g $abbrev $cmd
-end
-# }}}
-# j :: alias for __fzf_autojump {{{
-function j -d "alias for __fzf_autojump"
-    __fzf_autojump $argv
-end
-# }}}
-# fun :: alias for fundle to silence config.fish errors {{{
-function fun -d "alias for fundle"
-    fundle $argv
-end
-# }}}
-# _loadtheme :: alias for loadtheme to silence config.fish errors {{{
-function _loadtheme -d "alias for loadtheme for config.fish"
-    loadtheme $argv
-end
 # }}}
 # }}}
 # PACKAGES {{{
@@ -368,6 +378,7 @@ ab grmi 'git rm --cached'                                       # Remove from in
 # }}}
 # Directories {{{
 ab - cd
+ab b fzf_cdhist
 ab bcd fzf_cdhist
 ab fcd __fzf_cd
 ab lla ls -la

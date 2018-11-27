@@ -39,16 +39,16 @@ Plug 'christoomey/vim-tmux-navigator',                          " Navigate Vim s
 " }}}
 " Linting {{{
 Plug 'w0rp/ale',                                                " Async Linting Engine
-"     \ {
-"     \   'for': [
-"     \       'python',
-"     \       'vim',
-"     \       'typescript',
-"     \       'javascript',
-"     \       'cpp',
-"     \       'c',
-"     \   ]
-"     \ }
+    \ {
+    \   'for': [
+    \       'python',
+    \       'vim',
+    \       'typescript',
+    \       'javascript',
+    \       'cpp',
+    \       'c',
+    \   ]
+    \ }
 " }}}
 " Syntax highlighting {{{
 Plug 'HerringtonDarkholme/yats',    { 'for': 'typescript' }     " Typescript
@@ -79,7 +79,6 @@ Plug 'skywind3000/asyncrun.vim'                                 " Execute comman
 Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
 Plug 'Shougo/neosnippet-snippets'                               " Code snippets
 Plug 'Shougo/echodoc'                                           " Echo completion function definitons
-
 " Deoplete {{{
 Plug 'zchee/deoplete-jedi',
     \ Cond(has('nvim'),
@@ -99,7 +98,16 @@ Plug 'mhartington/nvim-typescript',
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
     \ {
-    \   'do': ':UpdateRemotePlugins',
+    \   'for':
+    \       [
+    \           'python',
+    \           'javascript',
+    \           'typescript',
+    \           'tsx',
+    \           'vim',
+    \           'cpp',
+    \           'c',
+    \       ],
     \ })
 Plug 'Shougo/neco-vim', Cond(has('nvim'),
     \ {
@@ -207,8 +215,7 @@ let g:black_virtualenv = '~/.env/black'      " Black virtualenv location (custom
 " Echodoc {{{
 " TODO: Only execute for python/ts/js?
 set cmdheight=1                                 " Add extra line for function definition
-let g:echodoc_enable_at_startup = 1
-" let g:echodoc#type = 'echo'
+let g:echodoc#enable_at_startup = 1
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 " }}}

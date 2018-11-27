@@ -42,6 +42,8 @@ set updatetime=100                                              " Update more of
 set signcolumn=yes                                              " Always show; keep appearance consistent
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set ttimeoutlen=10                                              " How long in ms to wait for key combinations
+set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
+set lazyredraw                                                  " Don't redraw screen when not needed
 " }}}
 " Folds {{{
 set foldenable                                                  " Enable folds by default
@@ -59,7 +61,8 @@ let g:vim_indent_cont = &shiftwidth                             " Indent after \
 set ignorecase                                                  " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
-set nohlsearch                                                  " Don't highglight search results
+set hlsearch                                                    " Highlight search results
+set magic                                                       " Magic escaping for regex
 " }}}
 " Undo {{{
 set undodir=~/.vim/undo                                         " Undo file directory

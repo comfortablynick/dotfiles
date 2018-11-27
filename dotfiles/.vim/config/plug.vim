@@ -109,7 +109,7 @@ Plug 'Shougo/neco-vim', Cond(has('nvim'),
 " YouCompleteMe {{{
 Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
     \ {
-    \   'do': 'python3 ~/git/python/shell/vimsync.py -p -y',
+    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
     \   'for':
     \       [
     \           'python',

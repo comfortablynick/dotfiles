@@ -36,8 +36,8 @@ function ab -d "create global abbreviation"
     abbr -g $abbrev $cmd
 end
 # }}}
-# exp :: export env var if no univar exists {{{
-function exp -d "export environment variable if not defined universally"
+# var :: export env var if no univar exists {{{
+function var -d "export environment variable if not defined universally"
     set -l var_name $argv[1]
     set -l var_value $argv[2..-1]
     # Set global var if not set universally
@@ -111,8 +111,8 @@ set -l def_venv "$VENV_DIR/dev/bin/activate.fish"
 source $def_venv                                                # Activate by default
 # }}}
 # Editor (Vim/Neovim) {{{
-exp EDITOR nvim                                                 # Default editor
-exp VISUAL $EDITOR                                              # Default visual editor
+var EDITOR nvim                                                 # Default editor
+var VISUAL $EDITOR                                              # Default visual editor
 set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
 set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
 set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
@@ -383,7 +383,7 @@ ab - cd
 ab b fzf_cdhist
 ab bcd fzf_cdhist
 ab fcd __fzf_cd
-ab lla ls -la
+ab lla 'ls -la'
 ab h $HOME
 ab dot "$HOME/dotfiles/dotfiles"
 ab vdot "$HOME/dotfiles/dotfiles/.vim"
@@ -392,7 +392,7 @@ ab gpy "$HOME/git/python"
 ab gpython "$HOME/git/python"
 ab pd prevd
 ab nd nextd
-ab rmdir rm -rf
+ab rmdir 'rm -rf'
 ab vico "$HOME/.vim/config"
 # }}}
 # Fish {{{
@@ -416,7 +416,7 @@ ab listh 'list --help'
 # }}}
 # TMux {{{
 ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
-ab tl tmux ls
+ab tl 'tmux ls'
 # }}}
 # Vim/Neovim {{{
 ab v vim                                                        # Call vim function (Open Neovim || Vim)

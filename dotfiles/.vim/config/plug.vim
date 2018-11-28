@@ -77,13 +77,6 @@ Plug 'HerringtonDarkholme/yats',    { 'for': 'typescript' }     " Typescript
 Plug 'gabrielelana/vim-markdown',   { 'for': 'markdown' }       " Markdown
 Plug 'dag/vim-fish',                { 'for': 'fish' }           " Fish script
 " }}}
-"         Formatting {{{
-" Plug 'ambv/black',                                              " Python formatter (subset of PEP8)
-"     \ {
-"     \   'for': 'python',
-"     \   'on': 'Black',
-"     \ }
-" }}}
 " Git {{{
 Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
@@ -97,16 +90,32 @@ Plug 'nightsense/snow'
 " Terminal/Code Execution {{{
 Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously
 " }}}
-" Completion/Snippets {{{
+" Snippets {{{
 Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
 Plug 'Shougo/neosnippet-snippets'                               " Code snippets
+" }}}
+" Code completion {{{
 Plug 'Shougo/echodoc'                                           " Echo completion function definitons
 " Deoplete {{{
+Plug 'Shougo/deoplete.nvim',
+    \ Cond(has('nvim'),
+    \ {
+    \   'for': g:completion_filetypes['deoplete'],
+    \ })
+" Vim {{{
+Plug 'Shougo/neco-vim', Cond(has('nvim'),
+    \ {
+    \   'for': 'vim'
+    \ })
+" }}}
+" Python (Jedi) {{{
 Plug 'zchee/deoplete-jedi',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'python',
     \ })
+" }}}
+" Typescript {{{
 Plug 'mhartington/nvim-typescript',
     \ Cond(has('nvim'),
     \ {
@@ -117,15 +126,14 @@ Plug 'mhartington/nvim-typescript',
     \       ],
     \   'do': './install.sh',
     \ })
-Plug 'Shougo/deoplete.nvim',
+" }}}
+" Fish {{{
+Plug 'ponko2/deoplete-fish',                                    " Fish-shell completion for deoplete
     \ Cond(has('nvim'),
     \ {
-    \   'for': g:completion_filetypes['deoplete'],
+    \   'for': 'fish',
     \ })
-Plug 'Shougo/neco-vim', Cond(has('nvim'),
-    \ {
-    \   'for': 'vim'
-    \ })
+" }}}
 " }}}
 " YouCompleteMe {{{
 Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
@@ -139,11 +147,6 @@ Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
 " Airline {{{
 Plug 'vim-airline/vim-airline',         Cond(has('nvim'))
 Plug 'vim-airline/vim-airline-themes',  Cond(has('nvim'))
-" }}}
-" Powerline {{{
-" if !has('nvim')
-"     set rtp+=/usr/local/lib/python3.7/site-packages/powerline/bindings/vim
-" endif
 " }}}
 " Lightline {{{
 Plug 'itchyny/lightline.vim',           Cond(!has('nvim'))
@@ -214,9 +217,6 @@ let NERDTreeIgnore = [
     \ '.vscode'
     \ ]
 let NERDTreeShowHidden = 1                      " Show dotfiles
-" }}}
-" Black {{{
-let g:black_virtualenv = '~/.env/black'      " Black virtualenv location (custom)
 " }}}
 " Echodoc {{{
 " TODO: Only execute for python/ts/js?

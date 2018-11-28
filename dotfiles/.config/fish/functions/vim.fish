@@ -1,6 +1,6 @@
-# Defined in /tmp/fish.nfu257/vim.fish @ line 2
+# Defined in /tmp/fish.CucE4K/vim.fish @ line 2
 function vim --description 'Calls Neovim or Vim based on nvim and availability'
-	if string match -q -- '*.vim' $argv
+	if string match -qr -- '.vim|.fish' $argv
         command nvim $argv
         return
     end

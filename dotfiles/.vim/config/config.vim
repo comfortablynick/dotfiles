@@ -87,20 +87,20 @@ augroup numbertoggle
 augroup END
 " }}}
 " Theme Compatibility {{{
-" Defaults: turn all fonts and colors ON
+" Defaults: turn all fonts and colors ON {{{
 let g:LL_pl = 1
 let g:LL_nf = 1
 set termguicolors
-
-" SSH: remove background to try to work better with iOS SSH apps
+" }}}
+" SSH: remove background to try to work better with iOS SSH apps {{{
 if $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
     let g:LL_nf = 0
     set notermguicolors
 endif
-
-" FONTS: check env vars to see if we need to turn off nerd/powerline fonts
+" }}}
+" FONTS: check env vars to see if we need to turn off nerd/powerline fonts {{{
 if ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
     " We can turn off both, since NF are a superset of PL fonts
     let g:LL_nf = 0
@@ -110,18 +110,33 @@ elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
     let g:LL_nf = 0
     let g:LL_pl = 1
 endif
-
-" TMUX: make it work with termguicolors
+" }}}
+" TMUX: make it work with termguicolors {{{
 if &term =~# '^screen'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
-
-" Get color theme from env var
+" }}}
+" Get color theme from env var {{{
 function! GetColorTheme() abort
     return has('nvim') ?
         \ !empty('$NVIM_COLOR') ? $NVIM_COLOR : 'papercolor-dark' :
         \ !empty('$VIM_COLOR') ? $VIM_COLOR : 'gruvbox-dark'
 endfunction
 let g:vim_color = GetColorTheme()
+
+" g:vim_base_color: 'nord-dark' -> 'nord'
+let g:vim_base_color = substitute(
+    \ g:vim_color,
+    \ '-dark\|-light',
+    \ '',
+    \ '')
+
+" g:vim_color_variant: 'nord-dark' -> 'dark'
+let g:vim_color_variant = substitute(
+    \ g:vim_color,
+    \ g:vim_base_color . '-',
+    \ '',
+    \ '')
+" }}}
 " }}}

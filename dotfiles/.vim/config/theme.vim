@@ -229,16 +229,11 @@ endfunction
 " }}}
 " Vim / Neovim Settings {{{
 " Set colors based on theme {{{
-" vim_baseColor: 'nord-dark' -> 'nord'
-let vim_baseColor = substitute(vim_color, '-dark\|-light', '', '')
-
-" vim_variant: 'nord-dark' -> 'dark'
-let vim_variant = substitute(vim_color, vim_baseColor . '-', '', '')
 
 " Assign to variables
-exe 'colorscheme '.vim_baseColor
-exe 'set background='.vim_variant
-let g:statusline_theme = get(g:airline_themes, vim_color, vim_baseColor)
+exe 'colorscheme '.g:vim_base_color
+exe 'set background='.g:vim_color_variant
+let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
 
 " Set airline theme
 let g:airline_theme = tolower(g:statusline_theme)

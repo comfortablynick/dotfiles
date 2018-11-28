@@ -81,11 +81,16 @@ Plug 'dag/vim-fish',                { 'for': 'fish' }           " Fish script
 Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
 " }}}
-" Theming {{{
-Plug 'arcticicestudio/nord-vim'
-Plug 'morhetz/gruvbox'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'nightsense/snow'
+" Color themes {{{
+" Conditionally load themes based on env var
+Plug 'arcticicestudio/nord-vim',
+    \ Cond(g:vim_base_color ==? 'nord')
+Plug 'morhetz/gruvbox',
+    \ Cond(g:vim_base_color ==? 'gruvbox')
+Plug 'NLKNguyen/papercolor-theme',
+    \ Cond(g:vim_base_color ==? 'papercolor')
+Plug 'nightsense/snow',
+    \ Cond(g:vim_base_color ==? 'snow')
 " }}}
 " Terminal/Code Execution {{{
 Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously

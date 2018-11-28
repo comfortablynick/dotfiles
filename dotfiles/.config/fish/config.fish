@@ -380,8 +380,7 @@ ab grmi 'git rm --cached'                                       # Remove from in
 # }}}
 # Directories {{{
 ab - cd
-ab b fzf_cdhist
-ab bcd fzf_cdhist
+ab p fzf_cdhist
 ab fcd __fzf_cd
 ab lla 'ls -la'
 ab h $HOME

@@ -67,14 +67,14 @@ function! SetExecutable()
     call SetShebang()
 endfunction
 " }}}
-" Run Python Code in Vim {{{
+" Run Python Code in Vim (DEPRECATED) {{{
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
-nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
-vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
-nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
+" nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
+" vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
+" nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
 " SaveAndExecutePython() :: save file and execute python in split vim {{{
-function! SaveAndExecutePython()
+function! SaveAndExecutePython() abort
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
 
     " save and reload current file
@@ -127,7 +127,7 @@ function! SaveAndExecutePython()
 endfunction
 " }}}
 " ClosePythonWindow() :: close window opened for running python {{{
-function! ClosePythonWindow()
+function! ClosePythonWindow() abort
     " Close Python window we opened
     if bufexists(s:buf_nr)
         let ui_window_number = bufwinnr(s:buf_nr)
@@ -142,55 +142,36 @@ endfunction
 " }}}
 " }}}
 " ToggleQf() :: toggle quickfix window {{{
-function! ToggleQf()
-  for buffer in tabpagebuflist()
-    if bufname(buffer) ==? ''
-      " then it should be the quickfix window
-      cclose
-      return
+function! ToggleQf() abort
+    if exists('*asyncrun#quickfix_toggle')
+        " AsyncRun is loaded; use this handy function
+        " Open qf window of specific size in most elegant way
+        let qf_size = get(g:, 'quickfix_size', 8)
+        call asyncrun#quickfix_toggle(qf_size)
+        return
     endif
-  endfor
-
-  copen
+    for buffer in tabpagebuflist()
+        if bufname(buffer) ==? ''
+          " then it should be the quickfix window
+          cclose
+          return
+        endif
+    endfor
+    " Quickfix window not open, so open it
+    copen
 endfunction
 nnoremap <silent> qf :call ToggleQf()<cr>
 " }}}
 " AutoCloseQfWin() :: close qf on quit {{{
-function! AutoCloseQfWin()
-  " if the window is quickfix go on
-  if &buftype ==? 'quickfix'
-    " if this window is last on screen quit without warning
-    if winnr('$') < 2
-      quit
+function! AutoCloseQfWin() abort
+    if &filetype ==? 'qf'
+        " if this window is last on screen quit without warning
+        if winnr('$') < 2
+            quit
+        endif
     endif
-  endif
 endfunction
 " }}}
-function! RunBlack()
-python3 << EOP
-import black
-import time
-
-start = time.time()
-fast = bool(int(vim.eval("g:black_fast")))
-line_length = int(vim.eval("g:black_linelength"))
-mode = black.FileMode.AUTO_DETECT
-if bool(int(vim.eval("g:black_skip_string_normalization"))):
-    mode |= black.FileMode.NO_STRING_NORMALIZATION
-buffer_str = '\n'.join(vim.current.buffer) + '\n'
-try:
-    new_buffer_str = black.format_file_contents(buffer_str, line_length=line_length, fast=fast, mode=mode)
-except black.NothingChanged:
-    print(f'Already well formatted, good job. (took {time.time() - start:.4f}s)')
-except Exception as exc:
-    print(exc)
-else:
-    cursor = vim.current.window.cursor
-    vim.current.buffer[:] = new_buffer_str.split('\n')[:-1]
-    vim.current.window.cursor = cursor
-    print(f'Reformatted in {time.time() - start:.4f}s.')
-EOP
-endfunction
 " }}}
 " Autocommands {{{
 " Jump to last cursor position {{{

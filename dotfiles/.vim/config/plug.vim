@@ -231,8 +231,9 @@ set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 " }}}
 " Asyncrun {{{
-let g:asyncrun_open = 6                                         " Show quickfix when executing command
-let g:asyncrun_bell = 1                                         " Ring bell when job finished
+let g:quickfix_size = 25                                        " Size of quickfix window used for ToggleQf() func
+let g:asyncrun_open = g:quickfix_size                           " Show quickfix when executing command
+let g:asyncrun_bell = 0                                         " Ring bell when job finished
 " }}}
 " Undotree {{{
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below

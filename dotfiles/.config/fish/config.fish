@@ -124,7 +124,9 @@ set -gx NVIM_COLOR papercolor-dark
 # Fuzzy Finder (fzf) {{{
 # Enable fuzzy directory finding
 set -gx FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
+set -gx FZF_CTRL_T_OPTS "--reverse --preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
 set -gx FZF_TMUX 1
+set -gx FZF_TMUX_HEIGHT '30%'
 # Install fzf
 if ! test -d "$HOME/.fzf"
     echo "fzf dir not found. Cloning fzf and installing..."

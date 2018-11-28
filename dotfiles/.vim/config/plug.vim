@@ -6,13 +6,35 @@
 "                 |___/
 "
 " Common Vim/Neovim plugins
-" Helper functions {{{
+" Helper functions/variables {{{
 " Vim-Plug Cond() {{{
 " Add conditions that aren't supported directly by vim-plug
 function! Cond(cond, ...)
   let opts = get(a:000, 0, {})
   return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
+" }}}
+" Completion filetypes {{{
+let g:completion_filetypes = {
+    \ 'deoplete':
+    \   [
+    \       'python',
+    \       'fish',
+    \       'vim',
+    \       'javascript',
+    \       'typescript',
+    \       'cpp',
+    \       'c',
+    \   ],
+    \ 'ycm':
+    \   [
+    \       'python',
+    \       'javascript',
+    \       'typescript',
+    \       'cpp',
+    \       'c',
+    \   ],
+    \ }
 " }}}
 " }}}
 " Plugin definitions {{{
@@ -98,16 +120,7 @@ Plug 'mhartington/nvim-typescript',
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
     \ {
-    \   'for':
-    \       [
-    \           'python',
-    \           'javascript',
-    \           'typescript',
-    \           'tsx',
-    \           'vim',
-    \           'cpp',
-    \           'c',
-    \       ],
+    \   'for': g:completion_filetypes['deoplete'],
     \ })
 Plug 'Shougo/neco-vim', Cond(has('nvim'),
     \ {
@@ -118,14 +131,7 @@ Plug 'Shougo/neco-vim', Cond(has('nvim'),
 Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
     \ {
     \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
-    \   'for':
-    \       [
-    \           'python',
-    \           'javascript',
-    \           'typescript',
-    \           'cpp',
-    \           'c',
-    \       ],
+    \   'for': g:completion_filetypes['ycm'],
     \ })
 " }}}
 " }}}

@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.EfqnyD/fzf_cdhist.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.AiLKay/fzf_cdhist.fish @ line 2
 function fzf_cdhist --description 'cd to one of the previously visited locations'
 	if set -q argv[1]
         cd $argv
@@ -17,8 +17,6 @@ function fzf_cdhist --description 'cd to one of the previously visited locations
 	set -l uniq_dirs
     for dir in $all_dirs[-1..1]
         if test -d $dir -a "$dir" != "$PWD"
-            # Replace $HOME with ~ for readability
-            # TODO: put it back to make cd work
             set -l home_dir (string match -r "^$HOME(/.*|\$)" "$dir")
             if set -q home_dir[2]
                 set dir "~$home_dir[2]"
@@ -30,12 +28,13 @@ function fzf_cdhist --description 'cd to one of the previously visited locations
     end
 
     # Pipe unique dirs to fzf
-    string join \n $uniq_dirs | eval (__fzfcmd) +m --tiebreak=index --toggle-sort=ctrl-r $FZF_CDHIST_OPTS | read -l result
+    string join \n $uniq_dirs | eval (__fzfcmd) +m --reverse --tiebreak=index --toggle-sort=ctrl-r $FZF_CDHIST_OPTS | read -l result
     if test -n "$result"
         set -l home_path (string match -r "^~(.*)" "$result")
         if set -q home_path[2]
             set result "$HOME$home_path[2]"
         end
+        cd $result
     end
     commandline -f repaint
 end

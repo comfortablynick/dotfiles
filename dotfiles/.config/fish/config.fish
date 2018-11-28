@@ -361,6 +361,7 @@ ab z j                                                          # Use autojump (
 # Git {{{
 ab g 'git'
 ab ga 'git add'
+ab gac 'git add . && git commit'                                # Combine add + commit
 ab gc 'git commit'
 ab gco 'git checkout master'
 ab gcol 'git checkout (git describe --tags)'                    # Check out latest tag

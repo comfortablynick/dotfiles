@@ -95,7 +95,7 @@ Plug 'Shougo/deoplete.nvim',
     \   'for': g:completion_filetypes['deoplete'],
     \ })
 " Vim {{{
-Plug 'Shougo/neco-vim', 
+Plug 'Shougo/neco-vim',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'vim'
@@ -204,13 +204,14 @@ let g:ale_python_flake8_args = {
     \ }
 " }}}
 " NERDTree {{{
-let NERDTreeHighlightCursorline = 1             " Increase visibility of line
+let NERDTreeHighlightCursorline = 1
 let NERDTreeIgnore = [
     \ '\.pyc$',
     \ '^__pycache__$',
-    \ '.vscode'
+    \ '.vscode',
     \ ]
-let NERDTreeShowHidden = 1                      " Show dotfiles
+let NERDTreeShowHidden = 1
+let NERDTreeQuitOnOpen = 1
 " }}}
 " Echodoc {{{
 " TODO: Only execute for python/ts/js?
@@ -249,6 +250,7 @@ let g:airline#extensions#default#section_truncate_width = {
     \ }
 let g:airline_powerline_fonts = 1
 let g:airline_detect_spelllang = 0
+let g:airline_highlighting_cache = 1
 
 " Airline Tabline
 let g:airline#extensions#tabline#show_buffers = 0

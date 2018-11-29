@@ -172,6 +172,13 @@ function! AutoCloseQfWin() abort
     endif
 endfunction
 " }}}
+" RunCommand() :: run command asynchronously in tmux
+function! RunCommand(cmd) abort
+    let panes = system('tmux display-message -p "#{window_panes}"')
+    if panes >= 2
+        execute 'AsyncRun tmux send-keys -t 2 ' . a:cmd
+    endif
+endfunction
 " }}}
 " Autocommands {{{
 " Jump to last cursor position {{{

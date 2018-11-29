@@ -10,8 +10,8 @@
 " Vim-Plug Cond() {{{
 " Add conditions that aren't supported directly by vim-plug
 function! Cond(cond, ...)
-  let opts = get(a:000, 0, {})
-  return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+    let opts = get(a:000, 0, {})
+    return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 " }}}
 " Completion filetypes {{{
@@ -42,17 +42,13 @@ let g:completion_filetypes = {
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 " }}}
 " Editor/appearance {{{
-Plug 'airblade/vim-gitgutter'                                   " Inline git status
-Plug 'scrooloose/nerdtree',                                     " File explorer panel
-    \ { 'on': 'NERDTreeToggle' }
-Plug 'mbbill/undotree',                                         " Undo history panel
-    \ { 'on': 'UndotreeToggle' }
-Plug '~/.fzf'                                                   " Fuzzy finder system folder
-Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
-Plug 'ryanoasis/vim-devicons',                                  " Load devicons if $NERD_FONTS = 1
-    \ Cond(g:LL_nf)
-Plug 'christoomey/vim-tmux-navigator',                          " Navigate Vim splits & tmux panes with same keys
-    \ Cond(!empty($TMUX_PANE))
+Plug 'airblade/vim-gitgutter'
+Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
+Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
+Plug '~/.fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
+Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
 " }}}
 " Linting {{{
 Plug 'w0rp/ale',                                                " Async Linting Engine
@@ -68,34 +64,30 @@ Plug 'w0rp/ale',                                                " Async Linting 
     \ }
 " }}}
 " Syntax highlighting {{{
-Plug 'HerringtonDarkholme/yats',    { 'for': 'typescript' }     " Typescript
-Plug 'gabrielelana/vim-markdown',   { 'for': 'markdown' }       " Markdown
-Plug 'dag/vim-fish',                { 'for': 'fish' }           " Fish script
+Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
+Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
+Plug 'dag/vim-fish',                    Cond(1, { 'for': 'fish' })
 " }}}
 " Git {{{
-Plug 'junegunn/gv.vim'                                          " Git log/diff explorer
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
 " }}}
 " Color themes {{{
 " Conditionally load themes based on env var
-Plug 'arcticicestudio/nord-vim',
-    \ Cond(g:vim_base_color ==? 'nord')
-Plug 'morhetz/gruvbox',
-    \ Cond(g:vim_base_color ==? 'gruvbox')
-Plug 'NLKNguyen/papercolor-theme',
-    \ Cond(g:vim_base_color ==? 'papercolor')
-Plug 'nightsense/snow',
-    \ Cond(g:vim_base_color ==? 'snow')
+Plug 'arcticicestudio/nord-vim',        Cond(g:vim_base_color ==? 'nord')
+Plug 'morhetz/gruvbox',                 Cond(g:vim_base_color ==? 'gruvbox')
+Plug 'NLKNguyen/papercolor-theme',      Cond(g:vim_base_color ==? 'papercolor')
+Plug 'nightsense/snow',                 Cond(g:vim_base_color ==? 'snow')
 " }}}
 " Terminal/Code Execution {{{
-Plug 'skywind3000/asyncrun.vim'                                 " Execute commands asynchronously
+Plug 'skywind3000/asyncrun.vim'
 " }}}
 " Snippets {{{
-Plug 'Shougo/neosnippet.vim'                                    " Programming code snippet framework
-Plug 'Shougo/neosnippet-snippets'                               " Code snippets
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 " }}}
 " Code completion {{{
-Plug 'Shougo/echodoc'                                           " Echo completion function definitons
+Plug 'Shougo/echodoc'
 " Deoplete {{{
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
@@ -103,7 +95,8 @@ Plug 'Shougo/deoplete.nvim',
     \   'for': g:completion_filetypes['deoplete'],
     \ })
 " Vim {{{
-Plug 'Shougo/neco-vim', Cond(has('nvim'),
+Plug 'Shougo/neco-vim', 
+    \ Cond(has('nvim'),
     \ {
     \   'for': 'vim'
     \ })
@@ -136,7 +129,8 @@ Plug 'ponko2/deoplete-fish',                                    " Fish-shell com
 " }}}
 " }}}
 " YouCompleteMe {{{
-Plug 'Valloric/YouCompleteMe',          Cond(!has('nvim'),
+Plug 'Valloric/YouCompleteMe',
+    \ Cond(!has('nvim'),
     \ {
     \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
     \   'for': g:completion_filetypes['ycm'],

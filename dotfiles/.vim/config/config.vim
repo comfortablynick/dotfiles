@@ -24,7 +24,7 @@ endif
 " }}}
 " General {{{
 syntax enable                                                   " Syntax highlighting on
-colorscheme darkblue                                            " Def colors (overwritten by theme.vim)
+colorscheme slate                                               " Def colors (overwritten by theme.vim)
 set fileformat=unix                                             " Always use LF and not CRLF
 set encoding=utf-8                                              " Default to unicode
 set termencoding=utf-8                                          " Unicode
@@ -44,6 +44,7 @@ set scrolloff=10                                                " Lines before/a
 set ttimeoutlen=10                                              " How long in ms to wait for key combinations
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set lazyredraw                                                  " Don't redraw screen when not needed
+set nostartofline                                               " Don't move to start of line with j/k
 " }}}
 " Folds {{{
 set foldenable                                                  " Enable folds by default
@@ -69,8 +70,8 @@ set undodir=~/.vim/undo                                         " Undo file dire
 set undofile                                                    " Enable persistent undo
 " }}}
 " Window Split {{{
-set splitbelow                                                  " Split below instead of above
 set splitright                                                  " Split right instead of left
+set splitbelow                                                  " Split below instead of above
 " }}}
 " Line numbers {{{
 set number                                                      " Show linenumbers
@@ -80,10 +81,12 @@ set relativenumber                                              " Show relative 
 " INSERT:       Turn off relativenumber while writing code
 " NORMAL:       Turn on relativenumber for easy navigation
 " NO FOCUS:     Turn off relativenumber (testing code, etc.)
+" QuickFix:     Turn off relativenumber (running code)
 augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+  autocmd FileType qf if &nu | set nornu | endif
 augroup END
 " }}}
 " Theme Compatibility {{{

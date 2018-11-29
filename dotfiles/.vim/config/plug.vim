@@ -231,9 +231,12 @@ set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 " }}}
 " Asyncrun {{{
-let g:quickfix_size = 25                                        " Size of quickfix window used for ToggleQf() func
+let g:quickfix_mult = 0.40                                      " % of window height to take up
+let g:quickfix_size = float2nr(g:quickfix_mult*winheight(0))    " Size of quickfix window used for ToggleQf() func
 let g:asyncrun_open = g:quickfix_size                           " Show quickfix when executing command
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
+let g:quickfix_run_scroll = 0                                   " Scroll when running code
+let g:asyncrun_raw_output = 0                                   " Don't process errors on output
 " }}}
 " Undotree {{{
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below

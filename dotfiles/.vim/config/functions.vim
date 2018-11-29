@@ -196,5 +196,11 @@ augroup quickfix
     autocmd BufEnter * call AutoCloseQfWin()
 augroup END
 " }}}
+" Don't insert comment leader on 'o' {{{
+augroup fmtopts
+    autocmd!
+    autocmd BufNewFile,BufRead * setlocal formatoptions-=o
+augroup END
+" }}}
 " }}}
 " vim:set fdl=1:

@@ -40,22 +40,17 @@ let g:completion_filetypes = {
 " Plugin definitions {{{
 " BEGIN {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
-
-if has('nvim')
-    " Load Neovim-only plugins
-    exec 'source' vim_home . 'vim-plug/nvim.plug.vim'
-else
-    " Load Vim-only plugins
-    exec 'source' vim_home . 'vim-plug/vim.plug.vim'
-endif
 " }}}
 " Editor/appearance {{{
 Plug 'airblade/vim-gitgutter'                                   " Inline git status
-Plug 'scrooloose/nerdtree',     { 'on': 'NERDTreeToggle' }      " File explorer panel
-Plug 'mbbill/undotree',         { 'on': 'UndotreeToggle' }      " Undo tree panel
-Plug '~/.fzf'                                                   " Fuzzy finder
+Plug 'scrooloose/nerdtree',                                     " File explorer panel
+    \ { 'on': 'NERDTreeToggle' }
+Plug 'mbbill/undotree',                                         " Undo history panel
+    \ { 'on': 'UndotreeToggle' }
+Plug '~/.fzf'                                                   " Fuzzy finder system folder
 Plug 'junegunn/fzf.vim'                                         " Fuzzy finder vim extension
-Plug 'ryanoasis/vim-devicons',  Cond(g:LL_nf)                   " Load devicons if $NERD_FONTS = 1
+Plug 'ryanoasis/vim-devicons',                                  " Load devicons if $NERD_FONTS = 1
+    \ Cond(g:LL_nf)
 Plug 'christoomey/vim-tmux-navigator',                          " Navigate Vim splits & tmux panes with same keys
     \ Cond(!empty($TMUX_PANE))
 " }}}

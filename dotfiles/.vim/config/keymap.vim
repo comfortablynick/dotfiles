@@ -3,17 +3,21 @@
 " Global {{{
 " `Ctrl+n` :: toggle NERDTree
 noremap <silent> <C-n> :NERDTreeToggle<CR>
+
 " <Space> :: toggle folds
 noremap <Space> za
 
 " za :: Open all folds
 noremap za zA
 
-" F10 to toggle quickfix window for asyncrun
-noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<cr>
+" `F2` :: Run Neoformat
+noremap <silent> <F2> :Neoformat<CR>
 
 " `F5` :: toggle UndoTree
 noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
+
+" F10 to toggle quickfix window for asyncrun
+noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<CR>
 " }}}
 " Normal mode {{{
 " Split navigation

@@ -209,5 +209,11 @@ augroup fmtopts
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
 " }}}
+" Run Neoformat on save {{{
+augroup format_code_neoformat
+  autocmd!
+  autocmd BufWritePre * undojoin | Neoformat
+augroup END
+" }}}
 " }}}
 " vim:set fdl=1:

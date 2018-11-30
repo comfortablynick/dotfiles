@@ -63,6 +63,9 @@ Plug 'w0rp/ale',                                                " Async Linting 
     \   ]
     \ }
 " }}}
+" Formatting {{{
+Plug 'sbdchd/neoformat'
+" }}}
 " Syntax highlighting {{{
 Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
 Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
@@ -153,7 +156,7 @@ call plug#end()
 " }}}
 " }}}
 " Plugin configuration {{{
-" Ale linter {{{
+" ALE (Asynchronus Linting Engine)  {{{
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
 let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
@@ -165,36 +168,36 @@ let g:ale_list_window_size = 5                                  " Show # of line
 let g:ale_open_list = 1                                         " Show quickfix list
 let g:ale_set_loclist = 0                                       " Show location list
 let g:ale_set_quickfix = 1                                      " Show quickfix list with errors
-let g:ale_fix_on_save = 1                                       " Apply fixes when saving
+let g:ale_fix_on_save = 0                                       " Apply fixes when saving
 let g:ale_echo_msg_error_str = 'E'                              " Error string prefix
 let g:ale_echo_msg_warning_str = 'W'                            " Warning string prefix
 let g:ale_echo_msg_format = '[%linter%] %s (%severity%%: code%)'
 let g:ale_sign_column_always = 1                                " Always show column on left side, even with no errors/warnings
 let g:ale_completion_enabled = 0                                " Enable ALE completion if no other completion engines
 let g:ale_virtualenv_dir_names = [
-    \ '.env',
-    \ '.pyenv',
-    \ 'env',
-    \ 'dev',
-    \ 'virtualenv'
-    \ ]
+    \   '.env',
+    \   '.pyenv',
+    \   'env',
+    \   'dev',
+    \   'virtualenv',
+    \   ]
 let g:ale_linters = {
     \ 'python':
     \   [
-    \     'flake8'
-    \   ]
+    \       'flake8',
+    \   ],
     \ }
 let g:ale_fixers = {
     \ '*':
-    \  [
-    \    'remove_trailing_lines',
-    \    'trim_whitespace'
-    \  ],
+    \   [
+    \       'remove_trailing_lines',
+    \       'trim_whitespace',
+    \   ],
     \ 'python':
-    \  [
-    \    'black',
-    \    'autopep8'
-    \  ]
+    \   [
+    \       'black',
+    \       'autopep8',
+    \   ],
     \ }
 let g:python_flake8_options = {
     \ '--max-line-length': 88
@@ -202,6 +205,37 @@ let g:python_flake8_options = {
 let g:ale_python_flake8_args = {
     \ '--max-line-length': 88
     \ }
+" }}}
+" Neoformat {{{
+" Global Settings
+let g:neoformat_run_all_formatters = 1                          " By default, stops after first formatter succeeds
+
+" Basic formatting when no filetype is found
+let g:neoformat_basic_format_align = 1                          " Enable formatting
+let g:neoformat_basic_format_retab = 1                          " Enable tab -> spaces
+let g:neoformat_basic_format_trim = 1                           " Trim trailing whitespace
+
+" Filetype-specific formatters
+let g:neoformat_enabled_python = [
+    \   'black',
+    \   'isort',
+    \ ]
+let g:neoformat_enabled_typescript = [ 'prettier' ]
+let g:neoformat_enabled_javascript = [ 'prettier' ]
+" TODO: add options to match Python prettier formatter on iPad
+" - Move variable declarations to new line
+let g:neoformat_typescript_prettier = {
+    \ 'exe': 'prettier',
+    \ 'args': [
+    \   '--tab-width 4',
+    \   '--stdin',
+    \   '--stdin-filepath',
+    \   '"%:p"'
+    \ ],
+    \ 'stdin': 1,
+    \ }
+" Same options for javascript
+let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 " }}}
 " NERDTree {{{
 let NERDTreeHighlightCursorline = 1
@@ -280,8 +314,8 @@ let g:ycm_filetype_blacklist = {
     \ 'mail': 1
     \}
 let g:ycm_filetype_specific_completion_to_disable = {
-      \ 'gitcommit': 1
-      \}
+    \ 'gitcommit': 1
+    \}
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
 " }}}
 " }}}

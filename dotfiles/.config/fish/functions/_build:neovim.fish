@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.eMIUzJ/_build:neovim.fish @ line 2
+# Defined in /tmp/fish.UTHEri/_build:neovim.fish @ line 2
 function _build:neovim --description 'build neovim from source' --argument src_dir
 	if ! test -d $src_dir
         echo "Source dir not found at $src_dir! Aborting..."
@@ -20,12 +20,10 @@ function _build:neovim --description 'build neovim from source' --argument src_d
     # Build Neovim
     cd ..
     test -d build && rm -rf build
-    mkdir build; cd build
     begin
-        cmake ..;
-        and make CMAKE_BUILD_TYPE=RelWithDebInfo;
+        make distclean;
+        make CMAKE_BUILD_TYPE=RelWithDebInfo;
         and sudo make install;
-        or return 1
     end
     # Return to original dir
     cd $orig_pwd

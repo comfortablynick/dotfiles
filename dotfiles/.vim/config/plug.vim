@@ -260,9 +260,9 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-augroup deoplete
+augroup deoplete_preview
     autocmd!
-    autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
 augroup end
 " }}}
 " YouCompleteMe {{{

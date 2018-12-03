@@ -120,7 +120,7 @@ set -gx VIM_SSH_COMPAT 0                                        # Safe term bg i
 
 # Vim/Neovim color schemes
 set -gx VIM_COLOR PaperColor-dark
-set -gx NVIM_COLOR papercolor-dark
+set -gx NVIM_COLOR $VIM_COLOR
 # }}}
 # Fuzzy Finder (fzf) {{{
 # Enable fuzzy directory finding
@@ -385,6 +385,7 @@ ab - cd
 ab p fzf_cdhist
 ab fcd __fzf_cd
 ab lla 'ls -la'
+ab ftpl "$HOME/.vim/after/ftplugin"
 ab h $HOME
 ab dot "$HOME/dotfiles/dotfiles"
 ab vdot "$HOME/dotfiles/dotfiles/.vim"

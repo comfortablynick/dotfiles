@@ -81,6 +81,7 @@ Plug 'arcticicestudio/nord-vim',        Cond(g:vim_base_color ==? 'nord')
 Plug 'morhetz/gruvbox',                 Cond(g:vim_base_color ==? 'gruvbox')
 Plug 'NLKNguyen/papercolor-theme',      Cond(g:vim_base_color ==? 'papercolor')
 Plug 'nightsense/snow',                 Cond(g:vim_base_color ==? 'snow')
+Plug 'romainl/Apprentice',              Cond(g:vim_base_color ==? 'apprentice')
 " }}}
 " Terminal/Code Execution {{{
 Plug 'skywind3000/asyncrun.vim'

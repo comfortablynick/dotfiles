@@ -9,6 +9,7 @@ let g:airline_themes = {
     \ 'papercolor': 'papercolor',
     \ 'PaperColor': 'PaperColor',
     \ 'gruvbox': 'gruvbox',
+    \ 'apprentice': 'apprentice',
     \ }
 " }}}
 " Lightline {{{

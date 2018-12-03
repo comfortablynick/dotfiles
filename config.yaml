@@ -19,6 +19,10 @@ dotfiles:
     dst: ~/.vim/after
     link: true
     src: .vim/after
+  d_autoload:
+    dst: ~/.vim/autoload
+    link: true
+    src: .vim/autoload
   d_bash:
     dst: ~/.config/bash
     link: true
@@ -137,6 +141,7 @@ profiles:
     - f_xonshrc
     - f_zshrc
     - d_after
+    - d_autoload
     - d_config
     - d_bash
     - d_fish

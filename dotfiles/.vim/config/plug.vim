@@ -168,7 +168,7 @@ let g:ale_list_window_size = 5                                  " Show # of line
 let g:ale_open_list = 1                                         " Show quickfix list
 let g:ale_set_loclist = 0                                       " Show location list
 let g:ale_set_quickfix = 1                                      " Show quickfix list with errors
-let g:ale_fix_on_save = 0                                       " Apply fixes when saving
+let g:ale_fix_on_save = 1                                       " Apply fixes when saving
 let g:ale_echo_msg_error_str = 'E'                              " Error string prefix
 let g:ale_echo_msg_warning_str = 'W'                            " Warning string prefix
 let g:ale_echo_msg_format = '[%linter%] %s (%severity%%: code%)'
@@ -176,10 +176,7 @@ let g:ale_sign_column_always = 1                                " Always show co
 let g:ale_completion_enabled = 0                                " Enable ALE completion if no other completion engines
 let g:ale_virtualenv_dir_names = [
     \   '.env',
-    \   '.pyenv',
-    \   'env',
     \   'dev',
-    \   'virtualenv',
     \   ]
 let g:ale_linters = {
     \ 'python':
@@ -196,7 +193,15 @@ let g:ale_fixers = {
     \ 'python':
     \   [
     \       'black',
-    \       'autopep8',
+    \       'isort',
+    \   ],
+    \ 'typescript':
+    \   [
+    \       'prettier',
+    \   ],
+    \ 'javascript':
+    \   [
+    \       'prettier',
     \   ],
     \ }
 let g:python_flake8_options = {
@@ -205,6 +210,8 @@ let g:python_flake8_options = {
 let g:ale_python_flake8_args = {
     \ '--max-line-length': 88
     \ }
+let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4'
+let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 " }}}
 " Neoformat {{{
 " Global Settings
@@ -228,9 +235,10 @@ let g:neoformat_typescript_prettier = {
     \ 'exe': 'prettier',
     \ 'args': [
     \   '--tab-width 4',
+    \   '--trailing-comma es5',
     \   '--stdin',
     \   '--stdin-filepath',
-    \   '"%:p"'
+    \   '"%:p"',
     \ ],
     \ 'stdin': 1,
     \ }

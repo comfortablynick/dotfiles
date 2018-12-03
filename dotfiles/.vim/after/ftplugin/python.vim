@@ -17,11 +17,22 @@ let $PYTHONUNBUFFERED=1
 
 " Map
 " Execute current file with AsyncRun
-let g:window_width = get(g:, 'window_width', winwidth('$'))
+" TODO: evaluate if > 1 pane in TMUX
+function! UseQuickFix() abort
+    if $TMUX_SESSION ==? 'ios'
+        if g:window_width < 120
+            return 1
+        else
+            return 0
+        endif
+    elseif exists('$TMUX')
+        return 0
+    endif
+endfunction
 
 if exists('*asyncrun#quickfix_toggle')
     function! AsyncRun_Python_Cmd() abort
-        if !exists('$TMUX') || g:window_width < 93
+        if UseQuickFix()
             let scroll = get(g:, 'quickfix_run_scroll', 1)
             let raw = get(g:, 'asyncrun_raw_output', 0)
             let cmd = scroll ? ':AsyncRun' : ':AsyncRun!'

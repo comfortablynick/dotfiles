@@ -69,9 +69,10 @@ set magic                                                       " Magic escaping
 set undodir=~/.vim/undo                                         " Undo file directory
 set undofile                                                    " Enable persistent undo
 " }}}
-" Window Split {{{
+" Windows/Splits {{{
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
+let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
 " }}}
 " Line numbers {{{
 set number                                                      " Show linenumbers
@@ -83,10 +84,10 @@ set relativenumber                                              " Show relative 
 " NO FOCUS:     Turn off relativenumber (testing code, etc.)
 " QuickFix:     Turn off relativenumber (running code)
 augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-  autocmd FileType qf if &nu | set nornu | endif
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+    autocmd FileType qf if &nu | set nornu | endif
 augroup END
 " }}}
 " Theme Compatibility {{{

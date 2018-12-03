@@ -87,20 +87,21 @@ end
 # Fish {{{
 set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-set -gx FISH_THEME "yimmy"
-set -gx FISH_SSH_THEME "yimmy"
-
+var FISH_THEME "yimmy"                                          # Theme to use if no local univar set
+var FISH_SSH_THEME "yimmy"                                      # SSH theme to use if no local univar set
+# Load local themes from file (DEPRECATED) {{{
 # Get theme from local file
-if test -f $XDG_DATA_HOME/fish/theme
-    read local_theme < $XDG_DATA_HOME/fish/theme
-    set FISH_THEME $local_theme
-end
+# if test -f $XDG_DATA_HOME/fish/theme
+#     read local_theme < $XDG_DATA_HOME/fish/theme
+#     set FISH_THEME $local_theme
+# end
 
 # Get ssh theme from local file
-if test -f $XDG_DATA_HOME/fish/ssh_theme
-    read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
-    set FISH_SSH_THEME $local_ssh_theme
-end
+# if test -f $XDG_DATA_HOME/fish/ssh_theme
+#     read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
+#     set FISH_SSH_THEME $local_ssh_theme
+# end
+# }}}
 # }}}
 # Python {{{
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
@@ -193,7 +194,7 @@ end
 # Plugins {{{
 if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
     echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-    set FISH_THEME $FISH_SSH_THEME
+    set -l FISH_THEME "$FISH_SSH_THEME"
 end
 # <--- All plugin definitions after this line
 

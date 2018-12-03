@@ -73,8 +73,7 @@ let g:lightline = {
     \ 'subseparator': { 'left': '', 'right': '' },
     \ }
 " }}}
-" Section definitions {{{
-" ALE Indicators {{{
+" Section definitions {{{ ALE Indicators {{{
 let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110 " : '...'
 let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
 let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
@@ -103,8 +102,78 @@ function! LL_Modified() abort " {{{
 endfunction
 " }}}
 function! LL_Mode() abort " {{{
-    " TODO: abbreviate mode if < MinWidth
-    return LL_IsNerd() ? 'NERD' : lightline#mode()
+    " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr) {{{
+    let l:mode_map = {
+        \ 'n' : [
+        \   'NORMAL',
+        \   'NORM',
+        \   'N',
+        \ ],
+        \ 'i' : [
+        \   'INSERT',
+        \   'INS',
+        \   'I',
+        \ ],
+        \ 'R' : [
+        \   'REPLACE',
+        \   'REPL',
+        \   'R',
+        \ ],
+        \ 'v' : [
+        \   'VISUAL',
+        \   'VIS',
+        \   'V',
+        \ ],
+        \ 'V' : [
+        \   'V-LINE',
+        \   'V-LN',
+        \   'V-L',
+        \ ],
+        \ "\<C-v>": [
+        \   'V-BLOCK',
+        \   'V-BL',
+        \   'V-B',
+        \ ],
+        \ 'c' : [
+        \   'COMMAND',
+        \   'CMD',
+        \   'C',
+        \ ],
+        \ 's' : [
+        \   'SELECT',
+        \   'SEL',
+        \   'S',
+        \ ],
+        \ 'S' : [
+        \   'S-LINE',
+        \   'S-LN',
+        \   'S-L',
+        \ ],
+        \ "\<C-s>": [
+        \   'S-BLOCK',
+        \   'S-BL',
+        \   'S-B',
+        \ ],
+        \ 't': [
+        \   'TERMINAL',
+        \   'TERM',
+        \   'T',
+        \ ],
+        \ }
+    " }}}
+    let l:mode = mode()
+    if LL_IsNerd()
+        return 'NERD'
+    elseif winwidth(0) > g:LL_MedWidth
+        " No abbreviation
+        return l:mode_map[l:mode][0]
+    elseif winwidth(0) > g:LL_MinWidth
+        " Medium abbreviation
+        return l:mode_map[l:mode][1]
+    else
+        " Short abbrevation
+        return l:mode_map[l:mode][2]
+    endif
 endfunction
 " }}}
 function! LL_IsNotFile() abort " {{{

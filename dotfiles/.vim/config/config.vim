@@ -24,7 +24,7 @@ endif
 " }}}
 " General {{{
 syntax enable                                                   " Syntax highlighting on
-colorscheme slate                                               " Def colors (overwritten by theme.vim)
+colorscheme default                                             " Def colors (overwritten by theme.vim)
 set fileformat=unix                                             " Always use LF and not CRLF
 set encoding=utf-8                                              " Default to unicode
 set termencoding=utf-8                                          " Unicode
@@ -41,7 +41,8 @@ set showmatch                                                   " Show matching 
 set updatetime=100                                              " Update more often (helps GitGutter)
 set signcolumn=yes                                              " Always show; keep appearance consistent
 set scrolloff=10                                                " Lines before/after cursor during scroll
-set ttimeoutlen=10                                              " How long in ms to wait for key combinations
+set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
+set timeoutlen=100                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set lazyredraw                                                  " Don't redraw screen when not needed
 set nostartofline                                               " Don't move to start of line with j/k

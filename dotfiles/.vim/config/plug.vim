@@ -6,6 +6,8 @@
 "                 |___/
 "
 " Common Vim/Neovim plugins
+
+scriptencoding                                                  " Use when including multibyte characters in script
 " Helper functions/variables {{{
 " Vim-Plug Cond() {{{
 " Add conditions that aren't supported directly by vim-plug
@@ -158,6 +160,7 @@ call plug#end()
 " }}}
 " Plugin configuration {{{
 " ALE (Asynchronus Linting Engine)  {{{
+" TODO: disable ale_open_list and use own function to open qf w/o shifting buf
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
 let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
@@ -175,6 +178,8 @@ let g:ale_echo_msg_warning_str = 'W'                            " Warning string
 let g:ale_echo_msg_format = '[%linter%] %s (%severity%%: code%)'
 let g:ale_sign_column_always = 1                                " Always show column on left side, even with no errors/warnings
 let g:ale_completion_enabled = 0                                " Enable ALE completion if no other completion engines
+let g:ale_virtualtext_cursor = 1                                " Enable Neovim's virtualtext support
+let g:ale_virtualtext_prefix = ' ➜ '                           " Prefix the virtualtext message
 let g:ale_virtualenv_dir_names = [
     \   '.env',
     \   'dev',

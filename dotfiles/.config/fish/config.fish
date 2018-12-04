@@ -270,10 +270,10 @@ if test "$FISH_THEME" = 'bobthefish'
 
     # Tmux shows user/host, so we dont need it here
     if test -n "$TMUX"
-        set -g theme_display_date no
         set -g theme_display_user no
         set -g theme_display_hostname no
-        set -g theme_newline_cursor yes
+        # set -g theme_newline_cursor yes
+        # set -g theme_display_date no
     end
 end
 # }}}

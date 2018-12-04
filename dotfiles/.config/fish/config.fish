@@ -260,20 +260,12 @@ set -g ___fish_git_prompt_char_stashstate ≡
 # bobthefish {{{
 if test "$FISH_THEME" = 'bobthefish'
     # Set options if term windows is narrow-ish
-    if test "$COLUMNS" -lt 140
-      set -g theme_newline_cursor yes
-      set -g theme_display_date no
-    else
-      set -g theme_newline_cursor no
-      set -g theme_display_date yes
-    end
+    set -g theme_short_prompt_cols 140                          # Shorten prompt if cols < this
 
     # Tmux shows user/host, so we dont need it here
     if test -n "$TMUX"
         set -g theme_display_user no
         set -g theme_display_hostname no
-        # set -g theme_newline_cursor yes
-        # set -g theme_display_date no
     end
 end
 # }}}

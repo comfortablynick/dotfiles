@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.0lzeHH/set_editor.fish @ line 2
+# Defined in /tmp/fish.ohrrKa/set_editor.fish @ line 2
 function set_editor --description 'set universal/environment variables for EDITOR and VISUAL'
 	set -l options 'h/help' 't/toggle' 'v/vim' 'n/nvim'
 
@@ -41,8 +41,8 @@ function set_editor --description 'set universal/environment variables for EDITO
     # Set $EDITOR and $VISUAL
     # Erase global first so no conflicts
     if test -n "$new_editor"
-        set -eg EDITOR; set -Ux EDITOR "$new_editor"
-        set -eg VISUAL; set -Ux VISUAL "$new_editor"
+        set -eg EDITOR; set -Ux EDITOR "$new_editor"; set -g EDITOR "$new_editor"
+        set -eg VISUAL; set -Ux VISUAL "$new_editor"; set -g EDITOR "$new_editor"
         echo "New editor set to $new_editor."
         return 0
     else

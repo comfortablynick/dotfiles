@@ -7,7 +7,7 @@
 "
 " Common Vim/Neovim plugins
 
-scriptencoding                                                  " Use when including multibyte characters in script
+scriptencoding utf-8
 " Helper functions/variables {{{
 " Vim-Plug Cond() {{{
 " Add conditions that aren't supported directly by vim-plug
@@ -43,10 +43,11 @@ let g:completion_filetypes = {
 " BEGIN {{{
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 " }}}
-" Editor/appearance {{{
+" Editor features {{{
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
+Plug 'majutsushi/tagbar'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
@@ -145,13 +146,13 @@ Plug 'Valloric/YouCompleteMe',
 " }}}
 " Status line {{{
 " Airline {{{
-Plug 'vim-airline/vim-airline',         Cond(has('nvim'))
-Plug 'vim-airline/vim-airline-themes',  Cond(has('nvim'))
+Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
+Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 " }}}
 " Lightline {{{
-Plug 'itchyny/lightline.vim',           Cond(!has('nvim'))
-Plug 'maximbaz/lightline-ale',          Cond(!has('nvim'))
-Plug 'mgee/lightline-bufferline',       Cond(!has('nvim'))
+Plug 'itchyny/lightline.vim',           Cond(has('nvim'))
+Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
+Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
 " }}}
 " }}}
 " END {{{
@@ -216,7 +217,7 @@ let g:python_flake8_options = {
 let g:ale_python_flake8_args = {
     \ '--max-line-length': 88
     \ }
-let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4'
+let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 " }}}
 " Neoformat {{{
@@ -286,7 +287,8 @@ let g:airline_extensions = [
     \ 'branch',
     \ 'hunks',
     \ 'wordcount',
-    \ 'virtualenv'
+    \ 'virtualenv',
+    \ 'tagbar',
     \ ]
 let g:airline#extensions#default#section_truncate_width = {
     \ 'b': 79,
@@ -331,6 +333,12 @@ let g:ycm_filetype_specific_completion_to_disable = {
     \ 'gitcommit': 1
     \}
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
+" }}}
+" Tagbar {{{
+let g:tagbar_autoclose = 0                                      " Autoclose tagbar after selecting tag
+let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened
+let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
+let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
 " }}}
 " }}}
 " vim:set fdl=1:

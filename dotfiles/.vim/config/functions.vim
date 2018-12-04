@@ -182,9 +182,18 @@ function! RunCommand(cmd) abort
     endif
 endfunction
 " }}}
+" OpenTagbar() :: wrapper for tagbar#autoopen with options {{{
+function! OpenTagbar() abort
+    if winwidth(0) > 100
+        call tagbar#autoopen(0)
+    else
+        return
+    endif
+endfunction
+" }}}
 " }}}
 " Autocommands {{{
-" Jump to last cursor position {{{
+" Cursor position {{{
 " Jump to last position when reopening file
 augroup cursor_position
     autocmd!
@@ -193,20 +202,28 @@ augroup cursor_position
 augroup END
 
 " }}}
-" Set shebang on new files {{{
+" Shebang {{{
 " augroup shebang
 "     autocmd!
 "     autocmd BufNewFile * call SetShebang()
 " augroup END
 " }}}
-" Close quickfix window on Vim exit {{{
-" Close buffer if quickfix window is last
+" Quickfix window {{{
 augroup quickfix
     autocmd!
+    " Close buffer if quickfix window is last
     autocmd BufEnter * call AutoCloseQfWin()
+    " Push quickfix window always to the bottom
+    autocmd FileType qf wincmd J
 augroup END
 " }}}
-" Don't insert comment leader on 'o' {{{
+" Tagbar {{{
+augroup tagbar
+    autocmd!
+    autocmd FileType * call OpenTagbar()
+augroup END
+" }}}
+" Formatopts {{{
 augroup fmtopts
     autocmd!
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o

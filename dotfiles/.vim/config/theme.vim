@@ -1,7 +1,8 @@
 " VIM COLORS/THEMES
 
-" Airline {{{
-" Map colorscheme to airline theme
+scriptencoding utf-8
+" Airline {{{1
+" Map colorscheme to airline theme {{{3
 let g:airline_themes = {
     \ 'nord': 'nord',
     \ 'snow-dark': 'snow_dark',
@@ -11,38 +12,43 @@ let g:airline_themes = {
     \ 'gruvbox': 'gruvbox',
     \ 'apprentice': 'apprentice',
     \ }
-" }}}
-" Lightline {{{
-" Status bar definition {{{
-scriptencoding
+" Lightline {{{1
+" Status bar definition {{{3
 let g:lightline = {
     \ 'tabline': {
-    \   'left': [[ 'buffers' ]],
-    \   'right': [[ 'close' ]],
+    \   'left':
+    \   [
+    \       [ 'buffers' ],
+    \   ],
+    \   'right':
+    \   [
+    \       [],
+    \   ],
     \ },
     \ 'active': {
     \   'left':
-    \     [
-    \        [ 'vim_mode', 'paste' ],
-    \        [ 'fugitive' ],
-    \        [ 'filename' ],
-    \     ],
+    \    [
+    \       [ 'vim_mode', 'paste' ],
+    \       [ 'fugitive' ],
+    \       [ 'filename' ],
+    \    ],
     \   'right':
-    \     [
-    \        [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'line_info' ],
-    \        [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
-    \     ]
+    \    [
+    \       [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'line_info' ],
+    \       [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
+    \       [ 'current_tag' ],
+    \    ]
     \ },
     \ 'inactive': {
     \      'left':
-    \     [
-    \        [ 'filename' ]
-    \     ],
+    \       [
+    \           [ 'filename' ]
+    \       ],
     \      'right':
-    \     [
-    \        [ 'line_info' ],
-    \        [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
-    \     ]
+    \       [
+    \           [ 'line_info' ],
+    \           [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
+    \       ]
     \ },
     \ 'component_function': {
     \   'fugitive': 'LL_Fugitive',
@@ -53,6 +59,7 @@ let g:lightline = {
     \   'line_info': 'LL_LineInfo',
     \   'vim_mode': 'LL_Mode',
     \   'venv': 'LL_VirtualEnvName',
+    \   'current_tag': 'LL_CurrentTag',
     \ },
     \ 'component_expand': {
     \   'linter_checking': 'lightline#ale#checking',
@@ -72,14 +79,7 @@ let g:lightline = {
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' },
     \ }
-" }}}
-" Section definitions {{{ ALE Indicators {{{
-let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110 " : '...'
-let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
-let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
-let g:lightline#ale#indicator_ok = ''
-" }}}
-" Main sections {{{
+" Section definitions {{{2
 " Section settings / glyphs {{{
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
 let g:LL_MedWidth = 100                                         " Secondary width for some sections
@@ -88,8 +88,16 @@ let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symb
 let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)
 let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? '' : '--RO--'                    " Read-only PL symbol
+" lightline#bufferline {{{
 let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
 let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified
+" }}}
+" lightline#ale {{{
+let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110 " : '...'
+let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
+let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
+let g:lightline#ale#indicator_ok = ''
+" }}}
 " }}}
 " Section separators {{{
 let g:lightline.separator.left = g:LL_pl ? '' : ''
@@ -293,22 +301,20 @@ function! LL_VirtualEnvName() abort " {{{
     return !empty($VIRTUAL_ENV) ? split($VIRTUAL_ENV, '/')[-1] : ''
 endfunction
 " }}}
+function! LL_CurrentTag() abort " {{{
+    return winwidth(0) > g:LL_MinWidth ? tagbar#currenttag('%s()', '') : ''
+endfunction
 " }}}
 " }}}
-" }}}
-" Vim / Neovim Settings {{{
-" Set colors based on theme {{{
-
+" Vim / Neovim Settings {{{1
+" Set colors based on theme {{{3
 " Assign to variables
 exe 'colorscheme '.g:vim_base_color
 exe 'set background='.g:vim_color_variant
 let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
-
 " Set airline theme
 let g:airline_theme = tolower(g:statusline_theme)
-
 " Set lightline theme
 let lightline['colorscheme'] = g:statusline_theme
-" }}}
-" }}}
-" vim:set fdl=1:
+
+" vim:set fdl=2 fdc=1: {{{1

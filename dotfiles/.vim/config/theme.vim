@@ -248,12 +248,11 @@ function! LL_FileEncoding() abort " {{{
 endfunction
 " }}}
 function! LL_HunkSummary() abort " {{{
-    let githunks = GitGutterGetHunkSummary()
-    return printf('+%d ~%d -%d',
-        \ githunks[0],
-        \ githunks[1],
-        \ githunks[2]
-        \ )
+    let githunks =  GitGutterGetHunkSummary()
+    let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
+    let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
+    let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''
+    return added . changed . deleted
 endfunction
 " }}}
 function! LL_ReadOnly() abort " {{{
@@ -280,7 +279,7 @@ endfunction
 function! LL_Fugitive() abort " {{{
     if &filetype !~? 'vimfiler' && ! LL_IsNotFile() && exists('*fugitive#head') && winwidth(0) > g:LL_MinWidth
         let branch = fugitive#head()
-        return branch !=# '' ? printf('%s%s %s %s',
+        return branch !=# '' ? printf('%s%s%s %s',
             \ g:LL_GitSymbol,
             \ LL_HunkSummary(),
             \ g:LL_Branch,

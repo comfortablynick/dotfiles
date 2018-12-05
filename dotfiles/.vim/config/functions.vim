@@ -1,11 +1,12 @@
+" vim:set fdl=1:
 "    __                  _   _                       _
 "   / _|_   _ _ __   ___| |_(_) ___  _ __  _____   _(_)_ __ ___
 "  | |_| | | | '_ \ / __| __| |/ _ \| '_ \/ __\ \ / / | '_ ` _ \
 "  |  _| |_| | | | | (__| |_| | (_) | | | \__ \\ V /| | | | | | |
 "  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
 "
-" Functions {{{
-" SetShebang() :: add shebang for new file {{{
+" Functions {{{1
+" SetShebang() :: add shebang for new file {{{2
 function! SetShebang()
 python3 << endpython
 
@@ -27,8 +28,8 @@ if not vim.current.buffer[0].startswith('#!'):
 		vim.current.buffer[0:0] = [ shebang[filetype] ]
 endpython
 endfunction
-" }}}
-" GetPath() :: get path of current file {{{
+
+" GetPath() :: get path of current file {{{2
 function! GetPath()
 python3 << EOP
 
@@ -38,8 +39,8 @@ file_path = vim.eval("expand('%:p')")
 print(file_path)
 EOP
 endfunction
-" }}}
-" SetExecutableBit() :: set file as executable by user {{{
+
+" SetExecutableBit() :: set file as executable by user {{{2
 function! SetExecutableBit()
 python3 << EOP
 
@@ -60,20 +61,20 @@ else:
     print(f"File now executable; changed from {old_perms} to {new_perms}")
 EOP
 endfunction
-" }}}
-" SetExecutable() :: set shebang and executable bit {{{
+
+" SetExecutable() :: set shebang and executable bit {{{2
 function! SetExecutable()
     call SetExecutableBit()
     call SetShebang()
 endfunction
-" }}}
-" Run Python Code in Vim (DEPRECATED) {{{
+
+" Run Python Code in Vim (DEPRECATED) {{{2
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 " nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
 " vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
 " nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
-" SaveAndExecutePython() :: save file and execute python in split vim {{{
+" SaveAndExecutePython() :: save file and execute python in split vim {{{2
 function! SaveAndExecutePython() abort
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
 
@@ -125,8 +126,8 @@ function! SaveAndExecutePython() abort
     " Return to previous (code) window
     silent execute 'wincmd p'
 endfunction
-" }}}
-" ClosePythonWindow() :: close window opened for running python {{{
+
+" ClosePythonWindow() :: close window opened for running python {{{2
 function! ClosePythonWindow() abort
     " Close Python window we opened
     if bufexists(s:buf_nr)
@@ -139,9 +140,8 @@ function! ClosePythonWindow() abort
     " Return to original window
     silent execute 'wincmd p'
 endfunction
-" }}}
-" }}}
-" ToggleQf() :: toggle quickfix window {{{
+
+" ToggleQf() :: toggle quickfix window {{{2
 function! ToggleQf() abort
     if exists('*asyncrun#quickfix_toggle')
         " AsyncRun is loaded; use this handy function
@@ -161,8 +161,8 @@ function! ToggleQf() abort
     copen
 endfunction
 nnoremap <silent> qf :call ToggleQf()<cr>
-" }}}
-" AutoCloseQfWin() :: close qf on quit {{{
+
+" AutoCloseQfWin() :: close qf on quit {{{2
 function! AutoCloseQfWin() abort
     if &filetype ==? 'qf'
         " if this window is last on screen quit without warning
@@ -171,8 +171,8 @@ function! AutoCloseQfWin() abort
         endif
     endif
 endfunction
-" }}}
-" RunCommand() :: run command asynchronously in tmux pane {{{
+
+" RunCommand() :: run command asynchronously in tmux pane {{{2
 function! RunCommand(cmd) abort
     let panes = system('tmux display-message -p "#{window_panes}"')
     if panes >= 2
@@ -181,8 +181,8 @@ function! RunCommand(cmd) abort
         execute 'AsyncRun tmux send-keys -t 2 ' . a:cmd
     endif
 endfunction
-" }}}
-" OpenTagbar() :: wrapper for tagbar#autoopen with options {{{
+
+" OpenTagbar() :: wrapper for tagbar#autoopen with options {{{2
 function! OpenTagbar() abort
     if winwidth(0) > 100
         call tagbar#autoopen(0)
@@ -190,25 +190,80 @@ function! OpenTagbar() abort
         return
     endif
 endfunction
-" }}}
-" }}}
-" Autocommands {{{
-" Cursor position {{{
-" Jump to last position when reopening file
-augroup cursor_position
+
+" LastPlace() :: restore cursor position and folding {{{2
+function! LastPlace()
+    " Derived from and simplified:
+    " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
+
+    " Options
+    let open_folds = 1
+    let ignore_buftype = [
+        \ 'quickfix',
+        \ 'nofile',
+        \ 'help',
+        \ ]
+    let ignore_filetype = [
+        \ 'gitcommit',
+        \ 'gitrebase',
+        \ 'svn',
+        \ 'hgcommit',
+        \ ]
+
+    " Check filetype and buftype against ignore lists
+    if index(ignore_buftype, &buftype) != -1 ||
+        \ index(ignore_filetype, &filetype) != -1
+        return
+    endif
+
+    " Do nothing if file does not exist on disk
+    try
+        if empty(glob(@%))
+            return
+        endif
+    catch
+        return
+    endtry
+
+    let lastpos = line("'\"")
+    let buffend = line('$')
+    let winend = line('w$')
+    let winstart = line('w0')
+
+    if lastpos > 0 && lastpos <= line('$')
+        " Last edit pos is set and is < no of lines in buffer
+        if winend == buffend
+            " Last line in buffer is also last line visible
+            execute 'normal! g`"'
+        elseif buffend - lastpos > ((winend - winstart) / 2) - 1
+            " Center cursor on screen if not at bottom
+            execute 'normal! g`"zz'
+        else
+            " Otherwise, show as much context as we can
+            execute "normal! \G'\"\<c-e>"
+        endif
+    endif
+
+    if foldclosed('.') != -1 && open_folds
+        " Cursor was inside a fold; open it
+        execute 'normal! zv'
+    endif
+endfunction
+
+" Autocommands {{{1
+" Cursor position {{{2
+augroup last_place
     autocmd!
-    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-        \| exe "normal! g`\"" | endif
+    autocmd BufWinEnter * call LastPlace()
 augroup END
 
-" }}}
-" Shebang {{{
+" Shebang {{{2
 " augroup shebang
 "     autocmd!
 "     autocmd BufNewFile * call SetShebang()
 " augroup END
-" }}}
-" Quickfix window {{{
+
+" Quickfix window {{{2
 augroup quickfix
     autocmd!
     " Close buffer if quickfix window is last
@@ -216,18 +271,15 @@ augroup quickfix
     " Push quickfix window always to the bottom
     autocmd FileType qf wincmd J
 augroup END
-" }}}
-" Tagbar {{{
+
+" Tagbar {{{2
 augroup tagbar
     autocmd!
-    autocmd FileType * call OpenTagbar()
+    autocmd FileType typescript,python call OpenTagbar()
 augroup END
-" }}}
-" Formatopts {{{
+
+" Formatopts {{{2
 augroup fmtopts
     autocmd!
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
-" }}}
-" }}}
-" vim:set fdl=1:

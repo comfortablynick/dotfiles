@@ -26,6 +26,9 @@ noremap <silent> <F8> :TagbarToggle<CR>
 noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<CR>
 " }}}
 " Normal mode {{{
+" <Shift>+Tab :: Move back in jump list
+nnoremap <silent> <S-Tab> <C-O>
+
 " Split navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>

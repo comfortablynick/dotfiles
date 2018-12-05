@@ -315,6 +315,9 @@ augroup deoplete_preview
     autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
 augroup end
 " }}}
+" Nvim Typescript {{{
+let g:nvim_typescript#type_info_on_hold = 1
+" }}}
 " YouCompleteMe {{{
 let g:ycm_filetype_blacklist = {
     \ 'gitcommit': 1,

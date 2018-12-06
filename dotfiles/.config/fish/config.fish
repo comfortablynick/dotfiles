@@ -339,10 +339,11 @@ ab z j                                                          # Use autojump (
 
 # Git {{{2
 ab g 'git'
-ab ga 'git add'
+ab ga 'git add'                                                 # Stage specific files
 ab gac 'git add . && git commit'                                # Combine add + commit
-ab gc 'git commit'
-ab gco 'git checkout master'
+ab gc 'git commit'                                              # Commit staged files
+ab gco 'git checkout master'                                    # Overwrite local files with master
+ab gcp 'git commit; and git push'                               # Combine commit + push
 ab gcol 'git checkout (git describe --tags)'                    # Check out latest tag
 ab gd 'git diff'
 ab gdf 'git diff'

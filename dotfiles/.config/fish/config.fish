@@ -198,7 +198,7 @@ fun plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
 
 fun plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
 fun plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
-fun plugin 'decors/fish-colored-man'
+# fun plugin 'decors/fish-colored-man'
 fun plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
 
 # Node.js
@@ -400,8 +400,7 @@ ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux
 ab tl 'tmux ls'
 
 # Todo.txt {{{2
-ab t todo.sh                                                    # Todo.txt cli
-ab todo todo.sh                                                 # Todo.txt cli
+ab t todo                                                       # Todo.txt cli
 ab tp topydo                                                    # Todo.txt Python cli
 
 # Vim/Neovim {{{2

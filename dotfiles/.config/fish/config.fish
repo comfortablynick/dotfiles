@@ -1,4 +1,4 @@
-# vim:fdl=1:
+# vim:fdl=0:
 #                 ___
 #   ___======____=---=)
 # /T            \_--===)
@@ -377,12 +377,18 @@ ab rmdir 'rm -rf'
 ab vico "$HOME/.vim/config"
 
 # Fish {{{2
-ab frel "exec fish"                                           # Better way to reload?
-ab fc "$__fish_config_dir"                                    # Fish config home
-ab ffn "$__fish_config_dir/functions"                         # Fish functions directory
-ab funced 'funced -s'                                         # Save function after editing automatically
-ab fcf "vim $__fish_config_dir/config.fish"                   # Edit config.fish
-ab cm 'command'                                               # Instead of \ bash
+# Commands {{{3
+ab frel "exec fish"                                             # Reload fish shell
+ab funced 'funced -s'                                           # Edit function + save to disk
+ab cm 'command'                                                 # Use command directly (like \ in bash)
+ab fcf "vim $__fish_config_dir/config.fish"                     # Edit config.fish
+ab del 'history delete'                                         # Deletes history matching pattern
+ab dlast 'history delete $history[1] --exact --case-sensitive'  # Delete last history item
+
+# Dirs {{{3
+ab fc "$__fish_config_dir"                                      # Fish config home
+ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
+ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
 
 # Python {{{2
 ab pysh "$HOME/git/python/shell"                              # Python shell scripts

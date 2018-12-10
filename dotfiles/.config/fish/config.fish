@@ -58,6 +58,7 @@ function _loadtheme -d "alias for loadtheme for config.fish"
 end
 # ENVIRONMENT {{{1
 # General System {{{2
+set -gx XDG_CACHE_HOME "$HOME/.cache"                           # Standard cache location
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
@@ -193,21 +194,28 @@ end
 # Themes
 fun plugin 'comfortablynick/theme-bobthefish' \
     --cond='[ $FISH_THEME = bobthefish ]'
-fun plugin 'oh-my-fish/theme-yimmy' --cond='[ $FISH_THEME = yimmy ]'
-fun plugin 'rafaelrinaldi/pure' --cond='[ $FISH_THEME = pure ]'
 
-fun plugin 'fisherman/git_util' --cond='[ $FISH_THEME = bigfish ]'
-fun plugin 'nyarly/fish-lookup' --cond='[ $FISH_THEME = bigfish ]'
-# fun plugin 'decors/fish-colored-man'
-fun plugin 'jethrokuan/fzf' --c='[ echo (type -q fzf) ]'
+fun plugin 'yimmy' --local \
+    --cond='[ $FISH_THEME = yimmy ]' \
+    --path="$XDG_DATA_HOME/fish_plugins/themes/yimmy"
+
+fun plugin 'bigfish' --local \
+    --cond='[ $FISH_THEME = bigfish ]' \
+    --path="$XDG_DATA_HOME/fish_plugins/themes/bigfish"
+
+fun plugin 'oh-my-fish/theme-clearance' \
+    --cond='[ $FISH_THEME = clearance ]'
+
+fun plugin 'jethrokuan/fzf' \
+    --cond='[ echo (type -q fzf) ]'
 
 # Node.js
 fun plugin 'FabioAntunes/fish-nvm'
 fun plugin 'edc/bass'
 
 # Test
-fun plugin 'fisherman/getopts' --cond 'test 1 -eq 2'
-# fundle 'fisherman/getopts', if:'test 1 -eq 1', from:'gh'
+fun plugin 'fisherman/getopts' \
+    --cond 'test 1 -eq 2'
 
 # <--- All plugin definitions before this line
 fun init
@@ -227,12 +235,12 @@ fun init
 # THEMES {{{1
 # Local/SSH theme {{{2
 if test -z "$FISH_PKG_MGR"
-  if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
-    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-    _loadtheme $FISH_SSH_THEME
-  else if test -n "$FISH_THEME"
-    _loadtheme $FISH_THEME
-  end
+    if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+      echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+        _loadtheme $FISH_SSH_THEME
+    else if test -n "$FISH_THEME"
+        _loadtheme $FISH_THEME
+    end
 end
 
 # Set options based on ssh connection/term size

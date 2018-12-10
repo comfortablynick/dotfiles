@@ -283,3 +283,6 @@ augroup fmtopts
     autocmd!
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
+" Commands {{{1
+" Sudo save {{{2
+command W w !sudo tee "%" > /dev/null

@@ -21,9 +21,9 @@ if not status --is-interactive
 end
 # Everything below is for interactive shells
 # Welcome message {{{2
-set_color $fish_color_autosuggestion;
+set_color $fish_color_autosuggestion
 set -l start_time (get_date)
-echo -n 'Sourcing config.fish...  '
+and echo -n 'Sourcing config.fish...  '
 # FUNCTIONS {{{1
 # ab :: wrap `abbr` so fish linter doesn't complain {{{2
 function ab -d "create global abbreviation"
@@ -84,18 +84,26 @@ set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here 
 set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
 var FISH_THEME "yimmy"                                          # Theme to use if no local univar set
 var FISH_SSH_THEME "yimmy"                                      # SSH theme to use if no local univar set
+
+# SSH: get theme if specified {{{3
+if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+    set FISH_THEME "$FISH_SSH_THEME"
+end
+
 # Load local themes from file (DEPRECATED) {{{3
 # Get theme from local file
-# if test -f $XDG_DATA_HOME/fish/theme
-#     read local_theme < $XDG_DATA_HOME/fish/theme
-#     set FISH_THEME $local_theme
+# if test -n "$SSH_CONNECTION" -a -f $XDG_DATA_HOME/fish/ssh_theme
+#     # Get ssh theme from local file
+#         read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
+#         set FISH_THEME $local_ssh_theme
+#     end
+# else
+#     if test -f $XDG_DATA_HOME/fish/theme
+#         read local_theme < $XDG_DATA_HOME/fish/theme
+#         set FISH_THEME $local_theme
 # end
 
-# Get ssh theme from local file
-# if test -f $XDG_DATA_HOME/fish/ssh_theme
-#     read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
-#     set FISH_SSH_THEME $local_ssh_theme
-# end
 
 # Python {{{2
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
@@ -185,67 +193,48 @@ switch "$FISH_PKG_MGR"
 end
 
 # Plugins {{{2
-if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
-    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-    set -l FISH_THEME "$FISH_SSH_THEME"
-end
-# <--- All plugin definitions after this line
-
-# Themes
+# Themes {{{3
 fun plugin 'comfortablynick/theme-bobthefish' \
     --cond='[ $FISH_THEME = bobthefish ]'
 
-fun plugin 'yimmy' --local \
-    --cond='[ $FISH_THEME = yimmy ]' \
-    --path="$XDG_DATA_HOME/fish_plugins/themes/yimmy"
+fun plugin 'oh-my-fish/theme-yimmy' \
+    --cond='[ $FISH_THEME = yimmy ]'
+
+fun plugin 'pure' --local \
+    --cond='[ $FISH_THEME = pure ]' \
+    --path="$HOME/Git/pure"
+
+    # fun plugin 'rafaelrinaldi/pure' \
+    # --cond='[ $FISH_THEME = pure ]'
 
 fun plugin 'bigfish' --local \
     --cond='[ $FISH_THEME = bigfish ]' \
-    --path="$XDG_DATA_HOME/fish_plugins/themes/bigfish"
+    --path="$XDG_CONFIG_HOME/fish/themes/bigfish"
 
-fun plugin 'oh-my-fish/theme-clearance' \
-    --cond='[ $FISH_THEME = clearance ]'
-
+# Utilities {{{3
 fun plugin 'jethrokuan/fzf' \
     --cond='[ echo (type -q fzf) ]'
 
-# Node.js
+# Node.js {{{3
 fun plugin 'FabioAntunes/fish-nvm'
 fun plugin 'edc/bass'
 
-# Test
+# Test {{{3
 fun plugin 'fisherman/getopts' \
     --cond 'test 1 -eq 2'
 
 # <--- All plugin definitions before this line
 fun init
 
-
-# SOURCE {{{1
-# External scripts {{{2
-# set -l externals                                                # Add exteral scripts to this variable
-# set -a externals "{PATH TO SCRIPT}"                             # Append to externals variable
-# Source external scripts if they exist
-# for e in $externals
-#   if test -e $e
-#     source $e
-#   end
-# end
-
 # THEMES {{{1
 # Local/SSH theme {{{2
-if test -z "$FISH_PKG_MGR"
-    if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
-      echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-        _loadtheme $FISH_SSH_THEME
-    else if test -n "$FISH_THEME"
-        _loadtheme $FISH_THEME
-    end
-end
+test -z "$FISH_PKG_MGR"
+and _loadtheme $FISH_THEME
 
 # Set options based on ssh connection/term size
-if test -n "$SSH_CONNECTION"; and test "$COLUMNS" -lt 140
-    # We're probably connecting from iOS
+if test -n "$SSH_CONNECTION" -a "$COLUMNS" -lt 140 -a -z "$TMUX"
+    # We're *probably* connecting from iOS
+    # Better to use TMUX and name session 'ios'
     set NERD_FONTS 0
 end
 
@@ -267,8 +256,8 @@ if test "$FISH_THEME" = 'bobthefish'
     end
 end
 
-# Pure Prompt {{{2
-# Prompt text
+# pure {{{2
+# prompt text
 if test "$FISH_THEME" = 'pure'
     set pure_symbol_prompt "❯"
     set pure_symbol_git_down_arrow "⇣"
@@ -291,16 +280,18 @@ if test "$FISH_THEME" = 'pure'
     set pure_root_color $pure_color_red
 
     # Display options
-    set pure_user_host_location 1                                   # Loc of u@h; 0 = end, 1 = beg
-    set pure_separate_prompt_on_error 0                             # Show addl char if error
-    set pure_command_max_exec_time 5                                # Time elapsed before exec time shown
+    set pure_user_host_location 1                               # Loc of u@h; 0 = end, 1 = beg
+    set pure_separate_prompt_on_error 0                         # Show addl char if error
+    set pure_command_max_exec_time 5                            # Secs elapsed before exec time shown
 end
 
 # bigfish {{{2
-set -gx glyph_git_on_branch '🜉'
-set -gx glyph_bg_jobs '⚒'
+if test "$FISH_THEME" = 'bigfish'
+    set -gx glyph_git_on_branch '🜉'
+    set -gx glyph_bg_jobs '⚒'
+end
 
-# Yimmy {{{2
+# yimmy {{{2
 if test "$FISH_THEME" = 'yimmy'
     set -g yimmy_solarized false                                    # Solarized color scheme
 end

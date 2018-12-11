@@ -197,7 +197,6 @@ function __fundle_load_plugin -a plugin -a path -a fundle_dir -a profile -d "loa
     # Use supplied $path if it exists (absolute path)
     test $path != '.' -a -d $path
     and set plugin_dir $path
-    # Check relative path inside $fundle_dir
     or set -l plugin_dir (string replace -r '/.$' '' -- "$fundle_dir/$plugin/$path")
 
     if not test -d $plugin_dir
@@ -214,33 +213,42 @@ function __fundle_load_plugin -a plugin -a path -a fundle_dir -a profile -d "loa
     set -l completions_dir "$plugin_dir/completions"
     set -l plugin_paths $__fundle_plugin_name_paths
 
-    if begin
-            test -d $functions_dir
-            and not contains $functions_dir $fish_function_path
-        end
-        set fish_function_path $functions_dir $fish_function_path
+    # Autoload functions dir
+    test -d $functions_dir
+    and not contains $functions_dir $fish_function_path
+    and set -p fish_function_path $functions_dir
+
+    # Autoload completions dir
+    test -d $completions_dir
+    and not contains $completions_dir $fish_complete_path
+    and set -p fish_complete_path $completions_dir
+
+    # Source conf.d dir
+    for f in $conf_dir/*.fish
+        source $f
     end
 
-    if begin
-            test -d $completions_dir
-            and not contains $completions_dir $fish_complete_path
-        end
-        set fish_complete_path $completions_dir $fish_complete_path
-    end
-
+    # Autoload top level dir if no $init_file
+    # See: https://github.com/oh-my-fish/theme-bobthefish/issues/136#issuecomment-377143578
     if test -f $init_file
         source $init_file
-    else if test -d $conf_dir
-        # read all *.fish files in conf.d
-        for f in $conf_dir/*.fish
-            source $f
-        end
-    else
-        # read all *.fish files if no init.fish or conf.d found
-        for f in $plugin_dir/*.fish
-            source $f
-        end
+    else if not contains $plugin_dir $fish_function_path
+        set -p fish_function_path $plugin_dir
     end
+
+    # Source other files
+    # if test -f $init_file
+    #     source $init_file
+    # else if test -d $conf_dir
+    #     for f in $conf_dir/*.fish
+    #         source $f
+    #     end
+    # else
+    #     # read all *.fish files if no init.fish or conf.d found
+    #     for f in $plugin_dir/*.fish
+    #         source $f
+    #     end
+    # end
 
     if test -f $bindings_file
         set -g __fundle_binding_paths $bindings_file $__fundle_binding_paths

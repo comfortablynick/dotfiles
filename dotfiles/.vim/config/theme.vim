@@ -1,4 +1,4 @@
-" vim:fdl=2:fdc=1:
+" vim:fdl=2:
 "  _   _                               _
 " | |_| |__   ___ _ __ ___   _____   _(_)_ __ ___
 " | __| '_ \ / _ \ '_ ` _ \ / _ \ \ / / | '_ ` _ \
@@ -330,7 +330,26 @@ function! LL_FileName() abort "{{{3
         return fnamemodify(f, ':t')
     else
         " Regular filename
-        return LL_ReadOnly().f.LL_Modified()
+        " Shorten it gracefully
+        let p = substitute(f, expand('~'), '~', '')
+        let s = p
+        let numChars = winwidth(0) <= g:LL_MinWidth ? 1 :
+            \ winwidth(0) <= g:LL_MedWidth ? 2 : 999
+        if winwidth(0) <= g:LL_MedWidth
+            let parts = split(p, '/')
+            let i = 1
+            for part in parts
+                if i == 1
+                    let s = part
+                elseif i == len(parts)
+                    let s = s.'/'.part
+                else
+                    let s = s.'/'.part[0:numChars - 1]
+                endif
+                let i += 1
+            endfor
+        endif
+        return LL_ReadOnly().s.LL_Modified()
     endif
 endfunction
 

@@ -86,23 +86,23 @@ var FISH_THEME "yimmy"                                          # Theme to use i
 var FISH_SSH_THEME "yimmy"                                      # SSH theme to use if no local univar set
 
 # SSH: get theme if specified {{{3
-if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
-    echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
-    set FISH_THEME "$FISH_SSH_THEME"
-end
-
-# Load local themes from file (DEPRECATED) {{{3
-# Get theme from local file
-# if test -n "$SSH_CONNECTION" -a -f $XDG_DATA_HOME/fish/ssh_theme
-#     # Get ssh theme from local file
-#         read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
-#         set FISH_THEME $local_ssh_theme
-#     end
-# else
-#     if test -f $XDG_DATA_HOME/fish/theme
-#         read local_theme < $XDG_DATA_HOME/fish/theme
-#         set FISH_THEME $local_theme
+# if test -n "$SSH_CONNECTION" && set -q FISH_SSH_THEME
+#     echo "SSH connection detected! Setting $FISH_SSH_THEME theme... "
+#     set FISH_THEME "$FISH_SSH_THEME"
 # end
+
+# Load local themes from file {{{3
+# Get theme from local file
+if test -n "$SSH_CONNECTION" -a -f $XDG_DATA_HOME/fish/ssh_theme
+    # Get ssh theme from local file
+        read local_ssh_theme < $XDG_DATA_HOME/fish/ssh_theme
+        set FISH_THEME $local_ssh_theme
+else
+    if test -f $XDG_DATA_HOME/fish/theme
+        read local_theme < $XDG_DATA_HOME/fish/theme
+        set FISH_THEME $local_theme
+    end
+end
 
 
 # Python {{{2
@@ -167,6 +167,11 @@ end
 # Todo.txt {{{2
 set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
 
+# Go {{{2
+# Add go dirs to PATH
+set -a PATH "/usr/local/go/bin"                                 # golang binaries
+set -a PATH "$HOME/go/bin"                                      # go home dir
+
 # PACKAGES {{{1
 # Package manager setup {{{2
 switch "$FISH_PKG_MGR"
@@ -200,12 +205,8 @@ fun plugin 'comfortablynick/theme-bobthefish' \
 fun plugin 'oh-my-fish/theme-yimmy' \
     --cond='[ $FISH_THEME = yimmy ]'
 
-fun plugin 'pure' --local \
-    --cond='[ $FISH_THEME = pure ]' \
-    --path="$HOME/Git/pure"
-
-    # fun plugin 'rafaelrinaldi/pure' \
-    # --cond='[ $FISH_THEME = pure ]'
+fun plugin 'rafaelrinaldi/pure' \
+    --cond='[ $FISH_THEME = pure ]'
 
 fun plugin 'bigfish' --local \
     --cond='[ $FISH_THEME = bigfish ]' \
@@ -287,7 +288,9 @@ end
 
 # bigfish {{{2
 if test "$FISH_THEME" = 'bigfish'
-    set -gx glyph_git_on_branch '🜉'
+    test $NERD_FONTS -eq 1
+    and set -gx glyph_git_on_branch '🜉'
+
     set -gx glyph_bg_jobs '⚒'
 end
 
@@ -335,7 +338,6 @@ ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git statu
 ab vw view                                                      # Call view function (vim read-only)
 ab o omf                                                        # oh-my-fish
 ab z j                                                          # Use autojump (j) instead of z
-
 # Git {{{2
 ab g 'git'
 ab ga 'git add'                                                 # Stage specific files
@@ -377,7 +379,8 @@ ab vico "$HOME/.vim/config"
 
 # Fish {{{2
 # Commands {{{3
-ab frel "exec fish"                                             # Reload fish shell
+ab frel 'exec fish'                                             # Reload fish shell in place
+ab frec 'clear; and exec fish'                                  # Clear terminal and reload fish shell in place
 ab funced 'funced -s'                                           # Edit function + save to disk
 ab cm 'command'                                                 # Use command directly (like \ in bash)
 ab fcf "vim $__fish_config_dir/config.fish"                     # Edit config.fish
@@ -389,6 +392,8 @@ ab fc "$__fish_config_dir"                                      # Fish config ho
 ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
 ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
 
+# FZF {{{3
+ab fp "fzf-tmux --reverse --preview 'cat {} --color=always'"   # fzf with colorized preview window
 # Python {{{2
 ab pysh "$HOME/git/python/shell"                              # Python shell scripts
 ab denv "source $def_venv"                                    # Activate venv

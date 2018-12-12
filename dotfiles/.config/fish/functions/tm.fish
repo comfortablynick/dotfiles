@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.PVZMz4/tm.fish @ line 2
+# Defined in /tmp/fish.89cQQa/tm.fish @ line 2
 function tm --description 'attach to existing tmux or create new one' --argument session_name
 	test -n "$session_name"; or set -l session_name 'def'
     if type -q tmux

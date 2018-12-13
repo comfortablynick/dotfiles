@@ -3,7 +3,7 @@ import socket
 
 # Env variables
 $HOST = socket.gethostname()
-# $SHELL_TYPE = 'ptk2'
+$SHELL_TYPE = 'ptk2'
 $AUTO_CD = True
 $XONSH_SHOW_TRACEBACK = True
 $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True

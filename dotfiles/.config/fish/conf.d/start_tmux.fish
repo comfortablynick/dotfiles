@@ -3,12 +3,15 @@ if status is-interactive
     and test -z "$TMUX"
     and not set -q no_tmux_login
 
-    set -l session_name
+    if not set -q no_tmux_next_login
+        test -n "$SSH_CONNECTION"
+        and set -l session_name 'ios'
+        or set -l session_name 'def'
 
-    if test -n "$SSH_CONNECTION"
-        set session_name 'ios'
+        exec tmux new-session -A -s "$session_name"
     else
-        set session_name 'def'
+        set -e no_tmux_next_login
+        echo "Note: 'no_tmux_next_login' flag was set for this login."
+        echo "TMUX will be used on next login unless flag is reset."
     end
-       exec tmux new-session -A -s "$session_name"
 end

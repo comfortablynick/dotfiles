@@ -73,6 +73,7 @@ Plug 'sbdchd/neoformat'
 Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
 Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
 Plug 'dag/vim-fish',                    Cond(1, { 'for': 'fish' })
+Plug 'cespare/vim-toml'
 " }}}
 " Git {{{
 Plug 'junegunn/gv.vim'

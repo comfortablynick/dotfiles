@@ -56,15 +56,19 @@ end
 function _loadtheme -d "alias for loadtheme for config.fish"
     loadtheme $argv
 end
+
 # ENVIRONMENT {{{1
 # General System {{{2
 set -gx XDG_CACHE_HOME "$HOME/.cache"                           # Standard cache location
 set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
 set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
 set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
+set -gx BROWSER 'w3m'                                           # Text-based browser
+
+# Preferences {{{2
 set -gx CLICOLOR 1                                              # Use colors in prompt
 set -gx NERD_FONTS 1                                            # Tells Vim which glyphs to use
-set -gx BROWSER 'w3m'                                           # Text-based browser
+set -gx LS_AFTER_CD 1                                           # Use snippet in conf.d to echo after cd
 
 # Path {{{2
 # Add general PATH items needed here
@@ -126,10 +130,10 @@ set -gx NVIM_COLOR $VIM_COLOR
 
 # Fuzzy Finder (fzf) {{{2
 # Enable fuzzy directory finding
-set -gx FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
-set -gx FZF_CTRL_T_OPTS "--reverse --preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
 set -gx FZF_TMUX 1
 set -gx FZF_TMUX_HEIGHT '30%'
+set -gx FZF_LEGACY_KEYBINDINGS 0
+
 # Install fzf
 if ! test -d "$HOME/.fzf"
     echo "fzf dir not found. Cloning fzf and installing..."
@@ -214,7 +218,7 @@ fun plugin 'bigfish' --local \
 
 # Utilities {{{3
 fun plugin 'jethrokuan/fzf' \
-    --cond='[ echo (type -q fzf) ]'
+    --cond='type -q fzf'
 
 # Node.js {{{3
 fun plugin 'FabioAntunes/fish-nvm'
@@ -338,6 +342,7 @@ ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git statu
 ab vw view                                                      # Call view function (vim read-only)
 ab o omf                                                        # oh-my-fish
 ab z j                                                          # Use autojump (j) instead of z
+
 # Git {{{2
 ab g 'git'
 ab ga 'git add'                                                 # Stage specific files
@@ -352,7 +357,7 @@ ab gdiff 'git diff'
 ab gpl 'git pull'
 ab gph 'git push'
 ab gs 'git show'
-ab gst 'git status'
+ab gst 'git status -s'
 ab glog 'vim +GV'                                               # Open interactive git log in vim
 ab grst 'git reset --hard origin/master'                        # Overwrite local repo with remote
 ab gsub 'git submodule foreach --recursive git pull origin master' # Update all submodules
@@ -363,7 +368,6 @@ ab grmi 'git rm --cached'                                       # Remove from in
 # Directories {{{2
 ab - cd
 ab p fzf_cdhist
-ab fcd __fzf_cd
 ab lla 'ls -la'
 ab ftpl "$HOME/.vim/after/ftplugin"
 ab h $HOME
@@ -391,9 +395,11 @@ ab dlast 'history delete $history[1] --exact --case-sensitive'  # Delete last hi
 ab fc "$__fish_config_dir"                                      # Fish config home
 ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
 ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
+ab fcd "$__fish_config_dir/conf.d"                              # Fish user configuration snippets
 
 # FZF {{{3
 ab fp "fzf-tmux --reverse --preview 'cat {} --color=always'"   # fzf with colorized preview window
+
 # Python {{{2
 ab pysh "$HOME/git/python/shell"                              # Python shell scripts
 ab denv "source $def_venv"                                    # Activate venv
@@ -422,14 +428,15 @@ ab vvim 'command vim'                                           # Call Vim binar
 ab vv 'command vim'                                             # Call Vim directly
 
 # System {{{2
-ab che 'chmod +x'                                             # Make executable
-ab chr 'chmod 755'                                            # 'Reset' permission in WSL
-ab version 'cat /etc/os-release'                              # Print Linux version info
-ab q exit                                                     # One key
-ab x exit                                                     # One key
-ab quit exit                                                  # Just in case I forget which :)
-ab path 'set -S PATH'                                         # Print PATH array
+ab che 'chmod +x'                                               # Make executable
+ab chr 'chmod 755'                                              # 'Reset' permission in WSL
+ab version 'cat /etc/os-release'                                # Print Linux version info
+ab q exit                                                       # One key
+ab x exit                                                       # One key
+ab quit exit                                                    # Just in case I forget which :)
+ab path 'set -S PATH'                                           # Print PATH array
 ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
+ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could be local to io)
 
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2

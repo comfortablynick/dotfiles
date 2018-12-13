@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.AiLKay/fzf_cdhist.fish @ line 2
+# Defined in /tmp/fish.k2Zmr2/fzf_cdhist.fish @ line 2
 function fzf_cdhist --description 'cd to one of the previously visited locations'
 	if set -q argv[1]
         cd $argv

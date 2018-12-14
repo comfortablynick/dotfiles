@@ -37,6 +37,13 @@ nnoremap <C-H> <C-W><C-H>
 
 " Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
+
+" Paste from register
+nnoremap <Leader>0 "0p<CR>
+nnoremap <Leader>1 "1p<CR>
+nnoremap <Leader>2 "2p<CR>
+nnoremap <Leader>3 "3p<CR>
+nnoremap <Leader>4 "4p<CR>
 " }}}
 " Insert mode {{{
 " `kj` :: escape

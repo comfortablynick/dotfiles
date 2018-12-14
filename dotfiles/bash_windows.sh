@@ -6,6 +6,7 @@
 # Git
 GIT_DIR="${HOME}/Git"
 alias gpython='cd ${GIT_DIR}/python'
+alias gpy='cd ${GIT_DIR}/python'
 alias ggas='cd ${GIT_DIR}/google-apps-script/sheets'
 alias gcp='cd ${GIT_DIR}/google-apps-script/sheets/convention-personnel'
 alias gcpr='cd ${GIT_DIR}/google-apps-script/sheets/convention-personnel-reports'

@@ -58,7 +58,8 @@ if [[ ! -n "$VIRTUAL_ENV" ]]; then
   source "${VENV_DIR}/dev/bin/activate" # Activate by default
 fi
 
-export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
+# Commenting this line out will revert to standard PS1 prompt
+# export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
 
 # SCRIPTS -----------------------------------------------------
 alias list='list.py'

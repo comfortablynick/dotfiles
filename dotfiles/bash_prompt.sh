@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GIT-AWARE PROMPT 
+# GIT-AWARE PROMPT
 
 find_git_branch() {
   # Based on: http://stackoverflow.com/a/13003854/170413
@@ -37,6 +37,7 @@ CYAN="\[\033[0;36m\]"
 PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
 export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
+return;
 # Powerline
 if [ "$POWERLINE_ROOT" != "" ]; then
     if [ -f "${POWERLINE_ROOT}/bindings/bash/powerline.sh" ]; then

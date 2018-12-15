@@ -42,7 +42,7 @@ set updatetime=100                                              " Update more of
 set signcolumn=yes                                              " Always show; keep appearance consistent
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
-set timeoutlen=100                                              " How long in ms to wait for key combinations (if used)
+set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set lazyredraw                                                  " Don't redraw screen when not needed
 set nostartofline                                               " Don't move to start of line with j/k

@@ -152,7 +152,8 @@ if ! test -d "$HOME/.nvm"
     cd "$HOME/.nvm"
     command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
 end
-set -p PATH "$HOME/.nvm/versions/node/v11.1.0/bin"
+set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
+set -p PATH "$HOME/.nvm/versions/node/$node_latest/bin"
 
 # TMux {{{2
 # Attach to existing tmux or create a new session using custom function

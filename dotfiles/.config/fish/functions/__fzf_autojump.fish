@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.2XEj0a/__fzf_autojump.fish @ line 2
+# Defined in /tmp/fish.7dKrCS/__fzf_autojump.fish @ line 2
 function __fzf_autojump --description 'fzf search if no args'
 	if test -n "$argv"
         cd (autojump $argv)

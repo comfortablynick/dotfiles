@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.66uS5M/set_theme.fish @ line 2
+# Defined in /tmp/fish.T5naBO/set_theme.fish @ line 2
 function set_theme --description 'set local theme file'
 	set -l options 's/ssh' 'h/help'
     set -l help_txt 'usage: set_theme NAME [ [--ssh] ]'

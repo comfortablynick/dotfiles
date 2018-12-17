@@ -152,12 +152,17 @@ if ! test -d "$HOME/.nvm"
     cd "$HOME/.nvm"
     command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
 end
-# Put node binaries in PATH
-if test -d "$node_bin_path"
-    set -p PATH "$node_bin_path"
-else
-    set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
-    set -p PATH "$HOME/.nvm/versions/node/$node_latest/bin"
+
+# Put node binaries in PATH if not already
+if not type -q node
+    if test -d "$node_bin_path"
+        set -p PATH "$node_bin_path"
+    else
+        set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
+        if test -n "$node_latest"
+            set -p PATH "$HOME/.nvm/versions/node/$node_latest/bin"
+        end
+    end
 end
 
 # TMux {{{2

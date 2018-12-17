@@ -146,7 +146,7 @@ end
 
 # Node Version Manager (nvm) {{{2
 # nvm
-if ! test -d "$HOME/.nvm"
+if not test -d "$HOME/.nvm"
     echo "nvm not found. Cloning nvm..."
     command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
     cd "$HOME/.nvm"
@@ -154,7 +154,7 @@ if ! test -d "$HOME/.nvm"
 end
 
 # Put node binaries in PATH if not already
-if not type -q node
+if not test (type -q node)
     if test -d "$node_bin_path"
         set -p PATH "$node_bin_path"
     else

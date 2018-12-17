@@ -1,4 +1,5 @@
 fish_universal_variables
 fish_variables
+env.fish
 dotfiles/.config/omf/theme
 *.log

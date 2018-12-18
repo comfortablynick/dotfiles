@@ -325,9 +325,9 @@ if test $env_file_sourced -eq 0
     ab fcf "vim $__fish_config_dir/config.fish"                     # Edit config.fish
     ab del 'history delete'                                         # Deletes history matching pattern
     ab dlast 'history delete $history[1] --exact --case-sensitive'  # Delete last history item
-    ab q exit                                                       # One key               
-    ab x exit                                                       # One key               
-    ab quit exit                                                    # Just in case I forget 
+    ab q exit                                                       # One key
+    ab x exit                                                       # One key
+    ab quit exit                                                    # Just in case I forget
 
 # FZF {{{2
     ab fp "fzf-tmux --reverse --preview 'cat {} --color=always'"   # fzf with colorized preview window
@@ -361,14 +361,15 @@ if test $env_file_sourced -eq 0
     ab vvim 'command vim'                                           # Call Vim binary directly
     ab vv 'command vim'                                             # Call Vim directly
 
-# System {{{2                                                                               
-    ab che 'chmod +x'                                               # Make executable       
-    ab chr 'chmod 755'                                              # 'Reset' permission in 
+# System {{{2
+    ab che 'chmod +x'                                               # Make executable
+    ab chr 'chmod 755'                                              # 'Reset' permission in
     ab version 'cat /etc/os-release'                                # Print Linux version in
-    ab path 'set -S PATH'                                           # Print PATH array      
-    ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'                      
-    ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could 
-end                             
+    ab path 'set -S PATH'                                           # Print PATH array
+    ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
+    ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could
+end
+
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2
 # set fish_key_bindings fish_user_vi_key_bindings
@@ -420,7 +421,7 @@ else if not type -q fzf
 end
 
 # Node Version Manager (NVM) {{{2
-if not test -n (type -f node)
+if test -z (type -f node 2>/dev/null)
     # nvm
     if not test -d "$HOME/.nvm"
         echo "nvm not found. Cloning nvm..."

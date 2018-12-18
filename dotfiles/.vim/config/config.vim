@@ -91,7 +91,7 @@ augroup numbertoggle
     autocmd FileType qf if &nu | set nornu | endif
 augroup END
 " }}}
-" Theme Compatibility {{{
+" iOS Compatibility {{{
 " Defaults: turn all fonts and colors ON {{{
 let g:LL_pl = 1
 let g:LL_nf = 1
@@ -143,5 +143,10 @@ let g:vim_color_variant = substitute(
     \ g:vim_base_color . '-',
     \ '',
     \ '')
+" }}}
+" Increase timeoutlen {{{
+if $TMUX_SESSION ==? 'ios'
+    set timeoutlen=400
+endif
 " }}}
 " }}}

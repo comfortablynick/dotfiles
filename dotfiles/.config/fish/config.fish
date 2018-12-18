@@ -98,7 +98,7 @@ if test $env_file_sourced -eq 0
     set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
 
 # Set and activate default VENV
-    set -l def_venv "$VENV_DIR/dev/bin/activate.fish"
+    set -g def_venv "$VENV_DIR/dev/bin/activate.fish"
 
 # Editor (Vim/Neovim) {{{2
     var EDITOR nvim                                                 # Default editor
@@ -267,8 +267,8 @@ if test "$FISH_THEME" = 'yimmy'
 end
 
 # ABBREVIATIONS {{{1
-if test $env_file_sourced -eq 0
 # Misc Apps {{{2
+if test $env_file_sourced -eq 0
     ab xo xonsh                                                     # Open xonsh shell
     ab lp lpass                                                     # LastPass cli
     ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
@@ -300,7 +300,6 @@ if test $env_file_sourced -eq 0
 
 # Directories {{{2
     ab - cd
-    ab p fzf_cdhist
     ab lla 'ls -la'
     ab ftpl "$HOME/.vim/after/ftplugin"
     ab h $HOME
@@ -313,9 +312,12 @@ if test $env_file_sourced -eq 0
     ab nd nextd
     ab rmdir 'rm -rf'
     ab vico "$HOME/.vim/config"
+    ab fc "$__fish_config_dir"                                      # Fish config home
+    ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
+    ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
+    ab fcd "$__fish_config_dir/conf.d"                              # Fish user configuration snippets
 
-# Fish {{{2
-# Commands {{{3
+# Fish Commands {{{2
     ab frel 'exec fish'                                             # Reload fish shell in place
     ab frec 'clear; and exec fish'                                  # Clear terminal and reload fish shell in place
     ab funced 'funced -s'                                           # Edit function + save to disk
@@ -323,15 +325,14 @@ if test $env_file_sourced -eq 0
     ab fcf "vim $__fish_config_dir/config.fish"                     # Edit config.fish
     ab del 'history delete'                                         # Deletes history matching pattern
     ab dlast 'history delete $history[1] --exact --case-sensitive'  # Delete last history item
+    ab q exit                                                       # One key               
+    ab x exit                                                       # One key               
+    ab quit exit                                                    # Just in case I forget 
 
-# Dirs {{{3
-    ab fc "$__fish_config_dir"                                      # Fish config home
-    ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
-    ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
-    ab fcd "$__fish_config_dir/conf.d"                              # Fish user configuration snippets
-
-# FZF {{{3
+# FZF {{{2
     ab fp "fzf-tmux --reverse --preview 'cat {} --color=always'"   # fzf with colorized preview window
+    ab p fzf_cdhist
+    ab cdf __fzf_cd
 
 # Python {{{2
     ab pysh "$HOME/git/python/shell"                              # Python shell scripts
@@ -360,18 +361,14 @@ if test $env_file_sourced -eq 0
     ab vvim 'command vim'                                           # Call Vim binary directly
     ab vv 'command vim'                                             # Call Vim directly
 
-# System {{{2
-    ab che 'chmod +x'                                               # Make executable
-    ab chr 'chmod 755'                                              # 'Reset' permission in WSL
-    ab version 'cat /etc/os-release'                                # Print Linux version info
-    ab q exit                                                       # One key
-    ab x exit                                                       # One key
-    ab quit exit                                                    # Just in case I forget which :)
-    ab path 'set -S PATH'                                           # Print PATH array
-    ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
-    ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could be local to io)
-end
-
+# System {{{2                                                                               
+    ab che 'chmod +x'                                               # Make executable       
+    ab chr 'chmod 755'                                              # 'Reset' permission in 
+    ab version 'cat /etc/os-release'                                # Print Linux version in
+    ab path 'set -S PATH'                                           # Print PATH array      
+    ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'                      
+    ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could 
+end                             
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2
 # set fish_key_bindings fish_user_vi_key_bindings
@@ -423,18 +420,18 @@ else if not type -q fzf
 end
 
 # Node Version Manager (NVM) {{{2
-# nvm
-if not test -d "$HOME/.nvm"
-    echo "nvm not found. Cloning nvm..."
-    command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
-    cd "$HOME/.nvm"
-    command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
-end
+if not test -n (type -f node)
+    # nvm
+    if not test -d "$HOME/.nvm"
+        echo "nvm not found. Cloning nvm..."
+        command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
+        cd "$HOME/.nvm"
+        command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
+    end
 
-# Put node binaries in PATH if not already
-if not test (type -q node)
+    # Put node binaries in PATH if not already
     if test -d "$node_bin_path"
-        set -p PATH "$node_bin_path"
+            set -p PATH "$node_bin_path"
     else
         set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
         if test -n "$node_latest"

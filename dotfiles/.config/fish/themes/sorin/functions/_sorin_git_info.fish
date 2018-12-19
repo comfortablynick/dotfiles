@@ -138,9 +138,9 @@ function _sorin_git_info
     if test $status_behind -ne 0
         echo -n "$space$sorin_color_white$sorin_symbol_git_behind"
     end
-    if test $status_ahead -ne 0 -o $status_behind -ne 0
-        echo -n "$space$sorin_color_white$sorin_symbol_git_separator"
-    end
+
+    echo -n "$space$sorin_color_white$sorin_symbol_git_separator"
+
     if test $status_stashed -ne 0
         echo -n "$space$sorin_color_cyan$sorin_symbol_git_stashed"
     end

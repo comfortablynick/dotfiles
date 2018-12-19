@@ -1,9 +1,4 @@
-function fish_right_prompt
-    set -l cmd_status $status
-    if test $cmd_status -ne 0
-        echo -n (set_color red)"✘ $cmd_status"
-    end
-
+function _sorin_git_info
     if not command -sq git
         set_color normal
         return
@@ -96,70 +91,76 @@ function fish_right_prompt
         # Check unambiguous cases first which allows us
         # to skip running all the other regexps.
         if test "$line" = '??'
-            set status_untracked 1
+            set status_untracked (math $status_untracked + 1)
             continue
         end
         if string match -r '^(?:AA|DD|U.|.U)$' "$line" >/dev/null
-            set status_unmerged 1
+            set status_unmerged (math $status_unmerged + 1)
             continue
         end
         if string match -r '^(?:[ACDMT][ MT]|[ACMT]D)$' "$line" >/dev/null
-            set status_added 1
+            set status_added (math $status_added + 1)
         end
         if string match -r '^[ ACMRT]D$' "$line" >/dev/null
-            set status_deleted 1
+            set status_deleted (math $status_deleted + 1)
         end
         if string match -r '^.[MT]$' "$line" >/dev/null
-            set status_modified 1
+            set status_modified (math $status_modified + 1)
         end
         if string match -e 'R' "$line" >/dev/null
-            set status_renamed 1
+            set status_renamed (math $status_renamed + 1)
         end
     end
 
-    set_color -o
 
     if test -n "$branch"
+        set -l color
         if test $branch_detached -ne 0
-            set_color brmagenta
+            set color $sorin_color_magenta
         else
-            set_color green
+            set color $sorin_color_green
         end
-        echo -n " $branch"
+        echo -n " $color$branch"
     end
+
+    set -l space ''
+
     if test -n "$commit"
-        echo -n ' '(set_color yellow)"$commit"
+        echo -n "$space$sorin_color_yellow$commit"
     end
     if test -n "$action"
         set_color normal
-        echo -n (set_color white)':'(set_color -o brred)"$action"
+        echo -n "$sorin_color_white:$sorin_color_red$action"
     end
     if test $status_ahead -ne 0
-        echo -n ' '(set_color brmagenta)'⬆'
+        echo -n "$sorin_color_white$sorin_symbol_git_ahead$status_ahead"
     end
     if test $status_behind -ne 0
-        echo -n ' '(set_color brmagenta)'⬇'
+        echo -n "$space$sorin_color_white$sorin_symbol_git_behind"
+    end
+    if test $status_ahead -ne 0 -o $status_behind -ne 0
+        echo -n "$space$sorin_color_white$sorin_symbol_git_separator"
     end
     if test $status_stashed -ne 0
-        echo -n ' '(set_color cyan)'✭'
+        echo -n "$space$sorin_color_cyan$sorin_symbol_git_stashed"
     end
     if test $status_added -ne 0
-        echo -n ' '(set_color green)'✚'
+        echo -n "$space$sorin_color_green$sorin_symbol_git_added$status_added"
     end
     if test $status_deleted -ne 0
-        echo -n ' '(set_color red)'✖'
+        echo -n "$space$sorin_color_red$sorin_symbol_git_deleted$status_deleted"
     end
     if test $status_modified -ne 0
-        echo -n ' '(set_color blue)'✱'
+        echo -n "$space$sorin_color_cyan$sorin_symbol_git_modified$status_modified"
     end
     if test $status_renamed -ne 0
-        echo -n ' '(set_color magenta)'➜'
+        echo -n "$space$sorin_color_magenta$sorin_symbol_git_renamed$status_renamed"
     end
     if test $status_unmerged -ne 0
-        echo -n ' '(set_color yellow)'═'
+        echo -n "$space$sorin_color_yellow$sorin_symbol_git_unmerged$status_unmerged"
     end
     if test $status_untracked -ne 0
-        echo -n ' '(set_color white)'◼'
+        echo -n "$space$sorin_color_blue$sorin_symbol_git_untracked$status_untracked"
     end
 
     set_color normal

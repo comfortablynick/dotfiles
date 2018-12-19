@@ -36,7 +36,10 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " Tagbar
-nnoremap <Leader>t :TagbarToggle<CR>
+nnoremap <silent> <Leader>t :TagbarToggle<CR>
+
+" NERDTree
+nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 
 " Paste from register
 nnoremap <Leader>0 "0p<CR>

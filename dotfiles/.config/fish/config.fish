@@ -59,16 +59,20 @@ end
 
 # ENVIRONMENT {{{1
 # Load from env file {{{2
-# set -l env_file "$HOME/.config/fish/env.fish"
-set -g env_file_sourced 0
+set -l env_file "$HOME/.config/fish/env.fish"
+set -q env_file_sourced
+or set -U env_file_sourced 0
 
 if test -f "$env_file"
+    and test $env_file_sourced -eq 0
+    echo "Reading env from $env_file..."
     source "$env_file"
     and set env_file_sourced 1
 end
 
 if test $env_file_sourced -eq 0
-
+    echo "Reading env from config.fish..."
+    # Only source env vars/abbrs in this file if not loaded elsewhere
 # General System {{{2
     set -gx XDG_CACHE_HOME "$HOME/.cache"                           # Standard cache location
     set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
@@ -80,12 +84,6 @@ if test $env_file_sourced -eq 0
     set -gx CLICOLOR 1                                              # Use colors in prompt
     set -gx NERD_FONTS 1                                            # Tells Vim which glyphs to use
     set -gx LS_AFTER_CD 1                                           # Use snippet in conf.d to echo after cd
-
-# Path {{{2
-# Add general PATH items needed here
-# Fish 3.0 will ignore invalid dirs, so no need to test
-    set -p PATH "$HOME/bin"                                         # General user binaries
-    set -p PATH "$HOME/git/python/shell"                            # Shell-like features using Python
 
 # Fish {{{2
     set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
@@ -119,11 +117,6 @@ if test $env_file_sourced -eq 0
 
 # Todo.txt {{{2
     set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
-
-# Go {{{2
-# Add go dirs to PATH
-    set -a PATH "/usr/local/go/bin"                                 # golang binaries
-    set -a PATH "$HOME/go/bin"                                      # go home dir
 end
 
 # PACKAGES {{{1
@@ -185,6 +178,10 @@ fun plugin 'rafaelrinaldi/pure' \
 fun plugin 'bigfish' --local \
     --cond='[ $FISH_THEME = bigfish ]' \
     --path="$XDG_CONFIG_HOME/fish/themes/bigfish"
+
+fun plugin 'sorin' --local \
+    --cond='[ $FISH_THEME = sorin ]' \
+    --path="$XDG_CONFIG_HOME/fish/themes/sorin"
 
 # Utilities {{{3
 fun plugin 'jethrokuan/fzf' \

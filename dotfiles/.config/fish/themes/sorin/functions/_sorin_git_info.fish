@@ -162,7 +162,8 @@ function _sorin_git_info
     if test $status_untracked -ne 0
         echo -n "$space$sorin_color_blue$sorin_symbol_git_untracked$status_untracked"
     end
-    if test (math $status_stashed + $status_added + $status_deleted + $status_modified + $status_renamed + $status_unmerged + $status_untracked) -eq 0
+    set -g sorin_git_changes (math $status_stashed + $status_added + $status_deleted + $status_modified + $status_renamed + $status_unmerged + $status_untracked)
+    if test $sorin_git_changes -eq 0
         echo -n "$space$sorin_color_green$sorin_symbol_git_clean"
     end
 

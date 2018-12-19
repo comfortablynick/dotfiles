@@ -5,18 +5,44 @@ function fish_prompt
     # Sources:
     # - General theme setup: https://github.com/sorin-ionescu/prezto/blob/d275f316ffdd0bbd075afbff677c3e00791fba16/modules/prompt/functions/prompt_sorin_setup
     # - Extraction of git info: https://github.com/sorin-ionescu/prezto/blob/d275f316ffdd0bbd075afbff677c3e00791fba16/modules/git/functions/git-info#L180-L441
-    echo -n \n
-    if test -n "$SSH_TTY"
-        echo -n (set_color brred)"$USER"(set_color white)'@'(set_color yellow)(prompt_hostname)' '
+    set -l virtualenv ""
+    set -l user_and_host ""
+    set -l root_indicator ""
+    set -l pwd ""
+    set -l git_info ""
+    set -l cmd_status $status
+    set -l prompt_symbol ""
+    set -l sorin_prompt_color $sorin_prompt_color
+
+
+    # Python virtualenv
+    if test -n "$VIRTUAL_ENV"
+        set virtualenv $sorin_virtualenv_color(basename "$VIRTUAL_ENV")$sorin_color_normal
     end
 
-    echo -n (set_color brblue)(prompt_pwd)' '
+    # SSH User/hostname
+    if test -n "$SSH_CONNECTION"
+        set user_and_host $sorin_username_color$USER$sorin_color_gray'@'$sorin_host_color(prompt_hostname)' '
+    end
 
-    set_color -o
+    # PWD
+    set pwd $sorin_pwd_color(prompt_pwd)$sorin_color_normal
+    set git_info (_sorin_git_info)
+
+    # Last command status
+    if test $cmd_status -ne 0
+        set sorin_prompt_color (set_color red)
+    end
+
+    # Root
     if test "$USER" = 'root'
-        echo -n (set_color red)'# '
+        set root_indicator $sorin_root_color'# '
     end
-    # echo -n (set_color red)'❯'(set_color yellow)'❯'(set_color green)'❯ '
-    echo -n (set_color green)'$ '
-    set_color normal
+
+    # Prompt Symbol
+    set prompt_symbol $sorin_prompt_color$sorin_symbol_prompt$sorin_color_normal
+
+    echo -n \n
+    echo "$pwd$git_info"
+    echo "$virtualenv $prompt_symbol"
 end

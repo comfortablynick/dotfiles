@@ -8,7 +8,7 @@ if status is-interactive
         and set -l session_name 'ios'
         or set -l session_name 'def'
 
-        exec tmux new-session -A -s "$session_name"
+        exec tmux -2 new-session -A -s "$session_name"
     else
         set -e no_tmux_next_login
         echo "Note: 'no_tmux_next_login' flag was set for this login."

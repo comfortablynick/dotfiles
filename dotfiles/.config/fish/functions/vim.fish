@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.CucE4K/vim.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.YsnISy/vim.fish @ line 2
 function vim --description 'Calls Neovim or Vim based on nvim and availability'
 	if string match -qr -- '.vim|.fish' $argv
         command nvim $argv

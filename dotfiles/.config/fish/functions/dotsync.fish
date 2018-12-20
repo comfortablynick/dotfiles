@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.upXArh/dotsync.fish @ line 2
+# Defined in /tmp/fish.3PvY0v/dotsync.fish @ line 2
 function dotsync --description 'Sync git dotfile repo'
 	set -q LS_AFTER_CD
     and set LS_AFTER_CD 0

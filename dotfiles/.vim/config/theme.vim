@@ -378,7 +378,7 @@ function! LL_VirtualEnvName() abort "{{{3
 endfunction
 
 function! LL_CurrentTag() abort "{{{3
-    return winwidth(0) > g:LL_MinWidth ? tagbar#currenttag('[%s]', '', 'f') : ''
+    return winwidth(0) > g:LL_MedWidth ? tagbar#currenttag('[%s]', '', 'f') : ''
 endfunction
 
 " Vim / Neovim Settings {{{1

@@ -112,6 +112,7 @@ function _sorin_git_info
         end
     end
 
+    echo -n ' ('
 
     if test -n "$branch"
         set -l color
@@ -120,7 +121,7 @@ function _sorin_git_info
         else
             set color $sorin_color_green
         end
-        echo -n " $color$branch"
+        echo -n "$color$branch"
     end
 
     set -l space ''
@@ -170,4 +171,6 @@ function _sorin_git_info
     end
 
     set_color normal
+
+    echo -n ')'
 end

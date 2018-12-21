@@ -103,7 +103,6 @@ if test $env_file_sourced -eq 0
     var VISUAL $EDITOR                                              # Default visual editor
     set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
     set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
-    set -gx VIM_SSH_COMPAT 0                                        # Safe term bg in vim
 
 # Vim/Neovim color schemes
     set -gx VIM_COLOR PaperColor-dark
@@ -452,6 +451,11 @@ if test -n (type powerline-daemon)
     powerline-daemon -q &
 end
 
+# vim {{{2
+# Set vim compat if SSH (until there's a better way)
+if test -n "$SSH_CONNECTION"
+    set -gx VIM_SSH_COMPAT 1
+end
 # WSL {{{2
 # Fix umask env variable if WSL didn't set it properly.
 if test -f /proc/version && grep -q "Microsoft" /proc/version

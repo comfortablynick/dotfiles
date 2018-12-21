@@ -33,3 +33,6 @@ _sorin_set_default sorin_root_color $sorin_color_red
 _sorin_set_default sorin_virtualenv_color $sorin_color_gray
 _sorin_set_default sorin_pwd_color $sorin_color_yellow
 _sorin_set_default sorin_prompt_color $sorin_color_green
+
+# Options
+_sorin_set_default sorin_use_gitprompt_async 0

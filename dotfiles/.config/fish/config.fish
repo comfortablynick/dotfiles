@@ -57,66 +57,6 @@ function _loadtheme -d "alias for loadtheme for config.fish"
     loadtheme $argv
 end
 
-# ENVIRONMENT {{{1
-# Load from env file {{{2
-set -l env_file "$HOME/.config/fish/env.fish"
-set -q env_file_sourced
-or set -U env_file_sourced 0
-
-if test -f "$env_file"
-    and test $env_file_sourced -eq 0
-    echo "Reading env from $env_file..."
-    source "$env_file"
-    and set env_file_sourced 1
-end
-
-if test $env_file_sourced -eq 0
-    echo "Reading env from config.fish..."
-    # Only source env vars/abbrs in this file if not loaded elsewhere
-# General System {{{2
-    set -gx XDG_CACHE_HOME "$HOME/.cache"                           # Standard cache location
-    set -gx XDG_CONFIG_HOME "$HOME/.config"                         # Standard config location
-    set -gx XDG_DATA_HOME  "$HOME/.local/share"                     # Standard data location
-    set -gx LC_ALL 'en_US.UTF-8'                                    # Default encoding
-    set -gx BROWSER 'w3m'                                           # Text-based browser
-
-# Preferences {{{2
-    set -gx CLICOLOR 1                                              # Use colors in prompt
-    set -gx NERD_FONTS 1                                            # Tells Vim which glyphs to use
-    set -gx LS_AFTER_CD 1                                           # Use snippet in conf.d to echo after cd
-
-# Fish {{{2
-    set -gx FISH_PKG_MGR "FUNDLE"                                   # Set this here to make things easier
-    set -gx FISH_PLUGIN_PATH "$XDG_DATA_HOME/fish_plugins"          # Manual plugin install dir
-    var FISH_THEME "yimmy"                                          # Theme to use if no local univar set
-    var FISH_SSH_THEME "yimmy"                                      # SSH theme to use if no local univar set
-
-# Python {{{2
-    set -gx VIRTUAL_ENV_DISABLE_PROMPT 1                            # Disable default venv prompt
-    set -gx VENV_DIR "$HOME/.env"                                   # Venv directory
-
-# Set and activate default VENV
-    set -g def_venv "$VENV_DIR/dev/bin/activate.fish"
-
-# Editor (Vim/Neovim) {{{2
-    var EDITOR nvim                                                 # Default editor
-    var VISUAL $EDITOR                                              # Default visual editor
-    set -gx NVIM_PY2_DIR "$HOME/.env/nvim2/bin/python"
-    set -gx NVIM_PY3_DIR "$HOME/.env/nvim3/bin/python"
-
-# Vim/Neovim color schemes
-    set -gx VIM_COLOR PaperColor-dark
-    set -gx NVIM_COLOR $VIM_COLOR
-
-# Fuzzy Finder (fzf) {{{2
-# Enable fuzzy directory finding
-    set -gx FZF_TMUX 1
-    set -gx FZF_TMUX_HEIGHT '30%'
-    set -gx FZF_LEGACY_KEYBINDINGS 0
-
-# Todo.txt {{{2
-    set -gx TODOTXT_CFG_FILE "$HOME/Dropbox/todo/todo.cfg"
-end
 
 # PACKAGES {{{1
 # Theme {{{2
@@ -262,110 +202,6 @@ if test "$FISH_THEME" = 'yimmy'
     set -g yimmy_solarized false                                    # Solarized color scheme
 end
 
-# ABBREVIATIONS {{{1
-# Misc Apps {{{2
-if test $env_file_sourced -eq 0
-    ab xo xonsh                                                     # Open xonsh shell
-    ab lp lpass                                                     # LastPass cli
-    ab vcp 'vcprompt -f "%b %r %p %u %m"'                           # Fast git status
-    ab vw view                                                      # Call view function (vim read-only)
-    ab o omf                                                        # oh-my-fish
-    ab z j                                                          # Use autojump (j) instead of z
-
-# Git {{{2
-    ab g 'git'
-    ab ga 'git add'                                                 # Stage specific files
-    ab gac 'git add . && git commit'                                # Combine add + commit
-    ab gc 'git commit'                                              # Commit staged files
-    ab gco 'git checkout master'                                    # Overwrite local files with master
-    ab gcp 'git commit; and git push'                               # Combine commit + push
-    ab gcol 'git checkout (git describe --tags)'                    # Check out latest tag
-    ab gd 'git diff'
-    ab gdf 'git diff'
-    ab gdiff 'git diff'
-    ab gpl 'git pull'
-    ab gph 'git push'
-    ab gs 'git show'
-    ab gst 'git status -s'
-    ab glog 'vim +GV'                                               # Open interactive git log in vim
-    ab grst 'git reset --hard origin/master'                        # Overwrite local repo with remote
-    ab gsub 'git submodule foreach --recursive git pull origin master' # Update all submodules
-    ab gsync 'git pull && git add . && git commit && git push'      # Sync local repo
-    ab gunst 'git reset HEAD'                                       # Unstage file
-    ab grmi 'git rm --cached'                                       # Remove from index but keep local
-
-# Directories {{{2
-    ab - cd
-    ab lla 'ls -la'
-    ab ftpl "$HOME/.vim/after/ftplugin"
-    ab h $HOME
-    ab dot "$HOME/dotfiles/dotfiles"
-    ab vdot "$HOME/dotfiles/dotfiles/.vim"
-    ab gdot "$HOME/dotfiles/dotfiles"
-    ab gpy "$HOME/git/python"
-    ab gpython "$HOME/git/python"
-    ab pd prevd
-    ab nd nextd
-    ab rmdir 'rm -rf'
-    ab vico "$HOME/.vim/config"
-    ab fc "$__fish_config_dir"                                      # Fish config home
-    ab ffn "$__fish_config_dir/functions"                           # Fish user functions directory
-    ab fcm "$__fish_config_dir/completions"                         # Fish user completions directory
-    ab fcd "$__fish_config_dir/conf.d"                              # Fish user configuration snippets
-
-# Fish Commands {{{2
-    ab frel 'exec fish'                                             # Reload fish shell in place
-    ab frec 'clear; and exec fish'                                  # Clear terminal and reload fish shell in place
-    ab funced 'funced -s'                                           # Edit function + save to disk
-    ab cm 'command'                                                 # Use command directly (like \ in bash)
-    ab fcf "vim $__fish_config_dir/config.fish"                     # Edit config.fish
-    ab del 'history delete'                                         # Deletes history matching pattern
-    ab dlast 'history delete $history[1] --exact --case-sensitive'  # Delete last history item
-    ab q exit                                                       # One key
-    ab x exit                                                       # One key
-    ab quit exit                                                    # Just in case I forget
-
-# FZF {{{2
-    ab fp "fzf-tmux --reverse --preview 'cat {} --color=always'"   # fzf with colorized preview window
-    ab p fzf_cdhist
-    ab cdf __fzf_cd
-
-# Python {{{2
-    ab pysh "$HOME/git/python/shell"                              # Python shell scripts
-    ab denv "source $def_venv"                                    # Activate venv
-    ab pr 'powerline-daemon --replace'                            # Reload powerline
-
-# Scripts {{{2
-    ab l list
-    ab lso 'list -hO'
-    ab listd 'list --debug'
-    ab listh 'list --help'
-
-# TMux {{{2
-    ab te "vim $HOME/.tmux.conf && tmux source ~/.tmux.conf && tmux display '~/.tmux.conf sourced'"
-    ab tl 'tmux ls'
-
-# Todo.txt {{{2
-    ab t todo                                                       # Todo.txt cli
-    ab tp topydo                                                    # Todo.txt Python cli
-
-# Vim/Neovim {{{2
-    ab v vim                                                        # Call vim function (Open Neovim || Vim)
-    ab vf 'vim (fzf)'                                               # Find file to open
-    ab n nvim                                                       # Call Neovim directly
-    ab nv nvim                                                      # Another Neovim
-    ab vvim 'command vim'                                           # Call Vim binary directly
-    ab vv 'command vim'                                             # Call Vim directly
-
-# System {{{2
-    ab che 'chmod +x'                                               # Make executable
-    ab chr 'chmod 755'                                              # 'Reset' permission in
-    ab version 'cat /etc/os-release'                                # Print Linux version in
-    ab path 'set -S PATH'                                           # Print PATH array
-    ab lookbusy 'cat /dev/urandom | hexdump -C | grep --color "ca fe"'
-    ab mntp 'sudo mount -t drvfs P: /mnt/p'                         # Mount P: drive (could
-end
-
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2
 # set fish_key_bindings fish_user_vi_key_bindings
@@ -416,7 +252,7 @@ if test -z (type -f fzf 2>/dev/null)
     ~/.fzf/install --bin --no-key-bindings --no-update-rc
 end
 
-# Node Version Manager (NVM) {{{2 
+# Node Version Manager (NVM) {{{2
 if test -z (type -f node 2>/dev/null)
     # nvm
     if not test -d "$HOME/.nvm"

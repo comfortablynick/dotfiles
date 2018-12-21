@@ -1,19 +1,18 @@
 " Settings for Python files
 
 " PEP8 Compatibile Indenting
-setlocal expandtab                   " Expand tab to spaces
-setlocal smartindent                 " Attempt smart indenting
-setlocal autoindent                  " Attempt auto indenting
-setlocal shiftwidth=4                " Indent width in spaces
+setlocal expandtab                          " Expand tab to spaces
+setlocal smartindent                        " Attempt smart indenting
+setlocal autoindent                         " Attempt auto indenting
+setlocal shiftwidth=4                       " Indent width in spaces
 setlocal softtabstop=4
 setlocal tabstop=4
+setlocal foldmethod=marker                  " Use {{{ for folding
 
 " Other
-setlocal backspace=2                 " Backspace behaves as expected
-let python_highlight_all=1           " Highlight all builtins
-
-" Disable stdout buffering
-let $PYTHONUNBUFFERED=1
+setlocal backspace=2                        " Backspace behaves as expected
+let python_highlight_all=1                  " Highlight all builtins
+let $PYTHONUNBUFFERED=1                     " Disable stdout buffering
 
 " Map
 " Execute current file with AsyncRun

@@ -407,16 +407,16 @@ test -f "$def_venv"
 and source $def_venv
 
 # FZF {{{2
-if ! test -d "$HOME/.fzf"
-    echo "fzf dir not found. Cloning fzf and installing..."
-    command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --bin --no-update-rc
-else if not type -q fzf
-    echo "fzf dir found, but not installed. Installing..."
-    ~/.fzf/install --bin --no-update-rc
+if test -z (type -f fzf 2>/dev/null)
+    if not test -d "$HOME/.fzf"
+        echo "fzf dir not found. Cloning fzf and installing..."
+        command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    end
+    echo "Installing fzf ..."
+    ~/.fzf/install --bin --no-key-bindings --no-update-rc
 end
 
-# Node Version Manager (NVM) {{{2
+# Node Version Manager (NVM) {{{2 
 if test -z (type -f node 2>/dev/null)
     # nvm
     if not test -d "$HOME/.nvm"

@@ -15,11 +15,14 @@ function fish_prompt
     set -l sorin_prompt_color $sorin_prompt_color
 
     # Git
-    if test $sorin_use_gitprompt_async -eq 1
-        set -g _sorin_gitprompt_display (_sorin_gitprompt)
+    if type -q gitprompt.py
+        if test $sorin_use_gitprompt_async -eq 1
+            set -g _sorin_gitprompt_display (_sorin_gitprompt)
+        else
+            set git_info (gitprompt.py)
+        end
     else
-        set git_info (gitprompt.py)
-        # set git_info (_sorin_git_info)
+        set git_info (_sorin_git_info)
     end
 
     # Python virtualenv

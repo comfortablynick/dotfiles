@@ -137,6 +137,19 @@ fun plugin 'fisherman/getopts' \
 # <--- All plugin definitions before this line
 fun init
 
+# ENVIRONMENT {{{1
+# Load from env file {{{2
+set -l env_file "$HOME/.config/fish/env.fish"
+set -q env_file_sourced
+or set -U env_file_sourced 0
+
+if test -f "$env_file"
+    and test $env_file_sourced -eq 0
+    echo "Reading env from $env_file..."
+    source "$env_file"
+    and set env_file_sourced 1
+end
+
 # THEMES {{{1
 # Themes (manual package management) {{{2
 test -z "$FISH_PKG_MGR"

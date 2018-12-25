@@ -8,15 +8,15 @@
 " Common Vim/Neovim plugins
 
 scriptencoding utf-8
-" Helper functions/variables {{{
-" Vim-Plug Cond() {{{
+" Helper functions/variables {{{1
+" Vim-Plug Cond() {{{2
 " Add conditions that aren't supported directly by vim-plug
 function! Cond(cond, ...)
     let opts = get(a:000, 0, {})
     return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
-" }}}
-" Completion filetypes {{{
+
+" Completion filetypes {{{2
 let g:completion_filetypes = {
     \ 'deoplete':
     \   [
@@ -37,13 +37,12 @@ let g:completion_filetypes = {
     \       'c',
     \   ],
     \ }
-" }}}
-" }}}
-" Plugin definitions {{{
-" BEGIN {{{
+
+" Plugin definitions {{{1
+" BEGIN {{{2
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
-" }}}
-" Editor features {{{
+
+" Editor features {{{2
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
@@ -52,8 +51,8 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
-" }}}
-" Linting {{{
+
+" Linting {{{2
 Plug 'w0rp/ale',                                                " Async Linting Engine
     \ {
     \   'for': [
@@ -65,58 +64,63 @@ Plug 'w0rp/ale',                                                " Async Linting 
     \       'c',
     \   ]
     \ }
-" }}}
-" Formatting {{{
+
+" Formatting {{{2
 Plug 'sbdchd/neoformat'
-" }}}
-" Syntax highlighting {{{
+
+" Folding {{{2
+Plug 'kalekundert/vim-coiled-snake'
+Plug 'Konfekt/FastFold'
+
+" Syntax highlighting {{{2
 Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
 Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
 Plug 'dag/vim-fish',                    Cond(1, { 'for': 'fish' })
 Plug 'cespare/vim-toml'
-" }}}
-" Git {{{
+
+" Git {{{2
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'                                       " Git wrapper
-" }}}
-" Color themes {{{
+
+" Color themes {{{2
 " Conditionally load themes based on env var
 Plug 'arcticicestudio/nord-vim',        Cond(g:vim_base_color ==? 'nord')
 Plug 'morhetz/gruvbox',                 Cond(g:vim_base_color ==? 'gruvbox')
 Plug 'NLKNguyen/papercolor-theme',      Cond(g:vim_base_color ==? 'papercolor')
 Plug 'nightsense/snow',                 Cond(g:vim_base_color ==? 'snow')
 Plug 'romainl/Apprentice',              Cond(g:vim_base_color ==? 'apprentice')
-" }}}
-" Terminal/Code Execution {{{
+
+" Terminal/Code Execution {{{2
 Plug 'skywind3000/asyncrun.vim'
-" }}}
-" Snippets {{{
+
+" Snippets {{{2
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-" }}}
-" Code completion {{{
+
+" Code completion {{{2
 Plug 'Shougo/echodoc'
-" Deoplete {{{
+" Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
     \ {
     \   'for': g:completion_filetypes['deoplete'],
     \ })
-" Vim {{{
+
+" Vim {{{4
 Plug 'Shougo/neco-vim',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'vim'
     \ })
-" }}}
-" Python (Jedi) {{{
+
+" Python (Jedi) {{{4
 Plug 'zchee/deoplete-jedi',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'python',
     \ })
-" }}}
-" Typescript {{{
+
+" Typescript {{{4
 Plug 'mhartington/nvim-typescript',
     \ Cond(has('nvim'),
     \ {
@@ -127,41 +131,41 @@ Plug 'mhartington/nvim-typescript',
     \       ],
     \   'do': './install.sh',
     \ })
-" }}}
-" Fish {{{
+
+" Fish {{{4
 Plug 'ponko2/deoplete-fish',                                    " Fish-shell completion for deoplete
     \ Cond(has('nvim'),
     \ {
     \   'for': 'fish',
     \ })
-" }}}
-" }}}
-" YouCompleteMe {{{
+
+
+" YouCompleteMe {{{3
 Plug 'Valloric/YouCompleteMe',
     \ Cond(!has('nvim'),
     \ {
     \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
     \   'for': g:completion_filetypes['ycm'],
     \ })
-" }}}
-" }}}
-" Status line {{{
-" Airline {{{
+
+" Status line {{{2
+" Airline {{{3
 Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
 Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
-" }}}
-" Lightline {{{
+
+" Lightline {{{3
 Plug 'itchyny/lightline.vim',           Cond(has('nvim'))
 Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
-" }}}
-" }}}
-" END {{{
+
+" Tmuxline {{{3
+Plug 'edkolev/tmuxline.vim'
+
+" END {{{2
 call plug#end()
-" }}}
-" }}}
-" Plugin configuration {{{
-" ALE (Asynchronus Linting Engine)  {{{
+
+" Plugin configuration {{{1
+" ALE (Asynchronus Linting Engine)  {{{2
 " TODO: disable ale_open_list and use own function to open qf w/o shifting buf
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -212,16 +216,16 @@ let g:ale_fixers = {
     \       'prettier',
     \   ],
     \ }
-let g:python_flake8_options = {
-    \ '--max-line-length': 88
-    \ }
 let g:ale_python_flake8_args = {
-    \ '--max-line-length': 88
+    \ '--max-line-length': 88,
+    \ '--ignore': [
+    \   'E203',
+    \ ],
     \ }
 let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
-" }}}
-" Neoformat {{{
+
+" Neoformat {{{2
 " Global Settings
 let g:neoformat_run_all_formatters = 1                          " By default, stops after first formatter succeeds
 
@@ -252,8 +256,8 @@ let g:neoformat_typescript_prettier = {
     \ }
 " Same options for javascript
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
-" }}}
-" NERDTree {{{
+
+" NERDTree {{{2
 let NERDTreeHighlightCursorline = 1
 let NERDTreeIgnore = [
     \ '\.pyc$',
@@ -262,26 +266,26 @@ let NERDTreeIgnore = [
     \ ]
 let NERDTreeShowHidden = 1
 let NERDTreeQuitOnOpen = 1
-" }}}
-" Echodoc {{{
+
+" Echodoc {{{2
 " TODO: Only execute for python/ts/js?
 set cmdheight=1                                 " Add extra line for function definition
 let g:echodoc#enable_at_startup = 1
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
-" }}}
-" Asyncrun {{{
+
+" Asyncrun {{{2
 let g:quickfix_mult = 0.40                                      " % of window height to take up
 let g:quickfix_size = float2nr(g:quickfix_mult*winheight(0))    " Size of quickfix window used for ToggleQf() func
 let g:asyncrun_open = g:quickfix_size                           " Show quickfix when executing command
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
 let g:quickfix_run_scroll = 0                                   " Scroll when running code
 let g:asyncrun_raw_output = 0                                   " Don't process errors on output
-" }}}
-" Undotree {{{
+
+" Undotree {{{2
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
-" }}}
-" Airline {{{
+
+" Airline {{{2
 let g:airline_extensions = [
     \ 'tabline',
     \ 'ale',
@@ -306,8 +310,8 @@ let g:airline_highlighting_cache = 1
 " Airline Tabline
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_close_button = 0
-" }}}
-" Deoplete {{{
+
+" Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
@@ -315,11 +319,11 @@ augroup deoplete_preview
     autocmd!
     autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
 augroup end
-" }}}
-" Nvim Typescript {{{
+
+" Nvim Typescript {{{2
 let g:nvim_typescript#type_info_on_hold = 1
-" }}}
-" YouCompleteMe {{{
+
+" YouCompleteMe {{{2
 let g:ycm_filetype_blacklist = {
     \ 'gitcommit': 1,
     \ 'tagbar': 1,
@@ -337,13 +341,12 @@ let g:ycm_filetype_specific_completion_to_disable = {
     \ 'gitcommit': 1
     \}
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
-" }}}
-" Tagbar {{{
+
+" Tagbar {{{2
 let g:tagbar_autoclose = 0                                      " Autoclose tagbar after selecting tag
 let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened
 let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
 let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
 let g:tagbar_sort = 0                                           " Sort tags alphabetically vs. in file order
-" }}}
-" }}}
+
 " vim:set fdl=1:

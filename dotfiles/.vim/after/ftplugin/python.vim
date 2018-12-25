@@ -7,7 +7,7 @@ setlocal autoindent                         " Attempt auto indenting
 setlocal shiftwidth=4                       " Indent width in spaces
 setlocal softtabstop=4
 setlocal tabstop=4
-setlocal foldmethod=marker                  " Use {{{ for folding
+" setlocal foldmethod=marker                  " Use 3x{ for folding
 
 " Other
 setlocal backspace=2                        " Backspace behaves as expected
@@ -51,3 +51,30 @@ else
     nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
     nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 endif
+
+" Define fold rules for coiledsnake
+function! g:CoiledSnakeConfigureFold(fold)
+    " Don't fold nested classes.
+    if a:fold.type ==? 'class'
+        let a:fold.max_level = 1
+
+    " Don't fold nested functions, but do fold methods (i.e. functions
+    " nested inside a class).
+    elseif a:fold.type ==? 'function'
+        let a:fold.max_level = 1
+        if get(a:fold.parent, 'type') == 'class'
+            let a:fold.max_level = 2
+        endif
+
+    " Only fold imports if there are n or more of them.
+    elseif a:fold.type ==? 'import'
+        let a:fold.min_lines = 6
+    endif
+
+    " Don't fold anything if the whole program is shorter than 30 lines.
+    if line('$') < 30
+        let a:fold.ignore = 1
+    endif
+
+    let a:fold.num_blanks_below = 2
+endfunction

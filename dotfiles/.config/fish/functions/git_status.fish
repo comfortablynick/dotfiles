@@ -1,30 +1,34 @@
-#!/usr/bin/env fish
-function git_status -d "retrieve git repo info from vcprompt util"
-    set -l repo ""
-    set -l branch ""
-    set -l revision ""
-    set -l untracked ""
-    set -l modified ""
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.h7to7u/git_status.fish @ line 2
+function git_status --description 'Parses and counts output of `git status`'
+	set_var_default __fish_git_prompt_symbol_prehash ':'
+    set_var_default __fish_git_prompt_tag_symbol ''
 
-    # Call vcprompt
-    set -l vcp_output (vcprompt -f "repo:%n branch:%b revision:%r untracked:%u modified:%m" | string split ' ')
-    for arg in $vcp_output
-        set -l arg_pair (string split ':' $arg)
-        set -l arg_name $arg_pair[1]
-        set -l arg_val $arg_pair[2]
-        switch "$arg_name"
-            case "repo"
-                set repo $arg_val
-            case "branch"
-                set branch $arg_val
-            case "revision"
-                set revision $arg_val
-            case "untracked"
-                set untracked $arg_val
-            case "modified"
-                set modified $arg_val
-            case "*"
-        end
+    set -l gstat (command git status --porcelain --branch 2>/dev/null)
+    set -l branch (string match -r '^##\s(.+)\.\.\.' -- $gstat)[2]
+
+    if test -z "$branch"
+        # Detatched
+        # Get tag
+        set branch (command git describe --exact-match 2>/dev/null)
+        test -n "$branch"
+        # Get hash
+        or set branch "$__fish_git_prompt_symbol_prehash"(command git rev-parse --short HEAD)
     end
-    printf "$repo $branch $revision $untracked $modified"
+
+    set -l added (count (string match -r '^[ACDMT] ' -- $gstat))
+    set -l deleted (count (string match -r '^[ACMRT ]D' -- $gstat))
+    set -l modified (count (string match -r '^.[MT]' -- $gstat))
+    set -l renamed (count (string match 'R' -- $gstat))
+    set -l unmerged (count (string match -r '^(?:AA|DD|U.|.U)' -- $gstat))
+    set -l untracked (count (string match -r '^\?\?' -- $gstat))
+
+    # set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print "+" added "/-" removed }')
+    # set changes (echo "$changes " | string replace -r '(\+0/(-0)?|/-0)' '')
+
+    set -l changes (command git diff --numstat | awk '{ added += $1; removed += $2 } END { print added " " removed }')
+    set -l diff (string split ' ' "$changes" )
+    set -l plus (math "$diff[1]" + 0)
+    set -l minus (math "$diff[2]" + 0)
+
+    echo $branch\n$added\n$deleted\n$modified\n$renamed\n$unmerged\n$untracked\n$plus\n$minus
 end

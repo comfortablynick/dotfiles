@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.yRR7tc/git_branch_name.fish @ line 2
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.N6XLrs/git_branch_name.fish @ line 2
 function git_branch_name --description 'Get the name of the current Git branch, tag or sha1'
 	set -l branch_name (command git symbolic-ref --short HEAD ^/dev/null)
 

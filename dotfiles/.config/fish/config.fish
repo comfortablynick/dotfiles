@@ -156,15 +156,23 @@ test -z "$FISH_PKG_MGR"
 and _loadtheme $FISH_THEME
 
 # Git prompt {{{2
+# Options
 set -g __fish_git_prompt_show_informative_status true
+set -g __fish_git_prompt_showupstream 'informative'
 set -g __fish_git_prompt_showcolorhints true
-set -g ___fish_git_prompt_char_stagedstate ±
-set -g ___fish_git_prompt_char_stashstate ≡
+
+# Symbols
+set -g __fish_git_prompt_char_stagedstate ±
+set -g __fish_git_prompt_char_stashstate ≡
 
 # bobthefish {{{2
 if test "$FISH_THEME" = 'bobthefish'
     # Set options if term windows is narrow-ish
-    set -g theme_short_prompt_cols 140                          # Shorten prompt if cols < this
+    set -g theme_short_prompt_cols 150                          # Shorten prompt if cols < this
+    set -g theme_display_git_ahead_verbose yes                                            
+    set -g theme_display_git_dirty_verbose yes
+    set -g theme_display_git_dirty yes
+    set -g theme_display_git_untracked yes
 
     # Tmux shows user/host, so we dont need it here
     if test -n "$TMUX"
@@ -296,9 +304,9 @@ end
 
 # Powerline {{{2
 # Start powerline-daemon in bg if it exists
-if test -n (type powerline-daemon)
-    powerline-daemon -q &
-end
+# if test -n (type powerline-daemon)
+# powerline-daemon -q &
+# end
 
 # vim {{{2
 # Set vim compat if SSH (until there's a better way)

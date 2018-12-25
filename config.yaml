@@ -111,6 +111,10 @@ dotfiles:
     dst: ~/.tmux.conf
     link: true
     src: tmux.conf
+  f_tmux.theme.conf:
+    dst: ~/.tmux.theme.conf
+    link: true
+    src: tmux.theme.conf
   f_vimrc:
     actions:
     - vim-plug-install
@@ -137,6 +141,7 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_tmux.conf
+    - f_tmux.theme.conf
     - f_vimrc
     - f_xonshrc
     - f_zshrc

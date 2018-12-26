@@ -159,7 +159,7 @@ Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
 
 " Tmuxline {{{3
-Plug 'edkolev/tmuxline.vim'
+Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })
 
 " END {{{2
 call plug#end()

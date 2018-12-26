@@ -1,4 +1,4 @@
-" vim:fdl=2:
+" vim:fdl=1:
 "  _   _                               _
 " | |_| |__   ___ _ __ ___   _____   _(_)_ __ ___
 " | __| '_ \ / _ \ '_ ` _ \ / _ \ \ / / | '_ ` _ \
@@ -6,7 +6,6 @@
 "  \__|_| |_|\___|_| |_| |_|\___(_)_/ |_|_| |_| |_|
 
 " Vim Themes / Statusline
-
 scriptencoding utf-8
 " Airline {{{1
 " Map colorscheme -> theme {{{3
@@ -111,7 +110,7 @@ let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
 let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
 let g:lightline#ale#indicator_ok = ''
 
-" Section separators {{{2
+" Section separators {{{3
 " Get separators based on settings above "{{{
 function! LL_Separator(side) abort "{{{
     if !g:LL_pl || g:LL_SimpleSep
@@ -381,13 +380,28 @@ function! LL_CurrentTag() abort "{{{3
     return winwidth(0) > g:LL_MedWidth ? tagbar#currenttag('[%s]', '', 'f') : ''
 endfunction
 
-" Vim / Neovim Settings {{{1
-" Set colors based on theme {{{3
+" Vim / Neovim Theme {{{1
+" Set colors based on theme {{{2
 " Assign to variables
 exe 'colorscheme '.g:vim_base_color
 exe 'set background='.g:vim_color_variant
 let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
+
 " Set airline theme
 let g:airline_theme = tolower(g:statusline_theme)
+
 " Set lightline theme
 let lightline['colorscheme'] = g:statusline_theme
+
+" Tmuxline {{{1
+" Tmuxline preset {{{2
+let g:tmuxline_preset = {
+    \'a'       : '#S',
+    \'win'     : ['#I #F', '#W'],
+    \'cwin'    : ['#I #F', '#W'],
+    \'x'       : '#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)',
+    \'y'       : ['%m-%d-%Y', '%l:%M %p'],
+    \'z'       : '#(whoami)@#H',
+    \'options' : {'status-justify' : 'left'}}
+
+"    \'c'       : '#(tmux-mem-cpu-load -p -m 2 -g 0 -i 2)',

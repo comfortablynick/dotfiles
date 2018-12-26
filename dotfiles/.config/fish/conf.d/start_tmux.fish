@@ -11,7 +11,10 @@ if status is-interactive
         exec tmux -2 new-session -A -s "$session_name"
     else
         set -e no_tmux_next_login
+        set_color yellow
         echo "Note: 'no_tmux_next_login' flag was set for this login."
         echo "TMUX will be used on next login unless flag is reset."
+        echo ""
+        set_color normal
     end
 end

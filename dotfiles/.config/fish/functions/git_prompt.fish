@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.f17Hfm/git_prompt.fish @ line 2
+# Defined in /tmp/fish.6K7vWF/git_prompt.fish @ line 2
 function git_prompt --description 'display git repo info'
 	set -l git_status (git_status)
     set -l branch $git_status[1]
@@ -11,7 +11,7 @@ function git_prompt --description 'display git repo info'
     set -l plus $git_status[8]
     set -l minus $git_status[9]
 
-    test -n "$branch"
+    test -z "$branch"
     and return
 
     command git rev-list --count --left-right 'HEAD...@{upstream}' 2>/dev/null \

@@ -1,4 +1,4 @@
-# vim:fdl=0:
+# vim:fdl=1:
 #                 ___
 #   ___======____=---=)
 # /T            \_--===)
@@ -72,7 +72,7 @@ else
     end
 end
 
-# Set options based on ssh connection/term size
+# Set options based on ssh connection/term size (if not TMUX)
 if test -n "$SSH_CONNECTION" -a "$COLUMNS" -lt 140 -a -z "$TMUX"
     # We're *probably* connecting from iOS
     # Better to use TMUX and name session 'ios'
@@ -105,8 +105,12 @@ end
 
 # Plugins {{{2
 # Themes {{{3
-fun plugin 'comfortablynick/theme-bobthefish' \
-    --cond='[ $FISH_THEME = bobthefish ]'
+# fun plugin 'comfortablynick/theme-bobthefish' \
+#     --cond='[ $FISH_THEME = bobthefish ]'
+
+fun plugin 'bobthefish' --local \
+    --cond='[ $FISH_THEME = bobthefish ]' \
+    --path="$HOME/git/theme-bobthefish"
 
 fun plugin 'oh-my-fish/theme-yimmy' \
     --cond='[ $FISH_THEME = yimmy ]'
@@ -155,21 +159,40 @@ end
 test -z "$FISH_PKG_MGR"
 and _loadtheme $FISH_THEME
 
-# Git prompt {{{2
-# Options
+# Fish git prompt {{{2
+# Settings {{{3
 set -g __fish_git_prompt_show_informative_status true
 set -g __fish_git_prompt_showupstream 'informative'
 set -g __fish_git_prompt_showcolorhints true
 
-# Symbols
-set -g __fish_git_prompt_char_stagedstate ±
-set -g __fish_git_prompt_char_stashstate ≡
+# Symbols {{{3
+# In default fish prompt
+set -g __fish_git_prompt_char_cleanstate '✔'
+set -g __fish_git_prompt_char_dirtystate '±'
+set -g __fish_git_prompt_char_invalidstate '✖'
+set -g __fish_git_prompt_char_stagedstate '\u2B24' # ⬤ (was: '✚')
+set -g __fish_git_prompt_char_stashstate '≡'
+set -g __fish_git_prompt_char_stateseparator '|'
+set -g __fish_git_prompt_char_untrackedfiles '…'
+set -g __fish_git_prompt_char_upstream_ahead '↑'
+set -g __fish_git_prompt_char_upstream_behind '↓'
+set -g __fish_git_prompt_char_upstream_diverged '\u2260' # ≠ (was: '<>')
+set -g __fish_git_prompt_char_upstream_equal '='
+set -g __fish_git_prompt_char_upstream_prefix ''
+
+# Not in default fish prompt
+set -g __fish_git_prompt_char_detachedstate '\u27A6' # ➦
+set -g __fish_git_prompt_char_tag '\u2617' # ☗
 
 # bobthefish {{{2
 if test "$FISH_THEME" = 'bobthefish'
     # Set options if term windows is narrow-ish
-    set -g theme_short_prompt_cols 150                          # Shorten prompt if cols < this
-    set -g theme_display_git_ahead_verbose yes                                            
+    set -g theme_short_prompt_cols 200
+    set -g theme_newline_cursor yes
+    set -g theme_display_date no
+
+    set -g theme_display_git_master_branch yes
+    set -g theme_display_git_ahead_verbose yes
     set -g theme_display_git_dirty_verbose yes
     set -g theme_display_git_dirty yes
     set -g theme_display_git_untracked yes
@@ -212,87 +235,25 @@ end
 
 # bigfish {{{2
 if test "$FISH_THEME" = 'bigfish'
-    test $NERD_FONTS -eq 1
+    test $NERD_FONTS -eq 0
     and set -gx glyph_git_on_branch '🜉'
 
     set -gx glyph_bg_jobs '⚒'
 end
 
 # yimmy {{{2
-if test "$FISH_THEME" = 'yimmy'
-    set -g yimmy_solarized false                                    # Solarized color scheme
-end
+test "$FISH_THEME" = 'yimmy'
+# Disable solarized theme
+and set -g yimmy_solarized false
 
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2
 # set fish_key_bindings fish_user_vi_key_bindings
 
-# COLORS {{{1
-# Fish color {{{2
-set -g fish_color_autosuggestion 707070
-set -g fish_color_cancel -r
-set -g fish_color_command b294bb
-set -g fish_color_comment f0c674
-set -g fish_color_cwd green
-set -g fish_color_cwd_root red
-set -g fish_color_end b294bb
-set -g fish_color_error cc6666
-set -g fish_color_escape 'bryellow'  '--bold'
-set -g fish_color_history_current --bold
-set -g fish_color_host normal
-set -g fish_color_match --background=brblue
-set -g fish_color_normal normal
-set -g fish_color_operator bryellow
-set -g fish_color_param 81a2be
-set -g fish_color_quote b5bd68
-set -g fish_color_redirection 8abeb7
-set -g fish_color_search_match 'bryellow'  '--background=brblack'
-set -g fish_color_selection 'white'  '--bold'  '--background=brblack'
-set -g fish_color_status red
-set -g fish_color_user brgreen
-set -g fish_color_valid_path --underline
-
-# Fish pager color {{{2
-set -g fish_pager_color_completion
-set -g fish_pager_color_description 'b3a06d'  'yellow'
-set -g fish_pager_color_prefix 'white'  '--bold'  '--underline'
-set -g fish_pager_color_progress 'brwhite'  '--background=cyan'
-
 # STARTUP COMMANDS {{{1
 # Python Venv {{{2
 test -f "$def_venv"
 and source $def_venv
-
-# FZF {{{2
-if test -z (type -f fzf 2>/dev/null)
-    if not test -d "$HOME/.fzf"
-        echo "fzf dir not found. Cloning fzf and installing..."
-        command git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    end
-    echo "Installing fzf ..."
-    ~/.fzf/install --bin --no-key-bindings --no-update-rc
-end
-
-# Node Version Manager (NVM) {{{2
-if test -z (type -f node 2>/dev/null)
-    # nvm
-    if not test -d "$HOME/.nvm"
-        echo "nvm not found. Cloning nvm..."
-        command git clone https://github.com/creationix/nvm.git "$HOME/.nvm"
-        cd "$HOME/.nvm"
-        command git checkout (command git describe --abbrev=0 --tags --match "v[0-9]*" (git rev-list --tags --max-count=1))
-    end
-
-    # Put node binaries in PATH if not already
-    if test -d "$node_bin_path"
-            set -p PATH "$node_bin_path"
-    else
-        set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
-        if test -n "$node_latest"
-            set -p PATH "$HOME/.nvm/versions/node/$node_latest/bin"
-        end
-    end
-end
 
 # TMux {{{2
 # Attach to existing tmux or create a new session using custom function
@@ -302,23 +263,10 @@ if test -n "$TMUX_PANE"
     test "$TMUX_SESSION" = 'ios' && set NERD_FONTS 0
 end
 
-# Powerline {{{2
-# Start powerline-daemon in bg if it exists
-# if test -n (type powerline-daemon)
-# powerline-daemon -q &
-# end
-
 # vim {{{2
 # Set vim compat if SSH (until there's a better way)
 if test -n "$SSH_CONNECTION"
     set -gx VIM_SSH_COMPAT 1
-end
-# WSL {{{2
-# Fix umask env variable if WSL didn't set it properly.
-if test -f /proc/version && grep -q "Microsoft" /proc/version
-  # https://github.com/Microsoft/WSL/issues/352
-  if test (umask) -eq "000" && umask "0022"
-  end
 end
 
 # END CONFIG {{{1
@@ -326,4 +274,4 @@ end
 set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
 echo "Completed in $elapsed sec."
-set_color brblue; echo 'Done'; set_color normal
+set_color brblue; echo 'Done'; set_color normal; echo ''

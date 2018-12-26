@@ -141,7 +141,6 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_tmux.conf
-    - f_tmux.theme.conf
     - f_vimrc
     - f_xonshrc
     - f_zshrc

@@ -280,7 +280,7 @@ function! LL_FileType() abort "{{{3
     let venv = &filetype ==? 'python' ?
         \ ' ('.LL_VirtualEnvName().')' :
         \ ''
-    return winwidth(0) > g:LL_MinWidth ? (&filetype . ftsymbol .venv ) : ''
+    return winwidth(0) > g:LL_MedWidth ? (&filetype . ftsymbol .venv ) : ''
 endfunction
 
 function! LL_FileFormat() abort "{{{3
@@ -399,9 +399,10 @@ let g:tmuxline_preset = {
     \'a'       : '#S',
     \'win'     : ['#I #F', '#W'],
     \'cwin'    : ['#I #F', '#W'],
-    \'x'       : '#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)',
+    \'x'       : '#(tmux-mem-cpu-load -c -q -m 2 -g 0 -i 2)',
     \'y'       : ['%m-%d-%Y', '%l:%M %p'],
     \'z'       : '#(whoami)@#H',
     \'options' : {'status-justify' : 'left'}}
 
 "    \'c'       : '#(tmux-mem-cpu-load -p -m 2 -g 0 -i 2)',
+"    \'x'       : '#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)',

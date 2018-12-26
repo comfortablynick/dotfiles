@@ -69,7 +69,7 @@ Plug 'w0rp/ale',                                                " Async Linting 
 Plug 'sbdchd/neoformat'
 
 " Folding {{{2
-Plug 'kalekundert/vim-coiled-snake'
+Plug 'kalekundert/vim-coiled-snake',    Cond(1)
 Plug 'Konfekt/FastFold'
 
 " Syntax highlighting {{{2
@@ -99,6 +99,7 @@ Plug 'Shougo/neosnippet-snippets'
 
 " Code completion {{{2
 Plug 'Shougo/echodoc'
+
 " Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
@@ -273,6 +274,7 @@ set cmdheight=1                                 " Add extra line for function de
 let g:echodoc#enable_at_startup = 1
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
+
 
 " Asyncrun {{{2
 let g:quickfix_mult = 0.40                                      " % of window height to take up

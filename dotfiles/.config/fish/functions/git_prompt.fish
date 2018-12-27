@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.6K7vWF/git_prompt.fish @ line 2
+# Defined in /tmp/fish.8zEwpZ/git_prompt.fish @ line 2
 function git_prompt --description 'display git repo info'
 	set -l git_status (git_status)
     set -l branch $git_status[1]

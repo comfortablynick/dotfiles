@@ -43,6 +43,10 @@ dotfiles:
     dst: ~/.vim/ftplugin
     link: true
     src: .vim/ftplugin
+  d_legit:
+    dst: ~/.config/legit
+    link: true
+    src: .config/legit
   d_nvim:
     dst: ~/.config/nvim
     link: true
@@ -151,6 +155,7 @@ profiles:
     - d_fish
     - d_ftplugin
     - d_ftdetect
+    - d_legit
     - d_nvim
     - d_powerline
     - d_topydo

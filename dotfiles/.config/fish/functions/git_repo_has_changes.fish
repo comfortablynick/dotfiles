@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.9G84oj/git_repo_has_changes.fish @ line 2
+# Defined in /tmp/fish.Dfu8YB/git_repo_has_changes.fish @ line 2
 function git_repo_has_changes --description 'fetch git repo and determine if changes have been made' --argument git_dir
 	git -C "$git_dir" fetch
     set -l head_hash (git -C "$git_dir" rev-parse HEAD)

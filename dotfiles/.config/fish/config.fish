@@ -170,19 +170,31 @@ set -g __fish_git_prompt_showcolorhints true
 set -g __fish_git_prompt_char_cleanstate '✔'
 set -g __fish_git_prompt_char_dirtystate '±'
 set -g __fish_git_prompt_char_invalidstate '✖'
-set -g __fish_git_prompt_char_stagedstate '\u2B24' # ⬤ (was: '✚')
+set -g __fish_git_prompt_char_stagedstate '⬤' # (was: '✚')
 set -g __fish_git_prompt_char_stashstate '≡'
 set -g __fish_git_prompt_char_stateseparator '|'
 set -g __fish_git_prompt_char_untrackedfiles '…'
 set -g __fish_git_prompt_char_upstream_ahead '↑'
 set -g __fish_git_prompt_char_upstream_behind '↓'
-set -g __fish_git_prompt_char_upstream_diverged '\u2260' # ≠ (was: '<>')
+set -g __fish_git_prompt_char_upstream_diverged '≠' # (was: '<>')
 set -g __fish_git_prompt_char_upstream_equal '='
 set -g __fish_git_prompt_char_upstream_prefix ''
 
 # Not in default fish prompt
-set -g __fish_git_prompt_char_detachedstate '\u27A6' # ➦
-set -g __fish_git_prompt_char_tag '\u2617' # ☗
+set -g __fish_git_prompt_char_detachedstate '➦'
+set -g __fish_git_prompt_char_tag '☗'
+
+# Colors {{{3
+set -g ___fish_git_prompt_color_flags (set_color --bold blue)
+set -g ___fish_git_prompt_color_flags_done (set_color normal)
+set -g ___fish_git_prompt_color_branch (set_color green)
+set -g ___fish_git_prompt_color_branch_done (set_color normal)
+set -g ___fish_git_prompt_color_branch_detached (set_color red)
+set -g ___fish_git_prompt_color_branch_detached_done (set_color normal)
+set -g ___fish_git_prompt_color_dirtystate (set_color red)
+set -g ___fish_git_prompt_color_dirtystate_done (set_color normal)
+set -g ___fish_git_prompt_color_stagedstate (set_color green)
+set -g ___fish_git_prompt_color_stagedstate_done (set_color normal)
 
 # bobthefish {{{2
 if test "$FISH_THEME" = 'bobthefish'

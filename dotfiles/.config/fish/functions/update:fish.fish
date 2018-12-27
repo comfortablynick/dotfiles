@@ -1,7 +1,6 @@
-# Defined in /tmp/fish.PxOoaY/update:fish.fish @ line 2
+# Defined in /tmp/fish.pWbgiu/update:fish.fish @ line 2
 function update:fish --description 'Pull fish source and build'
-	
-    set -q LS_AFTER_CD
+	set -q LS_AFTER_CD
     and set LS_AFTER_CD 0
 
     set -l src_dir "$HOME/src/fish-shell"

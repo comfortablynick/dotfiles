@@ -1,4 +1,4 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.h7to7u/git_status.fish @ line 2
+# Defined in /tmp/fish.5f1E2h/git_status.fish @ line 2
 function git_status --description 'Parses and counts output of `git status`'
 	set_var_default __fish_git_prompt_symbol_prehash ':'
     set_var_default __fish_git_prompt_tag_symbol ''

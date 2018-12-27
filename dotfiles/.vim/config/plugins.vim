@@ -69,8 +69,8 @@ Plug 'w0rp/ale',                                                " Async Linting 
 Plug 'sbdchd/neoformat'
 
 " Folding {{{2
-Plug 'kalekundert/vim-coiled-snake',    Cond(1)
-Plug 'Konfekt/FastFold'
+" Plug 'kalekundert/vim-coiled-snake',    Cond(1)
+" Plug 'Konfekt/FastFold'
 
 " Syntax highlighting {{{2
 Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })

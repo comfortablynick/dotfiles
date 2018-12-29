@@ -15,7 +15,9 @@ function fish_prompt
     set -l sorin_prompt_color $sorin_prompt_color
 
     # Git
-    if type -q gitprompt.py
+    if type -q gitprompt
+        set git_info (gitprompt)
+    else if type -q gitprompt.py
         if test $sorin_use_gitprompt_async -eq 1
             set -g _sorin_gitprompt_display (_sorin_gitprompt)
         else

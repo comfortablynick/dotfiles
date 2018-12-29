@@ -56,7 +56,7 @@ fi
 # export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 # alias denv='source ${VENV_DIR}/dev/bin/activate'
 
-if [[ ! -n "$VIRTUAL_ENV" ]]; then
+if [[ -n "$VIRTUAL_ENV" ]]; then
   source "${VENV_DIR}/dev/bin/activate" # Activate by default
 fi
 

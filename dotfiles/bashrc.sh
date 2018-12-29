@@ -96,6 +96,14 @@ if [ -d ${BASEDIR}/.config/bash/functions ]; then
 fi
 unset file
 
+# Source local env file
+file="${HOME}/env.sh"
+if [ -f "${file}" ]; then
+    [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+    source $file
+fi
+unset file
+
 if [ "$DEBUG_MODE" == true ]; then
     echo "$(date +"%T.%3N"): Leaving .bashrc"
 fi

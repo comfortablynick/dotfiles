@@ -19,40 +19,42 @@ if [[ -x /usr/bin/dircolors ]]; then
    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-# PATH --------------------------------------------------------
-# Add any directories to PATH here
-EXTRA_PATHS=(
-"$HOME/Git/python/shell"                                        # Python CLI tools
-"$HOME/bin"                                                     # User-defined binaries
-)
+# BELOW COMMENTED LINES HANDLED BY LOCAL env.sh
 
-# Load them if they exist
-for pth in ${EXTRA_PATHS[@]}; do
-  if [ -d $pth ]; then
-    [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Prepending ${pth} to PATH"
-    export PATH=${pth}:$PATH
-  fi
-done
-unset pth
+# # PATH --------------------------------------------------------
+# # Add any directories to PATH here
+# EXTRA_PATHS=(
+# "$HOME/Git/python/shell"                                        # Python CLI tools
+# "$HOME/bin"                                                     # User-defined binaries
+# )
+# 
+# # Load them if they exist
+# for pth in ${EXTRA_PATHS[@]}; do
+#   if [ -d $pth ]; then
+#     [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Prepending ${pth} to PATH"
+#     export PATH=${pth}:$PATH
+#   fi
+# done
+# unset pth
 
-# ALIASES -----------------------------------------------------
-
-# Git
-alias gpython='cd ~/git/python'
-alias ggas='cd ~/git/google-apps-script/sheets'
-alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
-alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
-alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
-alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
-alias gdspwe='cd ~/git/google-apps-script/sheets/dspw-email'
-
-
-# PYTHON ------------------------------------------------------
-# Virtual Env
-export VENV_DIR="${HOME}/.env"
-export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
-export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
-alias denv='source ${VENV_DIR}/dev/bin/activate'
+# # ALIASES -----------------------------------------------------
+#
+# # Git
+# alias gpython='cd ~/git/python'
+# alias ggas='cd ~/git/google-apps-script/sheets'
+# alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
+# alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
+# alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
+# alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
+# alias gdspwe='cd ~/git/google-apps-script/sheets/dspw-email'
+#
+#
+# # PYTHON ------------------------------------------------------
+# # Virtual Env
+# export VENV_DIR="${HOME}/.env"
+# export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
+# export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
+# alias denv='source ${VENV_DIR}/dev/bin/activate'
 
 if [[ ! -n "$VIRTUAL_ENV" ]]; then
   source "${VENV_DIR}/dev/bin/activate" # Activate by default
@@ -61,12 +63,12 @@ fi
 # Commenting this line out will revert to standard PS1 prompt
 # export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
 
-# SCRIPTS -----------------------------------------------------
-alias list='list.py'
+# # SCRIPTS -----------------------------------------------------
+# alias list='list.py'
 
-# SYSTEM ------------------------------------------------------
-export NVM_DIR="$HOME/.nvm"
-export VCPROMPT_FORMAT="%n %b %r %p %u %m"
+# # SYSTEM ------------------------------------------------------
+# export NVM_DIR="$HOME/.nvm"
+# export VCPROMPT_FORMAT="%n %b %r %p %u %m"
 
 # Try to load nvm on demand
 lnvm() {

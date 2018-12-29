@@ -203,16 +203,27 @@ if test "$FISH_THEME" = 'bobthefish'
     set -g theme_newline_cursor yes
     set -g theme_display_date no
 
+    # Git
     set -g theme_display_git_master_branch yes
     set -g theme_display_git_ahead_verbose yes
     set -g theme_display_git_dirty_verbose yes
     set -g theme_display_git_dirty yes
     set -g theme_display_git_untracked yes
 
-    # Tmux shows user/host, so we dont need it here
+    # Other settings
+    set -g theme_avoid_ambiguous_glyphs yes
+    set -g fish_prompt_pwd_dir_length 1 # Abbreviate PWD in prompt
+    set -g theme_project_dir_length 1 # Abbreviate relative path to proj root
+    set -g theme_display_cmd_duration 0 # Threshold for showing command dur in ms
+
+    # Tmux shows user/host
+    # Only display if $SSH and no $TMUX
     if test -n "$TMUX"
         set -g theme_display_user no
         set -g theme_display_hostname no
+    else
+        set -g theme_display_user ssh
+        set -g theme_display_hostname ssh
     end
 end
 

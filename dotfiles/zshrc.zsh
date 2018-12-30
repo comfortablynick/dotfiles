@@ -151,6 +151,7 @@ source_bash=(
 #  ~/.bash_functions
 #  ~/.bash_mac
 #  ~/.bash_windows
+~/env.zsh
 ~/.bash_linux
 )
 

@@ -19,44 +19,14 @@ if [[ -x /usr/bin/dircolors ]]; then
    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-# BELOW COMMENTED LINES HANDLED BY LOCAL env.sh
-
-# # PATH --------------------------------------------------------
-# # Add any directories to PATH here
-# EXTRA_PATHS=(
-# "$HOME/Git/python/shell"                                        # Python CLI tools
-# "$HOME/bin"                                                     # User-defined binaries
-# )
-# 
-# # Load them if they exist
-# for pth in ${EXTRA_PATHS[@]}; do
-#   if [ -d $pth ]; then
-#     [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Prepending ${pth} to PATH"
-#     export PATH=${pth}:$PATH
-#   fi
-# done
-# unset pth
-
-# # ALIASES -----------------------------------------------------
-#
-# # Git
-# alias gpython='cd ~/git/python'
-# alias ggas='cd ~/git/google-apps-script/sheets'
-# alias gfst='cd ~/git/google-apps-script/sheets/fs-time'
-# alias gcp='cd ~/git/google-apps-script/sheets/convention-personnel'
-# alias gcpr='cd ~/git/google-apps-script/sheets/convention-personnel-reports'
-# alias gdspw='cd ~/git/google-apps-script/sheets/dspw'
-# alias gdspwe='cd ~/git/google-apps-script/sheets/dspw-email'
-#
-#
 # # PYTHON ------------------------------------------------------
 # # Virtual Env
-# export VENV_DIR="${HOME}/.env"
+export VENV_DIR="${HOME}/.env"
 # export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
 # export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 # alias denv='source ${VENV_DIR}/dev/bin/activate'
 
-if [[ -n "$VIRTUAL_ENV" ]]; then
+if [ -z "$VIRTUAL_ENV" ]; then
   source "${VENV_DIR}/dev/bin/activate" # Activate by default
 fi
 

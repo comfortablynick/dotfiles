@@ -34,8 +34,6 @@ HISTSIZE=                                                       # Shell history 
 HISTFILESIZE=                                                   # Shell history file size
 shopt -s checkwinsize                                           # Update rows/cols if size changes
 shopt -s autocd                                                 # Auto cd if entering dir name at prompt
-export VISUAL=nvim                                              # Set default visual editor
-export EDITOR="${VISUAL}"                                       # Set default text editor
 export XDG_CONFIG_HOME="$HOME/.config"                          # Some scripts look here
 
 # Include files loaded at end of this script
@@ -49,6 +47,15 @@ INCLUDES=(
 "bash_prompt.sh"                                                # Prompt-specific settings
 # "bash_colors.sh"                                              # Color definitions (slow)
 )
+
+# EDITOR ------------------------------------------------------------
+export VISUAL=nvim                                              # Set default visual editor
+export EDITOR="${VISUAL}"                                       # Set default text editor
+
+# Set vim compatibility if SSH connection
+if [ -n "$SSH_CONNECTION" ]; then
+    export VIM_SSH_COMPAT=1
+fi
 
 # PROMPT ------------------------------------------------------------
 

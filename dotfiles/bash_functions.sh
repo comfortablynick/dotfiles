@@ -2,23 +2,23 @@
 # Helpful bash scripts; loaded by .bashrc
 
 # Adds, commits, and pushes to git with one command
-gsync() {
-    # Are we in git branch?
-    if [[ ! $git_branch ]]; then 
-        echo "Not in a repository."
-    else
-        # Check for uncommitted changes
-        if [[ ! $git_dirty ]]; then
-            # No changes; pull
-            echo "No uncommitted changes."
-            git pull
-        else 
-            # If any command fails, abort process
-            # Open .gitcommit in default editor for message
-            git add . && git commit && git push && git pull
-        fi
-    fi
-}
+# gsync() {
+#     # Are we in git branch?
+#     if [[ ! $git_branch ]]; then
+#         echo "Not in a repository."
+#     else
+#         # Check for uncommitted changes
+#         if [[ ! $git_dirty ]]; then
+#             # No changes; pull
+#             echo "No uncommitted changes."
+#             git pull
+#         else
+#             # If any command fails, abort process
+#             # Open .gitcommit in default editor for message
+#             git add . && git commit && git push && git pull
+#         fi
+#     fi
+# }
 
 # Displays useful sets of terminal colors based on param input
 # either set by default aliases or user-defined... When looking
@@ -53,11 +53,11 @@ reload() {
 }
 
 # Reset and print elapsed time for debugging
-treload(){
+brel() {
     reset
-    if [[ $1 == 'd' ]]; then
+    if [ "$1" == "d" ]; then
         export DEBUG_MODE=true
-    else 
+    else
         export DEBUG_MODE=false
     fi
     time . "${HOME}/.bashrc"
@@ -110,7 +110,7 @@ vimsync() {
   if [[ -x "$HOME/git/python/shell/vimsync.py" ]]; then
       echo "Executing vimsync.py ... "
       $HOME/git/python/shell/vimsync.py
-  else 
+  else
     echo "Executing bash function ... "
     if hash vim 2> /dev/null; then
       echo "Found Vim; updating plugins..."
@@ -138,4 +138,18 @@ vimsync() {
 # List octal (numeric) permissions instead of string-based ones
 lso() {
     ls -l "$@" | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}';
+}
+
+aptupdate() {
+    # if not root, run as root
+    if (( $EUID != 0 )); then
+        # sudo aptupdate
+        echo "Run aptupdate as root!"
+        return
+    fi
+    apt update
+    apt -y dist-upgrade
+    apt -y autoremove
+    apt clean
+    apt purge -y $(dpkg -l | awk '/^rc/ { print $2 }')
 }

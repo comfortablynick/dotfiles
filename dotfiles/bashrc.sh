@@ -45,7 +45,7 @@ INCLUDES=(
 "bash_mac.sh"                                                   # Code to run on Mac
 "bash_windows.sh"                                               # Code to run on Win (Git bash)
 "bash_prompt.sh"                                                # Prompt-specific settings
-# "bash_colors.sh"                                              # Color definitions (slow)
+# "bash_colors.sh"                                                # Color definitions (slow)
 )
 
 # EDITOR ------------------------------------------------------------
@@ -53,9 +53,7 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 
 # Set vim compatibility if SSH connection
-if [ -n "$SSH_CONNECTION" ]; then
-    export VIM_SSH_COMPAT=1
-fi
+[ -n "$SSH_CONNECTION" ] && export VIM_SSH_COMPAT=1
 
 # PROMPT ------------------------------------------------------------
 
@@ -68,20 +66,6 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_prompt=yes
-    else
-    color_prompt=
-    fi
-fi
-
-
 #INCLUDES ------------------------------------------------------------
 
 # Load includes if they exist; add timestamp for debug mode
@@ -93,24 +77,13 @@ for file in ${INCLUDES[@]}; do
 done
 unset file
 
-# Source all .bash files in functions subdir
-# TODO: combine with "INCLUDES" section
-if [ -d ${BASEDIR}/.config/bash/functions ]; then
-    for file in ${BASEDIR}/.config/bash/functions/*.bash; do
+# Source all .bash files in snippets subdir
+if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
+    for file in ${BASEDIR}/.config/bash/conf.d/*.bash; do
         [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
         source $file
     done
 fi
 unset file
 
-# Source local env file
-file="${HOME}/env.sh"
-if [ -f "${file}" ]; then
-    [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
-    source $file
-fi
-unset file
-
-if [ "$DEBUG_MODE" == true ]; then
-    echo "$(date +"%T.%3N"): Leaving .bashrc"
-fi
+[ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"

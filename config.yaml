@@ -59,6 +59,10 @@ dotfiles:
     dst: ~/.config/powerline
     link: true
     src: .config/powerline
+  d_shell:
+    dst: ~/.config/shell
+    link: true
+    src: .config/shell
   d_topydo:
     dst: ~/.config/topydo
     link: true
@@ -158,6 +162,7 @@ profiles:
     - d_legit
     - d_nvim
     - d_powerline
+    - d_shell
     - d_topydo
     - d_xonsh
     - d_zsh

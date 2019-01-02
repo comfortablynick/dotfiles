@@ -3,14 +3,12 @@
 # Return if not Linux
 [ ${OS_NAME} != "Linux" ] && return;
 
-
 # WSL (Windows Subsystem for Linux) Fixes
 if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
 
   # Fix umask value if WSL didn't set it properly.
   # https://github.com/Microsoft/WSL/issues/352
   [ "$(umask)" == "000" ] && umask 022
-
 
 fi
 
@@ -26,9 +24,9 @@ fi
 # export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 # alias denv='source ${VENV_DIR}/dev/bin/activate'
 
-if [ -z "$VIRTUAL_ENV" ]; then
-    source "${VENV_DIR}/dev/bin/activate" # Activate by default
-fi
+# if [ -z "$VIRTUAL_ENV" ]; then
+#     source "${VENV_DIR}/dev/bin/activate" # Activate by default
+# fi
 
 # Commenting this line out will revert to standard PS1 prompt
 # export POWERLINE_ROOT="/usr/local/lib/python3.7/site-packages/powerline"
@@ -41,8 +39,8 @@ fi
 # export VCPROMPT_FORMAT="%n %b %r %p %u %m"
 
 # Try to load nvm on demand
-lnvm() {
-    # Load nvm and nvm bash completions
-    [ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh"
-    [ -s "${NVM_DIR}/bash_completion" ] && \. "${NVM_DIR}/bash_completion"
-}
+# lnvm() {
+#     # Load nvm and nvm bash completions
+#     [ -s "${NVM_DIR}/nvm.sh" ] && \. "${NVM_DIR}/nvm.sh"
+#     [ -s "${NVM_DIR}/bash_completion" ] && \. "${NVM_DIR}/bash_completion"
+# }

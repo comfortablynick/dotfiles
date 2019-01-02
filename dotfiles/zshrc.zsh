@@ -93,9 +93,9 @@ zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme, if:'[[ $THEME ==
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Source bash files
-zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
+# zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
 # zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
-zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
+# zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
 # Zplug Load {{{2
 # Install plugins if there are plugins that have not been installed

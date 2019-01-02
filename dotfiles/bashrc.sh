@@ -39,7 +39,7 @@ export XDG_CONFIG_HOME="$HOME/.config"                          # Some scripts l
 # Include files loaded at end of this script
 # Located in $BASEDIR
 INCLUDES=(
-"bash_aliases.sh"                                               # Aliases for all OSes
+# "bash_aliases.sh"                                               # Aliases for all OSes
 "bash_functions.sh"                                             # General functions
 "bash_linux.sh"                                                 # Code to run on Linux
 "bash_mac.sh"                                                   # Code to run on Mac

@@ -138,27 +138,27 @@ fi
 alias zshc='vim ~/.zshrc'
 alias zrel='relz'
 
-# Source Bash Config Files
-source_sh() {
-  emulate sh -c "source $@"
-}
-
-# Currently handled by zplug
-source_bash=(
-#  ~/.bash_aliases
-#  ~/.bash_functions
-#  ~/.bash_mac
-#  ~/.bash_windows
-$ZDOTDIR/env.zsh
-~/.bash_linux
-)
-
-for file in $source_bash
-  do
-    [[ ! -f $file ]] && return;
-    [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
-    source_sh $file
-  done
+# # Source Bash Config Files
+# source_sh() {
+#   emulate sh -c "source $@"
+# }
+# 
+# # Currently handled by zplug
+# source_bash=(
+# #  ~/.bash_aliases
+# #  ~/.bash_functions
+# #  ~/.bash_mac
+# #  ~/.bash_windows
+# $ZDOTDIR/env.zsh
+# ~/.bash_linux
+# )
+# 
+# for file in $source_bash
+#   do
+#     [[ ! -f $file ]] && return;
+#     [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
+#     source_sh $file
+#   done
 
 # FUNCTIONS {{{1
 

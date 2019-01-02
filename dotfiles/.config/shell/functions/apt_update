@@ -1,9 +1,9 @@
-#!usr/bin/env bash
+#!/usr/bin/env bash
 # Update all apt packages
 
 # if not root, run as root
-if (( $EUID != 0 )); then
-    sudo "$XDG_CONFIG_HOME/bash/functions/apt_update.sh"
+if [ "$(id -u)" != "0" ]; then
+    exec sudo "$0" "$@"
     exit
 fi
 

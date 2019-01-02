@@ -21,14 +21,14 @@ case "$(uname -s)" in
 esac
 
 # Check for debug mode
-[[ "$DEBUG_MODE" == true ]] && echo "Sourcing .zshrc"
+[ "$DEBUG_MODE" = true ] && echo "Sourcing .zshrc"
 
 export XDG_CONFIG_HOME="$HOME/.config"                          # Common config dir
-export XDG_DATA_HOME="$HOME/.local"                           # Common data dir
+export XDG_DATA_HOME="$HOME/.local"                             # Common data dir
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile subdir
 
-# Source all .zsh files in ZDOTDIR/functions
-for config ($ZDOTDIR/functions/*.zsh) source $config
+# Source all .zsh files in ZDOTDIR/conf.d (config snippets)
+for config ($ZDOTDIR/conf.d/*.zsh) source $config
 fpath=($ZDOTDIR/completions $fpath)
 # autoload -U compinit && compinit
 
@@ -51,19 +51,6 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked file
 if [ is_ssh ]; then
     export VIM_SSH_COMPAT=1
     export THEME=$SSH_THEME
-fi
-
-# WSL (Windows Subsystem for Linux) Fixes
-if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
-
-  # Fix umask value if WSL didn't set it properly.
-  # https://github.com/Microsoft/WSL/issues/352
-  [ "$(umask)" == "000" ] && umask 022
-
-  # Don't change priority of background processes with nice.
-  # https://github.com/Microsoft/WSL/issues/1887
-  unsetopt BG_NICE
-
 fi
 
 # PLUGINS {{{1
@@ -132,17 +119,17 @@ if zplug check "zsh-users/zsh-syntax-highlighting"; then
 fi
 
 # Load zplug
-[[ "$DEBUG_MODE" == true ]] && zplug && zplug load --verbose || zplug load
+[ "$DEBUG_MODE" = true ] && zplug && zplug load --verbose || zplug load
 
 # ALIASES {{{1
-alias zshc='vim ~/.zshrc'
-alias zrel='relz'
+# alias zshc='vim ~/.zshrc'
+# alias zrel='relz'
 
 # # Source Bash Config Files
 # source_sh() {
 #   emulate sh -c "source $@"
 # }
-# 
+#
 # # Currently handled by zplug
 # source_bash=(
 # #  ~/.bash_aliases
@@ -152,11 +139,11 @@ alias zrel='relz'
 # $ZDOTDIR/env.zsh
 # ~/.bash_linux
 # )
-# 
+#
 # for file in $source_bash
 #   do
-#     [[ ! -f $file ]] && return;
-#     [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
+#     [ ! -f $file ] && return;
+#     [ "$DEBUG_MODE" ] && echo "Sourcing $file"
 #     source_sh $file
 #   done
 
@@ -166,7 +153,7 @@ alias zrel='relz'
 # Params
 #   -d Debug mode: print verbose debug information
 relz() {
-  if [[ "$1" == "-d" ]]; then
+  if [ "$1" = "-d" -o "$1" = "d" ]; then
     echo "Reloading zsh in debug mode... "
     export DEBUG_MODE=true
   else
@@ -177,12 +164,6 @@ relz() {
   echo "Complete!"
 }
 
-# whichvim :: Return Neovim if found in system; otherwise vim if found
-whichvim() {
-  hash nvim &> /dev/null && echo "Found Neovim" || "Did not find Neovim"
-  hash vim &> /dev/null && echo "Found Vim" || "Did not find Vim"
-}
-
 # is_ssh :: Return true if in SSH session
 is_ssh() {
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
@@ -191,3 +172,5 @@ is_ssh() {
     return 1
   fi
 }
+
+[ "$DEBUG_MODE" = true ] && echo "Exiting .zshrc"

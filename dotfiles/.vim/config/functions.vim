@@ -21,11 +21,12 @@ shebang = {
 	'php':        '#!/usr/bin/env php',
     'fish':       '#!/usr/bin/env fish',
     'awk':        '#!/bin/awk -f',
+    'bash':       '#!/usr/bin/env bash',
+    'zsh':        '#!/usr/bin/env zsh',
 }
 if not vim.current.buffer[0].startswith('#!'):
 	filetype = vim.eval('&filetype')
-	if filetype in shebang:
-		vim.current.buffer[0:0] = [ shebang[filetype] ]
+	vim.current.buffer[0:0] = [ shebang.get(filetype, shebang['bash']) ]
 endpython
 endfunction
 

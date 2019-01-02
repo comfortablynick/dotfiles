@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Make directory if it doesn't exist and CD into it
+
+mkdir -p -- "$1" && cd -P -- "$1"

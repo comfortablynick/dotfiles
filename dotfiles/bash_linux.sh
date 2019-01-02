@@ -3,14 +3,14 @@
 # Return if not Linux
 [ ${OS_NAME} != "Linux" ] && return;
 
-# WSL (Windows Subsystem for Linux) Fixes
-if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
-
-  # Fix umask value if WSL didn't set it properly.
-  # https://github.com/Microsoft/WSL/issues/352
-  [ "$(umask)" == "000" ] && umask 022
-
-fi
+# # WSL (Windows Subsystem for Linux) Fixes
+# if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
+#
+#   # Fix umask value if WSL didn't set it properly.
+#   # https://github.com/Microsoft/WSL/issues/352
+#   [ "$(umask)" == "000" ] && umask 022
+#
+# fi
 
 # Source colors from file
 if [ -x /usr/bin/dircolors ]; then

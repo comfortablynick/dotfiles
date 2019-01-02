@@ -20,7 +20,7 @@ case "$(uname -s)" in
 esac
 echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
-[ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Entering .bashrc";
+[ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Entering .bashrc";
 
 
 # SHELL DEFAULTS ----------------------------------------------------
@@ -41,16 +41,12 @@ export XDG_CONFIG_HOME="$HOME/.config"                          # Some scripts l
 INCLUDES=(
 # "bash_aliases.sh"                                               # Aliases for all OSes
 "bash_functions.sh"                                             # General functions
-"bash_linux.sh"                                                 # Code to run on Linux
+# "bash_linux.sh"                                                 # Code to run on Linux
 "bash_mac.sh"                                                   # Code to run on Mac
 "bash_windows.sh"                                               # Code to run on Win (Git bash)
 "bash_prompt.sh"                                                # Prompt-specific settings
 # "bash_colors.sh"                                                # Color definitions (slow)
 )
-
-# EDITOR ------------------------------------------------------------
-export VISUAL=nvim                                              # Set default visual editor
-export EDITOR="${VISUAL}"                                       # Set default text editor
 
 # Set vim compatibility if SSH connection
 [ -n "$SSH_CONNECTION" ] && export VIM_SSH_COMPAT=1
@@ -71,19 +67,21 @@ esac
 # Source all .bash files in snippets subdir
 if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
     for file in ${BASEDIR}/.config/bash/conf.d/*.bash; do
-        [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
         source $file
     done
 fi
 unset file
 
+source $def_venv/bin/activate
+
 # Load includes if they exist; add timestamp for debug mode
 for file in ${INCLUDES[@]}; do
     if [ -f $BASEDIR/$file ]; then
-        [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
         source $BASEDIR/$file
     fi
 done
 unset file
 
-[ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"
+[ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"

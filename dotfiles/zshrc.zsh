@@ -25,10 +25,16 @@ esac
 
 export XDG_CONFIG_HOME="$HOME/.config"                          # Common config dir
 export XDG_DATA_HOME="$HOME/.local"                           # Common data dir
-export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile subdir
-# export VISUAL=nvim                                              # Set default visual editor
-# export EDITOR="${VISUAL}"                                       # Set default text editor
+
+# Source all .zsh files in ZDOTDIR/functions
+for config ($ZDOTDIR/functions/*.zsh) source $config
+fpath=($ZDOTDIR/completions $fpath)
+# autoload -U compinit && compinit
+
+export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
+export VISUAL=nvim                                              # Set default visual editor
+export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
 export THEME="pure"
@@ -48,11 +54,11 @@ if [ is_ssh ]; then
 fi
 
 # WSL (Windows Subsystem for Linux) Fixes
-if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
+if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
 
   # Fix umask value if WSL didn't set it properly.
   # https://github.com/Microsoft/WSL/issues/352
-  [[ "$(umask)" == "000" ]] && umask 022
+  [ "$(umask)" == "000" ] && umask 022
 
   # Don't change priority of background processes with nice.
   # https://github.com/Microsoft/WSL/issues/1887
@@ -63,16 +69,10 @@ fi
 # PLUGINS {{{1
 # Zplug Config {{{2
 # Download zplug if it doesn't exist
-[[ ! -d ~/.zplug ]] && git clone https://github.com/zplug/zplug ~/.zplug
+[ ! -d ~/.zplug ] && git clone https://github.com/zplug/zplug ~/.zplug
 
 # Essential
 source ~/.zplug/init.zsh
-
-# Source all .zsh files in ZDOTDIR/functions
-for config ($ZDOTDIR/functions/*.zsh) source $config
-
-fpath=($ZDOTDIR/completions $fpath)
-# autoload -U compinit && compinit
 
 # Plugin Definitions {{{2
 

@@ -275,8 +275,8 @@ and set -g yimmy_solarized false
 
 # STARTUP COMMANDS {{{1
 # Python Venv {{{2
-test -f "$def_venv"
-and source $def_venv
+test -d "$def_venv"
+and source $def_venv/bin/activate.fish
 
 # TMux {{{2
 # Attach to existing tmux or create a new session using custom function

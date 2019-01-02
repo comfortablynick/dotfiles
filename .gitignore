@@ -1,5 +1,7 @@
 fish_universal_variables
 fish_variables
 env.fish
+env.bash
+env.zsh
 dotfiles/.config/omf/theme
 *.log

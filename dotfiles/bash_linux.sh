@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 
 # Return if not Linux
-[[ ${OS_NAME} != "Linux" ]] && return;
+[ ${OS_NAME} != "Linux" ] && return;
 
 
 # WSL (Windows Subsystem for Linux) Fixes
-if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
+if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
 
   # Fix umask value if WSL didn't set it properly.
   # https://github.com/Microsoft/WSL/issues/352
-  [[ "$(umask)" == "000" ]] && umask 022
+  [ "$(umask)" == "000" ] && umask 022
 
 
 fi
 
 # Source colors from file
-if [[ -x /usr/bin/dircolors ]]; then
-   test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+if [ -x /usr/bin/dircolors ]; then
+   [ -r ~/.dircolors ] && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
 # # PYTHON ------------------------------------------------------
 # # Virtual Env
-export VENV_DIR="${HOME}/.env"
+# export VENV_DIR="${HOME}/.env"
 # export NVIM_PY2_DIR="${VENV_DIR}/nvim2"
 # export NVIM_PY3_DIR="${VENV_DIR}/nvim3"
 # alias denv='source ${VENV_DIR}/dev/bin/activate'
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  source "${VENV_DIR}/dev/bin/activate" # Activate by default
+    source "${VENV_DIR}/dev/bin/activate" # Activate by default
 fi
 
 # Commenting this line out will revert to standard PS1 prompt

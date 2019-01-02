@@ -68,15 +68,6 @@ esac
 
 #INCLUDES ------------------------------------------------------------
 
-# Load includes if they exist; add timestamp for debug mode
-for file in ${INCLUDES[@]}; do
-    if [ -f $BASEDIR/$file ]; then
-        [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
-        source $BASEDIR/$file
-    fi
-done
-unset file
-
 # Source all .bash files in snippets subdir
 if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
     for file in ${BASEDIR}/.config/bash/conf.d/*.bash; do
@@ -84,6 +75,15 @@ if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
         source $file
     done
 fi
+unset file
+
+# Load includes if they exist; add timestamp for debug mode
+for file in ${INCLUDES[@]}; do
+    if [ -f $BASEDIR/$file ]; then
+        [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+        source $BASEDIR/$file
+    fi
+done
 unset file
 
 [ "$DEBUG_MODE" == true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"

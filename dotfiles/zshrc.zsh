@@ -5,10 +5,10 @@
 #  _/ /_\__ \ | | | | | (__
 # (_)___|___/_| |_|_|  \___|
 
-# NON-INTERACTIVE ============================ {{{
+# NON-INTERACTIVE {{{1
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
-# }}}
-# ENVIR ONMENT ================================ {{{
+
+# ENVIRONMENT {{{1
 START_TIME="$(date)"
 
 # Check OS
@@ -24,15 +24,15 @@ esac
 [[ "$DEBUG_MODE" == true ]] && echo "Sourcing .zshrc"
 
 export XDG_CONFIG_HOME="$HOME/.config"                          # Common config dir
-export XDG_DATA_HOME="$HOME/.local/share"                       # Common data dir
+export XDG_DATA_HOME="$HOME/.local"                           # Common data dir
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile subdir
-export VISUAL=nvim                                              # Set default visual editor
-export EDITOR="${VISUAL}"                                       # Set default text editor
+# export VISUAL=nvim                                              # Set default visual editor
+# export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export THEME="alien"                                            # Current theme to use
-export SSH_THEME="alien-minimal"                                # Theme for SSH connection
+export THEME="pure"
+export SSH_THEME="pure"
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -42,7 +42,10 @@ HYPHEN_INSENSITIVE="true"                                       # Hyphen and das
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 
-[[ is_ssh ]] && export THEME=$SSH_THEME
+if [ is_ssh ]; then
+    export VIM_SSH_COMPAT=1
+    export THEME=$SSH_THEME
+fi
 
 # WSL (Windows Subsystem for Linux) Fixes
 if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
@@ -56,9 +59,9 @@ if [[ -f /proc/version ]] && grep -q "Microsoft" /proc/version; then
   unsetopt BG_NICE
 
 fi
-# }}}
-# PLUGINS ==================================== {{{
-# Zplug Config {{{
+
+# PLUGINS {{{1
+# Zplug Config {{{2
 # Download zplug if it doesn't exist
 [[ ! -d ~/.zplug ]] && git clone https://github.com/zplug/zplug ~/.zplug
 
@@ -70,17 +73,13 @@ for config ($ZDOTDIR/functions/*.zsh) source $config
 
 fpath=($ZDOTDIR/completions $fpath)
 # autoload -U compinit && compinit
-# }}}
-# Plugin Definitions {{{
+
+# Plugin Definitions {{{2
 
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
-
-zplug "plugins/git", from:oh-my-zsh
-
+# zplug "plugins/git", from:oh-my-zsh
 zplug "zsh-users/zsh-completions"
-
 zplug "zsh-users/zsh-autosuggestions"
-
 zplug "mafredri/zsh-async", from:github
 
 # Themes
@@ -88,6 +87,7 @@ zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, as:theme, if:'[[ $THE
 zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme, as:theme, if:'[[ $THEME == sorin ]]'
 zplug "eendroroy/alien", as:theme, if:'[[ $THEME == alien ]]'
 zplug "eendroroy/alien-minimal", as:theme, if:'[[ $THEME == alien-minimal ]]'
+zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme, if:'[[ $THEME == pure ]]'
 
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
@@ -97,8 +97,7 @@ zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
 # zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
 zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
 
-# }}}
-# Zplug Load {{{
+# Zplug Load {{{2
 # Install plugins if there are plugins that have not been installed
 if ! zplug check; then
   printf "Install missing plugins? [y/N]: "
@@ -134,13 +133,12 @@ fi
 
 # Load zplug
 [[ "$DEBUG_MODE" == true ]] && zplug && zplug load --verbose || zplug load
-# }}}
-# }}}
-# ALIASES ==================================== {{{
+
+# ALIASES {{{1
 alias zshc='vim ~/.zshrc'
 alias zrel='relz'
 
-# Source Aliases in Bash Files
+# Source Bash Config Files
 source_sh() {
   emulate sh -c "source $@"
 }
@@ -151,7 +149,7 @@ source_bash=(
 #  ~/.bash_functions
 #  ~/.bash_mac
 #  ~/.bash_windows
-~/env.zsh
+$ZDOTDIR/env.zsh
 ~/.bash_linux
 )
 
@@ -161,7 +159,8 @@ for file in $source_bash
     [[ "$DEBUG_MODE" == true ]] && echo "Sourcing $file"
     source_sh $file
   done
-# FUNCTIONS ================================== {{{
+
+# FUNCTIONS {{{1
 
 # relz :: Reload zsh shell
 # Params
@@ -192,4 +191,3 @@ is_ssh() {
     return 1
   fi
 }
-# }}}

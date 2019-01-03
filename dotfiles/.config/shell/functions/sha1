@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Wrapper for (g)sha1sum
+cmd=$(type -p sha1sum || type -p gsha1sum)
+$cmd $@

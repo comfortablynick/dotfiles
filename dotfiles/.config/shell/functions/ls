@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Wrapper for (g)ls
+cmd=$(type -p gls || type -p ls)
+$cmd $@

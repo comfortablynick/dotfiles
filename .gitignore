@@ -3,5 +3,6 @@ fish_variables
 env.fish
 env.bash
 env.zsh
+01_env.*
 dotfiles/.config/omf/theme
 *.log

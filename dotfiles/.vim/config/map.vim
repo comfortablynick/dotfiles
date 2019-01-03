@@ -1,6 +1,12 @@
-" KEYMAPS ====================================
-
-" Global {{{
+"                             _
+"  _ __ ___   __ _ _ ____   _(_)_ __ ___
+" | '_ ` _ \ / _` | '_ \ \ / / | '_ ` _ \
+" | | | | | | (_| | |_) \ V /| | | | | | |
+" |_| |_| |_|\__,_| .__(_)_/ |_|_| |_| |_|
+"                 |_|
+"
+" KEYMAPS
+" Global {{{1
 " `<comma>` :: <Leader> (g:mapleader)
 let g:mapleader = ','
 
@@ -24,8 +30,8 @@ noremap <silent> <F8> :TagbarToggle<CR>
 
 " F10 to toggle quickfix window for asyncrun
 noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<CR>
-" }}}
-" Normal mode {{{
+
+" Normal mode {{{1
 " <Shift>+Tab :: Move back in jump list
 nnoremap <silent> <S-Tab> <C-O>
 
@@ -41,14 +47,17 @@ nnoremap <silent> <Leader>t :TagbarToggle<CR>
 " NERDTree
 nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 
+" SetExecutableBit()
+nnoremap <F3> :call SetExecutable()<CR>
+
 " Paste from register
 nnoremap <Leader>0 "0p<CR>
 nnoremap <Leader>1 "1p<CR>
 nnoremap <Leader>2 "2p<CR>
 nnoremap <Leader>3 "3p<CR>
 nnoremap <Leader>4 "4p<CR>
-" }}}
-" Insert mode {{{
+
+" Insert mode {{{1
 " `kj` :: escape
 inoremap kj <Esc>`^
 
@@ -58,12 +67,12 @@ inoremap lkj <Esc>`^:w<CR>
 " `;lkj` :: escape + save + quit
 inoremap ;lkj <Esc>`^:wq<CR>
 
-" }}}
-" Terminal mode {{{
+
+" Terminal mode {{{1
 " `<Esc>` to exit terminal mode
 tnoremap <Esc> <C-\><C-n>
-" }}}
-" Window navigation {{{
+
+" Window navigation {{{1
 " `ALT+{h,j,k,l}` to navigate windows from any mode
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
@@ -77,10 +86,9 @@ nnoremap <A-h> <C-w>h
 nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
-" }}}
-" Tab navigation {{{
+
+" Tab navigation {{{1
 " `t` + {h,l,n}
 nnoremap <silent> th :tabprev<CR>
 nnoremap <silent> tl :tabnext<CR>
 nnoremap <silent> tn :tabnew<CR>
-" }}}

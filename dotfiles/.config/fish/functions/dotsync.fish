@@ -1,7 +1,7 @@
-# Defined in /tmp/fish.3PvY0v/dotsync.fish @ line 2
+# Defined in /tmp/fish.uwdT79/dotsync.fish @ line 2
 function dotsync --description 'Sync git dotfile repo'
-	set -q LS_AFTER_CD
-    and set LS_AFTER_CD 0
+	
+    # and set LS_AFTER_CD 0
 
     echo "Updating dotdrop submodule ... "
     dotgit submodule foreach --recursive git pull origin master
@@ -13,6 +13,6 @@ function dotsync --description 'Sync git dotfile repo'
     echo "Running dotdrop install ... "
     and dotdrop install
 
-    set -q LS_AFTER_CD
-    and set LS_AFTER_CD 1
+    # set -q LS_AFTER_CD
+    # and set LS_AFTER_CD 1
 end

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Build vim from source
+
+# if not root, run as root
+if [ "$(id -u)" != "0" ]; then
+    exec sudo "$0" "$@"
+    exit
+fi
+
+src_dir="$1"
+
+if [ ! -d "$src_dir" ]; then
+    echo "Source dir not found at $src_dir! Aborting..." >&2
+    exit 1
+fi
+echo "Building vim from local source repo at $src_dir..."
+
+# Build vim
+if [ "$HOSTNAME" = "io" ]; then
+    py3_dir="/usr/local/lib/python3.7/config-3.7m-x86_64-linux-gnu"
+else
+    echo "Need to set python3 config dir for this host." >&2
+    exit 1
+fi
+
+venv="$VIRTUAL_ENV"
+
+if [ -n "$venv" ]; then
+    echo "Deactivating virtual env..."
+    deactivate
+fi
+
+cd "$src_dir" &&
+{
+    ./configure --with-features=huge \
+        --enable-multibyte \
+        --enable-rubyinterp=yes \
+        --enable-python3interp=yes \
+        --with-python3-config-dir=$py3_dir \
+        --enable-perlinterp=yes \
+        --enable-luainterp=yes \
+        --enable-cscope \
+        --prefix=/usr/local
+
+    make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
+    sudo make install
+} || exit 1
+
+if [ -n "$venv" ]; then
+    echo "Reactivating virtual env..."
+    . "$venv/bin/activate"
+fi
+
+if [ $? -eq 0 ]; then
+    echo "Vim build complete!"
+else
+    echo "Vim build failed!" >&2
+fi

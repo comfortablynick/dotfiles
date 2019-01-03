@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Update/build Vim
+
+src_dir="$HOME/src/vim"
+
+if git_repo_has_upstream_changes "$src_dir"; then
+    command git -C "$src_dir" reset --hard origin/master \
+    && _build_vim "$src_dir"
+else
+    echo "Vim has no upstream changes." >&2
+fi

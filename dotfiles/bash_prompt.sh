@@ -2,27 +2,36 @@
 # GIT-AWARE PROMPT
 
 find_git_branch() {
-  # Based on: http://stackoverflow.com/a/13003854/170413
-  local branch
-  if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null); then
-    if [ "$branch" == "HEAD" ]; then
-      branch='detached*'
+    # Based on: http://stackoverflow.com/a/13003854/170413
+    local branch
+    if branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); then
+        if [ "$branch" == "HEAD" ]; then
+            branch='detached*'
+        fi
+        git_branch="($branch)"
+    else
+        git_branch=""
     fi
-    git_branch="($branch)"
-  else
-    git_branch=""
-  fi
 }
 
 find_git_dirty() {
-  local status=$(git status --porcelain 2> /dev/null)
-  if [ -n "$status" ]; then
-    git_dirty='*'
-  else
-    git_dirty=''
-  fi
+    local status=$(git status --porcelain 2>/dev/null)
+    if [ -n "$status" ]; then
+        git_dirty='*'
+    else
+        git_dirty=''
+    fi
 }
 
+virtualenv_info() {
+    if [ -n "$VIRTUAL_ENV" ]; then
+        venv_name="(${VIRTUAL_ENV##*/})\n"
+    else
+        venv_name=""
+    fi
+}
+
+# export VIRTUAL_ENV_DISABLE_PROMPT=yes
 
 # Enhanced Git Prompt
 USE_ENHANCED_GIT_PROMPT=1
@@ -31,11 +40,10 @@ USE_ENHANCED_GIT_PROMPT=1
 GIT_PROMPT_ONLY_IN_REPO=0
 
 # GIT_PROMPT_FETCH_REMOTE_STATUS=0   # uncomment to avoid fetching remote status
-GIT_PROMPT_IGNORE_SUBMODULES=1 # uncomment to avoid searching for changed files in submodules
+GIT_PROMPT_IGNORE_SUBMODULES=1        # uncomment to avoid searching for changed files in submodules
 # GIT_PROMPT_WITH_VIRTUAL_ENV=0 # uncomment to avoid setting virtual environment infos for node/python/conda environments
-
 # GIT_PROMPT_SHOW_UPSTREAM=1 # uncomment to show upstream tracking branch
-GIT_PROMPT_SHOW_UNTRACKED_FILES=no # can be no, normal or all; determines counting of untracked files
+GIT_PROMPT_SHOW_UNTRACKED_FILES=no    # can be no, normal or all; determines counting of untracked files
 
 GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=0 # uncomment to avoid printing the number of changed files
 
@@ -43,8 +51,8 @@ GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=0 # uncomment to avoid printing the number o
 # GIT_PROMPT_END=...      # uncomment for custom prompt end sequence
 
 # as last entry source the gitprompt script
-# GIT_PROMPT_THEME=Custom # use custom theme specified in file GIT_PROMPT_THEME_FILE (default ~/.git-prompt-colors.sh)
-# GIT_PROMPT_THEME_FILE=~/.git-prompt-colors.sh
+# GIT_PROMPT_THEME=Default_Ubuntu
+GIT_PROMPT_THEME_FILE=$XDG_CONFIG_HOME/shell/bash-git-prompt/Custom.bgptemplate
 # GIT_PROMPT_THEME=Solarized # use theme optimized for solarized color scheme
 
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" -a $USE_ENHANCED_GIT_PROMPT -eq 1 ]; then
@@ -59,11 +67,13 @@ else
     RED="\[\033[0;31m\]"
     CYAN="\[\033[0;36m\]"
 
-    PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
-    export PS1="$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
+
+    # PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+
+    # export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 fi
 
-return;
+return
 
 # Powerline (not used)
 if [ "$POWERLINE_ROOT" != "" ]; then

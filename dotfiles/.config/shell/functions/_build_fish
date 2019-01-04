@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# if not root, run as root
+if [ "$(id -u)" != "0" ]; then
+    exec sudo "$0" "$@"
+    exit
+fi
+
+src_dir="$1"
+
+if [ ! -d "$src_dir" ]; then
+    echo "Source dir not found at $src_dir! Aborting..." >&2
+    exit 1
+fi
+
+echo "Building Fish from local source repo at $src_dir..."
+
+cd $src_dir &&
+    {
+        [ -d build ] && rm -rf build
+        mkdir build
+        cd build || exit 1
+        cmake ..
+        make
+        echo "Installing Fish ..."
+        sudo make install
+    } && echo "Installation complete!" || exit 1

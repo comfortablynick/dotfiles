@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Helpful bash scripts; loaded by .bashrc
+# For: funcs available at all times (not loaded in $PATH)
+
 # Reset the terminal and source .bashrc
 reload() {
     reset
@@ -22,4 +24,3 @@ brel() {
 timestamp() {
     date +"%T"
 }
-

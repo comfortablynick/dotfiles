@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # GIT-AWARE PROMPT
 
+[ "$OS_NAME" = "Windows" ] && return;
+
 find_git_branch() {
     # Based on: http://stackoverflow.com/a/13003854/170413
     local branch

@@ -20,8 +20,7 @@ case "$(uname -s)" in
 esac
 echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
-[ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Entering .bashrc";
-
+[ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Entering .bashrc"
 
 # SHELL DEFAULTS ----------------------------------------------------
 
@@ -39,13 +38,11 @@ export XDG_CONFIG_HOME="$HOME/.config"                          # Some scripts l
 # Include files loaded at end of this script
 # Located in $BASEDIR
 INCLUDES=(
-# "bash_aliases.sh"                                               # Aliases for all OSes
-"bash_functions.sh"                                             # General functions
-# "bash_linux.sh"                                                 # Code to run on Linux
-"bash_mac.sh"                                                   # Code to run on Mac
-"bash_windows.sh"                                               # Code to run on Win (Git bash)
-"bash_prompt.sh"                                                # Prompt-specific settings
-# "bash_colors.sh"                                                # Color definitions (slow)
+    "bash_functions.sh"                                         # General functions
+    "bash_mac.sh"                                               # Code to run on Mac
+    "bash_windows.sh"                                           # Code to run on Win (Git bash)
+    "bash_prompt.sh"                                            # Prompt-specific settings
+    # "bash_colors.sh"                                            # Color definitions (slow)
 )
 
 # Set vim compatibility if SSH connection

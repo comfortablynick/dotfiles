@@ -16,12 +16,18 @@ fi
 echo "Building vim from local source repo at $src_dir..."
 
 # Build vim
-if [ "$HOSTNAME" = "io" ]; then
+case "$HOSTNAME" in
+io)
     py3_dir="/usr/local/lib/python3.7/config-3.7m-x86_64-linux-gnu"
-else
-    echo "Need to set python3 config dir for this host." >&2
-    exit 1
-fi
+    ;;
+joppa)
+    py3_dir=$(python3.5-config --configdir)
+    ;;
+*)
+    echo "Need to set python3 config dir for this host." >&2 &&
+        exit 1
+    ;;
+esac
 
 venv="$VIRTUAL_ENV"
 
@@ -31,20 +37,20 @@ if [ -n "$venv" ]; then
 fi
 
 cd "$src_dir" &&
-{
-    ./configure --with-features=huge \
-        --enable-multibyte \
-        --enable-rubyinterp=yes \
-        --enable-python3interp=yes \
-        --with-python3-config-dir=$py3_dir \
-        --enable-perlinterp=yes \
-        --enable-luainterp=yes \
-        --enable-cscope \
-        --prefix=/usr/local
+    {
+        ./configure --with-features=huge \
+            --enable-multibyte \
+            --enable-rubyinterp=yes \
+            --enable-python3interp=yes \
+            --with-python3-config-dir=$py3_dir \
+            --enable-perlinterp=yes \
+            --enable-luainterp=yes \
+            --enable-cscope \
+            --prefix=/usr/local
 
-    make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
-    sudo make install
-} || exit 1
+        make VIMRUNTIMEDIR=/usr/local/share/vim/vim81
+        sudo make install
+    } || exit 1
 
 if [ -n "$venv" ]; then
     echo "Reactivating virtual env..."

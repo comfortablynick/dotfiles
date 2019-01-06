@@ -64,17 +64,17 @@ source ~/.zplug/init.zsh
 # Plugin Definitions {{{2
 
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
-# zplug "plugins/git", from:oh-my-zsh
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "mafredri/zsh-async", from:github
+zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
 
 # Themes
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, as:theme, if:'[[ $THEME == pl9k ]]'
-zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme, as:theme, if:'[[ $THEME == sorin ]]'
-zplug "eendroroy/alien", as:theme, if:'[[ $THEME == alien ]]'
-zplug "eendroroy/alien-minimal", as:theme, if:'[[ $THEME == alien-minimal ]]'
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme, if:'[[ $THEME == pure ]]'
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, as:theme, if:'[ "$THEME" = "pl9k" ]'
+zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme, as:theme, if:'[ "$THEME" = "sorin" ]'
+zplug "eendroroy/alien", as:theme, if:'[ "$THEME" = "alien" ]'
+zplug "eendroroy/alien-minimal", as:theme, if:'[ "$THEME" = "alien-minimal" ]'
+zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme, if:'[ "$THEME" = "pure" ]'
 
 # Must be loaded last (or deferred)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2

@@ -19,11 +19,13 @@
 if not status --is-interactive
   exit 0
 end
+
 # Everything below is for interactive shells
 # Welcome message {{{2
 set_color $fish_color_autosuggestion
 set -l start_time (get_date)
 and echo -n 'Sourcing config.fish...  '
+
 # FUNCTIONS {{{1
 # ab :: wrap `abbr` so fish linter doesn't complain {{{2
 function ab -d "create global abbreviation"
@@ -292,6 +294,9 @@ if test -n "$SSH_CONNECTION"
     set -gx VIM_SSH_COMPAT 1
 end
 
+# Powerline prompt
+# set -a fish_function_path "$XDG_CONFIG_HOME/powerline/bindings/fish"
+# powerline-setup
 # END CONFIG {{{1
 # Print config.fish load time {{{2
 set -l end_time (get_date)

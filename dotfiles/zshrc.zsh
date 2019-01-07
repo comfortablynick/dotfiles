@@ -37,8 +37,8 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export THEME="pure"
-export SSH_THEME="pure"
+export THEME="alien-minimal"
+export SSH_THEME="$THEME"
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -70,14 +70,34 @@ zplug "mafredri/zsh-async", from:github
 zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
 
 # Themes
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, as:theme, if:'[ "$THEME" = "pl9k" ]'
-zplug "themes/sorin", from:oh-my-zsh, use:sorin.zsh-theme, as:theme, if:'[ "$THEME" = "sorin" ]'
-zplug "eendroroy/alien", as:theme, if:'[ "$THEME" = "alien" ]'
-zplug "eendroroy/alien-minimal", as:theme, if:'[ "$THEME" = "alien-minimal" ]'
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme, if:'[ "$THEME" = "pure" ]'
+zplug "bhilburn/powerlevel9k", \
+    use:powerlevel9k.zsh-theme, \
+    as:theme, \
+    if:'[ $THEME = pl9k ]'
+
+zplug "themes/sorin", \
+    from:oh-my-zsh, \
+    use:sorin.zsh-theme, \
+    as:theme, \
+    if:'[ $THEME = sorin ]'
+
+zplug "eendroroy/alien", \
+    as:theme, \
+    if:'[ $THEME = alien ]'
+
+zplug "eendroroy/alien-minimal", \
+    as:theme, \
+    if:'[ $THEME = alien-minimal ]'
+
+zplug "sindresorhus/pure", \
+    use:pure.zsh, \
+    from:github, \
+    as:theme, \
+    if:'[ "$THEME" = "pure" ]'
 
 # Must be loaded last (or deferred)
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "zsh-users/zsh-syntax-highlighting", \
+    defer:2
 
 # Source bash files
 # zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
@@ -120,32 +140,6 @@ fi
 
 # Load zplug
 [ "$DEBUG_MODE" = true ] && zplug && zplug load --verbose || zplug load
-
-# ALIASES {{{1
-# alias zshc='vim ~/.zshrc'
-# alias zrel='relz'
-
-# # Source Bash Config Files
-# source_sh() {
-#   emulate sh -c "source $@"
-# }
-#
-# # Currently handled by zplug
-# source_bash=(
-# #  ~/.bash_aliases
-# #  ~/.bash_functions
-# #  ~/.bash_mac
-# #  ~/.bash_windows
-# $ZDOTDIR/env.zsh
-# ~/.bash_linux
-# )
-#
-# for file in $source_bash
-#   do
-#     [ ! -f $file ] && return;
-#     [ "$DEBUG_MODE" ] && echo "Sourcing $file"
-#     source_sh $file
-#   done
 
 # FUNCTIONS {{{1
 

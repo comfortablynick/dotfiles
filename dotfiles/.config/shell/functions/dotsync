@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Update dotfiles directory and
+# run dotdrop update
+
+dotfiles="$HOME/dotfiles"
+
+echo "Updating dotdrop submodule and syncing dotfiles repo... "
+command git -C "$dotfiles" submodule foreach --recursive git pull origin master &&
+    {
+        command git -C "$dotfiles" pull &&
+            command git -C "$dotfiles" add -A &&
+            command git -C "$dotfiles" commit &&
+            command git -C "$dotfiles" push
+    } && echo "Running dotdrop install ... " &&
+    dotdrop install || echo "Did not run dotdrop install."

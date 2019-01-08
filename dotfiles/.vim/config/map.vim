@@ -13,6 +13,9 @@ let g:mapleader = ','
 " `Ctrl+n` :: toggle NERDTree
 noremap <silent> <C-n> :NERDTreeToggle<CR>
 
+" `Ctrl+b` :: run code with Vim-Tmux-Runner
+noremap <silent> <C-b> :VtrSendFile!<CR>
+
 " <Space> :: toggle folds
 noremap <Space> za
 

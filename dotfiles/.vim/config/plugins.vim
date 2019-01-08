@@ -68,10 +68,6 @@ Plug 'w0rp/ale',                                                " Async Linting 
 " Formatting {{{2
 Plug 'sbdchd/neoformat'
 
-" Folding {{{2
-" Plug 'kalekundert/vim-coiled-snake',    Cond(1)
-" Plug 'Konfekt/FastFold'
-
 " Syntax highlighting {{{2
 Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
 Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
@@ -159,8 +155,19 @@ Plug 'itchyny/lightline.vim',           Cond(has('nvim'))
 Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
 
-" Tmuxline {{{3
+" Tmux {{{2
 Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })
+Plug 'christoomey/vim-tmux-runner',
+    \ Cond(1,
+    \ {
+    \   'on':
+    \     [
+    \       'VtrSendCommandToRunner',
+    \       'VtrOpenRunner',
+    \       'VtrSendCommand',
+    \       'VtrSendFile'
+    \     ]
+    \   })
 
 " END {{{2
 call plug#end()
@@ -350,5 +357,12 @@ let g:tagbar_autofocus = 1                                      " Move focus to 
 let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
 let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
 let g:tagbar_sort = 0                                           " Sort tags alphabetically vs. in file order
+
+" Vim Tmux Runner {{{2
+let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
+let g:VtrClearEmptyLines = 0                                    " Disable clearning if blank lines are relevant
+let g:VtrAppendNewline = 1                                      " Add newline to multiline send
+let g:VtrOrientation = 'h'                                      " h/v split
+let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
 
 " vim:set fdl=1:

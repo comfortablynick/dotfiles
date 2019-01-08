@@ -6,7 +6,8 @@
 "  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
 "
 " Functions {{{1
-" SetShebang() :: add shebang for new file {{{2
+" File operations {{{2
+" SetShebang() :: add shebang for new file {{{3
 function! SetShebang()
 python3 << endpython
 
@@ -30,7 +31,7 @@ if not vim.current.buffer[0].startswith('#!'):
 endpython
 endfunction
 
-" GetPath() :: get path of current file {{{2
+" GetPath() :: get path of current file {{{3
 function! GetPath()
 python3 << EOP
 
@@ -41,7 +42,7 @@ print(file_path)
 EOP
 endfunction
 
-" SetExecutableBit() :: set file as executable by user {{{2
+" SetExecutableBit() :: set file as executable by user {{{3
 function! SetExecutableBit()
 python3 << EOP
 
@@ -63,19 +64,20 @@ else:
 EOP
 endfunction
 
-" SetExecutable() :: set shebang and executable bit {{{2
+" SetExecutable() :: set shebang and executable bit {{{3
 function! SetExecutable()
     call SetExecutableBit()
     call SetShebang()
 endfunction
 
-" Run Python Code in Vim (DEPRECATED) {{{2
+" Run code {{{2
+" Run Python Code in Vim (DEPRECATED) {{{3
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 " nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
 " vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
 " nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
-" SaveAndExecutePython() :: save file and execute python in split vim {{{2
+" SaveAndExecutePython() :: save file and execute python in split vim {{{3
 function! SaveAndExecutePython() abort
     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
 
@@ -128,7 +130,7 @@ function! SaveAndExecutePython() abort
     silent execute 'wincmd p'
 endfunction
 
-" ClosePythonWindow() :: close window opened for running python {{{2
+" ClosePythonWindow() :: close window opened for running python {{{3
 function! ClosePythonWindow() abort
     " Close Python window we opened
     if bufexists(s:buf_nr)
@@ -142,7 +144,9 @@ function! ClosePythonWindow() abort
     silent execute 'wincmd p'
 endfunction
 
-" ToggleQf() :: toggle quickfix window {{{2
+
+" Quickfix window {{{2
+" ToggleQf() :: toggle quickfix window {{{3
 function! ToggleQf() abort
     if exists('*asyncrun#quickfix_toggle')
         " AsyncRun is loaded; use this handy function
@@ -163,7 +167,7 @@ function! ToggleQf() abort
 endfunction
 nnoremap <silent> qf :call ToggleQf()<cr>
 
-" AutoCloseQfWin() :: close qf on quit {{{2
+" AutoCloseQfWin() :: close qf on quit {{{3
 function! AutoCloseQfWin() abort
     if &filetype ==? 'qf'
         " if this window is last on screen quit without warning
@@ -173,7 +177,8 @@ function! AutoCloseQfWin() abort
     endif
 endfunction
 
-" RunCommand() :: run command asynchronously in tmux pane {{{2
+" General {{{2
+" RunCommand() :: run command asynchronously in tmux pane {{{3
 function! RunCommand(cmd) abort
     let panes = system('tmux display-message -p "#{window_panes}"')
     if panes >= 2
@@ -183,7 +188,7 @@ function! RunCommand(cmd) abort
     endif
 endfunction
 
-" OpenTagbar() :: wrapper for tagbar#autoopen with options {{{2
+" OpenTagbar() :: wrapper for tagbar#autoopen with options {{{3
 function! OpenTagbar() abort
     if winwidth(0) > 100
         call tagbar#autoopen(0)
@@ -192,7 +197,7 @@ function! OpenTagbar() abort
     endif
 endfunction
 
-" LastPlace() :: restore cursor position and folding {{{2
+" LastPlace() :: restore cursor position and folding {{{3
 function! LastPlace()
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
@@ -286,4 +291,6 @@ augroup fmtopts
 augroup END
 " Commands {{{1
 " Sudo save {{{2
+" Note: does not work in Neovim in some cases
+" Use `sudo -E vim {file}` to open vim while preserving user environment
 command W w !sudo tee "%" > /dev/null

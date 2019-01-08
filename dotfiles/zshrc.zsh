@@ -168,3 +168,7 @@ is_ssh() {
 }
 
 [ "$DEBUG_MODE" = true ] && echo "Exiting .zshrc"
+
+# SHELL STARTUP {{{1
+# Python Virtual Env
+source "$def_venv/bin/activate"

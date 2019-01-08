@@ -217,6 +217,7 @@ if test "$FISH_THEME" = 'bobthefish'
     set -g fish_prompt_pwd_dir_length 1 # Abbreviate PWD in prompt
     set -g theme_project_dir_length 1 # Abbreviate relative path to proj root
     set -g theme_display_cmd_duration 0 # Threshold for showing command dur in ms
+    set -g theme_date_format "+%a %b %d %I:%M:%S %p"
 
     # Tmux shows user/host
     # Only display if $SSH and no $TMUX

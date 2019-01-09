@@ -22,16 +22,15 @@ cd "$src_dir" || exit 1
 mkdir .deps && cd .deps &&
     {
         cmake ../third-party && make
-    } || exit 1
+    }
 
 # Build Neovim
 cd "$src_dir" || exit 1
-[ -d build ] && rm -rf build &&
-    {
-        make distclean
-        make CMAKE_BUILD_TYPE=RelWithDebInfo
-        sudo make install
-    }
+
+[ -d build ] && rm -rf build
+make distclean
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+sudo make install
 
 if [ $? -eq 0 ]; then
     echo "Neovim build complete!"

@@ -2,6 +2,7 @@
 """Build latest python from source and install.
 
 Also install/update prerequisites via apt.
+NOTE: UNTESTED!!
 """
 import logging
 import os

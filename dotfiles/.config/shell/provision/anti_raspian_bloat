@@ -11,26 +11,40 @@ logging.basicConfig(level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
 
 pkgs = """
-idle python3-pygame python-pygame python-tk
-idle3 python3-tk
-python3-rpi.gpio
-python-serial python3-serial
-python-picamera python3-picamera
-python3-pygame python-pygame python-tk
+idle
+python3-pygame
+python-pygame
+python-tk
+idle3
 python3-tk
-debian-reference-en dillo x2x
-scratch nuscratch
+python3-rpi.gpio
+python-serial
+python3-serial
+python-picamera
+python3-picamera
+python3-pygame
+python-pygame
+python-tk
+python3-tk
+debian-reference-en
+dillo
+x2x
+scratch
+nuscratch
 timidity
-smartsim penguinspuzzle
+smartsim
+penguinspuzzle
 pistore
 sonic-pi
 python3-numpy
 python3-pifacecommon
 python3-pifacedigitalio
 python3-pifacedigital-scratch-handler
-python-pifacecommon python-pifacedigitalio
+python-pifacecommon
+python-pifacedigitalio
 oracle-java8-jdk
-minecraft-pi python-minecraftpi
+minecraft-pi
+python-minecraftpi
 wolfram-engine
 """
 
@@ -50,27 +64,26 @@ directories = """
 
 def handler(func, path, exc):
     """Handles errors from rmtree."""
-    LOG.error("Error deleting %s: %s", path, exc)
+    LOG.error("Error deleting %s: %s", path, exc[1])
 
 
 def run():
     """Script entry point."""
     print("Removing the following extra default packages:\n{}".format(pkgs.strip()))
-    pkg_str = " ".join(pkgs.strip().split("\n"))
-    LOG.debug("pkg_str: %s", pkg_str)
+    pkg_list = pkgs.strip().split("\n")
 
     # Call apt in subshell
-    apt_cmd = ["sudo", "apt-get", "-y", "remove", "--purge", pkg_str]
-    subprocess.run(apt_cmd)
+    for pkg in pkg_list:
+        apt_cmd = ["sudo", "apt-get", "-y", "remove", "--purge", pkg]
+        LOG.debug("Command: %s", apt_cmd)
+        subprocess.run(apt_cmd)
 
     print(
         "Removing the following extra default directories\n{}".format(
             directories.strip()
         )
     )
-    LOG.debug("dirs_str: %s", directories.strip())
 
-    # Remove directories (empty or not)
     for dir in directories.strip().split("\n"):
         LOG.debug("Removing %s", dir)
         shutil.rmtree(dir, onerror=handler)

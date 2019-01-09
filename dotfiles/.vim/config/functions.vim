@@ -279,10 +279,10 @@ augroup quickfix
 augroup END
 
 " Tagbar {{{2
-augroup tagbar
-    autocmd!
-    autocmd FileType typescript,python call OpenTagbar()
-augroup END
+" augroup tagbar
+"     autocmd!
+"     autocmd FileType typescript,python call OpenTagbar()
+" augroup END
 
 " Formatopts {{{2
 augroup fmtopts

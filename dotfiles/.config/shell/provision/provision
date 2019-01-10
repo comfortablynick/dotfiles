@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 """Main provisioning script."""
+import argparse
 import errno
 import logging
 import os
 import shutil
 import stat
+import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
 from subprocess import run
 
-logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
 LOG = logging.getLogger(__name__)
 APT_CACHE_UPDATED = False
 
-# Utility Functions {{{
+# Utility Functions {{{1
 def mkdir_p(newdir: str) -> None:
     """Make new directory if it doesn't exist.
 
@@ -127,7 +129,7 @@ def chdir(path: str) -> None:
         os.chdir(prev_cwd)
 
 
-# }}}
+# Apt {{{1
 def apt_update_cache() -> None:
     """Update apt cache"""
     cmd = ["sudo", "apt", "update"]
@@ -149,8 +151,26 @@ def apt_install(pkgs: list) -> None:
     return
 
 
-def install_tmux() -> None:
+# Git {{{1
+def git_clone(repo: str, dest_path: str, args: list = ["--recursive"]) -> None:
+    """Clone git repo to dest path."""
+    if not shutil.which("git"):
+        LOG.error("Git not installed!")
+        return
+    if not repo[0:4] in ("git@", "http"):
+        # Assume it's my repo
+        repo = f"git@github.com:comfortablynick/{repo}.git"
+    LOG.debug("Cloning git repo %s to %s", repo, dest_path)
+    run(["git", "clone", "repo", *args, dest_path])
+    return
+
+
+# Install/build apps {{{1
+def install_tmux(args) -> None:
     """Download, build, and install tmux."""
+    if ("tmux", "all") not in args.run_list:
+        LOG.debug("Skipping tmux install")
+        return
     if shutil.which("tmux"):
         LOG.warning("tmux already exists. Skipping install!")
         return
@@ -181,5 +201,55 @@ def install_tmux() -> None:
     rmtree(tmux_tmp, ignore_errors=True)
 
 
+def process_args(argv: list):
+    """Parse command line arguments and return namespace."""
+    parser = argparse.ArgumentParser(
+        prog="provisioning",
+        description="Provision setup of new machine with standard defaults common to all installs",
+    )
+    parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--all",
+        dest="run_list",
+        action="append_const",
+        default=[],
+        const="all",
+        help="Run all provisioning processes",
+    )
+    parser.add_argument(
+        "--tmux",
+        dest="run_list",
+        action="append_const",
+        const="tmux",
+        help="Build and install latest version of TMUX",
+    )
+    return parser.parse_args(argv)
+
+
+# Entry point {{{1
+def cli():
+    """Command-line entry point."""
+    # Get arguments
+    try:
+        sys.argv[1]
+        cli_args = sys.argv[1:]
+    except IndexError:
+        cli_args = ["-dd"]
+    finally:
+        args = process_args(cli_args)
+
+    if args.debug == 1:
+        LOG.setLevel(logging.INFO)
+    if args.debug == 2:
+        LOG.setLevel(logging.DEBUG)
+
+    LOG.info("Argument input: %s", repr(cli_args))
+    LOG.info("Argparse output: %s", repr(args))
+
+    # Call all functions and pass args
+    # Each function will handle whether to execute or not
+    install_tmux(args)
+
+
 if __name__ == "__main__":
-    install_tmux()
+    cli()

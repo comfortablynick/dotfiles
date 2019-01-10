@@ -73,10 +73,9 @@ def run():
     pkg_list = pkgs.strip().split("\n")
 
     # Call apt in subshell
-    for pkg in pkg_list:
-        apt_cmd = ["sudo", "apt-get", "-y", "remove", "--purge", pkg]
-        LOG.debug("Command: %s", apt_cmd)
-        subprocess.run(apt_cmd)
+    apt_cmd = ["sudo", "apt-get", "-y", "remove", "--purge", *pkg_list]
+    LOG.debug("Command: %s", apt_cmd)
+    subprocess.run(apt_cmd)
 
     print(
         "Removing the following extra default directories\n{}".format(

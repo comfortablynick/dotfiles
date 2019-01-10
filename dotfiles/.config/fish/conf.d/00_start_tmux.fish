@@ -1,5 +1,6 @@
 # Start tmux session for interactive shells
 if status is-interactive
+    and test -n (type -f tmux 2>/dev/null)
     and test -z "$TMUX"
     and not set -q no_tmux_login
 

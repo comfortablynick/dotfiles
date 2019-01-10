@@ -224,12 +224,7 @@ let g:ale_fixers = {
     \       'prettier',
     \   ],
     \ }
-let g:ale_python_flake8_args = {
-    \ '--max-line-length': 88,
-    \ '--ignore': [
-    \   'E203',
-    \ ],
-    \ }
+let g:ale_python_flake8_options = '--max-line-length 100  --ignore E203,E302'
 let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 

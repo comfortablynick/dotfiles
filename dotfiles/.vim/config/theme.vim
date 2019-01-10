@@ -277,10 +277,10 @@ function! LL_FileType() abort "{{{3
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
-    let venv = &filetype ==? 'python' ?
-        \ ' ('.LL_VirtualEnvName().')' :
-        \ ''
-    return winwidth(0) > g:LL_MedWidth ? (&filetype . ftsymbol .venv ) : ''
+    let venv = LL_VirtualEnvName()
+    return winwidth(0) > g:LL_MinWidth
+        \ ? (&filetype . ftsymbol .venv )
+        \ : ''
 endfunction
 
 function! LL_FileFormat() abort "{{{3
@@ -373,7 +373,9 @@ function! LL_Fugitive() abort "{{{3
 endfunction
 
 function! LL_VirtualEnvName() abort "{{{3
-    return !empty($VIRTUAL_ENV) ? split($VIRTUAL_ENV, '/')[-1] : ''
+    return &filetype ==# 'python' && !empty($VIRTUAL_ENV)
+        \ ? printf(' (%s)', split($VIRTUAL_ENV, '/')[-1])
+        \ : ''
 endfunction
 
 function! LL_CurrentTag() abort "{{{3

@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Main provisioning script."""
+import errno
+import logging
+import os
+
+LOG = logging.basicConfig(level=logging.DEBUG)
+
+# Utility Functions {{{
+def mkdir_p(newdir):
+    """Make new directory if it doesn't exist.
+
+    Emulates `mkdir -p`
+        - if it already exists, silently complete
+        - if regular file in the way, raise an exception
+        - if parent directories do not exist, make them as well
+        From: Pipenv (http://bit.ly/2SLxRwL)
+    """
+    if os.path.isdir(newdir):
+        pass
+    elif os.path.isfile(newdir):
+        raise OSError(
+            "a file with the same name as the desired dir, '{0}', already exists.".format(
+                newdir
+            )
+        )
+
+    else:
+        head, tail = os.path.split(newdir)
+        if head and not os.path.isdir(head):
+            mkdir_p(head)
+        if tail:
+            # Even though we've checked that the directory doesn't exist above, it might exist
+            # now if some other process has created it between now and the time we checked it.
+            try:
+                os.mkdir(newdir)
+            except OSError as exn:
+                # If we failed because the directory does exist, that's not a problem -
+                # that's what we were trying to do anyway. Only re-raise the exception
+                # if we failed for some other reason.
+                if exn.errno != errno.EEXIST:
+                    raise
+
+
+# }}}

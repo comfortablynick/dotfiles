@@ -7,7 +7,7 @@ setlocal autoindent                         " Attempt auto indenting
 setlocal shiftwidth=4                       " Indent width in spaces
 setlocal softtabstop=4
 setlocal tabstop=4
-" setlocal foldmethod=marker                  " Use 3x{ for folding
+setlocal foldmethod=marker                  " Use 3x{ for folding
 
 " Other
 setlocal backspace=2                        " Backspace behaves as expected

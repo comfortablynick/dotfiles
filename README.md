@@ -6,3 +6,4 @@
 ## TODO
 
 - Add individual files in /bin to dotdrop to allow for os-specific configurations
+- Add provisioning/bootstrap script to handle *most* of the setup process

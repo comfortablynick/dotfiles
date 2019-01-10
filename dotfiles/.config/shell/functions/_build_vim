@@ -23,6 +23,9 @@ io)
 joppa)
     py3_dir=$(python3.5-config --configdir)
     ;;
+titan)
+    py3_dir=$("/home/pi/.pyenv/versions/3.7.2/lib/python3.7/config-3.7m-arm-linux-gnueabihf")
+    ;;
 *)
     echo "Need to set python3 config dir for this host." >&2 &&
         exit 1

@@ -3,9 +3,15 @@
 
 src_dir="$HOME/src/vim"
 
-if git_repo_has_upstream_changes "$src_dir"; then
-    command git -C "$src_dir" reset --hard origin/master \
-    && _build_vim "$src_dir"
+if [ -n "$src_dir" ] && [ ! -d "$src_dir" ]; then
+	echo "Cloning vim repo to $src_dir..."
+	git clone https://github.com/vim/vim.git "$src_dir" \
+	&& _build_vim "$src_dir"
 else
-    echo "Vim has no upstream changes." >&2
+	if git_repo_has_upstream_changes "$src_dir"; then
+	    command git -C "$src_dir" reset --hard origin/master \
+	    && _build_vim "$src_dir"
+	else
+	    echo "Vim has no upstream changes." >&2
+	fi
 fi

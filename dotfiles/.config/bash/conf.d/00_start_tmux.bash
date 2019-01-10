@@ -1,5 +1,9 @@
-# Return if already in tmux or if special var is set
-[ -n "$TMUX" -o -f "$HOME/.no_bash_tmux_login" ] && return
+# TMUX Initialization
+# Abort if
+#       - already in tmux
+#       - 'no tmux' file exists in home dir for this shell
+#       - `tmux` command not present
+([ -n "$TMUX" ] || [ -f "$HOME/.no_bash_tmux_login" ] || [ -z "$(command -v tmux)" ]) && return
 
 if [ ! -f "$HOME/.no_bash_tmux_next_login" ]; then
     # Start tmux
@@ -9,8 +13,8 @@ if [ ! -f "$HOME/.no_bash_tmux_next_login" ]; then
     exec tmux -2 new-session -A -s "$session_name"
 else
     rm "$HOME/.no_bash_tmux_next_login"
-    echo -e $(echo -ne '\033[1;33m')
+    echo -e "$(echo -ne '\033[1;33m')"
     echo "Note: 'no_tmux_next_login' flag was set for this login."
     echo "TMUX will be used on next login unless flag is reset."
-    echo -e $(echo -ne '\033[0m')
+    echo -e "$(echo -ne '\033[0m')"
 fi

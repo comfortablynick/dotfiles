@@ -288,7 +288,13 @@ function! LL_FileFormat() abort "{{{3
         \ exists('*WebDevIconsGetFileFormatSymbol') ?
         \ WebDevIconsGetFileFormatSymbol() :
         \ ''
-    return LL_IsNotFile() ? '' : winwidth(0) > g:LL_MedWidth ? (&fileformat . ' ' . ffsymbol ) : ''
+    " No output if fileformat is unix (standard)
+    return &fileformat !=? 'unix' ?
+            \ LL_IsNotFile() ?
+            \ '' : winwidth(0) > g:LL_MedWidth
+            \ ? (&fileformat . ' ' . ffsymbol )
+            \ : ''
+        \ : ''
 endfunction
 
 function! LL_FileEncoding() abort "{{{3

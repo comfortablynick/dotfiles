@@ -70,10 +70,8 @@ if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
 fi
 unset file
 
-source $def_venv/bin/activate
-
 # Load includes if they exist; add timestamp for debug mode
-for file in ${INCLUDES[@]}; do
+for file in "${INCLUDES[@]}"; do
     if [ -f $BASEDIR/$file ]; then
         [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
         source $BASEDIR/$file

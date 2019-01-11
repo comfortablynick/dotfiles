@@ -10,9 +10,14 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
+from pprint import pformat
 from subprocess import run
 
-logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
+import requests
+
+logging.basicConfig(
+    format="%(levelname)s:%(funcName)s: %(message)s", level=logging.WARNING
+)
 LOG = logging.getLogger(__name__)
 APT_CACHE_UPDATED = False
 
@@ -168,7 +173,7 @@ def git_clone(repo: str, dest_path: str, args: list = ["--recursive"]) -> None:
 # Install/build apps {{{1
 def install_tmux(args) -> None:
     """Download, build, and install tmux."""
-    if ("tmux", "all") not in args.run_list:
+    if "tmux" not in args.run_list:
         LOG.debug("Skipping tmux install")
         return
     if shutil.which("tmux"):
@@ -201,6 +206,21 @@ def install_tmux(args) -> None:
     rmtree(tmux_tmp, ignore_errors=True)
 
 
+# Clone repos {{{1
+def clone_git_repos(args) -> None:
+    """Clone default git repos."""
+    if "git" not in args.run_list:
+        LOG.debug("Skipping git clone")
+        return
+    r = requests.get("https://api.github.com/users/comfortablynick/repos")
+    response = r.json()
+    LOG.debug(pformat(response))
+    repo_urls = [repo["ssh_url"] for repo in response]
+    LOG.debug("User GitHub repos:\n%s", "\n".join(repo_urls))
+    return
+
+
+# Parse arguments {{{1
 def process_args(argv: list):
     """Parse command line arguments and return namespace."""
     parser = argparse.ArgumentParser(
@@ -210,10 +230,9 @@ def process_args(argv: list):
     parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
     parser.add_argument(
         "--all",
-        dest="run_list",
-        action="append_const",
-        default=[],
-        const="all",
+        dest="run_all",
+        action="store_true",
+        default=False,
         help="Run all provisioning processes",
     )
     parser.add_argument(
@@ -221,7 +240,15 @@ def process_args(argv: list):
         dest="run_list",
         action="append_const",
         const="tmux",
+        default=[],
         help="Build and install latest version of TMUX",
+    )
+    parser.add_argument(
+        "--git",
+        dest="run_list",
+        action="append_const",
+        const="git",
+        help="Clone default git repos to ~/git",
     )
     return parser.parse_args(argv)
 
@@ -234,7 +261,7 @@ def cli():
         sys.argv[1]
         cli_args = sys.argv[1:]
     except IndexError:
-        cli_args = ["-dd"]
+        cli_args = ["-dd", "--git"]
     finally:
         args = process_args(cli_args)
 
@@ -243,11 +270,16 @@ def cli():
     if args.debug == 2:
         LOG.setLevel(logging.DEBUG)
 
+    # Add all processes to run list if --all
+    if args.run_all:
+        args.run_list = ["git", "tmux"]
+
     LOG.info("Argument input: %s", repr(cli_args))
     LOG.info("Argparse output: %s", repr(args))
 
     # Call all functions and pass args
     # Each function will handle whether to execute or not
+    clone_git_repos(args)
     install_tmux(args)
 
 

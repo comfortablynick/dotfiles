@@ -61,11 +61,20 @@ esac
 
 #INCLUDES ------------------------------------------------------------
 
-# Source all .bash files in snippets subdir
+# Source all .bash files in config snippets subdir
 if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
     for file in ${BASEDIR}/.config/bash/conf.d/*.bash; do
-        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
-        source $file
+        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing snippet: ${file}"
+        source "$file"
+    done
+fi
+unset file
+
+# Source all .bash files in completions dir
+if [ -d ${BASEDIR}/.config/bash/completions ]; then
+    for file in ${BASEDIR}/.config/bash/completions/*.bash; do
+        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing completion: ${file}"
+        source "$file"
     done
 fi
 unset file
@@ -74,7 +83,7 @@ unset file
 for file in "${INCLUDES[@]}"; do
     if [ -f $BASEDIR/$file ]; then
         [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
-        source $BASEDIR/$file
+        source "$BASEDIR/$file"
     fi
 done
 unset file

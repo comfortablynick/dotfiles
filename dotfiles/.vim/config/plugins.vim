@@ -50,7 +50,6 @@ Plug 'majutsushi/tagbar'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
-Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
 
 " Linting {{{2
 Plug 'w0rp/ale',                                                " Async Linting Engine
@@ -157,17 +156,20 @@ Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
 
 " Tmux {{{2
 Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })
+Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
 Plug 'christoomey/vim-tmux-runner',
-    \ Cond(1,
+    \ Cond(!empty($TMUX_PANE),
     \ {
     \   'on':
     \     [
     \       'VtrSendCommandToRunner',
     \       'VtrOpenRunner',
     \       'VtrSendCommand',
-    \       'VtrSendFile'
+    \       'VtrSendFile',
+    \       'VtrKillRunner',
+    \       'VtrAttachToPane',
     \     ]
-    \   })
+    \ })
 
 " END {{{2
 call plug#end()

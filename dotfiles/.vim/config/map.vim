@@ -13,8 +13,9 @@ let g:mapleader = ','
 " `Ctrl+n` :: toggle NERDTree
 noremap <silent> <C-n> :NERDTreeToggle<CR>
 
-" `Ctrl+b` :: run code with Vim-Tmux-Runner
+" Vim-tmux-runner (Run code)
 noremap <silent> <C-b> :VtrSendFile!<CR>
+noremap <silent> <C-x> :VtrKillRunner<CR>
 
 " <Space> :: toggle folds
 noremap <Space> za
@@ -43,6 +44,10 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+" Vim-tmux-runner
+nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
+nnoremap <silent> <Leader>r :VtrSendFile!<CR>
 
 " Tagbar
 nnoremap <silent> <Leader>t :TagbarToggle<CR>

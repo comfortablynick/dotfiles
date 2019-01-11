@@ -24,3 +24,16 @@ brel() {
 timestamp() {
     date +"%T"
 }
+
+_pyenv_virtualenv_hook() {
+    local ret=$?
+    if [ -n "$VIRTUAL_ENV" ]; then
+        eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+    else
+        eval "$(pyenv sh-activate --quiet || true)" || true
+    fi
+    return $ret
+}
+if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+    PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
+fi

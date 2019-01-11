@@ -10,10 +10,9 @@ import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from pprint import pformat
 from subprocess import run
 
-import requests
+from github import Github
 
 logging.basicConfig(
     format="%(levelname)s:%(funcName)s: %(message)s", level=logging.WARNING
@@ -170,12 +169,23 @@ def git_clone(repo: str, dest_path: str, args: list = ["--recursive"]) -> None:
     return
 
 
+def github_token() -> str:
+    """Retrieve secret access token from disk."""
+    file = os.path.expanduser("~/.github_token")
+    token = ""
+    try:
+        with open(file, "r") as f:
+            token = f.read()
+    except FileNotFoundError:
+        LOG.error("GitHub token file not found: %s. Aborting!", file)
+        return None
+    else:
+        return token.strip("\n")
+
+
 # Install/build apps {{{1
-def install_tmux(args) -> None:
+def install_tmux() -> None:
     """Download, build, and install tmux."""
-    if "tmux" not in args.run_list:
-        LOG.debug("Skipping tmux install")
-        return
     if shutil.which("tmux"):
         LOG.warning("tmux already exists. Skipping install!")
         return
@@ -207,47 +217,45 @@ def install_tmux(args) -> None:
 
 
 # Clone repos {{{1
-def clone_git_repos(args) -> None:
-    """Clone default git repos."""
-    if "git" not in args.run_list:
-        LOG.debug("Skipping git clone")
+def clone_git_repos() -> None:
+    """Clone repos from GitHub."""
+    token = github_token()
+    LOG.info("GitHub token found: %s", token)
+    if token is None:
         return
-    r = requests.get("https://api.github.com/users/comfortablynick/repos")
-    response = r.json()
-    LOG.debug(pformat(response))
-    repo_urls = [repo["ssh_url"] for repo in response]
-    LOG.debug("User GitHub repos:\n%s", "\n".join(repo_urls))
-    return
+    g = Github(token)
+    repos = []
+    for repo in g.get_user().get_repos():
+        repos.append(repo.name)
+        for content in repo.get_contents("."):
+            print(content)
+    LOG.info("GitHub repos found:\n%s", "\n".join(repos))
 
 
 # Parse arguments {{{1
 def process_args(argv: list):
     """Parse command line arguments and return namespace."""
     parser = argparse.ArgumentParser(
-        prog="provisioning",
+        prog="provision",
         description="Provision setup of new machine with standard defaults common to all installs",
     )
     parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
     parser.add_argument(
         "--all",
-        dest="run_all",
         action="store_true",
         default=False,
         help="Run all provisioning processes",
     )
     parser.add_argument(
         "--tmux",
-        dest="run_list",
-        action="append_const",
-        const="tmux",
-        default=[],
+        action="store_true",
+        default=False,
         help="Build and install latest version of TMUX",
     )
     parser.add_argument(
         "--git",
-        dest="run_list",
-        action="append_const",
-        const="git",
+        action="store_true",
+        default=False,
         help="Clone default git repos to ~/git",
     )
     return parser.parse_args(argv)
@@ -270,17 +278,13 @@ def cli():
     if args.debug == 2:
         LOG.setLevel(logging.DEBUG)
 
-    # Add all processes to run list if --all
-    if args.run_all:
-        args.run_list = ["git", "tmux"]
-
     LOG.info("Argument input: %s", repr(cli_args))
     LOG.info("Argparse output: %s", repr(args))
 
-    # Call all functions and pass args
-    # Each function will handle whether to execute or not
-    clone_git_repos(args)
-    install_tmux(args)
+    if args.all or args.git:
+        clone_git_repos()
+    if args.all or args.tmux:
+        install_tmux()
 
 
 if __name__ == "__main__":

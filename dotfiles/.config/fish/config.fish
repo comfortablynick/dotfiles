@@ -277,10 +277,6 @@ and set -g yimmy_solarized false
 # set fish_key_bindings fish_user_vi_key_bindings
 
 # STARTUP COMMANDS {{{1
-# Python Venv {{{2
-# test -d "$def_venv"
-# and source $def_venv/bin/activate.fish
-
 # TMux {{{2
 # Attach to existing tmux or create a new session using custom function
 # Get current session name

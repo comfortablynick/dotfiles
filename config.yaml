@@ -172,7 +172,7 @@ profiles:
     - f_bash_windows
     include:
     - core
-  joppa:
+  titan:
     dotfiles:
     - f_bash_linux
     include:

@@ -7,3 +7,4 @@ env.zsh
 dotfiles/.config/omf/theme
 .zcompdump
 *.log
+.env_toml_sha*

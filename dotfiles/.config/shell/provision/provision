@@ -14,6 +14,7 @@ from subprocess import run
 
 from github import Github
 
+# Globals {{{1
 logging.basicConfig(
     format="%(levelname)s:%(funcName)s: %(message)s", level=logging.WARNING
 )
@@ -156,7 +157,7 @@ def apt_install(pkgs: list) -> None:
 
 
 # Git {{{1
-def git_clone(repo: str, dest_path: str, args: list = ["--recursive"]) -> None:
+def git_clone(repo: str, dest_path: str = None, args: list = ["--recursive"]) -> None:
     """Clone git repo to dest path."""
     if not shutil.which("git"):
         LOG.error("Git not installed!")
@@ -164,8 +165,12 @@ def git_clone(repo: str, dest_path: str, args: list = ["--recursive"]) -> None:
     if not repo[0:4] in ("git@", "http"):
         # Assume it's my repo
         repo = f"git@github.com:comfortablynick/{repo}.git"
-    LOG.debug("Cloning git repo %s to %s", repo, dest_path)
-    run(["git", "clone", "repo", *args, dest_path])
+    if dest_path is not None:
+        args.append(os.path.expanduser(dest_path))
+    cmd = ["git", "clone", repo, *args]
+    LOG.debug("Cmd: %s", " ".join(cmd))
+    with chdir(os.path.expanduser("~/git")):
+        run(cmd)
     return
 
 
@@ -181,6 +186,19 @@ def github_token() -> str:
         return None
     else:
         return token.strip("\n")
+
+
+def clone_git_repos() -> None:
+    """Clone repos from GitHub."""
+    token = github_token()
+    LOG.info("GitHub token found: %s", token)
+    if token is None:
+        return
+    g = Github(token)
+    for repo in g.get_user().get_repos():
+        root_files = [content.name for content in repo.get_contents(".")]
+        if ".provision_ignore" not in root_files:
+            git_clone(repo.ssh_url)
 
 
 # Install/build apps {{{1
@@ -214,22 +232,6 @@ def install_tmux() -> None:
         run(["sudo", "make", "install"])
     LOG.debug("Cleaning up temp directories...")
     rmtree(tmux_tmp, ignore_errors=True)
-
-
-# Clone repos {{{1
-def clone_git_repos() -> None:
-    """Clone repos from GitHub."""
-    token = github_token()
-    LOG.info("GitHub token found: %s", token)
-    if token is None:
-        return
-    g = Github(token)
-    repos = []
-    for repo in g.get_user().get_repos():
-        repos.append(repo.name)
-        for content in repo.get_contents("."):
-            print(content)
-    LOG.info("GitHub repos found:\n%s", "\n".join(repos))
 
 
 # Parse arguments {{{1

@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 export AUTOJUMP_SOURCED=1
-export AUTOJUMP_SOURCED=1
 
 # set user installation paths
 if [[ -d ~/.autojump/ ]]; then

@@ -11,7 +11,7 @@ file="$HOME/.no_${current_shell}_tmux_login"
 
 if [ -f "$file" ]; then
     rm $file && echo "Deleted $file."
-    return 0
+    exit 0
 else
     touch $file && echo "Created $file."
     echo -e $(echo -ne '\033[1;33m')

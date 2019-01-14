@@ -6,11 +6,12 @@ import logging
 import os
 import shutil
 import stat
+import subprocess
 import sys
 import warnings
 from contextlib import contextmanager
 from pathlib import Path
-from subprocess import run
+from typing import Generator
 
 from github import Github
 
@@ -22,6 +23,15 @@ LOG = logging.getLogger(__name__)
 APT_CACHE_UPDATED = False
 
 # Utility Functions {{{1
+def run(cmd, *args, **kwargs):
+    """Run subprocess command
+
+    A string command will be split into a list for subprocess.run()."""
+    if not isinstance(cmd, list):
+        cmd = cmd.split(" ")
+    return subprocess.run(cmd, *args, **kwargs)
+
+
 def mkdir_p(newdir: str) -> None:
     """Make new directory if it doesn't exist.
 
@@ -108,7 +118,7 @@ def is_readonly_path(file_name: str) -> bool:
     or `not os.access(path, os.W_OK)`
     """
     if os.path.exists(file_name):
-        return (os.stat(file_name).st_mode & stat.S_IREAD) or not os.access(
+        return bool(os.stat(file_name).st_mode & stat.S_IREAD) or not os.access(
             file_name, os.W_OK
         )
 
@@ -116,7 +126,7 @@ def is_readonly_path(file_name: str) -> bool:
 
 
 @contextmanager
-def chdir(path: str) -> None:
+def chdir(path: str) -> Generator:
     """Context manager to change working directories.
 
     Usage:
@@ -183,7 +193,7 @@ def github_token() -> str:
             token = f.read()
     except FileNotFoundError:
         LOG.error("GitHub token file not found: %s. Aborting!", file)
-        return None
+        return ""
     else:
         return token.strip("\n")
 
@@ -192,7 +202,7 @@ def clone_git_repos() -> None:
     """Clone repos from GitHub."""
     token = github_token()
     LOG.info("GitHub token found: %s", token)
-    if token is None:
+    if token == "":
         return
     g = Github(token)
     for repo in g.get_user().get_repos():
@@ -202,11 +212,15 @@ def clone_git_repos() -> None:
 
 
 # Install/build apps {{{1
-def install_tmux() -> None:
-    """Download, build, and install tmux."""
-    if shutil.which("tmux"):
+def install_tmux(force_install: bool = False) -> int:
+    """Download, build, and install tmux.
+
+    Params
+    `force_install` Reinstall if already installed
+    """
+    if shutil.which("tmux") and not force_install:
         LOG.warning("tmux already exists. Skipping install!")
-        return
+        return 1
     pkgs = [
         "git",
         "automake",
@@ -218,20 +232,61 @@ def install_tmux() -> None:
     apt_install(pkgs)
     tmux_tmp = "/tmp/tmux"
     rmtree(tmux_tmp, ignore_errors=True)
-    run(["git", "clone", "https://github.com/tmux/tmux.git", tmux_tmp])
+    run(f"git clone https://github.com/tmux/tmux.git {tmux_tmp}")
 
     with chdir(tmux_tmp):
-        run(["git", "checkout", "master"])
-        run(["sh", "autogen.sh"])
-        if run(["./configure"]).returncode == 0:
+        tag = (
+            run("git describe --tags --abbrev=0", capture_output=True)
+            .stdout.decode()
+            .strip("\n")
+        )
+        LOG.info("Checking out most recent tmux release: %s", tag)
+        run(f"git checkout {tag}")
+        run("sh autogen.sh")
+        if run("./configure").returncode == 0:
             LOG.debug("tmux build configured. Running `make`")
-            run(["make"])
+            run("make")
         else:
             LOG.error("tmux build configure failed!")
+            return 1
         LOG.debug("Installing tmux...")
-        run(["sudo", "make", "install"])
+        run("sudo make install")
     LOG.debug("Cleaning up temp directories...")
     rmtree(tmux_tmp, ignore_errors=True)
+    return 0
+
+
+def install_mosh() -> None:
+    """Download, build, and install mosh."""
+    if shutil.which("mosh"):
+        LOG.warning("mosh already exists. Skipping install!")
+        return
+    pkgs = [
+        "protobuf-compiler",
+        "libprotobuf-dev",
+        "libutempter-dev",
+        "libboost-dev",
+        "libio-pty-perl",
+        "libssl-dev",
+        "pkg-config",
+        "autoconf",
+    ]
+    apt_install(pkgs)
+    mosh_tmp = "/tmp/mosh"
+    rmtree(mosh_tmp, ignore_errors=True)
+    run(f"git clone https://github.com/keithw/mosh.git {mosh_tmp}")
+
+    with chdir(mosh_tmp):
+        run("sh autogen.sh")
+        if run("./configure").returncode == 0:
+            LOG.debug("mosh build configured. Running `make`")
+            run("make")
+        else:
+            LOG.error("mosh build configure failed!")
+        LOG.debug("Installing mosh...")
+        run("sudo make install")
+    LOG.debug("Cleaning up temp directories...")
+    rmtree(mosh_tmp, ignore_errors=True)
 
 
 # Parse arguments {{{1
@@ -260,6 +315,19 @@ def process_args(argv: list):
         default=False,
         help="Clone default git repos to ~/git",
     )
+    parser.add_argument(
+        "--mosh",
+        action="store_true",
+        default=False,
+        help="Build and install latest version of mobile shell",
+    )
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        default=False,
+        help="Force action to be completed",
+    )
     return parser.parse_args(argv)
 
 
@@ -286,7 +354,9 @@ def cli():
     if args.all or args.git:
         clone_git_repos()
     if args.all or args.tmux:
-        install_tmux()
+        install_tmux(force_install=args.force)
+    if args.all or args.mosh:
+        install_mosh()
 
 
 if __name__ == "__main__":

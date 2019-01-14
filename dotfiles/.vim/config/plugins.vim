@@ -204,6 +204,7 @@ let g:ale_linters = {
     \ 'python':
     \   [
     \       'flake8',
+    \       'mypy',
     \   ],
     \ }
 let g:ale_fixers = {
@@ -227,6 +228,8 @@ let g:ale_fixers = {
     \   ],
     \ }
 let g:ale_python_flake8_options = '--max-line-length 100  --ignore E203,E302'
+let g:ale_python_mypy_ignore_invalid_syntax = 1
+let g:ale_python_mypy_options = ''
 let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 

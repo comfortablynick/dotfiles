@@ -4,7 +4,9 @@ env.fish
 env.bash
 env.zsh
 01_env.*
+10_env.*
 dotfiles/.config/omf/theme
 .zcompdump
 *.log
 .env_toml_sha*
+.mypy_cache/

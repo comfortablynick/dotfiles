@@ -14,4 +14,4 @@ command git -C "$dotfiles" submodule foreach --recursive git pull origin master 
             command git -C "$dotfiles" push
     }
 echo "Running dotdrop install ... "
-dotdrop install
+"$HOME/dotfiles/dotdrop.sh" install

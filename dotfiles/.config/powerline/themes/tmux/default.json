@@ -9,13 +9,6 @@
                         }
         ],
         "right": [
-                        {
-                                "function": "powerline.segments.common.wthr.weather",
-                                "priority": 70,
-                                "args": {
-                                        "unit": "F"
-                                }
-                        },
 			{
 				"function": "powerline.segments.common.sys.system_load",
 				"priority": 60
@@ -50,6 +43,13 @@
 			}
 		],
        "test": [
+                        {
+                                "function": "powerline.segments.common.wthr.weather",
+                                "priority": 70,
+                                "args": {
+                                        "unit": "F"
+                                }
+                        },
                         {
                                 "function": "powerline.segments.common.env.virtualenv",
                                 "draw_soft_divider": false,

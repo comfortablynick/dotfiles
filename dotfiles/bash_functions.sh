@@ -37,3 +37,19 @@ _pyenv_virtualenv_hook() {
 if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
     PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
 fi
+
+pyenv() {
+  local command
+  command="${1:-}"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")";;
+  *)
+    command pyenv "$command" "$@";;
+  esac
+}
+

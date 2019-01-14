@@ -12,5 +12,6 @@ command git -C "$dotfiles" submodule foreach --recursive git pull origin master 
             command git -C "$dotfiles" add -A &&
             command git -C "$dotfiles" commit &&
             command git -C "$dotfiles" push
-    } && echo "Running dotdrop install ... " &&
-    dotdrop install || echo "Did not run dotdrop install."
+    }
+echo "Running dotdrop install ... "
+dotdrop install

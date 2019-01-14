@@ -149,6 +149,7 @@ profiles:
     - f_bash_functions
     - f_dircolors
     - f_tmux.conf
+    - f_tmux.theme.conf
     - f_vimrc
     - f_xonshrc
     - f_zshrc
@@ -172,14 +173,14 @@ profiles:
     - f_bash_windows
     include:
     - core
-  titan:
-    dotfiles:
-    - f_bash_linux
-    include:
-    - core
   thor.local:
     dotfiles:
     - f_bash_mac
+    include:
+    - core
+  titan:
+    dotfiles:
+    - f_bash_linux
     include:
     - core
   uranus:

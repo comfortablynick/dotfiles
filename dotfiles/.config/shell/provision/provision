@@ -155,14 +155,26 @@ def apt_update_cache() -> None:
     return
 
 
-def apt_install(pkgs: list) -> None:
+def apt_install(pkgs: list = []) -> None:
     """Update apt cache if necessary and install `pkgs`"""
     if not APT_CACHE_UPDATED:
-        # Make sure this is done once per execution
+        LOG.info("Updating apt cache")
         apt_update_cache()
+    if not len(pkgs):
+        LOG.info("No pkgs supplied; getting apt pkgs from disk")
+        pkg_file = "~/.config/shell/provision/apt_package"
+        try:
+            with open(os.path.expanduser(pkg_file), "r") as f:
+                pkgs = f.read().splitlines()
+        except FileNotFoundError:
+            LOG.warning("apt pkg file not found at %s", pkg_file)
+            return
     cmd = ["sudo", "apt", "install", "-y", *pkgs]
     LOG.debug("Command: %s", cmd)
-    run(cmd)
+    try:
+        run(cmd)
+    except FileNotFoundError:
+        LOG.error("apt does not seem to be installed on this system.")
     return
 
 
@@ -294,39 +306,45 @@ def process_args(argv: list):
     """Parse command line arguments and return namespace."""
     parser = argparse.ArgumentParser(
         prog="provision",
-        description="Provision setup of new machine with standard defaults common to all installs",
+        description="provision setup of new machine with standard defaults common to all installs",
     )
     parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
     parser.add_argument(
         "--all",
         action="store_true",
         default=False,
-        help="Run all provisioning processes",
+        help="run all provisioning processes",
+    )
+    parser.add_argument(
+        "--apt",
+        action="store_true",
+        default=False,
+        help="update apt cache and optionally install packages",
     )
     parser.add_argument(
         "--tmux",
         action="store_true",
         default=False,
-        help="Build and install latest version of TMUX",
+        help="build and install latest version of TMUX",
     )
     parser.add_argument(
         "--git",
         action="store_true",
         default=False,
-        help="Clone default git repos to ~/git",
+        help="clone default git repos to ~/git",
     )
     parser.add_argument(
         "--mosh",
         action="store_true",
         default=False,
-        help="Build and install latest version of mobile shell",
+        help="build and install latest version of mobile shell",
     )
     parser.add_argument(
         "-f",
         "--force",
         action="store_true",
         default=False,
-        help="Force action to be completed",
+        help="force action to be completed",
     )
     return parser.parse_args(argv)
 
@@ -357,6 +375,8 @@ def cli():
         install_tmux(force_install=args.force)
     if args.all or args.mosh:
         install_mosh()
+    if args.all or args.apt:
+        apt_install()
 
 
 if __name__ == "__main__":

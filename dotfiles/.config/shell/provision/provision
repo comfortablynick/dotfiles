@@ -157,6 +157,7 @@ def apt_update_cache() -> None:
 
 def apt_install(pkgs: list = []) -> None:
     """Update apt cache if necessary and install `pkgs`"""
+    # TODO: take cli args and add to pkg list if successful
     if not APT_CACHE_UPDATED:
         LOG.info("Updating apt cache")
         apt_update_cache()

@@ -33,7 +33,7 @@ noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
 noremap <silent> <F8> :TagbarToggle<CR>
 
 " F10 to toggle quickfix window for asyncrun
-noremap <silent> <F10> :call asyncrun#quickfix_toggle(6)<CR>
+noremap <silent> <F10> :call ToggleQf()<CR>
 
 " Normal mode {{{1
 " <Shift>+Tab :: Move back in jump list
@@ -48,6 +48,9 @@ nnoremap <C-H> <C-W><C-H>
 " Vim-tmux-runner
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>r :VtrSendFile!<CR>
+
+" Quickfix
+nnoremap <silent> <Leader>q :call ToggleQf()<CR>
 
 " Tagbar
 nnoremap <silent> <Leader>t :TagbarToggle<CR>

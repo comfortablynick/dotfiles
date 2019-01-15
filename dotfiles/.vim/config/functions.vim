@@ -151,7 +151,8 @@ function! ToggleQf() abort
     if exists('*asyncrun#quickfix_toggle')
         " AsyncRun is loaded; use this handy function
         " Open qf window of specific size in most elegant way
-        let qf_size = get(g:, 'quickfix_size', 8)
+        let qf_lines = len(getqflist())
+        let qf_size = min([qf_lines, get(g:, 'quickfix_size', 8)])
         call asyncrun#quickfix_toggle(qf_size)
         return
     endif
@@ -165,7 +166,6 @@ function! ToggleQf() abort
     " Quickfix window not open, so open it
     copen
 endfunction
-nnoremap <silent> qf :call ToggleQf()<cr>
 
 " AutoCloseQfWin() :: close qf on quit {{{3
 function! AutoCloseQfWin() abort
@@ -263,9 +263,9 @@ function! BufWidth()
   let numwidth = (&number || &relativenumber)? numberwidth : 0
   let foldwidth = &foldcolumn
 
-  if &signcolumn == 'yes'
+  if &signcolumn ==? 'yes'
     let signwidth = 2
-  elseif &signcolumn == 'auto'
+  elseif &signcolumn ==? 'auto'
     let signs = execute(printf('sign place buffer=%d', bufnr('')))
     let signs = split(signs, "\n")
     let signwidth = len(signs)>2? 2: 0

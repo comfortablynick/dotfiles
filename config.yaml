@@ -63,6 +63,10 @@ dotfiles:
     dst: ~/.config/shell
     link: true
     src: .config/shell
+  d_tmux:
+    dst: ~/.config/tmux
+    link: true
+    src: .config/tmux
   d_topydo:
     dst: ~/.config/topydo
     link: true
@@ -181,6 +185,7 @@ profiles:
   titan:
     dotfiles:
     - f_bash_linux
+    - d_tmux
     include:
     - core
   uranus:

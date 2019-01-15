@@ -169,6 +169,7 @@ profiles:
     - d_powerline
     - d_shell
     - d_topydo
+    - d_tmux
     - d_xonsh
     - d_zsh
   io:
@@ -185,7 +186,6 @@ profiles:
   titan:
     dotfiles:
     - f_bash_linux
-    - d_tmux
     include:
     - core
   uranus:

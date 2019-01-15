@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+IFS=$'\n'
+meminfo="$(grep -e MemTotal -e Shmem -e MemFree -e Buffers -e Cached -e SReclaimable < /proc/meminfo |  awk '{print $2}')"
+# echo "$meminfo"
+i=0
+free=0
+totalmem=0
+for item in $meminfo; do
+    i=$((i+1))
+    if [ $i -eq 1 ]; then
+        totalmem=$item
+        free=$((free+item))
+    elif [ $i -eq 6 ]; then
+        free=$((free+item))
+    else
+        free=$((free-item))
+    fi
+done
+echo "$((free/1024))/$((totalmem/1024))MB"

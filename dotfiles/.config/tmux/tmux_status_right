@@ -15,10 +15,11 @@ if [ "$WIDTH" -gt "$MEDIUM" ]; then
     SEPE=''
 
 
-    LOAD="#[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_loadavg)"
     CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_cputemp)"
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$SEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore] $(date +'%D')"
-    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$SEPE#[fg=colour252,bg=colour236,noitalics,nounderscore] $(date +'%I:%M %p')"
+    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$SEPE #[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%I:%M %p')"
+    LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$SEPE #[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_loadavg)"
+    UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_uptime)"
 fi
 
 
@@ -28,6 +29,6 @@ if [ "$WIDTH" -ge "$SMALL" ]; then
 fi
 
 # Final formatting
-[ -n "$CPUTEMP" ] && CPUTEMP="$CPUTEMP°"
+[ "$CPUTEMP" -gt 0 ] && CPUTEMP="$CPUTEMP°" || CPUTEMP=""
 
-echo "$CPUTEMP $LOAD $DATE $TIME $USER $UNAME " | sed 's/ *$/ /g'
+echo "$UPTIME $CPUTEMP $LOAD $DATE $TIME $USER $UNAME " | sed 's/ *$/ /g'

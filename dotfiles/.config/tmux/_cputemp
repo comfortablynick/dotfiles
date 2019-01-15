@@ -5,7 +5,7 @@ temp=0
 
 if [ -f "$temp_file" ]; then
     temp="$(cat $temp_file)"
+    echo "scale=1; ($temp / 1000.0)*9/5+32" | bc # Fahrenheit
+else
+    echo 0
 fi
-
-# echo "scale=1; ($temp / 1000.0)" | bc # Celsius
-echo "scale=1; ($temp / 1000.0)*9/5+32" | bc # Fahrenheit

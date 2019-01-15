@@ -178,6 +178,11 @@ profiles:
     - f_bash_windows
     include:
     - core
+  jupiter:
+    dotfiles:
+    - f_bash_linux
+    include:
+    - core
   thor.local:
     dotfiles:
     - f_bash_mac

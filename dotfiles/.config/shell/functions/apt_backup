@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# if not root, run as root
+if [ "$(id -u)" != "0" ]; then
+    exec sudo "$0" "$@"
+    exit
+fi
+
+sudo apt-clone clone --with-dpkg-repack "$HOME/backup/apt-clone-$(hostname)-$(lsb_release -sr)-$(date +%F).tar.gz"

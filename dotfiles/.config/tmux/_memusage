@@ -16,4 +16,5 @@ for item in $meminfo; do
         free=$((free-item))
     fi
 done
-echo "$((free/1024))/$((totalmem/1024))MB"
+# echo "$((free/1024))/$((totalmem/1024))MB"
+printf "🖫 %.1f%%\\n" $(echo "scale=10; ($free/$totalmem)*100" | bc)

@@ -145,7 +145,7 @@ fi
 # Alien minimal {{{2
 if [ "$THEME" = "alien-minimal" ]; then
     export USE_NERD_FONT="$NERD_FONT"
-    export AM_INITIAL_LINE_FEED=2
+    export AM_INITIAL_LINE_FEED=0
     export AM_SHOW_FULL_DIR=1
     export AM_KEEP_PROMPT=1                                     # Show prev right prompt until new one is ready
     export AM_VERSIONS_PROMPT=(PYTHON)

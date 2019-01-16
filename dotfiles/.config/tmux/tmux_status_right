@@ -2,7 +2,7 @@
 
 HOSTNAME=''
 
-WIDTH=${1}
+WIDTH="$(tmux display -p '#{client_width}')"
 
 SMALL=40
 MEDIUM=80
@@ -18,10 +18,10 @@ else
 fi
 
 if [ "$WIDTH" -gt "$MEDIUM" ]; then
-    CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_cputemp)"
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$SEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore] $(date +'%D')"
-    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$SEPE #[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%H:%M')"
-    LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$SEPE$S #[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_memusage)"
+    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$SEPE #[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%I:%M %p')"
+    # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_cputemp)"
+    LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$SEPE #[fg=green,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_memusage)"
     UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$($HOME/.config/tmux/_uptime)"
 fi
 
@@ -32,6 +32,6 @@ if [ "$WIDTH" -ge "$SMALL" ]; then
 fi
 
 # Final formatting
-[ "$CPUTEMP" -gt 0 ] && CPUTEMP="$CPUTEMP°" || CPUTEMP=""
+[ "$CPUTEMP" > 0 ] && CPUTEMP="$CPUTEMP°" || CPUTEMP=""
 
-echo "$UPTIME $CPUTEMP $LOAD $DATE $TIME $USER $UNAME " # | sed 's/ *$/ /g'
+echo " $UPTIME $LOAD $DATE $TIME $USER $UNAME " | sed 's/ *$/ /g'

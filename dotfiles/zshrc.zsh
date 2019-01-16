@@ -141,6 +141,24 @@ fi
 # Load zplug
 [ "$DEBUG_MODE" = true ] && zplug && zplug load --verbose || zplug load
 
+# THEME / APPEARANCE OPTIONS {{{1
+# Alien minimal {{{2
+if [ "$THEME" = "alien-minimal" ]; then
+    export USE_NERD_FONT="$NERD_FONT"
+    export AM_INITIAL_LINE_FEED=2
+    export AM_SHOW_FULL_DIR=1
+    export AM_KEEP_PROMPT=1                                     # Show prev right prompt until new one is ready
+    export AM_VERSIONS_PROMPT=(PYTHON)
+    export PROMPT_END_TAG=' $'
+    export PROMPT_END_TAG_COLOR=142
+    export PROMPT_START_TAG='→ '
+    export AM_ERROR_ON_START_TAG=1
+    export AM_PY_SYM='Py:'
+    export AM_ENABLE_VI_PROMPT=1
+fi
+
+# promptlib-zsh
+export PLIB_GIT_MOD_SYM=★
 # FUNCTIONS {{{1
 
 # relz :: Reload zsh shell
@@ -169,6 +187,34 @@ is_ssh() {
 
 [ "$DEBUG_MODE" = true ] && echo "Exiting .zshrc"
 
+_pyenv_virtualenv_hook() {
+    local ret=$?
+    if [ -n "$VIRTUAL_ENV" ]; then
+        eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+    else
+        eval "$(pyenv sh-activate --quiet || true)" || true
+    fi
+    return $ret
+}
+
+if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+    PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
+fi
+
+pyenv() {
+  local command
+  command="${1:-}"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")";;
+  *)
+    command pyenv "$command" "$@";;
+  esac
+}
 # SHELL STARTUP {{{1
 # Python Virtual Env
-source "$def_venv/bin/activate"
+# source "$def_venv/bin/activate"

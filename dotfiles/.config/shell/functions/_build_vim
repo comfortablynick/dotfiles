@@ -27,13 +27,20 @@ titan)
     py3_dir="/home/pi/.pyenv/versions/3.7.2/lib/python3.7/config-3.7m-arm-linux-gnueabihf"
     ;;
 jupiter)
-    py3_dir="/usr/local/lib/python3.7/config-3.7m-x86_64-linux-gnu"
+    py3_dir="/home/nick/.pyenv/versions/3.7.2/lib/python3.7/config-3.7m-x86_64-linux-gnu"
     ;;
 *)
     echo "Need to set python3 config dir for this host." >&2 &&
         exit 1
     ;;
 esac
+
+if [ ! -d "$py3_dir" ]; then
+    echo "Python 3 config dir not found at $py3_dir. Aborting!"
+    exit 1
+else
+    echo "Checking Python 3 config dir...OK!"
+fi
 
 venv="$VIRTUAL_ENV"
 

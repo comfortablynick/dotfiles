@@ -271,7 +271,7 @@ def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{
             LOG.error("User input canceled!")
             return 1
         try:
-            file = assets[int(choice)]
+            file = assets[int(choice) - 1]
         except IndexError:
             LOG.error("Choice '%s' out of range!", str(choice))
             continue
@@ -281,7 +281,12 @@ def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{
         else:
             break
     print(f"You chose to download {file.name}")
-    return 0
+    dl = run(f"wget {file.browser_download_url}", capture_output=True)
+    if dl.returncode != 0:
+        LOG.error("Download failed! %s", dl.stderr)
+    else:
+        print("File downloaded to current folder.")
+    return dl.returncode
 
 
 # Install/build apps {{{1

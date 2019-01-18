@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# use cat alternative if installed
+
+if [ -n "$(command -v bat 2>/dev/null)" ]; then
+    command bat $@
+else
+    command cat $@
+fi

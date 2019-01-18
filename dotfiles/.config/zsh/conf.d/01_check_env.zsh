@@ -6,6 +6,8 @@ env_sha=$(eval $sha_cmd "$HOME/dotfiles/dotfiles/env.toml" | cut -d' ' -f1)
 
 if [ ! -f "$env_file" ] || [ "$env_sha" != "$(< $env_file)" ]; then
     echo "Changes made to env.toml since zsh last started."
-    parse_env.py -z $HOME/dotfiles/dotfiles/env.toml
-    echo "$env_sha" > $env_file
+    pyenv_ver="$(head -n 1 $HOME/.pyenv/version)"
+    py_path="$HOME/.pyenv/versions/$pyenv_ver/bin/python"
+    "$py_path" "$HOME/git/python/shell/parse_env.py" -z "$HOME/dotfiles/dotfiles/env.toml"
+    if echo "$env_sha" > "$env_file"
 fi

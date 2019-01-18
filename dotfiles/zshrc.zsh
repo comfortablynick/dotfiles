@@ -68,6 +68,7 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "mafredri/zsh-async", from:github
 zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
+# zplug "plugins/vi-mode", from:"oh-my-zsh", as:plugin, use:vi-mode.plugin.zsh
 
 # Themes
 zplug "bhilburn/powerlevel9k", \
@@ -157,8 +158,50 @@ if [ "$THEME" = "alien-minimal" ]; then
     export AM_ENABLE_VI_PROMPT=1
 fi
 
-# promptlib-zsh
+# promptlib-zsh {{{2
 export PLIB_GIT_MOD_SYM=★
+
+# colored man {{{2
+export MANROFFOPT='-c'
+export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 6)
+export LESS_TERMCAP_me=$(tput sgr0)
+export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
+export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+export LESS_TERMCAP_mr=$(tput rev)
+export LESS_TERMCAP_mh=$(tput dim)
+
+# KEYMAP {{{1
+zle -N edit-command-line
+
+bindkey -v
+
+# allow v to edit the command line (standard behaviour)
+autoload -Uz edit-command-line
+# bindkey -M vicmd 'v' edit-command-line
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+# kj :: <Esc>
+bindkey 'kj' vi-cmd-mode
+
+# function zle-line-init zle-keymap-select {
+#     VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+#     # RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}$EPS1"
+#     zle reset-prompt
+# }
+#
+# zle -N zle-line-init
+# zle -N zle-keymap-select
+export KEYTIMEOUT=1                                                    # Timeout for key sequences in vi mode (10ms)
+
 # FUNCTIONS {{{1
 
 # relz :: Reload zsh shell

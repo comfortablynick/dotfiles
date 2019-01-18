@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Load weather in terminal
+
+# Formats:
+#       ?format=1       One line output of temp
+#       ?format=2       One line output of temp/wind
+#       ?format=3       Same as 1 with loc
+#       ?format=4       Same as 2 with loc
+
+host="$(hostname)"
+
+if [ "$host" = "jupiter" ]; then
+    location="Denton+TX"
+else
+    location="Lewisville+TX"
+fi
+
+curl "wttr.in/$location$@"

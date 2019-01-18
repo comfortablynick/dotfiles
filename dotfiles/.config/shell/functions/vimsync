@@ -3,7 +3,7 @@
 # Download plugins for Vim and Neovim
 if [ -x "$HOME/git/python/shell/vimsync.py" ]; then
     echo "Executing vimsync.py ... "
-    $HOME/git/python/shell/vimsync.py
+    $HOME/git/python/shell/vimsync.py $@
 else
     echo "Executing bash function ... "
     if hash vim 2>/dev/null; then

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Main provisioning script."""
+"""Main provisioning script.
+
+TODO:
+    - Make generic build/install function for different types:
+        - autogen
+        - standard configure/make/make install
+        - .deb packages
+"""
 import argparse
 import errno
 import logging
@@ -232,7 +239,80 @@ def git_latest_tag() -> str:  # {{{2
     return run("git describe --tags --abbrev=0", capture_output=True).stdout.strip("\n")
 
 
+def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{2
+    """Get latest release binary.
+
+    Params:
+    `repo` GitHub repo name in 'user/repo' format
+    """
+    token = github_token()
+    if token == "":
+        LOG.error("No GitHub token found!")
+        return 1
+    LOG.info("GitHub token found: %s", token)
+    g = Github(token)
+    r = g.get_repo(repo)
+    name = r.name
+
+    if shutil.which(name) and not force_install:
+        LOG.warning("%s already exists. Skipping install!")
+        return 1
+    rel = r.get_releases()[0]  # latest
+    assets = rel.get_assets()
+    if assets.totalCount is None:
+        LOG.error("Repo '%s' has no assets", repo)
+        return 1
+    print("Choose from the following packages:")
+    for ctr, asset in enumerate(assets, 1):
+        print(f"{str(ctr)}: {asset.name}")
+    while True:
+        choice = input("Enter number of choice: ")
+        if choice == "":
+            LOG.error("User input canceled!")
+            return 1
+        try:
+            file = assets[int(choice)]
+        except IndexError:
+            LOG.error("Choice '%s' out of range!", str(choice))
+            continue
+        except ValueError:
+            LOG.error("Incorrect value: '%s'. Enter a number in range.", str(choice))
+            continue
+        else:
+            break
+    print(f"You chose to download {file.name}")
+    return 0
+
+
 # Install/build apps {{{1
+def install_ctags(force_install: bool = False) -> int:  # {{{2
+    """Download, build, and install universal ctags.
+
+    Params:
+    `force_install` Reinstall if already installed
+    """
+    if shutil.which("ctags") and not force_install:
+        LOG.warning("ctags already exists. Skipping install!")
+        return 1
+    ctags_tmp = "/tmp/ctags"
+    rmtree(ctags_tmp, ignore_errors=True)
+    run(f"git clone https://github.com/universal-ctags/ctags.git {ctags_tmp}")
+
+    with chdir(ctags_tmp):
+        run("./autogen.sh")
+        if run("./configure").returncode == 0:
+            LOG.debug("ctags build configured. Running `make`")
+            run("make")
+        else:
+            LOG.error("ctags build configure failed!")
+            return 1
+        LOG.debug("Installing ctags...")
+        run("sudo make install")
+    LOG.debug("Cleaning up temp directories...")
+    rmtree(ctags_tmp, ignore_errors=True)
+    return 0
+
+
 def install_tmux(force_install: bool = False) -> int:  # {{{2
     """Download, build, and install tmux.
 
@@ -333,6 +413,23 @@ def install_nnn(force_install: bool = False) -> int:  # {{{2
     return 0
 
 
+def install_todo(force_install: bool = False) -> int:  # {{{2
+    """Download and install todo.txt cli."""
+    if shutil.which("todo.sh") and not force_install:
+        LOG.warning("todo.sh already exists. Skipping install!")
+        return 1
+
+    todo_tmp = "/tmp/todo"
+    rmtree(todo_tmp, ignore_errors=True)
+    run(f"git clone https://github.com/todotxt/todo.txt-cli.git {todo_tmp}")
+
+    with chdir(todo_tmp):
+        run("make")
+        install = run("sudo make install")
+    rmtree(todo_tmp)
+    return install.returncode
+
+
 # Parse arguments {{{1
 def process_args(argv: list):
     """Parse command line arguments and return namespace."""
@@ -354,10 +451,21 @@ def process_args(argv: list):
         help="update apt cache and optionally install packages",
     )
     parser.add_argument(
+        "--ctags",
+        action="store_true",
+        default=False,
+        help="build and install latest version of ctags",
+    )
+    parser.add_argument(
         "--git",
         action="store_true",
         default=False,
         help="clone default git repos to ~/git",
+    )
+    parser.add_argument(
+        "--github-release",
+        action="store",
+        help="download and install latest release from repo",
     )
     parser.add_argument(
         "--mosh",
@@ -376,6 +484,9 @@ def process_args(argv: list):
         action="store_true",
         default=False,
         help="build and install latest version of TMUX",
+    )
+    parser.add_argument(
+        "--todo", action="store_true", default=False, help="install latest todo.sh cli"
     )
     parser.add_argument(
         "-f",
@@ -411,12 +522,18 @@ def cli():
         apt_install()
     if args.all or args.git:
         clone_git_repos()
+    if args.all or args.ctags:
+        install_ctags()
+    if args.all or args.github_release:
+        github_latest_release(args.github_release)
     if args.all or args.mosh:
         install_mosh(force_install=args.force)
     if args.all or args.nnn:
         install_nnn(force_install=args.force)
     if args.all or args.tmux:
         install_tmux(force_install=args.force)
+    if args.all or args.todo:
+        install_todo(force_install=args.force)
 
 
 if __name__ == "__main__":

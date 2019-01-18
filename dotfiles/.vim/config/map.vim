@@ -58,6 +58,10 @@ nnoremap <silent> <Leader>t :TagbarToggle<CR>
 " NERDTree
 nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 
+" ALE
+nmap <silent> <Leader>f <Plug>(ale_next_wrap)
+nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
+
 " SetExecutableBit()
 nnoremap <F3> :call SetExecutable()<CR>
 

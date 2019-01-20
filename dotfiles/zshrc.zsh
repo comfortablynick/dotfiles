@@ -149,6 +149,7 @@ if [ "$THEME" = "alien-minimal" ]; then
     export AM_INITIAL_LINE_FEED=0
     export AM_SHOW_FULL_DIR=1
     export AM_KEEP_PROMPT=1                                     # Show prev right prompt until new one is ready
+    export AM_SEGMENT_UPDATE=1
     export AM_VERSIONS_PROMPT=(PYTHON)
     export PROMPT_END_TAG=' $'
     export PROMPT_END_TAG_COLOR=142
@@ -159,7 +160,7 @@ if [ "$THEME" = "alien-minimal" ]; then
 fi
 
 # promptlib-zsh {{{2
-export PLIB_GIT_MOD_SYM=★
+export PLIB_GIT_MOD_SYM='★'
 
 # colored man {{{2
 export MANROFFOPT='-c'

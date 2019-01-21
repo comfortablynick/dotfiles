@@ -318,6 +318,41 @@ def install_ctags(force_install: bool = False) -> int:  # {{{2
     return 0
 
 
+def install_fish(force_install: bool = False) -> int:  # {{{2
+    """Download, build, and install fish.
+
+    Params:
+    `force_install` Reinstall if already installed
+    """
+    if shutil.which("fish") and not force_install:
+        LOG.warning("fish already exists. Skipping install!")
+        return 1
+    pkgs = [
+        "build-essential",
+        "ncurses-dev",
+        "libncurses5-dev",
+        "gettext",
+        "autoconf",
+        "doxygen",
+    ]
+    apt_install(pkgs)
+    fish_tmp = "/tmp/fish"
+    rmtree(fish_tmp, ignore_errors=True)
+    run(f"git clone https://github.com/fish-shell/fish-shell.git {fish_tmp}")
+
+    with chdir(fish_tmp):
+        run("mkdir build")
+
+        with chdir("./build"):
+            run("cmake ..")
+            run("make")
+            LOG.debug("Installing fish...")
+            run("sudo make install")
+    LOG.debug("Cleaning up temp directories...")
+    rmtree(fish_tmp, ignore_errors=True)
+    return 0
+
+
 def install_tmux(force_install: bool = False) -> int:  # {{{2
     """Download, build, and install tmux.
 
@@ -462,6 +497,12 @@ def process_args(argv: list):
         help="build and install latest version of ctags",
     )
     parser.add_argument(
+        "--fish",
+        action="store_true",
+        default=False,
+        help="build and install fish shell",
+    )
+    parser.add_argument(
         "--git",
         action="store_true",
         default=False,
@@ -525,10 +566,12 @@ def cli():
 
     if args.all or args.apt:
         apt_install()
+    if args.all or args.fish:
+        install_fish(force_install=args.force)
     if args.all or args.git:
         clone_git_repos()
     if args.all or args.ctags:
-        install_ctags()
+        install_ctags(force_install=args.force)
     if args.all or args.github_release:
         github_latest_release(args.github_release)
     if args.all or args.mosh:

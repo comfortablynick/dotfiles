@@ -180,19 +180,23 @@ def apt_update_cache() -> None:
 def apt_install(args, pkgs: list = []) -> int:
     """Update apt cache if necessary and install `pkgs`"""
     # TODO: take cli args and add to pkg list if successful
+    if not shutil.which("apt-get"):
+        LOG.error("Apt not installed on this system")
+        return 1
     if not APT_CACHE_UPDATED:
         LOG.info("Updating apt cache")
         apt_update_cache()
-    if not len(pkgs):
+    packages = pkgs + args.packages
+    if not len(packages):
         LOG.info("No pkgs supplied; getting apt pkgs from disk")
         pkg_file = "~/.config/shell/provision/apt_package"
         try:
             with open(os.path.expanduser(pkg_file), "r") as f:
-                pkgs = f.read().splitlines()
+                packages = f.read().splitlines()
         except FileNotFoundError:
             LOG.warning("apt pkg file not found at %s", pkg_file)
             return 1
-    cmd = ["sudo", "apt", "install", "-y", *pkgs]
+    cmd = ["sudo", "apt", "install", "-y", *packages]
     LOG.debug("Command: %s", cmd)
     try:
         run(cmd)
@@ -306,11 +310,7 @@ def github_latest_release(args) -> int:  # {{{2
 
 # Install/build apps {{{1
 def install_ctags(args) -> int:  # {{{2
-    """Download, build, and install universal ctags.
-
-    Params:
-    `force_install` Reinstall if already installed
-    """
+    """Download, build, and install universal ctags."""
     if shutil.which("ctags") and not args.force:
         LOG.warning("ctags already exists. Skipping install!")
         return 1
@@ -334,7 +334,7 @@ def install_ctags(args) -> int:  # {{{2
 
 
 def install_fish(args) -> int:  # {{{2
-    """Download, build, and install fish."""
+    """Download, build, and install the Friendly Interactive SHell."""
     if shutil.which("fish") and not args.force:
         LOG.warning("fish already exists. Skipping install!")
         return 1
@@ -365,7 +365,7 @@ def install_fish(args) -> int:  # {{{2
 
 
 def install_tmux(args) -> int:  # {{{2
-    """Download, build, and install tmux."""
+    """Download, build, and install tmux terminal multiplexer."""
     if shutil.which("tmux") and not args.force:
         LOG.warning("tmux already exists. Skipping install!")
         return 1
@@ -403,7 +403,7 @@ def install_tmux(args) -> int:  # {{{2
 
 
 def install_mosh(args) -> None:  # {{{2
-    """Download, build, and install mosh."""
+    """Download, build, and install mobile shell."""
     if shutil.which("mosh") and not args.force:
         LOG.warning("mosh already exists. Skipping install!")
         return
@@ -507,16 +507,18 @@ def process_args(argv: list):
     parser_apt = subparsers.add_parser(
         "apt",
         help="update apt cache and optionally install packages",
+        description=apt_install.__doc__,
         parents=[common_parser],
         add_help=False,
     )
-    # parser_apt.add_argument(
+    parser_apt.add_argument("packages", nargs="*", help="apt packages to install")
     parser_apt.set_defaults(func=apt_install)
 
     # Ctags {{{2
     parser_ctags = subparsers.add_parser(
         "ctags",
         help="build and install ctags from source",
+        description=install_ctags.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -526,6 +528,7 @@ def process_args(argv: list):
     parser_fish = subparsers.add_parser(
         "fish",
         help="build and install fish shell",
+        description=install_fish.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -533,7 +536,11 @@ def process_args(argv: list):
 
     # Github {{{2
     parser_github = subparsers.add_parser(
-        "github", help="clone github repos", parents=[common_parser], add_help=False
+        "github",
+        help="clone github repos",
+        description=clone_git_repos.__doc__,
+        parents=[common_parser],
+        add_help=False,
     )
     parser_github.add_argument("dir", type=str, help="destination dir", default="~/git")
     parser_github.set_defaults(func=clone_git_repos)
@@ -541,6 +548,7 @@ def process_args(argv: list):
     parser_github_release = subparsers.add_parser(
         "github-release",
         help="download and install release from github",
+        description=github_latest_release.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -551,6 +559,7 @@ def process_args(argv: list):
     parser_mosh = subparsers.add_parser(
         "mosh",
         help="build and install mobile shell",
+        description=install_mosh.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -560,6 +569,7 @@ def process_args(argv: list):
     parser_nnn = subparsers.add_parser(
         "nnn",
         help="build and install nnn file browser",
+        description=install_nnn.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -569,6 +579,7 @@ def process_args(argv: list):
     parser_tmux = subparsers.add_parser(
         "tmux",
         help="build and install terminal multiplexer",
+        description=install_tmux.__doc__,
         parents=[common_parser],
         add_help=False,
     )
@@ -578,6 +589,7 @@ def process_args(argv: list):
     parser_todo = subparsers.add_parser(
         "todo",
         help="build and install todo.sh cli",
+        description=install_todo.__doc__,
         parents=[common_parser],
         add_help=False,
     )

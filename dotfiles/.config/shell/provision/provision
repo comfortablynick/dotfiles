@@ -152,10 +152,24 @@ def chdir(path: str) -> Generator:
         os.chdir(prev_cwd)
 
 
+def run_all(args) -> int:
+    """Run all provisioning processes."""
+    apt_install(args)
+    install_fish(args)
+    clone_git_repos(args)
+    install_ctags(args)
+    github_latest_release(args)
+    install_mosh(args)
+    install_nnn(args)
+    install_tmux(args)
+    install_todo(args)
+    return 0
+
+
 # Apt {{{1
 def apt_update_cache() -> None:
     """Update apt cache"""
-    cmd = ["sudo", "apt", "update"]
+    cmd = "sudo apt update -y"
     LOG.debug("Command: %s", cmd)
     run(cmd)
     global APT_CACHE_UPDATED
@@ -163,7 +177,7 @@ def apt_update_cache() -> None:
     return
 
 
-def apt_install(pkgs: list = []) -> None:
+def apt_install(args, pkgs: list = []) -> int:
     """Update apt cache if necessary and install `pkgs`"""
     # TODO: take cli args and add to pkg list if successful
     if not APT_CACHE_UPDATED:
@@ -177,14 +191,15 @@ def apt_install(pkgs: list = []) -> None:
                 pkgs = f.read().splitlines()
         except FileNotFoundError:
             LOG.warning("apt pkg file not found at %s", pkg_file)
-            return
+            return 1
     cmd = ["sudo", "apt", "install", "-y", *pkgs]
     LOG.debug("Command: %s", cmd)
     try:
         run(cmd)
     except FileNotFoundError:
         LOG.error("apt does not seem to be installed on this system.")
-    return
+        return 1
+    return 0
 
 
 # Git {{{1
@@ -221,7 +236,7 @@ def github_token() -> str:  # {{{2
         return token.strip("\n")
 
 
-def clone_git_repos() -> None:  # {{{2
+def clone_git_repos(args) -> None:  # {{{2
     """Clone repos from GitHub."""
     token = github_token()
     LOG.info("GitHub token found: %s", token)
@@ -239,7 +254,7 @@ def git_latest_tag() -> str:  # {{{2
     return run("git describe --tags --abbrev=0", capture_output=True).stdout.strip("\n")
 
 
-def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{2
+def github_latest_release(args) -> int:  # {{{2
     """Get latest release binary.
 
     Params:
@@ -251,16 +266,16 @@ def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{
         return 1
     LOG.info("GitHub token found: %s", token)
     g = Github(token)
-    r = g.get_repo(repo)
+    r = g.get_repo(args.repo)
     name = r.name
 
-    if shutil.which(name) and not force_install:
-        LOG.warning("%s already exists. Skipping install!")
+    if shutil.which(name) and not args.force:
+        LOG.warning("%s already exists. Skipping install!", name)
         return 1
     rel = r.get_releases()[0]  # latest
     assets = rel.get_assets()
     if assets.totalCount is None:
-        LOG.error("Repo '%s' has no assets", repo)
+        LOG.error("Repo '%s' has no assets", args.repo)
         return 1
     print("Choose from the following packages:")
     for ctr, asset in enumerate(assets, 1):
@@ -290,13 +305,13 @@ def github_latest_release(repo: str, force_install: bool = False) -> int:  # {{{
 
 
 # Install/build apps {{{1
-def install_ctags(force_install: bool = False) -> int:  # {{{2
+def install_ctags(args) -> int:  # {{{2
     """Download, build, and install universal ctags.
 
     Params:
     `force_install` Reinstall if already installed
     """
-    if shutil.which("ctags") and not force_install:
+    if shutil.which("ctags") and not args.force:
         LOG.warning("ctags already exists. Skipping install!")
         return 1
     ctags_tmp = "/tmp/ctags"
@@ -318,13 +333,9 @@ def install_ctags(force_install: bool = False) -> int:  # {{{2
     return 0
 
 
-def install_fish(force_install: bool = False) -> int:  # {{{2
-    """Download, build, and install fish.
-
-    Params:
-    `force_install` Reinstall if already installed
-    """
-    if shutil.which("fish") and not force_install:
+def install_fish(args) -> int:  # {{{2
+    """Download, build, and install fish."""
+    if shutil.which("fish") and not args.force:
         LOG.warning("fish already exists. Skipping install!")
         return 1
     pkgs = [
@@ -335,7 +346,7 @@ def install_fish(force_install: bool = False) -> int:  # {{{2
         "autoconf",
         "doxygen",
     ]
-    apt_install(pkgs)
+    apt_install(args, pkgs=pkgs)
     fish_tmp = "/tmp/fish"
     rmtree(fish_tmp, ignore_errors=True)
     run(f"git clone https://github.com/fish-shell/fish-shell.git {fish_tmp}")
@@ -353,13 +364,9 @@ def install_fish(force_install: bool = False) -> int:  # {{{2
     return 0
 
 
-def install_tmux(force_install: bool = False) -> int:  # {{{2
-    """Download, build, and install tmux.
-
-    Params
-    `force_install` Reinstall if already installed
-    """
-    if shutil.which("tmux") and not force_install:
+def install_tmux(args) -> int:  # {{{2
+    """Download, build, and install tmux."""
+    if shutil.which("tmux") and not args.force:
         LOG.warning("tmux already exists. Skipping install!")
         return 1
     pkgs = [
@@ -370,7 +377,7 @@ def install_tmux(force_install: bool = False) -> int:  # {{{2
         "libevent-dev",
         "libncurses5-dev",
     ]
-    apt_install(pkgs)
+    apt_install(args, pkgs)
     tmux_tmp = "/tmp/tmux"
     rmtree(tmux_tmp, ignore_errors=True)
     run(f"git clone https://github.com/tmux/tmux.git {tmux_tmp}")
@@ -395,9 +402,9 @@ def install_tmux(force_install: bool = False) -> int:  # {{{2
     return 0
 
 
-def install_mosh(force_install: bool = False) -> None:  # {{{2
+def install_mosh(args) -> None:  # {{{2
     """Download, build, and install mosh."""
-    if shutil.which("mosh") and not force_install:
+    if shutil.which("mosh") and not args.force:
         LOG.warning("mosh already exists. Skipping install!")
         return
     pkgs = [
@@ -410,7 +417,7 @@ def install_mosh(force_install: bool = False) -> None:  # {{{2
         "pkg-config",
         "autoconf",
     ]
-    apt_install(pkgs)
+    apt_install(args, pkgs)
     mosh_tmp = "/tmp/mosh"
     rmtree(mosh_tmp, ignore_errors=True)
     run(f"git clone https://github.com/keithw/mosh.git {mosh_tmp}")
@@ -428,13 +435,13 @@ def install_mosh(force_install: bool = False) -> None:  # {{{2
     rmtree(mosh_tmp, ignore_errors=True)
 
 
-def install_nnn(force_install: bool = False) -> int:  # {{{2
+def install_nnn(args) -> int:  # {{{2
     """Download, install and build nnn file manager."""
-    if shutil.which("nnn") and not force_install:
+    if shutil.which("nnn") and not args.force:
         LOG.warning("nnn already exists. Skipping install!")
         return 1
     pkgs = ["pkg-config", "libncursesw5-dev"]
-    apt_install(pkgs)
+    apt_install(args, pkgs)
     nnn_tmp = "/tmp/nnn"
     rmtree(nnn_tmp, ignore_errors=True)
     run(f"git clone https://github.com/jarun/nnn.git {nnn_tmp}")
@@ -448,14 +455,14 @@ def install_nnn(force_install: bool = False) -> int:  # {{{2
             run("sudo make install")
         else:
             LOG.error("Checkout for latest version of `nnn` failed. Aborting install!")
-    LOG.debug("Cleaning up temp directories...")
+            LOG.debug("Cleaning up temp directories...")
     rmtree(nnn_tmp, ignore_errors=True)
     return 0
 
 
-def install_todo(force_install: bool = False) -> int:  # {{{2
+def install_todo(args) -> int:  # {{{2
     """Download and install todo.txt cli."""
-    if shutil.which("todo.sh") and not force_install:
+    if shutil.which("todo.sh") and not args.force:
         LOG.warning("todo.sh already exists. Skipping install!")
         return 1
 
@@ -470,78 +477,113 @@ def install_todo(force_install: bool = False) -> int:  # {{{2
     return install.returncode
 
 
-# Parse arguments {{{1
+# Argparse {{{1
 def process_args(argv: list):
     """Parse command line arguments and return namespace."""
     parser = argparse.ArgumentParser(
         prog="provision",
         description="provision setup of new machine with standard defaults common to all installs",
     )
-    parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
-    parser.add_argument(
-        "--all",
-        action="store_true",
-        default=False,
-        help="run all provisioning processes",
-    )
-    parser.add_argument(
-        "--apt",
-        action="store_true",
-        default=False,
-        help="update apt cache and optionally install packages",
-    )
-    parser.add_argument(
-        "--ctags",
-        action="store_true",
-        default=False,
-        help="build and install latest version of ctags",
-    )
-    parser.add_argument(
-        "--fish",
-        action="store_true",
-        default=False,
-        help="build and install fish shell",
-    )
-    parser.add_argument(
-        "--git",
-        action="store_true",
-        default=False,
-        help="clone default git repos to ~/git",
-    )
-    parser.add_argument(
-        "--github-release",
-        action="store",
-        help="download and install latest release from repo",
-    )
-    parser.add_argument(
-        "--mosh",
-        action="store_true",
-        default=False,
-        help="build and install latest version of mobile shell",
-    )
-    parser.add_argument(
-        "--nnn",
-        action="store_true",
-        default=False,
-        help="build and install latest version of nnn file browser",
-    )
-    parser.add_argument(
-        "--tmux",
-        action="store_true",
-        default=False,
-        help="build and install latest version of TMUX",
-    )
-    parser.add_argument(
-        "--todo", action="store_true", default=False, help="install latest todo.sh cli"
-    )
-    parser.add_argument(
+
+    # Top-level options {{{2
+    common_parser = argparse.ArgumentParser(add_help=False, parents=[parser])
+    common_parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
+    common_parser.add_argument(
         "-f",
         "--force",
         action="store_true",
         default=False,
         help="force install/action to be completed",
     )
-    return parser.parse_args(argv)
+    subparsers = parser.add_subparsers(
+        title="commands", description="use -h/--help for any command"
+    )
+
+    # All {{{2
+    parser_all = subparsers.add_parser("all", help="run all provisioning processes")
+    parser_all.set_defaults(func=run_all)
+
+    # Apt {{{2
+    parser_apt = subparsers.add_parser(
+        "apt",
+        help="update apt cache and optionally install packages",
+        parents=[common_parser],
+        add_help=False,
+    )
+    # parser_apt.add_argument(
+    parser_apt.set_defaults(func=apt_install)
+
+    # Ctags {{{2
+    parser_ctags = subparsers.add_parser(
+        "ctags",
+        help="build and install ctags from source",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_ctags.set_defaults(func=install_ctags)
+
+    # Fish {{{2
+    parser_fish = subparsers.add_parser(
+        "fish",
+        help="build and install fish shell",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_fish.set_defaults(func=install_fish)
+
+    # Github {{{2
+    parser_github = subparsers.add_parser(
+        "github", help="clone github repos", parents=[common_parser], add_help=False
+    )
+    parser_github.add_argument("dir", type=str, help="destination dir", default="~/git")
+    parser_github.set_defaults(func=clone_git_repos)
+
+    parser_github_release = subparsers.add_parser(
+        "github-release",
+        help="download and install release from github",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_github_release.add_argument("repo", type=str, help="github repo name")
+    parser_github_release.set_defaults(func=github_latest_release)
+
+    # Mosh {{{2
+    parser_mosh = subparsers.add_parser(
+        "mosh",
+        help="build and install mobile shell",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_mosh.set_defaults(func=install_mosh)
+
+    # nnn {{{2
+    parser_nnn = subparsers.add_parser(
+        "nnn",
+        help="build and install nnn file browser",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_nnn.set_defaults(func=install_nnn)
+
+    # tmux {{{2
+    parser_tmux = subparsers.add_parser(
+        "tmux",
+        help="build and install terminal multiplexer",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_tmux.set_defaults(func=install_tmux)
+
+    # todo {{{2
+    parser_todo = subparsers.add_parser(
+        "todo",
+        help="build and install todo.sh cli",
+        parents=[common_parser],
+        add_help=False,
+    )
+    parser_todo.set_defaults(func=install_todo)
+
+    return parser.parse_known_args(argv)
 
 
 # Entry point {{{1
@@ -552,9 +594,9 @@ def cli():
         sys.argv[1]
         cli_args = sys.argv[1:]
     except IndexError:
-        cli_args = ["-dd", "--git"]
+        cli_args = ["-dd", "--help"]
     finally:
-        args = process_args(cli_args)
+        args, extra = process_args(cli_args)
 
     if args.debug == 1:
         LOG.setLevel(logging.INFO)
@@ -564,24 +606,11 @@ def cli():
     LOG.info("Argument input: %s", repr(cli_args))
     LOG.info("Argparse output: %s", repr(args))
 
-    if args.all or args.apt:
-        apt_install()
-    if args.all or args.fish:
-        install_fish(force_install=args.force)
-    if args.all or args.git:
-        clone_git_repos()
-    if args.all or args.ctags:
-        install_ctags(force_install=args.force)
-    if args.all or args.github_release:
-        github_latest_release(args.github_release)
-    if args.all or args.mosh:
-        install_mosh(force_install=args.force)
-    if args.all or args.nnn:
-        install_nnn(force_install=args.force)
-    if args.all or args.tmux:
-        install_tmux(force_install=args.force)
-    if args.all or args.todo:
-        install_todo(force_install=args.force)
+    if len(extra):
+        LOG.info("Argparse extra args: %s", repr(extra))
+
+    # Run function defined in subcommand(s)
+    args.func(args)
 
 
 if __name__ == "__main__":

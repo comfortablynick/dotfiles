@@ -115,6 +115,10 @@ dotfiles:
     dst: ~/.bashrc
     link: true
     src: bashrc.sh
+  f_config.py:
+    dst: ~/.ptpython/config.py
+    link: true
+    src: .ptpython/config.py
   f_dircolors:
     dst: ~/.dircolors
     link: true
@@ -151,6 +155,7 @@ profiles:
     - f_bash_profile
     - f_bash_aliases
     - f_bash_functions
+    - f_config.py
     - f_dircolors
     - f_tmux.conf
     - f_tmux.theme.conf

@@ -1,4 +1,5 @@
-function man --wraps man --description 'Format and display manual pages'
+# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.vxtwQz/man.fish @ line 2
+function man --description 'Format and display manual pages'
 	set -q man_blink; and set -l blink (set_color $man_blink); or set -l blink (set_color -o red)
     set -q man_bold; and set -l bold (set_color $man_bold); or set -l bold (set_color -o 5fafd7)
     set -q man_standout; and set -l standout (set_color $man_standout); or set -l standout (set_color 949494)
@@ -34,8 +35,6 @@ function man --wraps man --description 'Format and display manual pages'
     set -l fish_manpath (dirname $fish_data_dir)/fish/man
     if test -d "$fish_manpath" -a -n "$MANPATH"
         set MANPATH "$fish_manpath":$MANPATH
-        command man $argv
-        return
     end
     command man $argv
 end

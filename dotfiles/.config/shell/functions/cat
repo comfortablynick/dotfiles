@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-# use cat alternative if installed
+# use cat alternatives if installed
 
 if [ -n "$(command -v bat 2>/dev/null)" ]; then
-    command bat $@
+    command bat "$@"
+elif [ -n "$(command -v ccat 2>/dev/null)" ]; then
+    command ccat "$@"
+elif [ -n "$(command -v gcat 2>/dev/null)" ]; then
+    command gcat "$@"
 else
-    command cat $@
+    command cat "$@"
 fi

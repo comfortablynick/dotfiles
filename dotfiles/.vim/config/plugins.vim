@@ -52,7 +52,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 
 " Linting {{{2
-Plug 'w0rp/ale',                                                " Async Linting Engine
+Plug 'w0rp/ale', Cond(1,
     \ {
     \   'for': [
     \       'python',
@@ -62,7 +62,7 @@ Plug 'w0rp/ale',                                                " Async Linting 
     \       'cpp',
     \       'c',
     \   ]
-    \ }
+    \ })
 
 " Formatting {{{2
 Plug 'sbdchd/neoformat'
@@ -177,6 +177,7 @@ call plug#end()
 " Plugin configuration {{{1
 " ALE (Asynchronus Linting Engine)  {{{2
 " TODO: disable ale_open_list and use own function to open qf w/o shifting buf
+" Main options {{{3
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
 let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
@@ -200,6 +201,8 @@ let g:ale_virtualenv_dir_names = [
     \   '.env',
     \   'dev',
     \   ]
+
+" Linters/fixers {{{3
 let g:ale_linters = {
     \ 'python':
     \   [
@@ -208,6 +211,7 @@ let g:ale_linters = {
     \       'pydocstyle',
     \   ],
     \ }
+
 let g:ale_fixers = {
     \ '*':
     \   [
@@ -228,6 +232,8 @@ let g:ale_fixers = {
     \       'prettier',
     \   ],
     \ }
+
+" Linter/fixer options {{{3
 let g:ale_python_flake8_options = '--max-line-length 100  --ignore E203,E302,W503'
 let g:ale_python_mypy_ignore_invalid_syntax = 1
 let g:ale_python_mypy_options = '--ignore-missing-imports'

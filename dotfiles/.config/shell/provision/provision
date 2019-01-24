@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Main provisioning script.
-
-TODO:
-    - Make generic build/install function for different types:
-        - autogen
-        - standard configure/make/make install
-        - .deb packages
-"""
+"""Helper script for setup of unix machines."""
 import argparse
 import errno
 import logging
@@ -19,16 +12,20 @@ import warnings
 from contextlib import contextmanager
 from pathlib import Path
 from shlex import split
-from typing import Generator
+from typing import Generator, NoReturn
 
 from github import Github
 
 # Globals {{{1
-logging.basicConfig(
-    format="%(levelname)s:%(funcName)s: %(message)s", level=logging.WARNING
-)
+"""
+TODO:
+    - Make generic build/install function for different types:
+        - autogen
+        - standard configure/make/make install
+        - .deb packages
+"""
+logging.basicConfig(format="%(levelname)s:%(funcName)s: %(message)s")
 LOG = logging.getLogger(__name__)
-APT_CACHE_UPDATED = False
 
 # Utility Functions {{{1
 def run(cmd, encoding="utf-8", *args, **kwargs):
@@ -154,7 +151,7 @@ def chdir(path: str) -> Generator:
 
 def run_all(args) -> int:
     """Run all provisioning processes."""
-    apt_install(args)
+    Apt.install(args)
     install_fish(args)
     clone_git_repos(args)
     install_ctags(args)
@@ -167,48 +164,76 @@ def run_all(args) -> int:
 
 
 # Apt {{{1
-def apt_update_cache() -> None:
-    """Update apt cache"""
-    cmd = "sudo apt update -y"
-    LOG.debug("Command: %s", cmd)
-    run(cmd)
-    global APT_CACHE_UPDATED
-    APT_CACHE_UPDATED = True
-    return
+class Apt:
+    """Interact with apt-get on Debian distros."""
 
+    cache_updated = False
 
-def apt_install(args, pkgs: list = []) -> int:
-    """Update apt cache if necessary and install `pkgs`"""
-    # TODO: take cli args and add to pkg list if successful
-    if not shutil.which("apt-get"):
-        LOG.error("Apt not installed on this system")
-        return 1
-    if not APT_CACHE_UPDATED:
-        LOG.info("Updating apt cache")
-        apt_update_cache()
-    packages = pkgs + args.packages
-    if not len(packages):
-        LOG.info("No pkgs supplied; getting apt pkgs from disk")
-        pkg_file = "~/.config/shell/provision/apt_package"
-        try:
-            with open(os.path.expanduser(pkg_file), "r") as f:
-                packages = f.read().splitlines()
-        except FileNotFoundError:
-            LOG.warning("apt pkg file not found at %s", pkg_file)
+    def __init__(self, args):
+        self.args = args
+        self._update_cache()
+
+    @classmethod
+    def _update_cache(cls) -> None:
+        if not cls.cache_updated:
+            cmd = "sudo apt update -y"
+            LOG.debug("Command: %s", cmd)
+            run(cmd)
+            cls.cache_updated = True
+
+    @classmethod
+    def _list_upgradable(cls, args) -> int:
+        LOG.debug("Apt cache updated: %s", cls.cache_updated)
+        cls._update_cache()
+        cmd = run("apt list --upgradable", capture_output=True)
+        return cmd.returncode
+
+    @classmethod
+    def _upgrade(cls, args=None) -> int:
+        cls._update_cache()
+        cmd = run("sudo apt full-upgrade -y", capture_output=True)
+        return cmd.returncode
+
+    @classmethod
+    def install(cls, args=None, pkgs: list = []) -> int:
+        """Install apt packages, skipping if already installed."""
+        cls._update_cache()
+        # TODO: take cli args and add to pkg list if successful
+        if not shutil.which("apt-get"):
+            LOG.error("Apt not installed on this system")
             return 1
-    cmd = ["sudo", "apt", "install", "-y", *packages]
-    LOG.debug("Command: %s", cmd)
-    try:
-        run(cmd)
-    except FileNotFoundError:
-        LOG.error("apt does not seem to be installed on this system.")
-        return 1
-    return 0
+        packages = pkgs + args.packages
+        if not len(packages):
+            LOG.info("No pkgs supplied; getting apt pkgs from disk")
+            pkg_file = "~/.config/shell/provision/apt_package"
+            try:
+                with open(os.path.expanduser(pkg_file), "r") as f:
+                    packages = f.read().splitlines()
+            except FileNotFoundError:
+                LOG.warning("apt pkg file not found at %s", pkg_file)
+                return 1
+        cmd = ["sudo", "apt", "install", "-y", *packages]
+        LOG.debug("Command: %s", cmd)
+        try:
+            run(cmd)
+        except FileNotFoundError:
+            LOG.error("apt does not seem to be installed on this system.")
+            return 1
+        return 0
+
+    @classmethod
+    def update(cls, args) -> int:
+        """Install/update apt packages, and purge old cached files."""
+        cls._update_cache()
+        cls._upgrade(args)
+        cls.install(args)
+        run("sudo apt autoremove", check=True)
+        return run("sudo apt purge", capture_output=True).returncode
 
 
 # Git {{{1
 def git_clone(  # {{{2
-    repo: str, dest_path: str = None, args: list = ["--recursive"]
+    repo: str, dest_path: str = "", args: list = ["--recursive"]
 ) -> None:
     """Clone git repo to dest path."""
     if not shutil.which("git"):
@@ -259,11 +284,7 @@ def git_latest_tag() -> str:  # {{{2
 
 
 def github_latest_release(args) -> int:  # {{{2
-    """Get latest release binary.
-
-    Params:
-    `repo` GitHub repo name in 'user/repo' format
-    """
+    """Get latest release binary."""
     token = github_token()
     if token == "":
         LOG.error("No GitHub token found!")
@@ -309,6 +330,21 @@ def github_latest_release(args) -> int:  # {{{2
 
 
 # Install/build apps {{{1
+def install(args) -> int:  # {{{2
+    """Install software, building from source if needed."""
+    LOG.info("Install called for: %s", ", ".join(args.install))
+
+    for item in args.install:
+        func_name = f"install_{item}"
+        try:
+            LOG.debug("Calling '%s'", func_name)
+            globals()[func_name](args)
+        except KeyError:
+            LOG.error("Function '%s' does not exist!", func_name)
+            return 1
+    return 0
+
+
 def install_ctags(args) -> int:  # {{{2
     """Download, build, and install universal ctags."""
     if shutil.which("ctags") and not args.force:
@@ -346,7 +382,7 @@ def install_fish(args) -> int:  # {{{2
         "autoconf",
         "doxygen",
     ]
-    apt_install(args, pkgs=pkgs)
+    Apt.install(args, pkgs=pkgs)
     fish_tmp = "/tmp/fish"
     rmtree(fish_tmp, ignore_errors=True)
     run(f"git clone https://github.com/fish-shell/fish-shell.git {fish_tmp}")
@@ -377,7 +413,7 @@ def install_tmux(args) -> int:  # {{{2
         "libevent-dev",
         "libncurses5-dev",
     ]
-    apt_install(args, pkgs)
+    Apt.install(args, pkgs)
     tmux_tmp = "/tmp/tmux"
     rmtree(tmux_tmp, ignore_errors=True)
     run(f"git clone https://github.com/tmux/tmux.git {tmux_tmp}")
@@ -417,7 +453,7 @@ def install_mosh(args) -> None:  # {{{2
         "pkg-config",
         "autoconf",
     ]
-    apt_install(args, pkgs)
+    Apt.install(args, pkgs)
     mosh_tmp = "/tmp/mosh"
     rmtree(mosh_tmp, ignore_errors=True)
     run(f"git clone https://github.com/keithw/mosh.git {mosh_tmp}")
@@ -441,7 +477,7 @@ def install_nnn(args) -> int:  # {{{2
         LOG.warning("nnn already exists. Skipping install!")
         return 1
     pkgs = ["pkg-config", "libncursesw5-dev"]
-    apt_install(args, pkgs)
+    Apt.install(args, pkgs)
     nnn_tmp = "/tmp/nnn"
     rmtree(nnn_tmp, ignore_errors=True)
     run(f"git clone https://github.com/jarun/nnn.git {nnn_tmp}")
@@ -478,16 +514,67 @@ def install_todo(args) -> int:  # {{{2
 
 
 # Argparse {{{1
-def process_args(argv: list):
+class ColoredArgParser(argparse.ArgumentParser):  # {{{2
+    """Add color to ArgumentParser."""
+
+    # RED : Error, GREEN : Okay, YELLOW : Warning, Blue: Help/Info
+    color_dict = {"RED": "1;31", "GREEN": "1;32", "YELLOW": "1;33", "BLUE": "1;36"}
+
+    def print_usage(self, file=None) -> None:
+        """Add color to `Usage` messages."""
+        if file is None:
+            file = sys.stdout
+        self._print_message(
+            self.format_usage()[0].upper() + self.format_usage()[1:],
+            file,
+            self.color_dict["YELLOW"],
+        )
+
+    def print_help(self, file=None) -> None:
+        if file is None:
+            file = sys.stdout
+        self._print_message(
+            self.format_help()[0].upper() + self.format_help()[1:],
+            file,
+            self.color_dict["BLUE"],
+        )
+
+    def _print_message(self, message, file=None, color=None) -> None:
+        if message:
+            if file is None:
+                file = sys.stderr
+            # Print messages in bold, colored text if color is given.
+            if color is None:
+                file.write(message)
+            else:
+                # \x1b[ is the ANSI Control Sequence Introducer (CSI)
+                file.write("\x1b[" + color + "m" + message.strip() + "\x1b[0m\n")
+
+    def exit(self, status=0, message=None) -> NoReturn:
+        if message:
+            self._print_message(message, sys.stderr, self.color_dict["RED"])
+        sys.exit(status)
+
+    def error(self, message) -> NoReturn:
+        self.print_usage(sys.stderr)
+        args = {"prog": self.prog, "message": message}
+        self.exit(2, "%(prog)s: Error: %(message)s\n" % args)
+
+
+def process_args(argv: list):  # {{{2
     """Parse command line arguments and return namespace."""
-    parser = argparse.ArgumentParser(
+
+    parser = ColoredArgParser(
         prog="provision",
-        description="provision setup of new machine with standard defaults common to all installs",
+        description=__doc__,
+        epilog="use -h/--help for any command to see additional options",
     )
 
     # Top-level options {{{2
     common_parser = argparse.ArgumentParser(add_help=False, parents=[parser])
-    common_parser.add_argument("-d", "--debug", action="count", help=argparse.SUPPRESS)
+    common_parser.add_argument(
+        "-d", "--debug", action="count", default=0, help=argparse.SUPPRESS
+    )
     common_parser.add_argument(
         "-f",
         "--force",
@@ -496,7 +583,9 @@ def process_args(argv: list):
         help="force install/action to be completed",
     )
     subparsers = parser.add_subparsers(
-        title="commands", description="use -h/--help for any command"
+        title="commands",
+        description="(commands may take additional arguments)",
+        metavar="[COMMAND]",
     )
 
     # All {{{2
@@ -506,33 +595,54 @@ def process_args(argv: list):
     # Apt {{{2
     parser_apt = subparsers.add_parser(
         "apt",
+        help="use apt to manage system packages",
+        description="",
+        parents=[common_parser],
+        add_help=False,
+    )
+    apt_subparsers = parser_apt.add_subparsers(
+        title="subcommands",
+        description="(subcommands may take additional arguments)",
+        metavar="[COMMAND]",
+    )
+
+    # Apt install {{{3
+    parser_apt_install = apt_subparsers.add_parser(
+        "install",
         help="update apt cache and optionally install packages",
-        description=apt_install.__doc__,
-        parents=[common_parser],
-        add_help=False,
+        description=Apt.install.__doc__,
     )
-    parser_apt.add_argument("packages", nargs="*", help="apt packages to install")
-    parser_apt.set_defaults(func=apt_install)
+    parser_apt_install.add_argument(
+        "packages", nargs="*", help="optional apt packages to install"
+    )
+    parser_apt_install.set_defaults(func=Apt.install)
 
-    # Ctags {{{2
-    parser_ctags = subparsers.add_parser(
-        "ctags",
-        help="build and install ctags from source",
-        description=install_ctags.__doc__,
-        parents=[common_parser],
-        add_help=False,
+    # Apt update {{{3
+    parser_apt_update = apt_subparsers.add_parser(
+        "update",
+        help="update all packages and clean old files",
+        description=Apt.update.__doc__,
     )
-    parser_ctags.set_defaults(func=install_ctags)
+    parser_apt_update.add_argument(
+        "packages", nargs="*", help="optional apt packages to install"
+    )
+    parser_apt_update.set_defaults(func=Apt.update)
 
-    # Fish {{{2
-    parser_fish = subparsers.add_parser(
-        "fish",
-        help="build and install fish shell",
-        description=install_fish.__doc__,
+    # Install {{{2
+    parser_install = subparsers.add_parser(
+        "install",
+        help="install software, building from source if needed",
+        description="Download, (build), and install software",
         parents=[common_parser],
         add_help=False,
     )
-    parser_fish.set_defaults(func=install_fish)
+    parser_install.add_argument(
+        "install",
+        help="app to build and install from source",
+        choices=["ctags", "fish", "mosh", "nnn", "tmux", "todo"],
+        nargs="+",
+    )
+    parser_install.set_defaults(func=install)
 
     # Github {{{2
     parser_github = subparsers.add_parser(
@@ -555,46 +665,6 @@ def process_args(argv: list):
     parser_github_release.add_argument("repo", type=str, help="github repo name")
     parser_github_release.set_defaults(func=github_latest_release)
 
-    # Mosh {{{2
-    parser_mosh = subparsers.add_parser(
-        "mosh",
-        help="build and install mobile shell",
-        description=install_mosh.__doc__,
-        parents=[common_parser],
-        add_help=False,
-    )
-    parser_mosh.set_defaults(func=install_mosh)
-
-    # nnn {{{2
-    parser_nnn = subparsers.add_parser(
-        "nnn",
-        help="build and install nnn file browser",
-        description=install_nnn.__doc__,
-        parents=[common_parser],
-        add_help=False,
-    )
-    parser_nnn.set_defaults(func=install_nnn)
-
-    # tmux {{{2
-    parser_tmux = subparsers.add_parser(
-        "tmux",
-        help="build and install terminal multiplexer",
-        description=install_tmux.__doc__,
-        parents=[common_parser],
-        add_help=False,
-    )
-    parser_tmux.set_defaults(func=install_tmux)
-
-    # todo {{{2
-    parser_todo = subparsers.add_parser(
-        "todo",
-        help="build and install todo.sh cli",
-        description=install_todo.__doc__,
-        parents=[common_parser],
-        add_help=False,
-    )
-    parser_todo.set_defaults(func=install_todo)
-
     return parser.parse_known_args(argv)
 
 
@@ -611,10 +681,22 @@ def cli():
         args, extra = process_args(cli_args)
 
     if args.debug == 1:
-        LOG.setLevel(logging.INFO)
-    if args.debug == 2:
-        LOG.setLevel(logging.DEBUG)
+        log_level = logging.INFO
+    elif args.debug >= 2:
+        log_level = logging.DEBUG
+    else:
+        log_level = logging.WARNING
 
+    try:
+        import coloredlogs
+    except ModuleNotFoundError:
+        pass
+    else:
+        coloredlogs.install(
+            logger=LOG, fmt="%(levelname)s:%(funcName)s: %(message)s", level=log_level
+        )
+
+    LOG.info("Logging level: %s", LOG.getEffectiveLevel())
     LOG.info("Argument input: %s", repr(cli_args))
     LOG.info("Argparse output: %s", repr(args))
 
@@ -622,7 +704,10 @@ def cli():
         LOG.info("Argparse extra args: %s", repr(extra))
 
     # Run function defined in subcommand(s)
-    args.func(args)
+    try:
+        args.func(args)
+    except AttributeError:
+        LOG.warning("Args namespace has no 'func' attribute")
 
 
 if __name__ == "__main__":

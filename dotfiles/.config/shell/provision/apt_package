@@ -29,7 +29,6 @@ libvterm-dev
 libjemalloc-dev
 ninja-build
 gettext
-libtool 
 libtool-bin
 autoconf
 automake
@@ -38,3 +37,5 @@ g++
 pkg-config
 unzip
 python-docutils
+mercurial
+meld

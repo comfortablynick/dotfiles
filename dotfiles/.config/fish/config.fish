@@ -233,9 +233,9 @@ end
 # pure {{{2
 # prompt text
 if test "$FISH_THEME" = 'pure'
-    set pure_symbol_prompt "❯"
-    set pure_symbol_git_down_arrow "⇣"
-    set pure_symbol_git_up_arrow "⇡"
+    set pure_symbol_prompt "✖" # "❯"
+    set pure_symbol_git_down_arrow '↓' # "⇣"
+    set pure_symbol_git_up_arrow '↑' #  "⇡"
     set pure_symbol_git_dirty "*"
     set pure_symbol_horizontal_bar "—"
 
@@ -277,7 +277,7 @@ and set -g yimmy_solarized false
 # set fish_key_bindings fish_user_vi_key_bindings
 
 # STARTUP COMMANDS {{{1
-# TMux {{{2
+# TMUX {{{2
 # Attach to existing tmux or create a new session using custom function
 # Get current session name
 if test -n "$TMUX_PANE"

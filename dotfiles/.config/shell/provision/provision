@@ -513,6 +513,25 @@ def install_todo(args) -> int:  # {{{2
     return install.returncode
 
 
+def install_vcprompt(args) -> int:  # {{{2
+    """Download and install vcprompt C utility for git status."""
+    if shutil.which("vcprompt") and not args.force:
+        LOG.warning("vcprompt already exists. Skipping install!")
+        return 1
+
+    vcp_tmp = "/tmp/vcprompt"
+    rmtree(vcp_tmp, ignore_errors=True)
+    run(f"hg clone https://bitbucket.org/gward/vcprompt {vcp_tmp}")
+
+    with chdir(vcp_tmp):
+        run("autoconf")
+        run("./configure")
+        run("make")
+        install = run("sudo make install")
+    rmtree(vcp_tmp)
+    return install.returncode
+
+
 # Argparse {{{1
 class ColoredArgParser(argparse.ArgumentParser):  # {{{2
     """Add color to ArgumentParser."""
@@ -639,7 +658,7 @@ def process_args(argv: list):  # {{{2
     parser_install.add_argument(
         "install",
         help="app to build and install from source",
-        choices=["ctags", "fish", "mosh", "nnn", "tmux", "todo"],
+        choices=[d.split("_")[1] for d in globals().keys() if d.startswith("install_")],
         nargs="+",
     )
     parser_install.set_defaults(func=install)

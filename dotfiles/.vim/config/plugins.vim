@@ -57,6 +57,8 @@ Plug 'w0rp/ale', Cond(1,
     \   'for': [
     \       'python',
     \       'vim',
+    \       'sh',
+    \       'bash',
     \       'typescript',
     \       'javascript',
     \       'cpp',

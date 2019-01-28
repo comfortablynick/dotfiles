@@ -297,11 +297,11 @@ augroup quickfix
     autocmd FileType qf wincmd J
 augroup END
 
-" Tagbar {{{2
-" augroup tagbar
-"     autocmd!
-"     autocmd FileType typescript,python call OpenTagbar()
-" augroup END
+
+augroup fmt
+    autocmd!
+    autocmd BufWritePre *.{bash,sh,go} Neoformat
+augroup end
 
 " Formatopts {{{2
 augroup fmtopts

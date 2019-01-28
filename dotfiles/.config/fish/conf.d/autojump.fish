@@ -1,8 +1,10 @@
 set -gx AUTOJUMP_SOURCED 1
 
+set -l aj_install "$HOME/.autojump"
+
 # set user installation path
-if test -d ~/.autojump
-    set -x PATH ~/.autojump/bin $PATH
+if test -d "$aj_install"; and not contains "$aj_install/bin" $PATH
+    set -p PATH "$aj_install/bin"
 end
 
 # Set ostype, if not set

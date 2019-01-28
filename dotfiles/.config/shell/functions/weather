@@ -2,7 +2,8 @@
 script="$HOME/git/python/shell/weather/weather.py"
 
 if [ -x "$script" ]; then
-    python "$script" $@
+    cd "$PYENV_ROOT/versions/weather/bin" || return
+    ./python "$script" "$@"
 elif [ -e "$script" ]; then
     echo "Script exists but is not executable: $script"
     exit 1

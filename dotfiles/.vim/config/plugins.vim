@@ -223,6 +223,7 @@ let g:ale_linters = {
     \   ],
     \ 'go':
     \   [
+    \       'gometalinter',
     \       'golint',
     \   ],
     \ }

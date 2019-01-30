@@ -29,6 +29,9 @@ noremap <silent> <F2> :Neoformat<CR>
 " `F5` :: toggle UndoTree
 noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
 
+" `F7` :: build project
+noremap <silent> <F7> :call RunBuild()<CR>
+
 " `F8` :: toggle TagBar
 noremap <silent> <F8> :TagbarToggle<CR>
 

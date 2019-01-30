@@ -27,6 +27,7 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'cpp',
     \       'c',
+    \       'go',
     \   ],
     \ 'ycm':
     \   [
@@ -45,6 +46,7 @@ call plug#begin('~/.vim/plugged')                               " Plugin Manager
 " Editor features {{{2
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
+Plug 'scrooloose/nerdcommenter'
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
 Plug 'majutsushi/tagbar'
 Plug '~/.fzf'
@@ -63,6 +65,7 @@ Plug 'w0rp/ale', Cond(1,
     \       'javascript',
     \       'cpp',
     \       'c',
+    \       'go',
     \   ]
     \ })
 
@@ -137,6 +140,13 @@ Plug 'ponko2/deoplete-fish',                                    " Fish-shell com
     \   'for': 'fish',
     \ })
 
+" Go {{{4
+Plug 'zchee/deoplete-go',
+    \ Cond(has('nvim'),
+    \ {
+    \   'for': 'go',
+    \   'do': 'make',
+    \ })
 
 " YouCompleteMe {{{3
 Plug 'Valloric/YouCompleteMe',
@@ -178,7 +188,6 @@ call plug#end()
 
 " Plugin configuration {{{1
 " ALE (Asynchronus Linting Engine)  {{{2
-" TODO: disable ale_open_list and use own function to open qf w/o shifting buf
 " Main options {{{3
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
@@ -212,6 +221,10 @@ let g:ale_linters = {
     \       'mypy',
     \       'pydocstyle',
     \   ],
+    \ 'go':
+    \   [
+    \       'golint',
+    \   ],
     \ }
 
 let g:ale_fixers = {
@@ -232,6 +245,10 @@ let g:ale_fixers = {
     \ 'javascript':
     \   [
     \       'prettier',
+    \   ],
+    \ 'go':
+    \   [
+    \       'goimports',
     \   ],
     \ }
 
@@ -284,6 +301,23 @@ let NERDTreeIgnore = [
 let NERDTreeShowHidden = 1
 let NERDTreeQuitOnOpen = 1
 
+" NERD Commenter
+let g:NERDSpaceDelims = 1                       " Add spaces after comment delimiters by default
+let g:NERDCompactSexyComs = 1                   " Use compact syntax for prettified multi-line comments
+let g:NERDDefaultAlign = 'left'                 " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDAltDelims_java = 1                    " Set a language to use its alternate delimiters by default
+let g:NERDCommentEmptyLines = 1                 " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDTrimTrailingWhitespace = 1            " Enable trimming of trailing whitespace when uncommenting
+let g:NERDToggleCheckAllLines = 1               " Enable NERDCommenterToggle to check all selected lines is commented or not
+
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = {
+    \ 'c': {
+    \   'left': '/**',
+    \   'right': '*/'
+    \   }
+    \ }
+
 " Echodoc {{{2
 " TODO: Only execute for python/ts/js?
 set cmdheight=1                                 " Add extra line for function definition
@@ -332,6 +366,8 @@ let g:airline#extensions#tabline#show_close_button = 0
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 augroup deoplete_preview
     autocmd!
@@ -373,5 +409,9 @@ let g:VtrClearEmptyLines = 0                                    " Disable clearn
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
 let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
+
+let g:vtr_filetype_runner_overrides = {
+    \ 'go': 'go run {file}'
+    \ }
 
 " vim:set fdl=1:

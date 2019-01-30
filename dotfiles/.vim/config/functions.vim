@@ -70,79 +70,79 @@ function! SetExecutable()
     call SetShebang()
 endfunction
 
-" Run code {{{2
+" Run code (replaced by Vim Tmux Runner) {{{2
 " Run Python Code in Vim (DEPRECATED) {{{3
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 " nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
 " vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
 " nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
 
-" SaveAndExecutePython() :: save file and execute python in split vim {{{3
-function! SaveAndExecutePython() abort
-    " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
-
-    " save and reload current file
-    silent execute 'update | edit'
-
-    " get file path of current file
-    let s:current_buffer_file_path = expand('%')
-
-    let s:output_buffer_name = 'Python'
-    let s:output_buffer_filetype = 'output'
-
-    " reuse existing buffer window if it exists otherwise create a new one
-    if !exists('s:buf_nr') || !bufexists(s:buf_nr)
-        silent execute 'botright vsplit new ' . s:output_buffer_name
-        let s:buf_nr = bufnr('%')
-    elseif bufwinnr(s:buf_nr) == -1
-        silent execute 'botright new'
-        silent execute s:buf_nr . 'buffer'
-    elseif bufwinnr(s:buf_nr) != bufwinnr('%')
-        silent execute bufwinnr(s:buf_nr) . 'wincmd w'
-    endif
-
-    silent execute 'setlocal filetype=' . s:output_buffer_filetype
-    setlocal bufhidden=delete
-    setlocal buftype=nofile
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal winfixheight
-    setlocal cursorline " make it easy to distinguish
-    setlocal nonumber
-    setlocal norelativenumber
-    setlocal showbreak=""
-    setlocal wrap
-    setlocal textwidth=0
-
-    " clear the buffer
-    setlocal noreadonly
-    setlocal modifiable
-    silent %delete _
-
-    " add the console output
-    silent execute '.!python3 ' . shellescape(s:current_buffer_file_path, 1)
-
-    " make the buffer non modifiable
-    setlocal readonly
-    setlocal nomodifiable
-
-    " Return to previous (code) window
-    silent execute 'wincmd p'
-endfunction
-
-" ClosePythonWindow() :: close window opened for running python {{{3
-function! ClosePythonWindow() abort
-    " Close Python window we opened
-    if bufexists(s:buf_nr)
-        let ui_window_number = bufwinnr(s:buf_nr)
-        if ui_window_number != -1
-            silent execute ui_window_number . 'close'
-        endif
-    endif
-
-    " Return to original window
-    silent execute 'wincmd p'
-endfunction
+" SaveAndExecutePython() :: save file and execute python in split vim {{{4
+" function! SaveAndExecutePython() abort
+"     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
+"
+"     " save and reload current file
+"     silent execute 'update | edit'
+"
+"     " get file path of current file
+"     let s:current_buffer_file_path = expand('%')
+"
+"     let s:output_buffer_name = 'Python'
+"     let s:output_buffer_filetype = 'output'
+"
+"     " reuse existing buffer window if it exists otherwise create a new one
+"     if !exists('s:buf_nr') || !bufexists(s:buf_nr)
+"         silent execute 'botright vsplit new ' . s:output_buffer_name
+"         let s:buf_nr = bufnr('%')
+"     elseif bufwinnr(s:buf_nr) == -1
+"         silent execute 'botright new'
+"         silent execute s:buf_nr . 'buffer'
+"     elseif bufwinnr(s:buf_nr) != bufwinnr('%')
+"         silent execute bufwinnr(s:buf_nr) . 'wincmd w'
+"     endif
+"
+"     silent execute 'setlocal filetype=' . s:output_buffer_filetype
+"     setlocal bufhidden=delete
+"     setlocal buftype=nofile
+"     setlocal noswapfile
+"     setlocal nobuflisted
+"     setlocal winfixheight
+"     setlocal cursorline " make it easy to distinguish
+"     setlocal nonumber
+"     setlocal norelativenumber
+"     setlocal showbreak=""
+"     setlocal wrap
+"     setlocal textwidth=0
+"
+"     " clear the buffer
+"     setlocal noreadonly
+"     setlocal modifiable
+"     silent %delete _
+"
+"     " add the console output
+"     silent execute '.!python3 ' . shellescape(s:current_buffer_file_path, 1)
+"
+"     " make the buffer non modifiable
+"     setlocal readonly
+"     setlocal nomodifiable
+"
+"     " Return to previous (code) window
+"     silent execute 'wincmd p'
+" endfunction
+"
+" ClosePythonWindow() :: close window opened for running python {{{4
+" function! ClosePythonWindow() abort
+"     " Close Python window we opened
+"     if bufexists(s:buf_nr)
+"         let ui_window_number = bufwinnr(s:buf_nr)
+"         if ui_window_number != -1
+"             silent execute ui_window_number . 'close'
+"         endif
+"     endif
+"
+"     " Return to original window
+"     silent execute 'wincmd p'
+" endfunction
 
 
 " Quickfix window {{{2
@@ -152,7 +152,9 @@ function! ToggleQf() abort
         " AsyncRun is loaded; use this handy function
         " Open qf window of specific size in most elegant way
         let qf_lines = len(getqflist())
-        let qf_size = min([qf_lines, get(g:, 'quickfix_size', 8)])
+        let qf_size = qf_lines ?
+            \ min([qf_lines, get(g:, 'quickfix_size', 8)]) :
+            \ 1
         call asyncrun#quickfix_toggle(qf_size)
         return
     endif
@@ -167,6 +169,19 @@ function! ToggleQf() abort
     copen
 endfunction
 
+" CloseEmptyQf() :: close an empty quickfix window {{{3
+function! CloseEmptyQf() abort
+    if len(getqflist())
+        return
+    endif
+    for buffer in tabpagebuflist()
+        if bufname(buffer) ==? ''
+            call ToggleQf()
+            return
+        endif
+    endfor
+endfunction
+
 " AutoCloseQfWin() :: close qf on quit {{{3
 function! AutoCloseQfWin() abort
     if &filetype ==? 'qf'
@@ -174,6 +189,18 @@ function! AutoCloseQfWin() abort
         if winnr('$') < 2
             quit
         endif
+    endif
+endfunction
+
+" Building {{{2
+" RunBuild() :: build/install current project
+function! RunBuild() abort
+    let s:cmds = {
+        \ 'go': 'go install "%"',
+        \ }
+    let s:cmd = get(s:cmds, &filetype, '')
+    if s:cmd !=? ''
+        execute 'AsyncRun ' . s:cmd
     endif
 endfunction
 
@@ -295,12 +322,14 @@ augroup quickfix
     autocmd BufEnter * call AutoCloseQfWin()
     " Push quickfix window always to the bottom
     autocmd FileType qf wincmd J
+    " Close qf after lint if empty
+    autocmd User ALELintPost call CloseEmptyQf()
 augroup END
 
 
 augroup fmt
     autocmd!
-    autocmd BufWritePre *.{bash,sh,go} Neoformat
+    autocmd BufWritePre *.{bash,sh} Neoformat
 augroup end
 
 " Formatopts {{{2

@@ -203,7 +203,7 @@ if test "$FISH_THEME" = 'bobthefish'
     # Set options if term windows is narrow-ish
     set -g theme_short_prompt_cols 200
     set -g theme_newline_cursor yes
-    set -g theme_display_date no
+    set -g theme_display_date yes 
 
     # Git
     set -g theme_display_git_master_branch yes

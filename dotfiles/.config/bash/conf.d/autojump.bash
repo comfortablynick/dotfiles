@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-[ "$AUTOJUMP_SOURCED" -eq 1 ] && return 0
+[ "$AUTOJUMP_SOURCED" = "1" ] && return 0
 
 # Set up autojump and optionally install if not installed
 if [ ! -x "$HOME/.autojump/bin/autojump" ] && [ -z "$(command -v git 2>/dev/null)" ]; then
     echo "Installing autojump from git..."
     git clone git://github.com/wting/autojump.git "$HOME/src/autojump" && cd "$HOME/src/autojump" &&
-    "$HOME/src/autojump/install.py"
+        "$HOME/src/autojump/install.py"
 fi
 
 export AUTOJUMP_SOURCED=1
@@ -15,7 +15,6 @@ export AUTOJUMP_SOURCED=1
 if [[ -d ~/.autojump/ ]]; then
     export PATH=~/.autojump/bin:"${PATH}"
 fi
-
 
 # set error file location
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -30,20 +29,18 @@ if [[ ! -d "$(dirname ${AUTOJUMP_ERROR_PATH})" ]]; then
     mkdir -p "$(dirname ${AUTOJUMP_ERROR_PATH})"
 fi
 
-
 # enable tab completion
 _autojump() {
-        local cur
-        cur=${COMP_WORDS[*]:1}
-        comps=$(autojump --complete $cur)
-        while read i; do
-            COMPREPLY=("${COMPREPLY[@]}" "${i}")
-        done <<EOF
+    local cur
+    cur=${COMP_WORDS[*]:1}
+    comps=$(autojump --complete $cur)
+    while read i; do
+        COMPREPLY=("${COMPREPLY[@]}" "${i}")
+    done <<EOF
         $comps
 EOF
 }
 complete -F _autojump j
-
 
 # change pwd hook
 autojump_add_to_database() {
@@ -55,13 +52,12 @@ autojump_add_to_database() {
 }
 
 case $PROMPT_COMMAND in
-    *autojump*)
-        ;;
-    *)
-        PROMPT_COMMAND="${PROMPT_COMMAND:+$(echo "${PROMPT_COMMAND}" | awk '{gsub(/; *$/,"")}1') ; }autojump_add_to_database"
-        ;;
-esac
+*autojump*) ;;
 
+*)
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$(echo "${PROMPT_COMMAND}" | awk '{gsub(/; *$/,"")}1') ; }autojump_add_to_database"
+    ;;
+esac
 
 # default autojump command
 j() {
@@ -72,10 +68,10 @@ j() {
 
     output="$(autojump ${@})"
     if [[ -d "${output}" ]]; then
-        if [ -t 1 ]; then  # if stdout is a terminal, use colors
-                echo -e "\\033[31m${output}\\033[0m"
+        if [ -t 1 ]; then # if stdout is a terminal, use colors
+            echo -e "\\033[31m${output}\\033[0m"
         else
-                echo -e "${output}"
+            echo -e "${output}"
         fi
         cd "${output}"
     else
@@ -85,7 +81,6 @@ j() {
         false
     fi
 }
-
 
 # jump to child directory (subdirectory of current path)
 jc() {
@@ -97,7 +92,6 @@ jc() {
     fi
 }
 
-
 # open autojump results in file browser
 jo() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
@@ -108,18 +102,18 @@ jo() {
     output="$(autojump ${@})"
     if [[ -d "${output}" ]]; then
         case ${OSTYPE} in
-            linux*)
-                xdg-open "${output}"
-                ;;
-            darwin*)
-                open "${output}"
-                ;;
-            cygwin)
-                cygstart "" $(cygpath -w -a ${output})
-                ;;
-            *)
-                echo "Unknown operating system: ${OSTYPE}." 1>&2
-                ;;
+        linux*)
+            xdg-open "${output}"
+            ;;
+        darwin*)
+            open "${output}"
+            ;;
+        cygwin)
+            cygstart "" $(cygpath -w -a ${output})
+            ;;
+        *)
+            echo "Unknown operating system: ${OSTYPE}." 1>&2
+            ;;
         esac
     else
         echo "autojump: directory '${@}' not found"
@@ -128,7 +122,6 @@ jo() {
         false
     fi
 }
-
 
 # open autojump results (child directory) in file browser
 jco() {

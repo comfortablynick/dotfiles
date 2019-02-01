@@ -8,7 +8,7 @@
 " Vim Themes / Statusline
 scriptencoding utf-8
 " Airline {{{1
-" Map colorscheme -> theme {{{3
+" Map colorscheme -> theme {{{2
 let g:airline_themes = {
     \ 'nord': 'nord',
     \ 'snow-dark': 'snow_dark',
@@ -19,7 +19,7 @@ let g:airline_themes = {
     \ 'apprentice': 'apprentice',
     \ }
 " Lightline {{{1
-" Status bar definition {{{3
+" Status bar definition {{{2
 let g:lightline = {
     \ 'tabline': {
     \   'left':

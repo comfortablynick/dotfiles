@@ -36,6 +36,7 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'cpp',
     \       'c',
+    \       'go',
     \   ],
     \ }
 
@@ -144,8 +145,14 @@ Plug 'ponko2/deoplete-fish',                                    " Fish-shell com
 Plug 'zchee/deoplete-go',
     \ Cond(has('nvim'),
     \ {
-    \   'for': 'go',
     \   'do': 'make',
+    \ })
+
+Plug 'mdempsky/gocode',
+    \ Cond(has('nvim'),
+    \ {
+    \   'rtp': 'vim',
+    \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
     \ })
 
 " YouCompleteMe {{{3
@@ -259,6 +266,7 @@ let g:ale_python_mypy_ignore_invalid_syntax = 1
 let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
+let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
 
 " Neoformat {{{2
 " Global Settings
@@ -368,6 +376,7 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 augroup deoplete_preview

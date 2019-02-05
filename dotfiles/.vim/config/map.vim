@@ -52,6 +52,9 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>r :VtrSendFile!<CR>
 
+" Build
+nnoremap <silent> <Leader>w :w \| :call RunBuild()<CR>
+
 " Quickfix
 nnoremap <silent> <Leader>q :call ToggleQf()<CR>
 

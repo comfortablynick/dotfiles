@@ -200,8 +200,23 @@ function! RunBuild() abort
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''
+        let g:asyncrun_exit = 'call CheckRun("Build")'
+        let g:asyncrun_open = 0
         execute 'AsyncRun ' . s:cmd
     endif
+endfunction
+
+" AsyncRun {{{2
+" CheckRun() :: check AsyncRun return code
+function! CheckRun(cmdName) abort
+   if g:asyncrun_status ==? 'success'
+       echo a:cmdName . ' completed successfully'
+       return
+   endif
+   if g:asyncrun_status ==? 'failure'
+       echo a:cmdName . ' failed. Check quickfix for details'
+       return
+   endif
 endfunction
 
 " General {{{2

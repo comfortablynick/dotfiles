@@ -317,18 +317,18 @@ function! BufWidth()
   return width - numwidth - foldwidth - signwidth
 endfunction
 
-" Autocommands {{{1
+" (Auto)commands {{{1
 " Cursor position {{{2
 augroup last_place
     autocmd!
     autocmd BufWinEnter * call LastPlace()
 augroup END
 
-" Shebang {{{2
-" augroup shebang
-"     autocmd!
-"     autocmd BufNewFile * call SetShebang()
-" augroup END
+" Vim Fugitive {{{2
+" Use AsyncRun
+if exists('*asyncrun#execute')
+    command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+endif
 
 " Quickfix window {{{2
 augroup quickfix
@@ -341,7 +341,7 @@ augroup quickfix
     autocmd User ALELintPost call CloseEmptyQf()
 augroup END
 
-
+" Neoformat {{{2
 augroup fmt
     autocmd!
     autocmd BufWritePre *.{bash,sh} Neoformat
@@ -352,6 +352,7 @@ augroup fmtopts
     autocmd!
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
+
 " Commands {{{1
 " Sudo save {{{2
 " Note: does not work in Neovim in some cases

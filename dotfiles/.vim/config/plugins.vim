@@ -53,6 +53,7 @@ Plug 'majutsushi/tagbar'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
+Plug 'rhysd/clever-f.vim'
 
 " Linting {{{2
 Plug 'w0rp/ale', Cond(1,
@@ -222,42 +223,41 @@ let g:ale_virtualenv_dir_names = [
 
 " Linters/fixers {{{3
 let g:ale_linters = {
-    \ 'python':
-    \   [
-    \       'flake8',
-    \       'mypy',
-    \       'pydocstyle',
-    \   ],
-    \ 'go':
-    \   [
-    \       'gometalinter',
-    \       'golint',
-    \   ],
+    \ 'python': [
+    \   'flake8',
+    \   'mypy',
+    \   'pydocstyle',
+    \  ],
+    \ 'go': [
+    \   'gometalinter',
+    \   'golint',
+    \  ],
     \ }
 
 let g:ale_fixers = {
-    \ '*':
-    \   [
-    \       'remove_trailing_lines',
-    \       'trim_whitespace',
-    \   ],
-    \ 'python':
-    \   [
-    \       'black',
-    \       'isort',
-    \   ],
-    \ 'typescript':
-    \   [
-    \       'prettier',
-    \   ],
-    \ 'javascript':
-    \   [
-    \       'prettier',
-    \   ],
-    \ 'go':
-    \   [
-    \       'goimports',
-    \   ],
+    \ '*': [
+    \   'remove_trailing_lines',
+    \   'trim_whitespace',
+    \  ],
+    \ 'python': [
+    \   'black',
+    \   'isort',
+    \  ],
+    \ 'typescript': [
+    \   'prettier',
+    \  ],
+    \ 'javascript': [
+    \   'prettier',
+    \  ],
+    \ 'go': [
+    \   'goimports',
+    \  ],
+    \ 'sh': [
+    \   'shfmt',
+    \  ],
+    \ 'zsh': [
+    \   'shfmt',
+    \  ],
     \ }
 
 " Linter/fixer options {{{3
@@ -415,7 +415,7 @@ let g:tagbar_sort = 0                                           " Sort tags alph
 
 " Vim Tmux Runner {{{2
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
-let g:VtrClearEmptyLines = 0                                    " Disable clearning if blank lines are relevant
+let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
 let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy

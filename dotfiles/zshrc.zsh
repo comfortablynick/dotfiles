@@ -86,7 +86,11 @@ zplug "eendroroy/alien", \
     as:theme, \
     if:'[ $THEME = alien ]'
 
-zplug "eendroroy/alien-minimal", \
+# zplug "eendroroy/alien-minimal", \
+#     as:theme, \
+#     if:'[ $THEME = alien-minimal ]'
+
+zplug "comfortablynick/alien-minimal", \
     as:theme, \
     if:'[ $THEME = alien-minimal ]'
 

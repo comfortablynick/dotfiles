@@ -421,7 +421,7 @@ let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
 
 let g:vtr_filetype_runner_overrides = {
-    \ 'go': 'go run {file}'
+    \ 'go': 'go run *.go'
     \ }
 
 " vim:set fdl=1:

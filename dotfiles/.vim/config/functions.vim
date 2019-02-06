@@ -196,7 +196,7 @@ endfunction
 " RunBuild() :: build/install current project
 function! RunBuild() abort
     let s:cmds = {
-        \ 'go': 'go install "%"',
+        \ 'go': 'go install',
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''

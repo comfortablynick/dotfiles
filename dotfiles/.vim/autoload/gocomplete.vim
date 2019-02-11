@@ -1,1 +1,1 @@
-/c/Users/nmurphy/.vim/plugged/gocode/vim/autoload/gocomplete.vim
+/home/nick/.vim/plugged/gocode/vim/autoload/gocomplete.vim

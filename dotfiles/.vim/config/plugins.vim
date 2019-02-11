@@ -102,6 +102,9 @@ Plug 'Shougo/neosnippet-snippets'
 " Code completion {{{2
 Plug 'Shougo/echodoc'
 
+" Building {{{2
+Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
+
 " Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
@@ -136,7 +139,7 @@ Plug 'mhartington/nvim-typescript',
     \ })
 
 " Fish {{{4
-Plug 'ponko2/deoplete-fish',                                    " Fish-shell completion for deoplete
+Plug 'ponko2/deoplete-fish',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'fish',
@@ -232,6 +235,9 @@ let g:ale_linters = {
     \   'gometalinter',
     \   'golint',
     \  ],
+    \ 'cpp': [
+    \   'clang-tidy',
+    \  ],
     \ }
 
 let g:ale_fixers = {
@@ -257,6 +263,9 @@ let g:ale_fixers = {
     \  ],
     \ 'zsh': [
     \   'shfmt',
+    \  ],
+    \ 'cpp': [
+    \   'clang-format',
     \  ],
     \ }
 
@@ -342,6 +351,9 @@ let g:asyncrun_open = g:quickfix_size                           " Show quickfix 
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
 let g:quickfix_run_scroll = 0                                   " Scroll when running code
 let g:asyncrun_raw_output = 0                                   " Don't process errors on output
+
+" CMake {{{2
+let g:cmake_ycm_symlinks = 1                                    " Symlink json file for YouCompleteMe
 
 " Undotree {{{2
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below

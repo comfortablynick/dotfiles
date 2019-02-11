@@ -205,10 +205,10 @@ endfunction
 " Building {{{2
 " RunBuild() :: build/install current project
 function! RunBuild() abort
-    let s:filenameNoExt = expand('%:r')
+    " let s:filenameNoExt = expand('%:r')
     let s:cmds = {
         \ 'go': 'go install',
-        \ 'cpp': 'make ' . s:filenameNoExt,
+        \ 'cpp': 'make all',
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''

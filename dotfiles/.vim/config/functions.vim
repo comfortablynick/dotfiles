@@ -182,6 +182,16 @@ function! CloseEmptyQf() abort
     endfor
 endfunction
 
+" IsQfOpen() :: check if quickfix window is open {{{3
+function! IsQfOpen() abort
+    for buffer in tabpagebuflist()
+        if bufname(buffer) ==? ''
+            return 1
+        endif
+    endfor
+    return 0
+endfunction
+
 " AutoCloseQfWin() :: close qf on quit {{{3
 function! AutoCloseQfWin() abort
     if &filetype ==? 'qf'
@@ -195,13 +205,15 @@ endfunction
 " Building {{{2
 " RunBuild() :: build/install current project
 function! RunBuild() abort
+    let s:filenameNoExt = expand('%:r')
     let s:cmds = {
         \ 'go': 'go install',
+        \ 'cpp': 'make ' . s:filenameNoExt,
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''
         let g:asyncrun_exit = 'call CheckRun("Build")'
-        let g:asyncrun_open = 0
+        let g:asyncrun_open = 0 " IsQfOpen()
         execute 'AsyncRun ' . s:cmd
     endif
 endfunction
@@ -214,6 +226,9 @@ function! CheckRun(cmdName) abort
        return
    endif
    if g:asyncrun_status ==? 'failure'
+       if IsQfOpen() == 0
+           call ToggleQf()
+       endif
        echo a:cmdName . ' failed. Check quickfix for details'
        return
    endif

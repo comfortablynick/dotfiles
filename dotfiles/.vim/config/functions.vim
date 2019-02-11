@@ -215,7 +215,7 @@ function! RunBuild() abort
         if s:cmd =~# 'AsyncRun'
             let g:asyncrun_exit = 'call CheckRun("Build")'
             let g:asyncrun_open = 0 " IsQfOpen()
-            execute 'AsyncRun ' . s:cmd
+            execute s:cmd
             return
         endif
         " Regular command

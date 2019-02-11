@@ -38,3 +38,4 @@ python-docutils
 mercurial
 meld
 w3m
+clang-format

@@ -99,11 +99,11 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
-" Code completion {{{2
-Plug 'Shougo/echodoc'
-
 " Building {{{2
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
+
+" Code completion {{{2
+Plug 'Shougo/echodoc'
 
 " Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
@@ -111,6 +111,10 @@ Plug 'Shougo/deoplete.nvim',
     \ {
     \   'for': g:completion_filetypes['deoplete'],
     \ })
+
+" C {{{4
+Plug 'tweekmonster/deoplete-clang2',
+    \ Cond(has('nvim'))
 
 " Vim {{{4
 Plug 'Shougo/neco-vim',
@@ -236,7 +240,7 @@ let g:ale_linters = {
     \   'golint',
     \  ],
     \ 'cpp': [
-    \   'clang-tidy',
+    \   'clangtidy',
     \  ],
     \ }
 
@@ -353,7 +357,7 @@ let g:quickfix_run_scroll = 0                                   " Scroll when ru
 let g:asyncrun_raw_output = 0                                   " Don't process errors on output
 
 " CMake {{{2
-let g:cmake_ycm_symlinks = 1                                    " Symlink json file for YouCompleteMe
+let g:cmake_ycm_symlinks = 0                                    " Symlink json file for YouCompleteMe
 
 " Undotree {{{2
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below

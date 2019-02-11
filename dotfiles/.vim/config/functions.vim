@@ -205,16 +205,22 @@ endfunction
 " Building {{{2
 " RunBuild() :: build/install current project
 function! RunBuild() abort
-    " let s:filenameNoExt = expand('%:r')
+    " Run build plugins
     let s:cmds = {
-        \ 'go': 'go install',
-        \ 'cpp': 'make all',
+        \ 'go': 'AsyncRun go install',
+        \ 'cpp': 'AsyncRun -cwd=./build make',
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''
-        let g:asyncrun_exit = 'call CheckRun("Build")'
-        let g:asyncrun_open = 0 " IsQfOpen()
-        execute 'AsyncRun ' . s:cmd
+        if s:cmd =~# 'AsyncRun'
+            let g:asyncrun_exit = 'call CheckRun("Build")'
+            let g:asyncrun_open = 0 " IsQfOpen()
+            execute 'AsyncRun ' . s:cmd
+            return
+        endif
+        " Regular command
+        execute s:cmd
+        return
     endif
 endfunction
 

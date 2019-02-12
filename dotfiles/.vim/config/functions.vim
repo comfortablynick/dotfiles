@@ -70,7 +70,7 @@ function! SetExecutable()
     call SetShebang()
 endfunction
 
-" Run code (replaced by Vim Tmux Runner) {{{2
+" Run code {{{2
 " Run Python Code in Vim (DEPRECATED) {{{3
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 " nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
@@ -209,6 +209,7 @@ function! RunBuild() abort
     let s:cmds = {
         \ 'go': 'AsyncRun go install',
         \ 'cpp': 'AsyncRun -cwd=./build make',
+        \ 'rust': 'AsyncRun cargo build',
         \ }
     let s:cmd = get(s:cmds, &filetype, '')
     if s:cmd !=? ''

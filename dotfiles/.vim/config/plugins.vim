@@ -28,6 +28,7 @@ let g:completion_filetypes = {
     \       'cpp',
     \       'c',
     \       'go',
+    \       'rust',
     \   ],
     \ 'ycm':
     \   [
@@ -56,20 +57,23 @@ Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
 
 " Linting {{{2
-Plug 'w0rp/ale', Cond(1,
-    \ {
-    \   'for': [
-    \       'python',
-    \       'vim',
-    \       'sh',
-    \       'bash',
-    \       'typescript',
-    \       'javascript',
-    \       'cpp',
-    \       'c',
-    \       'go',
-    \   ]
-    \ })
+Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
+    " \ Cond(1,
+    " \ {
+    " \   'for': [
+    " \       'python',
+    " \       'vim',
+    " \       'sh',
+    " \       'bash',
+    " \       'zsh',
+    " \       'fish',
+    " \       'typescript',
+    " \       'javascript',
+    " \       'cpp',
+    " \       'c',
+    " \       'go',
+    " \   ]
+    " \ })
 
 " Formatting {{{2
 Plug 'sbdchd/neoformat'
@@ -163,6 +167,9 @@ Plug 'mdempsky/gocode',
     \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
     \ })
 
+" Rust {{{4
+Plug 'racer-rust/vim-racer',
+    \ Cond(has('nvim'))
 " YouCompleteMe {{{3
 Plug 'Valloric/YouCompleteMe',
     \ Cond(!has('nvim'),
@@ -242,6 +249,9 @@ let g:ale_linters = {
     \ 'cpp': [
     \   'clangtidy',
     \  ],
+    \ 'rust': [
+    \   'cargo',
+    \  ],
     \ }
 
 let g:ale_fixers = {
@@ -270,6 +280,9 @@ let g:ale_fixers = {
     \  ],
     \ 'cpp': [
     \   'clang-format',
+    \  ],
+    \ 'rust': [
+    \   'rustfmt',
     \  ],
     \ }
 
@@ -437,7 +450,8 @@ let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
 
 let g:vtr_filetype_runner_overrides = {
-    \ 'go': 'go run *.go'
+    \ 'go': 'go run *.go',
+    \ 'rust': 'cargo run',
     \ }
 
 " vim:set fdl=1:

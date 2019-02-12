@@ -15,3 +15,7 @@ else
 endif
 
 compiler go
+
+" Vim Tmux Runner maps
+noremap <buffer> <silent> <C-b> :VtrSendCommandToRunner! go run .<CR>
+nnoremap <silent> <Leader>r :VtrSendCommandToRunner! go run .<CR>

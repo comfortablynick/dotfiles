@@ -48,6 +48,12 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Delete window to the left/below/above/to the right with d<C-h/j/k/l>.
+nnoremap d<C-j> <C-w>j<C-w>c
+nnoremap d<C-k> <C-w>k<C-w>c
+nnoremap d<C-h> <C-w>h<C-w>c
+nnoremap d<C-l> <C-w>l<C-w>c
+
 " Vim-tmux-runner
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>r :VtrSendFile!<CR>
@@ -67,6 +73,21 @@ nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 " ALE
 nmap <silent> <Leader>f <Plug>(ale_next_wrap)
 nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
+
+" LanguageClient
+" Remap only if LC is activefor filetype
+function LC_maps()
+  if has_key(g:LanguageClient_serverCommands, &filetype)
+    nnoremap <buffer> <silent> gh :call LanguageClient#textDocument_hover()<cr>
+    nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer> <silent> <F4> :call LanguageClient#textDocument_rename()<CR>
+  endif
+endfunction
+
+augroup LC
+    autocmd!
+    autocmd FileType * call LC_maps()
+augroup END
 
 " SetExecutableBit()
 nnoremap <F3> :call SetExecutable()<CR>

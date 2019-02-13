@@ -46,6 +46,7 @@ set timeoutlen=200                                              " How long in ms
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set lazyredraw                                                  " Don't redraw screen when not needed
 set nostartofline                                               " Don't move to start of line with j/k
+set conceallevel=1                                              " Enable concealing, if defined
 " }}}
 " Folds {{{
 set foldenable                                                  " Enable folds by default

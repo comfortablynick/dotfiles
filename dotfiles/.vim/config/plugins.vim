@@ -55,6 +55,7 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
+Plug 'Yggdroot/indentLine'
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
@@ -108,6 +109,14 @@ Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 
 " Code completion {{{2
 Plug 'Shougo/echodoc'
+
+Plug 'autozimu/LanguageClient-neovim',  Cond(has('nvim'), {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ 'for': [
+    \   'rust',
+    \  ],
+    \ })
 
 " Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
@@ -168,8 +177,8 @@ Plug 'mdempsky/gocode',
     \ })
 
 " Rust {{{4
-Plug 'racer-rust/vim-racer',
-    \ Cond(has('nvim'))
+Plug 'racer-rust/vim-racer',    Cond(0) " Cond(has('nvim'))
+
 " YouCompleteMe {{{3
 Plug 'Valloric/YouCompleteMe',
     \ Cond(!has('nvim'),
@@ -250,7 +259,7 @@ let g:ale_linters = {
     \   'clangtidy',
     \  ],
     \ 'rust': [
-    \   'cargo',
+    \   'rls',
     \  ],
     \ }
 
@@ -355,8 +364,9 @@ let g:NERDCustomDelimiters = {
 
 " Echodoc {{{2
 " TODO: Only execute for python/ts/js?
-set cmdheight=1                                 " Add extra line for function definition
 let g:echodoc#enable_at_startup = 1
+let g:ecodoc#type = 'echo'                   " virtual: virtualtext; echo: use command line echo area
+set cmdheight=1                                 " Add extra line for function definition
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 
@@ -401,6 +411,45 @@ let g:airline_highlighting_cache = 1
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_close_button = 0
 
+" LanguageClient {{{2
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ }
+let g:LanguageClient_completionPreferTextEdit = 0
+" » ◊ ‼
+let g:LanguageClient_diagnosticsDisplay =
+    \ {
+    \     1: {
+    \         'name': 'Error',
+    \         'texthl': 'ALEError',
+    \         'signText': '✘',
+    \         'signTexthl': 'Error',
+    \         'virtualTexthl': 'Error',
+    \     },
+    \     2: {
+    \         'name': 'Warning',
+    \         'texthl': 'ALEWarning',
+    \         'signText': '◊',
+    \         'signTexthl': 'ALEWarningSign',
+    \         'virtualTexthl': 'Todo',
+    \     },
+    \     3: {
+    \         'name': 'Information',
+    \         'texthl': 'ALEInfo',
+    \         'signText': '🛈',
+    \         'signTexthl': 'ALEInfoSign',
+    \         'virtualTexthl': 'Todo',
+    \     },
+    \     4: {
+    \         'name': 'Hint',
+    \         'texthl': 'ALEInfo',
+    \         'signText': '⮞',
+    \         'signTexthl': 'ALEInfoSign',
+    \         'virtualTexthl': 'Todo',
+    \     },
+    \ }
+let g:LanguageClient_changeThrottle = 1
+let g:LanguageClient_diagnosticsEnable = 1
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1

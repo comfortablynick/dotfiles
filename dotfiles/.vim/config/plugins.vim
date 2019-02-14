@@ -55,7 +55,8 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
-Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine'                      " Show indentation marks
+Plug 'cohama/lexima.vim'                        " Autoclose parenthesis, etc
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
@@ -410,6 +411,9 @@ let g:airline_highlighting_cache = 1
 " Airline Tabline
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_close_button = 0
+
+" Indentline {{{2
+let g:indentLine_setConceal = 0                 " Don't change conceal settings
 
 " LanguageClient {{{2
 let g:LanguageClient_serverCommands = {

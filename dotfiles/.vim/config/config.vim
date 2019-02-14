@@ -47,6 +47,7 @@ set mouse=a                                                     " Use mouse in a
 set lazyredraw                                                  " Don't redraw screen when not needed
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
+set concealcursor=                                              " Don't conceal when cursor goes to line
 " }}}
 " Folds {{{
 set foldenable                                                  " Enable folds by default

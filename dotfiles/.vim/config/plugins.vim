@@ -56,7 +56,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
 Plug 'Yggdroot/indentLine'                      " Show indentation marks
-Plug 'cohama/lexima.vim'                        " Autoclose parenthesis, etc
+Plug 'cohama/lexima.vim',               Cond(0) " Autoclose parenthesis, etc
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
@@ -413,7 +413,9 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_close_button = 0
 
 " Indentline {{{2
-let g:indentLine_setConceal = 0                 " Don't change conceal settings
+let g:indentLine_setConceal = 1                 " Don't change conceal settings
+let g:indentLine_showFirstIndentLevel = 0
+let g:indentLine_char = '│'
 
 " LanguageClient {{{2
 let g:LanguageClient_serverCommands = {
@@ -433,14 +435,14 @@ let g:LanguageClient_diagnosticsDisplay =
     \     2: {
     \         'name': 'Warning',
     \         'texthl': 'ALEWarning',
-    \         'signText': '◊',
+    \         'signText': '‼',
     \         'signTexthl': 'ALEWarningSign',
     \         'virtualTexthl': 'Todo',
     \     },
     \     3: {
     \         'name': 'Information',
     \         'texthl': 'ALEInfo',
-    \         'signText': '🛈',
+    \         'signText': '»',
     \         'signTexthl': 'ALEInfoSign',
     \         'virtualTexthl': 'Todo',
     \     },

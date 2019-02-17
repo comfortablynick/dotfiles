@@ -55,8 +55,6 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
-Plug 'Yggdroot/indentLine'                      " Show indentation marks
-Plug 'cohama/lexima.vim',               Cond(0) " Autoclose parenthesis, etc
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
@@ -303,6 +301,7 @@ let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
+let g:ale_rust_rls_toolchain = 'stable'
 
 " Neoformat {{{2
 " Global Settings
@@ -455,7 +454,7 @@ let g:LanguageClient_diagnosticsDisplay =
     \     },
     \ }
 let g:LanguageClient_changeThrottle = 1
-let g:LanguageClient_diagnosticsEnable = 1
+let g:LanguageClient_diagnosticsEnable = 0
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1

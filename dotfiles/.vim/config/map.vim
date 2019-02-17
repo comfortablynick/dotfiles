@@ -57,6 +57,7 @@ nnoremap d<C-l> <C-w>l<C-w>c
 " Vim-tmux-runner
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>r :VtrSendFile!<CR>
+nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 
 " Build
 nnoremap <silent> <Leader>w :w \| :call RunBuild()<CR>

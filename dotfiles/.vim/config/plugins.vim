@@ -370,6 +370,9 @@ set cmdheight=1                                 " Add extra line for function de
 set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 
+" Neosnippet {{{2
+let g:neosnippet#enable_completed_snippet = 1
+autocmd CompleteDone * call neosnippet#complete_done()
 
 " AsyncRun {{{2
 let g:quickfix_mult = 0.40                                      " % of window height to take up
@@ -492,7 +495,7 @@ let g:ycm_filetype_specific_completion_to_disable = {
 let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
 
 " Tagbar {{{2
-let g:tagbar_autoclose = 0                                      " Autoclose tagbar after selecting tag
+let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
 let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened
 let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
 let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
@@ -502,7 +505,7 @@ let g:tagbar_sort = 0                                           " Sort tags alph
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
 let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
-let g:VtrOrientation = winwidth(0) > 120 ? 'h' : 'v'            " h/v split
+let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
 
 let g:vtr_filetype_runner_overrides = {

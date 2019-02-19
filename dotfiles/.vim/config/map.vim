@@ -61,6 +61,7 @@ nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 
 " Build
 nnoremap <silent> <Leader>w :w \| :call RunBuild()<CR>
+nnoremap <silent> <Leader>b :call RunBuild()<CR>
 
 " Quickfix
 nnoremap <silent> <Leader>q :call ToggleQf()<CR>

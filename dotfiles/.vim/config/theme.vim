@@ -91,7 +91,7 @@ let g:lightline = {
 " Section definitions {{{2
 " Section settings / glyphs {{{3
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
-let g:LL_MedWidth = 100                                         " Secondary width for some sections
+let g:LL_MedWidth = 120                                         " Secondary width for some sections
 let g:LL_LineNoSymbol = g:LL_pl ? '' : ''                     " Use  for line no unless no PL fonts; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)

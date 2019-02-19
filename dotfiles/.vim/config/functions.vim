@@ -153,7 +153,7 @@ function! ToggleQf() abort
         " Open qf window of specific size in most elegant way
         let qf_lines = len(getqflist())
         let qf_size = qf_lines ?
-            \ min([qf_lines, get(g:, 'quickfix_size', 8)]) :
+            \ min([qf_lines, get(g:, 'quickfix_size', 12)]) :
             \ 1
         call asyncrun#quickfix_toggle(qf_size)
         return

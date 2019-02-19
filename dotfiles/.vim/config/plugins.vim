@@ -371,13 +371,15 @@ set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 
 
-" Asyncrun {{{2
+" AsyncRun {{{2
 let g:quickfix_mult = 0.40                                      " % of window height to take up
-let g:quickfix_size = float2nr(g:quickfix_mult*winheight(0))    " Size of quickfix window used for ToggleQf() func
+" let g:quickfix_size = float2nr(g:quickfix_mult*winheight(0))    " Size of quickfix window used for ToggleQf() func
+let g:quickfix_size = 24
 let g:asyncrun_open = g:quickfix_size                           " Show quickfix when executing command
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
 let g:quickfix_run_scroll = 0                                   " Scroll when running code
 let g:asyncrun_raw_output = 0                                   " Don't process errors on output
+let g:asyncrun_save = 0                                         " Save file before running
 
 " CMake {{{2
 let g:cmake_ycm_symlinks = 0                                    " Symlink json file for YouCompleteMe
@@ -500,7 +502,7 @@ let g:tagbar_sort = 0                                           " Sort tags alph
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
 let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
-let g:VtrOrientation = 'h'                                      " h/v split
+let g:VtrOrientation = winwidth(0) > 120 ? 'h' : 'v'            " h/v split
 let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
 
 let g:vtr_filetype_runner_overrides = {

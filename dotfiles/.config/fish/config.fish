@@ -300,3 +300,5 @@ set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
 echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal; echo ''
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

@@ -25,10 +25,6 @@ let g:completion_filetypes = {
     \       'vim',
     \       'javascript',
     \       'typescript',
-    \       'cpp',
-    \       'c',
-    \       'go',
-    \       'rust',
     \   ],
     \ 'ycm':
     \   [
@@ -37,6 +33,14 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'cpp',
     \       'c',
+    \       'go',
+    \   ],
+    \ 'coc':
+    \   [
+    \       'rust',
+    \       'cpp',
+    \       'c',
+    \       'json',
     \       'go',
     \   ],
     \ }
@@ -58,22 +62,6 @@ Plug 'rhysd/clever-f.vim'
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
-    " \ Cond(1,
-    " \ {
-    " \   'for': [
-    " \       'python',
-    " \       'vim',
-    " \       'sh',
-    " \       'bash',
-    " \       'zsh',
-    " \       'fish',
-    " \       'typescript',
-    " \       'javascript',
-    " \       'cpp',
-    " \       'c',
-    " \       'go',
-    " \   ]
-    " \ })
 
 " Formatting {{{2
 Plug 'sbdchd/neoformat'
@@ -100,8 +88,8 @@ Plug 'romainl/Apprentice',              Cond(g:vim_base_color ==? 'apprentice')
 Plug 'skywind3000/asyncrun.vim'
 
 " Snippets {{{2
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neosnippet.vim',           Cond(has('nvim'))
+Plug 'Shougo/neosnippet-snippets',      Cond(has('nvim'))
 
 " Building {{{2
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
@@ -109,12 +97,22 @@ Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 " Code completion {{{2
 Plug 'Shougo/echodoc'
 
-Plug 'autozimu/LanguageClient-neovim',  Cond(has('nvim'), {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ 'for': [
-    \   'rust',
-    \  ],
+" LanguageClient {{{3
+" Plug 'autozimu/LanguageClient-neovim',  Cond(has('nvim'), {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ 'for': [
+"     \   'rust',
+"     \  ],
+"     \ })
+
+" Coc {{{3
+Plug 'neoclide/coc.nvim',
+    \ Cond(has('nvim'),
+    \ {
+    \   'tag': '*',
+    \   'do': { -> coc#util#install()},
+    \   'for': g:completion_filetypes['coc'],
     \ })
 
 " Deoplete {{{3
@@ -244,21 +242,16 @@ let g:ale_virtualenv_dir_names = [
     \   ]
 
 " Linters/fixers {{{3
+" 'go': [ 'gometalinter', 'golint' ],
+
 let g:ale_linters = {
     \ 'python': [
     \   'flake8',
     \   'mypy',
     \   'pydocstyle',
     \  ],
-    \ 'go': [
-    \   'gometalinter',
-    \   'golint',
-    \  ],
     \ 'cpp': [
     \   'clangtidy',
-    \  ],
-    \ 'rust': [
-    \   'rls',
     \  ],
     \ }
 
@@ -371,8 +364,12 @@ set noshowmode
 set shortmess+=c                                " Don't suppress echodoc with 'Match x of x'
 
 " Neosnippet {{{2
-let g:neosnippet#enable_completed_snippet = 1
-autocmd CompleteDone * call neosnippet#complete_done()
+if exists('g:loaded_neosnippet')
+    let g:neosnippet#enable_completed_snippet = 1
+    augroup snip
+        autocmd CompleteDone * call neosnippet#complete_done()
+    augroup END
+endif
 
 " AsyncRun {{{2
 let g:quickfix_mult = 0.40                                      " % of window height to take up
@@ -422,8 +419,8 @@ let g:indentLine_showFirstIndentLevel = 0
 let g:indentLine_char = '│'
 
 " LanguageClient {{{2
+" 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
     \ }
 let g:LanguageClient_completionPreferTextEdit = 0
 " » ◊ ‼

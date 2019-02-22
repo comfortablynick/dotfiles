@@ -10,3 +10,5 @@ dotfiles/.config/omf/theme
 *.log
 .env_toml_sha*
 .mypy_cache/
+node_modules/
+yarn.lock

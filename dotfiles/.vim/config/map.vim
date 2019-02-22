@@ -76,13 +76,16 @@ nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
 nmap <silent> <Leader>f <Plug>(ale_next_wrap)
 nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
 
-" LanguageClient
+" Completion -- Language Servers
 " Remap only if LC is activefor filetype
 function LC_maps()
   if has_key(g:LanguageClient_serverCommands, &filetype)
     nnoremap <buffer> <silent> gh :call LanguageClient#textDocument_hover()<cr>
     nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
     nnoremap <buffer> <silent> <F4> :call LanguageClient#textDocument_rename()<CR>
+elseif exists('g:did_coc_loaded')
+    nnoremap <buffer> <silent> gh :call CocActionAsync('doHover')<CR>
+    nnoremap <buffer> <silent> gd <Plug>(coc-definition)
   endif
 endfunction
 

@@ -1,0 +1,30 @@
+{
+  // Diagnostics
+  "diagnostic.displayByAle": true,
+  "diagnostic.enable": true,
+
+  // Suggestion options
+  "suggest.echodocSupport": true,
+  "suggest.triggerCompletionWait": 100,
+  "suggest.enablePreview": true,
+
+  // Server definitions
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+         "cache": {
+           "directory": "/tmp/ccls"
+         }
+       }
+    },
+  "golang": {
+    "command": "bingo",
+    "args": ["--diagnostics-style=instant"],
+    "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+    "filetypes": ["go"]
+    }
+  }
+}

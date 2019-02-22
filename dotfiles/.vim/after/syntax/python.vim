@@ -1,5 +1,9 @@
 scriptencoding=utf-8
 
+if !get(g:, 'python_conceal', 0) || !has('conceal') || &encoding !=# 'utf-8'
+    finish
+endif
+
 silent! syntax clear pythonOperator
 
 syntax match Normal '->' conceal cchar=→

@@ -208,7 +208,7 @@ function! RunBuild() abort
     " Run build plugins
     let s:cmds = {
         \ 'go': 'AsyncRun go install',
-        \ 'cpp': 'AsyncRun -cwd=./build make',
+        \ 'cpp': 'AsyncRun -cwd=../build make',
         \ 'rust': 'AsyncRun cargo build',
         \ }
     let s:cmd = get(s:cmds, &filetype, '')

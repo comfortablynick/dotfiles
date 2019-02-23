@@ -12,5 +12,5 @@ dotfiles/.config/omf/theme
 .mypy_cache/
 node_modules/
 yarn.lock
-.vim/autoload/gocomplete.vim
-.vim/ftplugin/go/gocomplete.vim
+*/.vim/autoload/gocomplete.vim
+*/.vim/ftplugin/go/gocomplete.vim

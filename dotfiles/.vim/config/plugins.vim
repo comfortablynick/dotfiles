@@ -251,7 +251,7 @@ let g:ale_linters = {
     \   'pydocstyle',
     \  ],
     \ 'cpp': [
-    \   'clangtidy',
+    \   'ccls',
     \  ],
     \ }
 
@@ -508,6 +508,7 @@ let g:VtrPercentage = 35                                        " Percent of tmu
 let g:vtr_filetype_runner_overrides = {
     \ 'go': 'go run *.go',
     \ 'rust': 'cargo run',
+    \ 'cpp': 'build/gitpr',
     \ }
 
 " vim:set fdl=1:

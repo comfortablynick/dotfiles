@@ -79,6 +79,7 @@ nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
 " Completion -- Language Servers
 " Remap only if LC is activefor filetype
 function LC_maps()
+  " TODO: change has_key to a regular exists() function
   if has_key(g:LanguageClient_serverCommands, &filetype)
     nnoremap <buffer> <silent> gh :call LanguageClient#textDocument_hover()<cr>
     nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>

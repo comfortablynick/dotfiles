@@ -71,10 +71,18 @@ Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
 Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
 Plug 'dag/vim-fish',                    Cond(1, { 'for': 'fish' })
 Plug 'cespare/vim-toml'
+Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
+
+" Clang (compiled, vim only)
+Plug 'jeaye/color_coded',
+    \ Cond(!has('nvim'), {
+    \   'for': [ 'c', 'cpp', 'c#' ],
+    \   'do': 'rm -f CMakeCache.txt && cmake . && make && make install',
+    \ })
 
 " Git {{{2
 Plug 'junegunn/gv.vim'
-Plug 'tpope/vim-fugitive'                                       " Git wrapper
+Plug 'tpope/vim-fugitive'
 
 " Color themes {{{2
 " Conditionally load themes based on env var
@@ -372,10 +380,7 @@ if exists('g:loaded_neosnippet')
 endif
 
 " AsyncRun {{{2
-let g:quickfix_mult = 0.40                                      " % of window height to take up
-" let g:quickfix_size = float2nr(g:quickfix_mult*winheight(0))    " Size of quickfix window used for ToggleQf() func
-let g:quickfix_size = 24
-let g:asyncrun_open = g:quickfix_size                           " Show quickfix when executing command
+let g:asyncrun_open = 10                                        " Show quickfix when executing command
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
 let g:quickfix_run_scroll = 0                                   " Scroll when running code
 let g:asyncrun_raw_output = 0                                   " Don't process errors on output
@@ -510,5 +515,17 @@ let g:vtr_filetype_runner_overrides = {
     \ 'rust': 'cargo run',
     \ 'cpp': 'build/gitpr',
     \ }
+
+" Syntax highlighting {{{2
+" C++ {{{3
+" Disable function highlighting (affects both C and C++ files)
+let g:cpp_no_function_highlight = 1
+
+" Put all standard C and C++ keywords under Vim's highlight group `Statement`
+" (affects both C and C++ files)
+let g:cpp_simple_highlight = 1
+
+" Enable highlighting of named requirements (C++20 library concepts)
+let g:cpp_named_requirements_highlight = 1
 
 " vim:set fdl=1:

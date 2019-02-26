@@ -33,13 +33,7 @@ endfunction
 
 " GetPath() :: get path of current file {{{3
 function! GetPath()
-python3 << EOP
-
-import vim
-
-file_path = vim.eval("expand('%:p')")
-print(file_path)
-EOP
+    return expand('%:p')
 endfunction
 
 " SetExecutableBit() :: set file as executable by user {{{3
@@ -70,6 +64,10 @@ function! SetExecutable()
     call SetShebang()
 endfunction
 
+" GetRootFolderName() :: get just the name of the folder {{{3
+function! GetRootFolderName()
+
+endfunction
 " Run code {{{2
 " Run Python Code in Vim (DEPRECATED) {{{3
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
@@ -206,16 +204,27 @@ endfunction
 " RunBuild() :: build/install current project
 function! RunBuild() abort
     " Run build plugins
-    let s:cmds = {
-        \ 'go': 'AsyncRun go install',
-        \ 'cpp': 'AsyncRun -cwd=<root>/build make',
-        \ 'rust': 'AsyncRun cargo build',
+    let s:ft_cmds = {
+        \ 'go': {
+        \   'cmd': 'AsyncRun go install',
+        \   'show_qf': 0
+        \  },
+        \ 'cpp': {
+        \   'cmd': 'AsyncRun -cwd=<root>/build make install',
+        \   'show_qf': 1
+        \  },
+        \ 'rust': {
+        \   'cmd': 'AsyncRun cargo build',
+        \   'show_qf': 0
+        \  },
         \ }
-    let s:cmd = get(s:cmds, &filetype, '')
+    let s:ft = get(s:ft_cmds, &filetype, {})
+    let s:cmd = get(s:ft, 'cmd', '')
+    let s:qf_size = get(s:ft, 'show_qf', 0) * g:asyncrun_open
     if s:cmd !=? ''
         if s:cmd =~# 'AsyncRun'
             let g:asyncrun_exit = 'call CheckRun("Build")'
-            let g:asyncrun_open = 0 " IsQfOpen()
+            let g:asyncrun_open = s:qf_size
             execute s:cmd
             return
         endif
@@ -225,6 +234,9 @@ function! RunBuild() abort
     endif
 endfunction
 
+function! RunMakeInstall() abort
+    execute 'AsyncRun -cwd=<root>/build make install'
+endfunction
 " AsyncRun {{{2
 " CheckRun() :: check AsyncRun return code
 function! CheckRun(cmdName) abort

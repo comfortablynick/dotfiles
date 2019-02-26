@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+lsd_bin="$CARGO_HOME/bin/lsd"
+
+if [ -x "$lsd_bin" ]; then
+    args="--classify --icon-theme=unicode --group-dirs=first"
+    if [ "$(tput cols)" -lt 200 ]; then
+        args="$args --icon=never --date=relative"
+    fi
+    "$lsd_bin" $args "$@"
+else
+    ls "$@"
+fi

@@ -43,6 +43,7 @@ setopt auto_cd;                                                 # Perform cd if 
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
 setopt pushd_ignore_dups;                                       # Ignore multiple copies of same dir in stack
+setopt interactivecomments;                                     # Allow bash-style command line comments
 
 HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions

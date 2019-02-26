@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+exa_bin="$CARGO_HOME/bin/exa"
+
+if [ -x "$exa_bin" ]; then
+    "$exa_bin" -F --time-style=iso --group-directories-first "$@"
+else
+    ls "$@"
+fi

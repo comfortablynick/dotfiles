@@ -6,3 +6,4 @@ setlocal tabstop=4
 setlocal expandtab
 
 let g:VtrGitCdUpOnOpen = 1
+let g:quickfix_open = 24

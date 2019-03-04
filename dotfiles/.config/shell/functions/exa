@@ -3,7 +3,11 @@
 exa_bin="$CARGO_HOME/bin/exa"
 
 if [ -x "$exa_bin" ]; then
-    "$exa_bin" -F --time-style=iso --group-directories-first "$@"
+    args="-F --time-style=iso --group-directories-first"
+    if [ "$(tput cols)" -gt 200 ]; then
+        args="$args --time-style long-iso --grid"
+    fi
+    "$exa_bin" $args "$@"
 else
     ls "$@"
 fi

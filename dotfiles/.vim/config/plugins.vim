@@ -261,6 +261,7 @@ let g:ale_linters = {
     \ 'cpp': [
     \   'ccls',
     \  ],
+    \ 'rust': [],
     \ }
 
 let g:ale_fixers = {

@@ -2,12 +2,12 @@
 
 # use cat alternatives if installed
 
-if [ -n "$(command -v bat 2>/dev/null)" ]; then
-    command bat "$@"
-elif [ -n "$(command -v ccat 2>/dev/null)" ]; then
-    command ccat "$@"
-elif [ -n "$(command -v gcat 2>/dev/null)" ]; then
-    command gcat "$@"
+if [ -x /usr/bin/bat ]; then
+    /usr/bin/bat "$@"
+elif [ -x "$GOBIN/ccat" ]; then
+    "$GOBIN/ccat" --bg=dark "$@"
+elif [ -x /usr/local/bin/gcat ]; then
+    /usr/local/bin/gcat "$@"
 else
-    command cat "$@"
+    /bin/cat "$@"
 fi

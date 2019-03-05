@@ -3,9 +3,9 @@
 exa_bin="$CARGO_HOME/bin/exa"
 
 if [ -x "$exa_bin" ]; then
-    args="-F --time-style=iso --group-directories-first"
+    args="-F --time-style=iso --group-directories-first --grid"
     if [ "$(tput cols)" -gt 200 ]; then
-        args="$args --time-style long-iso --grid"
+        args="$args --time-style long-iso"
     fi
     "$exa_bin" $args "$@"
 else

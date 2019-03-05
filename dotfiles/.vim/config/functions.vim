@@ -381,6 +381,14 @@ augroup fmt
     autocmd BufWritePre *.{bash,sh} Neoformat
 augroup end
 
+" Terminal {{{2
+if has('nvim')
+    augroup terminalbuf
+        autocmd!
+        " Start in TERMINAL mode (any key will exit)
+        autocmd TermOpen * startinsert
+    augroup end
+endif
 " Formatopts {{{2
 augroup fmtopts
     autocmd!

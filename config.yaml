@@ -123,6 +123,10 @@ dotfiles:
     dst: ~/.dircolors
     link: true
     src: dircolors.sh
+  f_gitconfig:
+    dst: ~/.gitconfig
+    link: true
+    src: .gitconfig
   f_tmux.conf:
     dst: ~/.tmux.conf
     link: true
@@ -157,6 +161,7 @@ profiles:
     - f_bash_functions
     - f_config.py
     - f_dircolors
+    - f_gitconfig
     - f_tmux.conf
     - f_tmux.theme.conf
     - f_vimrc

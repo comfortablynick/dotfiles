@@ -34,6 +34,7 @@ let g:completion_filetypes = {
     \       'cpp',
     \       'c',
     \       'go',
+    \       'rust',
     \   ],
     \ 'coc':
     \   [

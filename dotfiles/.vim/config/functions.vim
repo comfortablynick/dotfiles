@@ -64,11 +64,79 @@ function! SetExecutable()
     call SetShebang()
 endfunction
 
-" GetRootFolderName() :: get just the name of the folder {{{3
-function! GetRootFolderName()
-
+" GetProjectRoot() :: get the root path based on git or parent folder {{{3
+function! GetProjectRoot() abort
+    " Check if this has already been defined
+    if getbufvar(1, 'project_root_dir', '') !=# ''
+        return b:project_root_dir
+    endif
+    " Get root from git or file parent dir
+    let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
+    if ! isdirectory(l:root)
+        let l:root = expand('%:p:h')
+    endif
+    " Save root in buffer local variable
+    let b:project_root_dir = l:root
+    return b:project_root_dir
 endfunction
+
+" GetRootFolderName() :: get just the name of the folder {{{3
+function! GetRootFolderName() abort
+    let l:root = GetProjectRoot()
+    return matchstr(l:root, '[^\/\\]*$')
+endfunction
+
+" SetProjectRoot() :: set vim cwd to project root dir {{{3
+" set working directory to git project root
+" or directory of current file if not git project
+function! SetProjectRoot() abort
+  " default to the current file's directory
+  lcd %:p:h
+  let l:git_dir = system('git rev-parse --show-toplevel')
+  " See if the command output starts with 'fatal' (if it does, not in a git repo)
+  let l:is_not_git_dir = matchstr(l:git_dir, '^fatal:.*')
+  " if git project, change local directory to git project root
+  if empty(l:is_not_git_dir)
+    lcd `=l:git_dir`
+  endif
+endfunction
+
 " Run code {{{2
+" Run in Integrated terminal
+" TODO: share these commands with the AsyncRun/Vtr functions?
+" TODO: use functions to get root of project/repo
+function! RunInTerm(cmd_type) abort
+    let s:ft_cmds = {
+        \ 'go': {
+        \   'build': 'go install',
+        \   'run': 'go run .',
+        \  },
+        \ 'cpp': {
+        \   'build': '<root>/build make install',
+        \  },
+        \ 'rust': {
+        \   'build': 'cargo build',
+        \   'build-release': 'cargo build --release',
+        \   'install': 'cargo install -f --path ../.',
+        \   'run': 'cargo run',
+        \  },
+        \ }
+    let s:ft = get(s:ft_cmds, &filetype, {})
+    let s:cmd = get(s:ft, a:cmd_type, '')
+
+    if s:ft ==# {}
+        echo printf('No commands for filetype: %s', &filetype)
+        return
+    endif
+    if s:cmd ==# ''
+        echo printf('%s command not defined for %s filetype', a:cmd_type, &filetype)
+        return
+    endif
+
+    execute 'split term:// ' . s:cmd
+    return
+endfunction
+
 " Run Python Code in Vim (DEPRECATED) {{{3
 " Bind Ctrl+b to save file if modified and execute python script in a buffer.
 " nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
@@ -214,7 +282,7 @@ function! RunBuild() abort
         \   'show_qf': 1
         \  },
         \ 'rust': {
-        \   'cmd': 'AsyncRun cargo build',
+        \   'cmd': 'AsyncRun -cwd=<root> cargo install -f --path .',
         \   'show_qf': 0
         \  },
         \ }

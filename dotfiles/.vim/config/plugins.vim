@@ -510,11 +510,12 @@ let g:tagbar_autopreview = 0                                    " Open preview w
 let g:tagbar_sort = 0                                           " Sort tags alphabetically vs. in file order
 
 " Vim Tmux Runner {{{2
+let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
 let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
 let g:VtrOrientation = 'h'                                      " h/v split
-let g:VtrPercentage = 35                                        " Percent of tmux window the runner pane with occupy
+let g:VtrPercentage = 40                                        " Percent of tmux window the runner pane with occupy
 
 let g:vtr_filetype_runner_overrides = {
     \ 'go': 'go run *.go',

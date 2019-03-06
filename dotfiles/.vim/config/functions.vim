@@ -90,15 +90,8 @@ endfunction
 " set working directory to git project root
 " or directory of current file if not git project
 function! SetProjectRoot() abort
-  " default to the current file's directory
-  lcd %:p:h
-  let l:git_dir = system('git rev-parse --show-toplevel')
-  " See if the command output starts with 'fatal' (if it does, not in a git repo)
-  let l:is_not_git_dir = matchstr(l:git_dir, '^fatal:.*')
-  " if git project, change local directory to git project root
-  if empty(l:is_not_git_dir)
-    lcd `=l:git_dir`
-  endif
+    let l:root_dir = GetProjectRoot()
+    lcd `=l:root_dir`
 endfunction
 
 " Run code {{{2
@@ -123,13 +116,16 @@ function! RunInTerm(cmd_type) abort
     let s:ft = get(s:ft_cmds, &filetype, {})
     let s:cmd = get(s:ft, a:cmd_type, '')
 
-    if s:ft ==# {}
-        echo printf('No commands for filetype: %s', &filetype)
-        return
-    endif
-    if s:cmd ==# ''
-        echo printf('%s command not defined for %s filetype', a:cmd_type, &filetype)
-        return
+    " if s:ft ==# {}
+    "     echo printf('No commands for filetype: %s', &filetype)
+    "     return
+    " endif
+    " if s:cmd ==# ''
+    "     echo printf('%s command not defined for %s filetype', a:cmd_type, &filetype)
+    "     return
+    " endif
+    if s:ft ==# {} || s:cmd ==# ''
+        let s:cmd = a:cmd_type
     endif
 
     let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
@@ -306,6 +302,7 @@ endfunction
 function! RunMakeInstall() abort
     execute 'AsyncRun -cwd=<root>/build make install'
 endfunction
+
 " AsyncRun {{{2
 " CheckRun() :: check AsyncRun return code
 function! CheckRun(cmdName) abort
@@ -470,7 +467,15 @@ if has('nvim')
         autocmd!
         " Start in TERMINAL mode (any key will exit)
         autocmd TermOpen * startinsert
+        " `<Esc>` to exit terminal mode
+        autocmd TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
     augroup end
+
+    augroup terminal_fzf
+        autocmd!
+        " Unmap <Esc> so it can be used to exit FZF
+        autocmd FileType fzf tunmap <buffer> <Esc>
+    augroup END
 endif
 " Formatopts {{{2
 augroup fmtopts

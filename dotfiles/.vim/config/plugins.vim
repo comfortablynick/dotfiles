@@ -464,6 +464,10 @@ let g:LanguageClient_diagnosticsDisplay =
     \ }
 let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
+
+" Coc {{{2
+let g:coc_force_debug = 1
+
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1

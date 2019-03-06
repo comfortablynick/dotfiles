@@ -102,9 +102,8 @@ function! SetProjectRoot() abort
 endfunction
 
 " Run code {{{2
-" Run in Integrated terminal
+" Run in Integrated terminal {{{3
 " TODO: share these commands with the AsyncRun/Vtr functions?
-" TODO: use functions to get root of project/repo
 function! RunInTerm(cmd_type) abort
     let s:ft_cmds = {
         \ 'go': {
@@ -112,12 +111,12 @@ function! RunInTerm(cmd_type) abort
         \   'run': 'go run .',
         \  },
         \ 'cpp': {
-        \   'build': '<root>/build make install',
+        \   'build': '/build make install',
         \  },
         \ 'rust': {
         \   'build': 'cargo build',
         \   'build-release': 'cargo build --release',
-        \   'install': 'cargo install -f --path ../.',
+        \   'install': 'cargo install -f --path .',
         \   'run': 'cargo run',
         \  },
         \ }
@@ -133,7 +132,9 @@ function! RunInTerm(cmd_type) abort
         return
     endif
 
-    execute 'split term:// ' . s:cmd
+    let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
+    call SetProjectRoot()
+    execute s:mod . '|term ' . s:cmd
     return
 endfunction
 
@@ -321,6 +322,20 @@ function! CheckRun(cmdName) abort
    endif
 endfunction
 
+" Keyword documentation {{{2
+" ShowDocumentation() :: use K for vim docs or language servers
+function! ShowDocumentation() abort
+    if &filetype ==# 'vim'
+        execute 'h '.expand('<cword>')
+    else
+        if exists('g:did_coc_loaded')
+            call CocActionAsync('doHover')
+            return
+        endif
+    endif
+endfunction
+set keywordprg=:silent!\ call\ ShowDocumentation()
+
 " General {{{2
 " RunCommand() :: run command asynchronously in tmux pane {{{3
 function! RunCommand(cmd) abort
@@ -462,6 +477,15 @@ augroup fmtopts
     autocmd!
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
+
+" Coc {{{2
+" Highlight symbol under cursor on CursorHold
+if exists('g:did_coc_loaded')
+    augroup coc
+        autocmd!
+        autocmd CursorHold * silent call CocActionAsync('highlight')
+    augroup END
+endif
 
 " Commands {{{1
 " Sudo save {{{2

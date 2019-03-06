@@ -84,9 +84,13 @@ function LC_maps()
     nnoremap <buffer> <silent> gh :call LanguageClient#textDocument_hover()<cr>
     nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
     nnoremap <buffer> <silent> <F4> :call LanguageClient#textDocument_rename()<CR>
-elseif exists('g:did_coc_loaded')
-    nnoremap <buffer> <silent> gh :call CocActionAsync('doHover')<CR>
-    nnoremap <buffer> <silent> gd <Plug>(coc-definition)
+  elseif exists('g:did_coc_loaded')
+    nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gr <Plug>(coc-rename)
+    nmap <silent> gt <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gy <Plug>(coc-references)
   endif
 endfunction
 

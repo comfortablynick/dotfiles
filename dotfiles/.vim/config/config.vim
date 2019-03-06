@@ -48,6 +48,7 @@ set lazyredraw                                                  " Don't redraw s
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
+set completeopt+=preview
 " }}}
 " Folds {{{
 set foldenable                                                  " Enable folds by default

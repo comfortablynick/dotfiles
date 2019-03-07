@@ -67,7 +67,7 @@ endfunction
 " GetProjectRoot() :: get the root path based on git or parent folder {{{3
 function! GetProjectRoot() abort
     " Check if this has already been defined
-    if getbufvar(1, 'project_root_dir', '') !=# ''
+    if exists('b:project_root_dir')
         return b:project_root_dir
     endif
     " Get root from git or file parent dir
@@ -93,120 +93,6 @@ function! SetProjectRoot() abort
     let l:root_dir = GetProjectRoot()
     lcd `=l:root_dir`
 endfunction
-
-" Run code {{{2
-" Run in Integrated terminal {{{3
-" TODO: share these commands with the AsyncRun/Vtr functions?
-function! RunInTerm(cmd_type) abort
-    let s:ft_cmds = {
-        \ 'go': {
-        \   'build': 'go install',
-        \   'run': 'go run .',
-        \  },
-        \ 'cpp': {
-        \   'build': '/build make install',
-        \  },
-        \ 'rust': {
-        \   'build': 'cargo build',
-        \   'build-release': 'cargo build --release',
-        \   'install': 'cargo install -f --path .',
-        \   'run': 'cargo run',
-        \  },
-        \ }
-    let s:ft = get(s:ft_cmds, &filetype, {})
-    let s:cmd = get(s:ft, a:cmd_type, '')
-
-    " if s:ft ==# {}
-    "     echo printf('No commands for filetype: %s', &filetype)
-    "     return
-    " endif
-    " if s:cmd ==# ''
-    "     echo printf('%s command not defined for %s filetype', a:cmd_type, &filetype)
-    "     return
-    " endif
-    if s:ft ==# {} || s:cmd ==# ''
-        let s:cmd = a:cmd_type
-    endif
-
-    let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
-    call SetProjectRoot()
-    execute s:mod . '|term ' . s:cmd
-    return
-endfunction
-
-" Run Python Code in Vim (DEPRECATED) {{{3
-" Bind Ctrl+b to save file if modified and execute python script in a buffer.
-" nnoremap <silent> <C-b> :call SaveAndExecutePython()<CR>
-" vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython()<CR>
-" nnoremap <silent> <C-x> :call ClosePythonWindow()<CR>
-
-" SaveAndExecutePython() :: save file and execute python in split vim {{{4
-" function! SaveAndExecutePython() abort
-"     " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
-"
-"     " save and reload current file
-"     silent execute 'update | edit'
-"
-"     " get file path of current file
-"     let s:current_buffer_file_path = expand('%')
-"
-"     let s:output_buffer_name = 'Python'
-"     let s:output_buffer_filetype = 'output'
-"
-"     " reuse existing buffer window if it exists otherwise create a new one
-"     if !exists('s:buf_nr') || !bufexists(s:buf_nr)
-"         silent execute 'botright vsplit new ' . s:output_buffer_name
-"         let s:buf_nr = bufnr('%')
-"     elseif bufwinnr(s:buf_nr) == -1
-"         silent execute 'botright new'
-"         silent execute s:buf_nr . 'buffer'
-"     elseif bufwinnr(s:buf_nr) != bufwinnr('%')
-"         silent execute bufwinnr(s:buf_nr) . 'wincmd w'
-"     endif
-"
-"     silent execute 'setlocal filetype=' . s:output_buffer_filetype
-"     setlocal bufhidden=delete
-"     setlocal buftype=nofile
-"     setlocal noswapfile
-"     setlocal nobuflisted
-"     setlocal winfixheight
-"     setlocal cursorline " make it easy to distinguish
-"     setlocal nonumber
-"     setlocal norelativenumber
-"     setlocal showbreak=""
-"     setlocal wrap
-"     setlocal textwidth=0
-"
-"     " clear the buffer
-"     setlocal noreadonly
-"     setlocal modifiable
-"     silent %delete _
-"
-"     " add the console output
-"     silent execute '.!python3 ' . shellescape(s:current_buffer_file_path, 1)
-"
-"     " make the buffer non modifiable
-"     setlocal readonly
-"     setlocal nomodifiable
-"
-"     " Return to previous (code) window
-"     silent execute 'wincmd p'
-" endfunction
-"
-" ClosePythonWindow() :: close window opened for running python {{{4
-" function! ClosePythonWindow() abort
-"     " Close Python window we opened
-"     if bufexists(s:buf_nr)
-"         let ui_window_number = bufwinnr(s:buf_nr)
-"         if ui_window_number != -1
-"             silent execute ui_window_number . 'close'
-"         endif
-"     endif
-"
-"     " Return to original window
-"     silent execute 'wincmd p'
-" endfunction
-
 
 " Quickfix window {{{2
 " ToggleQf() :: toggle quickfix window {{{3
@@ -317,6 +203,61 @@ function! CheckRun(cmdName) abort
        echo a:cmdName . ' failed. Check quickfix for details'
        return
    endif
+endfunction
+
+" Run code {{{2
+" RunCmd() :: build command based on file type and command type {{{3
+function! RunCmd(cmd_type) abort
+    let l:ft_cmds = {
+        \ 'go': {
+        \   'build': 'go install',
+        \   'run': 'go run .',
+        \  },
+        \ 'cpp': {
+        \   'build': '/build make install',
+        \  },
+        \ 'rust': {
+        \   'build': 'cargo build',
+        \   'build-release': 'cargo build --release',
+        \   'install': 'cargo install -f --path .',
+        \   'run': 'cargo run',
+        \  },
+        \ }
+    let l:ft = get(l:ft_cmds, &filetype, {})
+    let l:cmd = get(l:ft, a:cmd_type, '')
+    if l:ft ==# {} || l:cmd ==# ''
+        let l:cmd = a:cmd_type
+    endif
+
+    " Decide where to run the command
+    let l:run_loc = exists('b:run_cmd_in') ?
+        \ b:run_cmd_in :
+        \ get(g:, 'run_cmd_in', GetCmdRunLoc())
+
+    call SetProjectRoot()
+    if l:run_loc ==# 'term'
+        call RunInTerm(l:cmd)
+    elseif l:run_loc ==# 'AsyncRun'
+        return
+    elseif l:run_loc ==# 'Vtr'
+        execute 'VtrSendCommandToRunner! ' . l:cmd
+        return
+    endif
+endfunction
+
+" RunInTerm() :: send cmd output to integrated terminal buffer {{{3
+function! RunInTerm(cmd) abort
+    let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
+    execute s:mod . '|term ' . a:cmd
+    return
+endfunction
+
+" GetCmdRunLoc() :: determine default command output {{{3
+function! GetCmdRunLoc() abort
+    if empty($TMUX_PANE)
+        return 'term'
+    endif
+    return 'Vtr'
 endfunction
 
 " Keyword documentation {{{2
@@ -432,10 +373,29 @@ function! BufWidth()
 endfunction
 
 " (Auto)commands {{{1
-" Cursor position {{{2
-augroup last_place
+" Cursor {{{2
+augroup _cursor
     autocmd!
+    " Remember last place in file
     autocmd BufWinEnter * call LastPlace()
+    " Set cursorline depending on mode
+    autocmd WinEnter    * set cursorline
+    autocmd WinLeave    * set nocursorline
+    autocmd InsertEnter * set nocursorline
+    autocmd InsertLeave * set cursorline
+augroup END
+
+" Line numbers {{{2
+" Toggle to number mode depending on vim mode
+" INSERT:       Turn off relativenumber while writing code
+" NORMAL:       Turn on relativenumber for easy navigation
+" NO FOCUS:     Turn off relativenumber (testing code, etc.)
+" QuickFix:     Turn off relativenumber (running code)
+augroup numbertoggle
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+    autocmd FileType qf if &nu | set nornu | endif
 augroup END
 
 " Vim Fugitive {{{2

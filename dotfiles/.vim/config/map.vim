@@ -55,22 +55,12 @@ nnoremap d<C-h> <C-w>h<C-w>c
 nnoremap d<C-l> <C-w>l<C-w>c
 
 " Vim-tmux-runner
-" TODO: abstract this logic in functions that can
-" be called by these maps
-if g:use_term != 1
-    nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
-    nnoremap <silent> <Leader>r :VtrSendFile!<CR>
-    nnoremap <silent> <Leader>x :VtrKillRunner<CR>
+nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
+nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 
-    " Build
-    nnoremap <silent> <Leader>w :w \| :call RunBuild()<CR>
-    nnoremap <silent> <Leader>b :call RunBuild()<CR>
-else
-    nnoremap <silent> <Leader>r :call RunInTerm('run')<CR>
-    nnoremap <silent> <Leader>w :w \| :call RunInTerm('build')<CR>
-    nnoremap <silent> <Leader>b :call RunInTerm('build')<CR>
-endif
-
+nnoremap <silent> <Leader>r :call RunCmd('run')<CR>
+nnoremap <silent> <Leader>w :w \| :call RunCmd('install')<CR>
+nnoremap <silent> <Leader>b :call RunCmd('build')<CR>
 
 " Quickfix
 nnoremap <silent> <Leader>q :call ToggleQf()<CR>

@@ -51,11 +51,12 @@ let g:completion_filetypes = {
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 " Editor features {{{2
+Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
-Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar',               Cond(1, { 'on': 'TagbarToggle' })
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
@@ -511,6 +512,7 @@ let g:tagbar_sort = 0                                           " Sort tags alph
 
 " Vim Tmux Runner {{{2
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
+let g:run_code_with = 'term'
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
 let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send

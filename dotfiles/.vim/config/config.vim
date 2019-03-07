@@ -5,7 +5,7 @@
 "   \___\___/|_| |_|_| |_|\__, (_)_/ |_|_| |_| |_|
 "                         |___/
 " General Configuration
-" Application {{{
+" Application {{{1
 set noswapfile                                                  " Don't create freaking swap files
 set ttyfast                                                     " Terminal acceleration
 set autoread                                                    " Detect when a file has been changed outside of vim
@@ -21,8 +21,8 @@ else
     set pyxversion=3                                            " Use Python3 for pyx
     let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
-" }}}
-" General {{{
+
+" General {{{1
 syntax enable                                                   " Syntax highlighting on
 colorscheme default                                             " Def colors (overwritten by theme.vim)
 set fileformat=unix                                             " Always use LF and not CRLF
@@ -35,7 +35,7 @@ set visualbell                                                  " Visual bell in
 set nowrap                                                      " Text wrapping mode
 set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
 set clipboard=unnamed                                           " Use system clipboard
-set cursorline                                                  " Show line under cursor's line
+set cursorline                                                  " Show line under cursor's line (check autocmds)
 set ruler                                                       " Show line info
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=100                                              " Update more often (helps GitGutter)
@@ -49,66 +49,54 @@ set nostartofline                                               " Don't move to 
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set completeopt+=preview
-" }}}
-" Folds {{{
+
+" Folds {{{1
 set foldenable                                                  " Enable folds by default
 set foldnestmax=5                                               " Max nested levels (default=20)
-" }}}
-" Indents {{{
+
+" Indents {{{1
 set expandtab                                                   " Expand tab to spaces
 set smartindent                                                 " Attempt smart indenting
 set autoindent                                                  " Attempt auto indenting
 set shiftwidth=4                                                " Indent width in spaces
 set backspace=2                                                 " Backspace behaves as expected
 let g:vim_indent_cont = &shiftwidth                             " Indent after \ in Vim script
-" }}}
-" Search & replace {{{
+
+" Search & replace {{{1
 set ignorecase                                                  " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
 set hlsearch                                                    " Highlight search results
 set magic                                                       " Magic escaping for regex
-" }}}
-" Undo {{{
+
+" Undo {{{1
 set undodir=~/.vim/undo                                         " Undo file directory
 set undofile                                                    " Enable persistent undo
-" }}}
-" Windows/Splits {{{
+
+" Windows/Splits {{{1
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
-" }}}
-" Line numbers {{{
+
+" Line numbers {{{1
 set number                                                      " Show linenumbers
 set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
 
-" Toggle to number mode depending on vim mode
-" INSERT:       Turn off relativenumber while writing code
-" NORMAL:       Turn on relativenumber for easy navigation
-" NO FOCUS:     Turn off relativenumber (testing code, etc.)
-" QuickFix:     Turn off relativenumber (running code)
-augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-    autocmd FileType qf if &nu | set nornu | endif
-augroup END
-" }}}
-" iOS Compatibility {{{
-" Defaults: turn all fonts and colors ON {{{
+" Terminal client compatibility {{{1
+" Defaults: turn all fonts and colors ON {{{2
 let g:LL_pl = 1
 let g:LL_nf = 1
 set termguicolors
-" }}}
-" SSH: remove background to try to work better with iOS SSH apps {{{
+
+" SSH: remove background to try to work better with iOS SSH apps {{{2
 if $VIM_SSH_COMPAT == 1
     hi Normal guibg=NONE ctermbg=NONE
     hi nonText guibg=NONE ctermbg=NONE
     let g:LL_nf = 0
     set notermguicolors
 endif
-" }}}
-" FONTS: check env vars to see if we need to turn off nerd/powerline fonts {{{
+
+" FONTS: check env vars to see if we need to turn off fancy fonts {{{2
 if ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
     " We can turn off both, since NF are a superset of PL fonts
     let g:LL_nf = 0
@@ -118,14 +106,14 @@ elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
     let g:LL_nf = 0
     let g:LL_pl = 1
 endif
-" }}}
-" TMUX: make it work with termguicolors {{{
+
+" TMUX: make it work with termguicolors {{{2
 if &term =~# '^screen'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
-" }}}
-" Get color theme from env var {{{
+
+" Get color theme from env var {{{2
 function! GetColorTheme() abort
     return has('nvim') ?
         \ !empty('$NVIM_COLOR') ? $NVIM_COLOR : 'papercolor-dark' :
@@ -146,10 +134,9 @@ let g:vim_color_variant = substitute(
     \ g:vim_base_color . '-',
     \ '',
     \ '')
-" }}}
-" Increase timeoutlen {{{
+
+" Increase timeoutlen {{{2
 if $TMUX_SESSION ==? 'ios'
     set timeoutlen=400
 endif
-" }}}
-" }}}
+

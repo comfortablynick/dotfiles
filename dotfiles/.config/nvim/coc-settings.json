@@ -9,7 +9,7 @@
   "suggest.enablePreview": true,
 
   // Preferences
-  "coc.preferences.hoverTarget": "preview",
+  "coc.preferences.hoverTarget": "float",
   "coc.preferences.previewAutoClose": true,
 
   // Server definitions

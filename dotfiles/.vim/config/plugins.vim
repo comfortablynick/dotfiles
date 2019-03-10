@@ -120,7 +120,6 @@ Plug 'Shougo/echodoc'
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
     \ {
-    \   'tag': '*',
     \   'do': { -> coc#util#install()},
     \   'for': g:completion_filetypes['coc'],
     \ })
@@ -467,7 +466,7 @@ let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
 " Coc {{{2
-let g:coc_force_debug = 1
+" let g:coc_force_debug = 1
 
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1

@@ -254,10 +254,12 @@ endfunction
 
 " GetCmdRunLoc() :: determine default command output {{{3
 function! GetCmdRunLoc() abort
-    if empty($TMUX_PANE)
-        return 'term'
+    if !empty($TMUX_PANE) && winwidth(0) > 200
+        let b:run_cmd_in = 'Vtr'
+        return 'Vtr'
     endif
-    return 'Vtr'
+    let b:run_cmd_in = 'term'
+    return 'term'
 endfunction
 
 " Keyword documentation {{{2
@@ -445,12 +447,13 @@ augroup END
 
 " Coc {{{2
 " Highlight symbol under cursor on CursorHold
-if exists('g:did_coc_loaded')
-    augroup coc
-        autocmd!
-        autocmd CursorHold * silent call CocActionAsync('highlight')
-    augroup END
-endif
+" if exists('g:did_coc_loaded')
+"     augroup coc
+"         autocmd!
+"         " autocmd CursorHold * silent call CocActionAsync('highlight')
+"         autocmd CursorHold * silent call CocActionAsync('doHover')
+"     augroup END
+" endif
 
 " Commands {{{1
 " Sudo save {{{2

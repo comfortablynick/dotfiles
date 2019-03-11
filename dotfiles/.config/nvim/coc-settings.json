@@ -12,6 +12,8 @@
   "coc.preferences.hoverTarget": "float",
   "coc.preferences.previewAutoClose": true,
 
+  "rust-client.channel": "stable",
+  "rust.clippy_preference": "on",
   // Server definitions
   "languageserver": {
     "ccls": {

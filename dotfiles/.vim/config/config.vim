@@ -25,6 +25,7 @@ endif
 " General {{{1
 syntax enable                                                   " Syntax highlighting on
 colorscheme default                                             " Def colors (overwritten by theme.vim)
+set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
 set encoding=utf-8                                              " Default to unicode
 set termencoding=utf-8                                          " Unicode
@@ -38,7 +39,7 @@ set clipboard=unnamed                                           " Use system cli
 set cursorline                                                  " Show line under cursor's line (check autocmds)
 set ruler                                                       " Show line info
 set showmatch                                                   " Show matching pair of brackets (), [], {}
-set updatetime=100                                              " Update more often (helps GitGutter)
+set updatetime=300                                              " Update more often (helps GitGutter)
 set signcolumn=yes                                              " Always show; keep appearance consistent
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
@@ -140,3 +141,7 @@ if $TMUX_SESSION ==? 'ios'
     set timeoutlen=400
 endif
 
+" Cursor {{{1
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+    \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+    \,sm:block-blinkwait175-blinkoff150-blinkon175

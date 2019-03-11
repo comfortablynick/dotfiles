@@ -214,7 +214,9 @@ function! RunCmd(cmd_type) abort
         \   'run': 'go run .',
         \  },
         \ 'cpp': {
-        \   'build': '/build make install',
+        \   'build': 'pushd build && make install; popd',
+        \   'install': 'pushd build && make install; popd',
+        \   'run': GetRootFolderName(),
         \  },
         \ 'rust': {
         \   'build': 'cargo build',
@@ -226,6 +228,10 @@ function! RunCmd(cmd_type) abort
     let l:ft = get(l:ft_cmds, &filetype, {})
     let l:cmd = get(l:ft, a:cmd_type, '')
     if l:ft ==# {} || l:cmd ==# ''
+        if index([ 'build', 'install', 'run' ], l:cmd) == 0
+            " not a valid command
+            return
+        endif
         let l:cmd = a:cmd_type
     endif
 
@@ -447,13 +453,13 @@ augroup END
 
 " Coc {{{2
 " Highlight symbol under cursor on CursorHold
-" if exists('g:did_coc_loaded')
-"     augroup coc
-"         autocmd!
-"         " autocmd CursorHold * silent call CocActionAsync('highlight')
-"         autocmd CursorHold * silent call CocActionAsync('doHover')
-"     augroup END
-" endif
+if exists('g:did_coc_loaded')
+    augroup coc
+        autocmd!
+        " autocmd CursorHold * silent call CocActionAsync('highlight')
+        autocmd CursorHold * silent call CocActionAsync('doHover')
+    augroup END
+endif
 
 " Commands {{{1
 " Sudo save {{{2

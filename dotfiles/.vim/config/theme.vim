@@ -113,27 +113,35 @@ let g:LL_LinterOK = ''
 " lightline#bufferline {{{3
 let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
 let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified
-let g:lightline#bufferline#show_number  = 2
+let g:lightline#bufferline#show_number  = 1
 let g:lightline#bufferline#shorten_path = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
-let g:lightline#bufferline#number_map = {
-    \ 0: '➓ ',
-    \ 1: '❶ ',
-    \ 2: '❷ ',
-    \ 3: '❸ ',
-    \ 4: '❹ ',
-    \ 5: '❺ ',
-    \ 6: '❻ ',
-    \ 7: '❼ ',
-    \ 8: '❽ ',
-    \ 9: '❾ ',
-    \ }
+" let g:lightline#bufferline#number_map = {
+"     \ 0: '➓ ',
+"     \ 1: '❶ ',
+"     \ 2: '❷ ',
+"     \ 3: '❸ ',
+"     \ 4: '❹ ',
+"     \ 5: '❺ ',
+"     \ 6: '❻ ',
+"     \ 7: '❼ ',
+"     \ 8: '❽ ',
+"     \ 9: '❾ ',
+"     \ }
 
 " lightline#ale {{{3
 let g:lightline#ale#indicator_checking = g:LL_LinterChecking
 let g:lightline#ale#indicator_warnings = g:LL_LinterWarnings
 let g:lightline#ale#indicator_errors = g:LL_LinterErrors
 let g:lightline#ale#indicator_ok = g:LL_LinterOK
+
+" coc#status {{{3
+if exists('g:did_coc_loaded')
+    augroup cocAle
+        autocmd!
+        autocmd User CocDiagnosticChange call lightline#update()
+    augroup END
+endif
 
 " Section separators {{{3
 " Get separators based on settings above "{{{

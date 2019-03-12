@@ -92,6 +92,7 @@ function LC_maps()
     nmap <silent> gy <Plug>(coc-references)
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
+    nnoremap <silent> <Leader>d :CocList diagnostics<cr>
   endif
 endfunction
 

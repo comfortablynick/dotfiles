@@ -72,10 +72,12 @@ let g:lightline = {
     \ },
     \ 'component_expand': {
     \   'linter_checking': 'lightline#ale#checking',
-    \   'linter_warnings': 'lightline#ale#warnings',
-    \   'linter_errors': 'lightline#ale#errors',
+    \   'linter_warnings': 'LL_LinterWarnings',
+    \   'linter_errors': 'LL_LinterErrors',
     \   'linter_ok': 'lightline#ale#ok',
     \   'buffers' : 'lightline#bufferline#buffers',
+    \   'cocerror': 'LL_CocError',
+    \   'cocwarn': 'LL_CocWarn',
     \ },
     \ 'component_type': {
     \   'readonly': 'error',
@@ -84,6 +86,8 @@ let g:lightline = {
     \   'linter_errors': 'error',
     \   'linter_ok': 'left',
     \   'buffers': 'tabsel',
+    \   'cocerror': 'error',
+    \   'cocwarn': 'warn',
     \ },
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '|', 'right': '|' },
@@ -100,15 +104,36 @@ let g:LL_ROSymbol = g:LL_pl ? ' ' : '--RO-- '                  " Read-only sy
 let g:LL_ModSymbol = ' [+]'                                     " File modified symbol
 let g:LL_SimpleSep = 0                                          " Use simple section separators instead of PL (no other effects)
 
+" Linter indicators
+let g:LL_LinterChecking = g:LL_nf ? "\uf110 " : '...'
+let g:LL_LinterWarnings = g:LL_nf ? "\uf071 " : '⧍'
+let g:LL_LinterErrors = g:LL_nf ? "\uf05e " : '✗'
+let g:LL_LinterOK = ''
+
 " lightline#bufferline {{{3
 let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
 let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified
+let g:lightline#bufferline#show_number  = 2
+let g:lightline#bufferline#shorten_path = 1
+let g:lightline#bufferline#unnamed      = '[No Name]'
+let g:lightline#bufferline#number_map = {
+    \ 0: '➓ ',
+    \ 1: '❶ ',
+    \ 2: '❷ ',
+    \ 3: '❸ ',
+    \ 4: '❹ ',
+    \ 5: '❺ ',
+    \ 6: '❻ ',
+    \ 7: '❼ ',
+    \ 8: '❽ ',
+    \ 9: '❾ ',
+    \ }
 
 " lightline#ale {{{3
-let g:lightline#ale#indicator_checking = g:LL_nf ? "\uf110 " : '...'
-let g:lightline#ale#indicator_warnings = g:LL_nf ? "\uf071 " : '⧍'
-let g:lightline#ale#indicator_errors = g:LL_nf ? "\uf05e " : '✗'
-let g:lightline#ale#indicator_ok = ''
+let g:lightline#ale#indicator_checking = g:LL_LinterChecking
+let g:lightline#ale#indicator_warnings = g:LL_LinterWarnings
+let g:lightline#ale#indicator_errors = g:LL_LinterErrors
+let g:lightline#ale#indicator_ok = g:LL_LinterOK
 
 " Section separators {{{3
 " Get separators based on settings above "{{{
@@ -141,6 +166,7 @@ let g:lightline.separator.left = LL_Separator('left')
 let g:lightline.separator.right = LL_Separator('right')
 let g:lightline.subseparator.left = LL_Subseparator('left')
 let g:lightline.subseparator.right = LL_Subseparator('right')
+
 " Component functions {{{2
 function! LL_Modified() abort "{{{3
     return &filetype =~? 'help\|vimfiler' ? '' : &modified ? g:LL_ModSymbol : &modifiable ? '' : '-'
@@ -389,6 +415,42 @@ function! LL_CurrentTag() abort "{{{3
         return tagbar#currenttag('[%s]', '', 'f')
     end
     return ''
+endfunction
+
+function! LL_CocError() abort "{{{3
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info)
+    return ''
+  endif
+  let errmsgs = []
+  if get(info, 'error', 0)
+    call add(errmsgs, g:LL_LinterErrors . info['error'])
+  endif
+  return trim(join(errmsgs, ' ') . ' ')
+endfunction
+
+function! LL_CocWarn() abort " {{{3
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info)
+    return ''
+  endif
+  let warnmsgs = []
+  if get(info, 'warning', 0)
+    call add(warnmsgs, g:LL_LinterWarnings . info['warning'])
+  endif
+  return trim(join(warnmsgs, ' ') . ' ')
+endfunction
+
+function! LL_LinterErrors() abort " {{{3
+    return LL_CocError() ==# '' ?
+        \ lightline#ale#errors() :
+        \ LL_CocError()
+endfunction
+
+function! LL_LinterWarnings() abort " {{{3
+    return LL_CocWarn() ==# '' ?
+        \ lightline#ale#warnings() :
+        \ LL_CocWarn()
 endfunction
 
 " Vim / Neovim Theme {{{1

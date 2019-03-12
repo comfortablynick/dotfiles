@@ -22,7 +22,6 @@ let g:completion_filetypes = {
     \   [
     \       'python',
     \       'fish',
-    \       'vim',
     \   ],
     \ 'ycm':
     \   [
@@ -43,6 +42,9 @@ let g:completion_filetypes = {
     \       'go',
     \       'javascript',
     \       'typescript',
+    \       'sh',
+    \       'bash',
+    \       'vim',
     \   ],
     \ }
 
@@ -61,6 +63,7 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'rhysd/clever-f.vim'
+Plug 'Shougo/echodoc'
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
@@ -105,18 +108,7 @@ Plug 'Shougo/neosnippet-snippets',      Cond(has('nvim'))
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 
 " Code completion {{{2
-Plug 'Shougo/echodoc'
-
-" LanguageClient {{{3
-" Plug 'autozimu/LanguageClient-neovim',  Cond(has('nvim'), {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ 'for': [
-"     \   'rust',
-"     \  ],
-"     \ })
-
-" Coc {{{3
+" Plugins for code autocompletion/language server features
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
     \ {
@@ -124,32 +116,44 @@ Plug 'neoclide/coc.nvim',
     \   'for': g:completion_filetypes['coc'],
     \ })
 
-" Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
     \ {
     \   'for': g:completion_filetypes['deoplete'],
     \ })
 
-" C {{{4
+Plug 'Valloric/YouCompleteMe',
+    \ Cond(!has('nvim'),
+    \ {
+    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
+    \   'for': g:completion_filetypes['ycm'],
+    \ })
+
+" C {{{3
 Plug 'tweekmonster/deoplete-clang2',
     \ Cond(has('nvim'))
 
-" Vim {{{4
+" Vim {{{3
 Plug 'Shougo/neco-vim',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'vim'
     \ })
 
-" Python (Jedi) {{{4
+Plug 'neoclide/coc-neco',
+    \ Cond(has('nvim'),
+    \ {
+    \   'for': 'vim'
+    \ })
+
+" Python (Jedi) {{{3
 Plug 'zchee/deoplete-jedi',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'python',
     \ })
 
-" Typescript {{{4
+" Typescript {{{3
 Plug 'mhartington/nvim-typescript',
     \ Cond(has('nvim'),
     \ {
@@ -161,14 +165,14 @@ Plug 'mhartington/nvim-typescript',
     \   'do': './install.sh',
     \ })
 
-" Fish {{{4
+" Fish {{{3
 Plug 'ponko2/deoplete-fish',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'fish',
     \ })
 
-" Go {{{4
+" Go {{{3
 Plug 'zchee/deoplete-go',
     \ Cond(has('nvim'),
     \ {
@@ -182,16 +186,8 @@ Plug 'mdempsky/gocode',
     \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
     \ })
 
-" Rust {{{4
+" Rust {{{3
 Plug 'racer-rust/vim-racer',    Cond(0) " Cond(has('nvim'))
-
-" YouCompleteMe {{{3
-Plug 'Valloric/YouCompleteMe',
-    \ Cond(!has('nvim'),
-    \ {
-    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
-    \   'for': g:completion_filetypes['ycm'],
-    \ })
 
 " Status line {{{2
 " Airline {{{3
@@ -359,10 +355,10 @@ let g:NERDToggleCheckAllLines = 1               " Enable NERDCommenterToggle to 
 
 " Add your own custom formats or override the defaults
 let g:NERDCustomDelimiters = {
-    \ 'c': {
-    \   'left': '/**',
-    \   'right': '*/'
-    \   }
+    \ 'c':
+    \   { 'left': '/**', 'right': '*/' },
+    \ 'json':
+    \   { 'left': '//' },
     \ }
 
 " Echodoc {{{2
@@ -467,6 +463,8 @@ let g:LanguageClient_diagnosticsEnable = 0
 
 " Coc {{{2
 let g:coc_force_debug = 1
+let g:coc_status_error_sign = 'E'
+let g:coc_status_warn_sign = 'W'
 
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1

@@ -90,6 +90,8 @@ function LC_maps()
     nmap <silent> gt <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gy <Plug>(coc-references)
+    nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
+    nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
   endif
 endfunction
 

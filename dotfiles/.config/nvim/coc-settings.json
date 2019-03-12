@@ -1,6 +1,6 @@
 {
   // Diagnostics
-  "diagnostic.displayByAle": true,
+  //"diagnostic.displayByAle": true,
   "diagnostic.enable": true,
 
   // Suggestion options
@@ -10,10 +10,12 @@
 
   // Preferences
   "coc.preferences.hoverTarget": "float",
-  "coc.preferences.previewAutoClose": true,
+  // "coc.preferences.previewAutoClose": true,
+  "coc.preferences.formatOnType": true,
 
   "rust-client.channel": "stable",
   "rust.clippy_preference": "on",
+
   // Server definitions
   "languageserver": {
     "ccls": {
@@ -31,6 +33,12 @@
     "args": ["--diagnostics-style=instant"],
     "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
     "filetypes": ["go"]
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh", "bash"],
+      "ignoredRootPaths": ["~"]
     }
   }
 }

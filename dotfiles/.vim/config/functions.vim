@@ -309,6 +309,11 @@ function! LastPlace()
 
     " Options
     let open_folds = 1
+    
+    " Folds flicker and close anyway when using Coc
+    if exists('g:did_coc_loaded')
+        let open_folds = 1
+    endif
     let ignore_buftype = [
         \ 'quickfix',
         \ 'nofile',
@@ -456,8 +461,9 @@ augroup END
 if exists('g:did_coc_loaded')
     augroup coc
         autocmd!
-        " autocmd CursorHold * silent call CocActionAsync('highlight')
-        autocmd CursorHold * silent call CocActionAsync('doHover')
+        " autocmd CursorHold * silent call CocActionAsync('doHover')
+        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        autocmd User CocDiagnosticChange call lightline#update()
     augroup END
 endif
 

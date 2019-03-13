@@ -22,6 +22,7 @@ let g:completion_filetypes = {
     \   [
     \       'python',
     \       'fish',
+    \       'vim',
     \   ],
     \ 'ycm':
     \   [
@@ -44,7 +45,6 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'sh',
     \       'bash',
-    \       'vim',
     \   ],
     \ }
 
@@ -135,12 +135,6 @@ Plug 'tweekmonster/deoplete-clang2',
 
 " Vim {{{3
 Plug 'Shougo/neco-vim',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for': 'vim'
-    \ })
-
-Plug 'neoclide/coc-neco',
     \ Cond(has('nvim'),
     \ {
     \   'for': 'vim'
@@ -533,5 +527,26 @@ let g:cpp_simple_highlight = 1
 
 " Enable highlighting of named requirements (C++20 library concepts)
 let g:cpp_named_requirements_highlight = 1
+
+" Fzf {{{2
+" use bottom positioned 20% height bottom split
+let g:fzf_layout = { 'down': '~30%' }
+let g:fzf_colors = {
+    \ 'fg':      ['fg', 'Normal'],
+    \ 'bg':      ['bg', 'Clear'],
+    \ 'hl':      ['fg', 'Comment'],
+    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+    \ 'hl+':     ['fg', 'Statement'],
+    \ 'info':    ['fg', 'PreProc'],
+    \ 'prompt':  ['fg', 'Conditional'],
+    \ 'pointer': ['fg', 'Exception'],
+    \ 'marker':  ['fg', 'Keyword'],
+    \ 'spinner': ['fg', 'Label'],
+    \ 'header':  ['fg', 'Comment']
+    \ }
+
+" clever-f {{{2
+let g:clever_f_smart_case = 1                                   " Ignore case if lowercase
 
 " vim:set fdl=1:

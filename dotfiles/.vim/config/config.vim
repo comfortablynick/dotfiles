@@ -70,6 +70,12 @@ set incsearch                                                   " Move cursor to
 set hlsearch                                                    " Highlight search results
 set magic                                                       " Magic escaping for regex
 
+" use ripgrep as grepprg
+if executable('rg')
+    set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
 " Undo {{{1
 set undodir=~/.vim/undo                                         " Undo file directory
 set undofile                                                    " Enable persistent undo

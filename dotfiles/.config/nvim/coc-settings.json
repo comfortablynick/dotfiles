@@ -2,6 +2,10 @@
   // Diagnostics
   //"diagnostic.displayByAle": true,
   "diagnostic.enable": true,
+  "diagnostic.errorSign": ">>",
+  "diagnostic.hintSign": ">>",
+  "diagnostic.infoSign": ">>",
+  "diagnostic.warningSign": "--",
 
   // Suggestion options
   "suggest.echodocSupport": true,
@@ -10,7 +14,7 @@
 
   // Preferences
   "coc.preferences.hoverTarget": "float",
-  // "coc.preferences.previewAutoClose": true,
+  "coc.preferences.previewAutoClose": true,
   "coc.preferences.formatOnType": true,
 
   "rust-client.channel": "stable",

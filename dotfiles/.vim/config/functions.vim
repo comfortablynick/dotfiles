@@ -309,7 +309,7 @@ function! LastPlace()
 
     " Options
     let open_folds = 1
-    
+
     " Folds flicker and close anyway when using Coc
     if exists('g:did_coc_loaded')
         let open_folds = 1
@@ -466,8 +466,26 @@ augroup END
 "     augroup END
 " endif
 
+" Fzf {{{2
+augroup fzf
+    autocmd!
+    " Don't show status bar in fzf window
+    autocmd  FileType fzf set laststatus=0 noshowmode noruler
+      \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup END
+
 " Commands {{{1
 " Sudo save {{{2
 " Note: does not work in Neovim in some cases
 " Use `sudo -E vim {file}` to open vim while preserving user environment
 command W w !sudo tee "%" > /dev/null
+
+" Fzf {{{2
+" Use Rg as a grep command
+command! -bang -nargs=* Rg call
+    \ fzf#vim#grep(
+    \ 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+    \ <bang>0 ? fzf#vim#with_preview('up:60%')
+    \         : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \ <bang>0
+    \ )

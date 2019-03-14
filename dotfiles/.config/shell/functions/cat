@@ -2,8 +2,8 @@
 
 # use cat alternatives if installed
 
-if [ -x /usr/bin/bat ]; then
-    /usr/bin/bat "$@"
+if [ -x "$CARGO_HOME/bin/bat" ]; then
+    "$CARGO_HOME/bin/bat" "$@"
 elif [ -x "$GOBIN/ccat" ]; then
     "$GOBIN/ccat" --bg=dark "$@"
 elif [ -x /usr/local/bin/gcat ]; then

@@ -67,7 +67,7 @@ let g:vim_indent_cont = &shiftwidth                             " Indent after \
 set ignorecase                                                  " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
-set hlsearch                                                    " Highlight search results
+set nohlsearch                                                  " Don't highlight search results
 set magic                                                       " Magic escaping for regex
 
 " use ripgrep as grepprg
@@ -151,4 +151,3 @@ endif
 set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
     \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
     \,sm:block-blinkwait175-blinkoff150-blinkon175
-

@@ -470,8 +470,8 @@ augroup END
 augroup fzf
     autocmd!
     " Don't show status bar in fzf window
-    autocmd  FileType fzf set laststatus=0 noshowmode noruler
-      \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+    autocmd  FileType fzf set laststatus=0 noruler
+      \| autocmd BufLeave <buffer> set laststatus=2 ruler
 augroup END
 
 " Commands {{{1
@@ -486,6 +486,6 @@ command! -bang -nargs=* Rg call
     \ fzf#vim#grep(
     \ 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
     \ <bang>0 ? fzf#vim#with_preview('up:60%')
-    \         : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \         : fzf#vim#with_preview('right:60%:hidden', '?'),
     \ <bang>0
     \ )

@@ -163,3 +163,7 @@ noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
 " Neoformat {{{2
 noremap <silent> <F2> :Neoformat<CR>
 
+" Fzf {{{2
+" Search command history
+noremap <silent> <C-r> :History:<CR>
+noremap <silent> <C-t> :BTags   <CR>

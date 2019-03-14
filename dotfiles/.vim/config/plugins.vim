@@ -62,7 +62,6 @@ Plug 'majutsushi/tagbar',               Cond(1, { 'on': 'TagbarToggle' })
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
-Plug 'rhysd/clever-f.vim'
 Plug 'Shougo/echodoc'
 
 " Linting {{{2
@@ -529,7 +528,7 @@ let g:cpp_simple_highlight = 1
 let g:cpp_named_requirements_highlight = 1
 
 " Fzf {{{2
-" use bottom positioned 20% height bottom split
+" use bottom split
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
@@ -545,6 +544,10 @@ let g:fzf_colors = {
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment']
     \ }
+
+if has('nvim') || has('gui_running')
+  let $FZF_DEFAULT_OPTS .= ' --inline-info'
+endif
 
 " clever-f {{{2
 let g:clever_f_smart_case = 1                                   " Ignore case if lowercase

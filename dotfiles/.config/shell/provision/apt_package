@@ -41,3 +41,7 @@ w3m
 clang-format
 clang-tidy
 clang
+xvfb
+libxrender1
+libxtst6
+libxi6

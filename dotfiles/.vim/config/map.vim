@@ -13,7 +13,7 @@ let g:mapleader = ','
 
 " Editor {{{1
 " Indent/outdent {{{2
-nnoremap <Tab>   >>
+nnoremap <Leader><Tab> >>
 nnoremap <S-Tab> <<
 vnoremap <Tab>   >><Esc>gv
 vnoremap <S-Tab> <<<Esc>gv
@@ -167,3 +167,7 @@ noremap <silent> <F2> :Neoformat<CR>
 " Search command history
 noremap <silent> <C-r> :History:<CR>
 noremap <silent> <C-t> :BTags   <CR>
+nnoremap <leader>l :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
+
+" Easymotion {{{2
+nmap <silent> <Leader>m <Plug>(easymotion-bd-w)

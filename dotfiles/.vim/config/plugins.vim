@@ -62,6 +62,8 @@ Plug 'majutsushi/tagbar',               Cond(1, { 'on': 'TagbarToggle' })
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
+" Plug 'rhysd/clever-f.vim'
+Plug 'easymotion/vim-easymotion'
 Plug 'Shougo/echodoc'
 
 " Linting {{{2

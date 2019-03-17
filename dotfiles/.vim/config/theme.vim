@@ -102,7 +102,7 @@ let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git br
 let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? ' ' : '--RO-- '                  " Read-only symbol
 let g:LL_ModSymbol = ' [+]'                                     " File modified symbol
-let g:LL_SimpleSep = 0                                          " Use simple section separators instead of PL (no other effects)
+let g:LL_SimpleSep = $SUB ==# '|' ? 1 : 0                       " Use simple section separators instead of PL (no other effects)
 
 " Linter indicators
 let g:LL_LinterChecking = g:LL_nf ? "\uf110 " : '...'

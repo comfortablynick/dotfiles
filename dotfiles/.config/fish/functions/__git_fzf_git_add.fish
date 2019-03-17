@@ -1,11 +1,19 @@
-# Defined in /tmp/fish.RL79we/__git_fzf_git_add.fish @ line 2
+# Defined in /tmp/fish.acvagl/__git_fzf_git_add.fish @ line 2
 function __git_fzf_git_add
+	__git_fzf_is_in_git_repo
+    or return
+
 	set -l result
 
-    __git_fzf_git_status | \
+    # Only show unstaged changes
+    git ls-files --exclude-standard -m -o | \
+        sk-tmux -m --ansi --preview 'git diff --color=always HEAD -- {-1} | head -500' | \
+        # cut -c4- | \
+        sed 's/.* -> //' | \
         while read -l r
         set -a result $r
     end
+
     test -n "$result"
     and git add $result
 

@@ -214,8 +214,8 @@ function! RunCmd(cmd_type) abort
         \   'run': 'go run .',
         \  },
         \ 'cpp': {
-        \   'build': 'pushd build && make install; popd',
-        \   'install': 'pushd build && make install; popd',
+        \   'build': 'bash -c "pushd build && make install; popd"',
+        \   'install': 'bash -c "pushd build && make install; popd"',
         \   'run': GetRootFolderName(),
         \  },
         \ 'rust': {

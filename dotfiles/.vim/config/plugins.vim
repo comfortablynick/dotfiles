@@ -252,6 +252,9 @@ let g:ale_linters = {
     \  ],
     \ 'cpp': [],
     \ 'rust': [],
+    \ 'sh': [
+    \   'shellcheck'
+    \  ],
     \ }
 
 let g:ale_fixers = {

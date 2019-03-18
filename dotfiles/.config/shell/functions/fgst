@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# fgst - pick files from `git status -s`
+is_in_git_repo() {
+    git rev-parse HEAD >/dev/null 2>&1
+}
+
+fzf-cmd() {
+    fzf-tmux --height 50% "$@" --border --ansi
+}
+
+gst() {
+    is_in_git_repo || return
+
+    local cmd="command git -c color.status=always status --short"
+
+    eval "$cmd" |
+        fzf-cmd -m --nth 2..,.. --preview \
+            'git diff --color=always -- {-1} | sed 1,4d; cat {-1} | head -500' |
+        cut -c4- |
+        sed 's/.* -> //'
+}
+gst "$@"

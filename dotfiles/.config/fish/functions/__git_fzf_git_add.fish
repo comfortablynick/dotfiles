@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.rtsAX5/__git_fzf_git_add.fish @ line 2
+# Defined in /tmp/fish.3WLM3w/__git_fzf_git_add.fish @ line 2
 function __git_fzf_git_add
 	__git_fzf_is_in_git_repo
     or return

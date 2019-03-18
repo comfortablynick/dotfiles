@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Display git diff if available, or file contents
+
+diff="$(git diff --color=always -- "$1" | diff-so-fancy)"
+
+if [ -n "$diff" ]; then
+    echo "$diff"
+elif [[ -n $(command -v bat 2>/dev/null) ]]; then
+    bat --color=always "$1"
+else
+    cat "$1"
+fi

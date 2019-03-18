@@ -6,6 +6,7 @@
 "                         |___/
 " General Configuration
 " Application {{{1
+set shell=/bin/bash                                             " Use bash to execute commands instead of sh
 set noswapfile                                                  " Don't create freaking swap files
 set ttyfast                                                     " Terminal acceleration
 set autoread                                                    " Detect when a file has been changed outside of vim

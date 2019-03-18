@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.acvagl/__git_fzf_git_add.fish @ line 2
+# Defined in /tmp/fish.rtsAX5/__git_fzf_git_add.fish @ line 2
 function __git_fzf_git_add
 	__git_fzf_is_in_git_repo
     or return
@@ -6,9 +6,10 @@ function __git_fzf_git_add
 	set -l result
 
     # Only show unstaged changes
-    git ls-files --exclude-standard -m -o | \
+    # git ls-files --exclude-standard -m -o | \
+    git -c color.status=always status -s | \
         sk-tmux -m --ansi --preview 'git diff --color=always HEAD -- {-1} | head -500' | \
-        # cut -c4- | \
+        cut -c4- | \
         sed 's/.* -> //' | \
         while read -l r
         set -a result $r

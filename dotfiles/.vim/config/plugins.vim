@@ -250,9 +250,7 @@ let g:ale_linters = {
     \   'mypy',
     \   'pydocstyle',
     \  ],
-    \ 'cpp': [
-    \   'ccls',
-    \  ],
+    \ 'cpp': [],
     \ 'rust': [],
     \ }
 

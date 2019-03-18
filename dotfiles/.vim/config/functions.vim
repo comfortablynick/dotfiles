@@ -214,9 +214,9 @@ function! RunCmd(cmd_type) abort
         \   'run': 'go run .',
         \  },
         \ 'cpp': {
-        \   'build': 'bash -c "pushd build && make install; popd"',
-        \   'install': 'bash -c "pushd build && make install; popd"',
-        \   'run': GetRootFolderName(),
+        \   'build': 'pushd build && make install; popd',
+        \   'install': 'pushd build && make install; popd',
+        \   'run': 'pushd build && make install; popd && ' . GetRootFolderName(),
         \  },
         \ 'rust': {
         \   'build': 'cargo build',
@@ -458,13 +458,13 @@ augroup END
 
 " Coc {{{2
 " Highlight symbol under cursor on CursorHold
-" if exists('g:did_coc_loaded')
-"     augroup coc
-"         autocmd!
-"         " autocmd CursorHold * silent call CocActionAsync('doHover')
-"         " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"     augroup END
-" endif
+if exists('g:did_coc_loaded')
+    augroup coc
+        autocmd!
+        autocmd CursorHold * silent call CocActionAsync('doHover')
+        " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    augroup END
+endif
 
 " Fzf {{{2
 augroup fzf

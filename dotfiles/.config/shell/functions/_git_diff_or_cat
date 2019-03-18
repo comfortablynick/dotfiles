@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Display git diff if available, or file contents
 
+[ -z "$1" ] && echo "error: file argument is needed" && exit 1
+
 diff="$(git diff --color=always -- "$1" | diff-so-fancy)"
 
 if [ -n "$diff" ]; then

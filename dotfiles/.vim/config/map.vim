@@ -166,8 +166,8 @@ noremap <silent> <F2> :Neoformat<CR>
 " Fzf {{{2
 " Search command history
 noremap <silent> <C-r> :History:<CR>
-noremap <silent> <C-t> :BTags   <CR>
-nnoremap <leader>l :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
-
-" Easymotion {{{2
-nmap <silent> <Leader>m <Plug>(easymotion-bd-w)
+noremap <silent> <C-t> :BTags<CR>
+nnoremap <silent> <Leader>m :BTags<CR>
+nnoremap <silent> <Leader>l :BLines<CR>
+nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
+" nnoremap <leader>k :call fzf#vim#buffer_lines(expand('<cword>'))<CR>

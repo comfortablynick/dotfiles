@@ -203,7 +203,11 @@ if test "$FISH_THEME" = 'bobthefish'
     # Set options if term windows is narrow-ish
     set -g theme_short_prompt_cols 200
     set -g theme_newline_cursor yes
-    set -g theme_display_date yes 
+    set -g theme_display_date yes
+
+    # Are the fancy fonts needed?
+    set -g theme_powerline_fonts no
+    set -g theme_nerd_fonts no
 
     # Git
     set -g theme_display_git_master_branch yes
@@ -233,7 +237,7 @@ end
 # pure {{{2
 # prompt text
 if test "$FISH_THEME" = 'pure'
-    set pure_symbol_prompt "✖" # "❯"
+    set pure_symbol_prompt "❯" # "✖"
     set pure_symbol_git_down_arrow '↓' # "⇣"
     set pure_symbol_git_up_arrow '↑' #  "⇡"
     set pure_symbol_git_dirty "*"

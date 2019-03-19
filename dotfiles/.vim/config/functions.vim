@@ -208,21 +208,22 @@ endfunction
 " Run code {{{2
 " RunCmd() :: build command based on file type and command type {{{3
 function! RunCmd(cmd_type) abort
+    " Preface commands with space to exclude from fish history
     let l:ft_cmds = {
         \ 'go': {
-        \   'build': 'go install',
-        \   'run': 'go run .',
+        \   'build': ' go install',
+        \   'run': ' go run .',
         \  },
         \ 'cpp': {
-        \   'build': 'pushd build && make install; popd',
-        \   'install': 'pushd build && make install; popd',
-        \   'run': 'pushd build && make install; popd && ' . GetRootFolderName(),
+        \   'build': ' pushd build && make install; popd',
+        \   'install': ' pushd build && make install; popd',
+        \   'run': ' pushd build && make install; popd && ' . GetRootFolderName(),
         \  },
         \ 'rust': {
-        \   'build': 'cargo build',
-        \   'build-release': 'cargo build --release',
-        \   'install': 'cargo install -f --path .',
-        \   'run': 'cargo run',
+        \   'build': ' cargo build',
+        \   'build-release': ' cargo build --release',
+        \   'install': ' cargo install -f --path .',
+        \   'run': ' cargo run',
         \  },
         \ }
     let l:ft = get(l:ft_cmds, &filetype, {})

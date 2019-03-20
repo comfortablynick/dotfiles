@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+declare -A colors
+colors[red]=$(tput setaf 1)
+colors[green]=$(tput setaf 2)
+colors[yellow]=$(tput setaf 3)
+colors[blue]=$(tput setaf 4)
+colors[reset]=$(tput sgr0)
+
+name="fgit"
+
+color() {
+    local c
+    c="$1"
+    shift
+    printf '%s%s' "${colors[$c]}" "$(tput bold)"
+    printf '%s\n' "$@"
+    printf '%s' "${colors[reset]}"
+}
+
+err() {
+    color red "$@" >&2
+}
+
+die() {
+    [[ -n "$1" ]] && err "$1"
+    exit 1
+}
+
+fgit::usage() {
+    LESS=-FEXR less <<HELP
+$name [command]
+    Execute git commands with fuzzy finder.
+
+    COMMANDS
+    help      Show this help message and exit
+    status    Show status of the working tree
+    add       Stage selected files for commit
+
+    The default command is \`help\`.
+HELP
+}
+
+fgit::warn() { printf "%b[Warn]%b %s\n" '\e[0;33m' '\e[0m' "$@" >&2; }
+fgit::info() { printf "%b[Info]%b %s\n" '\e[0;32m' '\e[0m' "$@" >&2; }
+fgit::inside_work_tree() { git rev-parse --is-inside-work-tree >/dev/null; }
+
+fgit::fzf() {
+    # Build array with command options
+    # Make it easy to remove any option for testing
+    FZF_OPTS=("$FZF_DEFAULT_OPTS")
+    FZF_OPTS+=("--ansi")
+    FZF_OPTS+=("--bind='alt-k:preview-up,alt-p:preview-up'")
+    FZF_OPTS+=("--bind='alt-j:preview-down,alt-n:preview-down'")
+    FZF_OPTS+=("--bind='ctrl-r:toggle-all'")
+    FZF_OPTS+=("--bind='ctrl-s:toggle-sort'")
+    FZF_OPTS+=("--bind='?:toggle-preview'")
+    FZF_OPTS+=("--preview-window='right:60%'")
+    FZF_OPTS+=("--bind='alt-w:toggle-preview-wrap'")
+    FZF_OPTS+=("--border")
+    FZF_OPTS+=("--reverse")
+    FZF_OPTS+=("--header 'Press ? to toggle preview'")
+    export FZF_DEFAULT_OPTS="${FZF_OPTS[*]}"
+    fzf-tmux "$@"
+}
+
+# git diff with preview -- only unstaged files
+fgit::diff() {
+    fgit::inside_work_tree || return 1
+    local changed unmerged untracked files
+    changed=$(git config --get-color color.status.changed red)
+    unmerged=$(git config --get-color color.status.unmerged red)
+    untracked=$(git config --get-color color.status.untracked red)
+    deleted=$(git config --get-color color.status.deleted red)
+    files=$(git -c color.status=always status --short |
+        rg -F -e "$changed" -e "$unmerged" -e "$untracked" -e "$deleted" |
+        awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
+        fgit::fzf -0 -m --nth 2..,.. \
+            --preview="_git_diff_or_cat {-1}" |
+        cut -d] -f2 |
+        sed 's/.* -> //') # for rename case
+}
+
+# git status with preview -- staged/unstaged files
+fgit::status() {
+    fgit::inside_work_tree || return 1
+    local files
+    files=$(git -c color.status=always status --short |
+        awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
+        fgit::fzf -0 -m --nth 2..,.. \
+            --preview="_git_diff_or_cat {-1}" |
+        cut -d] -f2 |
+        sed 's/.* -> //') # for rename case
+}
+
+# git add selector with preview -- only unstaged files
+fgit::add() {
+    fgit::inside_work_tree || return 1
+    local changed unmerged untracked files
+    changed=$(git config --get-color color.status.changed red)
+    unmerged=$(git config --get-color color.status.unmerged red)
+    untracked=$(git config --get-color color.status.untracked red)
+    files=$(git -c color.status=always status --short |
+        rg -F -e "$changed" -e "$unmerged" -e "$untracked" |
+        awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
+        fgit::fzf -0 -m --nth 2..,.. \
+            --preview="_git_diff_or_cat {-1}" |
+        cut -d] -f2 |
+        sed 's/.* -> //') # for rename case
+    if [ -n "$files" ]; then
+        echo "$files" | xargs -I {} git add {} &&
+            printf "%s%s%s\n" "$(tput setaf 4)" "$(tput bold)" "Add complete:" &&
+            git status --short
+        return
+    fi
+    color yellow "Nothing to add"
+}
+
+parse_cmd() {
+    # handle commands
+    while true; do
+        case "$1" in
+        -h | --help | help)
+            fgit::usage
+            exit
+            ;;
+        add)
+            fgit::add
+            break
+            ;;
+        diff)
+            fgit::diff
+            break
+            ;;
+        status)
+            fgit::status
+            break
+            ;;
+        '')
+            fgit::usage
+            break
+            ;;
+        *)
+            die "error: command '$1' not found"
+            exit
+            ;;
+        esac
+    done
+}
+
+parse_cmd "$@"
+# fgit::add "$@"

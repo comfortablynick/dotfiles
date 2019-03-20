@@ -276,6 +276,8 @@ function! LL_IsNotFile() abort "{{{3
         \ 'gitcommit',
         \ 'NERD_tree',
         \ 'output',
+        \ 'vista',
+        \ 'undotree',
         \ ]
     for item in exclude
         if &filetype =~? item || expand('%:t') =~ item

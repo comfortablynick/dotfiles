@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-for fgbg in 38 48; do # Foreground / Background
-    for color in {0..255}; do # Colors
+declare fgbg, color
+for fgbg in 38 48; do # print foreground example, then background
+    for ((color = 0; color < 256; color++)); do
         # Display the color
         printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
-        # Display 6 colors per lines
-        if [ $((($color + 1) % 6)) == 4 ]; then
-            echo # New line
+
+        # Display 6 colors per line
+        if [ $(($((color + 1)) % 6)) == 4 ]; then
+            echo
         fi
     done
-    echo # New line
+    echo
 done
 
 exit 0

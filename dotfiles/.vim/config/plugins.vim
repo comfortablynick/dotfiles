@@ -63,6 +63,7 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'Shougo/echodoc'
+Plug 'liuchengxu/vista.vim'
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it

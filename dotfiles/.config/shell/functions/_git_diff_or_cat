@@ -1,14 +1,38 @@
 #!/usr/bin/env bash
 # Display git diff if available, or file contents
 
-[ -z "$1" ] && echo "error: file argument is needed" && exit 1
-
-diff="$(git diff --color=always -- "$1" | diff-so-fancy)"
-
-if [ -n "$diff" ]; then
-    echo "$diff"
-elif [[ -n $(command -v bat 2>/dev/null) ]]; then
-    bat --color=always "$1"
-else
-    cat "$1"
+if [ -z "$1" ]; then
+    printf "%s%s\n" "$(tput setaf 1)" "error: file argument is needed"
+    exit 1
 fi
+
+out="$(printf "%s%s%s" "$(tput setaf 4)" "$(tput bold)" "Press ALT-k/ALT-j to scroll preview")"
+
+if [ -d "$1" ]; then
+    echo "$out"
+    $FZF_PREVIEW_DIR_CMD "$1"
+    exit 0
+fi
+
+diff="$(git diff --color=always HEAD -- "$1" | diff-so-fancy)"
+if [ -n "$diff" ]; then
+    echo "$out"
+    echo "$diff"
+    exit 0
+fi
+
+bat="$(bat --color=always "$1" 2>/dev/null)"
+if [ -n "$bat" ]; then
+    echo "$out"
+    echo "$bat"
+    exit 0
+fi
+
+cat="$(cat "$1" 2>/dev/null)"
+if [ -n "$cat" ]; then
+    echo "$out"
+    echo "$cat"
+    exit 0
+fi
+
+printf "%s%s\n" "$(tput setaf 1)" "Cannot preview this file"

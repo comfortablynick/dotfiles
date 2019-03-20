@@ -206,7 +206,7 @@ if test "$FISH_THEME" = 'bobthefish'
     set -g theme_display_date yes
 
     # Are the fancy fonts needed?
-    set -g theme_powerline_fonts no
+    set -g theme_powerline_fonts yes
     set -g theme_nerd_fonts no
 
     # Git

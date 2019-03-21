@@ -2,11 +2,22 @@
 # list directories in $PATH, press [enter] on an entry to list the executables inside.
 # press [escape] to go back to directory listing, [escape] twice to exit completely
 
-# TODO: use preview command to show all executables in dir
+fzf_opts=("$FZF_DEFAULT_OPTS")
+fzf_opts+=("--header='PATH explorer'")
+fzf_opts+=("--bind='alt-k:preview-up,alt-p:preview-up'")
+fzf_opts+=("--bind='alt-j:preview-down,alt-n:preview-down'")
+fzf_opts+=("--bind='ctrl-r:toggle-all'")
+fzf_opts+=("--bind='ctrl-s:toggle-sort'")
+fzf_opts+=("--bind='?:toggle-preview'")
+fzf_opts+=("--preview-window='right:60%'")
+fzf_opts+=("--bind='alt-w:toggle-preview-wrap'")
+fzf_opts+=("--border")
+fzf_opts+=("--reverse")
+fzf_opts+=("--preview='fd . {} -t x -d 1 --color=always'")
 
-loc=$(echo "$PATH" | sed -e $'s/:/\\\n/g' | eval "fzf-tmux ${FZF_DEFAULT_OPTS} --header='[find:path]'")
+# loc=$(echo "$PATH" | sed -e $'s/:/\\\n/g' | eval "fzf-tmux ${FZF_DEFAULT_OPTS} --header='[find:path]' --preview='fd . {} -t x -d 1 --color=always'")
+loc=$(echo "$PATH" | sed -e $'s/:/\\\n/g' | eval "fzf-tmux ${fzf_opts[*]}")
 
 if [ -d "$loc" ]; then
-    rg --files "$loc" | rev | cut -d"/" -f1 | rev | eval "fzf-tmux ${FZF_DEFAULT_OPTS} --header='[find:exe] => ${loc}' >/dev/null"
-    fpath
+    rg --files "$loc"
 fi

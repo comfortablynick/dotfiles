@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 declare -A colors
-colors[red]=$(tput setaf 1)
-colors[green]=$(tput setaf 2)
-colors[yellow]=$(tput setaf 3)
-colors[blue]=$(tput setaf 4)
+colors[red]=$(tput setaf 1 && tput bold)
+colors[green]=$(tput setaf 2 && tput bold)
+colors[yellow]=$(tput setaf 3 && tput bold)
+colors[blue]=$(tput setaf 4 && tput bold)
 colors[reset]=$(tput sgr0)
 
 name="fgit"
@@ -17,33 +17,17 @@ color() {
     printf '%s' "${colors[reset]}"
 }
 
-err() {
-    color red "$@" >&2
-}
-
-die() {
-    [[ -n "$1" ]] && err "$1"
-    exit 1
-}
-
-fgit::usage() {
-    LESS=-FEXR less <<HELP
-$name [command]
-    Execute git commands with fuzzy finder.
-
-    COMMANDS
-    help      Show this help message and exit
-    status    Show status of the working tree
-    add       Stage selected files for commit
-
-    The default command is \`help\`.
-HELP
-}
-
-fgit::warn() { printf "%b[Warn]%b %s\n" '\e[0;33m' '\e[0m' "$@" >&2; }
-fgit::info() { printf "%b[Info]%b %s\n" '\e[0;32m' '\e[0m' "$@" >&2; }
+# utility functions
+fgit::die() { [ -n "$1" ] && fgit::err "$1" && exit 1; }
+fgit::err() { color red "$@" >&2; }
 fgit::inside_work_tree() { git rev-parse --is-inside-work-tree >/dev/null; }
 
+# log functions
+fgit::error() { printf "%b[ERROR]%b %s\n" "${colors[red]}" '\e[0m' "$@" >&2; }
+fgit::warn() { printf "%b[WARN]%b %s\n" "${colors[yellow]}" '\e[0m' "$@" >&2; }
+fgit::info() { printf "%b[INFO]%b %s\n" "${colors[green]}" '\e[0m' "$@" >&2; }
+
+# build fzf command
 fgit::fzf() {
     # Build array with command options
     # Make it easy to remove any option for testing
@@ -63,56 +47,87 @@ fgit::fzf() {
     fzf-tmux "$@"
 }
 
-# git diff with preview -- only unstaged files
-fgit::diff() {
+# base fzf command -- returns selected files
+fgit::get_selected() {
+    # params
+    # $1: '1' to show all files (staged and unstaged)
     fgit::inside_work_tree || return 1
     local changed unmerged untracked files
     changed=$(git config --get-color color.status.changed red)
     unmerged=$(git config --get-color color.status.unmerged red)
     untracked=$(git config --get-color color.status.untracked red)
-    deleted=$(git config --get-color color.status.deleted red)
     files=$(git -c color.status=always status --short |
-        rg -F -e "$changed" -e "$unmerged" -e "$untracked" -e "$deleted" |
+        if [ ! "$1" = "1" ]; then
+            # Show only unstaged
+            rg -F -e "$changed" -e "$unmerged" -e "$untracked"
+        else
+            cat
+        fi |
         awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
         fgit::fzf -0 -m --nth 2..,.. \
             --preview="_git_diff_or_cat {-1}" |
         cut -d] -f2 |
         sed 's/.* -> //') # for rename case
+    echo "$files"
+}
+
+# git diff with preview -- only unstaged files
+# same as `status` but shows only unstaged
+fgit::diff() {
+    fgit::get_selected >/dev/null 2>&1
 }
 
 # git status with preview -- staged/unstaged files
+# view only (no output)
 fgit::status() {
-    fgit::inside_work_tree || return 1
-    local files
-    files=$(git -c color.status=always status --short |
-        awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
-        fgit::fzf -0 -m --nth 2..,.. \
-            --preview="_git_diff_or_cat {-1}" |
-        cut -d] -f2 |
-        sed 's/.* -> //') # for rename case
+    fgit::get_selected 1 >/dev/null 2>&1
 }
 
 # git add selector with preview -- only unstaged files
+# output is piped to `git add`
 fgit::add() {
-    fgit::inside_work_tree || return 1
-    local changed unmerged untracked files
-    changed=$(git config --get-color color.status.changed red)
-    unmerged=$(git config --get-color color.status.unmerged red)
-    untracked=$(git config --get-color color.status.untracked red)
-    files=$(git -c color.status=always status --short |
-        rg -F -e "$changed" -e "$unmerged" -e "$untracked" |
-        awk '{printf "[%10s]  ", $1; $1=""; print $0}' |
-        fgit::fzf -0 -m --nth 2..,.. \
-            --preview="_git_diff_or_cat {-1}" |
-        cut -d] -f2 |
-        sed 's/.* -> //') # for rename case
+    local files
+    files=$(fgit::get_selected)
     if [ -n "$files" ]; then
         echo "$files" | xargs -I {} git add {} &&
             printf "%s%s%s\n" "$(tput setaf 4)" "$(tput bold)" "Add complete:" &&
             git status --short
         return
     fi
-    color yellow "Nothing to add"
+    fgit::info "Nothing to add"
+}
+
+# git unstage
+# output is piped to `git reset`
+fgit::unstage() {
+    # TODO: add command to show only staged
+    local files
+    files=$(fgit::get_selected 1)
+    if [ -n "$files" ]; then
+        echo "$files" | xargs -I {} git reset HEAD {} >/dev/null &&
+            printf "%s%s%s\n" "$(tput setaf 4)" "$(tput bold)" "Reset complete:" &&
+            git status --short
+        return
+    fi
+    # color yellow "Nothing to unstage"
+    fgit::warn "Nothing to unstage"
+}
+
+# print fgit help
+fgit::help() {
+    LESS=-FEXR less <<HELP
+$name [command]
+    Execute git commands with fuzzy finder.
+
+    COMMANDS
+    help      Show this help message and exit
+
+    add       Stage selected files for commit
+    status    Show status of the working tree
+    diff      Show unstaged files with diff window
+
+    Without a command, \`help\` will be executed.
+HELP
 }
 
 parse_cmd() {
@@ -120,7 +135,7 @@ parse_cmd() {
     while true; do
         case "$1" in
         -h | --help | help)
-            fgit::usage
+            fgit::help
             exit
             ;;
         add)
@@ -135,12 +150,17 @@ parse_cmd() {
             fgit::status
             break
             ;;
+        unstage)
+            fgit::unstage
+            break
+            ;;
         '')
-            fgit::usage
+            fgit::err "error: command needed"
+            fgit::help
             break
             ;;
         *)
-            die "error: command '$1' not found"
+            fgit::die "command '$1' not found"
             exit
             ;;
         esac

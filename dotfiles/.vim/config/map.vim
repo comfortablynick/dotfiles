@@ -133,6 +133,7 @@ function LC_maps() abort
         nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
         nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
         nnoremap <silent> <Leader>d :CocList diagnostics<cr>
+        nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
     endif
 endfunction
 
@@ -166,8 +167,16 @@ noremap <silent> <F2> :Neoformat<CR>
 " Fzf {{{2
 " Search command history
 noremap <silent> <C-r> :History:<CR>
+
+" Tags
 noremap <silent> <C-t> :BTags<CR>
-nnoremap <silent> <Leader>m :BTags<CR>
-nnoremap <silent> <Leader>l :BLines<CR>
 nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
+" nnoremap <silent> <Leader>m :BTags<CR>
+
+if !exists('g:did_coc_loaded')
+    nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
+end
+
+" Search/lines
+nnoremap <silent> <Leader>l :BLines<CR>
 " nnoremap <leader>k :call fzf#vim#buffer_lines(expand('<cword>'))<CR>

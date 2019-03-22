@@ -457,15 +457,21 @@ augroup fmtopts
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
 
-" Coc {{{2
-" Highlight symbol under cursor on CursorHold
-" if exists('g:did_coc_loaded')
-"     augroup coc
-"         autocmd!
-"         autocmd CursorHold * silent call CocActionAsync('doHover')
-"         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"     augroup END
-" endif
+" Language Client {{{2
+" LC_cmds() :: set autocmds if LC is loaded
+function! LC_cmds() abort
+    if ! exists('g:did_coc_loaded')
+        return
+    endif
+    autocmd LC CursorHold * call CocActionAsync('doHover') " Hover on cursor hold
+    autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
+endfunction
+
+" Call func to set autocmds if LC is loaded
+augroup LC
+    autocmd!
+    autocmd FileType * call LC_cmds()
+augroup END
 
 " Fzf {{{2
 augroup fzf
@@ -482,7 +488,9 @@ augroup END
 command W w !sudo tee "%" > /dev/null
 
 " Fzf {{{2
-" Use Rg as a grep command
+" Rg with preview window {{{3
+"   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key
+"   :Rg! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Rg call
     \ fzf#vim#grep(
     \ 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
@@ -490,3 +498,19 @@ command! -bang -nargs=* Rg call
     \         : fzf#vim#with_preview('right:60%:hidden', '?'),
     \ <bang>0
     \ )
+
+" Ag with preview window {{{3
+"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
+"   :Ag! - Start fzf in fullscreen and display the preview window above
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:60%:hidden', '?'),
+  \                 <bang>0)
+
+" Files command with preview window {{{3
+command! -bang -nargs=* -complete=dir Files
+  \ call fzf#vim#files(<q-args>,
+  \                    <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                            : fzf#vim#with_preview('right:60%', '?'),
+  \                    <bang>0)

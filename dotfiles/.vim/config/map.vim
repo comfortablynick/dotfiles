@@ -138,10 +138,7 @@ function LC_maps() abort
     endif
 endfunction
 
-augroup LC
-    autocmd!
-    autocmd FileType * call LC_maps()
-augroup END
+autocmd LC FileType * call LC_maps()
 
 " Paste from register
 nnoremap <Leader>0 "0p<CR>

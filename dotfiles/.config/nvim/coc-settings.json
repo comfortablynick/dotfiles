@@ -32,12 +32,14 @@
          }
        }
     },
+
   "golang": {
     "command": "bingo",
     "args": ["--diagnostics-style=instant"],
     "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
     "filetypes": ["go"]
     },
+
     "bash": {
       "command": "bash-language-server",
       "args": ["start"],

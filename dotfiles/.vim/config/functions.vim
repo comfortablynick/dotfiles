@@ -459,7 +459,7 @@ augroup END
 
 " Language Client {{{2
 " LC_cmds() :: set autocmds if LC is loaded
-function! LC_cmds() abort
+function! s:LC_cmds() abort
     if ! exists('g:did_coc_loaded')
         return
     endif
@@ -470,7 +470,7 @@ endfunction
 " Call func to set autocmds if LC is loaded
 augroup LC
     autocmd!
-    autocmd FileType * call LC_cmds()
+    autocmd FileType * call <SID>LC_cmds()
 augroup END
 
 " Fzf {{{2
@@ -480,6 +480,13 @@ augroup fzf
     autocmd  FileType fzf set laststatus=0 noruler
       \| autocmd BufLeave <buffer> set laststatus=2 ruler
 augroup END
+
+" Vim Tmux Runner {{{2
+" Close runner when exiting vim
+" augroup vtr
+"     autocmd!
+"     autocmd QuitPre * :VtrKillRunner<CR>
+" augroup END
 
 " Commands {{{1
 " Sudo save {{{2

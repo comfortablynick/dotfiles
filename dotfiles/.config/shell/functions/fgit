@@ -97,6 +97,19 @@ fgit::add() {
     fgit::info "Nothing to add"
 }
 
+# git checkout master -- discard changes
+fgit::checkout() {
+    local files
+    files=$(fgit::get_selected)
+    if [ -n "$files" ]; then
+        echo "$files" | xargs -I {} git checkout master {} &&
+            printf "%s%s%s\n" "$(tput setaf 4)" "$(tput bold)" "Checkout complete:" &&
+            git status --short
+        return
+    fi
+    fgit::info "Nothing to checkout"
+}
+
 # git unstage
 # output is piped to `git reset`
 fgit::unstage() {
@@ -117,16 +130,17 @@ fgit::unstage() {
 fgit::help() {
     LESS=-FEXR less <<HELP
 $name [command]
-    Execute git commands with fuzzy finder.
+Execute git commands with fuzzy finder.
 
-    COMMANDS
-    help      Show this help message and exit
+COMMANDS:
+  help      Show this help message and exit
 
-    add       Stage selected files for commit
-    status    Show status of the working tree
-    diff      Show unstaged files with diff window
+  add       Stage selected files for commit
+  status    Show status of the working tree
+  diff      Show unstaged files with diff window
+  checkout  Discard edits to selected files and reset to master
 
-    Without a command, \`help\` will be executed.
+Without a command, \`help\` will be executed.
 HELP
 }
 
@@ -152,6 +166,10 @@ parse_cmd() {
             ;;
         unstage)
             fgit::unstage
+            break
+            ;;
+        checkout)
+            fgit::checkout
             break
             ;;
         '')

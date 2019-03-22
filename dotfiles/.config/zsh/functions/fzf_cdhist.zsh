@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-echo "${$(dirs)// /\n}" | $(__fzfcmd)
+echo "${$(dirs)// /\n}" | fzf-tmux

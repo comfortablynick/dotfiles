@@ -459,13 +459,13 @@ augroup END
 
 " Coc {{{2
 " Highlight symbol under cursor on CursorHold
-if exists('g:did_coc_loaded')
-    augroup coc
-        autocmd!
-        autocmd CursorHold * silent call CocActionAsync('doHover')
-        " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    augroup END
-endif
+" if exists('g:did_coc_loaded')
+"     augroup coc
+"         autocmd!
+"         autocmd CursorHold * silent call CocActionAsync('doHover')
+"         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+"     augroup END
+" endif
 
 " Fzf {{{2
 augroup fzf

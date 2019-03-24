@@ -460,6 +460,7 @@ let g:LanguageClient_diagnosticsEnable = 0
 let g:coc_force_debug = 1
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'
+let g:coc_snippet_next = '<tab>'
 
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1

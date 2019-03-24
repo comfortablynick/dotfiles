@@ -121,8 +121,14 @@ nmap <silent> <Leader>f <Plug>(ale_next_wrap)
 nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
 
 " Coc language client {{{2
+" Helper function for <TAB> completion keymap
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 " Remap only if active for filetype
-function LC_maps() abort
+function s:coc_maps() abort
     if exists('g:did_coc_loaded')
         nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
         nmap <silent> gd <Plug>(coc-definition)
@@ -135,10 +141,16 @@ function LC_maps() abort
         nnoremap <silent> <Leader>d :CocList diagnostics<cr>
         nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
         noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
+        " Map <TAB> as universal key to complete, accept snippets, jump
+        inoremap <silent><expr> <TAB>
+              \ pumvisible() ? coc#_select_confirm() :
+              \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+              \ <SID>check_back_space() ? "\<TAB>" :
+              \ coc#refresh()
     endif
 endfunction
 
-autocmd LC FileType * call LC_maps()
+autocmd LC FileType * call <SID>coc_maps()
 
 " Paste from register
 nnoremap <Leader>0 "0p<CR>

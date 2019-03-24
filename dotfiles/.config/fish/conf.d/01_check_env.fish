@@ -1,5 +1,5 @@
 # Check env.toml file for changes compared with previous checksum
-set -l env_sha (string split ' ' (sha1sum "$HOME/dotfiles/dotfiles/env.toml"))[1]
+set -l env_sha (string split ' ' (sha1 "$HOME/dotfiles/dotfiles/env.toml"))[1]
 
 if test "$env_sha" = "$env_toml_sha"
     # No changes; we're good!

@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+PATH="$(path_remove "$PWD")"
+
 # Wrapper for (g)sha1sum
-cmd=$(type -p sha1sum || type -p gsha1sum)
-$cmd $@
+# cmd="$(type -p sha1sum || type -p gsha1sum)"
+if [ -n "$(command -v sha1sum 2>/dev/null)" ]; then
+    sha1sum "$@"
+else
+    gsha1sum "$@"
+fi

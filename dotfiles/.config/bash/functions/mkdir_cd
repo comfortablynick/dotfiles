@@ -3,8 +3,8 @@
 # Make directory if it doesn't exist and CD into it
 
 mkdir_cd() {
-    mkdir -p -- "$1"
-    cd $1
+    mkdir -p -- "$1" &&
+        cd "$1" || exit 1
 }
 
 mkdir_cd "$@"

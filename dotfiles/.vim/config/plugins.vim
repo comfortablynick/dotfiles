@@ -103,6 +103,7 @@ Plug 'skywind3000/asyncrun.vim'
 " Snippets {{{2
 Plug 'Shougo/neosnippet.vim',           Cond(has('nvim'))
 Plug 'Shougo/neosnippet-snippets',      Cond(has('nvim'))
+Plug 'honza/vim-snippets',              Cond(has('nvim'))
 
 " Building {{{2
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
@@ -460,7 +461,7 @@ let g:LanguageClient_diagnosticsEnable = 0
 let g:coc_force_debug = 1
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'
-let g:coc_snippet_next = '<tab>'
+let g:coc_snippet_next = '<tab>'                                " See map.vim
 
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1

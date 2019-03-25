@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-declare fgbg, color
 for fgbg in 38 48; do # print foreground example, then background
     for ((color = 0; color < 256; color++)); do
         # Display the color

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 # use cat alternatives if installed
-dir="$(dirname "$(realpath "$0")")"
-PATH="$(path_remove "$dir")"
+cmd="cat"
 
 if [ -n "$(command -v bat 2>/dev/null)" ]; then
-    bat "$@"
+    cmd="bat"
 elif [ -n "$(command -v ccat 2>/dev/null)" ]; then
-    ccat "$@"
+    cmd="ccat"
 elif [ -n "$(command -v gcat 2>/dev/null)" ]; then
-    gcat "$@"
-else
-    cat "$@"
+    cmd="gcat"
 fi
+
+PATH="$(path_remove "$(dirname "$0")")"
+exec "$cmd" "$@"

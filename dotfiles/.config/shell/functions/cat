@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # use cat alternatives if installed
-
-PATH="$(path_remove "$PWD")"
+dir="$(dirname "$(realpath "$0")")"
+PATH="$(path_remove "$dir")"
 
 if [ -n "$(command -v bat 2>/dev/null)" ]; then
     bat "$@"

@@ -71,6 +71,10 @@ dotfiles:
     dst: ~/.config/topydo
     link: true
     src: .config/topydo
+  d_ultisnips:
+    dst: ~/.config/coc/ultisnips
+    link: true
+    src: .config/coc/ultisnips
   d_xonsh:
     dst: ~/.config/xonsh
     link: true
@@ -180,6 +184,7 @@ profiles:
     - d_shell
     - d_topydo
     - d_tmux
+    - d_ultisnips
     - d_xonsh
     - d_zsh
   io:

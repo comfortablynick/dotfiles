@@ -1,4 +1,4 @@
-# TMUX Initialization
+# TMUX Initialization (called from .bashrc)
 # Abort if
 #       - already in tmux
 #       - 'no tmux' file exists in home dir for this shell
@@ -7,6 +7,17 @@
 
 if [ ! -f "$HOME/.no_bash_tmux_next_login" ]; then
     # Start tmux
+    if [ "$COLUMNS" -gt 200 ]; then
+            export SEP=''
+            export SUB=''
+            export RSEP=''
+            export RSUB=''
+        else
+            export SEP=''
+            export SUB='|'
+            export RSEP=''
+            export RSUB='|'
+        fi
     session_name=""
     echo "Starting tmux..."
     [ -n "$SSH_CONNECTION" ] && session_name="ios" || session_name="def"

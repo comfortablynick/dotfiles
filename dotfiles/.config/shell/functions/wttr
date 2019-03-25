@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Load weather in terminal
 
 # Formats:
@@ -10,10 +9,8 @@
 
 host="$(hostname)"
 
-if [ "$host" = "jupiter" ]; then
-    location="Denton+TX"
-else
-    location="Lewisville+TX"
-fi
+loc="75067"
+[ "$host" = "jupiter" ] && loc="76207"
+loc="${1:-$loc}"
 
-curl "wttr.in/$location$@"
+curl "wttr.in/$loc"

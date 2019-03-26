@@ -1,11 +1,13 @@
 {
   // Diagnostics
-  //"diagnostic.displayByAle": true,
   "diagnostic.enable": true,
   "diagnostic.errorSign": ">>",
   "diagnostic.hintSign": ">>",
   "diagnostic.infoSign": ">>",
   "diagnostic.warningSign": "--",
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.joinMessageLines": true,
+  "diagnostic.messageTarget": "float",
 
   // Suggestion options
   "suggest.echodocSupport": true,

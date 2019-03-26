@@ -129,30 +129,31 @@ endfunction
 
 " Remap only if active for filetype
 function s:coc_maps() abort
-    if exists('g:did_coc_loaded')
-        nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
-        nmap <silent> gd <Plug>(coc-definition)
-        nmap <silent> gr <Plug>(coc-rename)
-        nmap <silent> gt <Plug>(coc-type-definition)
-        nmap <silent> gi <Plug>(coc-implementation)
-        nmap <silent> gy <Plug>(coc-references)
-        nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
-        nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
-        nnoremap <silent> <Leader>d :CocList diagnostics<cr>
-        nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
-        noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
-
-        " Map <TAB> as key to scroll completion results and jump through
-        " snippets
-        inoremap <silent><expr> <TAB>
-              \ pumvisible() ? "\<C-n>" :
-              \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
-              \ <SID>check_back_space() ? "\<TAB>" :
-              \ coc#refresh()
-        inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-        " Use <CR> to select snippet/completion
-        inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    if !exists('g:did_coc_loaded')
+        return
     endif
+    nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gr <Plug>(coc-rename)
+    nmap <silent> gt <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gy <Plug>(coc-references)
+    nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
+    nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
+    nnoremap <silent> <Leader>d :CocList diagnostics<cr>
+    nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
+    noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
+
+    " Map <TAB> as key to scroll completion results and jump through
+    " snippets
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+    " Use <CR> to select snippet/completion
+    inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endfunction
 
 autocmd LC FileType * call <SID>coc_maps()

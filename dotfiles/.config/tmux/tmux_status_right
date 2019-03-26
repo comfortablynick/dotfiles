@@ -11,8 +11,13 @@ SP=' '
 RSUB="${RSUB}"
 
 # Status commands
-MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
-LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
+if [ -n "$(command -v tmux-top 2>/dev/null)" ]; then
+    MEMUSAGE="$(tmux-top m)"
+    LOADAVG="$(tmux-top l)"
+else
+    MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
+    LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
+fi
 
 if [ "$MEMUSAGE" = "0.0%" ]; then
     SYSLOAD="$LOADAVG"

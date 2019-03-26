@@ -457,20 +457,20 @@ augroup fmtopts
     autocmd BufNewFile,BufRead * setlocal formatoptions-=o
 augroup END
 
-" Language Client {{{2
-" LC_cmds() :: set autocmds if LC is loaded
-function! s:LC_cmds() abort
+" Coc {{{2
+" coc_cmds() :: set autocmds if LC is loaded
+function! s:coc_cmds() abort
     if ! exists('g:did_coc_loaded')
         return
     endif
     autocmd LC CursorHold * call CocActionAsync('doHover') " Hover on cursor hold
-    autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
+    " autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
 endfunction
 
 " Call func to set autocmds if LC is loaded
 augroup LC
     autocmd!
-    autocmd FileType * call <SID>LC_cmds()
+    autocmd FileType * call <SID>coc_cmds()
 augroup END
 
 " Fzf {{{2

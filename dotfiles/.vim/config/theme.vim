@@ -16,7 +16,6 @@ let g:airline_themes = {
     \ 'papercolor': 'papercolor',
     \ 'PaperColor': 'PaperColor',
     \ 'gruvbox': 'gruvbox',
-    \ 'apprentice': 'apprentice',
     \ }
 " Lightline {{{1
 " Status bar definition {{{2

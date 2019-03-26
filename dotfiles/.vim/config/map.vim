@@ -141,12 +141,17 @@ function s:coc_maps() abort
         nnoremap <silent> <Leader>d :CocList diagnostics<cr>
         nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
         noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
-        " Map <TAB> as universal key to complete, accept snippets, jump
+
+        " Map <TAB> as key to scroll completion results and jump through
+        " snippets
         inoremap <silent><expr> <TAB>
-              \ pumvisible() ? coc#_select_confirm() :
+              \ pumvisible() ? "\<C-n>" :
               \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
               \ <SID>check_back_space() ? "\<TAB>" :
               \ coc#refresh()
+        inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+        " Use <CR> to select snippet/completion
+        inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
     endif
 endfunction
 

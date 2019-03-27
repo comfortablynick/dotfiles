@@ -10,10 +10,12 @@ LARGE=200
 SP=' '
 RSUB="${RSUB}"
 
+TMUX_TOP="$HOME/go/bin/tmux-top"
+
 # Status commands
-if [ -n "$(command -v tmux-top 2>/dev/null)" ]; then
-    MEMUSAGE="$(tmux-top m)"
-    LOADAVG="$(tmux-top l)"
+if [ -x "$TMUX_TOP" ]; then
+    MEMUSAGE="$("$TMUX_TOP" m)"
+    LOADAVG="$("$TMUX_TOP" l)"
 else
     MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
     LOADAVG="$("$HOME"/.config/tmux/_loadavg)"

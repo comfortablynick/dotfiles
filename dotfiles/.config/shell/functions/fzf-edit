@@ -3,5 +3,35 @@
 #   - Bypass fuzzy finder if there's only one match (--select-1)
 #   - Exit if there's no match (--exit-0)
 
-IFS=$'\n' files=("$(fzf-tmux --query="$1" --multi --select-1 --exit-0)")
-[ -n "${files[*]}" ] && "${EDITOR:-vim}" $files
+fzf_find_edit() {
+    local file
+    file=$(
+        fzf --no-multi --preview-window 'top:60%' --preview 'bat --color=always --line-range :500 {}'
+    )
+    if [[ -n $file ]]; then
+        ${VISUAL:-EDITOR:-vim} "$file"
+    fi
+}
+
+fzf_grep_edit() {
+    if [[ $# == 0 ]]; then
+        echo 'Error: search term was not provided.'
+        return
+    fi
+    local match file
+    match=$(
+        rg --color=always --line-number "$1" |
+            fzf --ansi --preview-window 'top:60%' --no-multi --delimiter : \
+                --preview "bat --color=always --line-range {2}: {1}"
+    )
+    file=$(echo "$match" | cut -d':' -f1)
+    if [[ -n $file ]]; then
+        "${VISUAL:-EDITOR:-vim}" "$file" +"$(echo "$match" | cut -d':' -f2)"
+    fi
+}
+
+if [ -n "$1" ]; then
+    fzf_grep_edit "$@"
+else
+    fzf_find_edit
+fi

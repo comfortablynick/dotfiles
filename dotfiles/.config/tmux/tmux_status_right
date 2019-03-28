@@ -11,14 +11,23 @@ SP=' '
 RSUB="${RSUB}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
+SYSINFO="$HOME/.cargo/bin/sysinfo"
 
 # Status commands
-if [ -x "$TMUX_TOP" ]; then
-    MEMUSAGE="$("$TMUX_TOP" m)"
-    LOADAVG="$("$TMUX_TOP" l)"
+if [ -x "$SYSINFO" ]; then
+    MEMUSAGE="$("$SYSINFO" memory -p)"
+    LOADAVG="$("$SYSINFO" load)"
+    UPTIME="$("$SYSINFO" uptime)"
+    # CPUTEMP="$("$SYSINFO" temp)"
 else
-    MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
-    LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
+    if [ -x "$TMUX_TOP" ]; then
+        MEMUSAGE="$("$TMUX_TOP" m)"
+        LOADAVG="$("$TMUX_TOP" l)"
+    else
+        MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
+        LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
+    fi
+    UPTIME="$("$HOME/.config/tmux/_uptime")"
 fi
 
 if [ "$MEMUSAGE" = "0.0%" ]; then
@@ -34,9 +43,9 @@ fi
 if [ "$WIDTH" -gt "$MEDIUM" ]; then
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
     TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%I:%M %p')"
-    # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$("$HOME"/.config/tmux/_cputemp)"
-    LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=green,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
-    UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$("$HOME"/.config/tmux/_uptime)"
+    # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
+    LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
+    UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UPTIME"
     # WEATHER="$("$HOME"/.config/tmux/_weather)"
 fi
 

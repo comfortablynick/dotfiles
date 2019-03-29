@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
+PATH="$(path_remove "$(dirname "$0")")"
+
+if [ -n "$(command -v ccls 2>/dev/null)" ]; then
+    ccls "$@"
+    exit 0
+fi
+
 "$HOME/src/ccls/Release/ccls" "$@"

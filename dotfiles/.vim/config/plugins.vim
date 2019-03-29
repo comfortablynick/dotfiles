@@ -112,11 +112,11 @@ Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
     \ {
-    \   'do': { -> coc_update() },
+    \   'do': { -> Coc_post_update() },
     \   'for': g:completion_filetypes['coc'],
     \ })
 
-function! s:coc_update() abort
+function! Coc_post_update() abort
     call coc#util#install()
     if get(g:, 'coc_force_debug', 0) == 1
         " Build from source

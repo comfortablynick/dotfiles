@@ -12,10 +12,11 @@ RSUB="${RSUB}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
+TMUX_MEM_CPU="$TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load"
 
 # Status commands
 if [ -x "$SYSINFO" ]; then
-    MEMUSAGE="$("$SYSINFO" memory -p)"
+    MEMUSAGE="$("$SYSINFO" memory)"
     LOADAVG="$("$SYSINFO" load)"
     UPTIME="$("$SYSINFO" uptime)"
     # CPUTEMP="$("$SYSINFO" temp)"
@@ -45,6 +46,7 @@ if [ "$WIDTH" -gt "$MEDIUM" ]; then
     TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%I:%M %p')"
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
     LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
+    # LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour10,bg=default,noitalics,nounderscore]$($TMUX_MEM_CPU -i 2)"
     UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UPTIME"
     # WEATHER="$("$HOME"/.config/tmux/_weather)"
 fi

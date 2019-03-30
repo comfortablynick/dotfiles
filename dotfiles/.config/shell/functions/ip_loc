@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""Get location from current IP or SSH IP."""
+#  import json
+import os
+from subprocess import run
+
+#  def get_loc(ip: str):
+#      """Get location from IP."""
+
+def get_ip() -> str:
+    """Get local or SSH IP."""
+    ip = os.environ.get("SSH_CONNECTION")
+    if ip is None:
+        ip = run(["hostname", "-I"], capture_output=True).stdout
+    return ip.split(maxsplit=1)[0]
+
+
+def main():
+    print(get_ip())
+
+
+if __name__ == "__main__":
+    main()

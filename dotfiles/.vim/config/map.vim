@@ -132,7 +132,7 @@ function s:coc_maps() abort
     if !exists('g:did_coc_loaded')
         return
     endif
-    nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+    nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gr <Plug>(coc-rename)
     nmap <silent> gt <Plug>(coc-type-definition)
@@ -143,6 +143,7 @@ function s:coc_maps() abort
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>
     nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
+    noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
 
     " Map <TAB> as key to scroll completion results and jump through
     " snippets

@@ -463,8 +463,8 @@ function! s:coc_cmds() abort
     if ! exists('g:did_coc_loaded')
         return
     endif
-    autocmd LC CursorHold * call CocActionAsync('doHover') " Hover on cursor hold
-    " autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
+    autocmd LC CursorHold * if ! coc#util#has_float() | call CocAction('doHover') | endif
+    autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
 endfunction
 
 " Call func to set autocmds if LC is loaded

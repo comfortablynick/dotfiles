@@ -1,22 +1,42 @@
 #!/usr/bin/env python3
 """Get location from current IP or SSH IP."""
-#  import json
+import logging
 import os
-from subprocess import run
+import pprint
 
-#  def get_loc(ip: str):
-#      """Get location from IP."""
+import ipinfo
 
-def get_ip() -> str:
-    """Get local or SSH IP."""
-    ip = os.environ.get("SSH_CONNECTION")
-    if ip is None:
-        ip = run(["hostname", "-I"], capture_output=True).stdout
-    return ip.split(maxsplit=1)[0]
+logging.basicConfig(level=logging.DEBUG)
+LOG = logging.getLogger(__name__)
+
+
+def get_token() -> str:
+    """Retrieve secret access token from disk."""
+    file = os.path.expanduser("~/.ipinfo_token")
+    token = ""
+    try:
+        with open(file, "r") as f:
+            token = f.read()
+    except FileNotFoundError:
+        print(f"ipinfo token file not found: {file}. Aborting!")
+        return ""
+    else:
+        return token.strip("\n")
+
+
+def get_ipinfo():
+    """Get response from ipinfo.io."""
+    #  ssh_ip = os.environ.get("SSH_CONNECTION")
+    token = get_token()
+    LOG.debug("Token from disk: %s", token)
+    handler = ipinfo.getHandler(token)
+    details = handler.getDetails()
+    LOG.debug("Response:\n%s", pprint.pformat(details.all))
 
 
 def main():
-    print(get_ip())
+    #  print(get_ip())
+    get_ipinfo()
 
 
 if __name__ == "__main__":

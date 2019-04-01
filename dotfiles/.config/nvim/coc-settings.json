@@ -22,6 +22,9 @@
   "rust-client.channel": "stable",
   "rust.clippy_preference": "on",
 
+  "python.linting.enabled": false,
+  "python.jediEnabled": true,
+
   // Server definitions
   "languageserver": {
     "ccls": {

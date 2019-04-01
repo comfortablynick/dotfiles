@@ -4,6 +4,7 @@ HOSTNAME=''
 WIDTH="$(tmux display -p '#{client_width}')"
 SMALL=40
 MEDIUM=80
+MEDIUM_LARGE=150
 LARGE=200
 
 # Separators
@@ -12,13 +13,20 @@ RSUB="${RSUB}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
-TMUX_MEM_CPU="$TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load"
+# TMUX_MEM_CPU="$TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load"
 
 # Status commands
 if [ -x "$SYSINFO" ]; then
-    MEMUSAGE="$("$SYSINFO" memory)"
-    LOADAVG="$("$SYSINFO" load)"
-    UPTIME="$("$SYSINFO" uptime)"
+    memusage_cmd='memory'
+    loadavg_cmd='load'
+    uptime_cmd='uptime'
+    # temp_cmd='temp'
+    if [ "$WIDTH" -lt "$MEDIUM_LARGE" ]; then
+        memusage_cmd='memory -p'
+    fi
+    MEMUSAGE="$(eval "$SYSINFO" "$memusage_cmd")"
+    LOADAVG="$(eval "$SYSINFO" "$loadavg_cmd")"
+    UPTIME="$(eval "$SYSINFO" "$uptime_cmd")"
     # CPUTEMP="$("$SYSINFO" temp)"
 else
     if [ -x "$TMUX_TOP" ]; then

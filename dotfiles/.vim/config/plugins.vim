@@ -20,7 +20,6 @@ endfunction
 let g:completion_filetypes = {
     \ 'deoplete':
     \   [
-    \       'python',
     \       'fish',
     \       'vim',
     \   ],
@@ -45,6 +44,7 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'sh',
     \       'bash',
+    \       'python',
     \   ],
     \ }
 

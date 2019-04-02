@@ -33,6 +33,10 @@ virtualenv_info() {
     fi
 }
 
+_gitpr() {
+    gitpr="$(gitpr -f '%g %b %a %m %d %u %s' 2>/dev/null)"
+}
+
 # export VIRTUAL_ENV_DISABLE_PROMPT=yes
 
 # Enhanced Git Prompt
@@ -71,12 +75,12 @@ else
 
 
     # standard git-aware prompt with color
-    PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
-    export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
+    # PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+    # export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
     # use gitpr rust program
-    # gitpr="$(gitpr -d $PWD -f '%g %b %a %m %d %u %s' 2>/dev/null)\n"
-    # export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $DEFAULT$gitpr\$ "
+    PROMPT_COMMAND="_gitpr; $PROMPT_COMMAND"
+    export PS1="\$venv_name$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $DEFAULT\$gitpr\n\$ "
 fi
 
 return

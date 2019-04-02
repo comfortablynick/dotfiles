@@ -24,10 +24,10 @@
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 
-snippet dir "directory of current script" w
+snippet directory "directory of current script" w
 "$(dirname "\$0")"
 endsnippet
 
-snippet pr "remove directory of script from PATH" w
+snippet pathrem "remove directory of script from PATH" w
 PATH="$(path_remove "$(dirname "\$0")")"
 endsnippet

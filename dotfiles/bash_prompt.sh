@@ -70,9 +70,13 @@ else
     CYAN="\[\033[0;36m\]"
 
 
-    # PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+    # standard git-aware prompt with color
+    PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+    export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 
-    # export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
+    # use gitpr rust program
+    # gitpr="$(gitpr -d $PWD -f '%g %b %a %m %d %u %s' 2>/dev/null)\n"
+    # export PS1="$virtualenv_info$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $DEFAULT$gitpr\$ "
 fi
 
 return

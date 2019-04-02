@@ -2,7 +2,6 @@ actions:
   pre:
     vim-plug-install: test -e ~/.vim/autoload/plug.vim || (mkdir -p ~/.vim/autoload;
       curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
-  # vim-plug: vimsync
 config:
   backup: true
   banner: false
@@ -59,6 +58,10 @@ dotfiles:
     dst: ~/.config/powerline
     link: true
     src: .config/powerline
+  d_profiles:
+    dst: ~/.conan/profiles
+    link: true
+    src: .conan/profiles
   d_shell:
     dst: ~/.config/shell
     link: true
@@ -142,7 +145,6 @@ dotfiles:
   f_vimrc:
     actions:
     - vim-plug-install
-   # - vim-plug
     dst: ~/.vimrc
     link: true
     src: vimrc.vim
@@ -181,6 +183,7 @@ profiles:
     - d_legit
     - d_nvim
     - d_powerline
+    - d_profiles
     - d_shell
     - d_topydo
     - d_tmux

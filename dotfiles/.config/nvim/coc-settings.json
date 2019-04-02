@@ -38,13 +38,19 @@
        }
     },
 
-  "golang": {
-    "command": "bingo",
-    "args": ["--diagnostics-style=instant"],
-    "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-    "filetypes": ["go"]
-    },
+  // "golang": {
+  //   "command": "bingo",
+  //   "args": ["--diagnostics-style=instant"],
+  //   "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+  //   "filetypes": ["go"]
+  //   },
 
+  "golang": {
+      "command": "gopls",
+      "args": [],
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    },
     "bash": {
       "command": "bash-language-server",
       "args": ["start"],

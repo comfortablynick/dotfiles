@@ -14,7 +14,8 @@ if test -z (type -f node 2>/dev/null)
         set -p PATH "$node_bin_path"
     else
         if test -d "$HOME/.nvm/versions/node"
-            set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
+            # set -l node_latest (ls -a "$HOME/.nvm/versions/node" | string match -r 'v.*' | sort -V | tail -n1)
+            set -l node_latest (ls -v "$HOME/.nvm/versions/node" | tail -n 1)
             if test -n "$node_latest"
                 set -p PATH "$HOME/.nvm/versions/node/$node_latest/bin"
             end

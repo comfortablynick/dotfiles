@@ -460,7 +460,7 @@ augroup END
 " Coc {{{2
 " coc_cmds() :: set autocmds if LC is loaded
 function! s:coc_cmds() abort
-    if ! exists('g:did_coc_loaded')
+    if get(g:, 'coc_service_initialized', 0) == 0
         return
     endif
     autocmd LC CursorHold * if ! coc#util#has_float() | call CocAction('doHover') | endif

@@ -13,7 +13,7 @@ RSUB="${RSUB}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
-# TMUX_MEM_CPU="$TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load"
+TMUX_MEM_CPU="$TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load"
 
 # Status commands
 if [ -x "$SYSINFO" ]; then

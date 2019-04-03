@@ -37,7 +37,7 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export THEME="alien-minimal"
+export THEME="alien"
 export SSH_THEME="$THEME"
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
@@ -72,11 +72,6 @@ zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plug
 # zplug "plugins/vi-mode", from:"oh-my-zsh", as:plugin, use:vi-mode.plugin.zsh
 
 # Themes
-zplug "bhilburn/powerlevel9k", \
-    use:powerlevel9k.zsh-theme, \
-    as:theme, \
-    if:'[ $THEME = pl9k ]'
-
 zplug "themes/sorin", \
     from:oh-my-zsh, \
     use:sorin.zsh-theme, \
@@ -87,13 +82,13 @@ zplug "eendroroy/alien", \
     as:theme, \
     if:'[ $THEME = alien ]'
 
-# zplug "eendroroy/alien-minimal", \
-#     as:theme, \
-#     if:'[ $THEME = alien-minimal ]'
-
-zplug "comfortablynick/alien-minimal", \
+zplug "eendroroy/alien-minimal", \
     as:theme, \
     if:'[ $THEME = alien-minimal ]'
+
+# zplug "comfortablynick/alien-minimal", \
+#     as:theme, \
+#     if:'[ $THEME = alien-minimal ]'
 
 zplug "sindresorhus/pure", \
     use:pure.zsh, \
@@ -102,8 +97,9 @@ zplug "sindresorhus/pure", \
     if:'[ "$THEME" = "pure" ]'
 
 # Must be loaded last (or deferred)
-zplug "zsh-users/zsh-syntax-highlighting", \
-    defer:2
+# zplug "zsh-users/zsh-syntax-highlighting", \
+#     defer:2
+zplug "zdharma/fast-syntax-highlighting"
 
 # Source bash files
 # zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
@@ -153,7 +149,7 @@ if [ "$THEME" = "alien-minimal" ]; then
     export USE_NERD_FONT="$NERD_FONT"
     export AM_INITIAL_LINE_FEED=0
     export AM_SHOW_FULL_DIR=1
-    export AM_KEEP_PROMPT=1                                     # Show prev right prompt until new one is ready
+    export AM_KEEP_PROMPT=1
     export AM_SEGMENT_UPDATE=1
     export AM_VERSIONS_PROMPT=(PYTHON)
     export PROMPT_END_TAG=' $'
@@ -164,6 +160,21 @@ if [ "$THEME" = "alien-minimal" ]; then
     export AM_ENABLE_VI_PROMPT=1
 fi
 
+# Alien {{{2
+# if [ "$THEME" = "alien" ]; then
+#     export ALIEN_SECTIONS_LEFT=(
+#       exit
+#       battery
+#       user
+#       path
+#       vcs_branch
+#       vcs_status
+#       vcs_dirty
+#       ssh
+#       venv
+#       prompt
+#   )
+# fi
 # promptlib-zsh {{{2
 export PLIB_GIT_MOD_SYM='★'
 

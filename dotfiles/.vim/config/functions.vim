@@ -460,11 +460,13 @@ augroup END
 " Coc {{{2
 " coc_cmds() :: set autocmds if LC is loaded
 function! s:coc_cmds() abort
-    if get(g:, 'coc_service_initialized', 0) == 0
+    if ! exists('g:did_coc_loaded')
         return
     endif
-    autocmd LC CursorHold * if ! coc#util#has_float() | call CocAction('doHover') | endif
-    autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp') " Does this work?
+    autocmd LC CursorHold *
+        \ if ! coc#util#has_float() && coc#util#valid_state() | call CocAction('doHover') | endif
+    autocmd LC User CocJumpPlaceholder
+        \ if coc#util#valid_state() | call CocActionAsync('showSignatureHelp') | endif
 endfunction
 
 " Call func to set autocmds if LC is loaded

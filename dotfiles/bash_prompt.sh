@@ -49,7 +49,7 @@ _gitpr() { #{{{2
 
 # Enhanced git prompt {{{1
 # GIT_PROMPT_THEME_FILE=$XDG_CONFIG_HOME/shell/bash-git-prompt/Custom.bgptemplate
-USE_ENHANCED_GIT_PROMPT=1             # Enhanced Git Prompt
+USE_ENHANCED_GIT_PROMPT=0             # Enhanced Git Prompt
 GIT_PROMPT_ONLY_IN_REPO=0             # Set config variables first
 # GIT_PROMPT_FETCH_REMOTE_STATUS=0    # avoid fetching remote status
 GIT_PROMPT_IGNORE_SUBMODULES=1        # avoid searching for changed files in submodules

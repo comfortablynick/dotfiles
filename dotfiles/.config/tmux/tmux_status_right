@@ -29,7 +29,7 @@ if [ -x "$SYSINFO" ]; then
     MEMUSAGE="$(eval "$SYSINFO" "$memusage_cmd")"
     LOADAVG="$(eval "$SYSINFO" "$loadavg_cmd")"
     UPTIME="$(eval "$SYSINFO" "$uptime_cmd")"
-    CPUTEMP="$("$SYSINFO" "$temp_cmd")"
+    CPUTEMP="$(eval "$SYSINFO" "$temp_cmd")"
     # CPUUSAGE="$(eval "$SYSINFO" "$cpu_usage_cmd")"
 else
     if [ -x "$TMUX_TOP" ]; then

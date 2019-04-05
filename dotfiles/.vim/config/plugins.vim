@@ -22,6 +22,7 @@ let g:completion_filetypes = {
     \   [
     \       'fish',
     \       'vim',
+    \       'python',
     \   ],
     \ 'ycm':
     \   [
@@ -44,7 +45,6 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'sh',
     \       'bash',
-    \       'python',
     \   ],
     \ }
 
@@ -466,7 +466,8 @@ let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
 " Coc {{{2
-let g:coc_force_debug = 1
+" let g:coc_force_debug = 1
+let g:coc_global_extensions = 1                                 " Install extensions when not found
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'
 let g:coc_snippet_next = '<tab>'                                " See map.vim

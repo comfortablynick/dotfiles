@@ -1,0 +1,259 @@
+#!/usr/bin/env python3
+"""Parse env settings from TOML file for shells."""
+import argparse
+import hashlib
+import logging
+import os
+import re
+import socket
+import sys
+from datetime import datetime
+from pprint import pformat
+from typing import Iterator
+from subprocess import run
+
+try:
+    from tomlkit import parse
+except ModuleNotFoundError:
+    from toml import loads as parse
+
+# globals {{{1
+logging.basicConfig()
+LOG = logging.getLogger(__name__)
+
+
+def get_file_hash(filepath: str) -> str:  # {{{1
+    """Get sha hash of filepath.
+
+    Hash can be compared to determine if changes were made to file.
+    Params:
+    `filepath` Path to file
+    """
+    # Inner function to create hash
+    def update_hash(running_hash, filepath, encoding="utf-8"):
+        """Update running SHA1 hash, factoring in hash of given file.
+
+        Side Effects:
+            running_hash.update()
+        """
+        if encoding:
+            file = open(filepath, "r", encoding=encoding)
+            for line in file:
+                hashed_line = hashlib.sha1(line.encode(encoding))
+                hex_digest = hashed_line.hexdigest().encode(encoding)
+                running_hash.update(hex_digest)
+            file.close()
+        else:
+            file = open(filepath, "rb")
+            while True:
+                # Read file in as little chunks.
+                buffer = file.read(4096)
+                if not buffer:
+                    break
+                running_hash.update(hashlib.sha1(buffer).hexdigest())
+            file.close()
+
+    hash_sha = hashlib.sha1()
+    update_hash(hash_sha, filepath, "utf-8")
+    return hash_sha.hexdigest()
+
+
+def get_env_objs(toml: dict) -> Iterator[dict]:  # {{{1
+    """Get dict of env objects from TOML data."""
+    for k in toml.keys():
+        for d in toml[k]:
+            d["var_type"] = k
+            yield d
+
+
+def get_toml(file_path: str) -> dict:  # {{{1
+    """Return toml data from file."""
+    with open(file_path, "r", encoding="utf-8") as f:
+        toml = parse(f.read())
+    return toml
+
+
+def write_shell_file(shell_vars: list, file: str) -> None:  # {{{1
+    """Write settings file to disk, formatted for shell."""
+    LOG.debug("Writing output to: %s", file)
+    with open(file, "w", encoding="utf-8") as f:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write("# File generated from env.toml: {}\n".format(timestamp))
+        for line in shell_vars:
+            f.write("{}\n".format(line))
+
+
+def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
+    """Return true if var is valid for target shell."""
+    return bool(set(var_shell) & set(target_shell))
+
+
+def get_shell_vars(  # {{{1
+    toml: dict, shell: str, print_comments: bool = False
+) -> list:
+    """Get shell script to create vars for given shell.
+
+    Params:
+    `toml` TOML loaded from file
+    `shell` Shell to get config for
+    `print_comments` Print description as comment
+    """
+    var_defs = {
+        "fish": {
+            "abbr": {"format": "abbr {0} {1} {2}", "default_args": "-U"},
+            "alias": {"format": "alias {0} {1}={2}"},
+            "env": {"format": "set {0} {1} {2}", "default_args": "-Ux"},
+            "path": {"format": "set {0} {1} {2}", "default_args": "-U --path"},
+        },
+        "bash": {
+            "abbr": {"format": "alias {1}={2}", "default_args": ""},
+            "alias": {"format": "alias {1}={2}", "default_args": ""},
+            "env": {"format": "export {1}={2}", "default_args": ""},
+            "path": {"format": "export PATH={2}:$PATH", "default_args": ""},
+        },
+        "zsh": {
+            "abbr": {"format": "alias {1}={2}", "default_args": ""},
+            "alias": {"format": "alias {1}={2}", "default_args": ""},
+            "env": {"format": "export {1}={2}", "default_args": ""},
+            "path": {"format": "export PATH={2}:$PATH", "default_args": ""},
+        },
+    }
+    all_vars = []
+    for var in get_env_objs(toml):
+        if (
+            is_shell_match(var.get("shell", ["common"]), (shell, "common"))
+            and var.get("host", socket.gethostname()) == socket.gethostname()
+        ):
+            var_def = var_defs[shell][var["var_type"]]
+            k = var["key"]
+            a = var.get("args", var_def.get("default_args", ""))
+
+            if isinstance(var["val"], list):
+                # Probably path array
+                v = " ".join(map(str, var["val"]))
+            else:
+                v = var["val"]
+            if var.get("quote", False):
+                v = repr(v)
+            # Convert posix subshell `$()` to fish `()`
+            if shell == "fish":
+                v = re.sub(r"\$\(", "(", str(v))
+
+            if var.get("eval", False):
+                LOG.debug("Eval called on %s", v)
+                v = eval(v)
+                LOG.debug("Eval result: %s", v)
+
+            if var.get("shell_eval", False):
+                LOG.debug("Shell eval called on %s", v)
+                v = (
+                    run(v, shell=True, capture_output=True)
+                    .stdout.strip()
+                    .decode("utf-8")
+                )
+                LOG.debug("Shell eval result: %s", v)
+
+            if var["var_type"] == "path":
+                if os.path.isdir(os.path.expandvars(v)):
+                    if shell == "fish":
+                        k = "fish_user_paths"
+                    elif shell in ("bash", "zsh"):
+                        k = "PATH"
+                else:
+                    LOG.info("'%s' is not a valid directory", v)
+                    continue
+
+            # Remove extra whitespace
+            str_out = " ".join(var_def["format"].format(a, k, v).split())
+            if print_comments:
+                try:
+                    c = " # {}".format(var["desc"])
+                except AttributeError:
+                    c = ""
+            else:
+                c = ""
+            all_vars.append("{0}{1}".format(str_out, c))
+    return all_vars
+
+
+def default_shell_file(shell: str) -> str:  # {{{1
+    """Return default env source file for shell."""
+    file = ""
+    if shell == "fish":
+        file = "$XDG_CONFIG_HOME/fish/env.fish"
+    elif shell == "bash":
+        file = "$XDG_CONFIG_HOME/bash/conf.d/10_env.bash"
+    elif shell == "zsh":
+        file = "$XDG_CONFIG_HOME/zsh/conf.d/01_env.zsh"
+    else:
+        raise AttributeError
+    return os.path.expandvars(file)
+
+
+def process_args(args: list):  # {{{1
+    """Parse command line input."""
+    parser = argparse.ArgumentParser(
+        prog="parse_env", description="parse shell environment from TOML config file"
+    )
+    parser.add_argument("file", action="store", nargs="?", help="TOML file to parse")
+    parser.add_argument("-d", "--debug", action="count", help="print debug info")
+    shells = parser.add_mutually_exclusive_group()
+    shells.add_argument(
+        "-f", "--fish", action="store_true", help="parse for Fish (default)"
+    )
+    shells.add_argument("-b", "--bash", action="store_true", help="parse for Bash")
+    shells.add_argument("-z", "--zsh", action="store_true", help="parse for Z-Shell")
+    return parser.parse_args(args)
+
+
+def main():  # {{{1
+    """Script entry point."""
+    try:
+        sys.argv[1]
+        cli_args = sys.argv[1:]
+    except IndexError:
+        cli_args = ["--debug", "-z"]
+    finally:
+        args = process_args(cli_args)
+
+    # Set up logger
+    # logging.getLogger(__name__)
+    if args.debug == 0:
+        LOG.setLevel(logging.WARNING)
+    if args.debug == 1:
+        LOG.setLevel(logging.INFO)
+    if args.debug == 2:
+        LOG.setLevel(logging.DEBUG)
+    LOG.debug(args)
+
+    # Default TOML file used if nothing supplied from cli
+    if args.file is None:
+        args.file = os.path.expanduser("~/dotfiles/dotfiles/env.toml")
+    toml = get_toml(args.file)
+    LOG.debug(pformat(toml))
+
+    # Shells
+    shells = []
+    if args.bash:
+        shells.append("bash")
+    if args.zsh:
+        shells.append("zsh")
+    if args.fish:
+        shells.append("fish")
+
+    if len(shells) == 0:
+        current_shell = os.path.basename(os.environ.get("SHELL"))
+        shells.append(current_shell)
+
+    for shell in shells:
+        output_file = default_shell_file(shell)
+        shell_vars = get_shell_vars(toml, shell)
+        write_shell_file(shell_vars=shell_vars, file=output_file)
+
+        # Debug output
+        for v in shell_vars:
+            LOG.debug(v)
+
+
+if __name__ == "__main__":
+    main()

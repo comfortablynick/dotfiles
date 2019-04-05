@@ -9,7 +9,7 @@ if status is-interactive
 
     # Run parsing script to update env.fish
     echo "env.toml has changed!"
-    parse_env.py "$HOME/dotfiles/dotfiles/env.toml" -f
+    parse_env "$HOME/dotfiles/dotfiles/env.toml" -f
 
     # Set variable to reload file on shell init
     set -U env_file_sourced 0

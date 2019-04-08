@@ -212,6 +212,7 @@ function! RunCmd(cmd_type) abort
     let l:ft_cmds = {
         \ 'go': {
         \   'build': ' go install',
+        \   'install': ' go install',
         \   'run': ' go run .',
         \  },
         \ 'cpp': {

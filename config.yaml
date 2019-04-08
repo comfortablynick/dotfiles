@@ -9,152 +9,153 @@ config:
   dotpath: dotfiles
   ignoreempty: false
   keepdot: true
-  link_by_default: true
+  link_dotfile_default: nolink
+  link_on_import: link
   longkey: false
   showdiff: false
   workdir: ~/.config/dotdrop
 dotfiles:
   d_after:
     dst: ~/.vim/after
-    link: true
+    link: link
     src: .vim/after
   d_autoload:
     dst: ~/.vim/autoload
-    link: true
+    link: link
     src: .vim/autoload
   d_bash:
     dst: ~/.config/bash
-    link: true
+    link: link
     src: .config/bash
   d_config:
     dst: ~/.vim/config
-    link: true
+    link: link
     src: .vim/config
   d_fish:
     dst: ~/.config/fish
-    link: true
+    link: link
     src: .config/fish
   d_ftdetect:
     dst: ~/.vim/ftdetect
-    link: true
+    link: link
     src: .vim/ftdetect
   d_ftplugin:
     dst: ~/.vim/ftplugin
-    link: true
+    link: link
     src: .vim/ftplugin
   d_legit:
     dst: ~/.config/legit
-    link: true
+    link: link
     src: .config/legit
   d_nvim:
     dst: ~/.config/nvim
-    link: true
+    link: link
     src: .config/nvim
   d_omf:
     dst: ~/.config/omf
-    link: true
+    link: link
     src: .config/omf
   d_powerline:
     dst: ~/.config/powerline
-    link: true
+    link: link
     src: .config/powerline
   d_profiles:
     dst: ~/.conan/profiles
-    link: true
+    link: link
     src: .conan/profiles
   d_shell:
     dst: ~/.config/shell
-    link: true
+    link: link
     src: .config/shell
   d_tmux:
     dst: ~/.config/tmux
-    link: true
+    link: link
     src: .config/tmux
   d_topydo:
     dst: ~/.config/topydo
-    link: true
+    link: link
     src: .config/topydo
   d_ultisnips:
     dst: ~/.config/coc/ultisnips
-    link: true
+    link: link
     src: .config/coc/ultisnips
   d_xonsh:
     dst: ~/.config/xonsh
-    link: true
+    link: link
     src: .config/xonsh
   d_zsh:
     dst: ~/.config/zsh
-    link: true
+    link: link
     src: .config/zsh
   f_bash_aliases:
     dst: ~/.bash_aliases
-    link: true
+    link: link
     src: bash_aliases.sh
   f_bash_colors:
     dst: ~/.bash_colors
-    link: true
+    link: link
     src: bash_colors.sh
   f_bash_functions:
     dst: ~/.bash_functions
-    link: true
+    link: link
     src: bash_functions.sh
   f_bash_linux:
     dst: ~/.bash_linux
-    link: true
+    link: link
     src: bash_linux.sh
   f_bash_mac:
     dst: ~/.bash_mac
-    link: true
+    link: link
     src: bash_mac.sh
   f_bash_profile:
     dst: ~/.bash_profile
-    link: true
+    link: link
     src: bash_profile.sh
   f_bash_prompt:
     dst: ~/.bash_prompt
-    link: true
+    link: link
     src: bash_prompt.sh
   f_bash_windows:
     dst: ~/.bash_windows
-    link: true
+    link: link
     src: bash_windows.sh
   f_bashrc:
     dst: ~/.bashrc
-    link: true
+    link: link
     src: bashrc.sh
   f_config.py:
     dst: ~/.ptpython/config.py
-    link: true
+    link: link
     src: .ptpython/config.py
   f_dircolors:
     dst: ~/.dircolors
-    link: true
+    link: link
     src: dircolors.sh
   f_gitconfig:
     dst: ~/.gitconfig
-    link: true
+    link: link
     src: .gitconfig
   f_tmux.conf:
     dst: ~/.tmux.conf
-    link: true
+    link: link
     src: tmux.conf
   f_tmux.theme.conf:
     dst: ~/.tmux.theme.conf
-    link: true
+    link: link
     src: tmux.theme.conf
   f_vimrc:
     actions:
     - vim-plug-install
     dst: ~/.vimrc
-    link: true
+    link: link
     src: vimrc.vim
   f_xonshrc:
     dst: ~/.xonshrc_orig
-    link: true
+    link: link
     src: xonshrc.py
   f_zshrc:
     dst: ~/.zshrc
-    link: true
+    link: link
     src: zshrc.zsh
 profiles:
   core:

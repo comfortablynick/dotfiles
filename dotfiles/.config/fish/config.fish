@@ -61,6 +61,7 @@ end
 
 
 # PACKAGES {{{1
+# NOTE: Fisher packages are kept in fishfile
 # Theme {{{2
 # Get theme from local file
 if test -n "$SSH_CONNECTION" -a -f $XDG_DATA_HOME/fish/ssh_theme
@@ -94,54 +95,52 @@ switch "$FISH_PKG_MGR"
     # Fisher
     if not functions -q fisher
         echo "Installing fisher for the first time..." >&2
+        set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
         curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-        echo "Reload shell to use fisher."
+        fish -c fisher
     end
-    # case "FUNDLE"
-    #     if not functions -q fundle
-    #         curl -sfL https://git.io/fxdrv | fish
-    #     end
     case "*"
-    # echo "Unknown package manager"
 end
 
 # Plugins {{{2
+if test "$FISH_PKG_MGR" = "Fundle"
 # Themes {{{3
-# fun plugin 'comfortablynick/theme-bobthefish' \
-#     --cond='[ $FISH_THEME = bobthefish ]'
+    # fun plugin 'comfortablynick/theme-bobthefish' \
+    #     --cond='[ $FISH_THEME = bobthefish ]'
 
-fun plugin 'bobthefish' --local \
-    --cond='[ $FISH_THEME = bobthefish ]' \
-    --path="$HOME/git/theme-bobthefish"
+    fun plugin 'bobthefish' --local \
+        --cond='[ $FISH_THEME = bobthefish ]' \
+        --path="$HOME/git/theme-bobthefish"
 
-fun plugin 'oh-my-fish/theme-yimmy' \
-    --cond='[ $FISH_THEME = yimmy ]'
+    fun plugin 'oh-my-fish/theme-yimmy' \
+        --cond='[ $FISH_THEME = yimmy ]'
 
-fun plugin 'rafaelrinaldi/pure' \
-    --cond='[ $FISH_THEME = pure ]'
+    fun plugin 'rafaelrinaldi/pure' \
+        --cond='[ $FISH_THEME = pure ]'
 
-fun plugin 'bigfish' --local \
-    --cond='[ $FISH_THEME = bigfish ]' \
-    --path="$XDG_CONFIG_HOME/fish/themes/bigfish"
+    fun plugin 'bigfish' --local \
+        --cond='[ $FISH_THEME = bigfish ]' \
+        --path="$XDG_CONFIG_HOME/fish/themes/bigfish"
 
-fun plugin 'sorin' --local \
-    --cond='[ $FISH_THEME = sorin ]' \
-    --path="$XDG_CONFIG_HOME/fish/themes/sorin"
+    fun plugin 'sorin' --local \
+        --cond='[ $FISH_THEME = sorin ]' \
+        --path="$XDG_CONFIG_HOME/fish/themes/sorin"
 
-# Utilities {{{3
-fun plugin 'jethrokuan/fzf' \
-    --cond='type -q fzf'
+# Utilities {{{4
+    fun plugin 'jethrokuan/fzf' \
+        --cond='type -q fzf'
 
 # Node.js {{{3
-fun plugin 'FabioAntunes/fish-nvm'
-fun plugin 'edc/bass'
+    fun plugin 'FabioAntunes/fish-nvm'
+    fun plugin 'edc/bass'
 
 # Test {{{3
-fun plugin 'fisherman/getopts' \
-    --cond 'test 1 -eq 2'
+    fun plugin 'fisherman/getopts' \
+        --cond 'test 1 -eq 2'
 
 # <--- All plugin definitions before this line
-fun init
+    fun init
+end
 
 # ENVIRONMENT {{{1
 # Load from env file {{{2
@@ -199,10 +198,13 @@ set -g ___fish_git_prompt_color_stagedstate (set_color green)
 set -g ___fish_git_prompt_color_stagedstate_done (set_color normal)
 
 # bobthefish {{{2
-if test "$FISH_THEME" = 'bobthefish'
+# if test "$FISH_THEME" = 'bobthefish'
+if functions -q __bobthefish_colors
     # Set options if term windows is narrow-ish
-    set -g theme_short_prompt_cols 200
-    set -g theme_newline_cursor yes
+    if test $COLUMNS -lt 200
+        set -g theme_newline_cursor yes
+    end
+
     set -g theme_display_date yes
 
     # Are the fancy fonts needed?
@@ -236,31 +238,32 @@ end
 
 # pure {{{2
 # prompt text
-if test "$FISH_THEME" = 'pure'
-    set pure_symbol_prompt "❯" # "✖"
-    set pure_symbol_git_down_arrow '↓' # "⇣"
-    set pure_symbol_git_up_arrow '↑' #  "⇡"
-    set pure_symbol_git_dirty "*"
-    set pure_symbol_horizontal_bar "—"
+# if test "$FISH_THEME" = 'pure'
+if functions -q _pure_prompt
+    set -g pure_symbol_prompt "❯"
+    set -g pure_symbol_git_unpulled_commits '↓' # "⇣"
+    set -g pure_symbol_git_unpushed_commits '↑' #  "⇡"
+    set -g pure_symbol_git_dirty "*"
+    set -g pure_symbol_title_bar_separator "—"
 
     # Prompt colors
-    set pure_color_blue (set_color brblue)
-    set pure_color_cyan (set_color cyan)
-    set pure_color_gray (set_color 6c6c6c)
-    set pure_color_green (set_color green)
-    set pure_color_normal (set_color normal)
-    set pure_color_red (set_color red)
-    set pure_color_yellow (set_color yellow)
+    set -g pure_color_primary (set_color brblue)
+    set -g pure_color_info (set_color cyan)
+    set -g pure_color_mute (set_color 6c6c6c)
+    set -g pure_color_success (set_color green)
+    set -g pure_color_normal (set_color normal)
+    set -g pure_color_danger (set_color red)
+    set -g pure_color_warning (set_color yellow)
 
     # Colors when connected via SSH
-    set pure_username_color $pure_color_yellow
-    set pure_host_color $pure_color_gray
-    set pure_root_color $pure_color_red
+    set -g pure_color_ssh_user_normal $pure_color_warning
+    set -g pure_color_ssh_hostname $pure_color_mute
+    set -g pure_color_ssh_user_root $pure_color_danger
 
     # Display options
-    set pure_user_host_location 1                               # Loc of u@h; 0 = end, 1 = beg
-    set pure_separate_prompt_on_error 0                         # Show addl char if error
-    set pure_command_max_exec_time 5                            # Secs elapsed before exec time shown
+    set -g pure_begin_prompt_with_current_directory false          # Loc of u@h; 0 = end, 1 = beg
+    set -g pure_separate_prompt_on_error false                     # Show addl char if error
+    set -g pure_threshold_command_duration 5                       # Secs elapsed before exec time shown
 end
 
 # bigfish {{{2
@@ -304,5 +307,3 @@ set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
 echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal; echo ''
-
-# export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

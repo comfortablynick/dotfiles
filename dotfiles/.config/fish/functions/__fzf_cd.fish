@@ -1,6 +1,5 @@
-# Defined in /tmp/fish.B6fPEq/__fzf_cd.fish @ line 2
-function __fzf_cd --description 'Change directory'
-	set -l commandline (__fzf_parse_commandline)
+function __fzf_cd -d "Change directory"
+    set -l commandline (__fzf_parse_commandline)
     set -l dir $commandline[1]
     set -l fzf_query $commandline[2]
 

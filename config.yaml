@@ -43,6 +43,10 @@ dotfiles:
     dst: ~/.vim/ftplugin
     link: link
     src: .vim/ftplugin
+  d_git:
+    dst: ~/.config/git
+    link: link
+    src: .config/git
   d_legit:
     dst: ~/.config/legit
     link: link
@@ -191,6 +195,7 @@ profiles:
     - d_ultisnips
     - d_xonsh
     - d_zsh
+    - d_git
   io:
     dotfiles:
     - f_bash_linux

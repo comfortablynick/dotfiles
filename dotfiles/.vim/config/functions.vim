@@ -226,7 +226,11 @@ function! RunCmd(cmd_type) abort
         \   'install': ' cargo install -f --path .',
         \   'run': ' cargo run',
         \  },
-        \ }
+        \ 'python': {
+        \   'build': ' python ' . expand('%'),
+        \   'install': ' python ' . expand('%'),
+        \   'run': ' python ' . expand('%'),
+        \ }}
     let l:ft = get(l:ft_cmds, &filetype, {})
     let l:cmd = get(l:ft, a:cmd_type, '')
     if l:ft ==# {} || l:cmd ==# ''

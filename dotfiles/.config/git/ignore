@@ -1,0 +1,23 @@
+## Global gitignore
+
+# Node
+npm-debug.log
+
+# Mac
+.DS_Store
+
+# Python
+.mypy_cache/
+
+# Windows
+Thumbs.db
+
+# WebStorm
+.idea/
+
+# vi
+*~
+
+# General
+log/
+*.log

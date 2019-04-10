@@ -85,7 +85,7 @@ _prompt_command() {
     curr_exit="$?"
     cmd_err_glyph='✘'
     cmd_ok_glyph='✔'
-    gitpr="$(gitpr -s 2>/dev/null)"
+    gitpr="$(gitpr -sq 2>/dev/null)"
     date="$(date +%H:%M)"
 
     # Exit status

@@ -431,6 +431,9 @@ function! LL_VirtualEnvName() abort "{{{3
 endfunction
 
 function! LL_CurrentTag() abort "{{{3
+    " if get(b:, 'vista_nearest_method_or_function', '') !=# ''
+    "     return get(g:vista#renderer#icons, 'function', '') . ' ' . b:vista_nearest_method_or_function . '()'
+    " endif
     if exists('*tagbar#currenttag') && winwidth(0) > g:LL_MedWidth
         return tagbar#currenttag('[%s]', '', 'f')
     end

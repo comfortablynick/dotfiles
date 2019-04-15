@@ -58,7 +58,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
-Plug 'majutsushi/tagbar',               Cond(1, { 'on': 'TagbarToggle' })
+Plug 'majutsushi/tagbar'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
@@ -426,7 +426,6 @@ let g:indentLine_showFirstIndentLevel = 0
 let g:indentLine_char = '│'
 
 " LanguageClient {{{2
-" 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
 let g:LanguageClient_serverCommands = {
     \ }
 let g:LanguageClient_completionPreferTextEdit = 0
@@ -564,5 +563,44 @@ endif
 
 " clever-f {{{2
 let g:clever_f_smart_case = 1                                   " Ignore case if lowercase
+
+" vista {{{2
+let g:vista#renderer#icons = {
+\    'func': 'ƒ',
+\    'function': 'ƒ',
+\    'var': 'ʋ',
+\    'variable': 'ʋ',
+\    'const': 'c',
+\    'constant': 'c',
+\    'method': '𝑚',
+\    'package': 'p',
+\    'packages': 'p',
+\    'enum': 'e',
+\    'enumerator': 'e',
+\    'module': 'M',
+\    'modules': 'M',
+\    'type': '𝑡',
+\    'typedef': '𝑡',
+\    'types': '𝑡',
+\    'field': 'f',
+\    'fields': 'f',
+\    'macro': 'ɱ',
+\    'macros': 'ɱ',
+\    'map': '⇶',
+\    'class': 'c',
+\    'augroup': 'a',
+\    'struct': 's',
+\    'union': 'u',
+\    'member': 'm',
+\    'target': 't',
+\    'property': 'p',
+\    'interface': 'I',
+\    'namespace': 'n',
+\    'subroutine': 'ƒ',
+\    'implementation': 'I',
+\    'typeParameter': '𝑡',
+\    'default': 'd',
+\}
+let g:vista_close_on_jump = 1
 
 " vim:set fdl=1:

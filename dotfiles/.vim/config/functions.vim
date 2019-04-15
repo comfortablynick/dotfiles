@@ -487,6 +487,12 @@ augroup fzf
       \| autocmd BufLeave <buffer> set laststatus=2 ruler
 augroup END
 
+" Vista {{{2
+augroup vista
+    autocmd!
+    autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+augroup END
+
 " Vim Tmux Runner {{{2
 " Close runner when exiting vim
 " augroup vtr

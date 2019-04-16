@@ -198,9 +198,10 @@ Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
 Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 
 " Lightline {{{3
-Plug 'itchyny/lightline.vim',           Cond(has('nvim'))
-Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
-Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
+" Plug 'itchyny/lightline.vim',           Cond(has('nvim'))
+" Plug 'maximbaz/lightline-ale',          Cond(has('nvim'))
+" Plug 'mgee/lightline-bufferline',       Cond(has('nvim'))
+Plug '~/git/eleline.vim',               Cond(has('nvim') && !empty(glob('$HOME/git/eleline.vim')))
 
 " Tmux {{{2
 Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })

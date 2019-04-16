@@ -53,7 +53,7 @@ let g:completion_filetypes = {
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 " Editor features {{{2
-Plug 'mhinz/vim-startify'
+" Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'

@@ -17,6 +17,8 @@ if has('nvim')
     set inccommand=split                                        " Live substitution
     let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
+    let &viminfofile =
+        \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx

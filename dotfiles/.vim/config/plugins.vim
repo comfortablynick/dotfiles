@@ -53,7 +53,7 @@ let g:completion_filetypes = {
 call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 " Editor features {{{2
-" Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'
@@ -198,14 +198,15 @@ Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
 Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 
 " Lightline {{{3
-let nvim_statusbar = 'eleline'                                  " Use 'eleline' or 'lightline'
-let use_eleline = nvim_statusbar ==# 'eleline' &&
-    \ !empty(glob('$HOME/git/eleline.vim'))
+let g:nvim_statusbar = 'eleline'                                  " Use 'eleline' or 'lightline'
+let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
+let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
+    \ && !empty(glob('$HOME/git/eleline.vim'))
 
-Plug '~/git/eleline.vim',               Cond(has('nvim') && use_eleline)
-Plug 'itchyny/lightline.vim',           Cond(has('nvim') && !use_eleline)
-Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && !use_eleline)
-Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && !use_eleline)
+Plug '~/git/eleline.vim',               Cond(has('nvim') && g:use_eleline)
+Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)
+Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
+Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)
 
 " Tmux {{{2
 Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })

@@ -149,7 +149,8 @@ let g:lightline#ale#indicator_ok = g:LL_LinterOK
 if exists('g:did_coc_loaded')
     augroup cocAle
         autocmd!
-        autocmd User CocDiagnosticChange call lightline#update()
+        autocmd User CocDiagnosticChange 
+            \ if exists('*lightline#update') | call lightline#update() | endif
     augroup END
 endif
 
@@ -190,65 +191,20 @@ function! LL_Modified() abort "{{{3
     return &filetype =~? 'help\|vimfiler' ? '' : &modified ? g:LL_ModSymbol : &modifiable ? '' : '-'
 endfunction
 function! LL_Mode() abort "{{{3
-    " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr) {{{
+    " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
-        \ 'n' : [
-        \   'NORMAL',
-        \   'NORM',
-        \   'N',
-        \ ],
-        \ 'i' : [
-        \   'INSERT',
-        \   'INS',
-        \   'I',
-        \ ],
-        \ 'R' : [
-        \   'REPLACE',
-        \   'REPL',
-        \   'R',
-        \ ],
-        \ 'v' : [
-        \   'VISUAL',
-        \   'VIS',
-        \   'V',
-        \ ],
-        \ 'V' : [
-        \   'V-LINE',
-        \   'V-LN',
-        \   'V-L',
-        \ ],
-        \ "\<C-v>": [
-        \   'V-BLOCK',
-        \   'V-BL',
-        \   'V-B',
-        \ ],
-        \ 'c' : [
-        \   'COMMAND',
-        \   'CMD',
-        \   'C',
-        \ ],
-        \ 's' : [
-        \   'SELECT',
-        \   'SEL',
-        \   'S',
-        \ ],
-        \ 'S' : [
-        \   'S-LINE',
-        \   'S-LN',
-        \   'S-L',
-        \ ],
-        \ "\<C-s>": [
-        \   'S-BLOCK',
-        \   'S-BL',
-        \   'S-B',
-        \ ],
-        \ 't': [
-        \   'TERMINAL',
-        \   'TERM',
-        \   'T',
-        \ ],
+        \ 'n' :     ['NORMAL','NORM','N'],
+        \ 'i' :     ['INSERT','INS','I'],
+        \ 'R' :     ['REPLACE','REPL','R'],
+        \ 'v' :     ['VISUAL','VIS','V'],
+        \ 'V' :     ['V-LINE','V-LN','V-L'],
+        \ '\<C-v>': ['V-BLOCK','V-BL','V-B'],
+        \ 'c' :     ['COMMAND','CMD','C'],
+        \ 's' :     ['SELECT','SEL','S'],
+        \ 'S' :     ['S-LINE','S-LN','S-L'],
+        \ '\<C-s>': ['S-BLOCK','S-BL','S-B'],
+        \ 't':      ['TERMINAL','TERM','T'],
         \ }
-    " }}}
     let l:mode = mode()
     let f = @%
     if LL_IsNerd()

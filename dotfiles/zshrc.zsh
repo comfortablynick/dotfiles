@@ -10,6 +10,7 @@
 
 # ENVIRONMENT {{{1
 START_TIME="$(date)"
+zmodload zsh/zprof                                              # Profile startup
 
 # Check OS
 case "$(uname -s)" in
@@ -30,7 +31,7 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile su
 # Source all .zsh files in ZDOTDIR/conf.d (config snippets)
 for config ($ZDOTDIR/conf.d/*.zsh) source $config
 fpath=($ZDOTDIR/completions $fpath)
-# autoload -U compinit && compinit
+autoload -U compinit && compinit
 
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor

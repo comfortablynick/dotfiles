@@ -1,0 +1,11 @@
+#compdef pyenv
+emulate -L zsh
+
+local index
+(( index = ${(c)#words[0,CURRENT]} + $#PREFIX + 1 ))
+
+
+local resp=($(pyenv completions "$words" $index "$words[CURRENT]"))
+
+_description options opt_expl option
+_description arguments arg_expl argument

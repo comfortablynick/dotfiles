@@ -65,6 +65,7 @@ Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'Shougo/echodoc'
 Plug 'liuchengxu/vista.vim'
 Plug 'tpope/vim-surround'
+Plug 'chrisbra/Colorizer'
 
 " Linting {{{2
 Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it

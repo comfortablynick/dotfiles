@@ -40,7 +40,7 @@ set nowrap                                                      " Text wrapping 
 set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
 set clipboard=unnamed                                           " Use system clipboard
 set cursorline                                                  " Show line under cursor's line (check autocmds)
-set ruler                                                       " Show line info
+set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=300                                              " Update more often (helps GitGutter)
 set signcolumn=yes                                              " Always show; keep appearance consistent

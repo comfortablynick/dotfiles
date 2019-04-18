@@ -194,17 +194,16 @@ Plug 'mdempsky/gocode',
 Plug 'racer-rust/vim-racer',    Cond(0) " Cond(has('nvim'))
 
 " Status line {{{2
-" Airline {{{3
+" Vim (Airline) {{{3
 Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
 Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 
-" Lightline {{{3
-let g:nvim_statusbar = 'eleline'                                  " Use 'eleline' or 'lightline'
+" Neovim (Lightline/Eleline) {{{3
+let g:nvim_statusbar = 'eleline'
 let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
 let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
-    \ && !empty(glob('$HOME/git/eleline.vim'))
 
-Plug '~/git/eleline.vim',               Cond(has('nvim') && g:use_eleline)
+Plug 'comfortablynick/eleline.vim',     Cond(has('nvim') && g:use_eleline)
 Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)
 Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)

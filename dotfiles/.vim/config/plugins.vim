@@ -202,6 +202,7 @@ Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 let g:nvim_statusbar = 'eleline'
 let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
 let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
+let g:eleline_background = 234
 
 Plug 'comfortablynick/eleline.vim',     Cond(has('nvim') && g:use_eleline)
 Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)

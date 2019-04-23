@@ -59,7 +59,11 @@ Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
 Plug 'majutsushi/tagbar'
-Plug '~/.fzf'
+Plug 'junegunn/fzf',
+    \ Cond(1, {
+    \   'dir': '~/.fzf',
+    \   'do': './install --bin --no-key-bindings --no-update-rc',
+    \ })
 Plug 'junegunn/fzf.vim'
 Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
 Plug 'Shougo/echodoc'

@@ -1,0 +1,1 @@
+/home/nick/git/pure/functions/_pure_prompt_vimode.fish

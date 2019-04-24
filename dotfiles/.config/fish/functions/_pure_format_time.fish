@@ -1,0 +1,1 @@
+/home/nick/git/pure/functions/_pure_format_time.fish

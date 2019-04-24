@@ -38,8 +38,8 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export THEME="alien"
-export SSH_THEME="$THEME"
+export ZSH_THEME="pure"
+export SSH_THEME="$ZSH_THEME"
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -77,25 +77,25 @@ zplug "themes/sorin", \
     from:oh-my-zsh, \
     use:sorin.zsh-theme, \
     as:theme, \
-    if:'[ $THEME = sorin ]'
+    if:'[ $ZSH_THEME = sorin ]'
 
 zplug "eendroroy/alien", \
     as:theme, \
-    if:'[ $THEME = alien ]'
+    if:'[ $ZSH_THEME = alien ]'
 
 zplug "eendroroy/alien-minimal", \
     as:theme, \
-    if:'[ $THEME = alien-minimal ]'
+    if:'[ $ZSH_THEME = alien-minimal ]'
 
 # zplug "comfortablynick/alien-minimal", \
 #     as:theme, \
-#     if:'[ $THEME = alien-minimal ]'
+#     if:'[ $ZSH_THEME = alien-minimal ]'
 
 zplug "sindresorhus/pure", \
     use:pure.zsh, \
     from:github, \
     as:theme, \
-    if:'[ "$THEME" = "pure" ]'
+    if:'[ "$ZSH_THEME" = "pure" ]'
 
 # Must be loaded last (or deferred)
 # zplug "zsh-users/zsh-syntax-highlighting", \
@@ -146,7 +146,7 @@ fi
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
-if [ "$THEME" = "alien-minimal" ]; then
+if [ "$ZSH_THEME" = "alien-minimal" ]; then
     export USE_NERD_FONT="$NERD_FONT"
     export AM_INITIAL_LINE_FEED=0
     export AM_SHOW_FULL_DIR=1
@@ -162,7 +162,7 @@ if [ "$THEME" = "alien-minimal" ]; then
 fi
 
 # Alien {{{2
-# if [ "$THEME" = "alien" ]; then
+# if [ "$ZSH_THEME" = "alien" ]; then
 #     export ALIEN_SECTIONS_LEFT=(
 #       exit
 #       battery

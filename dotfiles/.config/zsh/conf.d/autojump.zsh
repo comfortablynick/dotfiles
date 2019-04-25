@@ -5,6 +5,8 @@ if [ -z "$(command -v autojump 2>/dev/null)" ] && [ -n "$(command -v git 2>/dev/
     "$HOME/src/autojump/install.py"
 fi
 
+[[ $AUTOJUMP_SOURCED -eq 1 ]] && return
+
 export AUTOJUMP_SOURCED=1
 
 # set user installation paths

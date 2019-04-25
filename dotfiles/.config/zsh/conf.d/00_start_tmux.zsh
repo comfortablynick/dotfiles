@@ -1,8 +1,10 @@
 # Return if already in tmux or if special var is set
-[ -n "$TMUX" -o -f "$HOME/.no_zsh_tmux_login" ] && return
+{ [ -n "$TMUX" ] || -f "$HOME/.no_zsh_tmux_login" ] || [ -z $(command -v tmux) ]; } && return
 
 if [ ! -f "$HOME/.no_zsh_tmux_next_login" ]; then
     # Start tmux
+    export SUB='|'
+    export RSUB='|'
     session_name=""
     echo "Starting tmux..."
     [ -n "$SSH_CONNECTION" ] && session_name="ios" || session_name="def"

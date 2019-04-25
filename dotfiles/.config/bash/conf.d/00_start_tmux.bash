@@ -3,21 +3,11 @@
 #       - already in tmux
 #       - 'no tmux' file exists in home dir for this shell
 #       - `tmux` command not present
-([ -n "$TMUX" ] || [ -f "$HOME/.no_bash_tmux_login" ] || [ -z "$(command -v tmux)" ]) && return
+{ [ -n "$TMUX" ] || [ -f "$HOME/.no_bash_tmux_login" ] || [ -z "$(command -v tmux)" ]; } && return
 
 if [ ! -f "$HOME/.no_bash_tmux_next_login" ]; then
-    # Start tmux
-    if [ "$COLUMNS" -gt 200 ]; then
-            export SEP=''
-            export SUB=''
-            export RSEP=''
-            export RSUB=''
-        else
-            export SEP=''
-            export SUB='|'
-            export RSEP=''
-            export RSUB='|'
-        fi
+    export SUB='|'
+    export RSUB='|'
     session_name=""
     echo "Starting tmux..."
     [ -n "$SSH_CONNECTION" ] && session_name="ios" || session_name="def"

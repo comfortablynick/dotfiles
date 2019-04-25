@@ -8,9 +8,26 @@
 # NON-INTERACTIVE {{{1
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
 
+# PROFILE STARTUP {{{1
+export DEBUG_MODE=false
+export PROFILE=0
+
+if [[ $PROFILE -eq 1 ]]; then
+    # from https://esham.io/2018/02/zsh-profiling
+    zmodload zsh/datetime
+    setopt PROMPT_SUBST
+    PS4='+$EPOCHREALTIME %N:%i> '
+
+    logfile=$(mktemp zsh_profile.XXXXXXXX)
+    echo "Logging to $logfile"
+    exec 3>&2 2>$logfile
+
+    setopt XTRACE
+fi
+
 # ENVIRONMENT {{{1
 START_TIME="$(date)"
-zmodload zsh/zprof                                              # Profile startup
+# zmodload zsh/zprof                                              # Profile startup
 
 # Check OS
 case "$(uname -s)" in
@@ -22,33 +39,35 @@ case "$(uname -s)" in
 esac
 
 # Check for debug mode
-[ "$DEBUG_MODE" = true ] && echo "Sourcing .zshrc"
+[[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
 
-export XDG_CONFIG_HOME="$HOME/.config"                          # Common config dir
-export XDG_DATA_HOME="$HOME/.local"                             # Common data dir
-export ZDOTDIR="$XDG_CONFIG_HOME/zsh"                           # ZSH dotfile subdir
+export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
+export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
+export ZDOTDIR=${XDG_CONFIG_HOME}/zsh                           # ZSH dotfile subdir
+export ZPLUG_HOME=${HOME}/.zplug                                # Zplug install dir
 
 # Source all .zsh files in ZDOTDIR/conf.d (config snippets)
 for config ($ZDOTDIR/conf.d/*.zsh) source $config
 fpath=($ZDOTDIR/completions $fpath)
-autoload -U compinit && compinit
+# autoload -U compinit # && compinit
 
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export ZSH_THEME="pure"
-export SSH_THEME="$ZSH_THEME"
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
 setopt pushd_ignore_dups;                                       # Ignore multiple copies of same dir in stack
 setopt interactivecomments;                                     # Allow bash-style command line comments
-
 HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
+
+# Theme
+export ZSH_THEME="powerlevel10k"
+export SSH_THEME="$ZSH_THEME"
 
 if [ is_ssh ]; then
     export VIM_SSH_COMPAT=1
@@ -58,91 +77,86 @@ fi
 # PLUGINS {{{1
 # Zplug Config {{{2
 # Download zplug if it doesn't exist
-[ ! -d ~/.zplug ] && git clone https://github.com/zplug/zplug ~/.zplug
-
-# Essential
-source ~/.zplug/init.zsh
+# Check if zplug is installed
+if [[ ! -d $ZPLUG_HOME ]]; then
+    git clone https://github.com/zplug/zplug $ZPLUG_HOME
+    source $ZPLUG_HOME/init.zsh && zplug update
+else
+    source $ZPLUG_HOME/init.zsh
+fi
 
 # Plugin Definitions {{{2
-
-zplug "zplug/zplug", hook-build:'zplug --self-manage'
+zplug "zplug/zplug" #, hook-build:'zplug --self-manage'
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
-zplug "mafredri/zsh-async", from:github
-zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
-# zplug "plugins/vi-mode", from:"oh-my-zsh", as:plugin, use:vi-mode.plugin.zsh
+# zplug "mafredri/zsh-async", from:github
+# zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
 
-# Themes
-zplug "themes/sorin", \
-    from:oh-my-zsh, \
-    use:sorin.zsh-theme, \
-    as:theme, \
-    if:'[ $ZSH_THEME = sorin ]'
-
-zplug "eendroroy/alien", \
-    as:theme, \
-    if:'[ $ZSH_THEME = alien ]'
-
-zplug "eendroroy/alien-minimal", \
-    as:theme, \
-    if:'[ $ZSH_THEME = alien-minimal ]'
-
+# Themes {{{3
+# zplug "themes/sorin", \
+#     from:oh-my-zsh, \
+#     use:sorin.zsh-theme, \
+#     as:theme, \
+#     if:'[ $ZSH_THEME = sorin ]'
+#
+# zplug "eendroroy/alien", \
+#     as:theme, \
+#     if:'[ $ZSH_THEME = alien ]'
+#
+# zplug "eendroroy/alien-minimal", \
+#     as:theme, \
+#     if:'[ $ZSH_THEME = alien-minimal ]'
+#
 # zplug "comfortablynick/alien-minimal", \
 #     as:theme, \
 #     if:'[ $ZSH_THEME = alien-minimal ]'
+#
+# zplug "sindresorhus/pure", \
+#     use:pure.zsh, \
+#     from:github, \
+#     as:theme, \
+#     if:'[ "$ZSH_THEME" = "pure" ]'
 
-zplug "sindresorhus/pure", \
-    use:pure.zsh, \
-    from:github, \
-    as:theme, \
-    if:'[ "$ZSH_THEME" = "pure" ]'
+zplug romkatv/powerlevel10k, \
+    use:powerlevel10k.zsh-theme \
+    if:'[ "$ZSH_THEME" = "powerlevel10k" ]'
+
+# Syntax {{{3
+zplug "zdharma/fast-syntax-highlighting"
 
 # Must be loaded last (or deferred)
 # zplug "zsh-users/zsh-syntax-highlighting", \
 #     defer:2
-zplug "zdharma/fast-syntax-highlighting"
-
-# Source bash files
-# zplug "$HOME", from:local, defer:1, use:'.{bash_aliases,bash_functions}'
-# zplug "$HOME", from:local, defer:2, use:'.bash_linux', if:'[[ $OSTYPE == linux* ]]'
-# zplug "$HOME", from:local, defer:2, use:'.bash_mac', if:'[[ $OSTYPE == darwin* ]]'
+# #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
+# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
+# ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+#
+# typeset -A ZSH_HIGHLIGHT_STYLES
+# ZSH_HIGHLIGHT_STYLES[cursor]='bg=yellow'
+# ZSH_HIGHLIGHT_STYLES[globbing]='none'
+# ZSH_HIGHLIGHT_STYLES[path]='fg=white'
+# ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
+# ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
+# ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
+# ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
+# ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+# ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
+# ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
+# ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow'
+# ZSH_HIGHLIGHT_STYLES[redirection]='fg=magenta'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=cyan,bold'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
+# ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
 
 # Zplug Load {{{2
 # Install plugins if there are plugins that have not been installed
-if ! zplug check; then
-  printf "Install missing plugins? [y/N]: "
-  if read -q; then
-      echo; zplug install
-  fi
-fi
+# zplug check || zplug install
+# zplug clean --force
 
-# Syntax highlighting config
-if zplug check "zsh-users/zsh-syntax-highlighting"; then
-  #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
-  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
-  ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
-
-  typeset -A ZSH_HIGHLIGHT_STYLES
-  ZSH_HIGHLIGHT_STYLES[cursor]='bg=yellow'
-  ZSH_HIGHLIGHT_STYLES[globbing]='none'
-  ZSH_HIGHLIGHT_STYLES[path]='fg=white'
-  ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
-  ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
-  ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
-  ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
-  ZSH_HIGHLIGHT_STYLES[command]='fg=green'
-  ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
-  ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
-  ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow'
-  ZSH_HIGHLIGHT_STYLES[redirection]='fg=magenta'
-  ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=cyan,bold'
-  ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
-  ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
-  ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
-fi
 
 # Load zplug
-[ "$DEBUG_MODE" = true ] && zplug && zplug load --verbose || zplug load
+{ [[ $DEBUG_MODE = true ]] || [[ $PROFILE -eq 1 ]] } && zplug load --verbose || zplug load
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
@@ -277,5 +291,8 @@ pyenv() {
   esac
 }
 # SHELL STARTUP {{{1
-# Python Virtual Env
-# source "$def_venv/bin/activate"
+# Profiling end
+if [[ $PROFILE -eq 1 ]]; then
+    unsetopt XTRACE
+    exec 2>&3 3>&-
+fi

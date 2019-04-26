@@ -161,7 +161,7 @@ Plug 'zchee/deoplete-jedi',
     \   'for': 'python',
     \ })
 
-" Typescript {{{3
+" Typescript (Deoplete) {{{3
 " Plug 'mhartington/nvim-typescript',
 "     \ Cond(has('nvim'),
 "     \ {

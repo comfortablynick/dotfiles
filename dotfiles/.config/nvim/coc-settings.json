@@ -19,11 +19,16 @@
   "coc.preferences.previewAutoClose": true,
   "coc.preferences.formatOnType": true,
 
+  // Rust
   "rust-client.channel": "stable",
   "rust.clippy_preference": "on",
 
+  // Python
   "python.linting.enabled": false,
   "python.jediEnabled": true,
+
+  // Tsserver
+  // "tsserver.npm": "/home/nick/.nvm/versions/node/v10.15.3/bin/npm",
 
   // Server definitions
   "languageserver": {

@@ -43,13 +43,11 @@ esac
 
 export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
 export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
-export ZDOTDIR=${XDG_CONFIG_HOME}/zsh                           # ZSH dotfile subdir
-export ZPLUG_HOME=${HOME}/.zplug                                # Zplug install dir
+export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
+export ZPLG_HOME=${ZDOTDIR}/.zplugin                            # Zplugin install dir
 
-# Source all .zsh files in ZDOTDIR/conf.d (config snippets)
-for config ($ZDOTDIR/conf.d/*.zsh) source $config
-fpath=($ZDOTDIR/completions $fpath)
-# autoload -U compinit # && compinit
+for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
+fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
 
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor
@@ -65,6 +63,24 @@ HYPHEN_INSENSITIVE="true"                                       # Hyphen and das
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 
+# Shell history
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000000
+SAVEHIST=10000000
+setopt BANG_HIST                                                # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY                                         # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY                                       # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY                                            # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST                                   # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS                                         # Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS                                     # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS                                        # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE                                        # Don't record an entry starting with a space.
+setopt HIST_SAVE_NO_DUPS                                        # Don't write duplicate entries in the history file.
+setopt HIST_REDUCE_BLANKS                                       # Remove superfluous blanks before recording entry.
+setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
+setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
+
 # Theme
 export ZSH_THEME="powerlevel10k"
 export SSH_THEME="$ZSH_THEME"
@@ -75,88 +91,124 @@ if [ is_ssh ]; then
 fi
 
 # PLUGINS {{{1
-# Zplug Config {{{2
-# Download zplug if it doesn't exist
-# Check if zplug is installed
-if [[ ! -d $ZPLUG_HOME ]]; then
-    git clone https://github.com/zplug/zplug $ZPLUG_HOME
-    source $ZPLUG_HOME/init.zsh && zplug update
-else
-    source $ZPLUG_HOME/init.zsh
+# Zplugin Config {{{2
+if ! [[ -d $ZPLG_HOME ]]; then
+    mkdir $ZPLG_HOME
+    chmod g-rwX $ZPLG_HOME
 fi
 
-# Plugin Definitions {{{2
-zplug "zplug/zplug" #, hook-build:'zplug --self-manage'
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-autosuggestions"
-# zplug "mafredri/zsh-async", from:github
-# zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
+if ! [[ -d $ZPLG_HOME/bin/.git ]]; then
+    echo ">>> Downloading zplugin to $ZPLG_HOME/bin"
+    cd $ZPLG_HOME
+    git clone --depth 10 https://github.com/zdharma/zplugin.git bin
+    echo ">>> Done"
+fi
 
-# Themes {{{3
-# zplug "themes/sorin", \
-#     from:oh-my-zsh, \
-#     use:sorin.zsh-theme, \
-#     as:theme, \
-#     if:'[ $ZSH_THEME = sorin ]'
+source $ZPLG_HOME/bin/zplugin.zsh
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+
+# Zplugin Plugin Definitions {{{2
+zplugin ice if'[[ $ZSH_THEME = powerlevel10k ]]'
+zplugin load romkatv/powerlevel10k
+
+zplugin ice pick"async.zsh" src"pure.zsh" if'[[ $ZSH_THEME = pure ]]'
+zplugin light sindresorhus/pure
+
+zplugin ice wait"0" blockf lucid
+zplugin light zsh-users/zsh-completions
+
+zplugin ice wait"0" atload"_zsh_autosuggest_start" lucid
+zplugin light zsh-users/zsh-autosuggestions
+
+zplugin ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
+zplugin light zdharma/fast-syntax-highlighting
+
+zplugin ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
+zplugin load junegunn/fzf
+
+# # Zplug Config {{{2
+# # Download zplug if it doesn't exist
+# # Check if zplug is installed
+# if [[ ! -d $ZPLUG_HOME ]]; then
+#     git clone https://github.com/zplug/zplug $ZPLUG_HOME
+#     source $ZPLUG_HOME/init.zsh && zplug update
+# else
+#     source $ZPLUG_HOME/init.zsh
+# fi
 #
-# zplug "eendroroy/alien", \
-#     as:theme, \
-#     if:'[ $ZSH_THEME = alien ]'
+# # Zplug Plugin Definitions {{{2
+# zplug "zplug/zplug" #, hook-build:'zplug --self-manage'
+# zplug "zsh-users/zsh-completions"
+# zplug "zsh-users/zsh-autosuggestions"
+# zplug "mafredri/zsh-async"
+# # zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
 #
-# zplug "eendroroy/alien-minimal", \
-#     as:theme, \
-#     if:'[ $ZSH_THEME = alien-minimal ]'
+# # Themes {{{3
+# # zplug "themes/sorin", \
+# #     from:oh-my-zsh, \
+# #     use:sorin.zsh-theme, \
+# #     as:theme, \
+# #     if:'[ $ZSH_THEME = sorin ]'
+# #
+# # zplug "eendroroy/alien", \
+# #     as:theme, \
+# #     if:'[ $ZSH_THEME = alien ]'
+# #
+# # zplug "eendroroy/alien-minimal", \
+# #     as:theme, \
+# #     if:'[ $ZSH_THEME = alien-minimal ]'
+# #
+# # zplug "comfortablynick/alien-minimal", \
+# #     as:theme, \
+# #     if:'[ $ZSH_THEME = alien-minimal ]'
+# #
+# # zplug "sindresorhus/pure", \
+# #     use:pure.zsh, \
+# #     from:github, \
+# #     as:theme, \
+# #     if:'[ $ZSH_THEME = pure ]'
 #
-# zplug "comfortablynick/alien-minimal", \
-#     as:theme, \
-#     if:'[ $ZSH_THEME = alien-minimal ]'
+# zplug romkatv/powerlevel10k, \
+#     use:powerlevel10k.zsh-theme, \
+#     if:'[ $ZSH_THEME = powerlevel10k ]'
 #
-# zplug "sindresorhus/pure", \
-#     use:pure.zsh, \
-#     from:github, \
-#     as:theme, \
-#     if:'[ "$ZSH_THEME" = "pure" ]'
-
-zplug romkatv/powerlevel10k, \
-    use:powerlevel10k.zsh-theme \
-    if:'[ "$ZSH_THEME" = "powerlevel10k" ]'
-
-# Syntax {{{3
-zplug "zdharma/fast-syntax-highlighting"
-
-# Must be loaded last (or deferred)
-# zplug "zsh-users/zsh-syntax-highlighting", \
-#     defer:2
-# #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
-# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
-# ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+# # Syntax {{{3
+# zplug "zdharma/fast-syntax-highlighting"
 #
-# typeset -A ZSH_HIGHLIGHT_STYLES
-# ZSH_HIGHLIGHT_STYLES[cursor]='bg=yellow'
-# ZSH_HIGHLIGHT_STYLES[globbing]='none'
-# ZSH_HIGHLIGHT_STYLES[path]='fg=white'
-# ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
-# ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
-# ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
-# ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
-# ZSH_HIGHLIGHT_STYLES[command]='fg=green'
-# ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
-# ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
-# ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow'
-# ZSH_HIGHLIGHT_STYLES[redirection]='fg=magenta'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=cyan,bold'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
-# ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
-
-# Zplug Load {{{2
-# Install plugins if there are plugins that have not been installed
-# zplug check || zplug install
-# zplug clean --force
-
-
-# Load zplug
-{ [[ $DEBUG_MODE = true ]] || [[ $PROFILE -eq 1 ]] } && zplug load --verbose || zplug load
+# # Must be loaded last (or deferred)
+# # zplug "zsh-users/zsh-syntax-highlighting", \
+# #     defer:2
+# # #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
+# # ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
+# # ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
+# #
+# # typeset -A ZSH_HIGHLIGHT_STYLES
+# # ZSH_HIGHLIGHT_STYLES[cursor]='bg=yellow'
+# # ZSH_HIGHLIGHT_STYLES[globbing]='none'
+# # ZSH_HIGHLIGHT_STYLES[path]='fg=white'
+# # ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
+# # ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
+# # ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
+# # ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
+# # ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+# # ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
+# # ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
+# # ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow'
+# # ZSH_HIGHLIGHT_STYLES[redirection]='fg=magenta'
+# # ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=cyan,bold'
+# # ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
+# # ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
+# # ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
+#
+# # Zplug Load {{{2
+# # Install plugins if there are plugins that have not been installed
+# # zplug check || zplug install
+# # zplug clean --force
+#
+#
+# # Load zplug
+# { [[ $DEBUG_MODE = true ]] || [[ $PROFILE -eq 1 ]] } && zplug load --verbose || zplug load
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
@@ -260,11 +312,11 @@ is_ssh() {
   fi
 }
 
-[ "$DEBUG_MODE" = true ] && echo "Exiting .zshrc"
+[[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
 
 _pyenv_virtualenv_hook() {
     local ret=$?
-    if [ -n "$VIRTUAL_ENV" ]; then
+    if [[ -n $VIRTUAL_ENV ]]; then
         eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
     else
         eval "$(pyenv sh-activate --quiet || true)" || true
@@ -272,7 +324,7 @@ _pyenv_virtualenv_hook() {
     return $ret
 }
 
-if ! [[ "$PROMPT_COMMAND" =~ _pyenv_virtualenv_hook ]]; then
+if ! [[ $PROMPT_COMMAND =~ _pyenv_virtualenv_hook ]]; then
     PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
 fi
 
@@ -289,6 +341,19 @@ pyenv() {
   *)
     command pyenv "$command" "$@";;
   esac
+}
+
+# `ls` on directory change
+chpwd() {
+    # Ignore if LS_AFTER_CD is not set, or we are in HOME
+    { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return
+    # if [[ $ARCH = "x86_64" ]] && [[ $(command -v exa 2>/dev/null) ]]; then
+    #     exa --group-directories-first
+    # else
+    #     # ls is faster on ARM
+    #     ls --group-directories-first
+    # fi
+    ls --group-directories-first
 }
 # SHELL STARTUP {{{1
 # Profiling end

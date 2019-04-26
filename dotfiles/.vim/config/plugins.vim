@@ -78,9 +78,9 @@ Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
 Plug 'sbdchd/neoformat'
 
 " Syntax highlighting {{{2
-Plug 'HerringtonDarkholme/yats',        Cond(1, { 'for': 'typescript' })
-Plug 'gabrielelana/vim-markdown',       Cond(1, { 'for': 'markdown' })
-Plug 'dag/vim-fish',                    Cond(1, { 'for': 'fish' })
+Plug 'HerringtonDarkholme/yats' ",        Cond(1, { 'for': 'typescript' })
+Plug 'gabrielelana/vim-markdown' ",       Cond(1, { 'for': 'markdown' })
+Plug 'dag/vim-fish' ",                    Cond(1, { 'for': 'fish' })
 Plug 'cespare/vim-toml'
 Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
 
@@ -162,16 +162,16 @@ Plug 'zchee/deoplete-jedi',
     \ })
 
 " Typescript {{{3
-Plug 'mhartington/nvim-typescript',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for':
-    \       [
-    \           'typescript',
-    \           'tsx',
-    \       ],
-    \   'do': './install.sh',
-    \ })
+" Plug 'mhartington/nvim-typescript',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'for':
+"     \       [
+"     \           'typescript',
+"     \           'tsx',
+"     \       ],
+"     \   'do': './install.sh',
+"     \ })
 
 " Fish {{{3
 Plug 'ponko2/deoplete-fish',
@@ -495,7 +495,7 @@ augroup deoplete_preview
 augroup end
 
 " Nvim Typescript {{{2
-let g:nvim_typescript#type_info_on_hold = 1
+" let g:nvim_typescript#type_info_on_hold = 1
 
 " YouCompleteMe {{{2
 let g:ycm_filetype_blacklist = {

@@ -29,12 +29,13 @@ timestamp() {
 # show directory contents if not $HOME
 cd() {
     builtin cd "$@" && {
-        if [ "$PWD" != "$HOME" ]; then
-            if [ "$ARCH" = "x86_64" ]; then
-                exa --group-directories-first
-            else
-                ls # ls is faster on ARM
-            fi
+        if [ "$PWD" != "$HOME" ] || [ "$LS_AFTER_CD" -eq 1 ]; then
+            ls --group-directories-first
+            # if [ "$ARCH" = "x86_64" ]; then
+            #     exa --group-directories-first
+            # else
+            #     ls # ls is faster on ARM
+            # fi
         fi
     }
 }

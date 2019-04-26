@@ -1,16 +1,16 @@
 # Start tmux session for interactive shells
 if status is-interactive
-    if test $COLUMNS -gt 200
-        set -gx SEP ''
-        set -gx SUB ''
-        set -gx RSEP ''
-        set -gx RSUB ''
-    else
-        set -gx SEP ''
-        set -gx SUB '|'
-        set -gx RSEP ''
-        set -gx RSUB '|'
-    end
+    # if test $COLUMNS -gt 200
+    #     set -gx SEP ''
+    #     set -gx SUB ''
+    #     set -gx RSEP ''
+    #     set -gx RSUB ''
+    # else
+    set -gx SEP ''
+    set -gx SUB '|'
+    set -gx RSEP ''
+    set -gx RSUB '|'
+    # end
     if test -n (type -f tmux 2>/dev/null)
         and test -z "$TMUX"
         and not set -q no_tmux_login

@@ -230,7 +230,13 @@ function! RunCmd(cmd_type) abort
         \   'build': ' python ' . expand('%'),
         \   'install': ' python ' . expand('%'),
         \   'run': ' python ' . expand('%'),
-        \ }}
+        \ },
+        \ 'typescript': {
+        \   'build': 'clasp push',
+        \   'install': 'clasp push',
+        \   'run': 'clasp run',
+        \ }
+        \ }
     let l:ft = get(l:ft_cmds, &filetype, {})
     let l:cmd = get(l:ft, a:cmd_type, '')
     if l:ft ==# {} || l:cmd ==# ''

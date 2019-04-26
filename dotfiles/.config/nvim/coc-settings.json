@@ -22,13 +22,14 @@
   // Rust
   "rust-client.channel": "stable",
   "rust.clippy_preference": "on",
+  "rust.show_hover_context": true,
 
   // Python
   "python.linting.enabled": false,
   "python.jediEnabled": true,
 
-  // Tsserver
-  // "tsserver.npm": "/home/nick/.nvm/versions/node/v10.15.3/bin/npm",
+  // Typescript
+  "tsserver.reportStyleChecksAsWarnings": true,
 
   // Server definitions
   "languageserver": {

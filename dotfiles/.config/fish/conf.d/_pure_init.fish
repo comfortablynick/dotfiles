@@ -1,1 +1,0 @@
-/home/nick/git/pure/conf.d/_pure_init.fish

@@ -1,1 +1,0 @@
-/home/nick/git/pure/functions/_pure_set_default.fish

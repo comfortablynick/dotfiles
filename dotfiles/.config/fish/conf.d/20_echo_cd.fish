@@ -2,7 +2,7 @@ function echo_cd --on-variable PWD --description 'echo directory listing on chan
     if set -q LS_AFTER_CD
         and test $LS_AFTER_CD -eq 1
         if test "$PWD" != "$HOME"
-            exa --group-directories-first
+                ls -a --group-directories-first
         end
     end
 end

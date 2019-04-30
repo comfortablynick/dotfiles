@@ -118,7 +118,7 @@ Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
     \ {
-    \   'do': { -> Coc_post_update() },
+    \   'do': 'yarn install --frozen-lockfile',
     \   'for': g:completion_filetypes['coc'],
     \ })
 
@@ -484,7 +484,7 @@ let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
 " Coc {{{2
-" let g:coc_force_debug = 1
+let g:coc_force_debug = 1
 let g:coc_global_extensions = 1                                 " Install extensions when not found
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'
@@ -539,6 +539,7 @@ let g:VtrClearEmptyLines = 0                                    " Disable cleari
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send
 let g:VtrOrientation = 'h'                                      " h/v split
 let g:VtrPercentage = 40                                        " Percent of tmux window the runner pane with occupy
+let g:VtrInitialCommand = 'LS_AFTER_CD=0'                       " Turn off auto 'ls after cd'
 
 let g:vtr_filetype_runner_overrides = {
     \ 'go': 'go run *.go',

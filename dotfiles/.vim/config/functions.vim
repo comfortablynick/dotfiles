@@ -220,6 +220,11 @@ function! RunCmd(cmd_type) abort
         \   'install': ' pushd build && make install; popd',
         \   'run': ' pushd build && make install; popd && ' . GetRootFolderName(),
         \  },
+        \ 'c': {
+        \   'build': ' pushd build && make install; popd',
+        \   'install': ' pushd build && make install; popd',
+        \   'run': ' pushd build && make install; popd && ' . GetRootFolderName(),
+        \  },
         \ 'rust': {
         \   'build': ' cargo build',
         \   'build-release': ' cargo build --release',

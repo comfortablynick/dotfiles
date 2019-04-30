@@ -139,7 +139,7 @@ fi
     return 1
   fi
 
-  local mode=${PURE_POWER_MODE:-fancy}
+  local mode=${PURE_POWER_MODE:-compatibile}
   case $mode in
     fancy)
       local vi_insert=$'\u276F'
@@ -149,6 +149,15 @@ fi
       local outgoing=$'\u21E1'
       local root=$'\uF09C'
       local jobs=$'\uF013'
+      ;;
+  compatibile)
+      local vi_insert=$'\u276F'
+      local vi_cmd=$'\u276E'
+      local lock=''
+      local incoming=$'\u21E3'
+      local outgoing=$'\u21E1'
+      local root=$'\u26A1'
+      local jobs=$'\u2699'
       ;;
     *)
       if [[ $mode != portable ]]; then

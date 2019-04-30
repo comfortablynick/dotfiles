@@ -270,6 +270,10 @@ let g:ale_linters = {
     \   'pydocstyle',
     \  ],
     \ 'cpp': [],
+    \ 'c': [
+    \   'clangtidy',
+    \   'gcc',
+    \  ],
     \ 'rust': [],
     \ 'sh': [
     \   'shellcheck'
@@ -303,6 +307,9 @@ let g:ale_fixers = {
     \ 'cpp': [
     \   'clang-format',
     \  ],
+    \ 'c': [
+    \   'clang-format',
+    \  ],
     \ 'rust': [
     \   'rustfmt',
     \  ],
@@ -316,6 +323,7 @@ let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --en
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
 let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_c_gcc_options = '-std=gnu11 -Wall -Wextra'
 
 " Neoformat {{{2
 " Global Settings

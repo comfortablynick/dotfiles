@@ -8,9 +8,13 @@
 # NON-INTERACTIVE {{{1
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
 
-# PROFILE STARTUP {{{1
+# PROFILE / DEBUG {{{1
 export DEBUG_MODE=false
 export PROFILE=0
+
+# Check for debug mode
+[[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
+# START_TIME="$(date)"
 
 if [[ $PROFILE -eq 1 ]]; then
     # from https://esham.io/2018/02/zsh-profiling
@@ -26,10 +30,7 @@ if [[ $PROFILE -eq 1 ]]; then
 fi
 
 # ENVIRONMENT {{{1
-START_TIME="$(date)"
-# zmodload zsh/zprof                                              # Profile startup
-
-# Check OS
+# OS Type {{{2
 case "$(uname -s)" in
     Linux*)     OS_NAME=Linux;;
     Darwin*)    OS_NAME=Mac;;
@@ -38,9 +39,7 @@ case "$(uname -s)" in
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
 
-# Check for debug mode
-[[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
-
+# Directories {{{2
 export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
 export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
 export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
@@ -54,6 +53,17 @@ export VISUAL=nvim                                              # Set default vi
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
+
+# Set theme {{{2
+export ZSH_THEME="powerlevel10k"
+export SSH_THEME="$ZSH_THEME"
+
+if [ is_ssh ]; then
+    export VIM_SSH_COMPAT=1
+    export THEME=$SSH_THEME
+fi
+
+# SHELL OPTS {{{1
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -63,14 +73,13 @@ HYPHEN_INSENSITIVE="true"                                       # Hyphen and das
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 
-# Shell history
-HISTFILE="$HOME/.zsh_history"
+# SHELL HISTORY {{{1
+HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
 setopt BANG_HIST                                                # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY                                         # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY                                       # Write to the history file immediately, not when the shell exits.
-# setopt SHARE_HISTORY                                            # Share history between all sessions.
 setopt HIST_EXPIRE_DUPS_FIRST                                   # Expire duplicate entries first when trimming history.
 setopt HIST_IGNORE_DUPS                                         # Don't record an entry that was just recorded again.
 setopt HIST_IGNORE_ALL_DUPS                                     # Delete old recorded entry if new entry is a duplicate.
@@ -80,15 +89,6 @@ setopt HIST_SAVE_NO_DUPS                                        # Don't write du
 setopt HIST_REDUCE_BLANKS                                       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
-
-# Theme
-export ZSH_THEME="powerlevel10k"
-export SSH_THEME="$ZSH_THEME"
-
-if [ is_ssh ]; then
-    export VIM_SSH_COMPAT=1
-    export THEME=$SSH_THEME
-fi
 
 # PLUGINS {{{1
 # Zplugin Config {{{2
@@ -127,92 +127,9 @@ zplugin light zdharma/fast-syntax-highlighting
 zplugin ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zplugin load junegunn/fzf
 
-# # Zplug Config {{{2
-# # Download zplug if it doesn't exist
-# # Check if zplug is installed
-# if [[ ! -d $ZPLUG_HOME ]]; then
-#     git clone https://github.com/zplug/zplug $ZPLUG_HOME
-#     source $ZPLUG_HOME/init.zsh && zplug update
-# else
-#     source $ZPLUG_HOME/init.zsh
-# fi
-#
-# # Zplug Plugin Definitions {{{2
-# zplug "zplug/zplug" #, hook-build:'zplug --self-manage'
-# zplug "zsh-users/zsh-completions"
-# zplug "zsh-users/zsh-autosuggestions"
-# zplug "mafredri/zsh-async"
-# # zplug "changyuheng/zsh-interactive-cd", from:github, use:zsh-interactive-cd.plugin.zsh
-#
-# # Themes {{{3
-# # zplug "themes/sorin", \
-# #     from:oh-my-zsh, \
-# #     use:sorin.zsh-theme, \
-# #     as:theme, \
-# #     if:'[ $ZSH_THEME = sorin ]'
-# #
-# # zplug "eendroroy/alien", \
-# #     as:theme, \
-# #     if:'[ $ZSH_THEME = alien ]'
-# #
-# # zplug "eendroroy/alien-minimal", \
-# #     as:theme, \
-# #     if:'[ $ZSH_THEME = alien-minimal ]'
-# #
-# # zplug "comfortablynick/alien-minimal", \
-# #     as:theme, \
-# #     if:'[ $ZSH_THEME = alien-minimal ]'
-# #
-# # zplug "sindresorhus/pure", \
-# #     use:pure.zsh, \
-# #     from:github, \
-# #     as:theme, \
-# #     if:'[ $ZSH_THEME = pure ]'
-#
-# zplug romkatv/powerlevel10k, \
-#     use:powerlevel10k.zsh-theme, \
-#     if:'[ $ZSH_THEME = powerlevel10k ]'
-#
-# # Syntax {{{3
-# zplug "zdharma/fast-syntax-highlighting"
-#
-# # Must be loaded last (or deferred)
-# # zplug "zsh-users/zsh-syntax-highlighting", \
-# #     defer:2
-# # #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'
-# # ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line)
-# # ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
-# #
-# # typeset -A ZSH_HIGHLIGHT_STYLES
-# # ZSH_HIGHLIGHT_STYLES[cursor]='bg=yellow'
-# # ZSH_HIGHLIGHT_STYLES[globbing]='none'
-# # ZSH_HIGHLIGHT_STYLES[path]='fg=white'
-# # ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey'
-# # ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
-# # ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan'
-# # ZSH_HIGHLIGHT_STYLES[function]='fg=orange'
-# # ZSH_HIGHLIGHT_STYLES[command]='fg=green'
-# # ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
-# # ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
-# # ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow'
-# # ZSH_HIGHLIGHT_STYLES[redirection]='fg=magenta'
-# # ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=cyan,bold'
-# # ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
-# # ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
-# # ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
-#
-# # Zplug Load {{{2
-# # Install plugins if there are plugins that have not been installed
-# # zplug check || zplug install
-# # zplug clean --force
-#
-#
-# # Load zplug
-# { [[ $DEBUG_MODE = true ]] || [[ $PROFILE -eq 1 ]] } && zplug load --verbose || zplug load
-
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
-if [ "$ZSH_THEME" = "alien-minimal" ]; then
+if [[ $ZSH_THEME = "alien-minimal" ]]; then
     export USE_NERD_FONT="$NERD_FONT"
     export AM_INITIAL_LINE_FEED=0
     export AM_SHOW_FULL_DIR=1
@@ -245,7 +162,7 @@ fi
 # promptlib-zsh {{{2
 export PLIB_GIT_MOD_SYM='★'
 
-# colored man {{{2
+# Colored man {{{2
 export MANROFFOPT='-c'
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
 export LESS_TERMCAP_md=$(tput bold; tput setaf 6)
@@ -258,13 +175,8 @@ export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
 
 # KEYMAP {{{1
-zle -N edit-command-line
-
 bindkey -v
-
-# allow v to edit the command line (standard behaviour)
-autoload -Uz edit-command-line
-# bindkey -M vicmd 'v' edit-command-line
+# export KEYTIMEOUT=1                                                    # Timeout for key sequences in vi mode (10ms)
 
 bindkey '^P' up-history
 bindkey '^N' down-history
@@ -272,51 +184,45 @@ bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
-
-# kj :: <Esc>
-bindkey 'kj' vi-cmd-mode
-
-# function zle-line-init zle-keymap-select {
-#     VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-#     # RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}$EPS1"
-#     zle reset-prompt
-# }
 #
-# zle -N zle-line-init
-# zle -N zle-keymap-select
-export KEYTIMEOUT=1                                                    # Timeout for key sequences in vi mode (10ms)
+# # kj :: <Esc>
+bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
+
+zle -N zle-keymap-select
 
 # FUNCTIONS {{{1
-
-# relz :: Reload zsh shell
+# relz :: Reload zsh shell {{{2
 # Params
 #   -d Debug mode: print verbose debug information
-relz() {
-  if [ "$1" = "-d" -o "$1" = "d" ]; then
-    echo "Reloading zsh in debug mode... "
-    export DEBUG_MODE=true
-  else
-    echo "Reloading zsh... "
-    export DEBUG_MODE=false
-  fi
-  source ~/.zshrc
-  echo "Complete!"
-}
+# relz() {
+#   if [[ $1 = "-d" ]] || [[ $1 = "d" ]]; then
+#     echo "Reloading zsh in debug mode... "
+#     export DEBUG_MODE=true
+#   else
+#     echo "Reloading zsh... "
+#     export DEBUG_MODE=false
+#   fi
+#   source ~/.zshrc
+#   echo "Complete!"
+# }
 
-# is_ssh :: Return true if in SSH session
+# is_ssh :: Return true if in SSH session {{{2
 is_ssh() {
-  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
     return 0
   else
     return 1
   fi
 }
 
-[[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
-
+# mc :: make directory and cd into it {{{2
+mc() {
+    mkdir "$1" && cd "$1" || exit 1
+}
+# _pyenv_virtualenv_hook :: check for local env on dir change {{{2 
 _pyenv_virtualenv_hook() {
     local ret=$?
-    if [[ -n $VIRTUAL_ENV ]]; then
+    if [[ -n "$VIRTUAL_ENV" ]]; then
         eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
     else
         eval "$(pyenv sh-activate --quiet || true)" || true
@@ -328,10 +234,11 @@ if ! [[ $PROMPT_COMMAND =~ _pyenv_virtualenv_hook ]]; then
     PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
 fi
 
+# pyenv :: wrapper for python version manager {{{2
 pyenv() {
   local command
   command="${1:-}"
-  if [ "$#" -gt 0 ]; then
+  if [[ "$#" -gt 0 ]]; then
     shift
   fi
 
@@ -343,19 +250,15 @@ pyenv() {
   esac
 }
 
-# `ls` on directory change
+# chpwd :: do on directory change {{{2
 chpwd() {
     # Ignore if LS_AFTER_CD is not set, or we are in HOME
     { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return
-    # if [[ $ARCH = "x86_64" ]] && [[ $(command -v exa 2>/dev/null) ]]; then
-    #     exa --group-directories-first
-    # else
-    #     # ls is faster on ARM
-    #     ls --group-directories-first
-    # fi
     ls --group-directories-first
 }
+
 # SHELL STARTUP {{{1
+[[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
 # Profiling end
 if [[ $PROFILE -eq 1 ]]; then
     unsetopt XTRACE

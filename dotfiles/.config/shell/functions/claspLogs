@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Check clasp logs every interval
+# TODO: measure how long it takes command to complete, then start timer
+# TODO: make sure we are in a clasp repo
+
+while true; do
+    clasp logs && echo ""
+    if [[ -n $1 ]]; then
+        sleep "$1"
+    fi
+done

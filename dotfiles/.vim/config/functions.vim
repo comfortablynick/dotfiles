@@ -211,8 +211,8 @@ function! RunCmd(cmd_type) abort
     " Preface commands with space to exclude from fish history
     let l:ft_cmds = {
         \ 'go': {
-        \   'build': ' go install',
-        \   'install': ' go install',
+        \   'build': ' go install && go run .',
+        \   'install': ' go install && go run .',
         \   'run': ' go run .',
         \  },
         \ 'cpp': {

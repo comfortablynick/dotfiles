@@ -297,6 +297,7 @@ let g:ale_fixers = {
     \  ],
     \ 'go': [
     \   'goimports',
+    \   'gofmt',
     \  ],
     \ 'sh': [
     \   'shfmt',
@@ -312,6 +313,9 @@ let g:ale_fixers = {
     \  ],
     \ 'rust': [
     \   'rustfmt',
+    \  ],
+    \ 'cmake': [
+    \   'cmakeformat',
     \  ],
     \ }
 

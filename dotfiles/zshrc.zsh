@@ -67,11 +67,13 @@ fi
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
+setopt pushdsilent;                                             # Don't echo directories during pushd
 setopt pushd_ignore_dups;                                       # Ignore multiple copies of same dir in stack
 setopt interactivecomments;                                     # Allow bash-style command line comments
 HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
+DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
 
 # SHELL HISTORY {{{1
 HISTFILE="${HOME}/.zsh_history"

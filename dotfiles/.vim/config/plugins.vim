@@ -16,6 +16,8 @@ function! Cond(cond, ...)
     return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 
+let g:vim_exists = executable('vim')
+
 " Completion filetypes {{{2
 let g:completion_filetypes = {
     \ 'deoplete':
@@ -72,24 +74,26 @@ Plug 'tpope/vim-surround'
 Plug 'chrisbra/Colorizer'
 
 " Linting {{{2
-Plug 'w0rp/ale' " Go ahead and leave enabled since most files use it
+Plug 'w0rp/ale'
 
 " Formatting {{{2
 Plug 'sbdchd/neoformat'
 
 " Syntax highlighting {{{2
-Plug 'HerringtonDarkholme/yats' ",        Cond(1, { 'for': 'typescript' })
-Plug 'gabrielelana/vim-markdown' ",       Cond(1, { 'for': 'markdown' })
-Plug 'dag/vim-fish' ",                    Cond(1, { 'for': 'fish' })
+Plug 'HerringtonDarkholme/yats'
+Plug 'gabrielelana/vim-markdown'
+Plug 'dag/vim-fish'
 Plug 'cespare/vim-toml'
 Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
 
 " Clang (compiled, vim only)
-Plug 'jeaye/color_coded',
-    \ Cond(!has('nvim'), {
-    \   'for': [ 'c', 'cpp', 'c#' ],
-    \   'do': 'rm -f CMakeCache.txt && cmake . && make && make install',
-    \ })
+if g:vim_exists
+    Plug 'jeaye/color_coded',
+        \ Cond(!has('nvim'), {
+        \   'for': [ 'c', 'cpp', 'c#' ],
+        \   'do': 'rm -f CMakeCache.txt && cmake . && make && make install',
+        \ })
+endif
 
 " Git {{{2
 Plug 'junegunn/gv.vim'
@@ -136,12 +140,14 @@ Plug 'Shougo/deoplete.nvim',
     \   'for': g:completion_filetypes['deoplete'],
     \ })
 
-Plug 'Valloric/YouCompleteMe',
-    \ Cond(!has('nvim'),
-    \ {
-    \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
-    \   'for': g:completion_filetypes['ycm'],
-    \ })
+if g:vim_exists
+    Plug 'Valloric/YouCompleteMe',
+        \ Cond(!has('nvim'),
+        \ {
+        \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
+        \   'for': g:completion_filetypes['ycm'],
+        \ })
+endif
 
 " C {{{3
 Plug 'tweekmonster/deoplete-clang2',
@@ -160,18 +166,6 @@ Plug 'zchee/deoplete-jedi',
     \ {
     \   'for': 'python',
     \ })
-
-" Typescript (Deoplete) {{{3
-" Plug 'mhartington/nvim-typescript',
-"     \ Cond(has('nvim'),
-"     \ {
-"     \   'for':
-"     \       [
-"     \           'typescript',
-"     \           'tsx',
-"     \       ],
-"     \   'do': './install.sh',
-"     \ })
 
 " Fish {{{3
 Plug 'ponko2/deoplete-fish',
@@ -194,13 +188,12 @@ Plug 'mdempsky/gocode',
     \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
     \ })
 
-" Rust {{{3
-Plug 'racer-rust/vim-racer',    Cond(0) " Cond(has('nvim'))
-
 " Status line {{{2
 " Vim (Airline) {{{3
-Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
-Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
+if g:vim_exists
+    Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
+    Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
+endif
 
 " Neovim (Lightline/Eleline) {{{3
 let g:nvim_statusbar = 'eleline'

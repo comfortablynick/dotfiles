@@ -27,6 +27,10 @@ dotfiles:
     dst: ~/.config/bash
     link: link
     src: .config/bash
+  d_cmake:
+    dst: ~/.config/cmake
+    link: link
+    src: .config/cmake
   d_config:
     dst: ~/.vim/config
     link: link
@@ -180,6 +184,7 @@ profiles:
     - f_zshrc
     - d_after
     - d_autoload
+    - d_cmake
     - d_config
     - d_bash
     - d_fish

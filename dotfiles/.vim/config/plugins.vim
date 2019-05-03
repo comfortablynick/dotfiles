@@ -321,6 +321,8 @@ let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_c_gcc_options = '-std=gnu11 -Wall -Wextra'
+let g:ale_cmake_cmakeformat_options = '--config-file $HOME/.config/cmake/cmake-format.py'
+let g:ale_cmake_cmakelint_options = '--config=$HOME/.config/cmake/cmakelintrc'
 
 " Neoformat {{{2
 " Global Settings
@@ -350,6 +352,11 @@ let g:neoformat_typescript_prettier = {
     \   '"%:p"',
     \ ],
     \ 'stdin': 1,
+    \ }
+
+let g:neoformat_cmake_cmakeformat = {
+    \ 'exe': 'cmake-format',
+    \ 'args': ['--config-file $HOME/.config/cmake/cmake-format.py'],
     \ }
 " Same options for javascript
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier

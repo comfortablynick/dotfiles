@@ -7,6 +7,7 @@ setlocal expandtab
 
 let g:quickfix_open = 24
 
-if exists('g:AutoPairs')
-    let b:AutoPairs = AutoPairsDefine({'<' : '>'}, [])
-endif
+" This works for some things but is really annoying on the stream << operator
+" if exists('g:AutoPairs')
+"     let b:AutoPairs = AutoPairsDefine({'<' : '>'}, [])
+" endif

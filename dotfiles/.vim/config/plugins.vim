@@ -72,7 +72,6 @@ Plug 'Shougo/echodoc'
 Plug 'liuchengxu/vista.vim'
 Plug 'tpope/vim-surround'
 Plug 'chrisbra/Colorizer'
-Plug 'jiangmiao/auto-pairs'
 
 " Linting {{{2
 Plug 'w0rp/ale'

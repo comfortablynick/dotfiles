@@ -91,6 +91,10 @@ dotfiles:
     dst: ~/.config/xonsh
     link: link
     src: .config/xonsh
+  d_yay:
+    dst: ~/.config/yay
+    link: link
+    src: .config/yay
   d_zsh:
     dst: ~/.config/zsh
     link: link
@@ -201,6 +205,7 @@ profiles:
     - d_xonsh
     - d_zsh
     - d_git
+    - d_yay
   io:
     dotfiles:
     - f_bash_linux

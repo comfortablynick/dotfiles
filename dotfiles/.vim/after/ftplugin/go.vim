@@ -11,5 +11,5 @@ let &l:tabstop = winwidth(0) > 150 ? 8 : 4
 compiler go
 
 " Vim Tmux Runner maps
-noremap <buffer> <silent> <C-b> :VtrSendCommandToRunner! go run .<CR>
-nnoremap <silent> <Leader>r :VtrSendCommandToRunner! go run .<CR>
+" noremap <buffer> <silent> <C-b> :VtrSendCommandToRunner! go run .<CR>
+" nnoremap <silent> <Leader>r :VtrSendCommandToRunner! go run .<CR>

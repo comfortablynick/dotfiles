@@ -2,6 +2,7 @@
 
 HOSTNAME=''
 WIDTH="$(tmux display -p '#{client_width}')"
+TABS="$(tmux list-windows | wc -l)"
 SMALL=40
 MEDIUM=80
 MEDIUM_LARGE=150
@@ -28,7 +29,7 @@ if [ -x "$SYSINFO" ]; then
     fi
     MEMUSAGE="$(eval "$SYSINFO" "$memusage_cmd")"
     LOADAVG="$(eval "$SYSINFO" "$loadavg_cmd")"
-    UPTIME="$(eval "$SYSINFO" "$uptime_cmd")"
+    UP="$(eval "$SYSINFO" "$uptime_cmd")"
     CPUTEMP="$(eval "$SYSINFO" "$temp_cmd")"
     # CPUUSAGE="$(eval "$SYSINFO" "$cpu_usage_cmd")"
 else
@@ -39,7 +40,7 @@ else
         MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
         LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
     fi
-    UPTIME="$("$HOME/.config/tmux/_uptime")"
+    UP="$("$HOME/.config/tmux/_uptime")"
 fi
 
 SYSLOAD="$MEMUSAGE $LOADAVG"
@@ -54,8 +55,11 @@ if [ "$WIDTH" -gt "$MEDIUM" ]; then
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
     LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
     # LOAD="#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour10,bg=default,noitalics,nounderscore]$($TMUX_MEM_CPU -i 2)"
-    UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UPTIME"
-    # WEATHER="$("$HOME"/.config/tmux/_weather)"
+
+    if [[ $TABS -lt 5 ]]; then
+        UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP"
+        # WEATHER="$("$HOME"/.config/tmux/_weather)"
+    fi
 fi
 
 if [ "$WIDTH" -ge "$SMALL" ]; then

@@ -290,7 +290,6 @@ let g:ale_fixers = {
     \  ],
     \ 'go': [
     \   'goimports',
-    \   'gofmt',
     \  ],
     \ 'sh': [
     \   'shfmt',
@@ -360,6 +359,8 @@ let g:neoformat_cmake_cmakeformat = {
     \ }
 " Same options for javascript
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
+
+let g:neoformat_enabled_go = [ 'goimports' ]
 
 " NERDTree {{{2
 let NERDTreeHighlightCursorline = 1

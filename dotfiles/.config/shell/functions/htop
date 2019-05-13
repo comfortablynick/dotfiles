@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Start htop with custom config based on terminal width
+
+PATH="$(path_remove "$(dirname "$0")")"
+COLS="$(tput cols)"
+
+if [[ $COLS -lt 200 ]] && [[ -f $XDG_CONFIG_HOME/htop/htoprc_compact ]]; then
+    HTOPRC=$XDG_CONFIG_HOME/htop/htoprc_compact htop
+elif [[ $COLS -ge 200 ]] && [[ -f $XDG_CONFIG_HOME/htop/htoprc_full ]]; then
+    HTOPRC=$XDG_CONFIG_HOME/htop/htoprc_full htop
+else
+    htop
+fi

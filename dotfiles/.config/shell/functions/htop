@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 # Start htop with custom config based on terminal width
+#
+# Order of precedence
+# 1. Hostname file ("htoprc_xxxxx")
+# 2. Terminal size config
+# 3. Default config
 
 PATH="$(path_remove "$(dirname "$0")")"
 COLS="$(tput cols)"
+HOST="$(hostname -s)"
+CFG_DIR="$XDG_CONFIG_HOME/htop"
 
-if [[ $COLS -lt 200 ]] && [[ -f $XDG_CONFIG_HOME/htop/htoprc_compact ]]; then
-    HTOPRC=$XDG_CONFIG_HOME/htop/htoprc_compact htop
-elif [[ $COLS -ge 200 ]] && [[ -f $XDG_CONFIG_HOME/htop/htoprc_full ]]; then
-    HTOPRC=$XDG_CONFIG_HOME/htop/htoprc_full htop
+if [[ -f "$CFG_DIR/htoprc_$HOST" ]]; then
+    HTOPRC=$CFG_DIR/htoprc_$HOST
+elif [[ $COLS -lt 200 ]] && [[ -f $CFG_DIR/htoprc_compact ]]; then
+    HTOPRC=$CFG_DIR/htoprc_compact
+elif [[ $COLS -ge 200 ]] && [[ -f $CFG_DIR/htoprc_full ]]; then
+    HTOPRC=$CFG_DIR/htoprc_full
 else
-    htop
+    HTOPRC=""
 fi
+
+HTOPRC=$HTOPRC htop "$@"

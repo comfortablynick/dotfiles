@@ -219,7 +219,11 @@ is_ssh() {
 
 # mc :: make directory and cd into it {{{2
 mc() {
-    mkdir "$1" && cd "$1" || return 1
+    if [[ $# -ge 1 ]]; then
+        mkdir -p "$1" && cd "$1" || return 1
+    else
+        echo "ERROR usage: $0 [DIR]"
+    fi
 }
 # _pyenv_virtualenv_hook :: check for local env on dir change {{{2 
 _pyenv_virtualenv_hook() {

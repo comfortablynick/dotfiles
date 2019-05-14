@@ -39,23 +39,10 @@
       "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "initializationOptions": {
          "cache": {
-           "directory": "/tmp/ccls"
+           "directory": "/tmp/ccls",
+           "retainInMemory": 1
          }
        }
-    },
-
-  // "golang": {
-  //   "command": "bingo",
-  //   "args": ["--diagnostics-style=instant"],
-  //   "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-  //   "filetypes": ["go"]
-  //   },
-
-  "golang": {
-      "command": "gopls",
-      "args": [],
-      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"]
     },
     "bash": {
       "command": "bash-language-server",

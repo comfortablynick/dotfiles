@@ -480,8 +480,8 @@ function! s:coc_cmds() abort
         return
     endif
     autocmd LC CursorHold *
-        \ if ! coc#util#has_float() | call CocAction('doHover') | endif
-    autocmd LC User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
+    autocmd LC User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
 endfunction
 
 " Call func to set autocmds if LC is loaded

@@ -117,7 +117,7 @@ Plug 'honza/vim-snippets',              Cond(has('nvim'))
 " Building {{{2
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 
-" Code completion {{{2
+" Code completion/Language server {{{2
 " Plugins for code autocompletion/language server features
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
@@ -490,7 +490,14 @@ let g:LanguageClient_diagnosticsEnable = 0
 
 " Coc {{{2
 let g:coc_force_debug = 1
-let g:coc_global_extensions = 1                                 " Install extensions when not found
+let g:coc_global_extensions = [
+    \ 'coc-snippets',
+    \ 'coc-json',
+    \ 'coc-rls',
+    \ 'coc-python',
+    \ 'coc-tsserver',
+    \ 'coc-go',
+    \ ]
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'
 let g:coc_snippet_next = '<tab>'                                " See map.vim

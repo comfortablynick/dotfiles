@@ -154,7 +154,10 @@ function s:coc_maps() abort
           \ coc#refresh()
     inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
     " Use <CR> to select snippet/completion
-    inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    " inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    inoremap <silent><expr> <CR>
+        \ pumvisible() ? coc#_select_confirm() : 
+        \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction
 
 autocmd LC FileType * call <SID>coc_maps()

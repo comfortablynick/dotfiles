@@ -129,7 +129,7 @@ endfunction
 
 " Remap only if active for filetype
 function s:coc_maps() abort
-    if !exists('g:did_coc_loaded')
+    if exists('b:coc_suggest_disable')
         return
     endif
     nnoremap <silent> gh :call CocAction('doHover')<CR>
@@ -153,14 +153,15 @@ function s:coc_maps() abort
           \ <SID>check_back_space() ? "\<TAB>" :
           \ coc#refresh()
     inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+
     " Use <CR> to select snippet/completion
     " inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
     inoremap <silent><expr> <CR>
-        \ pumvisible() ? coc#_select_confirm() : 
+        \ pumvisible() ? coc#_select_confirm() :
         \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction
 
-autocmd LC FileType * call <SID>coc_maps()
+autocmd vimrc User CocNvimInit call <SID>coc_maps()
 
 " Paste from register
 nnoremap <Leader>0 "0p<CR>

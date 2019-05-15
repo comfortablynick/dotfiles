@@ -147,11 +147,8 @@ let g:lightline#ale#indicator_ok = g:LL_LinterOK
 
 " coc#status {{{3
 if exists('g:did_coc_loaded')
-    augroup cocAle
-        autocmd!
-        autocmd User CocDiagnosticChange
-            \ if exists('*lightline#update') | call lightline#update() | endif
-    augroup END
+    autocmd vimrc User CocDiagnosticChange
+        \ if exists('*lightline#update') | call lightline#update() | endif
 endif
 
 " Section separators {{{3
@@ -444,4 +441,3 @@ let g:airline_theme = tolower(g:statusline_theme)
 
 " Set lightline theme
 let lightline['colorscheme'] = g:statusline_theme
-

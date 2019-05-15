@@ -18,6 +18,13 @@ if $SHELL =~# 'bin/fish'
     set shell=/bin/sh
 endif
 
+" AUGROUP =======================================
+" General augroup for vimrc files
+" Add to this group freely throughout config
+augroup vimrc
+    autocmd!
+augroup END
+
 " CONFIG FILES ==================================
 let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 

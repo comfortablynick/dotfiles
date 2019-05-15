@@ -13,6 +13,7 @@
   "suggest.echodocSupport": false,
   "suggest.triggerCompletionWait": 100,
   "suggest.enablePreview": true,
+  "suggest.keepCompleteopt": false,
 
   // Signature
   "signature.target": "float",

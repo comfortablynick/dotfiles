@@ -320,7 +320,7 @@ function! OpenTagbar() abort
 endfunction
 
 " LastPlace() :: restore cursor position and folding {{{3
-function! LastPlace()
+function! s:last_place()
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 
@@ -404,16 +404,12 @@ endfunction
 
 " (Auto)commands {{{1
 " Cursor {{{2
-augroup _cursor
-    autocmd!
-    " Remember last place in file
-    autocmd BufWinEnter * call LastPlace()
-    " Set cursorline depending on mode
-    autocmd WinEnter    * set cursorline
-    autocmd WinLeave    * set nocursorline
-    autocmd InsertEnter * set nocursorline
-    autocmd InsertLeave * set cursorline
-augroup END
+" Remember last place in file
+autocmd vimrc BufWinEnter * call <SID>last_place()
+
+" Set cursorline depending on mode
+autocmd vimrc WinEnter,InsertLeave * set cursorline
+autocmd vimrc WinLeave,InsertEnter * set nocursorline
 
 " Line numbers {{{2
 " Toggle to number mode depending on vim mode
@@ -421,12 +417,9 @@ augroup END
 " NORMAL:       Turn on relativenumber for easy navigation
 " NO FOCUS:     Turn off relativenumber (testing code, etc.)
 " QuickFix:     Turn off relativenumber (running code)
-augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-    autocmd FileType qf if &nu | set nornu | endif
-augroup END
+autocmd vimrc BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+autocmd vimrc BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+autocmd vimrc FileType qf if &nu | set nornu | endif
 
 " Vim Fugitive {{{2
 " Use AsyncRun
@@ -435,82 +428,55 @@ if exists('*asyncrun#execute')
 endif
 
 " Quickfix window {{{2
-augroup quickfix
-    autocmd!
-    " Close buffer if quickfix window is last
-    autocmd BufEnter * call AutoCloseQfWin()
-    " Push quickfix window always to the bottom
-    autocmd FileType qf wincmd J
-    " Close qf after lint if empty
-    autocmd User ALELintPost call CloseEmptyQf()
-augroup END
+" Close buffer if quickfix window is last
+autocmd vimrc BufEnter * call AutoCloseQfWin()
+" Push quickfix window always to the bottom
+autocmd vimrc FileType qf wincmd J
+" Close qf after lint if empty
+autocmd vimrc User ALELintPost call CloseEmptyQf()
 
 " Neoformat {{{2
-augroup fmt
-    autocmd!
-    autocmd BufWritePre *.{bash,sh} Neoformat
-augroup end
+autocmd vimrc BufWritePre *.{bash,sh} Neoformat
 
 " Terminal {{{2
 if has('nvim')
-    augroup terminalbuf
-        autocmd!
-        " Start in TERMINAL mode (any key will exit)
-        autocmd TermOpen * startinsert
-        " `<Esc>` to exit terminal mode
-        autocmd TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
-    augroup end
-
-    augroup terminal_fzf
-        autocmd!
-        " Unmap <Esc> so it can be used to exit FZF
-        autocmd FileType fzf tunmap <buffer> <Esc>
-    augroup END
+    " Start in TERMINAL mode (any key will exit)
+    autocmd vimrc TermOpen * startinsert
+    " `<Esc>` to exit terminal mode
+    autocmd vimrc TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
+    " Unmap <Esc> so it can be used to exit FZF
+    autocmd vimrc FileType fzf tunmap <buffer> <Esc>
 endif
+
 " Formatopts {{{2
-augroup fmtopts
-    autocmd!
-    autocmd BufNewFile,BufRead * setlocal formatoptions-=o
-augroup END
+autocmd vimrc BufNewFile,BufRead * setlocal formatoptions-=o
 
 " Coc {{{2
 " coc_cmds() :: set autocmds if LC is loaded
 function! s:coc_cmds() abort
-    if ! exists('g:did_coc_loaded') || ! coc#rpc#ready()
+    if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
         return
     endif
-    autocmd LC CursorHold *
+    autocmd vimrc CursorHold *
         \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
-    autocmd LC User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
-    autocmd LC InsertEnter * call CocActionAsync('showSignatureHelp')
+    autocmd vimrc User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
+    autocmd vimrc InsertEnter * call CocActionAsync('showSignatureHelp')
 endfunction
 
 " Call func to set autocmds if LC is loaded
-augroup LC
-    autocmd!
-    autocmd FileType * call <SID>coc_cmds()
-augroup END
+autocmd vimrc User CocNvimInit call <SID>coc_cmds()
 
 " Fzf {{{2
-augroup fzf
-    autocmd!
     " Don't show status bar in fzf window
-    autocmd  FileType fzf set laststatus=0 noruler
-      \| autocmd BufLeave <buffer> set laststatus=2 ruler
-augroup END
+autocmd vimrc  FileType fzf set laststatus=0 noruler
+  \| autocmd vimrc BufLeave <buffer> set laststatus=2 ruler
 
 " Vista {{{2
-augroup vista
-    autocmd!
-    autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-augroup END
+autocmd vimrc VimEnter * call vista#RunForNearestMethodOrFunction()
 
 " Vim Tmux Runner {{{2
 " Close runner when exiting vim
-" augroup vtr
-"     autocmd!
-"     autocmd QuitPre * :VtrKillRunner<CR>
-" augroup END
+" autocmd vimrc QuitPre * :VtrKillRunner<CR>
 
 " Commands {{{1
 " Sudo save {{{2

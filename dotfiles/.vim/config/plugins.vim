@@ -56,7 +56,6 @@ call plug#begin('~/.vim/plugged')                               " Plugin Manager
 
 " Editor features {{{2
 Plug 'mhinz/vim-startify'
-Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
 Plug 'scrooloose/nerdcommenter'
 Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
@@ -96,6 +95,13 @@ if g:vim_exists
 endif
 
 " Git {{{2
+Plug 'airblade/vim-gitgutter',          Cond(0)
+" Don't load if we're using coc (use coc-git instead)
+autocmd vimrc FileType *
+    \ if index(g:completion_filetypes['coc'], &filetype) < 0
+    \ | call plug#load('vim-gitgutter')
+    \ | endif
+
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 
@@ -118,7 +124,12 @@ Plug 'honza/vim-snippets',              Cond(has('nvim'))
 Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 
 " Code completion/Language server {{{2
-" Plugins for code autocompletion/language server features
+" Coc {{{3
+" Exclude completion on deoplete file types, so we can still use other features
+" autocmd vimrc FileType *
+"     \ if index(g:completion_filetypes['coc'], &filetype) < 0
+"     \ | let b:coc_suggest_disable = 1
+
 Plug 'neoclide/coc.nvim',
     \ Cond(has('nvim'),
     \ {
@@ -134,12 +145,14 @@ function! Coc_post_update() abort
     endif
 endfunction
 
+" Deoplete {{{3
 Plug 'Shougo/deoplete.nvim',
     \ Cond(has('nvim'),
     \ {
     \   'for': g:completion_filetypes['deoplete'],
     \ })
 
+" YouCompleteMe {{{3
 if g:vim_exists
     Plug 'Valloric/YouCompleteMe',
         \ Cond(!has('nvim'),
@@ -399,9 +412,7 @@ set shortmess+=c                                " Don't suppress echodoc with 'M
 " Neosnippet {{{2
 if exists('g:loaded_neosnippet')
     let g:neosnippet#enable_completed_snippet = 1
-    augroup snip
-        autocmd CompleteDone * call neosnippet#complete_done()
-    augroup END
+    autocmd vimrc CompleteDone * call neosnippet#complete_done()
 endif
 
 " AsyncRun {{{2
@@ -508,10 +519,7 @@ let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-augroup deoplete_preview
-    autocmd!
-    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-augroup end
+autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Nvim Typescript {{{2
 " let g:nvim_typescript#type_info_on_hold = 1

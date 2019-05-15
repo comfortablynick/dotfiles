@@ -10,9 +10,12 @@
   "diagnostic.messageTarget": "float",
 
   // Suggestion options
-  "suggest.echodocSupport": true,
+  "suggest.echodocSupport": false,
   "suggest.triggerCompletionWait": 100,
   "suggest.enablePreview": true,
+
+  // Signature
+  "signature.target": "float",
 
   // Preferences
   "coc.preferences.hoverTarget": "float",

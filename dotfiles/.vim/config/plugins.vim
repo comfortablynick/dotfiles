@@ -207,7 +207,6 @@ Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)
 
 " Tmux {{{2
-Plug 'edkolev/tmuxline.vim',            Cond(1, { 'on': 'Tmuxline' })
 Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
 Plug 'christoomey/vim-tmux-runner',
     \ Cond(!empty($TMUX_PANE),

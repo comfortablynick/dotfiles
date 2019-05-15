@@ -149,7 +149,7 @@ let g:lightline#ale#indicator_ok = g:LL_LinterOK
 if exists('g:did_coc_loaded')
     augroup cocAle
         autocmd!
-        autocmd User CocDiagnosticChange 
+        autocmd User CocDiagnosticChange
             \ if exists('*lightline#update') | call lightline#update() | endif
     augroup END
 endif
@@ -445,16 +445,3 @@ let g:airline_theme = tolower(g:statusline_theme)
 " Set lightline theme
 let lightline['colorscheme'] = g:statusline_theme
 
-" Tmuxline {{{1
-" Tmuxline preset {{{2
-let g:tmuxline_preset = {
-    \'a'       : '#S',
-    \'win'     : ['#I #F', '#W'],
-    \'cwin'    : ['#I #F', '#W'],
-    \'x'       : '#(tmux-mem-cpu-load -c -q -m 2 -g 0 -i 2)',
-    \'y'       : ['%m-%d-%Y', '%l:%M %p'],
-    \'z'       : '#(whoami)@#H',
-    \'options' : {'status-justify' : 'left'}}
-
-"    \'c'       : '#(tmux-mem-cpu-load -p -m 2 -g 0 -i 2)',
-"    \'x'       : '#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)',

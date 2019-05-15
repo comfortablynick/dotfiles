@@ -507,6 +507,7 @@ let g:coc_global_extensions = [
     \ 'coc-python',
     \ 'coc-tsserver',
     \ 'coc-go',
+    \ 'coc-git',
     \ ]
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'

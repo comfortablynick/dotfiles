@@ -138,6 +138,13 @@ function s:coc_maps() abort
     nmap <silent> gt <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gy <Plug>(coc-references)
+
+    " coc-git
+    nmap [g <Plug>(coc-git-prevchunk)
+    nmap ]g <Plug>(coc-git-nextchunk)
+    nmap gs <Plug>(coc-git-chunkinfo)
+    nmap gc <Plug>(coc-git-commit)
+
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>

@@ -279,6 +279,7 @@ let g:ale_linters = {
     \   'clangtidy',
     \   'gcc',
     \  ],
+    \ 'go': [],
     \ 'rust': [],
     \ 'sh': [
     \   'shellcheck'

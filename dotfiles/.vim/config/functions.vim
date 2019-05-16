@@ -5,6 +5,7 @@
 "  |  _| |_| | | | | (__| |_| | (_) | | | \__ \\ V /| | | | | | |
 "  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
 "
+" TODO: move these to canonical vim folders (plugin,ftplugin,autoload,indent)
 " Functions {{{1
 " File operations {{{2
 " SetShebang() :: add shebang for new file {{{3
@@ -451,21 +452,6 @@ endif
 " Formatopts {{{2
 autocmd vimrc BufNewFile,BufRead * setlocal formatoptions-=o
 
-" Coc {{{2
-" coc_cmds() :: set autocmds if LC is loaded
-function! s:coc_cmds() abort
-    if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
-        return
-    endif
-    autocmd vimrc CursorHold *
-        \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
-    autocmd vimrc User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
-    autocmd vimrc InsertEnter * call CocActionAsync('showSignatureHelp')
-endfunction
-
-" Call func to set autocmds if LC is loaded
-autocmd vimrc User CocNvimInit call <SID>coc_cmds()
-
 " Fzf {{{2
     " Don't show status bar in fzf window
 autocmd vimrc  FileType fzf set laststatus=0 noruler
@@ -483,31 +469,3 @@ autocmd vimrc VimEnter * call vista#RunForNearestMethodOrFunction()
 " Note: does not work in Neovim in some cases
 " Use `sudo -E vim {file}` to open vim while preserving user environment
 command W w !sudo tee "%" > /dev/null
-
-" Fzf {{{2
-" Rg with preview window {{{3
-"   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key
-"   :Rg! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Rg call
-    \ fzf#vim#grep(
-    \ 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-    \ <bang>0 ? fzf#vim#with_preview('up:60%')
-    \         : fzf#vim#with_preview('right:60%:hidden', '?'),
-    \ <bang>0
-    \ )
-
-" Ag with preview window {{{3
-"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-"   :Ag! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:60%:hidden', '?'),
-  \                 <bang>0)
-
-" Files command with preview window {{{3
-command! -bang -nargs=* -complete=dir Files
-  \ call fzf#vim#files(<q-args>,
-  \                    <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                            : fzf#vim#with_preview('right:60%', '?'),
-  \                    <bang>0)

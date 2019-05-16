@@ -67,6 +67,10 @@ dotfiles:
     dst: ~/.config/omf
     link: link
     src: .config/omf
+  d_plugin:
+    dst: ~/.vim/plugin
+    link: link
+    src: .vim/plugin
   d_powerline:
     dst: ~/.config/powerline
     link: link
@@ -211,6 +215,7 @@ profiles:
     - d_git
     - d_yay
     - d_htop
+    - d_plugin
   io:
     dotfiles:
     - f_bash_linux

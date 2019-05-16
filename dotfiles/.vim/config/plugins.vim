@@ -499,21 +499,6 @@ let g:LanguageClient_diagnosticsDisplay =
 let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
-" Coc {{{2
-let g:coc_force_debug = 1
-let g:coc_global_extensions = [
-    \ 'coc-snippets',
-    \ 'coc-json',
-    \ 'coc-rls',
-    \ 'coc-python',
-    \ 'coc-tsserver',
-    \ 'coc-go',
-    \ 'coc-git',
-    \ ]
-let g:coc_status_error_sign = 'E'
-let g:coc_status_warn_sign = 'W'
-let g:coc_snippet_next = '<tab>'                                " See map.vim
-
 " Deoplete {{{2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#show_docstring = 1
@@ -579,28 +564,6 @@ let g:cpp_simple_highlight = 1
 
 " Enable highlighting of named requirements (C++20 library concepts)
 let g:cpp_named_requirements_highlight = 1
-
-" Fzf {{{2
-" use bottom split
-let g:fzf_layout = { 'down': '~30%' }
-let g:fzf_colors = {
-    \ 'fg':      ['fg', 'Normal'],
-    \ 'bg':      ['bg', 'Clear'],
-    \ 'hl':      ['fg', 'Comment'],
-    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':     ['fg', 'Statement'],
-    \ 'info':    ['fg', 'PreProc'],
-    \ 'prompt':  ['fg', 'Conditional'],
-    \ 'pointer': ['fg', 'Exception'],
-    \ 'marker':  ['fg', 'Keyword'],
-    \ 'spinner': ['fg', 'Label'],
-    \ 'header':  ['fg', 'Comment']
-    \ }
-
-if has('nvim') || has('gui_running')
-  let $FZF_DEFAULT_OPTS .= ' --inline-info'
-endif
 
 " clever-f {{{2
 let g:clever_f_smart_case = 1                                   " Ignore case if lowercase

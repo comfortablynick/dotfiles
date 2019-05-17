@@ -1,8 +1,4 @@
 " Fzf.vim commands/config
-if exists('g:loaded_fzf_config')
-    finish
-endif
-let g:loaded_fzf_config = 1
 
 " Rg with preview window
 "   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key

@@ -5,13 +5,10 @@ function! coc_config#cmds() abort
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
         return
     endif
-    augroup coc_config_auto
-        autocmd!
-        autocmd CursorHold *
-            \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
-        autocmd User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
-        " autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
-    augroup END
+    autocmd coc_config CursorHold *
+        \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
+    autocmd coc_config User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
+    autocmd coc_config InsertEnter * call CocActionAsync('showSignatureHelp')
 endfunction
 
 " Helper function for <TAB> completion keymap
@@ -55,8 +52,8 @@ function! coc_config#maps() abort
     inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
     " Use <CR> to select snippet/completion
-    " inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-    inoremap <silent><expr> <CR>
-        \ pumvisible() ? coc#_select_confirm() :
-        \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    " inoremap <silent><expr> <CR>
+    "     \ pumvisible() ? coc#_select_confirm() :
+    "     \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction

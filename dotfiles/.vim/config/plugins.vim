@@ -114,6 +114,7 @@ Plug 'morhetz/gruvbox',                     Cond(g:vim_base_color ==? 'gruvbox')
 Plug 'NLKNguyen/papercolor-theme',          Cond(g:vim_base_color ==? 'papercolor')
 Plug 'nightsense/snow',                     Cond(g:vim_base_color ==? 'snow')
 
+
 " CODE COMPLETION
 Plug 'Shougo/neosnippet.vim',               Cond(has('nvim'))
 Plug 'Shougo/neosnippet-snippets',          Cond(has('nvim'))

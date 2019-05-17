@@ -5,9 +5,6 @@ setlocal shiftwidth=4
 setlocal tabstop=4
 setlocal expandtab
 
-let g:quickfix_open = 24
+let b:load_doxygen_syntax = 1
 
-" This works for some things but is really annoying on the stream << operator
-" if exists('g:AutoPairs')
-"     let b:AutoPairs = AutoPairsDefine({'<' : '>'}, [])
-" endif
+let g:quickfix_open = 24

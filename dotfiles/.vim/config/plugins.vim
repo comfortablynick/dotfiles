@@ -96,14 +96,16 @@ endif
 
 " Git {{{2
 Plug 'airblade/vim-gitgutter',          Cond(0)
+
+Plug 'tpope/vim-fugitive',              Cond(0)
 " Don't load if we're using coc (use coc-git instead)
 autocmd vimrc FileType *
-    \ if index(g:completion_filetypes['coc'], &filetype) < 0
+    \ if index(g:completion_filetypes['coc'], &filetype) != 1
     \ | call plug#load('vim-gitgutter')
+    \ | call plug#load('vim-fugitive')
     \ | endif
 
 Plug 'junegunn/gv.vim'
-Plug 'tpope/vim-fugitive'
 
 " Color themes {{{2
 " Conditionally load themes based on env var
@@ -202,19 +204,24 @@ Plug 'mdempsky/gocode',
     \ })
 
 " Status line {{{2
-" Vim (Airline) {{{3
+" Vim (Airline)
 if g:vim_exists
     Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
     Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
 endif
 
-" Neovim (Lightline/Eleline) {{{3
+" Neovim (Lightline/Eleline)
 let g:nvim_statusbar = 'eleline'
 let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
 let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
 let g:eleline_background = 234
 
-Plug 'comfortablynick/eleline.vim',     Cond(has('nvim') && g:use_eleline)
+let g:eleline_local_path = '$HOME/git/eleline.vim'
+if !empty(glob(expand(g:eleline_local_path)))
+    Plug g:eleline_local_path,          Cond(has('nvim') && g:use_eleline)
+else
+    Plug 'comfortablynick/eleline.vim', Cond(has('nvim') && g:use_eleline)
+endif
 Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)
 Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
 Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)
@@ -385,7 +392,7 @@ let NERDTreeIgnore = [
 let NERDTreeShowHidden = 1
 let NERDTreeQuitOnOpen = 1
 
-" NERD Commenter
+" NERD Commenter {{{2
 let g:NERDSpaceDelims = 1                       " Add spaces after comment delimiters by default
 let g:NERDCompactSexyComs = 1                   " Use compact syntax for prettified multi-line comments
 let g:NERDDefaultAlign = 'left'                 " Align line-wise comment delimiters flush left instead of following code indentation
@@ -508,9 +515,6 @@ let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" Nvim Typescript {{{2
-" let g:nvim_typescript#type_info_on_hold = 1
-
 " YouCompleteMe {{{2
 let g:ycm_filetype_blacklist = {
     \ 'gitcommit': 1,
@@ -554,7 +558,7 @@ let g:vtr_filetype_runner_overrides = {
     \ }
 
 " Syntax highlighting {{{2
-" C++ {{{3
+" C/C++
 " Disable function highlighting (affects both C and C++ files)
 let g:cpp_no_function_highlight = 1
 
@@ -564,9 +568,6 @@ let g:cpp_simple_highlight = 1
 
 " Enable highlighting of named requirements (C++20 library concepts)
 let g:cpp_named_requirements_highlight = 1
-
-" clever-f {{{2
-let g:clever_f_smart_case = 1                                   " Ignore case if lowercase
 
 " vista {{{2
 let g:vista#renderer#icons = {

@@ -330,7 +330,7 @@ function! s:last_place()
 
     " Folds flicker and close anyway when using Coc
     if exists('g:did_coc_loaded')
-        let open_folds = 1
+        let open_folds = 0
     endif
     let ignore_buftype = [
         \ 'quickfix',

@@ -20,6 +20,7 @@ let g:coc_global_extensions = [
     \ 'coc-tsserver',
     \ 'coc-go',
     \ 'coc-git',
+    \ 'coc-vimlsp',
     \ ]
 let g:coc_status_error_sign = 'E'
 let g:coc_status_warn_sign = 'W'

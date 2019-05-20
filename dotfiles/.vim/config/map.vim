@@ -101,7 +101,6 @@ nnoremap <silent> tn :tabnew<CR>
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 noremap <silent> <C-b> :VtrSendFile!<CR>
-noremap <silent> <C-x> :VtrKillRunner<CR>
 
 
 " RunCmd() {{{2

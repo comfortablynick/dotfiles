@@ -5,13 +5,8 @@
 "   \___\___/|_| |_|_| |_|\__, (_)_/ |_|_| |_| |_|
 "                         |___/
 " General Configuration
-" Application {{{1
-set shell=/bin/bash                                             " Use bash to execute commands instead of sh
-set noswapfile                                                  " Don't create freaking swap files
-set ttyfast                                                     " Terminal acceleration
-set autoread                                                    " Detect when a file has been changed outside of vim
-filetype plugin on                                              " Allow loading .vim files for different filetypes
 
+" Vim/Neovim Only {{{1
 if has('nvim')
     " Neovim Only
     set inccommand=split                                        " Live substitution
@@ -25,7 +20,13 @@ else
     let g:python3_host_prog = '/usr/local/bin/python3.7'
 endif
 
+" Files/Swap/Backup {{{1
+set noswapfile                                                  " Swap files if vim quits without saving
+set autoread                                                    " Detect when a file has been changed outside of vim
+
 " General {{{1
+set shell=bash                                                  " Use bash to execute commands instead of sh
+filetype plugin on                                              " Allow loading .vim files for different filetypes
 syntax enable                                                   " Syntax highlighting on
 colorscheme default                                             " Def colors (overwritten by theme.vim)
 set hidden                                                      " Don't unload hidden buffers
@@ -48,7 +49,8 @@ set scrolloff=10                                                " Lines before/a
 set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
 set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
-set lazyredraw                                                  " Don't redraw screen when not needed
+" set lazyredraw                                                  " Don't redraw screen when not needed
+" set ttyfast                                                     " Terminal acceleration
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line

@@ -10,12 +10,13 @@ PATH="$(path_remove "$(dirname "$0")")"
 COLS="$(tput cols)"
 HOST="$(hostname -s)"
 CFG_DIR="$XDG_CONFIG_HOME/htop"
+COMPACT_COLS=150
 
 if [[ -f "$CFG_DIR/htoprc_$HOST" ]]; then
     HTOPRC=$CFG_DIR/htoprc_$HOST
-elif [[ $COLS -lt 200 ]] && [[ -f $CFG_DIR/htoprc_compact ]]; then
+elif [[ $COLS -lt $COMPACT_COLS ]] && [[ -f $CFG_DIR/htoprc_compact ]]; then
     HTOPRC=$CFG_DIR/htoprc_compact
-elif [[ $COLS -ge 200 ]] && [[ -f $CFG_DIR/htoprc_full ]]; then
+elif [[ $COLS -ge $COMPACT_COLS ]] && [[ -f $CFG_DIR/htoprc_full ]]; then
     HTOPRC=$CFG_DIR/htoprc_full
 else
     HTOPRC=""

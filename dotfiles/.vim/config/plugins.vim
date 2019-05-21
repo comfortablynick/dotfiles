@@ -84,6 +84,7 @@ Plug 'gabrielelana/vim-markdown'
 Plug 'dag/vim-fish'
 Plug 'cespare/vim-toml'
 Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
+Plug 'chase/vim-ansible-yaml'
 
 " Clang (compiled, vim only)
 if g:vim_exists

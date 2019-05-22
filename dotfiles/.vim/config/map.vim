@@ -89,6 +89,10 @@ nnoremap d<C-l> <C-w>l<C-w>c
 nnoremap <silent> <Leader>q :call ToggleQf()<CR>
 noremap <silent> <F10> :call ToggleQf()<CR>
 
+" Read-only/non-files {{{2
+" Use q to close buffer
+autocmd vimrc FileType netrw,help nnoremap <silent> q :bd<CR>
+
 " Tabs {{{1
 " Navigation {{{2
 " `t` + {h,l,n} to navigate tabs
@@ -133,8 +137,8 @@ nnoremap <silent> <Leader>t :TagbarToggle<CR>
 noremap <silent> <F8> :TagbarToggle<CR>
 
 " NERDTree {{{2
-nnoremap <silent> <Leader>n :NERDTreeToggle<CR>
-noremap <silent> <C-n> :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>n :Nerd<CR>
+noremap <silent> <C-n> :Nerd<CR>
 
 " UndoTree {{{2
 noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>

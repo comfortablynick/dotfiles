@@ -23,7 +23,6 @@ let g:completion_filetypes = {
     \ 'deoplete':
     \   [
     \       'fish',
-    \       'vim',
     \       'python',
     \   ],
     \ 'ycm':
@@ -47,84 +46,179 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'sh',
     \       'bash',
+    \       'vim',
     \   ],
     \ }
 
 " Plugin definitions {{{1
-" BEGIN {{{2
-call plug#begin('~/.vim/plugged')                               " Plugin Manager
-
-" Editor features {{{2
-Plug 'mhinz/vim-startify'
-Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
-Plug 'scrooloose/nerdcommenter'
-Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
-Plug 'majutsushi/tagbar'
-Plug 'junegunn/fzf',
-    \ Cond(1, {
-    \   'dir': '~/.fzf',
-    \   'do': './install --bin --no-key-bindings --no-update-rc',
-    \ })
-Plug 'junegunn/fzf.vim'
-Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
-Plug 'Shougo/echodoc'
-Plug 'liuchengxu/vista.vim'
-Plug 'tpope/vim-surround'
-Plug 'chrisbra/Colorizer'
-
-" Linting {{{2
-Plug 'w0rp/ale'
-
-" Formatting {{{2
-Plug 'sbdchd/neoformat'
-
-" Syntax highlighting {{{2
-Plug 'HerringtonDarkholme/yats'
-Plug 'gabrielelana/vim-markdown'
-Plug 'dag/vim-fish'
-Plug 'cespare/vim-toml'
-Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
-Plug 'chase/vim-ansible-yaml'
-
-" Clang (compiled, vim only)
-if g:vim_exists
-    Plug 'jeaye/color_coded',
-        \ Cond(!has('nvim'), {
-        \   'for': [ 'c', 'cpp', 'c#' ],
-        \   'do': 'rm -f CMakeCache.txt && cmake . && make && make install',
-        \ })
+" Package Manager Init {{{2
+" call plug#begin('~/.vim/plugged')                               " Plugin Manager
+let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
+if empty(glob(minpac_path))
+    echo 'Downloading Minpac'
+    let clone = system('git clone https://github.com/k-takata/minpac.git ' . minpac_path)
 endif
 
-" Git {{{2
-Plug 'airblade/vim-gitgutter',          Cond(0)
+function! s:pack_init() abort
+    packadd minpac
+    if !exists('*minpac#init')
+        echo "Minpac doesn't exist! Check download location"
+        return
+    endif
+    command! -nargs=+ Pack call minpac#add(<args>)
 
-Plug 'tpope/vim-fugitive',              Cond(0)
+    call minpac#init()
+
+    Pack 'k-takata/minpac',              {'type': 'opt'}
+    Pack 'tpope/vim-scriptease',         {'type': 'opt'}
+    Pack 'mhinz/vim-lookup',             {'type': 'opt'}
+    Pack 'NLKNguyen/papercolor-theme',   {'type': 'opt'}
+    Pack 'scrooloose/nerdtree',          {'type': 'opt'}
+    Pack 'chrisbra/Colorizer',           {'type': 'opt'}
+    Pack 'mhinz/vim-startify'
+    Pack 'scrooloose/nerdcommenter'
+    Pack 'tpope/vim-surround'
+    Pack 'liuchengxu/vista.vim'
+    Pack 'w0rp/ale'
+    Pack 'sbdchd/neoformat'
+    Pack 'mbbill/undotree'
+    Pack 'majutsushi/tagbar'
+    " Pack 'Shougo/echodoc'
+    Pack 'skywind3000/asyncrun.vim'
+    Pack 'vhdirk/vim-cmake'
+    Pack 'junegunn/fzf'
+    Pack 'junegunn/fzf.vim'
+
+    " Syntax highlighting
+    Pack 'HerringtonDarkholme/yats'
+    Pack 'gabrielelana/vim-markdown'
+    Pack 'dag/vim-fish'
+    Pack 'cespare/vim-toml'
+    Pack 'chase/vim-ansible-yaml'
+
+    " Git
+    Pack 'airblade/vim-gitgutter',      {'type': 'opt'}
+    Pack 'tpope/vim-fugitive',          {'type': 'opt'}
+    Pack 'junegunn/gv.vim'
+
+    " Nvim Only
+    if has('nvim')
+        Pack 'comfortablynick/eleline.vim'
+
+        Pack 'Shougo/neosnippet.vim'
+        Pack 'Shougo/neosnippet-snippets'
+        Pack 'honza/vim-snippets'
+
+        Pack 'bfrg/vim-cpp-modern'
+        Pack 'neoclide/coc.nvim',
+            \ {
+            \   'type': 'opt',
+            \   'do': '!yarn install --frozen-lockfile'
+            \ }
+
+        " Deoplete
+        Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
+        " Pack 'tweekmonster/deoplete-clang2'
+        " Pack 'Shougo/neco-vim',
+        Pack 'zchee/deoplete-jedi'
+        Pack 'ponko2/deoplete-fish'
+
+        Pack 'christoomey/vim-tmux-navigator'
+        Pack 'christoomey/vim-tmux-runner'
+    endif
+endfunction
+
 " Don't load if we're using coc (use coc-git instead)
 autocmd vimrc FileType *
-    \ if index(g:completion_filetypes['coc'], &filetype) != 1
-    \ | call plug#load('vim-gitgutter')
-    \ | call plug#load('vim-fugitive')
+    \ if index(g:completion_filetypes['coc'], &filetype) < 0
+    \ | packadd vim-gitgutter
+    \ | packadd vim-fugitive
     \ | endif
 
-Plug 'junegunn/gv.vim'
+" Load deoplete
+autocmd vimrc FileType *
+    \ if index(g:completion_filetypes['deoplete'], &filetype) >= 0
+    \ | packadd deoplete.nvim
+    \ | endif
+
+" Define commands for updating/cleaning the plugins.
+command! PackUpdate call <SID>pack_init() | call minpac#update('', {'do': 'call minpac#status()'})
+command! PackClean  call <SID>pack_init() | call minpac#clean()
+command! PackStatus call <SID>pack_init() | call minpac#status()
+
+let g:eleline_background = 234
+
+" Editor features {{{2
+" Plug 'mhinz/vim-startify'
+" Plug 'scrooloose/nerdtree',             Cond(1, { 'on': 'NERDTreeToggle' })
+" Plug 'scrooloose/nerdcommenter'
+" Plug 'mbbill/undotree',                 Cond(1, { 'on': 'UndotreeToggle' })
+" Plug 'majutsushi/tagbar'
+" Plug 'junegunn/fzf',
+"     \ Cond(1, {
+"     \   'dir': '~/.fzf',
+"     \   'do': './install --bin --no-key-bindings --no-update-rc',
+"     \ })
+" Plug 'junegunn/fzf.vim'
+" Plug 'ryanoasis/vim-devicons',          Cond(g:LL_nf)
+" Plug 'Shougo/echodoc'
+" Plug 'liuchengxu/vista.vim'
+" Plug 'tpope/vim-surround'
+" Plug 'chrisbra/Colorizer'
+
+" Linting {{{2
+" Plug 'w0rp/ale'
+
+" Formatting {{{2
+" Plug 'sbdchd/neoformat'
+
+" Syntax highlighting {{{2
+" Plug 'HerringtonDarkholme/yats'
+" Plug 'gabrielelana/vim-markdown'
+" Plug 'dag/vim-fish'
+" Plug 'cespare/vim-toml'
+" Plug 'bfrg/vim-cpp-modern',             Cond(has('nvim'))
+" Plug 'chase/vim-ansible-yaml'
+
+" Clang (compiled, vim only)
+" if g:vim_exists
+"     Plug 'jeaye/color_coded',
+"         \ Cond(!has('nvim'), {
+"         \   'for': [ 'c', 'cpp', 'c#' ],
+"         \   'do': 'rm -f CMakeCache.txt && cmake . && make && make install',
+"         \ })
+" endif
+
+" Git {{{2
+" Plug 'airblade/vim-gitgutter',          Cond(0)
+"
+" Plug 'tpope/vim-fugitive',              Cond(0)
+" " Don't load if we're using coc (use coc-git instead)
+" autocmd vimrc FileType *
+"     \ if index(g:completion_filetypes['coc'], &filetype) != 1
+"     \ | call plug#load('vim-gitgutter')
+"     \ | call plug#load('vim-fugitive')
+"     \ | endif
+"
+" Plug 'junegunn/gv.vim'
 
 " Color themes {{{2
 " Conditionally load themes based on env var
-Plug 'arcticicestudio/nord-vim',        Cond(g:vim_base_color ==? 'nord')
-Plug 'morhetz/gruvbox',                 Cond(g:vim_base_color ==? 'gruvbox')
-Plug 'NLKNguyen/papercolor-theme',      Cond(g:vim_base_color ==? 'papercolor')
-Plug 'nightsense/snow',                 Cond(g:vim_base_color ==? 'snow')
+" Plug 'arcticicestudio/nord-vim',        Cond(g:vim_base_color ==? 'nord')
+" Plug 'morhetz/gruvbox',                 Cond(g:vim_base_color ==? 'gruvbox')
+" Plug 'NLKNguyen/papercolor-theme',      Cond(g:vim_base_color ==? 'papercolor')
+" Plug 'nightsense/snow',                 Cond(g:vim_base_color ==? 'snow')
 
 " Terminal/Code Execution {{{2
-Plug 'skywind3000/asyncrun.vim'
+" Plug 'skywind3000/asyncrun.vim'
 
 " Snippets {{{2
-Plug 'Shougo/neosnippet.vim',           Cond(has('nvim'))
-Plug 'Shougo/neosnippet-snippets',      Cond(has('nvim'))
-Plug 'honza/vim-snippets',              Cond(has('nvim'))
+" Plug 'Shougo/neosnippet.vim',           Cond(has('nvim'))
+" Plug 'Shougo/neosnippet-snippets',      Cond(has('nvim'))
+" Plug 'honza/vim-snippets',              Cond(has('nvim'))
 
 " Building {{{2
-Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
+" Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 
 " Code completion/Language server {{{2
 " Coc {{{3
@@ -133,118 +227,110 @@ Plug 'vhdirk/vim-cmake',                Cond(1, { 'for': ['cpp', 'c'] })
 "     \ if index(g:completion_filetypes['coc'], &filetype) < 0
 "     \ | let b:coc_suggest_disable = 1
 
-Plug 'neoclide/coc.nvim',
-    \ Cond(has('nvim'),
-    \ {
-    \   'do': 'yarn install --frozen-lockfile',
-    \   'for': g:completion_filetypes['coc'],
-    \ })
-
-function! Coc_post_update() abort
-    call coc#util#install()
-    if get(g:, 'coc_force_debug', 0) == 1
-        " Build from source
-        call coc#util#build()
-    endif
-endfunction
+" Plug 'neoclide/coc.nvim',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'do': 'yarn install --frozen-lockfile',
+"     \   'for': g:completion_filetypes['coc'],
+"     \ })
 
 " Deoplete {{{3
-Plug 'Shougo/deoplete.nvim',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for': g:completion_filetypes['deoplete'],
-    \ })
+" Plug 'Shougo/deoplete.nvim',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'for': g:completion_filetypes['deoplete'],
+"     \ })
 
 " YouCompleteMe {{{3
-if g:vim_exists
-    Plug 'Valloric/YouCompleteMe',
-        \ Cond(!has('nvim'),
-        \ {
-        \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
-        \   'for': g:completion_filetypes['ycm'],
-        \ })
-endif
+" if g:vim_exists
+"     Plug 'Valloric/YouCompleteMe',
+"         \ Cond(!has('nvim'),
+"         \ {
+"         \   'do': 'python3 ~/git/python/shell/vimsync.py -y',
+"         \   'for': g:completion_filetypes['ycm'],
+"         \ })
+" endif
 
 " C {{{3
-Plug 'tweekmonster/deoplete-clang2',
-    \ Cond(has('nvim'))
+" Plug 'tweekmonster/deoplete-clang2',
+"     \ Cond(has('nvim'))
 
 " Vim {{{3
-Plug 'Shougo/neco-vim',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for': 'vim'
-    \ })
+" Plug 'Shougo/neco-vim',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'for': 'vim'
+"     \ })
 
 " Python (Jedi) {{{3
-Plug 'zchee/deoplete-jedi',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for': 'python',
-    \ })
+" Plug 'zchee/deoplete-jedi',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'for': 'python',
+"     \ })
 
 " Fish {{{3
-Plug 'ponko2/deoplete-fish',
-    \ Cond(has('nvim'),
-    \ {
-    \   'for': 'fish',
-    \ })
+" Plug 'ponko2/deoplete-fish',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'for': 'fish',
+"     \ })
 
 " Go {{{3
-Plug 'zchee/deoplete-go',
-    \ Cond(has('nvim'),
-    \ {
-    \   'do': 'make',
-    \ })
+" Plug 'zchee/deoplete-go',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'do': 'make',
+"     \ })
 
-Plug 'mdempsky/gocode',
-    \ Cond(has('nvim'),
-    \ {
-    \   'rtp': 'vim',
-    \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
-    \ })
+" Plug 'mdempsky/gocode',
+"     \ Cond(has('nvim'),
+"     \ {
+"     \   'rtp': 'vim',
+"     \   'do': '~/.vim/plugged/gocode/vim/symlink.sh'
+"     \ })
 
 " Status line {{{2
 " Vim (Airline)
-if g:vim_exists
-    Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
-    Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
-endif
+" if g:vim_exists
+"     Plug 'vim-airline/vim-airline',         Cond(!has('nvim'))
+"     Plug 'vim-airline/vim-airline-themes',  Cond(!has('nvim'))
+" endif
 
 " Neovim (Lightline/Eleline)
-let g:nvim_statusbar = 'eleline'
-let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
-let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
-let g:eleline_background = 234
-
-let g:eleline_local_path = '$HOME/git/eleline.vim'
-if !empty(glob(expand(g:eleline_local_path)))
-    Plug g:eleline_local_path,          Cond(has('nvim') && g:use_eleline)
-else
-    Plug 'comfortablynick/eleline.vim', Cond(has('nvim') && g:use_eleline)
-endif
-Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)
-Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
-Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)
-
+" let g:nvim_statusbar = 'eleline'
+" let g:use_lightline = get(g:, 'nvim_statusbar', '') ==# 'lightline'
+" let g:use_eleline =   get(g:, 'nvim_statusbar', '') ==# 'eleline'
+" let g:eleline_background = 234
+"
+" let g:eleline_local_path = '$HOME/git/eleline.vim'
+" if !empty(glob(expand(g:eleline_local_path)))
+"     Plug g:eleline_local_path,          Cond(has('nvim') && g:use_eleline)
+" else
+"     Plug 'comfortablynick/eleline.vim', Cond(has('nvim') && g:use_eleline)
+" endif
+" Plug 'itchyny/lightline.vim',           Cond(has('nvim') && g:use_lightline)
+" Plug 'maximbaz/lightline-ale',          Cond(has('nvim') && g:use_lightline)
+" Plug 'mgee/lightline-bufferline',       Cond(has('nvim') && g:use_lightline)
+"
 " Tmux {{{2
-Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
-Plug 'christoomey/vim-tmux-runner',
-    \ Cond(!empty($TMUX_PANE),
-    \ {
-    \   'on':
-    \     [
-    \       'VtrSendCommandToRunner',
-    \       'VtrOpenRunner',
-    \       'VtrSendCommand',
-    \       'VtrSendFile',
-    \       'VtrKillRunner',
-    \       'VtrAttachToPane',
-    \     ]
-    \ })
+" Plug 'christoomey/vim-tmux-navigator',  Cond(!empty($TMUX_PANE))
+" Plug 'christoomey/vim-tmux-runner',
+"     \ Cond(!empty($TMUX_PANE),
+"     \ {
+"     \   'on':
+"     \     [
+"     \       'VtrSendCommandToRunner',
+"     \       'VtrOpenRunner',
+"     \       'VtrSendCommand',
+"     \       'VtrSendFile',
+"     \       'VtrKillRunner',
+"     \       'VtrAttachToPane',
+"     \     ]
+"     \ })
 
 " END {{{2
-call plug#end()
+" call plug#end()
 
 " Plugin configuration {{{1
 " ALE (Asynchronus Linting Engine)  {{{2
@@ -384,31 +470,31 @@ let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 let g:neoformat_enabled_go = [ 'goimports' ]
 
 " NERDTree {{{2
-let NERDTreeHighlightCursorline = 1
-let NERDTreeIgnore = [
-    \ '\.pyc$',
-    \ '^__pycache__$',
-    \ '.vscode',
-    \ ]
-let NERDTreeShowHidden = 1
-let NERDTreeQuitOnOpen = 1
+" let NERDTreeHighlightCursorline = 1
+" let NERDTreeIgnore = [
+"     \ '\.pyc$',
+"     \ '^__pycache__$',
+"     \ '.vscode',
+"     \ ]
+" let NERDTreeShowHidden = 1
+" let NERDTreeQuitOnOpen = 1
 
 " NERD Commenter {{{2
-let g:NERDSpaceDelims = 1                       " Add spaces after comment delimiters by default
-let g:NERDCompactSexyComs = 1                   " Use compact syntax for prettified multi-line comments
-let g:NERDDefaultAlign = 'left'                 " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDAltDelims_java = 1                    " Set a language to use its alternate delimiters by default
-let g:NERDCommentEmptyLines = 1                 " Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDTrimTrailingWhitespace = 1            " Enable trimming of trailing whitespace when uncommenting
-let g:NERDToggleCheckAllLines = 1               " Enable NERDCommenterToggle to check all selected lines is commented or not
-
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = {
-    \ 'c':
-    \   { 'left': '/**', 'right': '*/' },
-    \ 'json':
-    \   { 'left': '//' },
-    \ }
+" let g:NERDSpaceDelims = 1                       " Add spaces after comment delimiters by default
+" let g:NERDCompactSexyComs = 1                   " Use compact syntax for prettified multi-line comments
+" let g:NERDDefaultAlign = 'left'                 " Align line-wise comment delimiters flush left instead of following code indentation
+" let g:NERDAltDelims_java = 1                    " Set a language to use its alternate delimiters by default
+" let g:NERDCommentEmptyLines = 1                 " Allow commenting and inverting empty lines (useful when commenting a region)
+" let g:NERDTrimTrailingWhitespace = 1            " Enable trimming of trailing whitespace when uncommenting
+" let g:NERDToggleCheckAllLines = 1               " Enable NERDCommenterToggle to check all selected lines is commented or not
+"
+" " Add your own custom formats or override the defaults
+" let g:NERDCustomDelimiters = {
+"     \ 'c':
+"     \   { 'left': '/**', 'right': '*/' },
+"     \ 'json':
+"     \   { 'left': '//' },
+"     \ }
 
 " Echodoc {{{2
 " TODO: Only execute for python/ts/js?

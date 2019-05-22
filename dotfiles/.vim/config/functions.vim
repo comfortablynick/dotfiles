@@ -458,14 +458,10 @@ autocmd vimrc  FileType fzf set laststatus=0 noruler
   \| autocmd vimrc BufLeave <buffer> set laststatus=2 ruler
 
 " Vista {{{2
-autocmd vimrc VimEnter * call vista#RunForNearestMethodOrFunction()
+autocmd vimrc VimEnter * if exists('*vista#')
+    \ | call vista#RunForNearestMethodOrFunction() | endif
 
 " Vim Tmux Runner {{{2
 " Close runner when exiting vim
 " autocmd vimrc QuitPre * :VtrKillRunner<CR>
 
-" Commands {{{1
-" Sudo save {{{2
-" Note: does not work in Neovim in some cases
-" Use `sudo -E vim {file}` to open vim while preserving user environment
-command W w !sudo tee "%" > /dev/null

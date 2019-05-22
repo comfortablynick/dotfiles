@@ -9,6 +9,10 @@ augroup coc_config
     autocmd!
     autocmd User CocNvimInit call coc_config#cmds()
     autocmd User CocNvimInit call coc_config#maps()
+    autocmd FileType *
+        \ if index(g:completion_filetypes['coc'], &filetype) >= 0
+        \ | packadd coc.nvim
+        \ | endif
 augroup END
 
 let g:coc_force_debug = 1

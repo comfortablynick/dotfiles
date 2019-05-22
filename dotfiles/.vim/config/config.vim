@@ -91,6 +91,9 @@ set splitright                                                  " Split right in
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
 
+" Netrw {{{1
+let g:netrw_liststyle = 3
+
 " Line numbers {{{1
 set number                                                      " Show linenumbers
 set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)

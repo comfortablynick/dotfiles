@@ -39,6 +39,8 @@ set showtabline=2                                               " Always show ta
 set visualbell                                                  " Visual bell instead of audible
 set nowrap                                                      " Text wrapping mode
 set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
+set cmdheight=1                                                 " Add extra line for function definition
+set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
 set cursorline                                                  " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin

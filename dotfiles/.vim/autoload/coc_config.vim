@@ -57,3 +57,8 @@ function! coc_config#maps() abort
     "     \ pumvisible() ? coc#_select_confirm() :
     "     \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction
+
+function! coc_config#init() abort
+    call coc_config#cmds()
+    call coc_config#maps()
+endfunction

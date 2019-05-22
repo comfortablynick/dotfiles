@@ -66,7 +66,6 @@ function! s:pack_init() abort
         return
     endif
     command! -nargs=+ Pack call minpac#add(<args>)
-
     call minpac#init()
 
     Pack 'k-takata/minpac',              {'type': 'opt'}
@@ -133,12 +132,6 @@ autocmd vimrc FileType *
     \ if index(g:completion_filetypes['coc'], &filetype) < 0
     \ | packadd vim-gitgutter
     \ | packadd vim-fugitive
-    \ | endif
-
-" Load deoplete
-autocmd vimrc FileType *
-    \ if index(g:completion_filetypes['deoplete'], &filetype) >= 0
-    \ | packadd deoplete.nvim
     \ | endif
 
 " Define commands for updating/cleaning the plugins.
@@ -594,32 +587,32 @@ let g:LanguageClient_changeThrottle = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
 " Deoplete {{{2
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#jedi#show_docstring = 1
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#sources#jedi#show_docstring = 1
+" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+" let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+"
+" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " YouCompleteMe {{{2
-let g:ycm_filetype_blacklist = {
-    \ 'gitcommit': 1,
-    \ 'tagbar': 1,
-    \ 'qf': 1,
-    \ 'notes': 1,
-    \ 'markdown': 1,
-    \ 'unite': 1,
-    \ 'text': 1,
-    \ 'vimwiki': 1,
-    \ 'pandoc': 1,
-    \ 'infolog': 1,
-    \ 'mail': 1
-    \}
-let g:ycm_filetype_specific_completion_to_disable = {
-    \ 'gitcommit': 1
-    \}
-let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
+" let g:ycm_filetype_blacklist = {
+"     \ 'gitcommit': 1,
+"     \ 'tagbar': 1,
+"     \ 'qf': 1,
+"     \ 'notes': 1,
+"     \ 'markdown': 1,
+"     \ 'unite': 1,
+"     \ 'text': 1,
+"     \ 'vimwiki': 1,
+"     \ 'pandoc': 1,
+"     \ 'infolog': 1,
+"     \ 'mail': 1
+"     \}
+" let g:ycm_filetype_specific_completion_to_disable = {
+"     \ 'gitcommit': 1
+"     \}
+" let g:ycm_autoclose_preview_window_after_completion = 1         " Ditch preview window after completion
 
 " Tagbar {{{2
 let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
@@ -657,42 +650,42 @@ let g:cpp_simple_highlight = 1
 let g:cpp_named_requirements_highlight = 1
 
 " vista {{{2
-let g:vista#renderer#icons = {
-\    'func': 'ƒ',
-\    'function': 'ƒ',
-\    'var': 'ʋ',
-\    'variable': 'ʋ',
-\    'const': 'c',
-\    'constant': 'c',
-\    'method': '𝑚',
-\    'package': 'p',
-\    'packages': 'p',
-\    'enum': 'e',
-\    'enumerator': 'e',
-\    'module': 'M',
-\    'modules': 'M',
-\    'type': '𝑡',
-\    'typedef': '𝑡',
-\    'types': '𝑡',
-\    'field': 'f',
-\    'fields': 'f',
-\    'macro': 'ɱ',
-\    'macros': 'ɱ',
-\    'map': '⇶',
-\    'class': 'c',
-\    'augroup': 'a',
-\    'struct': 's',
-\    'union': 'u',
-\    'member': 'm',
-\    'target': 't',
-\    'property': 'p',
-\    'interface': 'I',
-\    'namespace': 'n',
-\    'subroutine': 'ƒ',
-\    'implementation': 'I',
-\    'typeParameter': '𝑡',
-\    'default': 'd',
-\}
-let g:vista_close_on_jump = 1
+" let g:vista#renderer#icons = {
+" \    'func': 'ƒ',
+" \    'function': 'ƒ',
+" \    'var': 'ʋ',
+" \    'variable': 'ʋ',
+" \    'const': 'c',
+" \    'constant': 'c',
+" \    'method': '𝑚',
+" \    'package': 'p',
+" \    'packages': 'p',
+" \    'enum': 'e',
+" \    'enumerator': 'e',
+" \    'module': 'M',
+" \    'modules': 'M',
+" \    'type': '𝑡',
+" \    'typedef': '𝑡',
+" \    'types': '𝑡',
+" \    'field': 'f',
+" \    'fields': 'f',
+" \    'macro': 'ɱ',
+" \    'macros': 'ɱ',
+" \    'map': '⇶',
+" \    'class': 'c',
+" \    'augroup': 'a',
+" \    'struct': 's',
+" \    'union': 'u',
+" \    'member': 'm',
+" \    'target': 't',
+" \    'property': 'p',
+" \    'interface': 'I',
+" \    'namespace': 'n',
+" \    'subroutine': 'ƒ',
+" \    'implementation': 'I',
+" \    'typeParameter': '𝑡',
+" \    'default': 'd',
+" \}
+" let g:vista_close_on_jump = 1
 
 " vim:set fdl=1:

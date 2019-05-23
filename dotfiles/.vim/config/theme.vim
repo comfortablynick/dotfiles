@@ -146,9 +146,8 @@ let g:lightline#ale#indicator_errors = g:LL_LinterErrors
 let g:lightline#ale#indicator_ok = g:LL_LinterOK
 
 " coc#status {{{3
-if exists('g:did_coc_loaded')
-    autocmd vimrc User CocDiagnosticChange
-        \ if exists('*lightline#update') | call lightline#update() | endif
+if exists('*lightline#update')
+    autocmd! vimrc User CocDiagnosticChange call lightline#update()
 endif
 
 " Section separators {{{3
@@ -432,8 +431,8 @@ endfunction
 " Vim / Neovim Theme {{{1
 " Set colors based on theme {{{2
 " Assign to variables
-exe 'colorscheme '.g:vim_base_color
-exe 'set background='.g:vim_color_variant
+execute 'silent! colorscheme' g:vim_base_color
+let &background = g:vim_color_variant
 let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
 
 " Set airline theme

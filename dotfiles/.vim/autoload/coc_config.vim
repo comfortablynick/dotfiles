@@ -5,10 +5,13 @@ function! coc_config#cmds() abort
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
         return
     endif
-    autocmd coc_config CursorHold *
-        \ if ! coc#util#has_float() | silent! call CocActionAsync('doHover') | endif
-    autocmd coc_config User CocJumpPlaceholder silent! call CocActionAsync('showSignatureHelp')
-    autocmd coc_config InsertEnter * call CocActionAsync('showSignatureHelp')
+    augroup coc_config_auto
+        autocmd!
+        autocmd CursorHold *
+            \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
+        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
+    augroup END
 endfunction
 
 " Helper function for <TAB> completion keymap

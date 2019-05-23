@@ -61,3 +61,8 @@ function! nick#functions#set_executable() abort
     call nick#functions#set_executable_bit()
     call nick#functions#set_shebang()
 endfunction
+
+" Get character under cursor
+function! nick#functions#get_cursor_char() abort
+    return strcharpart(strpart(getline('.'), col('.') - 1), 0, 1)
+endfunction

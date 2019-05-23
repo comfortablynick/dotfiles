@@ -59,6 +59,20 @@ function! coc_config#maps() abort
 endfunction
 
 function! coc_config#init() abort
+    let g:coc_force_debug = 1
+    let g:coc_global_extensions = [
+        \ 'coc-snippets',
+        \ 'coc-json',
+        \ 'coc-rls',
+        \ 'coc-python',
+        \ 'coc-tsserver',
+        \ 'coc-go',
+        \ 'coc-git',
+        \ 'coc-vimlsp',
+        \ ]
+    let g:coc_status_error_sign = 'E'
+    let g:coc_status_warn_sign = 'W'
+    let g:coc_snippet_next = '<tab>'
     call coc_config#cmds()
     call coc_config#maps()
 endfunction

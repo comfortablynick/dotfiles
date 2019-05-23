@@ -1,18 +1,18 @@
 #!/usr/bin/env zsh
+# vim: fdl=1:
 #            _
 #   ____ ___| |__  _ __ ___
 #  |_  // __| '_ \| '__/ __|
 #  _/ /_\__ \ | | | | | (__
 # (_)___|___/_| |_|_|  \___|
 
-# NON-INTERACTIVE {{{1
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
 
 # PROFILE / DEBUG {{{1
 export DEBUG_MODE=false
 export PROFILE=0
 
-# Check for debug mode
+# Check for debug mode {{{2
 [[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
 # START_TIME="$(date)"
 
@@ -178,7 +178,6 @@ export LESS_TERMCAP_mh=$(tput dim)
 
 # KEYMAP {{{1
 bindkey -v
-# export KEYTIMEOUT=1                                                    # Timeout for key sequences in vi mode (10ms)
 
 bindkey '^P' up-history
 bindkey '^N' down-history
@@ -186,10 +185,9 @@ bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
-#
-# # kj :: <Esc>
-bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
 
+# kj :: <Esc>
+bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
 zle -N zle-keymap-select
 
 # FUNCTIONS {{{1
@@ -264,8 +262,10 @@ chpwd() {
 }
 
 # SHELL STARTUP {{{1
+# Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
-# Profiling end
+
+# Profiling end {{{2
 if [[ $PROFILE -eq 1 ]]; then
     unsetopt XTRACE
     exec 2>&3 3>&-

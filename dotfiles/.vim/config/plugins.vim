@@ -77,6 +77,7 @@ function! s:pack_init() abort
     Pack 'mhinz/vim-startify'
     Pack 'scrooloose/nerdcommenter'
     Pack 'tpope/vim-surround'
+    Pack 'tpope/vim-projectionist'
     Pack 'liuchengxu/vista.vim'
     Pack 'w0rp/ale'
     Pack 'sbdchd/neoformat'

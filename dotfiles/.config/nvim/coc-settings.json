@@ -21,7 +21,8 @@
   // Preferences
   "coc.preferences.hoverTarget": "float",
   "coc.preferences.previewAutoClose": true,
-  "coc.preferences.formatOnType": true,
+  "coc.preferences.formatOnType": false,
+  "coc.preferences.messageLevel": "error",
 
   // Rust
   "rust-client.channel": "stable",

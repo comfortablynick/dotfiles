@@ -116,7 +116,7 @@ nnoremap <silent> <Leader>b :call RunCmd('build')<CR>
 noremap <silent> <F7> :call RunBuild()<CR>
 
 " SetExecutableBit() {{{2
-nnoremap <F3> :call SetExecutable()<CR>
+nnoremap <F3> :call nick#functions#set_executable()<CR>
 
 " Plugins {{{1
 " ALE {{{2

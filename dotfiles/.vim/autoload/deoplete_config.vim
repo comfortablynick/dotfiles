@@ -7,4 +7,5 @@ function! deoplete_config#init() abort
     inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
     autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
     packadd deoplete.nvim
+    silent! UpdateRemotePlugins
 endfunction

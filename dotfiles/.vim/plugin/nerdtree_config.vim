@@ -19,4 +19,6 @@ function! s:nerd_tree() abort
     exe 'NERDTreeToggle'
 endfunction
 
-command! Nerd call <SID>nerd_tree()
+
+" Maps
+nnoremap <silent> <Leader>n :call <SID>nerd_tree()<CR>

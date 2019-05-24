@@ -40,3 +40,7 @@ let g:neoformat_cmake_cmakeformat = {
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 
 let g:neoformat_enabled_go = [ 'goimports' ]
+
+" Maps/Commands
+noremap <silent> <F2> :Neoformat<CR>
+autocmd vimrc BufWritePre *.{bash,sh} Neoformat

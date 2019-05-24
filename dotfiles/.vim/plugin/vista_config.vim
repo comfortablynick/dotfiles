@@ -40,3 +40,6 @@ let g:vista#renderer#icons = {
 \    'default': 'd',
 \}
 let g:vista_close_on_jump = 1
+
+autocmd vimrc VimEnter * if exists('*vista#')
+    \ | call vista#RunForNearestMethodOrFunction() | endif

@@ -379,9 +379,6 @@ autocmd vimrc FileType qf wincmd J
 " Close qf after lint if empty
 autocmd vimrc User ALELintPost call CloseEmptyQf()
 
-" Neoformat {{{2
-autocmd vimrc BufWritePre *.{bash,sh} Neoformat
-
 " Terminal {{{2
 if has('nvim')
     " Start in TERMINAL mode (any key will exit)
@@ -394,16 +391,3 @@ endif
 
 " Formatopts {{{2
 autocmd vimrc BufNewFile,BufRead * setlocal formatoptions-=o
-
-" Fzf {{{2
-    " Don't show status bar in fzf window
-autocmd vimrc  FileType fzf set laststatus=0 noruler
-  \| autocmd vimrc BufLeave <buffer> set laststatus=2 ruler
-
-" Vista {{{2
-autocmd vimrc VimEnter * if exists('*vista#')
-    \ | call vista#RunForNearestMethodOrFunction() | endif
-
-" Vim Tmux Runner {{{2
-" Close runner when exiting vim
-" autocmd vimrc QuitPre * :VtrKillRunner<CR>

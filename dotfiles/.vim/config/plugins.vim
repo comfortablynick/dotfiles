@@ -83,7 +83,6 @@ function! s:pack_init() abort
     Pack 'sbdchd/neoformat'
     Pack 'mbbill/undotree'
     Pack 'majutsushi/tagbar'
-    " Pack 'Shougo/echodoc'
     Pack 'skywind3000/asyncrun.vim'
     Pack 'vhdirk/vim-cmake'
     Pack 'junegunn/fzf'
@@ -117,7 +116,7 @@ function! s:pack_init() abort
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
     " Pack 'tweekmonster/deoplete-clang2'
     " Pack 'Shougo/neco-vim',
-    Pack 'zchee/deoplete-jedi'
+    " Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'
 
     Pack 'christoomey/vim-tmux-navigator'

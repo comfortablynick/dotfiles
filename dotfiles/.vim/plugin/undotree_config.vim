@@ -4,3 +4,6 @@ endif
 let g:loaded_undotree_config_vim = 1
 
 let g:undotree_WindowLayout = 4                                 " Show tree on right + diff below
+
+" Maps
+noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>

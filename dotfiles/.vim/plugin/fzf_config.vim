@@ -47,3 +47,26 @@ let g:fzf_colors = {
 if has('nvim') || has('gui_running')
   let $FZF_DEFAULT_OPTS .= ' --inline-info'
 endif
+
+" Maps
+" Search command history
+noremap <silent> <C-r> :History:<CR>
+
+" Tags
+noremap <silent> <C-t> :BTags<CR>
+nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
+
+" Search/lines
+nnoremap <silent> <Leader>l :BLines<CR>
+
+augroup fzf_config
+    autocmd!
+    " Add fzf vista finder if not a coc filetype
+    autocmd FileType *
+        \ if index(g:completion_filetypes['coc'], &filetype) < 0
+        \ | nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
+        \ | endif
+    " Don't show status bar in fzf window
+    autocmd FileType fzf set laststatus=0 noruler
+        \| autocmd BufLeave <buffer> set laststatus=2 ruler
+augroup END

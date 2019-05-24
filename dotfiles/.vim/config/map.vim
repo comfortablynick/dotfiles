@@ -115,50 +115,5 @@ nnoremap <silent> <Leader>b :call RunCmd('build')<CR>
 " RunBuild() {{{2
 noremap <silent> <F7> :call RunBuild()<CR>
 
-" SetExecutableBit() {{{2
+" Set Executable {{{2
 nnoremap <F3> :call nick#functions#set_executable()<CR>
-
-" Plugins {{{1
-" ALE {{{2
-nmap <silent> <Leader>f <Plug>(ale_next_wrap)
-nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
-
-
-" Paste from register
-nnoremap <Leader>0 "0p<CR>
-nnoremap <Leader>1 "1p<CR>
-nnoremap <Leader>2 "2p<CR>
-nnoremap <Leader>3 "3p<CR>
-nnoremap <Leader>4 "4p<CR>
-
-" Tagbar {{{2
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
-" `F8` :: toggle TagBar
-noremap <silent> <F8> :TagbarToggle<CR>
-
-" NERDTree {{{2
-nnoremap <silent> <Leader>n :Nerd<CR>
-noremap <silent> <C-n> :Nerd<CR>
-
-" UndoTree {{{2
-noremap <silent> <F5> :UndotreeToggle \| :UndotreeFocus<CR>
-
-" Neoformat {{{2
-noremap <silent> <F2> :Neoformat<CR>
-
-" Fzf {{{2
-" Search command history
-noremap <silent> <C-r> :History:<CR>
-
-" Tags
-noremap <silent> <C-t> :BTags<CR>
-nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
-" nnoremap <silent> <Leader>m :BTags<CR>
-
-if !exists('g:did_coc_loaded')
-    nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
-end
-
-" Search/lines
-nnoremap <silent> <Leader>l :BLines<CR>
-" nnoremap <leader>k :call fzf#vim#buffer_lines(expand('<cword>'))<CR>

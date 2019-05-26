@@ -1,4 +1,4 @@
-if exists('g:loaded_asyncrun_config_vim')
+if exists('g:loaded_asyncrun_config_vim') || !exists(':AsyncRun')
     finish
 endif
 let g:loaded_asyncrun_config_vim = 1

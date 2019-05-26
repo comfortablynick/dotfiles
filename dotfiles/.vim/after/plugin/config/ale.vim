@@ -1,4 +1,6 @@
-if exists('g:loaded_ale_config_vim')
+scriptencoding utf-8
+
+if exists('g:loaded_ale_config_vim') || !exists(':ALEEnable')
     finish
 endif
 let g:loaded_ale_config_vim = 1

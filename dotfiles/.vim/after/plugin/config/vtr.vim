@@ -1,4 +1,4 @@
-if exists('g:loaded_vtr_config_vim')
+if exists('g:loaded_vtr_config_vim') || !exists(':VtrAttachToPane')
     finish
 endif
 let g:loaded_vtr_config_vim = 1

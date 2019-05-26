@@ -1,4 +1,4 @@
-if exists('g:loaded_neoformat_config_vim')
+if exists('g:loaded_neoformat_config_vim') || ! exists(':Neoformat')
     finish
 endif
 let g:loaded_neoformat_config_vim = 1

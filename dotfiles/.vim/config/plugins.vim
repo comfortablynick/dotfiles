@@ -139,16 +139,4 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 
 let g:eleline_background = 234
 
-" Plugin configuration {{{1
-" Echodoc {{{2
-" TODO: Only execute for python/ts/js?
-" let g:echodoc#enable_at_startup = 1
-" let g:ecodoc#type = 'echo'                   " virtual: virtualtext; echo: use command line echo area
-
-" Neosnippet {{{2
-" if exists('g:loaded_neosnippet')
-"     let g:neosnippet#enable_completed_snippet = 1
-"     autocmd vimrc CompleteDone * call neosnippet#complete_done()
-" endif
-
 " vim:set fdl=1:

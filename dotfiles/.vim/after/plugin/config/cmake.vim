@@ -1,4 +1,4 @@
-if exists('g:loaded_cmake_config_vim')
+if exists('g:loaded_cmake_config_vim') || exists(':CMake')
     finish
 endif
 let g:loaded_cmake_config_vim = 1

@@ -1,4 +1,4 @@
-if exists('g:loaded_nerdcommenter_config')
+if exists('g:loaded_nerdcommenter_config') || !exists('g:loaded_nerd_comments')
     finish
 endif
 let g:loaded_nerdcommenter_config = 1

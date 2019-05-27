@@ -1,4 +1,5 @@
-if exists('g:loaded_vista_config_vim') || !exists(':Vista')
+scriptencoding utf-8
+if exists('g:loaded_vista_config_vim')
     finish
 endif
 let g:loaded_vista_config_vim = 1
@@ -39,7 +40,8 @@ let g:vista#renderer#icons = {
 \    'typeParameter': '𝑡',
 \    'default': 'd',
 \}
-let g:vista_close_on_jump = 1
+let g:vista_close_on_jump = 0
 
-autocmd vimrc VimEnter * if exists('*vista#')
-    \ | call vista#RunForNearestMethodOrFunction() | endif
+"nnoremap <leader>
+"autocmd vimrc VimEnter * if exists(':Vista')
+    "\ | call vista#RunForNearestMethodOrFunction() | endif

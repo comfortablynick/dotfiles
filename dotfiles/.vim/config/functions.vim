@@ -347,6 +347,10 @@ function! BufWidth()
 endfunction
 
 " (Auto)commands {{{1
+" General {{{2
+" Start in Insert Mode
+autocmd vimrc FileType gitcommit startinsert
+
 " Cursor {{{2
 " Remember last place in file
 autocmd vimrc BufWinEnter * call <SID>last_place()

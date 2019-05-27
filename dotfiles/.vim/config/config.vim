@@ -61,6 +61,7 @@ set virtualedit=onemore                                         " Allow cursor t
 
 " Folds {{{1
 set foldenable                                                  " Enable folds by default
+set foldmethod=marker                                           " Fold using markers by default
 set foldnestmax=5                                               " Max nested levels (default=20)
 
 " Indents {{{1

@@ -1,4 +1,4 @@
-if exists('g:loaded_vista_config_vim')
+if exists('g:loaded_vista_config_vim') || !exists(':Vista')
     finish
 endif
 let g:loaded_vista_config_vim = 1

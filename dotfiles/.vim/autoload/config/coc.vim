@@ -1,7 +1,7 @@
 " Coc.nvim configuration
 
 " Set autocmds if LC is loaded
-function! coc_config#cmds() abort
+function! config#coc#cmds() abort
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
         return
     endif
@@ -21,7 +21,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Remap only if active for filetype
-function! coc_config#maps() abort
+function! config#coc#maps() abort
     if exists('b:coc_suggest_disable')
         return
     endif
@@ -61,7 +61,7 @@ function! coc_config#maps() abort
     "     \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 endfunction
 
-function! coc_config#init() abort
+function! config#coc#init() abort
     let g:coc_force_debug = 1
     let g:coc_global_extensions = [
         \ 'coc-snippets',
@@ -76,6 +76,6 @@ function! coc_config#init() abort
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'
-    call coc_config#cmds()
-    call coc_config#maps()
+    call config#coc#cmds()
+    call config#coc#maps()
 endfunction

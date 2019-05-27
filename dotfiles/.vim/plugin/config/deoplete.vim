@@ -8,6 +8,6 @@ augroup deoplete_config
     autocmd!
     autocmd FileType *
         \ if index(g:completion_filetypes['deoplete'], &filetype) >= 0
-        \ | call deoplete_config#init()
+        \ | call config#deoplete#init()
         \ | endif
 augroup END

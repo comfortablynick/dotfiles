@@ -1,4 +1,4 @@
-function! deoplete_config#init() abort
+function! config#deoplete#init() abort
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#sources#jedi#show_docstring = 1
     let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'

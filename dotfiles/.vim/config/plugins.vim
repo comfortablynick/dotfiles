@@ -50,7 +50,7 @@ let g:completion_filetypes = {
     \   ],
     \ }
 
-" Plugin definitions {{{1
+" Packages {{{1
 " Minpac Init {{{2
 let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
 if empty(glob(minpac_path))
@@ -64,7 +64,7 @@ function! s:pack_init() abort
         echo "Minpac doesn't exist! Check download location"
         return
     endif
-    command! -nargs=+ Pack call minpac#add(<args>)
+    command! -nargs=+ Pack call nick#minpac#add(<args>)
     call minpac#init()
 
     " General Packages {{{2
@@ -95,35 +95,34 @@ function! s:pack_init() abort
     Pack 'dag/vim-fish'
     Pack 'cespare/vim-toml'
     Pack 'chase/vim-ansible-yaml'
+    Pack 'bfrg/vim-cpp-modern'
 
     " Git {{{2
     Pack 'airblade/vim-gitgutter',      {'type': 'opt'}
     Pack 'tpope/vim-fugitive',          {'type': 'opt'}
     Pack 'junegunn/gv.vim'
 
+    " Snippets {{{2
     Pack 'Shougo/neosnippet.vim'
     Pack 'Shougo/neosnippet-snippets'
     Pack 'honza/vim-snippets'
 
-    Pack 'bfrg/vim-cpp-modern'
+    " Completion {{{2
     Pack 'neoclide/coc.nvim',
         \ {
         \   'type': 'opt',
         \   'do': '!yarn install --frozen-lockfile'
         \ }
-
-    " Deoplete
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
-    " Pack 'tweekmonster/deoplete-clang2'
-    " Pack 'Shougo/neco-vim',
-    " Pack 'zchee/deoplete-jedi'
+    Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'
 
+    " Tmux {{{2
     Pack 'christoomey/vim-tmux-navigator'
     Pack 'christoomey/vim-tmux-runner'
 endfunction
 
-" Pack autocmds {{{3
+" FileType Autocmds {{{2
 " Don't load if we're using coc (use coc-git instead)
 autocmd vimrc FileType *
     \ if index(g:completion_filetypes['coc'], &filetype) < 0
@@ -131,12 +130,40 @@ autocmd vimrc FileType *
     \ | packadd vim-fugitive
     \ | endif
 
-" Pack commands {{{3
+autocmd vimrc FileType *
+    \ if index(g:completion_filetypes['deoplete'], &filetype) >= 0
+    \ | packadd deoplete.nvim
+    \ | packadd deoplete-jedi
+    \ | packadd deoplete-fish
+    \ | endif
+
+" Pack commands {{{2
 " Define commands for updating/cleaning the plugins.
 command! PackUpdate call <SID>pack_init() | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  call <SID>pack_init() | call minpac#clean()
 command! PackStatus call <SID>pack_init() | call minpac#status()
+" Load :: use in vimrc files to load on startup
+command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
-let g:eleline_background = 234
+" Load packages {{{1
+Load eleline.vim
+Load fzf
+Load fzf.vim
+Load nerdcommenter
+Load tagbar
+Load vista.vim
+Load ale
+Load neoformat
+Load undotree
+Load asyncrun.vim
+Load vim-cmake
 
-" vim:set fdl=1:
+" Syntax
+Load vim-cpp-modern
+Load yats
+Load vim-markdown
+Load vim-fish
+Load vim-toml
+Load vim-ansible-yaml
+
+" vim:set fdm=marker fdl=1:

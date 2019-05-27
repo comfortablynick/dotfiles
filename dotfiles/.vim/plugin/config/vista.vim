@@ -42,6 +42,6 @@ let g:vista#renderer#icons = {
 \}
 let g:vista_close_on_jump = 0
 
-"nnoremap <leader>
+nnoremap <silent> <Leader>v :Vista!!<CR>
 "autocmd vimrc VimEnter * if exists(':Vista')
     "\ | call vista#RunForNearestMethodOrFunction() | endif

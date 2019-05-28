@@ -87,6 +87,7 @@ function! s:pack_init() abort
     Pack 'vhdirk/vim-cmake'
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
+    Pack 'airblade/vim-rooter'
     Pack 'comfortablynick/eleline.vim'
 
     " Syntax highlighting {{{2

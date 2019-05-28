@@ -14,10 +14,15 @@ function! GetProjectRoot() abort
     if exists('b:project_root_dir')
         return b:project_root_dir
     endif
-    " Get root from git or file parent dir
-    let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
-    if ! isdirectory(l:root)
-        let l:root = expand('%:p:h')
+    packadd vim-rooter
+    if exists('*FindRootDirectory')
+        let l:root = FindRootDirectory()
+    else
+        " Get root from git or file parent dir
+        let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
+        if ! isdirectory(l:root)
+            let l:root = expand('%:p:h')
+        endif
     endif
     " Save root in buffer local variable
     let b:project_root_dir = l:root

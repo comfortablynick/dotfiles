@@ -382,7 +382,7 @@ endif
 
 " Quickfix window {{{2
 " Close buffer if quickfix window is last
-autocmd vimrc BufEnter * call AutoCloseQfWin()
+" autocmd vimrc BufEnter * call AutoCloseQfWin()
 " Push quickfix window always to the bottom
 autocmd vimrc FileType qf wincmd J
 " Close qf after lint if empty

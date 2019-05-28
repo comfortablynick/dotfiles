@@ -167,4 +167,8 @@ Load vim-fish
 Load vim-toml
 Load vim-ansible-yaml
 
+" Tmux
+Load vim-tmux-navigator
+Load vim-tmux-runner
+
 " vim:set fdm=marker fdl=1:

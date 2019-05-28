@@ -106,7 +106,6 @@ nnoremap <silent> <Leader>a :VtrAttachToPane<CR>
 nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 noremap <silent> <C-b> :VtrSendFile!<CR>
 
-
 " RunCmd() {{{2
 nnoremap <silent> <Leader>r :call RunCmd('run')<CR>
 nnoremap <silent> <Leader>w :w \| :call RunCmd('install')<CR>

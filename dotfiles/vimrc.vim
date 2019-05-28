@@ -30,6 +30,7 @@ let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 
 let config_list = ['config.vim', 'plugins.vim', 'functions.vim', 'theme.vim', 'map.vim']
 
+set runtimepath+='~/git/eleline.vim'
 for files in config_list
     for f in glob(g:vim_home.files, 1, 1)
         exec 'source' f

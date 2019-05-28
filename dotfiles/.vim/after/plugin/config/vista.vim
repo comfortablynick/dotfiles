@@ -1,9 +1,15 @@
 scriptencoding utf-8
-if exists('g:loaded_vista_config_vim')
+if exists('g:loaded_vista_config_vim') || !exists(':Vista')
     finish
 endif
 let g:loaded_vista_config_vim = 1
 
+" How each level is indented and what to prepend.
+" This could make the display more compact or more spacious.
+" e.g., more compact: ['▸ ', '']
+let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
+
+let g:vista#renderer#enable_icon = 1
 let g:vista#renderer#icons = {
 \    'func': 'ƒ',
 \    'function': 'ƒ',

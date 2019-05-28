@@ -1,15 +1,17 @@
 scriptencoding utf-8
-if exists('g:loaded_vista_config_vim') || !exists(':Vista')
+if exists('g:loaded_vista_config_vim')
     finish
 endif
 let g:loaded_vista_config_vim = 1
 
+let g:vista#renderer#enable_icon = 1
+
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious.
 " e.g., more compact: ['▸ ', '']
-let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
+" let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
+let g:vista_icon_indent = ['▸ ', '']
 
-let g:vista#renderer#enable_icon = 1
 let g:vista#renderer#icons = {
 \    'func': 'ƒ',
 \    'function': 'ƒ',
@@ -49,5 +51,5 @@ let g:vista#renderer#icons = {
 let g:vista_close_on_jump = 0
 
 nnoremap <silent> <Leader>v :Vista!!<CR>
-"autocmd vimrc VimEnter * if exists(':Vista')
-    "\ | call vista#RunForNearestMethodOrFunction() | endif
+" autocmd vimrc VimEnter * if exists(':Vista')
+"     \ | call vista#RunForNearestMethodOrFunction() | endif

@@ -6,12 +6,12 @@
 dotfiles="$HOME/dotfiles"
 
 echo "Updating dotdrop submodule and syncing dotfiles repo... "
-command git -C "$dotfiles" submodule foreach --recursive git pull origin master &&
+git -C "$dotfiles" submodule foreach --recursive git pull origin master &&
     {
-        command git -C "$dotfiles" pull &&
-            command git -C "$dotfiles" add -A &&
-            command git -C "$dotfiles" commit &&
-            command git -C "$dotfiles" push
+        git -C "$dotfiles" pull &&
+            git -C "$dotfiles" add -A &&
+            git -C "$dotfiles" commit &&
+            git -C "$dotfiles" push
     }
 echo "Running dotdrop install ... "
 "$HOME/dotfiles/dotdrop.sh" install

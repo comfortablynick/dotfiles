@@ -62,7 +62,7 @@ function! config#coc#maps() abort
 endfunction
 
 function! config#coc#init() abort
-    let g:coc_force_debug = 1
+    " let g:coc_force_debug = 1
     let g:coc_global_extensions = [
         \ 'coc-snippets',
         \ 'coc-json',

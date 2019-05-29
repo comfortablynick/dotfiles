@@ -30,7 +30,7 @@ endfunction
 
 function! autoclose#quit_if_only_window() abort
     let g:autoclose_buftypes = ['quickfix', 'help']
-    let g:autoclose_filetypes = ['qf', 'help', 'vista']
+    let g:autoclose_filetypes = ['qf', 'help', 'vista', 'minpac', 'vim-plug']
     let l:buftype = getbufvar(winbufnr(winnr()), '&buftype')
     let l:filetype = getbufvar(winbufnr(winnr()), '&filetype')
     if index(g:autoclose_buftypes, l:buftype) < 0 && index(g:autoclose_filetypes, l:filetype) < 0

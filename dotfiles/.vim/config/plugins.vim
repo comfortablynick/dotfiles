@@ -113,8 +113,10 @@ function! s:pack_init() abort
     Pack 'neoclide/coc.nvim',
         \ {
         \   'type': 'opt',
-        \   'do': '!yarn install --frozen-lockfile'
+        \   'rev': '*',
+        \   'do': './install.sh',
         \ }
+        " \   'do': '!yarn install --frozen-lockfile'
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
     Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'

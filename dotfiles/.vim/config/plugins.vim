@@ -106,6 +106,7 @@ function! s:pack_init() abort
     " Snippets {{{2
     Pack 'Shougo/neosnippet.vim'
     Pack 'Shougo/neosnippet-snippets'
+    Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
 
     " Completion {{{2
@@ -158,6 +159,10 @@ Load neoformat
 Load undotree
 Load asyncrun.vim
 Load vim-cmake
+
+" Snippets
+Load ultisnips
+Load vim-snippets
 
 " Syntax
 Load vim-cpp-modern

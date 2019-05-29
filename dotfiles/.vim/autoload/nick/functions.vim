@@ -66,3 +66,9 @@ endfunction
 function! nick#functions#get_cursor_char() abort
     return strcharpart(strpart(getline('.'), col('.') - 1), 0, 1)
 endfunction
+
+" Get syntax group of item under cursor
+function! nick#functions#syn_group()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun

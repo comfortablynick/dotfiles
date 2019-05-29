@@ -129,7 +129,3 @@ function! doxygen#file_comment()
         \ "\\date   " . strftime(g:DoxyDateFormat) . "\n" .
         \ '/'
 endfunction
-
-"    vim:tw=75 et ts=4 sw=4 sr ai comments=\:\" formatoptions=croq
-"
-"---------[ END OF FILE doxygen.vim ]------------------------------------------

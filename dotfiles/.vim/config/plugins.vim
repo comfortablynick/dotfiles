@@ -113,10 +113,10 @@ function! s:pack_init() abort
     Pack 'neoclide/coc.nvim',
         \ {
         \   'type': 'opt',
-        \   'rev': '*',
-        \   'do': './install.sh',
+        \   'do': '!yarn install --frozen-lockfile'
         \ }
-        " \   'do': '!yarn install --frozen-lockfile'
+        " \   'rev': '*',
+        " \   'do': {-> coc#util#install()},
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
     Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'
@@ -163,7 +163,7 @@ Load asyncrun.vim
 Load vim-cmake
 
 " Snippets
-Load ultisnips
+" Load ultisnips
 Load vim-snippets
 
 " Syntax

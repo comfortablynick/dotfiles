@@ -10,7 +10,7 @@ function! config#coc#cmds() abort
         autocmd CursorHold *
             \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-        autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
+        " autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
     augroup END
 endfunction
 

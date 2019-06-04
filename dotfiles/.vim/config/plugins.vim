@@ -168,10 +168,7 @@ Load vim-snippets
 
 " Syntax
 Load vim-cpp-modern
-Load yats
 Load vim-markdown
-Load vim-fish
-Load vim-toml
 Load vim-ansible-yaml
 
 " Tmux

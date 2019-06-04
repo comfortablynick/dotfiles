@@ -1,4 +1,5 @@
-" TYPESCRIPT ====================================
+" Load syntax
+packadd yats
 
 " Local typescript editor settings
 setlocal tabstop=4                                              " Treat spaces as tab

@@ -35,3 +35,15 @@ fun ${1:function_name}($2)
 	${3:" code}
 endf
 endsnippet
+
+snippet filetype_detect "filetype detection boilerplate" b
+" vint: -ProhibitAutocmdWithNoGroup
+
+autocmd BufRead,BufNewFile *.${1:file_ext} call s:set_$1_filetype()
+
+function! s:set_$1_filetype() abort
+    if &filetype !=# '$1'
+        set filetype=$1
+    endif
+endfunction
+endsnippet

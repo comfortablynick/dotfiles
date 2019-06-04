@@ -1,4 +1,5 @@
-" FISH SCRIPTS ==================================
+" Load syntax
+Load vim-fish
 
 " Set up :make to use fish for syntax checking.
 compiler fish                                                   " Use fish syntax

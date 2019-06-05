@@ -51,6 +51,7 @@ let g:completion_filetypes = {
     \ }
 
 " Packages {{{1
+let g:use_nerdtree = 0                                          " Use NERDTree instead of netrw as explorer
 " Minpac Init {{{2
 let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
 if empty(glob(minpac_path))
@@ -88,7 +89,7 @@ function! s:pack_init() abort
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'airblade/vim-rooter'
-    Pack 'comfortablynick/eleline.vim'
+    " Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
 
@@ -127,6 +128,10 @@ function! s:pack_init() abort
     Pack 'christoomey/vim-tmux-navigator'
     Pack 'christoomey/vim-tmux-runner'
 endfunction
+
+" Local plugins {{{2
+" Have to add to rtp manually
+set runtimepath+=~/git/eleline.vim
 
 " FileType Autocmds {{{2
 " Don't load if we're using coc (use coc-git instead)

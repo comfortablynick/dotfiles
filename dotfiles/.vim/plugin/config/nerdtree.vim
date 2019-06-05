@@ -21,4 +21,6 @@ endfunction
 
 
 " Maps
-nnoremap <silent> <Leader>n :call <SID>nerd_tree()<CR>
+if get(g:, 'use_nerdtree', 0) == 1
+    nnoremap <silent> <Leader>n :call <SID>nerd_tree()<CR>
+endif

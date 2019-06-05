@@ -89,6 +89,7 @@ function! s:pack_init() abort
     Pack 'junegunn/fzf.vim'
     Pack 'airblade/vim-rooter'
     Pack 'comfortablynick/eleline.vim'
+    Pack 'freitass/todo.txt-vim'
 
     " Syntax highlighting {{{2
     Pack 'HerringtonDarkholme/yats'

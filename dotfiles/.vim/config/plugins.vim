@@ -90,6 +90,7 @@ function! s:pack_init() abort
     Pack 'airblade/vim-rooter'
     Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
+    Pack 'justinmk/vim-sneak'
 
     " Syntax highlighting {{{2
     Pack 'HerringtonDarkholme/yats'
@@ -162,6 +163,7 @@ Load neoformat
 Load undotree
 Load asyncrun.vim
 Load vim-cmake
+Load vim-sneak
 
 " Snippets
 " Load ultisnips

@@ -72,3 +72,12 @@ function! nick#functions#syn_group()
     let l:s = synID(line('.'), col('.'), 1)
     echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
+
+" Return details of syntax highlight
+function! nick#functions#extract_highlight(group, what, ...) abort
+    if a:0 == 1
+        return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
+    else
+        return synIDattr(synIDtrans(hlID(a:group)), a:what)
+    endif
+endfunction

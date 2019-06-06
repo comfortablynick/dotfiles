@@ -83,6 +83,10 @@ dotfiles:
     dst: ~/.config/shell
     link: link
     src: .config/shell
+  d_syntax:
+    dst: ~/.vim/syntax
+    link: link
+    src: .vim/syntax
   d_tmux:
     dst: ~/.config/tmux
     link: link
@@ -216,6 +220,7 @@ profiles:
     - d_yay
     - d_htop
     - d_plugin
+    - d_syntax
   io:
     dotfiles:
     - f_bash_linux

@@ -89,7 +89,7 @@ function! s:pack_init() abort
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'airblade/vim-rooter'
-    " Pack 'comfortablynick/eleline.vim'
+    Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
 
@@ -131,7 +131,7 @@ endfunction
 
 " Local plugins {{{2
 " Have to add to rtp manually
-set runtimepath+=~/git/eleline.vim
+" set runtimepath+=~/git/eleline.vim
 
 " FileType Autocmds {{{2
 " Don't load if we're using coc (use coc-git instead)

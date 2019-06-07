@@ -56,8 +56,11 @@ set mouse=a                                                     " Use mouse in a
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
-set completeopt+=preview                                        " Enable preview option for completion
 set virtualedit=onemore                                         " Allow cursor to extend past line
+
+" Completion {{{1
+set completeopt+=preview                                        " Enable preview option for completion
+set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{1
 set foldenable                                                  " Enable folds by default

@@ -13,11 +13,11 @@ let g:mapleader = ','
 
 " Editor {{{1
 " Indent/outdent {{{2
-nnoremap <Leader><Tab> >>
-nnoremap <S-Tab> <<
+" nnoremap <Leader><Tab> >>
+" nnoremap <S-Tab> <<
 vnoremap <Tab>   >><Esc>gv
 vnoremap <S-Tab> <<<Esc>gv
-inoremap <S-Tab> <C-d>
+" inoremap <S-Tab> <C-d>
 
 " Folds {{{2
 " Toggle folds
@@ -51,10 +51,10 @@ inoremap ;lkj <Esc>`^:wq<CR>
 
 " Line navigation {{{2
 " Easy navigation in insert mode
-inoremap <C-k> <Up>
-inoremap <C-j> <Down>
-inoremap <C-h> <Left>
-inoremap <C-l> <Right>
+" inoremap <C-k> <Up>
+" inoremap <C-j> <Down>
+" inoremap <C-h> <Left>
+" inoremap <C-l> <Right>
 
 " Windows/splits {{{1
 " Navigation {{{2

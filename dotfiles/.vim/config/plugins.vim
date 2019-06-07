@@ -121,6 +121,7 @@ function! s:pack_init() abort
         " \   'rev': '*',
         " \   'do': {-> coc#util#install()},
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
+    Pack 'lifepillar/vim-mucomplete'
     Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'
 

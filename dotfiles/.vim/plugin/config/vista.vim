@@ -73,5 +73,6 @@ let g:vista#renderer#icons = {
 \}
 
 nnoremap <silent> <Leader>v :Vista!!<CR>
+nnoremap <silent> <Leader>m :Vista finder<CR>
 " autocmd vimrc VimEnter * if exists(':Vista')
 "     \ | call vista#RunForNearestMethodOrFunction() | endif

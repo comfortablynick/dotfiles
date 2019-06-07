@@ -41,7 +41,6 @@ function! config#coc#maps() abort
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>
-    nnoremap <silent> <Leader>m :call vista#finder#fzf#Run('coc')<CR>
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
     noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
 

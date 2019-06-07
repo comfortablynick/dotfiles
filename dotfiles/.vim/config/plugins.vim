@@ -69,12 +69,12 @@ function! s:pack_init() abort
     call minpac#init()
 
     " General Packages {{{2
-    Pack 'k-takata/minpac',              {'type': 'opt'}
-    Pack 'tpope/vim-scriptease',         {'type': 'opt'}
-    Pack 'mhinz/vim-lookup',             {'type': 'opt'}
-    Pack 'NLKNguyen/papercolor-theme',   {'type': 'opt'}
-    Pack 'scrooloose/nerdtree',          {'type': 'opt'}
-    Pack 'chrisbra/Colorizer',           {'type': 'opt'}
+    Pack 'k-takata/minpac'
+    Pack 'tpope/vim-scriptease'
+    Pack 'mhinz/vim-lookup'
+    Pack 'NLKNguyen/papercolor-theme'
+    Pack 'scrooloose/nerdtree'
+    Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
     Pack 'scrooloose/nerdcommenter'
     Pack 'tpope/vim-surround'

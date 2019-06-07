@@ -4,13 +4,36 @@ if exists('g:loaded_vista_config_vim')
 endif
 let g:loaded_vista_config_vim = 1
 
+if exists('*nvim_open_win') || exists('*popup_create')
+    let g:vista_echo_cursor_strategy = 'floating_win'
+else
+    let g:vista_echo_cursor_strategy = 'echo'
+endif
+
 let g:vista#renderer#enable_icon = 1
+let g:vista_close_on_jump = 0
+let g:vista_fzf_preview = ['right:50%']
+let g:vista_disable_statusline = exists('g:loaded_airline') || exists('g:loaded_lightline') || exists('g:loaded_eleline')
+let g:vista_sidebar_width = 50
 
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious.
 " e.g., more compact: ['▸ ', '']
 " let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
 let g:vista_icon_indent = ['▸ ', '']
+
+" Set default service for filetypes to override ctags
+let g:vista_executive_for = {
+  \ 'cpp': 'coc',
+  \ 'c': 'coc',
+  \ 'rust': 'coc',
+  \ 'json': 'coc',
+  \ 'go': 'coc',
+  \ 'javascript': 'coc',
+  \ 'typescript': 'coc',
+  \ 'sh': 'coc',
+  \ 'bash': 'coc',
+  \ }
 
 let g:vista#renderer#icons = {
 \    'func': 'ƒ',
@@ -48,7 +71,6 @@ let g:vista#renderer#icons = {
 \    'typeParameter': '𝑡',
 \    'default': 'd',
 \}
-let g:vista_close_on_jump = 0
 
 nnoremap <silent> <Leader>v :Vista!!<CR>
 " autocmd vimrc VimEnter * if exists(':Vista')

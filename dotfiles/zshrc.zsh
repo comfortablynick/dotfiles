@@ -258,7 +258,8 @@ pyenv() {
 chpwd() {
     # Ignore if LS_AFTER_CD is not set, or we are in HOME
     { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return
-    ls --group-directories-first
+    # ls --group-directories-first
+    exa --group-directories-first
 }
 
 # SHELL STARTUP {{{1

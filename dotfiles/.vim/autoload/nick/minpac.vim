@@ -18,3 +18,9 @@ function! nick#minpac#add(repo, ...) abort
     end
 endfunction
 
+function! nick#minpac#update_all() abort
+    " Load remote plugins
+    let g:deoplete#enable_at_startup = 0
+    Load deoplete.nvim
+    call minpac#update('', {'do': 'call minpac#status()'})
+endfunction

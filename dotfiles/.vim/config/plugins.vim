@@ -151,7 +151,7 @@ autocmd vimrc FileType *
 
 " Pack commands {{{2
 " Define commands for updating/cleaning the plugins.
-command! PackUpdate call <SID>pack_init() | call minpac#update('', {'do': 'call minpac#status()'})
+command! PackUpdate call <SID>pack_init() | call nick#minpac#update_all()
 command! PackClean  call <SID>pack_init() | call minpac#clean()
 command! PackStatus call <SID>pack_init() | call minpac#status()
 " Load :: use in vimrc files to load on startup

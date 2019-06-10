@@ -48,10 +48,25 @@ let g:completion_filetypes = {
     \       'bash',
     \       'vim',
     \   ],
+    \ 'mucomplete':
+    \   [
+    \       'pro',
+    \       'toml',
+    \       'yaml',
+    \       'mail',
+    \       'gitcommit',
+    \       'txt',
+    \       'ini',
+    \   ],
     \ }
 
+" Exclude from default completion
+let g:nocompletion_filetypes = [
+    \ 'nerdtree',
+    \ ]
+
 " Packages {{{1
-let g:use_nerdtree = 0                                          " Use NERDTree instead of netrw as explorer
+let g:use_nerdtree = 1                                          " Use NERDTree instead of netrw as explorer
 " Minpac Init {{{2
 let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
 if empty(glob(minpac_path))

@@ -8,7 +8,9 @@ function! config#coc#cmds() abort
     augroup coc_config_auto
         autocmd!
         autocmd CursorHold *
-            \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
+            \ if ! coc#util#has_float()
+            \ && get(b:, 'coc_disable_cursorhold_hover', 0) == 0
+            \ | call CocActionAsync('doHover') | endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
         " autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
     augroup END
@@ -68,7 +70,6 @@ function! config#coc#init() abort
         \ 'coc-rls',
         \ 'coc-python',
         \ 'coc-tsserver',
-        \ 'coc-go',
         \ 'coc-git',
         \ 'coc-vimlsp',
         \ ]

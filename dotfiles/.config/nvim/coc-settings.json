@@ -15,6 +15,7 @@
   "suggest.enablePreview": true,
   "suggest.keepCompleteopt": false,
   "suggest.labelMaxLength": 80,
+  "suggest.floatEnable": true,
 
   // Signature
   "signature.target": "float",
@@ -55,6 +56,12 @@
       "args": ["start"],
       "filetypes": ["sh", "bash"],
       "ignoredRootPaths": ["~"]
+    },
+    "golang": {
+      "command": "gopls",
+      "args": [],
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
     }
   }
 }

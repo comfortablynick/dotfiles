@@ -71,9 +71,10 @@ set foldnestmax=5                                               " Max nested lev
 set expandtab                                                   " Expand tab to spaces
 set smartindent                                                 " Attempt smart indenting
 set autoindent                                                  " Attempt auto indenting
-set shiftwidth=4                                                " Indent width in spaces
+set tabstop=4                                                   " How many spaces a tab is worth
+set shiftwidth=0                                                " Columns of whitespace per indent (0 = &tabstop)
 set backspace=2                                                 " Backspace behaves as expected
-let g:vim_indent_cont = &shiftwidth                             " Indent after \ in Vim script
+let g:vim_indent_cont = &tabstop                                " Indent after \ in Vim script
 
 " Search & replace {{{1
 set ignorecase                                                  " Ignore case while searching

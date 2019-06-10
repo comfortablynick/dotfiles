@@ -196,7 +196,7 @@ Load vim-markdown
 Load vim-ansible-yaml
 
 " Tmux
-Load vim-tmux-navigator
 Load vim-tmux-runner
+Load vim-tmux-navigator
 
 " vim:set fdm=marker fdl=1:

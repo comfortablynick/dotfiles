@@ -1,0 +1,11 @@
+audio/*; /usr/bin/xdg-open %s ; copiousoutput
+
+image/*; /usr/bin/xdg-open %s ; copiousoutput
+
+application/msword; /usr/bin/xdg-open %s ; copiousoutput
+application/pdf; /usr/bin/xdg-open %s ; copiousoutput
+application/postscript ; /usr/bin/xdg-open %s ; copiousoutput
+
+text/html; w3m -v -F -o display_link_number=1 -T text/html %s; edit=vim; compose=vim; nametemplate=%s.html; copiousoutput; needsterminal
+# text/html; qutebrowser %s && sleep 5 ; test=test -n "$DISPLAY";
+# text/html; w3m -I %{charset} -T text/html ; copiousoutput; nametemplate=%s.html; needsterminal

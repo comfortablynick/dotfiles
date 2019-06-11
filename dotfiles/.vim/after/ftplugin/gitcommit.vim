@@ -7,3 +7,5 @@ if exists('g:loaded_deoplete')
         \ v:false
         \ )
 endif
+
+startinsert

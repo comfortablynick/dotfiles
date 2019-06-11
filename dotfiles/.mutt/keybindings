@@ -8,7 +8,4 @@ bind pager                      G   bottom
 bind attach,index               g   first-entry
 bind attach,index               G   last-entry
 
-# Macros
-macro index                     Q   ":set quit=yes\nq"      "Quit mutt without asking"
-
 # vim: set ft=muttrc:

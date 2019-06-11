@@ -1,0 +1,19 @@
+color   normal      white default
+color   attachment  brightyellow default
+color   hdrdefault  cyan default
+color   indicator   black cyan
+color   markers     brightred default
+color   quoted      green default
+color   signature   cyan default
+color   status      brightgreen blue
+color   tilde       blue default
+color   tree        red default
+color   header      brightgreen default ^From:
+color   header      brightcyan default ^To:
+color   header      brightcyan default ^Reply-To:
+color   header      brightcyan default ^Cc:
+color   header      brightblue default ^Subject:
+color   body        yellow default [\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+
+color   body        brightblue default (https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+
+
+# vim: set ft=muttrc:

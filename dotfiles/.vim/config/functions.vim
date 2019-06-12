@@ -366,9 +366,14 @@ autocmd vimrc WinLeave,InsertEnter * set nocursorline
 " NORMAL:       Turn on relativenumber for easy navigation
 " NO FOCUS:     Turn off relativenumber (testing code, etc.)
 " QuickFix:     Turn off relativenumber (running code)
-autocmd vimrc BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-autocmd vimrc BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-autocmd vimrc FileType qf if &nu | set nornu | endif
+" autocmd vimrc BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+" autocmd vimrc BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+" autocmd vimrc FileType qf if &nu | set nornu | endif
+
+" Only turn off relativenumber during insert mode
+" Put back to the above lines once coc.nvim floating window is fixed
+autocmd vimrc InsertLeave * if &nu | set rnu   | endif
+autocmd vimrc InsertEnter * if &nu | set nornu | endif
 
 " Vim Fugitive {{{2
 " Use AsyncRun

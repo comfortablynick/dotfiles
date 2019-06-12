@@ -20,7 +20,7 @@ SYSINFO="$HOME/.cargo/bin/sysinfo"
 if [ -x "$SYSINFO" ]; then
     memusage_cmd='memory'
     loadavg_cmd='load'
-    uptime_cmd='uptime'
+    uptime_cmd='uptime -p'
     temp_cmd='temp 2>/dev/null'
     # cpu_usage_cmd='cpu -i 2 2>/dev/null'
     if [ "$WIDTH" -lt "$MEDIUM_LARGE" ]; then

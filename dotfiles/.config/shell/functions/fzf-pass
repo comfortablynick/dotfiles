@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# fzf-pass [FUZZY PATTERN]
+#   - Search lpass cli for pattern and print password to terminal
+
+lpass show --password "$(lpass ls | fzf-tmux --no-multi | awk '{print $(NF)}' | sed 's/\]//g')"

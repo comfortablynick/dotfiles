@@ -224,8 +224,6 @@ profiles:
     - d_htop
     - d_plugin
     - d_syntax
-    - d_mutt
-    - f_muttrc
   io:
     dotfiles:
     - f_bash_linux
@@ -235,11 +233,15 @@ profiles:
   jupiter:
     dotfiles:
     - f_bash_linux
+    - d_mutt
+    - f_muttrc
     include:
     - core
   saturn:
     dotfiles:
     - f_bash_linux
+    - d_mutt
+    - f_muttrc
     include:
     - core
   thor.local:

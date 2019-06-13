@@ -154,7 +154,6 @@ endfunction
 autocmd vimrc FileType *
     \ if index(g:completion_filetypes['coc'], &filetype) < 0
     \ | packadd vim-gitgutter
-    \ | packadd vim-fugitive
     \ | endif
 
 autocmd vimrc FileType *
@@ -185,6 +184,7 @@ Load undotree
 Load asyncrun.vim
 Load vim-cmake
 Load vim-sneak
+Load vim-fugitive
 
 " Snippets
 " Load ultisnips

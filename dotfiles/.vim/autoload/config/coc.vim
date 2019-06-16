@@ -60,6 +60,9 @@ function! config#coc#maps() abort
     " inoremap <silent><expr> <CR>
     "     \ pumvisible() ? coc#_select_confirm() :
     "     \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+    " Use `:Fold` to fold current buffer
+    command! -nargs=? Fold :call CocAction('fold', <f-args>)
 endfunction
 
 function! config#coc#init() abort

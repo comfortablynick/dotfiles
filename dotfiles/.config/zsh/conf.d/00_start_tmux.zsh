@@ -1,5 +1,5 @@
 # Return if already in tmux or if special var is set
-{ [ -n "$TMUX" ] || [ -f "$HOME/.no_zsh_tmux_login" ] || [ -z $(command -v tmux) ]; } && return
+{ [[ -n $TMUX ]] || [[ -f "$HOME/.no_zsh_tmux_login" ]] || [[ -z $(command -v tmux) ]] || [[ -n $VCSODE_IPC_HOOK_CLI ]]; } && return
 
 if [ ! -f "$HOME/.no_zsh_tmux_next_login" ]; then
     # Start tmux

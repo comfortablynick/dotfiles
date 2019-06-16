@@ -248,6 +248,20 @@ function! ShowDocumentation() abort
 endfunction
 set keywordprg=:silent!\ call\ ShowDocumentation()
 
+" Foldtext {{{2
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &foldcolumn + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - strdisplaywidth(line) - len(foldedlinecount)
+    return line . '…' . repeat(' ',fillcharcount) . foldedlinecount . '…' . ' '
+endfunction " }}}
+" set foldtext=MyFoldText()
+
 " General {{{2
 " RunCommand() :: run command asynchronously in tmux pane {{{3
 function! RunCommand(cmd) abort

@@ -57,6 +57,8 @@ set nostartofline                                               " Don't move to 
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set virtualedit=onemore                                         " Allow cursor to extend past line
+set exrc                                                        " Load project local .vimrc
+set secure                                                      " Don't execute code in local .vimrcs
 
 " Completion {{{1
 set completeopt+=preview                                        " Enable preview option for completion

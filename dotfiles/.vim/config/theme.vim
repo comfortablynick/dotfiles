@@ -429,6 +429,32 @@ function! LL_LinterWarnings() abort " {{{3
 endfunction
 
 " Vim / Neovim Theme {{{1
+" Set theme options/overrides {{{2
+let g:PaperColor_Theme_Options = {
+  \   'language': {
+  \     'python': {
+  \       'highlight_builtins' : 1
+  \     },
+  \     'cpp': {
+  \       'highlight_standard_library': 1
+  \     },
+  \     'c': {
+  \       'highlight_builtins' : 1
+  \     }
+  \   },
+  \   'theme': {
+  \     'default': {
+  \       'allow_bold': 1,
+  \       'allow_italic': 1,
+  \     },
+  \     'default.dark': {
+  \       'override' : {
+  \         'vertsplit_bg': ['#808080', '244'],
+  \       }
+  \     }
+  \   }
+  \ }
+
 " Set colors based on theme {{{2
 " Assign to variables
 execute 'silent! colorscheme' g:vim_base_color

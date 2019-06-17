@@ -99,6 +99,7 @@ set undofile                                                    " Enable persist
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
+set fillchars+=vert:\│
 
 " Line numbers {{{1
 set number                                                      " Show linenumbers

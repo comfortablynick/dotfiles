@@ -259,7 +259,7 @@ profiles:
     - f_bash_windows
     include:
     - core
-trans:
+trans_read:
   gpg: gpg2 -d -o {1} -r nick {0}
 trans_write:
   gpg: gpg2 -e -o {1} -r nick {0}

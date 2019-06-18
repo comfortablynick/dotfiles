@@ -162,7 +162,7 @@ dotfiles:
   f_muttrc:
     dst: ~/.muttrc
     src: muttrc
-    trans: gpg
+    trans_read: gpg
     trans_write: gpg
   f_tmux.conf:
     dst: ~/.tmux.conf

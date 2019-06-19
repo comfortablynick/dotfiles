@@ -158,7 +158,7 @@ endfunction
 " RunCmd() :: build command based on file type and command type {{{3
 function! RunCmd(cmd_type) abort
     " Preface commands with space to exclude from fish history
-    let l:ft_cmds = {
+    let l:ft_cmds = get(b:, 'ft_cmds', {
         \ 'go': {
         \   'build': ' go install && go run .',
         \   'install': ' go install && go run .',
@@ -190,7 +190,7 @@ function! RunCmd(cmd_type) abort
         \   'install': 'clasp push',
         \   'run': 'clasp run',
         \ }
-        \ }
+        \ })
     let l:ft = get(l:ft_cmds, &filetype, {})
     let l:cmd = get(l:ft, a:cmd_type, '')
     if l:ft ==# {} || l:cmd ==# ''

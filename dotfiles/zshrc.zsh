@@ -91,6 +91,7 @@ setopt HIST_SAVE_NO_DUPS                                        # Don't write du
 setopt HIST_REDUCE_BLANKS                                       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
+setopt SHARE_HISTORY                                            # Shells share history
 
 # PLUGINS {{{1
 # Zplugin Config {{{2
@@ -110,6 +111,9 @@ source $ZPLG_HOME/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 
+# Enhancd {{{2
+ENHANCD_FILTER=fzy:fzf
+export ENHANCD_FILTER
 # Zplugin Plugin Definitions {{{2
 zplugin ice if'[[ $ZSH_THEME = powerlevel10k ]]'
 zplugin load romkatv/powerlevel10k
@@ -128,6 +132,8 @@ zplugin light zdharma/fast-syntax-highlighting
 
 zplugin ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zplugin load junegunn/fzf
+
+zplugin light b4b4r07/enhancd
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
@@ -175,6 +181,7 @@ export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
 export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
+
 
 # KEYMAP {{{1
 bindkey -v

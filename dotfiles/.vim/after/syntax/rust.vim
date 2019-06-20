@@ -1,5 +1,13 @@
 scriptencoding utf-8
+if exists('g:loaded_rust_after_syntax')
+    finish
+endif
+let g:loaded_rust_after_syntax = 1
 
+" Add additional rustTrait
+syntax keyword rustTrait        PathBuf
+syntax keyword rustIdentifier   Error
+" Conceal operators (only if g:rust_conceal = 1) {{{
 if !get(g:, 'rust_conceal', 0) || !has('conceal') || &encoding !=# 'utf-8'
     finish
 endif
@@ -40,5 +48,5 @@ if !get(g:, 'rust_conceal_mod_path', 0)
         autocmd ColorScheme <buffer> hi! link Conceal Operator
     augroup END
 endif
-
+" }}}
 " vim: set et sw=4 sts=4 ts=8:

@@ -57,6 +57,7 @@ let g:completion_filetypes = {
     \       'gitcommit',
     \       'txt',
     \       'ini',
+    \       'muttrc',
     \   ],
     \ }
 
@@ -129,10 +130,8 @@ function! s:pack_init() abort
 
     " Completion {{{2
     Pack 'neoclide/coc.nvim',
-        \ {
-        \   'type': 'opt',
-        \   'do': '!yarn install --frozen-lockfile'
-        \ }
+        \ { 'do': 'split term://yarn install --frozen-lockfile' }
+        " \ { 'do': '!yarn install --frozen-lockfile' }
         " \   'rev': '*',
         " \   'do': {-> coc#util#install()},
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}

@@ -161,9 +161,8 @@ dotfiles:
     src: gitconfig
   f_muttrc:
     dst: ~/.muttrc
+    link: link
     src: muttrc
-    trans_read: gpg
-    trans_write: gpg
   f_tmux.conf:
     dst: ~/.tmux.conf
     link: link

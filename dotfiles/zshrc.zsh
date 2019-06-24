@@ -233,17 +233,13 @@ mc() {
 # _pyenv_virtualenv_hook :: check for local env on dir change {{{2 
 _pyenv_virtualenv_hook() {
     local ret=$?
-    if [[ -n "$VIRTUAL_ENV" ]]; then
+    if [[ -n $VIRTUAL_ENV ]]; then
         eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
     else
         eval "$(pyenv sh-activate --quiet || true)" || true
     fi
     return $ret
 }
-
-if ! [[ $PROMPT_COMMAND =~ _pyenv_virtualenv_hook ]]; then
-    PROMPT_COMMAND="_pyenv_virtualenv_hook;$PROMPT_COMMAND"
-fi
 
 # pyenv :: wrapper for python version manager {{{2
 pyenv() {
@@ -261,12 +257,15 @@ pyenv() {
   esac
 }
 
-# chpwd :: do on directory change {{{2
+# chpwd :: execute on directory change {{{2
 chpwd() {
+    # _pyenv_virtualenv_hook # Enable this if "local pyenv virtualenv" feature is needed
+
+    # List directory contents
     # Ignore if LS_AFTER_CD is not set, or we are in HOME
     { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return
-    # ls --group-directories-first
-    exa --group-directories-first
+    ls --group-directories-first 2>/dev/null
+    # exa --group-directories-first
 }
 
 # SHELL STARTUP {{{1

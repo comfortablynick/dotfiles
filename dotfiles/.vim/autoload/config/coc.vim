@@ -7,10 +7,13 @@ function! config#coc#cmds() abort
     endif
     augroup coc_config_auto
         autocmd!
-        autocmd CursorHold *
+        autocmd CursorHold * silent
             \ if ! coc#util#has_float()
             \ && get(b:, 'coc_disable_cursorhold_hover', 0) == 0
             \ | call CocActionAsync('doHover') | endif
+        autocmd CursorHold * silent
+            \ if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
+            \ | call CocActionAsync('highlight') | endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
         " autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
     augroup END
@@ -75,6 +78,8 @@ function! config#coc#init() abort
         \ 'coc-tsserver',
         \ 'coc-git',
         \ 'coc-vimlsp',
+        \ 'coc-yank',
+        \ 'coc-highlight',
         \ ]
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'

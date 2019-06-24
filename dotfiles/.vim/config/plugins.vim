@@ -184,6 +184,7 @@ Load asyncrun.vim
 Load vim-cmake
 Load vim-sneak
 Load vim-fugitive
+Load vim-surround
 
 " Snippets
 " Load ultisnips

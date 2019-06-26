@@ -12,7 +12,7 @@ endif
 
 let g:vista#renderer#enable_icon = 1
 let g:vista_close_on_jump = 0
-let g:vista_fzf_preview = ['right:50%']
+let g:vista_fzf_preview = winwidth(0) > 200 ? ['right:50%'] : []
 let g:vista_disable_statusline = exists('g:loaded_airline') || exists('g:loaded_lightline') || exists('g:loaded_eleline')
 let g:vista_sidebar_width = 50
 
@@ -20,20 +20,20 @@ let g:vista_sidebar_width = 50
 " This could make the display more compact or more spacious.
 " e.g., more compact: ['▸ ', '']
 " let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
-let g:vista_icon_indent = ['▸ ', '']
+" let g:vista_icon_indent = ['▸ ', '']
 
 " Set default service for filetypes to override ctags
-let g:vista_executive_for = {
-  \ 'cpp': 'coc',
-  \ 'c': 'coc',
-  \ 'rust': 'coc',
-  \ 'json': 'coc',
-  \ 'go': 'coc',
-  \ 'javascript': 'coc',
-  \ 'typescript': 'coc',
-  \ 'sh': 'coc',
-  \ 'bash': 'coc',
-  \ }
+" let g:vista_executive_for = {
+"   \ 'cpp': 'coc',
+"   \ 'c': 'coc',
+"   \ 'rust': 'coc',
+"   \ 'json': 'coc',
+"   \ 'go': 'coc',
+"   \ 'javascript': 'coc',
+"   \ 'typescript': 'coc',
+"   \ 'sh': 'coc',
+"   \ 'bash': 'coc',
+"   \ }
 
 let g:vista#renderer#icons = {
 \    'func': 'ƒ',

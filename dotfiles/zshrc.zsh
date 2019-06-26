@@ -111,9 +111,6 @@ source $ZPLG_HOME/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 
-# Enhancd {{{2
-ENHANCD_FILTER=fzy:fzf
-export ENHANCD_FILTER
 # Zplugin Plugin Definitions {{{2
 zplugin ice if'[[ $ZSH_THEME = powerlevel10k ]]'
 zplugin load romkatv/powerlevel10k
@@ -132,8 +129,6 @@ zplugin light zdharma/fast-syntax-highlighting
 
 zplugin ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zplugin load junegunn/fzf
-
-zplugin light b4b4r07/enhancd
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2

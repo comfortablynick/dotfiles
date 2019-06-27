@@ -58,6 +58,7 @@ let g:completion_filetypes = {
     \       'txt',
     \       'ini',
     \       'muttrc',
+    \       'markdown',
     \   ],
     \ }
 
@@ -131,9 +132,6 @@ function! s:pack_init() abort
     " Completion {{{2
     Pack 'neoclide/coc.nvim',
         \ { 'do': 'split term://yarn install --frozen-lockfile' }
-        " \ { 'do': '!yarn install --frozen-lockfile' }
-        " \   'rev': '*',
-        " \   'do': {-> coc#util#install()},
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
     Pack 'lifepillar/vim-mucomplete'
     Pack 'zchee/deoplete-jedi'

@@ -356,9 +356,11 @@ endfunction
 " Remember last place in file
 autocmd vimrc BufWinEnter * call <SID>last_place()
 
-" Set cursorline depending on mode
-autocmd vimrc WinEnter,InsertLeave * set cursorline
-autocmd vimrc WinLeave,InsertEnter * set nocursorline
+" Set cursorline depending on mode, if cursorline is enabled in vimrc
+if &cursorline
+    autocmd vimrc WinEnter,InsertLeave * set cursorline
+    autocmd vimrc WinLeave,InsertEnter * set nocursorline
+endif
 
 " Line numbers {{{2
 " Toggle to number mode depending on vim mode

@@ -5,7 +5,6 @@
 "   \___\___/|_| |_|_| |_|\__, (_)_/ |_|_| |_| |_|
 "                         |___/
 " General Configuration
-
 " Vim/Neovim Only {{{1
 if has('nvim')
     " Neovim Only
@@ -25,13 +24,14 @@ set noswapfile                                                  " Swap files if 
 set autoread                                                    " Detect when a file has been changed outside of vim
 
 " General {{{1
+set encoding=utf-8                                              " Default to unicode
+scriptencoding utf-8
 set shell=bash                                                  " Use bash to execute commands instead of sh
 filetype plugin on                                              " Allow loading .vim files for different filetypes
 syntax enable                                                   " Syntax highlighting on
 colorscheme default                                             " Def colors (overwritten by theme.vim)
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
-set encoding=utf-8                                              " Default to unicode
 set termencoding=utf-8                                          " Unicode
 set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
 set laststatus=2                                                " Always show statusline
@@ -42,7 +42,7 @@ set noshowmode                                                  " Hide default m
 set cmdheight=1                                                 " Add extra line for function definition
 set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
-set cursorline                                                  " Show line under cursor's line (check autocmds)
+set nocursorline                                                " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=300                                              " Update more often (helps GitGutter)

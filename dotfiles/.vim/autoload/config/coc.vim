@@ -7,13 +7,13 @@ function! config#coc#cmds() abort
     endif
     augroup coc_config_auto
         autocmd!
-        autocmd CursorHold * silent
-            \ if ! coc#util#has_float()
-            \ && get(b:, 'coc_disable_cursorhold_hover', 0) == 0
-            \ | call CocActionAsync('doHover') | endif
-        autocmd CursorHold * silent
-            \ if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
-            \ | call CocActionAsync('highlight') | endif
+        if get(b:, 'coc_disable_cursorhold_hover', 0) == 0
+            autocmd CursorHold * silent
+                \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
+        endif
+        if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
+            autocmd CursorHold * silent call CocActionAsync('highlight')
+        endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
         " autocmd InsertEnter * call CocActionAsync('showSignatureHelp')
     augroup END

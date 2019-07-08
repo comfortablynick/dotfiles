@@ -4,6 +4,16 @@ if exists('g:loaded_vista_config_vim')
 endif
 let g:loaded_vista_config_vim = 1
 
+" Calculate fzf preview width based on window width
+function s:vista_fzf_preview_width() abort
+    let winwidth = winwidth(0)
+    let pwidth = 50
+    if winwidth < 200
+        let pwidth = 60 - (200 - winwidth)
+    endif
+    return insert([], printf('right:%d%%', pwidth < 0 ? 0 : pwidth))
+endfunction
+
 if exists('*nvim_open_win') || exists('*popup_create')
     let g:vista_echo_cursor_strategy = 'floating_win'
 else
@@ -12,9 +22,9 @@ endif
 
 let g:vista#renderer#enable_icon = 1
 let g:vista_close_on_jump = 0
-let g:vista_fzf_preview = winwidth(0) > 200 ? ['right:50%'] : []
+let g:vista_fzf_preview = s:vista_fzf_preview_width()
 let g:vista_disable_statusline = exists('g:loaded_airline') || exists('g:loaded_lightline') || exists('g:loaded_eleline')
-let g:vista_sidebar_width = 50
+let g:vista_sidebar_width = winwidth(0) > 200 ? 60 : 40
 
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious.
@@ -74,5 +84,3 @@ let g:vista#renderer#icons = {
 
 nnoremap <silent> <Leader>v :Vista!!<CR>
 nnoremap <silent> <Leader>m :Vista finder<CR>
-" autocmd vimrc VimEnter * if exists(':Vista')
-"     \ | call vista#RunForNearestMethodOrFunction() | endif

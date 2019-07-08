@@ -13,7 +13,8 @@ endfunction
 augroup mucomplete_config
     autocmd!
     autocmd FileType *
-        \ if index(g:completion_filetypes['mucomplete'], &filetype) >= 0
+        \ if exists('g:completion_filetypes') &&
+        \ index(g:completion_filetypes['mucomplete'], &filetype) >= 0
         \ | call s:init_mucomplete()
         \ | endif
 augroup END

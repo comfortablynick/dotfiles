@@ -9,7 +9,8 @@ augroup coc_config
     autocmd!
     autocmd User CocNvimInit call config#coc#init()
     autocmd FileType *
-        \ if index(g:completion_filetypes['coc'], &filetype) >= 0
+        \ if exists('g:completion_filetypes') && 
+        \ index(g:completion_filetypes['coc'], &filetype) >= 0
         \ | packadd coc.nvim
         \ | endif
 augroup END

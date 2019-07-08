@@ -67,7 +67,8 @@ augroup fzf_config
     autocmd!
     " Add fzf vista finder if not a coc filetype
     autocmd FileType *
-        \ if index(g:completion_filetypes['coc'], &filetype) < 0
+        \ if ! exists('g:completion_filetypes') ||
+        \ index(g:completion_filetypes['coc'], &filetype) < 0
         \ | nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
         \ | endif
     " Don't show status bar in fzf window

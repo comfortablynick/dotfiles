@@ -27,7 +27,7 @@
   "coc.preferences.messageLevel": "error",
 
   // Rust
-  "rust-client.channel": "stable",
+  "rust-client.channel": "nightly",
   "rust.clippy_preference": "on",
   "rust.show_hover_context": true,
 

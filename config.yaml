@@ -12,11 +12,11 @@ config:
   workdir: ~/.config/dotdrop
 dotfiles:
   d_after:
-    dst: ~/.vim/after
+    dst: ~/.local/share/nvim/site/after
     link: link
     src: .vim/after
   d_autoload:
-    dst: ~/.vim/autoload
+    dst: ~/.local/share/nvim/site/autoload
     link: link
     src: .vim/autoload
   d_bash:
@@ -28,7 +28,7 @@ dotfiles:
     link: link
     src: .config/cmake
   d_config:
-    dst: ~/.vim/config
+    dst: ~/.local/share/nvim/site/config
     link: link
     src: .vim/config
   d_fish:
@@ -36,11 +36,11 @@ dotfiles:
     link: link
     src: .config/fish
   d_ftdetect:
-    dst: ~/.vim/ftdetect
+    dst: ~/.local/share/nvim/site/ftdetect
     link: link
     src: .vim/ftdetect
   d_ftplugin:
-    dst: ~/.vim/ftplugin
+    dst: ~/.local/share/nvim/site/ftplugin
     link: link
     src: .vim/ftplugin
   d_git:
@@ -68,7 +68,7 @@ dotfiles:
     link: link
     src: .config/omf
   d_plugin:
-    dst: ~/.vim/plugin
+    dst: ~/.local/share/nvim/site/plugin
     link: link
     src: .vim/plugin
   d_powerline:
@@ -84,7 +84,7 @@ dotfiles:
     link: link
     src: .config/shell
   d_syntax:
-    dst: ~/.vim/syntax
+    dst: ~/.local/share/nvim/site/syntax
     link: link
     src: .vim/syntax
   d_tmux:

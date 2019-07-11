@@ -70,7 +70,7 @@ let g:nocompletion_filetypes = [
 " Packages {{{1
 let g:use_nerdtree = 1                                          " Use NERDTree instead of netrw as explorer
 " Minpac Init {{{2
-let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
+let minpac_path = expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/minpac')
 if empty(glob(minpac_path))
     echo 'Downloading Minpac'
     let clone = system('git clone https://github.com/k-takata/minpac.git ' . minpac_path)
@@ -83,7 +83,7 @@ function! s:pack_init() abort
         return
     endif
     command! -nargs=+ Pack call nick#minpac#add(<args>)
-    call minpac#init()
+    call minpac#init({'dir': expand('$XDG_DATA_HOME/nvim/site')})
 
     " General Packages {{{2
     Pack 'k-takata/minpac'

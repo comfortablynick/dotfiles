@@ -19,7 +19,7 @@ augroup vimrc
 augroup END
 
 " CONFIG FILES ==================================
-let g:vim_home = get(g:, 'vim_home', expand('$XDG_DATA_HOME/nvim/site/config/'))
+let g:vim_home = get(g:, 'vim_home', expand('$HOME/dotfiles/dotfiles/.vim/config/'))
 
 let config_list = [
     \ 'config.vim',

@@ -22,6 +22,7 @@ endif
 " Files/Swap/Backup {{{1
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
+set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{1
 set encoding=utf-8                                              " Default to unicode
@@ -92,7 +93,7 @@ if executable('rg')
 endif
 
 " Undo {{{1
-set undodir=~/.vim/undo                                         " Undo file directory
+set undodir=~/.vim/undo//                                       " Undo file directory
 set undofile                                                    " Enable persistent undo
 
 " Windows/Splits {{{1

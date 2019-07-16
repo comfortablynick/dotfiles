@@ -183,6 +183,10 @@ dotfiles:
     dst: ~/.zshrc
     link: link
     src: zshrc.zsh
+  d_pacman:
+    src: .config/pacman
+    dst: ~/.config/pacman
+    link: link
 profiles:
   core:
     dotfiles:
@@ -223,6 +227,7 @@ profiles:
     - d_htop
     - d_plugin
     - d_syntax
+    - d_pacman
   io:
     dotfiles:
     - f_bash_linux

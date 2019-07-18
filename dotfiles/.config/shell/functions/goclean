@@ -2,12 +2,15 @@
 # Remove traces of something installed with `go get`
 goclean() {
     local pkg=$1
-    shift || return 1
+    shift || { printf "\e[1;31merror: pkg required\e[0m\n" && usage; }
     local ost
     local cnt
 
+    printf "Performing \`go clean\` for %s..." "$pkg"
     # Clean removes object files from package source directories (ignore error)
     go clean -i "$pkg" &>/dev/null
+
+    printf "done\n"
 
     # Set local variables
     [[ "$(uname -m)" == "x86_64" ]] &&
@@ -15,6 +18,7 @@ goclean() {
     ost="${ost,,}_amd64" &&
         cnt="${pkg//[^\/]/}"
 
+    printf "Deleting source directories for %s..." "$pkg"
     # Delete the source directory and compiled package directory(ies)
     if (("${#cnt}" == "2")); then
         rm -rf "${GOPATH%%:*}/src/${pkg%/*}"
@@ -23,4 +27,12 @@ goclean() {
         rm -rf "${GOPATH%%:*}/src/${pkg%/*/*}"
         rm -rf "${GOPATH%%:*}/pkg/${ost}/${pkg%/*/*}"
     fi
+    printf "done\n"
 }
+
+usage() {
+    echo "usage: goclean [pkg]"
+    return 1
+}
+
+goclean "$@"

@@ -89,7 +89,6 @@ function! s:pack_init() abort
     Pack 'k-takata/minpac'
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
-    Pack 'NLKNguyen/papercolor-theme'
     Pack 'scrooloose/nerdtree'
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
@@ -109,6 +108,10 @@ function! s:pack_init() abort
     Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
+
+    " Themes {{{2
+    Pack 'NLKNguyen/papercolor-theme'
+    Pack 'gruvbox-community/gruvbox'
 
     " Syntax highlighting {{{2
     Pack 'HerringtonDarkholme/yats'

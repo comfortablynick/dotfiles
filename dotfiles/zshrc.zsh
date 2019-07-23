@@ -190,7 +190,7 @@ bindkey '^r' history-incremental-search-backward
 
 # kj :: <Esc>
 bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
-zle -N zle-keymap-select
+# zle -N zle-keymap-select
 
 # FUNCTIONS {{{1
 # relz :: Reload zsh shell {{{2

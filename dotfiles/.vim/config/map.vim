@@ -44,6 +44,10 @@ inoremap ;lkj <Esc>`^:wq<CR>
 " inoremap <C-h> <Left>
 " inoremap <C-l> <Right>
 
+" Search
+" CR turns off search highlighting
+nnoremap <CR> :nohlsearch<CR><CR>
+
 " Windows/splits {{{1
 " Navigation {{{2
 " `CTRL+{h,j,k,l}` to navigate in normal mode
@@ -95,9 +99,9 @@ nnoremap <silent> <Leader>x :VtrKillRunner<CR>
 noremap <silent> <C-b> :VtrSendFile!<CR>
 
 " RunCmd() {{{2
-nnoremap <silent> <Leader>r :call RunCmd('run')<CR>
-nnoremap <silent> <Leader>w :w \| :call RunCmd('install')<CR>
-nnoremap <silent> <Leader>b :call RunCmd('build')<CR>
+nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
+nnoremap <silent> <Leader>w :w \| :call runner#run_cmd('install')<CR>
+nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
 
 " RunBuild() {{{2
 noremap <silent> <F7> :call RunBuild()<CR>

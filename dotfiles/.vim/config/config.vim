@@ -83,7 +83,7 @@ let g:vim_indent_cont = &tabstop                                " Indent after \
 set ignorecase                                                  " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
-set nohlsearch                                                  " Don't highlight search results
+" set nohlsearch                                                  " Don't highlight search results
 set magic                                                       " Magic escaping for regex
 
 " use ripgrep as grepprg

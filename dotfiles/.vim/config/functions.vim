@@ -7,42 +7,42 @@
 "
 " TODO: move these to canonical vim folders (plugin,ftplugin,autoload,indent)
 " Functions {{{1
-" File operations {{{2
-" GetProjectRoot() :: get the root path based on git or parent folder {{{3
-function! GetProjectRoot() abort
-    " Check if this has already been defined
-    if exists('b:project_root_dir')
-        return b:project_root_dir
-    endif
-    packadd vim-rooter
-    if exists('*FindRootDirectory')
-        let l:root = FindRootDirectory()
-    else
-        " Get root from git or file parent dir
-        let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
-        if ! isdirectory(l:root)
-            let l:root = expand('%:p:h')
-        endif
-    endif
-    " Save root in buffer local variable
-    let b:project_root_dir = l:root
-    return b:project_root_dir
-endfunction
-
-" GetRootFolderName() :: get just the name of the folder {{{3
-function! GetRootFolderName() abort
-    let l:root = GetProjectRoot()
-    return matchstr(l:root, '[^\/\\]*$')
-endfunction
-
-" SetProjectRoot() :: set vim cwd to project root dir {{{3
-" set working directory to git project root
-" or directory of current file if not git project
-function! SetProjectRoot() abort
-    let l:root_dir = GetProjectRoot()
-    lcd `=l:root_dir`
-endfunction
-
+" " File operations {{{2
+" " GetProjectRoot() :: get the root path based on git or parent folder {{{3
+" function! GetProjectRoot() abort
+"     " Check if this has already been defined
+"     if exists('b:project_root_dir')
+"         return b:project_root_dir
+"     endif
+"     packadd vim-rooter
+"     if exists('*FindRootDirectory')
+"         let l:root = FindRootDirectory()
+"     else
+"         " Get root from git or file parent dir
+"         let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
+"         if ! isdirectory(l:root)
+"             let l:root = expand('%:p:h')
+"         endif
+"     endif
+"     " Save root in buffer local variable
+"     let b:project_root_dir = l:root
+"     return b:project_root_dir
+" endfunction
+"
+" " GetRootFolderName() :: get just the name of the folder {{{3
+" function! GetRootFolderName() abort
+"     let l:root = GetProjectRoot()
+"     return matchstr(l:root, '[^\/\\]*$')
+" endfunction
+"
+" " SetProjectRoot() :: set vim cwd to project root dir {{{3
+" " set working directory to git project root
+" " or directory of current file if not git project
+" function! SetProjectRoot() abort
+"     let l:root_dir = GetProjectRoot()
+"     lcd `=l:root_dir`
+" endfunction
+"
 " Quickfix window {{{2
 " ToggleQf() :: toggle quickfix window {{{3
 function! ToggleQf() abort
@@ -102,41 +102,41 @@ endfunction
 
 " Building {{{2
 " RunBuild() :: build/install current project
-function! RunBuild() abort
-    " Run build plugins
-    let s:ft_cmds = {
-        \ 'go': {
-        \   'cmd': 'AsyncRun go install',
-        \   'show_qf': 0
-        \  },
-        \ 'cpp': {
-        \   'cmd': 'AsyncRun -cwd=<root>/build make install',
-        \   'show_qf': 1
-        \  },
-        \ 'rust': {
-        \   'cmd': 'AsyncRun -cwd=<root> cargo install -f --path .',
-        \   'show_qf': 0
-        \  },
-        \ }
-    let s:ft = get(s:ft_cmds, &filetype, {})
-    let s:cmd = get(s:ft, 'cmd', '')
-    let s:qf_size = get(s:ft, 'show_qf', 0) * g:asyncrun_open
-    if s:cmd !=? ''
-        if s:cmd =~# 'AsyncRun'
-            let g:asyncrun_exit = 'call CheckRun("Build")'
-            let g:asyncrun_open = s:qf_size
-            execute s:cmd
-            return
-        endif
-        " Regular command
-        execute s:cmd
-        return
-    endif
-endfunction
-
-function! RunMakeInstall() abort
-    execute 'AsyncRun -cwd=<root>/build make install'
-endfunction
+" function! RunBuild() abort
+"     " Run build plugins
+"     let s:ft_cmds = {
+"         \ 'go': {
+"         \   'cmd': 'AsyncRun go install',
+"         \   'show_qf': 0
+"         \  },
+"         \ 'cpp': {
+"         \   'cmd': 'AsyncRun -cwd=<root>/build make install',
+"         \   'show_qf': 1
+"         \  },
+"         \ 'rust': {
+"         \   'cmd': 'AsyncRun -cwd=<root> cargo install -f --path .',
+"         \   'show_qf': 0
+"         \  },
+"         \ }
+"     let s:ft = get(s:ft_cmds, &filetype, {})
+"     let s:cmd = get(s:ft, 'cmd', '')
+"     let s:qf_size = get(s:ft, 'show_qf', 0) * g:asyncrun_open
+"     if s:cmd !=? ''
+"         if s:cmd =~# 'AsyncRun'
+"             let g:asyncrun_exit = 'call CheckRun("Build")'
+"             let g:asyncrun_open = s:qf_size
+"             execute s:cmd
+"             return
+"         endif
+"         " Regular command
+"         execute s:cmd
+"         return
+"     endif
+" endfunction
+"
+" function! RunMakeInstall() abort
+"     execute 'AsyncRun -cwd=<root>/build make install'
+" endfunction
 
 " AsyncRun {{{2
 " CheckRun() :: check AsyncRun return code
@@ -154,86 +154,6 @@ function! CheckRun(cmdName) abort
    endif
 endfunction
 
-" Run code {{{2
-" RunCmd() :: build command based on file type and command type {{{3
-function! RunCmd(cmd_type) abort
-    " Preface commands with space to exclude from fish history
-    let l:ft_cmds = get(b:, 'ft_cmds', {
-        \ 'go': {
-        \   'build': ' go install && go run .',
-        \   'install': ' go install && go run .',
-        \   'run': ' go run .',
-        \  },
-        \ 'cpp': {
-        \   'build': ' pushd build && make install; popd',
-        \   'install': ' pushd build && make install; popd',
-        \   'run': ' pushd build && make install; popd && ' . GetRootFolderName(),
-        \  },
-        \ 'c': {
-        \   'build': ' pushd build && make install; popd',
-        \   'install': ' pushd build && make install; popd',
-        \   'run': ' pushd build && make install; popd && ' . GetRootFolderName(),
-        \  },
-        \ 'rust': {
-        \   'build': ' cargo build',
-        \   'build-release': ' cargo build --release',
-        \   'install': ' cargo install -f --path .',
-        \   'run': ' cargo run',
-        \  },
-        \ 'python': {
-        \   'build': ' python ' . expand('%'),
-        \   'install': ' python ' . expand('%'),
-        \   'run': ' python ' . expand('%'),
-        \ },
-        \ 'typescript': {
-        \   'build': 'clasp push',
-        \   'install': 'clasp push',
-        \   'run': 'clasp run',
-        \ }
-        \ })
-    let l:ft = get(l:ft_cmds, &filetype, {})
-    let l:cmd = get(l:ft, a:cmd_type, '')
-    if l:ft ==# {} || l:cmd ==# ''
-        if index([ 'build', 'install', 'run' ], l:cmd) == 0
-            " not a valid command
-            return
-        endif
-        let l:cmd = a:cmd_type
-    endif
-
-    " Decide where to run the command
-    let l:run_loc = exists('b:run_cmd_in') ?
-        \ b:run_cmd_in :
-        \ get(g:, 'run_cmd_in', GetCmdRunLoc())
-
-    call SetProjectRoot()
-    if l:run_loc ==# 'term'
-        call RunInTerm(l:cmd)
-    elseif l:run_loc ==# 'AsyncRun'
-        return
-    elseif l:run_loc ==# 'Vtr'
-        execute 'VtrSendCommandToRunner! ' . l:cmd
-        return
-    endif
-endfunction
-
-" RunInTerm() :: send cmd output to integrated terminal buffer {{{3
-function! RunInTerm(cmd) abort
-    let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
-    execute s:mod . '|term ' . a:cmd
-    return
-endfunction
-
-" GetCmdRunLoc() :: determine default command output {{{3
-function! GetCmdRunLoc() abort
-    if !empty($TMUX_PANE) && winwidth(0) > 200
-        let b:run_cmd_in = 'Vtr'
-        return 'Vtr'
-    endif
-    let b:run_cmd_in = 'term'
-    return 'term'
-endfunction
-
 " Keyword documentation {{{2
 " ShowDocumentation() :: use K for vim docs or language servers
 function! ShowDocumentation() abort
@@ -249,16 +169,6 @@ endfunction
 set keywordprg=:silent!\ call\ ShowDocumentation()
 
 " General {{{2
-" RunCommand() :: run command asynchronously in tmux pane {{{3
-function! RunCommand(cmd) abort
-    let panes = system('tmux display-message -p "#{window_panes}"')
-    if panes >= 2
-        " Don't open quickfix window
-        let g:asyncrun_auto = 0
-        execute 'AsyncRun tmux send-keys -t 2 ' . a:cmd
-    endif
-endfunction
-
 " OpenTagbar() :: wrapper for tagbar#autoopen with options {{{3
 function! OpenTagbar() abort
     if winwidth(0) > 100

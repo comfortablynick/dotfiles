@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+declare distro
+declare -A colors
+colors[red]=$(tput setaf 1 && tput bold)
+colors[green]=$(tput setaf 2 && tput bold)
+colors[yellow]=$(tput setaf 3 && tput bold)
+colors[blue]=$(tput setaf 4 && tput bold)
+colors[reset]=$(tput sgr0)
+
+color() {
+    local c
+    c="$1"
+    shift
+    printf '%s%s' "${colors[$c]}" "$(tput bold)"
+    printf '%s\n' "$@"
+    printf '%s' "${colors[reset]}"
+}
+
+die() {
+    [[ -n $1 ]] && err "$1"
+    exit 1
+}
+
+err() { color red "error: $*" >&2; }
+
+has() {
+    local verbose=0
+    if [[ $1 == '-v' ]]; then
+        verbose=1
+        shift
+    fi
+    for c; do
+        c="${c%% *}"
+        if ! command -v "$c" &>/dev/null; then
+            (("$verbose" > 0)) && err "$c not found"
+            return 1
+        fi
+    done
+}
+
+debian() {
+    if has apt; then
+        printf "Getting updates from %sapt%s...\n" "${colors[green]}" "${colors[reset]}"
+        sudo apt update -y
+        sudo apt full-upgrade -y
+        printf "%sDone%s\n" "${colors[green]}" "${colors[reset]}"
+        return
+    fi
+}
+
+arch() {
+    if has yay; then
+        printf "Getting updates from %syay%s...\n" "${colors[blue]}" "${colors[reset]}"
+        yay -Syu
+        printf "%sDone!\n%s" "${colors[green]}" "${colors[reset]}"
+        return
+    fi
+    if has pacman; then
+        printf "Getting updates from %spacman%s...\n" "${colors[blue]}" "${colors[reset]}"
+        pacman -Syu
+        printf "%sDone!\n%s" "${colors[green]}" "${colors[reset]}"
+        return
+    fi
+}
+
+rust() {
+    if has rustup; then
+        printf "Getting updates from %srustup%s...\n" "${colors[blue]}" "${colors[reset]}"
+        rustup update
+        printf "%sDone!\n%s" "${colors[green]}" "${colors[reset]}"
+    fi
+    if has cargo; then
+        printf "Getting updates from %scargo%s...\n" "${colors[blue]}" "${colors[reset]}"
+        cargo install-update --all --git
+        printf "%sDone!\n%s" "${colors[green]}" "${colors[reset]}"
+    fi
+}
+
+# update rust for all distros
+rust
+
+if [[ -r /etc/os-release ]]; then
+    distro=$(awk -F'=' '"NAME" == $1 { gsub("\"", "", $2); print tolower($2); }' /etc/os-release)
+    distro="${distro%% *}"
+fi
+
+case "$distro" in
+debian | ubuntu) debian ;;
+arch) arch ;;
+*) die 'unknown distro :(' ;;
+esac

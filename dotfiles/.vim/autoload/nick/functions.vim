@@ -1,7 +1,7 @@
-
+" Personal functions
 " Add shebang for new file
 function! nick#functions#set_shebang() abort
-    py3 << EOF
+    python3 << EOP
 import vim
 shebang = {
     'python':     '#!/usr/bin/env python3',
@@ -18,8 +18,11 @@ shebang = {
 }
 if not vim.current.buffer[0].startswith('#!'):
     filetype = vim.eval('&filetype')
-    vim.current.buffer[0:0] = [ shebang.get(filetype, shebang['bash']) ]
-EOF
+    try:
+        vim.current.buffer[0:0] = [ shebang[filetype] ]
+    except KeyError:
+        vim.err_write("No shebang for filetype '{}'\n".format(filetype))
+EOP
 endfunction
 
 " Get path of current file
@@ -29,18 +32,14 @@ endfunction
 
 " Set file as executable by user
 function! nick#functions#set_executable_bit() abort
-    py3 << EOF
+    python3 << EOP
 import os
 import stat
 import vim
 
-def main():
-    file_path = vim.eval("expand('%:p')")
-    try:
-        st = os.stat(file_path)
-    except FileNotFoundError:
-        print(f"Error setting executable bit: file does not exist or has not been saved.")
-        return
+file_path = vim.eval("expand('%:p')")
+try:
+    st = os.stat(file_path)
     old_perms = stat.filemode(st.st_mode)
     os.chmod(file_path, st.st_mode | 0o111)
     new_st = os.stat(file_path)
@@ -50,10 +49,9 @@ def main():
         print(f"File already executable: {old_perms}")
     else:
         print(f"File now executable; changed from {old_perms} to {new_perms}")
-
-if __name__ == '__main__':
-    main()
-EOF
+except FileNotFoundError:
+    vim.err_write("Error setting executable bit: file must be saved to disk first.\n")
+EOP
 endfunction
 
 " Set shebang and executable bit
@@ -68,7 +66,7 @@ function! nick#functions#get_cursor_char() abort
 endfunction
 
 " Get syntax group of item under cursor
-function! nick#functions#syn_group()
+function! nick#functions#syn_group() abort
     let l:s = synID(line('.'), col('.'), 1)
     echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun

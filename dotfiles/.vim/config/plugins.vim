@@ -23,7 +23,6 @@ let g:completion_filetypes = {
     \ 'deoplete':
     \   [
     \       'fish',
-    \       'python',
     \   ],
     \ 'ycm':
     \   [
@@ -47,6 +46,7 @@ let g:completion_filetypes = {
     \       'sh',
     \       'bash',
     \       'vim',
+    \       'python',
     \   ],
     \ 'mucomplete':
     \   [

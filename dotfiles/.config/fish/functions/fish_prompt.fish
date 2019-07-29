@@ -34,6 +34,7 @@
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
 #     set -g theme_display_vi no
+#     set -g theme_display_nvm yes
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
@@ -377,7 +378,10 @@ function __bobthefish_finish_segments -S -d 'Close open prompt segments'
     if [ "$theme_newline_cursor" = 'yes' ]
         echo -ens "\n"
         set_color $fish_color_autosuggestion
-        if [ "$theme_powerline_fonts" = "no" ]
+
+        if set -q theme_newline_prompt
+            echo -ens "$theme_newline_prompt"
+        else if [ "$theme_powerline_fonts" = "no" ]
             echo -ns '> '
         else
             echo -ns "$right_arrow_glyph "
@@ -576,10 +580,7 @@ function __bobthefish_prompt_docker -S -d 'Display Docker machine name'
     echo -ns $DOCKER_MACHINE_NAME ' '
 end
 
-function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
-    [ "$theme_display_k8s_context" = 'yes' ]
-    or return
-
+function __bobthefish_k8s_context -S -d 'Get the current k8s context'
     set -l config_paths "$HOME/.kube/config"
     [ -n "$KUBECONFIG" ]
     and set config_paths (string split ':' "$KUBECONFIG") $config_paths
@@ -592,14 +593,36 @@ function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
             if [ "$key" = 'current-context:' ]
                 set -l context (string trim -c '"\' ' -- $val)
                 [ -z "$context" ]
-                and return
+                and return 1
 
-                __bobthefish_start_segment $color_k8s
-                echo -ns $context ' '
+                echo $context
                 return
             end
         end <$file
     end
+
+    return 1
+end
+
+function __bobthefish_k8s_namespace -S -d 'Get the current k8s namespace'
+    kubectl config view --minify --output "jsonpath={..namespace}"
+end
+
+function __bobthefish_prompt_k8s_context -S -d 'Show current Kubernetes context'
+    [ "$theme_display_k8s_context" = 'yes' ]
+    or return
+
+    set -l context (__bobthefish_k8s_context)
+    or return
+
+    set -l namespace (__bobthefish_k8s_namespace)
+
+    set -l segment $k8s_glyph " " $context
+    [ -n "$namespace" ]
+    and set segment $segment ":" $namespace
+
+    __bobthefish_start_segment $color_k8s
+    echo -ns $segment " "
 end
 
 
@@ -799,6 +822,20 @@ function __bobthefish_prompt_desk -S -d 'Display current desk environment'
     set_color normal
 end
 
+function __bobthefish_prompt_nvm -S -d 'Display current node version through NVM'
+    [ "$theme_display_nvm" = 'yes' -a -n "$NVM_DIR" ]
+    or return
+
+    set -l node_version (nvm current 2> /dev/null)
+
+    [ -z $node_version -o "$node_version" = 'none' -o "$node_version" = 'system' ]
+    and return
+
+    __bobthefish_start_segment $color_nvm
+    echo -ns $node_glyph $node_version ' '
+    set_color normal
+end
+
 
 # ==============================
 # VCS segments
@@ -976,8 +1013,14 @@ end
 # ==============================
 
 function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
-    # Save the last status for later (do this before the `set` calls below)
+    # Save the last status for later (do this before anything else)
     set -l last_status $status
+
+    # Use a simple prompt on dumb terminals.
+    if [ "$TERM" = "dumb" ]
+        echo "> "
+        return
+    end
 
     __bobthefish_glyphs
     __bobthefish_colors $theme_color_scheme
@@ -1005,6 +1048,7 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
     __bobthefish_prompt_rubies
     __bobthefish_prompt_virtualfish
     __bobthefish_prompt_virtualgo
+    __bobthefish_prompt_nvm
 
     set -l real_pwd (__bobthefish_pwd)
 

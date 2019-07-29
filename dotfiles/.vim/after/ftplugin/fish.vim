@@ -6,3 +6,4 @@ compiler fish                                                   " Use fish synta
 
 " Local fish editor settings
 setlocal foldmethod=marker                                      " Fold using markers
+setlocal commentstring=#\ %s

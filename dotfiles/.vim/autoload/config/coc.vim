@@ -7,7 +7,8 @@ function! config#coc#cmds() abort
     endif
     augroup coc_config_auto
         autocmd!
-        if get(b:, 'coc_disable_cursorhold_hover', 0) == 0
+        if get(b:, 'coc_disable_cursorhold_hover', 1) == 0 ||
+            \ get(b:, 'coc_enable_cursorhold_hover', 0) == 1
             autocmd CursorHold * silent
                 \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
         endif

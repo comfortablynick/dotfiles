@@ -1,6 +1,8 @@
-if exists('b:current_syntax')
-  finish
-endif
+" if exists('b:current_syntax')
+"   finish
+" endif
+let b:current_syntax = ''
+unlet b:current_syntax
 
 syntax keyword  justType            alias
 
@@ -17,6 +19,10 @@ syntax region   justVarSub          start='{{' end='}}'                         
 syntax region   justString          start=+'+ skip=+\\'+ end=+'+                        keepend
 syntax region   justString          start=+"+ skip=+\\"+ end=+"+                        keepend
 
+" Embedded shell script
+syntax include @sh syntax/sh.vim
+syntax region shEmbed matchgroup=Snip start='#!/usr/bin/env bash' end='#sh' contains=@sh
+
 " Define the default highlighting.
 " Only when an item doesn't have highlighting yet
 hi def link     justString          String
@@ -30,5 +36,6 @@ hi def link     justVarSub          Structure
 hi def link     justVarName         Identifier
 hi def link     justVarNameSub      Constant
 hi def link     justOperator        Operator
+hi link Snip SpecialComment
 
 let b:current_syntax = 'just'

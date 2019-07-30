@@ -1,49 +1,5 @@
 " Build command based on file type and command type
 function! runner#run_cmd(cmd_type) abort
-    " Preface commands with space to exclude from history
-    " TODO: use justfile by default instead of all this
-    " let l:ft_cmds = get(b:, 'ft_cmds', {
-    "     \ 'go': {
-    "     \   'build': ' go install && go run .',
-    "     \   'install': ' go install && go run .',
-    "     \   'run': ' go run .',
-    "     \  },
-    "     \ 'cpp': {
-    "     \   'build': ' pushd build && make install; popd',
-    "     \   'install': ' pushd build && make install; popd',
-    "     \   'run': ' pushd build && make install; popd && ' . files#get_root_folder_name(),
-    "     \  },
-    "     \ 'c': {
-    "     \   'build': ' pushd build && make install; popd',
-    "     \   'install': ' pushd build && make install; popd',
-    "     \   'run': ' pushd build && make install; popd && ' . files#get_root_folder_name(),
-    "     \  },
-    "     \ 'rust': {
-    "     \   'build': ' cargo build',
-    "     \   'build-release': ' cargo build --release',
-    "     \   'install': ' cargo install -f --path .',
-    "     \   'run': ' cargo run',
-    "     \  },
-    "     \ 'python': {
-    "     \   'build': ' python ' . expand('%'),
-    "     \   'install': ' python ' . expand('%'),
-    "     \   'run': ' python ' . expand('%'),
-    "     \ },
-    "     \ 'typescript': {
-    "     \   'build': 'clasp push',
-    "     \   'install': 'clasp push',
-    "     \   'run': 'clasp run',
-    "     \ }
-    "     \ })
-    " let l:ft = get(l:ft_cmds, &filetype, {})
-    " let l:cmd = get(l:ft, a:cmd_type, '')
-    " if l:ft ==# {} || l:cmd ==# ''
-    "     if index([ 'build', 'install', 'run' ], l:cmd) == 0
-    "         " not a valid command
-    "         return
-    "     endif
-    "     let l:cmd = a:cmd_type
-    " endif
     let l:cmd = 'just '.a:cmd_type
 
     " Decide where to run the command
@@ -51,7 +7,6 @@ function! runner#run_cmd(cmd_type) abort
         \ b:run_cmd_in :
         \ get(g:, 'run_cmd_in', runner#get_cmd_run_loc())
 
-    call files#set_project_root()
     if l:run_loc ==# 'term'
         call runner#run_in_term(l:cmd)
     elseif l:run_loc ==# 'AsyncRun'

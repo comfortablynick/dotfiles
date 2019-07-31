@@ -187,6 +187,10 @@ dotfiles:
     src: .config/pacman
     dst: ~/.config/pacman
     link: link
+  d_rustfmt:
+    src: .config/rustfmt
+    dst: ~/.config/rustfmt
+    link: link
 profiles:
   core:
     dotfiles:
@@ -228,6 +232,7 @@ profiles:
     - d_plugin
     - d_syntax
     - d_pacman
+    - d_rustfmt
   io:
     dotfiles:
     - f_bash_linux

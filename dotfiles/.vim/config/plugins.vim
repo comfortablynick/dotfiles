@@ -120,7 +120,7 @@ function! s:pack_init() abort
     Pack 'cespare/vim-toml'
     Pack 'chase/vim-ansible-yaml'
     Pack 'bfrg/vim-cpp-modern'
-    " Pack 'vmchale/just-vim'
+    Pack 'vim-jp/syntax-vim-ex'
 
     " Git {{{2
     Pack 'airblade/vim-gitgutter',      {'type': 'opt'}

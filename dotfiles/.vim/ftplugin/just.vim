@@ -4,4 +4,3 @@ endif
 let g:just_ftplugin = 1
 
 set commentstring=#\ %s
-" packadd just-vim

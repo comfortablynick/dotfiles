@@ -1,6 +1,5 @@
-" if exists('b:current_syntax')
-"   finish
-" endif
+" Justfile syntax with regions of other languages
+
 let b:current_syntax = ''
 unlet b:current_syntax
 
@@ -20,8 +19,12 @@ syntax region   justString          start=+'+ skip=+\\'+ end=+'+                
 syntax region   justString          start=+"+ skip=+\\"+ end=+"+                        keepend
 
 " Embedded shell script
-syntax include @sh syntax/sh.vim
-syntax region shEmbed matchgroup=Snip start='#!/usr/bin/env bash' end='#sh' contains=@sh
+" syntax include @sh      syntax/sh.vim
+" syntax include @py      syntax/python.vim
+" syntax region shEmbed   matchgroup=Shebang start='#!/usr/bin/env sh'       end='#\n' contains=@sh
+" syntax region shEmbed   matchgroup=Shebang start='#!/bin/sh'               end='#\n' contains=@sh
+" syntax region bashEmbed matchgroup=Shebang start='#!/usr/bin/env bash'     end='#\n' contains=@sh
+" syntax region py3Embed  matchgroup=Shebang start='#!/usr/bin/env python3'  end='#\n' contains=@py
 
 " Define the default highlighting.
 " Only when an item doesn't have highlighting yet
@@ -36,6 +39,6 @@ hi def link     justVarSub          Structure
 hi def link     justVarName         Identifier
 hi def link     justVarNameSub      Constant
 hi def link     justOperator        Operator
-hi link Snip SpecialComment
+" hi def link     Shebang             SpecialComment
 
 let b:current_syntax = 'just'

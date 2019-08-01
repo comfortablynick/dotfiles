@@ -263,6 +263,17 @@ chpwd() {
     # exa --group-directories-first
 }
 
+# direnv :: change environment based on .envrc file
+if [[ -x /usr/bin/direnv ]]; then
+    _direnv_hook() {
+      eval "$("/usr/bin/direnv" export zsh)";
+    }
+    typeset -ag precmd_functions;
+    if [[ -z ${precmd_functions[(r)_direnv_hook]} ]]; then
+      precmd_functions+=_direnv_hook;
+    fi
+fi
+
 # SHELL STARTUP {{{1
 # Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"

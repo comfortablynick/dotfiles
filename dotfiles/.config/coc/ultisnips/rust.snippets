@@ -38,7 +38,7 @@ enum ${1:struct_name} {
 }
 endsnippet
 
-snippet display "display trait" b
+snippet impl_display "display trait" b
 impl fmt::Display for ${1:obj} {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		write!(f, "{}", self)

@@ -77,8 +77,17 @@ rust() {
     fi
 }
 
-# update rust for all distros
+pipx-update() {
+    if has pipx; then
+        printf "Getting updates from %spipx%s...\n" "${colors[blue]}" "${colors[reset]}"
+        pipx upgrade-all
+        printf "%sDone!\n%s" "${colors[green]}" "${colors[reset]}"
+    fi
+}
+
+# update for all distros
 rust
+pipx-update
 
 if [[ -r /etc/os-release ]]; then
     distro=$(awk -F'=' '"NAME" == $1 { gsub("\"", "", $2); print tolower($2); }' /etc/os-release)

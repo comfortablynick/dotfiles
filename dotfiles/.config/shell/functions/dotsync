@@ -11,4 +11,4 @@ git -C "$dotfiles" pull &&
     git -C "$dotfiles" commit &&
     git -C "$dotfiles" push
 echo "Running dotdrop install ... "
-dotdrop install
+dotdrop -c ~/dotfiles/config.yaml install

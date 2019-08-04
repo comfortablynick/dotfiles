@@ -96,7 +96,7 @@ function! s:pack_init() abort
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
     Pack 'liuchengxu/vista.vim'
-    Pack 'w0rp/ale'
+    Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'mbbill/undotree'
     Pack 'majutsushi/tagbar'
@@ -120,6 +120,7 @@ function! s:pack_init() abort
     Pack 'cespare/vim-toml'
     Pack 'chase/vim-ansible-yaml'
     Pack 'bfrg/vim-cpp-modern'
+    Pack 'vim-jp/syntax-vim-ex'
 
     " Git {{{2
     Pack 'airblade/vim-gitgutter',      {'type': 'opt'}

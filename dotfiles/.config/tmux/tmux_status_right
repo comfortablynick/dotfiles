@@ -52,7 +52,7 @@ fi
 
 if [[ $WIDTH -gt $MEDIUM ]]; then
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
-    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB$SP#[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%I:%M %p')"
+    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB#[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%R')"
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
     LOAD="#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
 

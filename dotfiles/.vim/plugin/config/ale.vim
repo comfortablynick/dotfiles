@@ -25,66 +25,31 @@ let g:ale_sign_column_always = 0                                " Always show co
 let g:ale_completion_enabled = 0                                " Enable ALE completion if no other completion engines
 let g:ale_virtualtext_cursor = 1                                " Enable Neovim's virtualtext support
 let g:ale_virtualtext_prefix = ' ➜ '                           " Prefix the virtualtext message
-let g:ale_virtualenv_dir_names = [
-    \   '.env',
-    \   'dev',
-    \   ]
+let g:ale_virtualenv_dir_names = ['.env', 'dev']
 
 " Linters/fixers
 let g:ale_linters = {
-    \ 'python': [
-    \   'flake8',
-    \   'mypy',
-    \   'pydocstyle',
-    \  ],
+    \ 'python': ['flake8','mypy','pydocstyle'],
     \ 'cpp': [],
-    \ 'c': [
-    \   'clangtidy',
-    \   'gcc',
-    \  ],
+    \ 'c': ['clangtidy','gcc'],
     \ 'go': [],
     \ 'rust': [],
-    \ 'sh': [
-    \   'shellcheck'
-    \  ],
+    \ 'sh': ['shellcheck'],
+    \ 'yaml.ansible': ['ansible-lint'],
     \ }
 
 let g:ale_fixers = {
-    \ '*': [
-    \   'remove_trailing_lines',
-    \   'trim_whitespace',
-    \  ],
-    \ 'python': [
-    \   'black',
-    \   'isort',
-    \  ],
-    \ 'typescript': [
-    \   'prettier',
-    \  ],
-    \ 'javascript': [
-    \   'prettier',
-    \  ],
-    \ 'go': [
-    \   'goimports',
-    \  ],
-    \ 'sh': [
-    \   'shfmt',
-    \  ],
-    \ 'zsh': [
-    \   'shfmt',
-    \  ],
-    \ 'cpp': [
-    \   'clang-format',
-    \  ],
-    \ 'c': [
-    \   'clang-format',
-    \  ],
-    \ 'rust': [
-    \   'rustfmt',
-    \  ],
-    \ 'cmake': [
-    \   'cmakeformat',
-    \  ],
+    \ '*': ['remove_trailing_lines','trim_whitespace'],
+    \ 'python': ['black','isort'],
+    \ 'typescript': ['prettier'],
+    \ 'javascript': ['prettier'],
+    \ 'go': ['goimports'],
+    \ 'sh': ['shfmt'],
+    \ 'zsh': ['shfmt'],
+    \ 'cpp': ['clang-format'],
+    \ 'c': ['clang-format'],
+    \ 'rust': ['rustfmt'],
+    \ 'cmake': ['cmakeformat'],
     \ }
 
 " Linter/fixer options

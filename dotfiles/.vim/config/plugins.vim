@@ -118,9 +118,9 @@ function! s:pack_init() abort
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
     Pack 'cespare/vim-toml'
-    Pack 'chase/vim-ansible-yaml'
     Pack 'bfrg/vim-cpp-modern'
     Pack 'vim-jp/syntax-vim-ex'
+    Pack 'pearofducks/ansible-vim'
 
     " Git {{{2
     Pack 'airblade/vim-gitgutter',      {'type': 'opt'}
@@ -195,7 +195,7 @@ Load vim-snippets
 " Syntax
 Load vim-cpp-modern
 Load vim-markdown
-Load vim-ansible-yaml
+Load ansible-vim
 
 " Tmux
 Load vim-tmux-runner

@@ -191,6 +191,10 @@ dotfiles:
     src: .config/rustfmt
     dst: ~/.config/rustfmt
     link: link
+  d_ansible:
+    src: .ansible
+    dst: ~/.ansible
+    link: link
 profiles:
   core:
     dotfiles:
@@ -246,6 +250,7 @@ profiles:
     - f_muttrc
     include:
     - core
+    - ansible
   saturn:
     dotfiles:
     - f_bash_linux
@@ -268,6 +273,9 @@ profiles:
     - f_bash_windows
     include:
     - core
+  ansible:
+    dotfiles:
+    - d_ansible
 trans_read:
   gpg: gpg2 -d -o {1} -r nick {0}
 trans_write:

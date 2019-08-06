@@ -1,0 +1,18 @@
+# vim: ft=yaml.ansible:
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: "install default packages after minimal install"
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+    vars:
+      packages:
+        - aptitude
+        - bc
+        - curl
+        - mosh
+    when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

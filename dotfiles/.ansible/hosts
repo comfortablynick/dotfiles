@@ -15,3 +15,7 @@ all:
       ansible_host: 155.138.241.48
       ansible_port: 50222
       ansible_user: nick
+    io:
+      ansible_host: remote.vetcosolutions.com
+      ansible_port: 5022
+      ansible_user: nick

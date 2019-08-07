@@ -1,4 +1,5 @@
 ---
-# tasks file for pkg-base
-- name: Handle os packages
+# tasks file for neovim
+
+- name: Install neovim
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"

@@ -1,0 +1,25 @@
+---
+# defaults file for neovim
+
+# The specific package name used to install neovim
+neovim_name: neovim
+
+# Debian
+Debian_neovim_ppa: ppa:neovim-ppa/unstable
+Debian_python_required_packages:
+    - software-properties-common
+    - python-dev
+    - python-pip
+    - python3-dev
+    - python3-pip
+
+# Whether or not to install or remove neovim
+# choices: [ present, absent, latest ]
+install_state: latest
+
+# Whether or not to configure or remove configuration
+# choices: [ present, absent ]
+configure_state: present
+
+pip2_name: pip
+pip3_name: pip3

@@ -1,0 +1,21 @@
+---
+# debian hosts
+# - name: Add default repositories
+#   become: yes
+#   apt_repository:
+#     repo: ppa:neovim-ppa/unstable
+#     state: present
+
+- name: Install default packages
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+      - aptitude
+      - bc
+      - curl
+      - mosh

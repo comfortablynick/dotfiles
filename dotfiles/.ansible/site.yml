@@ -1,0 +1,7 @@
+---
+# vim: ft=yaml.ansible:
+
+- hosts: all
+  roles:
+    - pkg-base
+    - neovim

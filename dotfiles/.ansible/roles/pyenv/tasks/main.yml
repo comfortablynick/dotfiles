@@ -1,12 +1,14 @@
 ---
+- name: Install platform-specific dependencies
+  include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+
 # tasks file for pyenv
 - name: Install pyenv
-  include_role:
-    name: avanov.pyenv
+  include_tasks: install.yml
+  become: true
   vars:
     pyenv_env: user
     pyenv_path: "{{ lookup('env', 'HOME') }}/.pyenv"
-    # pyenv_owner: "{{ instance_owner }}"
     pyenv_update_git_install: no
     pyenv_enable_autocompletion: no
     pyenv_python_versions:

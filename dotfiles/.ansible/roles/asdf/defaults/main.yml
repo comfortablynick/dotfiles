@@ -15,23 +15,6 @@ asdf_fish_config_path: "{{ asdf_home }}/.config/fish/config.fish"
 # plugins
 asdf_plugins: []
 
-# asdf_python_path: "{% if pyenv_env == 'user' %}{{ ansible_env.HOME }}/.pyenv{% else %}/usr/local/pyenv{% endif %}"
-# asdf_python_owner: "{{ ansible_env.USER }}"
-# asdf_python_setting_path: "{% if pyenv_env == 'user' %}~/.bashrc{% else %}/etc/profile.d/pyenv.sh{% endif %}"
-# asdf_python_update_git_install: no
-# asdf_python_enable_autocompletion: no
-# asdf_python_python_versions:
-#   - 3.7.4
-# asdf_python_virtualenvs:
-#   - { venv_name: "latest", py_version: "3.7.4" }
-# For a system install, the shims dir will not be writable by users, disable rehashing
-# asdf_python_init_options: "{% if pyenv_env != 'user' %}--no-rehash{% endif %}"
-
-# asdf_python_update: no
-
-# additional options for the build process, e.g "--enable-shared"
-# asdf_python_configure_opts: ""
-
 asdf_debian_packages:
   - build-essential
   - git

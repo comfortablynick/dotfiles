@@ -1,7 +1,10 @@
 # vim: ft=yaml.ansible:
 ---
-- name: Test Asdf
-  hosts: titan
+- name: Install asdf and plugins
+  hosts:
+    - mars
+    - io
+    - titan
   roles:
     - name: asdf
       asdf_plugins:
@@ -12,5 +15,6 @@
           global: "3.7.4"
       python_default_packages:
         - pipx
+        - tomlkit
   environment:
     PYTHON_CONFIGURE_OPTS: "--enable-shared"

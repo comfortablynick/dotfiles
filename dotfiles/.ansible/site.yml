@@ -1,9 +1,9 @@
 ---
 # vim: ft=yaml.ansible:
+- import_playbook: asdf.yml
 
 - name: install base packages
   hosts: all
   roles:
     - pkg-base
-    # - pyenv
     - neovim

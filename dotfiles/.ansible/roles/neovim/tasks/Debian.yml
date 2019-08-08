@@ -12,12 +12,13 @@
     pip:
       name: pynvim
       state: latest
-      virtualenv: ~/.pyenv/versions/nvim3
+      virtualenv: ~/.env/nvim3
+      virtualenv_command: ~/.asdf/shims/python3 -m venv
   - name: Install python2 neovim plugin
     pip:
       name: pynvim
       state: latest
-      virtualenv: ~/.pyenv/versions/nvim2
+      virtualenv: ~/.env/nvim2
 
 # Install neovim from ppa
 - block:

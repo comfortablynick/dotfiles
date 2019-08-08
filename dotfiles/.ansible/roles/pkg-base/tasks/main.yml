@@ -2,3 +2,11 @@
 # tasks file for pkg-base
 - name: Handle os packages
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+
+- name: Install/update python2 pip packages
+  pip:
+    name:
+      - virtualenv
+      - pip
+    executable: ~/.asdf/shims/pip2
+    state: latest

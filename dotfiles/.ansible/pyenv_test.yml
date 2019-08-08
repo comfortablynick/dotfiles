@@ -1,6 +1,0 @@
-# vim: ft=yaml.ansible:
----
-- name: Test Pyenv
-  hosts: all
-  roles:
-    - pyenv

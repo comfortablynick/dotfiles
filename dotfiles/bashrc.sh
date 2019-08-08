@@ -88,7 +88,11 @@ for file in "${INCLUDES[@]}"; do
 done
 unset file
 
-# Load asdf
-[[ -f $HOME/.asdf/asdf.sh ]] && source "$HOME/.asdf/asdf.sh"
+# BEGIN ANSIBLE MANAGED BLOCK: asdf
+if [[ -e $HOME/.asdf/asdf.sh ]]; then
+  source $HOME/.asdf/asdf.sh
+  source $HOME/.asdf/completions/asdf.bash
+fi
+# END ANSIBLE MANAGED BLOCK: asdf
 
 [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"

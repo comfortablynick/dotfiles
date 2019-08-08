@@ -275,7 +275,12 @@ if [[ -x /usr/bin/direnv ]]; then
 fi
 
 # asdf
-if [[ -f $HOME/.asdf/asdf.sh ]] && source "$HOME/.asdf/asdf.sh"
+# BEGIN ANSIBLE MANAGED BLOCK: asdf
+if [[ -e $HOME/.asdf/asdf.sh ]]; then
+  source $HOME/.asdf/asdf.sh
+  source $HOME/.asdf/completions/asdf.bash
+fi
+# END ANSIBLE MANAGED BLOCK: asdf
 
 # SHELL STARTUP {{{1
 # Debug end {{{2

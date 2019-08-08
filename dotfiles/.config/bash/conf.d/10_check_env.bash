@@ -6,8 +6,7 @@ env_sha=$(eval "$sha_cmd" "$HOME/dotfiles/dotfiles/env.toml" | cut -d' ' -f1)
 
 if [ ! -f "$env_file" ] || [ "$env_sha" != "$(<"$env_file")" ]; then
     echo "Changes made to env.toml since bash last started."
-    pyenv_ver="$(head -n 1 "$HOME/.pyenv/version")"
-    py_path="$HOME/.pyenv/versions/$pyenv_ver/bin/python"
-    $py_path "$HOME/.config/shell/functions/parse_env" -b "$HOME/dotfiles/dotfiles/env.toml"
+    py_path="$($HOME/.asdf/bin/asdf which python)"
+    "$py_path" "$HOME/.config/shell/functions/parse_env" -b "$HOME/dotfiles/dotfiles/env.toml"
     echo "$env_sha" >"$env_file"
 fi

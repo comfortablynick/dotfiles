@@ -89,3 +89,4 @@ done
 unset file
 
 [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"
+source /home/nick/.pyenv/.pyenvrc

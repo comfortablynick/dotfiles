@@ -1,7 +1,9 @@
 ---
 # vim: ft=yaml.ansible:
 
-- hosts: all
+- name: install base packages
+  hosts: all
   roles:
     - pkg-base
+    - pyenv
     - neovim

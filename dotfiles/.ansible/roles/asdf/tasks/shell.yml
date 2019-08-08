@@ -65,4 +65,5 @@
   copy:
     src: "{{ asdf_dir }}/completions/asdf.fish"
     dest: "{{ asdf_home }}/.config/fish/completions/asdf.fish"
+    remote_src: true
   when: asdf_fish_config_st.stat.exists and asdf_fish_completions_st.stat.exists

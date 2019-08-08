@@ -1,0 +1,7 @@
+---
+# pyenv
+- name: Install development packages for building Python
+  pacman:
+    update_cache: yes
+    name: "{{ pyenv_arch_packages }}"
+    state: present

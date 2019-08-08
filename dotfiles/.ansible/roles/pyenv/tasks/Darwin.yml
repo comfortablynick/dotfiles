@@ -1,5 +1,5 @@
 ---
-# MacOS
+# pyenv
 - name: Install development packages necessary for building Python
   homebrew:
     name: "{{ pyenv_osx_packages }}"

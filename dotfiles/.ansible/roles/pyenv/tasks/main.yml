@@ -1,21 +1,18 @@
 ---
+# tasks for pyenv
+
 - name: Install platform-specific dependencies
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-# tasks file for pyenv
-- name: Install pyenv
-  include_tasks: install.yml
+- block:
+  - name: Install user pyenv
+    include_tasks: install.yml
+    when: pyenv_env == "user"
   become: true
-  vars:
-    pyenv_env: user
-    pyenv_path: "{{ lookup('env', 'HOME') }}/.pyenv"
-    pyenv_update_git_install: no
-    pyenv_enable_autocompletion: no
-    pyenv_python_versions:
-      - "3.7.4"
-      - "2.7.16"
-    pyenv_virtualenvs:
-      - venv_name: "nvim3"
-        py_version: "3.7.4"
-      - venv_name: "nvim2"
-        py_version: "2.7.16"
+  become_user: "{{ pyenv_owner }}"
+
+- block:
+  - name: Install system pyenv
+    include_tasks: install.yml
+    when: pyenv_env == "system"
+  become: true

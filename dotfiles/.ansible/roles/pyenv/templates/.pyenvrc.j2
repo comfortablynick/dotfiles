@@ -1,0 +1,5 @@
+# Source 
+# -------------------------------------
+export PYENV_ROOT="{{ pyenv_path }}"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - {{ pyenv_init_options}})"

@@ -1,2 +1,15 @@
 ---
 # vars file for pyenv
+pyenv_env: user
+pyenv_path: "{{ lookup('env', 'HOME') }}/.pyenv"
+pyenv_update_git_install: no
+pyenv_enable_autocompletion: no
+pyenv_python_configure_opts: "--enable-shared"
+pyenv_python_versions:
+  - "3.7.4"
+  - "2.7.16"
+pyenv_virtualenvs:
+  - venv_name: "nvim3"
+    py_version: "3.7.4"
+  - venv_name: "nvim2"
+    py_version: "2.7.16"

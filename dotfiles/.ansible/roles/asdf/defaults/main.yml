@@ -1,0 +1,70 @@
+---
+# asdf defaults
+asdf_git_repo: "https://github.com/asdf-vm/asdf.git"
+asdf_version: "v0.7.3"
+asdf_home: "{{ ansible_env.HOME }}"
+asdf_dir: "{{ asdf_home }}/.asdf"
+
+# shell config
+# leave any shell blank to skip config
+asdf_install_shell: /bin/bash
+asdf_bashrc_path: "{{ asdf_home }}/.bashrc"
+asdf_zshrc_path: "{{ asdf_home }}/.zshrc"
+asdf_fish_config_path: "{{ asdf_home }}/.config/fish/config.fish"
+
+# plugins
+asdf_plugins: []
+
+# asdf_python_path: "{% if pyenv_env == 'user' %}{{ ansible_env.HOME }}/.pyenv{% else %}/usr/local/pyenv{% endif %}"
+# asdf_python_owner: "{{ ansible_env.USER }}"
+# asdf_python_setting_path: "{% if pyenv_env == 'user' %}~/.bashrc{% else %}/etc/profile.d/pyenv.sh{% endif %}"
+# asdf_python_update_git_install: no
+# asdf_python_enable_autocompletion: no
+# asdf_python_python_versions:
+#   - 3.7.4
+# asdf_python_virtualenvs:
+#   - { venv_name: "latest", py_version: "3.7.4" }
+# For a system install, the shims dir will not be writable by users, disable rehashing
+# asdf_python_init_options: "{% if pyenv_env != 'user' %}--no-rehash{% endif %}"
+
+# asdf_python_update: no
+
+# additional options for the build process, e.g "--enable-shared"
+# asdf_python_configure_opts: ""
+
+asdf_debian_packages:
+  - build-essential
+  - git
+  - curl
+  - libssl-dev
+  - libbz2-dev
+  - libsqlite3-dev
+  - libreadline-dev
+  - zlib1g-dev
+  - wget
+  - llvm
+  - libncurses5-dev
+  - xz-utils
+  - tk-dev
+  - libxml2-dev
+  - libxmlsec1-dev
+  - libffi-dev
+asdf_osx_packages:
+  - readline
+  - xz
+asdf_arch_packages:
+  - base-devel
+  - openssl
+  - zlib
+  - bzip2
+  - readline
+  - sqlite
+  - wget
+  - curl
+  - llvm
+  - ncurses
+  - xz
+  - tk
+  - libffi
+  - python-pyopenssl
+  - git

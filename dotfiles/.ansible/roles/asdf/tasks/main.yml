@@ -1,0 +1,11 @@
+---
+# asdf
+- name: Install asdf version manager
+  include_tasks: install.yml
+
+- name: Initialize shell
+  include_tasks: shell.yml
+
+- name: Install plugins
+  include_tasks: plugins.yml
+  when: asdf_plugins|length > 0

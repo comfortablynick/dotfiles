@@ -1,0 +1,16 @@
+# vim: ft=yaml.ansible:
+---
+- name: Test Asdf
+  hosts: titan
+  roles:
+    - name: asdf
+      asdf_plugins:
+        - name: python
+          versions:
+            - "3.7.4"
+            - "2.7.16"
+          global: "3.7.4"
+      python_default_packages:
+        - pipx
+  environment:
+    PYTHON_CONFIGURE_OPTS: "--enable-shared"

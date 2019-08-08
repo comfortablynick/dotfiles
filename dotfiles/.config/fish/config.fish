@@ -283,7 +283,7 @@ and set -g yimmy_solarized false
 # vi-mode with custom keybindings {{{2
 # set fish_key_bindings fish_user_vi_key_bindings
 
-# STARTUP COMMANDS {{{1
+# PRE SHELL LOAD {{{1
 # TMUX {{{2
 # Attach to existing tmux or create a new session using custom function
 # Get current session name
@@ -298,14 +298,13 @@ if test -n "$SSH_CONNECTION"
     set -gx VIM_SSH_COMPAT 1
 end
 
-# Powerline prompt
-# set -a fish_function_path "$XDG_CONFIG_HOME/powerline/bindings/fish"
-# powerline-setup
+# asdf {{{2
+set -l asdf_file "$HOME/.asdf/asdf.fish"
+test -f "$asdf_file"; and source "$asdf_file"
+
 # END CONFIG {{{1
 # Print config.fish load time {{{2
 set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))
 echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal; echo ''
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

@@ -12,11 +12,11 @@ START_TIME="$(date)"
 
 # Check OS
 case "$(uname -s)" in
-    Linux*)     OS_NAME=Linux;;
-    Darwin*)    OS_NAME=Mac;;
-    CYGWIN*)    OS_NAME=Windows;;
-    MINGW*)     OS_NAME=Windows;;
-    *)          OS_NAME="UNKNOWN:$(uname -s)"
+Linux*) OS_NAME=Linux ;;
+Darwin*) OS_NAME=Mac ;;
+CYGWIN*) OS_NAME=Windows ;;
+MINGW*) OS_NAME=Windows ;;
+*) OS_NAME="UNKNOWN:$(uname -s)" ;;
 esac
 echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
@@ -24,24 +24,24 @@ echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
 
 # SHELL DEFAULTS ----------------------------------------------------
 
-stty -ixon                                                      # Disable ctrl-s and ctrl-q
+stty -ixon # Disable ctrl-s and ctrl-q
 stty icrnl
-BASEDIR="${HOME}/dotfiles/dotfiles"                             # Location of includes dir
-HISTCONTROL=ignoreboth                                          # Ignore duplicate/blank history
-shopt -s histappend                                             # Don't overwrite history; append
-HISTSIZE=                                                       # Shell history size
-HISTFILESIZE=                                                   # Shell history file size
-shopt -s checkwinsize                                           # Update rows/cols if size changes
-shopt -s autocd                                                 # Auto cd if entering dir name at prompt
-export XDG_CONFIG_HOME="$HOME/.config"                          # Some scripts look here
+BASEDIR="${HOME}/dotfiles/dotfiles"    # Location of includes dir
+HISTCONTROL=ignoreboth                 # Ignore duplicate/blank history
+shopt -s histappend                    # Don't overwrite history; append
+HISTSIZE=                              # Shell history size
+HISTFILESIZE=                          # Shell history file size
+shopt -s checkwinsize                  # Update rows/cols if size changes
+shopt -s autocd                        # Auto cd if entering dir name at prompt
+export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look here
 
 # Include files loaded at end of this script
 # Located in $BASEDIR
 INCLUDES=(
-    "bash_functions.sh"                                         # General functions
-    "bash_mac.sh"                                               # Code to run on Mac
-    "bash_windows.sh"                                           # Code to run on Win (Git bash)
-    "bash_prompt.sh"                                            # Prompt-specific settings
+    "bash_functions.sh" # General functions
+    "bash_mac.sh" # Code to run on Mac
+    "bash_windows.sh" # Code to run on Win (Git bash)
+    "bash_prompt.sh" # Prompt-specific settings
     # "bash_colors.sh"                                            # Color definitions (slow)
 )
 
@@ -88,5 +88,7 @@ for file in "${INCLUDES[@]}"; do
 done
 unset file
 
+# Load asdf
+[[ -f $HOME/.asdf/asdf.sh ]] && source "$HOME/.asdf/asdf.sh"
+
 [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"
-source /home/nick/.pyenv/.pyenvrc

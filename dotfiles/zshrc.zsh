@@ -274,6 +274,9 @@ if [[ -x /usr/bin/direnv ]]; then
     fi
 fi
 
+# asdf
+if [[ -f $HOME/.asdf/asdf.sh ]] && source "$HOME/.asdf/asdf.sh"
+
 # SHELL STARTUP {{{1
 # Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"

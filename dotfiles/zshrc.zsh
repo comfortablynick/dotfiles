@@ -74,6 +74,7 @@ HYPHEN_INSENSITIVE="true"                                       # Hyphen and das
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
+autoload -Uz compinit && compinit                               # Needed to autoload completions
 
 # SHELL HISTORY {{{1
 HISTFILE="${HOME}/.zsh_history"

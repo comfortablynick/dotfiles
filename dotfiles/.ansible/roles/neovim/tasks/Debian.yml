@@ -7,19 +7,6 @@
       state: latest
   become: yes
 
-- block:
-  - name: Install python3 neovim plugin
-    pip:
-      name: pynvim
-      state: latest
-      virtualenv: ~/.env/nvim3
-      virtualenv_command: ~/.asdf/shims/python3 -m venv
-  - name: Install python2 neovim plugin
-    pip:
-      name: pynvim
-      state: latest
-      virtualenv: ~/.env/nvim2
-
 # Install neovim from ppa
 - block:
   - name: Add neovim ppa

@@ -5,6 +5,7 @@
     # - mars
     # - io
     # - titan
+    - localhost
     - saturn
   roles:
     - name: asdf
@@ -14,8 +15,5 @@
             - "3.7.4"
             - "2.7.16"
           global: "3.7.4 2.7.16"
-      python_default_packages:
-        - pipx
-        - tomlkit
   environment:
     PYTHON_CONFIGURE_OPTS: "--enable-shared"

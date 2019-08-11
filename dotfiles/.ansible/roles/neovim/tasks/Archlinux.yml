@@ -1,0 +1,9 @@
+---
+# neovim
+- name: Install nightly neovim from aur
+  aur:
+    name:
+      - neovim-nightly
+      - neovim-symlinks
+  become: yes
+  become_user: aur_builder

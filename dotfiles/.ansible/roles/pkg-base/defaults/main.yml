@@ -4,6 +4,8 @@
 pip3_default_pkgs:
   - pip
   - pipx
+  - ruamel.yaml
+  - tomlkit
 
 pipx_default_pkgs:
   - black

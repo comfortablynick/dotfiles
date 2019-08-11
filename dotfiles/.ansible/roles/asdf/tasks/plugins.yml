@@ -55,4 +55,4 @@
   template:
     src: .default-python-packages.j2
     dest: "{{ asdf_home }}/.default-python-packages"
-  when: python_default_packages|length > 0
+  when: python_default_packages is defined

@@ -1,2 +1,22 @@
 ---
 # defaults file for pkg-base
+
+pip3_default_pkgs:
+  - pip
+  - pipx
+
+pipx_default_pkgs:
+  - black
+  - dirtools
+  - mypy
+  - optimize-images
+  - dotdrop
+  - cmake_format[yaml]
+  - cmakelint
+  - ptpython
+  - pydocstyle
+  - topydo
+  - speedtest-cli
+  - vim-vint
+
+pipx_bin_dir: "{{ ansible_env.HOME }}/bin"

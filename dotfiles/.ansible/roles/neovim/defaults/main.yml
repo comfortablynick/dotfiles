@@ -21,5 +21,8 @@ install_state: latest
 # choices: [ present, absent ]
 configure_state: present
 
-pip2_name: pip
+nvim_venv_dir: "{{ ansible_env.HOME }}/.env"
+nvim_py2_venv_name: nvim2
+nvim_py3_venv_name: nvim3
+pip2_name: pip2
 pip3_name: pip3

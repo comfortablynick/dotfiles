@@ -2,9 +2,10 @@
 ---
 - name: Install asdf and plugins
   hosts:
-    - mars
-    - io
-    - titan
+    # - mars
+    # - io
+    # - titan
+    - saturn
   roles:
     - name: asdf
       asdf_plugins:
@@ -12,7 +13,7 @@
           versions:
             - "3.7.4"
             - "2.7.16"
-          global: "3.7.4"
+          global: "3.7.4 2.7.16"
       python_default_packages:
         - pipx
         - tomlkit

@@ -11,6 +11,7 @@ all:
       ansible_host: 780f075cbdbc.sn.mynetname.net
       ansible_port: 5022
       ansible_user: pi
+      ansible_shell_executable: /bin/bash
     mars:
       ansible_host: 155.138.241.48
       ansible_port: 50222
@@ -19,6 +20,7 @@ all:
       ansible_host: remote.vetcosolutions.com
       ansible_port: 5022
       ansible_user: nick
+      ansible_shell_executable: /bin/bash
   vars:
     asdf_home: "{{ ansible_env.HOME }}"
     asdf_dir: "{{ asdf_home }}/.asdf"

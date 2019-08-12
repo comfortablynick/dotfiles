@@ -21,4 +21,4 @@ pipx_default_pkgs:
   - speedtest-cli
   - vim-vint
 
-pipx_bin_dir: "{{ ansible_env.HOME }}/bin"
+pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"

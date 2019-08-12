@@ -1,0 +1,31 @@
+---
+# tmux
+- name: Clone tmux source
+  git:
+    repo: https://github.com/tmux/tmux.git
+    version: "{{ tmux_version }}"
+    dest: "{{ tmux_source_dir }}"
+    force: yes
+    accept_hostkey: yes
+  register: source_repo
+
+
+- name: Install dependencies
+  include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+  when: source_repo.changed or tmux_force_build
+
+- block:
+  - name: Configure and build tmux
+    command: "{{ item }}"
+    loop:
+      - ./autogen.sh
+      - ./configure
+      - make
+    args:
+      chdir: "{{ tmux_source_dir }}"
+  - name: Install tmux
+    command: make install
+    args:
+      chdir: "{{ tmux_source_dir }}"
+    become: yes
+  when: source_repo.changed or tmux_force_build

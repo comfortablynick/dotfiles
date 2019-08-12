@@ -1,0 +1,4 @@
+---
+# tasks file for tmux
+- name: Install tmux
+  include_tasks: build.yml

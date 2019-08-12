@@ -1,0 +1,7 @@
+---
+# tmux
+- name: Install dependencies
+  apt:
+    name: "{{ Debian_tmux_required_packages }}"
+    state: present
+  become: yes

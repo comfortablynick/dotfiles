@@ -1,0 +1,20 @@
+---
+# defaults file for tmux
+
+tmux_version: "3.0"
+tmux_force_build: false
+tmux_source_dir: /tmp/src/tmux
+
+Debian_tmux_required_packages:
+  - git
+  - automake
+  - build-essential
+  - pkg-config
+  - libevent-dev
+  - libncurses5-dev
+  - bison
+Arch_tmux_required_packages:
+  - git
+  - libevent
+  - ncurses
+  - bison

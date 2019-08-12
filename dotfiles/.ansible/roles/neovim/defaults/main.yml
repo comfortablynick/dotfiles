@@ -24,6 +24,8 @@ Debian_neovim_required_packages:
     - lua-lpeg
     - lua-mpack
     - lua-bitop
+    - libuv1-dev
+    - lua-luv-dev
 
 # Whether or not to install or remove neovim
 # choices: [ present, absent, latest ]
@@ -40,6 +42,8 @@ pip2_name: pip2
 pip3_name: pip3
 
 # Build from source
-neovim_source_dir: /tmp/src
+neovim_source_dir: /tmp/src/neovim
 neovim_cmake_build_type: RelWithDebInfo
-neovim_force_build: false
+neovim_install_prefix: /usr
+neovim_force_build: false # build even if no change in git upstream
+neovim_install_arm: false # build for rpi

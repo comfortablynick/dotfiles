@@ -1,11 +1,13 @@
 ---
 # neovim
 - name: Clone Neovim git repo
-  git: https://github.com/neovim/neovim.git
-  dest: "{{ neovim_source_dir }}"
-  force: yes
-  accept_hostkey: yes
+  git:
+    repo: https://github.com/neovim/neovim.git
+    dest: "{{ neovim_source_dir }}"
+    force: yes
+    accept_hostkey: yes
   register: source_repo
+  when: neovim_install_arm
 
 - block:
   - name: Install build prerequisites
@@ -13,8 +15,42 @@
     apt:
       name: "{{ Debian_neovim_required_packages }}"
       state: present
-    when: "{{ ansible_facts['os_family'] }} == 'Debian'"
+    when: ansible_facts['os_family'] == 'Debian'
+  # - name: Build from source
+  #   command: "{{ item }}"
+  #   args:
+  #     chdir: "{{ neovim_source_dir }}"
+  #   loop:
+  #     - make distclean
+  #     - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
+  #   changed_when: false
+  # - name: Create deps dir
+  #   file:
+  #     path: "{{ neovim_source_dir }}/.deps"
+  #     state: directory
+  # - name: Build deps
+  #   command: "{{ item }}"
+  #   args:
+  #     chdir: "{{ neovim_source_dir }}/.deps"
+  #   loop:
+  #     - cmake ../third-party
+  #     - make
+  - name: Create build dir
+    file:
+      path: "{{ neovim_source_dir }}/build"
+      state: directory
   - name: Build from source_repo
-    command: make CMAKE_BUILD_TYPE="{{ neovim_cmake_build_type }}"
-    chdir: "{{ neovim_source_dir }}"
-  when: source_repo.changed
+    command: "{{ item }}"
+    args:
+      chdir: "{{ neovim_source_dir }}/build"
+    loop:
+      - >
+        cmake -GNinja
+        -DCMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
+        -DLIBLUV_LIBRARY=/usr/lib/arm-linux-gnueabihf/libuv.so
+        -DLIBLUV_INCLUDE_DIR=/usr/lib/arm-linux-gnueabihf
+        -DCMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}
+        -DENABLE_JEMALLOC=ON
+        ..
+      - ninja
+  when: (source_repo.changed or neovim_force_build) and neovim_install_arm

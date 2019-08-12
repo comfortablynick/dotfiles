@@ -4,6 +4,6 @@
   aur:
     name:
       - neovim-nightly
-      - neovim-symlinks
+      # - neovim-symlinks # conflicts with vim
   become: yes
   become_user: aur_builder

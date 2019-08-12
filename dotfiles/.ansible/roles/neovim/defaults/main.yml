@@ -12,6 +12,18 @@ Debian_python_required_packages:
     - python-pip
     - python3-dev
     - python3-pip
+Debian_neovim_required_packages:
+    - gperf
+    - libluajit-5.1-dev
+    - libunibilium-dev
+    - libmsgpack-dev
+    - libtermkey-dev
+    - libvterm-dev
+    - libjemalloc-dev
+    - lua5.1
+    - lua-lpeg
+    - lua-mpack
+    - lua-bitop
 
 # Whether or not to install or remove neovim
 # choices: [ present, absent, latest ]
@@ -26,3 +38,8 @@ nvim_py2_venv_name: nvim2
 nvim_py3_venv_name: nvim3
 pip2_name: pip2
 pip3_name: pip3
+
+# Build from source
+neovim_source_dir: /tmp/src
+neovim_cmake_build_type: RelWithDebInfo
+neovim_force_build: false

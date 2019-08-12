@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
-"""Print PATH elements and lengths to the terminal."""
-import os
+#!/usr/bin/env bash
+# Print $PATH with line breaks
+# TODO: add line numbers and total count for easy diff
 
-path = os.environ.get("PATH").split(":")
-
-for i, p in enumerate(path, 1):
-    plen = len(p)
-    print("{:2d}: len={:3d} |{}|".format(i, plen, p))
+pathlines="${PATH//:/$'\n'}"
+echo "$pathlines"
+echo "-----------------"
+printf "\$PATH count: %d\n" "$(echo "$pathlines" | wc -l)"

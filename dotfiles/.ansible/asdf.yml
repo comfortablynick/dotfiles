@@ -2,9 +2,9 @@
 ---
 - name: Install asdf and plugins
   hosts:
-    # - mars
-    # - io
-    # - titan
+    - mars
+    - io
+    - titan
     - localhost
     - saturn
   roles:

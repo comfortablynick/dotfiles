@@ -1,4 +1,9 @@
 ---
 # tasks file for tmux
 - name: Install tmux
+  include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+  when: ansible_facts['os_family'] not in tmux_build_from_source
+
+- name: Install tmux from source
   include_tasks: build.yml
+  when: ansible_facts['os_family'] in tmux_build_from_source

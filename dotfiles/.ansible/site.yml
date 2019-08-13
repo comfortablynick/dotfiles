@@ -16,6 +16,7 @@
 - name: Install software on all hosts
   hosts: all
   roles:
-    - pkg
-    - neovim
+    # - pkg
+    # - neovim
     - tmux
+    - dotfiles

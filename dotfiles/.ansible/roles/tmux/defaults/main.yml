@@ -1,6 +1,11 @@
 ---
 # defaults file for tmux
 
+# os_family to build from source
+tmux_build_from_source:
+  - Debian
+
+# building from source
 tmux_version: "3.0"
 tmux_force_build: false
 tmux_source_dir: /tmp/src/tmux

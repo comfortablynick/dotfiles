@@ -9,6 +9,7 @@ apt_default_packages:
   - todotxt-cli
 
 pacman_default_packages:
+  - pacman-contrib
   - bc
   - curl
 

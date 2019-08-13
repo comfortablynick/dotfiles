@@ -1,0 +1,12 @@
+---
+# vim:ft=yaml.ansible:
+- name: Test environment variables
+  hosts:
+    all
+  tasks:
+  - debug:
+      msg:
+        - Output from lookup('env', 'HOME') = "{{ lookup('env', 'HOME') }}"
+        - Output from ansible_facts['env']['HOME'] = "{{ ansible_facts['env']['HOME'] }}"
+        - Output from ansible_env.HOME = "{{ ansible_env.HOME }}"
+      verbosity: 0

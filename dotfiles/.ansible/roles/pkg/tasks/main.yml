@@ -20,6 +20,11 @@
     shell: . {{ asdf_dir }}/asdf.sh && asdf reshim
     changed_when: false
 
+- name: Get installed pipx packages
+  command: "{{ asdf_dir }}/shims/pipx list"
+  register: pipx_installed
+  changed_when: false
+
 - name: Install pipx packages
   command: "{{ asdf_dir }}/shims/pipx install {{ item }}"
   loop: "{{ pipx_default_pkgs }}"
@@ -27,3 +32,4 @@
   changed_when: "'already seems to be installed' not in pipx.stdout"
   environment:
     - PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
+  when: item not in pipx_installed.stdout

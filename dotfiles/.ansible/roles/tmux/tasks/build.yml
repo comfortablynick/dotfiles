@@ -11,7 +11,7 @@
 
 
 - name: Install dependencies
-  include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+  include_tasks: "{{ ansible_facts['os_family'] }}_prerequisites.yml"
   when: source_repo.changed or tmux_force_build
 
 - block:

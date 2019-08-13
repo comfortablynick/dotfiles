@@ -13,3 +13,17 @@
         create: yes
         validate: 'visudo -cf %s'
   become: yes
+
+- name: Upgrade pacman packages
+  become: true
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+- name: Update aur packages
+  become: yes
+  become_user: aur_builder
+  aur:
+    upgrade: yes
+    use: yay
+    aur_only: yes

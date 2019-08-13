@@ -1,16 +1,21 @@
 ---
 # vim: ft=yaml.ansible:
-# - import_playbook: asdf.yml
-
-# - name: install base packages
-#   hosts: all
-#   roles:
-#     - pkg-base
-#     - neovim
-
-- name: install tmux
-  hosts:
-    - mars
-    - saturn
+- name: Install asdf and plugins
+  hosts: all
   roles:
+    - name: asdf
+      asdf_plugins:
+        - name: python
+          versions:
+            - "3.7.4"
+            - "2.7.16"
+          global: "3.7.4 2.7.16"
+  environment:
+    PYTHON_CONFIGURE_OPTS: "--enable-shared"
+
+- name: Install software on all hosts
+  hosts: all
+  roles:
+    - pkg
+    - neovim
     - tmux

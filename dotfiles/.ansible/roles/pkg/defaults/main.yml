@@ -1,5 +1,20 @@
 ---
-# defaults file for pkg-base
+# defaults file for pkg
+
+apt_default_packages:
+  - aptitude
+  - bc
+  - curl
+  - direnv
+  - todotxt-cli
+
+pacman_default_packages:
+  - bc
+  - curl
+
+aur_default_packages:
+  - todotxt
+  - direnv
 
 pip3_default_pkgs:
   - pip

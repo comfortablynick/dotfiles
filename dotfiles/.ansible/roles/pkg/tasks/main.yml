@@ -1,6 +1,6 @@
 ---
-# tasks file for pkg-base
-- name: Handle os packages
+# tasks file for pkg
+- name: Handle os-specific packages
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
 - block:

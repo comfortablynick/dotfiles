@@ -1,5 +1,5 @@
 ---
 # defaults for dotfiles
 home: "{{ ansible_facts['env']['HOME'] }}"
-dotfiles_repo: https://github.com/comfortablynick/dotfiles.git
+dotfiles_repo: git@github.com:comfortablynick/dotfiles.git
 dotfiles_dest: "{{ home }}/dotfiles"

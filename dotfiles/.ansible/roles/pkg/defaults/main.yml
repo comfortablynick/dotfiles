@@ -38,3 +38,4 @@ pipx_default_pkgs:
   - vim-vint
 
 pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
+new_mirrorlist_path: /tmp/mirrorlist

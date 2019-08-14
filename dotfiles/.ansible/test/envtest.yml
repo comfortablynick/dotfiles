@@ -10,3 +10,6 @@
         - Output from ansible_facts['env']['HOME'] = "{{ ansible_facts['env']['HOME'] }}"
         - Output from ansible_env.HOME = "{{ ansible_env.HOME }}"
       verbosity: 0
+  - debug:
+      var: ansible_facts
+      verbosity: 1

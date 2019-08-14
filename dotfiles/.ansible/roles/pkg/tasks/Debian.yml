@@ -9,7 +9,6 @@
 - name: Install default packages
   become: yes
   apt:
-    name: "{{ packages }}"
+    name: "{{ apt_default_packages }}"
     state: latest
     update_cache: yes
-  vars:

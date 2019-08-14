@@ -1,0 +1,14 @@
+# vim:ft=yaml.ansible:
+---
+- name: File tests
+  hosts: local
+  tasks:
+  - name: Find out age of mirrorlist
+    find:
+      paths: /etc/pacman.d
+      age: "1w"
+      age_stamp: mtime
+    register: found
+
+  - debug:
+      var: found

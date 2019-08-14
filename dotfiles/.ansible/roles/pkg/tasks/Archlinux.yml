@@ -14,6 +14,21 @@
         validate: 'visudo -cf %s'
   become: yes
 
+- name: Update mirrorlist
+  block:
+    - name: Install reflector
+      pacman:
+        name: reflector
+        state: present
+    - name: Run reflector
+      command: /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ new_mirrorlist_path }}
+    - name: Replace mirrorlist with new file
+      copy:
+        src: "{{ new_mirrorlist_path }}"
+        dest: /etc/pacman.d/mirrorlist
+        backup: yes
+  become: yes
+
 - name: Upgrade pacman packages
   become: true
   pacman:

@@ -1,2 +1,4 @@
 ---
 # ssh defaults
+ssh_user: "{{ ansible_facts['env']['USER'] }}"
+github_user: comfortablynick

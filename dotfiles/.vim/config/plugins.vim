@@ -47,6 +47,7 @@ let g:completion_filetypes = {
     \       'bash',
     \       'vim',
     \       'python',
+    \       'yaml',
     \   ],
     \ 'mucomplete':
     \   [

@@ -4,3 +4,9 @@
   shell: eval $(ssh-agent)
   when: "'SSH_AUTH_SOCK' in ansible_facts['env']"
   changed_when: false
+
+- name: Get public keys from Github
+  authorized_key:
+    user: "{{ ssh_user }}"
+    state: present
+    key: https://github.com/{{ github_user }}.keys

@@ -1,26 +1,20 @@
-# vim:ft=yaml.ansible:
-all:
-  hosts:
-    localhost:
-      ansible_connection: local
-    saturn:
-      ansible_host: 155.138.241.170
-      ansible_port: 5022
-      ansible_user: nick
-    titan:
-      ansible_host: 780f075cbdbc.sn.mynetname.net
-      ansible_port: 5022
-      ansible_user: pi
-      ansible_shell_executable: /bin/bash
-    mars:
-      ansible_host: 155.138.241.48
-      ansible_port: 50222
-      ansible_user: nick
-    io:
-      ansible_host: remote.vetcosolutions.com
-      ansible_port: 5022
-      ansible_user: nick
-      ansible_shell_executable: /bin/bash
-  vars:
-    asdf_home: "{{ ansible_env.HOME }}"
-    asdf_dir: "{{ asdf_home }}/.asdf"
+# Ansible inventory
+
+jupiter
+saturn
+titan
+mars
+io
+
+[local]
+jupiter
+
+[dev]
+jupiter
+saturn
+
+[www]
+mars
+
+[wsl]
+io

@@ -1,6 +1,6 @@
 " vint: -ProhibitAutocmdWithNoGroup
 autocmd BufNewFile,BufRead *.yml,*.yaml,*/{group,host}_vars/*  call s:SelectAnsible("ansible")
-autocmd BufNewFile,BufRead hosts call s:SelectAnsible("ansible_hosts")
+" autocmd BufNewFile,BufRead hosts call s:SelectAnsible("ansible_hosts")
 
 function! s:SelectAnsible(fileType)
   " Bail out if 'filetype' is already set to 'ansible'.

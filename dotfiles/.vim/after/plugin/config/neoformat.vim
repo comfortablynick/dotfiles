@@ -40,6 +40,7 @@ let g:neoformat_cmake_cmakeformat = {
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 
 let g:neoformat_enabled_go = [ 'goimports' ]
+let g:neoformat_enabled_yaml = [ 'prettier' ]
 
 " Maps/Commands
 noremap <silent> <F2> :Neoformat<CR>

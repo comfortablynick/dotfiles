@@ -1,0 +1,2 @@
+asdf_home: "{{ ansible_env.HOME }}"
+asdf_dir: "{{ asdf_home }}/.asdf"

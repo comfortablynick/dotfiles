@@ -1,0 +1,3 @@
+ansible_host: 155.138.241.48
+ansible_port: 50222
+ansible_user: nick

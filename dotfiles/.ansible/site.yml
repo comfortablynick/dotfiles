@@ -1,5 +1,9 @@
 ---
 # vim: ft=yaml.ansible:
+- name: Ensure ssh setup
+  hosts: local
+  roles: ssh
+
 - name: Install asdf and plugins
   hosts: all
   roles:

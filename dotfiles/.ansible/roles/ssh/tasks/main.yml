@@ -1,0 +1,6 @@
+---
+# ssh tasks
+- name: Enable ssh-agent
+  shell: eval $(ssh-agent)
+  when: "'SSH_AUTH_SOCK' in ansible_facts['env']"
+  changed_when: false

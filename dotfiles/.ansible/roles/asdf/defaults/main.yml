@@ -13,7 +13,12 @@ asdf_zshrc_path: "{{ asdf_home }}/.zshrc"
 asdf_fish_config_path: "{{ asdf_home }}/.config/fish/config.fish"
 
 # plugins
-asdf_plugins: []
+asdf_plugins:
+  - name: python
+    versions:
+      - "3.7.4"
+      - "2.7.16"
+    global: "3.7.4 2.7.16"
 
 asdf_debian_packages:
   - build-essential

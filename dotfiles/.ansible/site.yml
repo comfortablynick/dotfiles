@@ -5,23 +5,17 @@
   roles:
     - ssh
 
-# - name: Install asdf and plugins
-#   hosts: all
-#   roles:
-#     - name: asdf
-#       asdf_plugins:
-#         - name: python
-#           versions:
-#             - "3.7.4"
-#             - "2.7.16"
-#           global: "3.7.4 2.7.16"
-#   environment:
-#     PYTHON_CONFIGURE_OPTS: "--enable-shared"
+- name: Install asdf and plugins
+  hosts: all
+  roles:
+    - name: asdf
+  environment:
+    PYTHON_CONFIGURE_OPTS: "--enable-shared"
 
 - name: Install software on all hosts
   hosts: all
   roles:
     # - pkg
-    # - neovim
-    # - tmux
+    - neovim
+    - tmux
     - dotfiles

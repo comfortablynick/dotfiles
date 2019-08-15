@@ -19,6 +19,8 @@ asdf_plugins:
       - "3.7.4"
       - "2.7.16"
     global: "3.7.4 2.7.16"
+    environment:
+      PYTHON_CONFIGURE_OPTS: "--enable-shared"
 
 asdf_debian_packages:
   - build-essential

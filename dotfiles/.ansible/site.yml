@@ -8,9 +8,7 @@
 - name: Install asdf and plugins
   hosts: all
   roles:
-    - name: asdf
-  environment:
-    PYTHON_CONFIGURE_OPTS: "--enable-shared"
+    - asdf
 
 - name: Install software on all hosts
   hosts: all

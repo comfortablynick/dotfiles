@@ -10,3 +10,17 @@
     user: "{{ ssh_user }}"
     state: present
     key: https://github.com/{{ github_user }}.keys
+
+- name: Copy private ssh key
+  copy:
+    src: ~/.ssh/id_rsa
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_rsa"
+    remote_src: no
+    mode: "0700"
+
+- name: Copy public ssh key
+  copy:
+    src: ~/.ssh/id_rsa.pub
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_rsa.pub"
+    remote_src: no
+    mode: "0700"

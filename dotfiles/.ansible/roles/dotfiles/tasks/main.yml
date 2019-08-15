@@ -5,6 +5,7 @@
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"
     version: HEAD
+    key_file: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_rsa"
     accept_hostkey: yes
     force: no
     update: yes

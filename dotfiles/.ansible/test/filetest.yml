@@ -18,4 +18,3 @@
   hosts: mars
   roles:
     - dotfiles
-  gather_facts: yes

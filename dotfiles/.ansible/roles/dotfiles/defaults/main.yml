@@ -2,6 +2,8 @@
 home: "{{ ansible_facts['env']['HOME'] }}"
 dotfiles_repo: git@github.com:comfortablynick/dotfiles.git
 dotfiles_dest: "{{ home }}/dotfiles"
+dotdrop_bin: "{{ home }}/.local/bin/dotdrop"
+dotdrop_cfg: "{{ dotfiles_dest }}/config.yaml"
 
 base_dir: "{{ dotfiles_dest }}/dotfiles"
 

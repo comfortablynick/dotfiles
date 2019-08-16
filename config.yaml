@@ -251,6 +251,11 @@ profiles:
     include:
     - core
     - ansible
+  mars:
+    dotfiles:
+    - f_bash_linux
+    include:
+    - core
   saturn:
     dotfiles:
     - f_bash_linux

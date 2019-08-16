@@ -39,3 +39,4 @@ pipx_default_pkgs:
 
 pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
 new_mirrorlist_path: /tmp/mirrorlist
+mirrorlist_file_age: "1w"

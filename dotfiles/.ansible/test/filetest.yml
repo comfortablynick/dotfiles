@@ -6,23 +6,16 @@
     - name: Find out age of mirrorlist
       find:
         paths: /etc/pacman.d
-        age: "{{ file_age }}"
+        pattern: mirrorlist
+        age: "1w"
         age_stamp: mtime
-      register: found
+      register: mirrorlist_found
       when: "ansible_facts['os_family'] == 'Archlinux'"
     - debug:
-        msg: "Files older than {{ file_age }} found: {{ found }}"
-        verbosity: 2
-    - debug:
-        msg:
-          - "Path: {{ item['path'] }}"
-          - "File: {{ item['path'] | basename }}"
-          - "Date: {{ '%Y-%m-%d %H:%M:%S' | strftime(item['mtime']) }}"
-      loop: "{{ found['files'] | default([]) }}"
-      loop_control:
-        label: "{{ item['path'] }}"
-  vars:
-    file_age: "1m"
+        msg: "Mirrorlist is old!"
+      when:
+        - "ansible_facts['os_family'] == 'Archlinux'"
+        - mirrorlist_found['matched'] > 0
 
 # - name: Link test
 #   hosts: mars

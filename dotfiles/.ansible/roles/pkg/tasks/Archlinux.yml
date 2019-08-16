@@ -14,6 +14,14 @@
         validate: 'visudo -cf %s'
   become: yes
 
+- name: Find out age of mirrorlist
+  find:
+    paths: /etc/pacman.d
+    pattern: mirrorlist
+    age: "{{ mirrorlist_file_age }}"
+    age_stamp: mtime
+  register: mirrorlist_found
+
 - name: Update mirrorlist
   block:
     - name: Install reflector
@@ -28,6 +36,7 @@
         dest: /etc/pacman.d/mirrorlist
         backup: yes
   become: yes
+  when: mirrorlist_found['matched'] > 0
 
 - name: Upgrade pacman packages
   become: yes

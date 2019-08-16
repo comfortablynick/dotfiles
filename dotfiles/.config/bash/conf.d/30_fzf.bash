@@ -21,7 +21,7 @@
 
 # Key bindings
 # ------------
-. "$HOME/.fzf/shell/key-bindings.bash"
+. "$HOME/.fzf/shell/key-bindings.bash" 2>/dev/null
 
 # Functions
 # -----------

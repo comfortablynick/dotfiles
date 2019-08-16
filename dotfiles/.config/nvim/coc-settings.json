@@ -39,6 +39,13 @@
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,
 
+  // YAML
+  "yaml.format.enable": true,
+  "yaml.validate": false,
+  "yaml.schemas": {
+    "http://json.schemastore.org/ansible-stable-2.5": "/*"
+  },
+
   // Server definitions
   "languageserver": {
     "ccls": {

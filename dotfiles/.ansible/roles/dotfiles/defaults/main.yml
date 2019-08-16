@@ -1,5 +1,238 @@
 ---
-# defaults for dotfiles
 home: "{{ ansible_facts['env']['HOME'] }}"
 dotfiles_repo: git@github.com:comfortablynick/dotfiles.git
 dotfiles_dest: "{{ home }}/dotfiles"
+
+base_dir: "{{ dotfiles_dest }}/dotfiles"
+
+all_dotfiles:
+  d_htop:
+    dst: ~/.config/htop
+    link: link
+    src: .config/htop
+  d_after:
+    dst: ~/.local/share/nvim/site/after
+    link: link
+    src: .vim/after
+  d_autoload:
+    dst: ~/.local/share/nvim/site/autoload
+    link: link
+    src: .vim/autoload
+  d_bash:
+    dst: ~/.config/bash
+    link: link
+    src: .config/bash
+  d_cmake:
+    dst: ~/.config/cmake
+    link: link
+    src: .config/cmake
+  d_config:
+    dst: ~/.local/share/nvim/site/config
+    link: link
+    src: .vim/config
+  d_fish:
+    dst: ~/.config/fish
+    link: link
+    src: .config/fish
+  d_ftdetect:
+    dst: ~/.local/share/nvim/site/ftdetect
+    link: link
+    src: .vim/ftdetect
+  d_ftplugin:
+    dst: ~/.local/share/nvim/site/ftplugin
+    link: link
+    src: .vim/ftplugin
+  d_git:
+    dst: ~/.config/git
+    link: link
+    src: .config/git
+  d_legit:
+    dst: ~/.config/legit
+    link: link
+    src: .config/legit
+  d_mutt:
+    dst: ~/.mutt
+    link: link
+    src: .mutt
+  d_nvim:
+    dst: ~/.config/nvim
+    link: link
+    src: .config/nvim
+  d_omf:
+    dst: ~/.config/omf
+    link: link
+    src: .config/omf
+  d_plugin:
+    dst: ~/.local/share/nvim/site/plugin
+    link: link
+    src: .vim/plugin
+  d_powerline:
+    dst: ~/.config/powerline
+    link: link
+    src: .config/powerline
+  d_profiles:
+    dst: ~/.conan/profiles
+    link: link
+    src: .conan/profiles
+  d_shell:
+    dst: ~/.config/shell
+    link: link
+    src: .config/shell
+  d_syntax:
+    dst: ~/.local/share/nvim/site/syntax
+    link: link
+    src: .vim/syntax
+  d_tmux:
+    dst: ~/.config/tmux
+    link: link
+    src: .config/tmux
+  d_topydo:
+    dst: ~/.config/topydo
+    link: link
+    src: .config/topydo
+  d_ultisnips:
+    dst: ~/.config/coc/ultisnips
+    link: link
+    src: .config/coc/ultisnips
+  d_xonsh:
+    dst: ~/.config/xonsh
+    link: link
+    src: .config/xonsh
+  d_yay:
+    dst: ~/.config/yay
+    link: link
+    src: .config/yay
+  d_zsh:
+    dst: ~/.config/zsh
+    link: link
+    src: .config/zsh
+  f_bash_aliases:
+    dst: ~/.bash_aliases
+    link: link
+    src: bash_aliases.sh
+  f_bash_colors:
+    dst: ~/.bash_colors
+    link: link
+    src: bash_colors.sh
+  f_bash_functions:
+    dst: ~/.bash_functions
+    link: link
+    src: bash_functions.sh
+  f_bash_linux:
+    dst: ~/.bash_linux
+    link: link
+    src: bash_linux.sh
+  f_bash_mac:
+    dst: ~/.bash_mac
+    link: link
+    src: bash_mac.sh
+  f_bash_profile:
+    dst: ~/.bash_profile
+    link: link
+    src: bash_profile.sh
+  f_bash_prompt:
+    dst: ~/.bash_prompt
+    link: link
+    src: bash_prompt.sh
+  f_bash_windows:
+    dst: ~/.bash_windows
+    link: link
+    src: bash_windows.sh
+  f_bashrc:
+    dst: ~/.bashrc
+    link: link
+    src: bashrc.sh
+  f_config.py:
+    dst: ~/.ptpython/config.py
+    link: link
+    src: .ptpython/config.py
+  f_dircolors:
+    dst: ~/.dircolors
+    link: link
+    src: dircolors.sh
+  f_gitconfig:
+    dst: ~/.gitconfig
+    link: link
+    src: gitconfig
+  f_muttrc:
+    dst: ~/.muttrc
+    link: link
+    src: muttrc
+  f_tmux.conf:
+    dst: ~/.tmux.conf
+    link: link
+    src: tmux.conf
+  f_tmux.theme.conf:
+    dst: ~/.tmux.theme.conf
+    link: link
+    src: tmux.theme.conf
+  f_vimrc:
+    dst: ~/.vimrc
+    link: link
+    src: vimrc.vim
+  f_xonshrc:
+    dst: ~/.xonshrc_orig
+    link: link
+    src: xonshrc.py
+  f_zshrc:
+    dst: ~/.zshrc
+    link: link
+    src: zshrc.zsh
+  d_pacman:
+    src: .config/pacman
+    dst: ~/.config/pacman
+    link: link
+  d_rustfmt:
+    src: .config/rustfmt
+    dst: ~/.config/rustfmt
+    link: link
+  d_ansible:
+    src: .ansible
+    dst: ~/.ansible
+    link: link
+
+dotfile_profiles:
+  core:
+    dotfiles:
+      - f_bashrc
+      - f_bash_colors
+      - f_bash_prompt
+      - f_bash_profile
+      - f_bash_aliases
+      - f_bash_functions
+      - f_config.py
+      - f_dircolors
+      - f_gitconfig
+      - f_tmux.conf
+      - f_tmux.theme.conf
+      - f_vimrc
+      - f_xonshrc
+      - f_zshrc
+      - d_after
+      - d_autoload
+      - d_cmake
+      - d_config
+      - d_bash
+      - d_fish
+      - d_ftplugin
+      - d_ftdetect
+      - d_legit
+      - d_nvim
+      - d_powerline
+      - d_profiles
+      - d_shell
+      - d_topydo
+      - d_tmux
+      - d_ultisnips
+      - d_xonsh
+      - d_zsh
+      - d_git
+      - d_yay
+      - d_htop
+      - d_plugin
+      - d_syntax
+      - d_pacman
+      - d_rustfmt
+  ansible:
+    dotfiles:
+      - d_ansible

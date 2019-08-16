@@ -1,15 +1,21 @@
 # vim:ft=yaml.ansible:
 ---
-- name: File tests
-  hosts: all
-  tasks:
-    - name: Find out age of mirrorlist
-      find:
-        paths: /etc/pacman.d
-        age: "1m"
-        age_stamp: mtime
-      register: found
-      when: "ansible_facts['os_family'] == 'Archlinux'"
-    - debug:
-        msg: "Files older than 1w found: {{ found }}"
-        verbosity: 2
+# - name: File tests
+#   hosts: all
+#   tasks:
+#     - name: Find out age of mirrorlist
+#       find:
+#         paths: /etc/pacman.d
+#         age: "1m"
+#         age_stamp: mtime
+#       register: found
+#       when: "ansible_facts['os_family'] == 'Archlinux'"
+#     - debug:
+#         msg: "Files older than 1w found: {{ found }}"
+#         verbosity: 2
+
+- name: Link test
+  hosts: mars
+  roles:
+    - dotfiles
+  gather_facts: yes

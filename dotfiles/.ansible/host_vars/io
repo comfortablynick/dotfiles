@@ -1,4 +1,9 @@
+---
 ansible_host: remote.vetcosolutions.com
 ansible_port: 5022
 ansible_user: nick
 ansible_shell_executable: /bin/bash
+dotfiles:
+  - f_bash_linux
+  - include:
+    - core

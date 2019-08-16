@@ -1,2 +1,10 @@
+---
 ansible_host: localhost
 ansible_connection: local
+dotfiles:
+  - f_bash_linux
+  - d_mutt
+  - f_muttrc
+  - include:
+      - core
+      - ansible

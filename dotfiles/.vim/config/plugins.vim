@@ -53,7 +53,6 @@ let g:completion_filetypes = {
     \   [
     \       'pro',
     \       'toml',
-    \       'yaml',
     \       'mail',
     \       'gitcommit',
     \       'txt',

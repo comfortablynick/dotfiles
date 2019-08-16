@@ -1,0 +1,15 @@
+---
+- name: Update packages with yay
+  hosts:
+    - jupiter
+    - saturn
+  become: yes
+  become_user: aur_builder
+  tasks:
+  # - aur:
+  #     upgrade: yes
+  #     use: auto
+  #     aur_only: yes
+  - command: yay -Syu --noconfirm
+    register: yayout
+    changed_when: "'there is nothing to do' not in yayout.stdout"

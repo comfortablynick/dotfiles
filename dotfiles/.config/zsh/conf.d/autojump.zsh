@@ -1,9 +1,9 @@
 # Set up autojump and optionally install if not installed
-if [ -z "$(command -v autojump 2>/dev/null)" ] && [ -n "$(command -v git 2>/dev/null)" ]; then
-    echo "Installing autojump from git..."
-    git clone git://github.com/wting/autojump.git "$HOME/src/autojump" && cd "$HOME/src/autojump" &&
-    "$HOME/src/autojump/install.py"
-fi
+# if [ -z "$(command -v autojump 2>/dev/null)" ] && [ -n "$(command -v git 2>/dev/null)" ]; then
+#     echo "Installing autojump from git..."
+#     git clone git://github.com/wting/autojump.git "$HOME/src/autojump" && cd "$HOME/src/autojump" &&
+#     "$HOME/src/autojump/install.py"
+# fi
 
 [[ $AUTOJUMP_SOURCED -eq 1 ]] && return
 

@@ -1,14 +1,14 @@
 ---
 # tasks for dotfiles
-# - name: Clone dotfiles repo
-#   git:
-#     repo: "{{ dotfiles_repo }}"
-#     dest: "{{ dotfiles_dest }}"
-#     version: HEAD
-#     key_file: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_rsa"
-#     accept_hostkey: yes
-#     force: no
-#     update: yes
+- name: Clone dotfiles repo
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dest }}"
+    version: HEAD
+    key_file: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_rsa"
+    accept_hostkey: yes
+    force: no
+    update: yes
 
 - name: Get host dotfiles
   set_fact:
@@ -29,7 +29,7 @@
     label: "{{ idx }}: {{ item.key }}"
   register: linkattempts
   ignore_errors: yes
-  when: "item.key in host_dotfiles and idx < 3"
+  when: "item.key in host_dotfiles"
 
 - debug:
     msg: "Results: {{ linkattempts.results | to_nice_json }}"

@@ -7,11 +7,13 @@ apt_default_packages:
   - curl
   - direnv
   - todotxt-cli
+  - unzip
 
 pacman_default_packages:
   - pacman-contrib
   - bc
   - curl
+  - unzip
 
 aur_default_packages:
   - todotxt

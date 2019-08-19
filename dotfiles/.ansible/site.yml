@@ -15,5 +15,4 @@
   roles:
     - pkg
     - neovim
-    - tmux
     - dotfiles

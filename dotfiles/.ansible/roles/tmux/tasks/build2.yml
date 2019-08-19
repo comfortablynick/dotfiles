@@ -1,0 +1,69 @@
+---
+# tmux
+- name: Create temp build dir
+  tempfile:
+    state: directory
+    suffix: _tmux_build
+  register: build_dir
+
+- name: Print temp dir
+  debug:
+    var: build_dir
+    verbosity: 1
+
+# - name: Create folders for unzipped files
+#   file:
+#     path: "{{ build_dir.path }}/{{ item }}"
+#     state: directory
+#   loop:
+#     - libevent
+#     - ncurses
+#     - tmux
+
+- name: Download libevent
+  unarchive:
+    src: https://github.com/libevent/libevent/releases/download/release-{{ libevent_version }}-stable/libevent-{{ libevent_version }}-stable.tar.gz
+    dest: "{{ build_dir.path }}"
+    remote_src: yes
+
+- name: Build libevent
+  command: "{{ item }}"
+  args:
+    chdir: "{{ build_dir.path }}/libevent-{{ libevent_version }}-stable"
+  loop:
+    - ./configure --prefix={{ install_path }}
+    - make -j{{ make_concurrency }}
+    - make install
+
+- name: Download ncurses
+  unarchive:
+    src: http://ftp.gnu.org/pub/gnu/ncurses/ncurses-{{ ncurses_version }}.tar.gz
+    dest: "{{ build_dir.path }}"
+    remote_src: yes
+
+- name: Build ncurses
+  command: "{{ item }}"
+  args:
+    chdir: "{{ build_dir.path }}/ncurses-{{ ncurses_version }}"
+  loop:
+    - ./configure --prefix={{ install_path }}
+    - make -j{{ make_concurrency }}
+    - make install
+
+- name: Download tmux
+  unarchive:
+    src: https://github.com/tmux/tmux/releases/download/{{ tmux_version }}/tmux-{{ tmux_release }}.tar.gz
+    dest: "{{ build_dir.path }}"
+    remote_src: yes
+
+- name: Build and install tmux
+  command: "{{ item }}"
+  args:
+    chdir: "{{ build_dir.path }}/tmux-{{ tmux_release }}"
+  loop:
+    - >-
+      ./configure --prefix={{ install_path }}
+        CPPFLAGS=-I{{ install_path }}/include -I{{ install_path }}/include/ncurses
+        LDFLAGS=-L{{ install_path }}/lib
+    - make -j{{ make_concurrency }}
+    - make install

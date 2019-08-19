@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Install one or more versions of specified language
+# e.g. `vmi rust` # => fzf multimode, tab to mark, enter to install
+# if no plugin is supplied (e.g. `vmi<CR>`), fzf will list them for you
+# Mnemonic [V]ersion [M]anager [I]nstall
+vmi() {
+    local lang=${1}
+
+    if [[ -z $lang ]]; then
+        lang=$(asdf plugin-list | fzf-tmux)
+    fi
+
+    if [[ -n $lang ]]; then
+        local versions
+        versions=$(asdf list-all "$lang" | fzf -m)
+        if [[ $versions ]]; then
+            for version in $versions; do
+                asdf install "$lang" "$version"
+            done
+        fi
+    fi
+}
+
+vmi "$@"

@@ -21,6 +21,14 @@ asdf_plugins:
     global: "3.7.4 2.7.16"
     environment:
       PYTHON_CONFIGURE_OPTS: "--enable-shared"
+  - name: nodejs
+    versions:
+      - "10.16.3"
+    global: "10.16.3"
+  - name: tmux
+    versions:
+      - "3.0"
+    global: "3.0"
 
 asdf_debian_packages:
   - build-essential

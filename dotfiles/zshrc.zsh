@@ -227,36 +227,84 @@ mc() {
     fi
 }
 # _pyenv_virtualenv_hook :: check for local env on dir change {{{2 
-_pyenv_virtualenv_hook() {
-    local ret=$?
-    if [[ -n $VIRTUAL_ENV ]]; then
-        eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
-    else
-        eval "$(pyenv sh-activate --quiet || true)" || true
-    fi
-    return $ret
-}
+# _pyenv_virtualenv_hook() {
+#     local ret=$?
+#     if [[ -n $VIRTUAL_ENV ]]; then
+#         eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+#     else
+#         eval "$(pyenv sh-activate --quiet || true)" || true
+#     fi
+#     return $ret
+# }
 
 # pyenv :: wrapper for python version manager {{{2
-pyenv() {
-  local command
-  command="${1:-}"
-  if [[ "$#" -gt 0 ]]; then
-    shift
-  fi
+# pyenv() {
+#   local command
+#   command="${1:-}"
+#   if [[ "$#" -gt 0 ]]; then
+#     shift
+#   fi
+#
+#   case "$command" in
+#   activate|deactivate|rehash|shell)
+#     eval "$(pyenv "sh-$command" "$@")";;
+#   *)
+#     command pyenv "$command" "$@";;
+#   esac
+# }
 
-  case "$command" in
-  activate|deactivate|rehash|shell)
-    eval "$(pyenv "sh-$command" "$@")";;
-  *)
-    command pyenv "$command" "$@";;
-  esac
+# npm :: wrapper for asdf npm {{{2
+npm() {
+    export ASDF_SKIP_RESHIM=1
+    $HOME/.asdf/shims/npm "$@"
+    asdf reshim nodejs
+}
+
+# cd :: cd with fuzzy find {{{2
+function cd() {
+    if [[ $# -ne 0 ]]; then
+        builtin cd "$@"
+        return
+    fi
+    local fuzzy_finder
+    local lsd
+    local dir
+    fuzzy_finder="fzy"
+    while true; do
+        lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+    -o -type d -print 2> /dev/null | cut -b3-")
+        dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
+        [[ ${#dir} -ne 0 ]] || return 0
+        builtin cd "$dir" &> /dev/null
+    done
+}
+
+# cdp :: cd with fzf preview {{{2
+function cdp() {
+    if [[ $# -ne 0 ]]; then
+        builtin cd "$@";
+        return
+    fi
+    local lsd
+    local dir
+    while true; do
+        lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+    -o -type d -print 2> /dev/null | cut -b3-")
+        dir="$(printf '%s\n' "${lsd[@]}" |
+            fzf-tmux --reverse --preview '
+                __cd_nxt="$(echo {})";
+                __cd_path="$(echo $(pwd)/${__cd_nxt})";
+                echo $__cd_path;
+                echo;
+                ls -lA --group-directories-first --color=always "${__cd_path}";
+        ')"
+        [[ ${#dir} -ne 0 ]] || return 0
+        builtin cd "$dir" &> /dev/null
+    done
 }
 
 # chpwd :: execute on directory change {{{2
 chpwd() {
-    # _pyenv_virtualenv_hook # Enable this if "local pyenv virtualenv" feature is needed
-
     # List directory contents
     # Ignore if LS_AFTER_CD is not set, or we are in HOME
     { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return

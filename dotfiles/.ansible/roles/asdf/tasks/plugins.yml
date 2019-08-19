@@ -1,25 +1,32 @@
 ---
 # asdf plugins
-- name: "Install asdf plugins"
+- name: Install asdf plugins
   shell: >-
     . {{ asdf_dir }}/asdf.sh &&
-    asdf plugin-add {{ item.name }} {{ item.repository|default() }}
+    asdf plugin-add {{ item.name }} {{ item.repository|d() }}
   args:
-    executable: "{{ asdf_install_shell|default(omit) }}"
+    executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/plugins/{{ item.name }}"
     chdir: "{{ asdf_home }}"
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
   ignore_errors: True
 
-- name: "Install asdf packages"
+# Plugin-specific tasks go here
+- name: Include tasks for nodejs
+  include_tasks: "plugins/nodejs.yml"
+  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  when: '"nodejs" in item["name"]'
+
+# Install binaries using plugins
+- name: Install asdf packages
   shell: >-
     . {{ asdf_dir }}/asdf.sh &&
     asdf install {{ item.0.name }} {{ item.1 }}
   args:
-    executable: "{{ asdf_install_shell|default(omit) }}"
+    executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
     chdir: "{{ asdf_home }}"
-  environment: "{{ item.0.environment|default(omit) }}"
+  environment: "{{ item.0.environment|d(ansible_facts['env']) }}"
   loop: "{{ asdf_plugins|subelements('versions', {'skip_missing': True}) }}"
 
 - name: Get current asdf package versions
@@ -27,9 +34,9 @@
     set -o pipefail &&
     . {{ asdf_dir }}/asdf.sh &&
     asdf current {{ item.name }} |
-    grep -o '{{ item.global| default(item.versions[0]) }}'
+    grep -o '{{ item.global| d(item.versions[0]) }}'
   args:
-    executable: "{{ asdf_install_shell|default(omit) }}"
+    executable: "{{ asdf_install_shell|d(omit) }}"
     chdir: "{{ asdf_home }}"
   register: asdf_plugins_versions
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
@@ -41,9 +48,9 @@
   shell: >-
     . {{ asdf_dir }}/asdf.sh &&
     asdf global {{ item.item.name }}
-    {{ item.item.global|default(item.item.versions[0]) }}
+    {{ item.item.global|d(item.item.versions[0]) }}
   args:
-    executable: "{{ asdf_install_shell|default(omit) }}"
+    executable: "{{ asdf_install_shell|d(omit) }}"
     chdir: "{{ asdf_home }}"
   when: item.skipped is not defined and item.rc != 0
   loop: "{{ asdf_plugins_versions.results|flatten(levels=1) }}"

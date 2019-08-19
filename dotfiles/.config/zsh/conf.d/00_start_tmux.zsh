@@ -1,3 +1,4 @@
+export PATH="$HOME/.local/bin:$PATH"
 {
     # Check for conditions where we don't want to start tmux
     [[ ! -t 1 ]] ||

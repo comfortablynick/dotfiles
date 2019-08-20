@@ -43,6 +43,7 @@
   pacman:
     update_cache: yes
     upgrade: yes
+  register: pacout
 
 - name: Update aur packages
   become: yes
@@ -50,8 +51,3 @@
   command: yay -Syu --noconfirm
   register: yayout
   changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'
-
-  # aur:
-  #   upgrade: yes
-  #   use: auto
-  #   aur_only: yes

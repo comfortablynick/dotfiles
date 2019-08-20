@@ -266,17 +266,12 @@ function cd() {
         builtin cd "$@"
         return
     fi
-    local fuzzy_finder
-    local lsd
-    local dir
-    fuzzy_finder="fzy"
-    while true; do
-        lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-    -o -type d -print 2> /dev/null | cut -b3-")
-        dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
-        [[ ${#dir} -ne 0 ]] || return 0
-        builtin cd "$dir" &> /dev/null
-    done
+    local fuzzy_finder="fzy"
+    local lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+-o -type d -print 2> /dev/null | sort | cut -b3-")
+    local dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
+    [[ ${#dir} -ne 0 ]] || return 0
+    builtin cd "$dir"
 }
 
 # cdp :: cd with fzf preview {{{2
@@ -287,20 +282,18 @@ function cdp() {
     fi
     local lsd
     local dir
-    while true; do
-        lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-    -o -type d -print 2> /dev/null | cut -b3-")
-        dir="$(printf '%s\n' "${lsd[@]}" |
-            fzf-tmux --reverse --preview '
-                __cd_nxt="$(echo {})";
-                __cd_path="$(echo $(pwd)/${__cd_nxt})";
-                echo $__cd_path;
-                echo;
-                ls -lA --group-directories-first --color=always "${__cd_path}";
-        ')"
-        [[ ${#dir} -ne 0 ]] || return 0
-        builtin cd "$dir" &> /dev/null
-    done
+    lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+-o -type d -print 2> /dev/null | sort | cut -b3-")
+    dir="$(printf '%s\n' "${lsd[@]}" |
+        fzf-tmux --reverse --preview '
+            __cd_nxt="$(echo {})";
+            __cd_path="$(echo $(pwd)/${__cd_nxt})";
+            echo $__cd_path;
+            echo;
+            ls -lA --group-directories-first --color=always "${__cd_path}";
+    ')"
+    [[ ${#dir} -ne 0 ]] || return 0
+    builtin cd "$dir"
 }
 
 # chpwd :: execute on directory change {{{2

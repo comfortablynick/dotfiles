@@ -34,7 +34,7 @@
 
   // Python
   "python.linting.enabled": false,
-  "python.jediEnabled": true,
+  "python.jediEnabled": false,
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,

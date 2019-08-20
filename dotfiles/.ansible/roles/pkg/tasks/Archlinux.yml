@@ -49,7 +49,7 @@
   become_user: aur_builder
   command: yay -Syu --noconfirm
   register: yayout
-  changed_when: '"there is nothing to do" not in yayout.stdout'
+  changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'
 
   # aur:
   #   upgrade: yes

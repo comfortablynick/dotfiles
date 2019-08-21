@@ -199,6 +199,10 @@ dotfiles:
     src: .config/pip
     dst: ~/.config/pip
     link: link
+  f_direnvrc:
+    src: .config/direnv/direnvrc
+    dst: ~/.config/direnv/direnvrc
+    link: link
 profiles:
   core:
     dotfiles:
@@ -242,6 +246,7 @@ profiles:
     - d_pacman
     - d_rustfmt
     - d_pip
+    - f_direnvrc
   io:
     dotfiles:
     - f_bash_linux

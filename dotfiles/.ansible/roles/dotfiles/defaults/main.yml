@@ -192,6 +192,10 @@ all_dotfiles:
     src: .ansible
     dst: ~/.ansible
     link: link
+  d_pip:
+    src: .config/pip
+    dst: ~/.config/pip
+    link: link
 
 dotfile_profiles:
   core:
@@ -235,6 +239,7 @@ dotfile_profiles:
       - d_syntax
       - d_pacman
       - d_rustfmt
+      - d_pip
   ansible:
     dotfiles:
       - d_ansible

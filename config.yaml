@@ -43,6 +43,26 @@ dotfiles:
     dst: ~/.local/share/nvim/site/ftplugin
     link: link
     src: .vim/ftplugin
+  d_after_2:
+    dst: ~/.vim/after
+    link: link
+    src: .vim/after
+  d_autoload_2:
+    dst: ~/.vim/autoload
+    link: link
+    src: .vim/autoload
+  d_config_2:
+    dst: ~/.vim/config
+    link: link
+    src: .vim/config
+  d_ftdetect_2:
+    dst: ~/.vim/ftdetect
+    link: link
+    src: .vim/ftdetect
+  d_ftplugin_2:
+    dst: ~/.vim/ftplugin
+    link: link
+    src: .vim/ftplugin
   d_git:
     dst: ~/.config/git
     link: link
@@ -258,6 +278,11 @@ profiles:
     - f_bash_linux
     - d_mutt
     - f_muttrc
+    - d_after_2
+    - d_autoload_2
+    - d_config_2
+    - d_ftdetect_2
+    - d_ftplugin_2
     include:
     - core
     - ansible

@@ -1,0 +1,7 @@
+---
+# vim
+- name: Install dependencies
+  apt:
+    name: "{{ Debian_vim_required_packages }}"
+    state: present
+  become: yes

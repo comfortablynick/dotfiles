@@ -1,0 +1,7 @@
+---
+# vim
+- name: Install vim
+  pacman:
+    name: vim
+    state: latest
+  become: yes

@@ -1,0 +1,39 @@
+---
+# vim
+- name: Create temp build dir
+  tempfile:
+    state: directory
+    suffix: _vim_build
+  register: build_dir
+
+- name: Print temp dir
+  debug:
+    var: build_dir
+    verbosity: 1
+
+- name: Download vim
+  unarchive:
+    src: https://github.com/vim/vim/archive/v{{ vim_version }}.tar.gz
+    dest: "{{ build_dir.path }}"
+    remote_src: yes
+
+- name: Build and install vim
+  command: "{{ item }}"
+  args:
+    chdir: "{{ build_dir.path }}/vim-{{ vim_version }}"
+  loop:
+    - >
+      ./configure \
+          --prefix={{ install_path }}
+          --with-features=huge
+          --with-x=yes
+          --disable-gui
+          --enable-multibyte
+          --enable-cscope
+          --enable-netbeans
+          --enable-perlinterp
+          --enable-python3interp
+          --enable-rubyinterp
+          --enable-luainterp
+    - make -j{{ make_concurrency }}
+    - make install

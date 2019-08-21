@@ -1,0 +1,31 @@
+---
+# tasks file for vim
+# - name: Get current vim version
+#   command: vim -V
+#   register: vim_current_version
+#   changed_when: False
+
+- name: Set flag to true if upgrade needed
+  set_fact:
+    # vim_upgrade: "{{ vim_current_version.stdout.split(' ')[1] is version(vim_version, '<') }}"
+    vim_upgrade: True
+
+- debug:
+    msg: Vim needs to be upgraded!
+  when: vim_upgrade
+
+- debug:
+    msg: Forcing vim build/install
+  when: vim_force_build and not vim_upgrade
+
+- name: Install vim from source
+  include_tasks: build.yml
+  when: vim_upgrade or vim_force_build
+
+# - name: Install vim
+#   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+#   when: ansible_facts['os_family'] not in vim_build_from_source
+#
+# - name: Install vim from source
+#   include_tasks: build.yml
+#   when: ansible_facts['os_family'] in vim_build_from_source

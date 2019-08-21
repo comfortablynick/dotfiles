@@ -1,0 +1,42 @@
+---
+# defaults file for vim
+make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
+
+# os_family to build from source
+# vim_build_from_source:
+#   - Debian
+
+# building from source
+vim_version: "8.1.1896"
+vim_force_build: False
+vim_source_dir: /tmp/src/vim
+install_path: "{{ ansible_facts['user_dir'] }}/.local"
+
+Debian_vim_required_packages:
+  - libncurses5-dev
+  - libgnome2-dev
+  - libgnomeui-dev
+  - libgtk2.0-dev
+  - libatk1.0-dev
+  - libbonoboui2-dev
+  - libcairo2-dev
+  - libx11-dev
+  - libxpm-dev
+  - libxt-dev
+  - python-dev
+  - python3-dev
+  - ruby-dev
+  - lua5.1
+  - liblua5.1-dev
+  - libperl-dev
+  - git
+Arch_vim_required_packages:
+  - git
+  - gpm
+  - ruby
+  - lua
+  - python2
+  - python
+  - acl
+  - libice
+  - libsm

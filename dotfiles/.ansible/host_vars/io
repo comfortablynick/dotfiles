@@ -4,6 +4,7 @@ ansible_port: 5022
 ansible_user: nick
 ansible_shell_executable: /bin/bash
 dotfiles:
-  - f_bash_linux
-  - include:
+  files:
+    - f_bash_linux
+  include_profiles:
     - core

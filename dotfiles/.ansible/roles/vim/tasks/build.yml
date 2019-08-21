@@ -6,11 +6,6 @@
     suffix: _vim_build
   register: build_dir
 
-- name: Print temp dir
-  debug:
-    var: build_dir
-    verbosity: 1
-
 - name: Download vim
   unarchive:
     src: https://github.com/vim/vim/archive/v{{ vim_version }}.tar.gz

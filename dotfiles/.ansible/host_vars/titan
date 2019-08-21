@@ -6,5 +6,5 @@ ansible_shell_executable: /bin/bash
 dotfiles:
   files:
     - f_bash_linux
-  include_profile:
+  include_profiles:
     - core

@@ -10,6 +10,12 @@
   roles:
     - asdf
 
+- name: Install hub
+  hosts: all
+  roles:
+    - hub
+  strategy: linear
+
 - name: Install software on all hosts
   hosts: all
   roles:

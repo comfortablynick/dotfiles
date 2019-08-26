@@ -1,0 +1,3 @@
+---
+# defaults for hub
+hub_install_prefix: "{{ ansible_facts['env']['HOME'] }}/.local"

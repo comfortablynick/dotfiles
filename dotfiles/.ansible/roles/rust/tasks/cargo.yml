@@ -1,0 +1,24 @@
+---
+- name: Rust | Install cargo binaries
+  command: "{{ rust_user_dir }}/.cargo/bin/cargo install {{ item.name }} {{ item.args|d(omit) }}"
+  loop: "{{ cargo_items }}"
+  register: cargo_result
+  changed_when: "'Add --force to overwrite' not in cargo_result.stderr|d()"
+  failed_when: "'run the command again with --verbose' in cargo_result.stderr|d()"
+  when: item.name is defined
+
+- name: Rust | Verify binary installation
+  stat:
+    path: "{{ rust_user_dir }}/.cargo/bin/{{ item.binary }}"
+  loop: "{{ cargo_items }}"
+  when: item.binary is defined
+
+- name: Rust | Check cargo-update is installed
+  stat:
+    path: "{{ rust_user_dir }}/.cargo/bin/cargo-install-update"
+  register: cargo_update
+
+- name: Rust | Update binaries
+  command: "{{ rust_user_dir }}/.cargo/bin/cargo install-update -ag"
+  when: cargo_update.stat.executable
+  changed_when: "'Updated' in cargo_update.stdout|d()"

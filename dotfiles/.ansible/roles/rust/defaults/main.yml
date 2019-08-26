@@ -1,0 +1,22 @@
+---
+# defaults file for rust
+
+# Rust
+
+rust_user_dir: "{{ ansible_facts['env']['HOME'] }}"
+rust_version: 1.31.0
+rust_update: false
+build_rust_from_source: false
+rust_install_clean: false
+
+# Cargo
+
+cargo_items:
+  - name: cargo-update
+    binary: cargo-install-update
+  - name: ripgrep
+    binary: rg
+
+# Configuration
+# shell_profiles:
+# - .bash_profile

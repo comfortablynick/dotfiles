@@ -1,0 +1,8 @@
+---
+
+- name: "Rust | Install dependencies"
+  dnf:
+    name:
+      - curl
+      - gcc
+    state: present

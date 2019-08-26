@@ -1,0 +1,40 @@
+---
+# tasks for hub
+- name: Hub | Get latest release
+  uri:
+    url: https://api.github.com/repos/github/hub/releases/latest
+    return_content: yes
+  run_once: True
+  register: hub_latest
+  changed_when: False
+
+- name: Hub | Get installed version
+  command: hub --version
+  register: hub_current_version
+  changed_when: False
+  failed_when: False
+
+- name: Hub | Set installed version
+  set_fact:
+    hub_installed_version: "{{ hub_current_version.stdout_lines[1].split(' ')[2]|d() }}"
+  changed_when: False
+  when: hub_current_version.stdout_lines is defined
+
+- name: Hub | Set latest releases
+  set_fact:
+    hub_latest_version: "{{ hub_latest.json.tag_name[1:] }}"
+    hub_releases: "{{ hub_latest.json.assets }}"
+  changed_when: False
+
+- name: Hub | Debug versions
+  debug:
+    msg:
+      - "Hub installed vesion: {{ hub_installed_version|d() }}"
+      - "Hub latest version:   {{ hub_latest_version }}"
+    verbosity: 1
+
+- name: Hub | Download
+  include_tasks: download.yml
+  when:
+    ((hub_latest_version is defined and hub_latest_version is version(hub_installed_version|d(0), '>'))
+    or hub_latest_version is not defined)

@@ -1,0 +1,9 @@
+# vim:ft=yaml.ansible:
+---
+# git
+- name: Install/update hub
+  hosts:
+    - all
+  roles:
+    - name: hub
+  strategy: linear

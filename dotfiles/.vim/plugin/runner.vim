@@ -7,6 +7,7 @@ let g:loaded_runner_vim = 1
 nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
 nnoremap <silent> <Leader>w :w \| :call runner#run_cmd('install')<CR>
 nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
+nnoremap <silent> <Leader>c :call runner#run_cmd('test')<CR>
 
 " Vim-tmux-runner
 nnoremap <silent> <Leader>a :VtrAttachToPane<CR>

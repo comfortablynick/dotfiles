@@ -32,7 +32,7 @@ let g:ale_linters = {
     \ 'python': ['flake8','mypy','pydocstyle'],
     \ 'cpp': [],
     \ 'c': ['clangtidy','gcc'],
-    \ 'go': [],
+    \ 'go': ['golint'],
     \ 'rust': [],
     \ 'sh': ['shellcheck'],
     \ 'yaml.ansible': ['ansible-lint'],

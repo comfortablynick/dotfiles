@@ -1,7 +1,8 @@
 ---
 - name: Rust | Install
   shell: "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-  changed_when: false
+  warn: False
+  changed_when: False
 
 - name: Rust | Install toolchain
   command: "{{ rust_user_dir }}/.cargo/bin/rustup toolchain install {{ item }}"

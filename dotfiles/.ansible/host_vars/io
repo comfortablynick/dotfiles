@@ -8,3 +8,7 @@ dotfiles:
     - f_bash_linux
   include_profiles:
     - core
+
+# rust
+rust_toolchains:
+  - nightly-x86_64-unknown-linux-gnu

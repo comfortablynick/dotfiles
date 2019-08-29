@@ -12,7 +12,7 @@
   include_tasks: installer.yml
   when:
     - ((not build_rust_from_source) and
-      (rust_version_requirement not in rust_preinstall_version_r.stdout)) or
+      (rust_version_requirement not in rust_preinstall_version_r.stdout|d())) or
       (rust_update)
 
 - name: Install from source

@@ -2,7 +2,7 @@
 ---
 - name: Install rust
   hosts:
-    - mars
+    - io
   roles:
     - name: rust
   vars:

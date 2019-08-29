@@ -9,6 +9,9 @@ rust_update: false
 build_rust_from_source: false
 rust_install_clean: false
 
+rust_toolchains:
+  - stable
+
 # Cargo
 
 cargo_items:

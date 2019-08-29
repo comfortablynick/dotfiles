@@ -4,7 +4,8 @@
   changed_when: false
 
 - name: Rust | Install toolchain
-  command: "{{ rust_user_dir }}/.cargo/bin/rustup toolchain install {{ rust_version }}"
-  register: rustup_toolchain
-  changed_when: "'installed' in rustup_toolchain.stdout"
-  when: rust_version is defined
+  command: "{{ rust_user_dir }}/.cargo/bin/rustup toolchain install {{ item }}"
+  register: rustup_toolchain_install
+  changed_when: "'installed' in rustup_toolchain_install.stdout"
+  loop: "{{ rust_toolchains }}"
+  when: item is defined

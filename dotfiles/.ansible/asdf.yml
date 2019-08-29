@@ -6,6 +6,5 @@
     - io
     - titan
     - jupiter
-    - saturn
   roles:
     - name: asdf

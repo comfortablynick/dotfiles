@@ -1,6 +1,7 @@
 ---
 # setup tasks file for rust
 
+# Original {{{
 # - name: "Rust | Look for cURL"
 #   shell: which curl
 #   register: rust_which_curl
@@ -59,34 +60,36 @@
 #       - regex: 'export PATH="\$PATH:{{ rust_user_dir }}/.cargo/bin"'
 #         lineinfile: 'export PATH="$PATH:{{ rust_user_dir }}/.cargo/bin"'
 #   when: shell_exports is not defined
+# }}}
 
-- name: "Rust | Formulate source string comparrison requirements"
+- name: Rust | Formulate source string comparison requirements
   set_fact:
     rust_version_requirement: "rustc {{ rust_version }}"
   when:
     - build_rust_from_source
     - rust_version_requirement is not defined
 
-- name: "Rust | Formulate installer string comparrison requirements"
+- name: Rust | Formulate installer string comparison requirements
   set_fact:
     rust_version_requirement: "Usage: rustc"
   when:
     - not build_rust_from_source
     - rust_version_requirement is not defined
 
-- name: "Rust | Looking for installer installation"
-  command: "{{ rust_user_dir }}/.cargo/bin/rustc"
+- name: Rust | Looking for installer installation
+  shell: rustc
   register: rust_preinstall_version_r
-  changed_when: false
+  changed_when: False
+  failed_when: False
   when: not build_rust_from_source
 
-- name: "Rust | Looking for source installation"
+- name: Rust | Looking for source installation
   command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
   register: rust_preinstall_version_s
   changed_when: false
   when: build_rust_from_source
 
-- name: "Rust | Detect configured shell profiles"
+- name: Rust | Detect configured shell profiles
   stat:
     path: "{{ rust_user_dir }}/{{ item }}"
   changed_when: false

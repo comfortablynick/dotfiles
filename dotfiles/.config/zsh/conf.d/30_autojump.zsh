@@ -1,12 +1,14 @@
 # Set up autojump and optionally install if not installed
-if [[ -z $(command -v autojump 2>/dev/null) ]]; then
-    if [[ -z $(command -v git 2>/dev/null) ]]; then
+
+if [[ ! -x $HOME/.autojump/bin/autojump ]] && ! (( $+commands[autojump] )); then
+    if ! (( $+commands[git] )); then
         echo "git not found; install git before installing autojump!"
         exit 1
     fi
     echo "Installing autojump from git..."
-    command git clone git://github.com/wting/autojump.git $HOME/src/autojump && cd $HOME/src/autojump &&
-    $HOME/src/autojump/install.py
+    command git clone git://github.com/wting/autojump.git $HOME/src/autojump \
+        && cd $HOME/src/autojump \
+        && $HOME/src/autojump/install.py
 fi
 
 [[ $AUTOJUMP_SOURCED -eq 1 ]] && return

@@ -4,13 +4,16 @@
 # Rust
 
 rust_user_dir: "{{ ansible_facts['env']['HOME'] }}"
-rust_version: 1.31.0
+rustup_path: "{{ rust_user_dir }}/.cargo/bin/rustup"
+rust_version: 1.38
 rust_update: false
 build_rust_from_source: false
 rust_install_clean: false
 
 rust_toolchains:
-  - stable
+  - nightly
+
+rust_default_toolchain: nightly
 
 # Cargo
 
@@ -19,7 +22,3 @@ cargo_items:
     binary: cargo-install-update
   - name: ripgrep
     binary: rg
-
-# Configuration
-# shell_profiles:
-# - .bash_profile

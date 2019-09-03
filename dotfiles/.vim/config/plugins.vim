@@ -116,6 +116,7 @@ function! s:pack_init() abort
     Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
+    Pack 'embear/vim-localvimrc'
 
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
@@ -196,6 +197,7 @@ Load asyncrun.vim
 Load vim-sneak
 Load vim-fugitive
 Load vim-surround
+Load vim-localvimrc
 
 " Snippets
 " Load ultisnips

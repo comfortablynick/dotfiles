@@ -14,11 +14,18 @@
   changed_when: False
   failed_when: False
 
+- name: Hub | Get installed version in default location
+  command: "{{ hub_install_prefix }}/bin/hub --version"
+  register: hub_current_version
+  changed_when: False
+  failed_when: False
+  when: not (hub_current_version.stdout_lines|d([]))|length
+
 - name: Hub | Set installed version
   set_fact:
     hub_installed_version: "{{ hub_current_version.stdout_lines[1].split(' ')[2]|d() }}"
   changed_when: False
-  when: hub_current_version.stdout_lines is defined
+  when: (hub_current_version.stdout_lines|d([]))|length
 
 - name: Hub | Set latest releases
   set_fact:

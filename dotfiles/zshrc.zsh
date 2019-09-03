@@ -60,7 +60,7 @@ export SSH_THEME="$ZSH_THEME"
 
 if [ is_ssh ]; then
     export VIM_SSH_COMPAT=1
-    export THEME=$SSH_THEME
+    export ZSH_THEME=$SSH_THEME
 fi
 
 # SHELL OPTS {{{1
@@ -163,6 +163,12 @@ fi
 #       prompt
 #   )
 # fi
+
+# starship {{{2
+if [[ $ZSH_THEME = "starship" ]]; then
+    eval "$(starship init zsh)"
+fi
+
 # promptlib-zsh {{{2
 export PLIB_GIT_MOD_SYM='★'
 
@@ -194,21 +200,6 @@ bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ES
 # zle -N zle-keymap-select
 
 # FUNCTIONS {{{1
-# relz :: Reload zsh shell {{{2
-# Params
-#   -d Debug mode: print verbose debug information
-# relz() {
-#   if [[ $1 = "-d" ]] || [[ $1 = "d" ]]; then
-#     echo "Reloading zsh in debug mode... "
-#     export DEBUG_MODE=true
-#   else
-#     echo "Reloading zsh... "
-#     export DEBUG_MODE=false
-#   fi
-#   source ~/.zshrc
-#   echo "Complete!"
-# }
-
 # is_ssh :: Return true if in SSH session {{{2
 is_ssh() {
   if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
@@ -226,33 +217,6 @@ mc() {
         echo "ERROR usage: $0 [DIR]"
     fi
 }
-# _pyenv_virtualenv_hook :: check for local env on dir change {{{2 
-# _pyenv_virtualenv_hook() {
-#     local ret=$?
-#     if [[ -n $VIRTUAL_ENV ]]; then
-#         eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
-#     else
-#         eval "$(pyenv sh-activate --quiet || true)" || true
-#     fi
-#     return $ret
-# }
-
-# pyenv :: wrapper for python version manager {{{2
-# pyenv() {
-#   local command
-#   command="${1:-}"
-#   if [[ "$#" -gt 0 ]]; then
-#     shift
-#   fi
-#
-#   case "$command" in
-#   activate|deactivate|rehash|shell)
-#     eval "$(pyenv "sh-$command" "$@")";;
-#   *)
-#     command pyenv "$command" "$@";;
-#   esac
-# }
-
 # npm :: wrapper for asdf npm {{{2
 npm() {
     export ASDF_SKIP_RESHIM=1
@@ -316,7 +280,7 @@ if [[ -x /usr/bin/direnv ]]; then
     fi
 fi
 
-# asdf
+# asdf :: version manager {{{2
 # BEGIN ANSIBLE MANAGED BLOCK: asdf
 if [[ -e $HOME/.asdf/asdf.sh ]]; then
   source $HOME/.asdf/asdf.sh

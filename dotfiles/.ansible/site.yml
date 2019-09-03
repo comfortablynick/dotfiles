@@ -43,3 +43,4 @@
         args: --git https://github.com/comfortablynick/sysinfo.git
       - name: just
       - name: bat
+      - name: starship

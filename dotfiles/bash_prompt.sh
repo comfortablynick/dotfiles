@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# Check interactive session {{{1
+# Check interactive session
 [ "$OS_NAME" = "Windows" ] && return
-# Prompt selection {{{1
+
+# Prompt selection (uses first one -eq 1, or default if none)
 USE_ENHANCED_GIT_PROMPT=0 # Enhanced Git Prompt
-USE_FACTORY_GIT_PROMPT=0  # Git prompt that comes with git cli
+USE_GITPR_GIT_PROMPT=0    # Gitpr-based prompt
+USE_STARSHIP_PROMPT=1     # Use starship prompt written in rust
 
 # Prompt colors {{{1
 DEFAULT="\[\033[0;00m\]"
@@ -60,7 +62,7 @@ export GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=0 # avoid printing the number of chan
 # export GIT_PROMPT_END=...                  # custom prompt end sequence
 # export GIT_PROMPT_THEME_FILE=$XDG_CONFIG_HOME/shell/bash-git-prompt/Custom.bgptemplate
 
-if [ "$USE_ENHANCED_GIT_PROMPT" -eq 1 ]; then
+if [[ $USE_ENHANCED_GIT_PROMPT -eq 1 ]]; then
     if [ ! -d "$HOME/.bash-git-prompt" ]; then
         git clone https://github.com/magicmonty/bash-git-prompt.git "$HOME/.bash-git-prompt"
     fi
@@ -71,47 +73,43 @@ if [ "$USE_ENHANCED_GIT_PROMPT" -eq 1 ]; then
         return
 fi
 
-# Factory git color prompt {{{1
-if [ "$USE_FACTORY_GIT_PROMPT" -eq 1 ]; then
-    PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
-    export PS1="$venv_name$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
+# Custom git-enabled prompt using gitpr {{{1
+if [[ $USE_GITPR_GIT_PROMPT -eq 1 ]]; then
+    PROMPT_COMMAND="_gitpr_prompt_command; $PROMPT_COMMAND"
+    _gitpr_prompt_command() {
+        curr_exit="$?"
+        cmd_err_glyph='✘'
+        cmd_ok_glyph='✔'
+        gitpr="$(gitpr -sq 2>/dev/null)"
+        date="$(date +%H:%M)"
+
+        # Exit status
+        [ $curr_exit -eq 0 ] && PS1="$GREEN\$cmd_ok_glyph" || PS1="$RED\$cmd_err_glyph-\$curr_exit"
+
+        # user@host (if not in tmux)
+        [ -z "$TMUX_PANE" ] && PS1="$PS1$BOLDGREEN\u@\h$DEFAULT: "
+
+        # CWD and git repo info
+        PS1="$PS1 $YELLOW\w $DEFAULT\$gitpr\n"
+
+        # Second line
+        # Virtualenv name if active, else current time
+        PS1="$PS1$GRAY"
+        [ -n "$VIRTUAL_ENV" ] && PS1="$PS1(${VIRTUAL_ENV##*/})" || PS1="$PS1\$date"
+        PS1="$PS1$DEFAULT \$ "
+    }
     return
 fi
 
-# Default Git enabled prompt {{{1
-PROMPT_COMMAND="_prompt_command; $PROMPT_COMMAND"
+# Starship prompt {{{1
+if [[ $USE_STARSHIP_PROMPT -eq 1 ]]; then
+    eval "$(starship init bash)"
+    return
+fi
 
-_prompt_command() {
-    curr_exit="$?"
-    cmd_err_glyph='✘'
-    cmd_ok_glyph='✔'
-    gitpr="$(gitpr -sq 2>/dev/null)"
-    date="$(date +%H:%M)"
+# Default: factory git color prompt {{{1
+PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
+export PS1="$venv_name$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
+return
 
-    # Exit status
-    [ $curr_exit -eq 0 ] && PS1="$GREEN\$cmd_ok_glyph" || PS1="$RED\$cmd_err_glyph-\$curr_exit"
-
-    # user@host (if not in tmux)
-    [ -z "$TMUX_PANE" ] && PS1="$PS1$BOLDGREEN\u@\h$DEFAULT: "
-
-    # CWD and git repo info
-    PS1="$PS1 $YELLOW\w $DEFAULT\$gitpr\n"
-
-    # Second line
-    # Virtualenv name if active, else current time
-    PS1="$PS1$GRAY"
-    [ -n "$VIRTUAL_ENV" ] && PS1="$PS1(${VIRTUAL_ENV##*/})" || PS1="$PS1\$date"
-    PS1="$PS1$DEFAULT \$ "
-}
-
-# # Powerline (not used) {{{1
-# if [ "$POWERLINE_ROOT" != "" ]; then
-#     if [ -f "${POWERLINE_ROOT}/bindings/bash/powerline.sh" ]; then
-#         # if [ command -v powerline-daemon 2>/dev/null ]; then
-#         powerline-daemon -q
-#         POWERLINE_BASH_CONTINUATION=1
-#         POWERLINE_BASH_SELECT=1
-#         . "${POWERLINE_ROOT}/bindings/bash/powerline.sh"
-#     fi
-# fi
 # vim:fdm=marker:

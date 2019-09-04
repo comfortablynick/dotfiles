@@ -14,7 +14,7 @@ let g:NERDToggleCheckAllLines = 1               " Enable NERDCommenterToggle to 
 " Add your own custom formats or override the defaults
 let g:NERDCustomDelimiters = {
  \ 'c':
- \   { 'left': '/**', 'right': '*/' },
+ \   { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
  \ 'json':
  \   { 'left': '//' },
  \ }

@@ -1,0 +1,7 @@
+---
+# dev group vars
+apt_default_packages:
+  - cmake
+
+pacman_default_packages:
+  - cmake

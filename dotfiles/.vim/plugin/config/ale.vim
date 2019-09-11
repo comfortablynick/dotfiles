@@ -29,7 +29,7 @@ let g:ale_virtualenv_dir_names = ['.env', 'dev']
 
 " Linters/fixers
 let g:ale_linters = {
-    \ 'python': ['flake8','pydocstyle'],
+    \ 'python': [],
     \ 'cpp': [],
     \ 'c': ['clangtidy','gcc'],
     \ 'go': ['golint'],

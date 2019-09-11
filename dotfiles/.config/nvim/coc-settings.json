@@ -35,6 +35,9 @@
   // Python
   "python.linting.enabled": false,
   "python.jediEnabled": false,
+  "python.linting.mypyEnabled": true,
+  "python.linting.pydocstyleEnabled": true,
+  "python.linting.flake8Enabled": true,
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,

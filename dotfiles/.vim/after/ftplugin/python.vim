@@ -9,3 +9,4 @@ setlocal foldmethod=marker                  " Use 3x{ for folding
 let python_highlight_all=1                  " Highlight all builtins
 let $PYTHONUNBUFFERED=1                     " Disable stdout buffering
 
+let g:semshi#mark_selected_nodes = 0

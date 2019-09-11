@@ -10,3 +10,4 @@ let python_highlight_all=1                  " Highlight all builtins
 let $PYTHONUNBUFFERED=1                     " Disable stdout buffering
 
 let g:semshi#mark_selected_nodes = 0
+let g:semshi#error_sign = v:false

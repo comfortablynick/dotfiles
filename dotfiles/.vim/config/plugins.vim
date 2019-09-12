@@ -123,6 +123,10 @@ function! s:pack_init() abort
     Pack 'gruvbox-community/gruvbox'
 
     " Syntax highlighting {{{2
+    if has('nvim')
+        " Python
+        Pack 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
+    endif
     Pack 'HerringtonDarkholme/yats'
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
@@ -207,6 +211,7 @@ Load vim-snippets
 Load vim-cpp-modern
 Load vim-markdown
 Load ansible-vim
+Load semshi
 
 " Tmux
 Load vim-tmux-runner

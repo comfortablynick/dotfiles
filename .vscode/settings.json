@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "C:\\Users\\nmurphy\\.env\\windev\\Scripts\\python.exe",
-    "code-runner.executorMap": {
-        "python": "python3 $fullFileName"
-    }
-}

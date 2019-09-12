@@ -39,6 +39,10 @@ case "$(uname -s)" in
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
 
+# Completion {{{2
+autoload -Uz compinit && compinit                               # Needed to autoload completions
+autoload -Uz bashcompinit && bashcompinit                       # Bash completions must be sourced
+
 # Directories {{{2
 export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
 export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
@@ -74,7 +78,6 @@ HYPHEN_INSENSITIVE="true"                                       # Hyphen and das
 COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
-autoload -Uz compinit && compinit                               # Needed to autoload completions
 
 # SHELL HISTORY {{{1
 HISTFILE="${HOME}/.zsh_history"

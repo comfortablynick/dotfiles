@@ -1,16 +1,25 @@
 # TMUX Initialization (called from .bashrc)
 # Abort if
+#       - not interactive
 #       - already in tmux
 #       - 'no tmux' file exists in home dir for this shell
+#       - in vscode remote session
 #       - `tmux` command not present
-{ [ -n "$TMUX" ] || [ -f "$HOME/.no_bash_tmux_login" ] || [ -z "$(command -v tmux)" ]; } && return
+export PATH="$HOME/.local/bin:$PATH"
+{
+    [[ $- != *i* ]] ||
+        [[ -n $TMUX ]] ||
+        [[ -f "$HOME/.no_bash_tmux_login" ]] ||
+        [[ $TERM_PROGRAM == "vscode" ]] ||
+            [[ -z $(command -v tmux) ]]
+} && return
 
-if [ ! -f "$HOME/.no_bash_tmux_next_login" ]; then
+if [[ ! -f $HOME/.no_bash_tmux_next_login ]]; then
     export SUB='|'
     export RSUB='|'
     session_name=""
     echo "Starting tmux..."
-    [ -n "$SSH_CONNECTION" ] && session_name="ios" || session_name="def"
+    [[ -n $SSH_CONNECTION ]] && session_name="ios" || session_name="def"
     exec tmux -2 new-session -A -s "$session_name"
 else
     rm "$HOME/.no_bash_tmux_next_login"

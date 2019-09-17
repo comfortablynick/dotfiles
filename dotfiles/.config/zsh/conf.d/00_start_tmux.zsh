@@ -2,6 +2,7 @@ export PATH="$HOME/.local/bin:$PATH"
 {
     # Check for conditions where we don't want to start tmux
     [[ ! -t 1 ]] ||
+        [[ $TERM_PROGRAM == "vscode" ]] ||
         [[ -n $TMUX ]] ||
         [[ -f "$HOME/.no_zsh_tmux_login" ]] ||
         ! (( $+commands[tmux] ))

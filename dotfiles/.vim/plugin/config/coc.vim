@@ -16,6 +16,7 @@ let g:coc_global_extensions = [
     \ 'coc-yank',
     \ 'coc-highlight',
     \ 'coc-yaml',
+    \ 'coc-pairs',
     \ ]
 
 let g:coc_filetype_map = {

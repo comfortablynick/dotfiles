@@ -33,11 +33,13 @@
   "rust.all_targets": false,
 
   // Python
-  "python.linting.enabled": false,
+  "python.linting.enabled": true,
   "python.jediEnabled": true,
   "python.linting.mypyEnabled": true,
   "python.linting.pydocstyleEnabled": true,
   "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Args": ["--max-line-length=100"],
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,

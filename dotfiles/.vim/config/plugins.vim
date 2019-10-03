@@ -117,6 +117,7 @@ function! s:pack_init() abort
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
     Pack 'embear/vim-localvimrc'
+    Pack 'liuchengxu/vim-clap'
 
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
@@ -202,6 +203,7 @@ Load vim-sneak
 Load vim-fugitive
 Load vim-surround
 Load vim-localvimrc
+Load vim-clap
 
 " Snippets
 " Load ultisnips

@@ -189,7 +189,9 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
-Load eleline.vim
+" if !&diff
+    Load eleline.vim
+" endif
 Load fzf
 Load fzf.vim
 Load nerdcommenter

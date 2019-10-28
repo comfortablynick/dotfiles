@@ -34,7 +34,7 @@
 
   // Python
   "python.linting.enabled": true,
-  "python.jediEnabled": true,
+  "python.jediEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.linting.pydocstyleEnabled": true,
   "python.linting.flake8Enabled": true,

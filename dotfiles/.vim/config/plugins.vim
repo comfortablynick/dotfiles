@@ -113,7 +113,6 @@ function! s:pack_init() abort
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'airblade/vim-rooter'
-    Pack 'comfortablynick/eleline.vim'
     Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
     Pack 'embear/vim-localvimrc'
@@ -190,7 +189,6 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
-" Load eleline.vim
 Load lightline.vim
 Load fzf
 Load fzf.vim

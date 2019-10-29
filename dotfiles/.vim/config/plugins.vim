@@ -118,6 +118,7 @@ function! s:pack_init() abort
     Pack 'justinmk/vim-sneak'
     Pack 'embear/vim-localvimrc'
     Pack 'liuchengxu/vim-clap'
+    Pack 'itchyny/lightline.vim'
 
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
@@ -189,7 +190,8 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
-Load eleline.vim
+" Load eleline.vim
+Load lightline.vim
 Load fzf
 Load fzf.vim
 Load nerdcommenter

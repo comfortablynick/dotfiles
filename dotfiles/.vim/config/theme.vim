@@ -56,7 +56,7 @@ let g:lightline = {
     \       ]
     \ },
     \ 'component_function': {
-    \   'fugitive': 'LL_Fugitive',
+    \   'fugitive': 'LL_GitStatus',
     \   'filename': 'LL_FileName',
     \   'filetype_icon': 'LL_FileType',
     \   'fileformat_icon': 'LL_FileFormat',
@@ -97,7 +97,7 @@ let g:LL_MinWidth = 90                                          " Width for usin
 let g:LL_MedWidth = 120                                         " Secondary width for some sections
 let g:LL_LineNoSymbol = g:LL_pl ? '' : ''                     " Use  for line no unless no PL fonts; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
-let g:LL_Branch = g:LL_pl ? '' : ''                           " Use git branch NF symbol (is '🜉' ever needed?)
+let g:LL_Branch = g:LL_pl ? ' ' : ' '                         " Use git branch NF symbol (is '🜉' ever needed?)
 let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? ' ' : '--RO-- '                  " Read-only symbol
 let g:LL_ModSymbol = ' [+]'                                     " File modified symbol
@@ -147,7 +147,7 @@ let g:lightline#ale#indicator_ok = g:LL_LinterOK
 
 " coc#status {{{3
 if exists('*lightline#update')
-    autocmd! vimrc User CocDiagnosticChange call lightline#update()
+    autocmd vimrc User CocDiagnosticChange call lightline#update()
 endif
 
 " Section separators {{{3
@@ -229,6 +229,7 @@ function! LL_IsNotFile() abort "{{{3
         \ 'output',
         \ 'vista',
         \ 'undotree',
+        \ 'vimfiler',
         \ ]
     for item in exclude
         if &filetype =~? item || expand('%:t') =~ item
@@ -300,14 +301,6 @@ function! LL_FileEncoding() abort "{{{3
     return &fileencoding !=? 'utf-8' ? &fileencoding : ''
 endfunction
 
-function! LL_HunkSummary() abort "{{{3
-    let githunks =  GitGutterGetHunkSummary()
-    let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
-    let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
-    let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''
-    return added . changed . deleted
-endfunction
-
 function! LL_ReadOnly() abort "{{{3
     return &filetype !~? 'help' && &readonly ? g:LL_ROSymbol : ''
 endfunction
@@ -363,14 +356,35 @@ function! LL_TabName() abort "{{{3
         \ LL_FileName()
 endfunction
 
-function! LL_Fugitive() abort "{{{3
-    if &filetype !~? 'vimfiler' && ! LL_IsNotFile() && exists('*fugitive#head') && winwidth(0) > g:LL_MinWidth
-        let branch = fugitive#head()
-        return branch !=# '' ? printf('%s%s%s %s',
+function! LL_GitHunkSummary() abort "{{{3
+    if exists('b:coc_git_status')
+        return b:coc_git_status
+    elseif !exists('*GitGutterGetHunkSummary')
+        return ''
+    endif
+    let githunks =  GitGutterGetHunkSummary()
+    let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
+    let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
+    let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''
+    return added . changed . deleted
+endfunction
+
+function! LL_GitBranch() abort "{{{3
+    if exists('g:coc_git_status')
+        return g:coc_git_status
+    elseif exists('*fugitive#head')
+        return g:LL_GitSymbol.' '.fugitive#head()
+    endif
+    return ''
+endfunction
+
+function! LL_GitStatus() abort "{{{3
+    if !LL_IsNotFile() && winwidth(0) > g:LL_MinWidth
+        let branch = LL_GitBranch()
+        return branch !=# '' ? printf('%s%s%s',
             \ g:LL_GitSymbol,
-            \ LL_HunkSummary(),
-            \ g:LL_Branch,
             \ branch,
+            \ LL_GitHunkSummary(),
             \ ) : ''
     endif
     return ''

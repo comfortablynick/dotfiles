@@ -25,6 +25,7 @@
   "coc.preferences.previewAutoClose": true,
   "coc.preferences.formatOnType": false,
   "coc.preferences.messageLevel": "error",
+  "coc.preferences.currentFunctionSymbolAutoUpdate": true,
 
   // Rust
   "rust-client.channel": "nightly",

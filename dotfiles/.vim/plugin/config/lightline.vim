@@ -24,8 +24,7 @@ let g:lightline = {
     \   'left':
     \    [
     \       [ 'vim_mode', 'paste' ],
-    \       [ 'git_status' ],
-    \       [ 'filename' ],
+    \       [ 'git_status', 'filename' ],
     \       [ 'coc_status'],
     \    ],
     \   'right':
@@ -83,16 +82,18 @@ let g:lightline = {
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '|', 'right': '|' },
     \ }
+
 " Section settings / glyphs {{{2
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
 let g:LL_MedWidth = 120                                         " Secondary width for some sections
-let g:LL_LineNoSymbol = g:LL_pl ? '' : ''                     " Use  for line no unless no PL fonts; alt: '␤'
+let g:LL_LineNoSymbol = ''                                     " Use  for line no unless no PL fonts; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
-let g:LL_Branch = g:LL_pl ? ' ' : ' '                         " Use git branch NF symbol (is '🜉' ever needed?)
-let g:LL_LineSymbol = g:LL_pl ? '☰ ' : '☰ '                     " Is 'Ξ' ever needed?
+let g:LL_BranchSymbol = ' '                                    " Git branch symbol
+let g:LL_LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? ' ' : '--RO-- '                  " Read-only symbol
 let g:LL_ModSymbol = ' [+]'                                     " File modified symbol
 let g:LL_SimpleSep = $SUB ==# '|' ? 1 : 0                       " Use simple section separators instead of PL (no other effects)
+let g:LL_FnSymbol = 'ƒ '                                        " Use for current function
 
 " Linter indicators
 let g:LL_LinterChecking = g:LL_nf ? "\uf110 " : '...'
@@ -196,7 +197,7 @@ function! LL_Mode() abort "{{{2
     let f = @%
     if LL_IsNerd()
         return 'NERD'
-    elseif f ==? '__Tagbar__'
+    elseif f =~? '__Tagbar__'
         return 'TAGS'
     elseif f =~? 'undotree'
         return 'UNDO'
@@ -216,20 +217,17 @@ function! LL_IsNotFile() abort "{{{2
     " Return true if not treated as file
     let exclude = [
         \ 'gitcommit',
-        \ 'NERD_tree',
+        \ 'nerdtree',
         \ 'output',
         \ 'vista',
         \ 'undotree',
         \ 'vimfiler',
+        \ 'tagbar',
         \ ]
-    for item in exclude
-        if &filetype =~? item || expand('%:t') =~ item
-            return 1
-            break
-        else
-            continue
-        endif
-    endfor
+    if index(exclude, &filetype) > -1 || index(exclude, expand('%:t')) > -1
+        return 1
+    endif
+    return 0
 endfunction
 
 function! LL_LinePercent() abort "{{{2
@@ -305,7 +303,7 @@ function! LL_FileName() abort "{{{2
     let b = &buftype
     if empty(@%)
         return '[No Name]'
-    elseif f ==? '__Tagbar__'
+    elseif f =~? '__Tagbar__'
         return ''
     elseif f =~? '__Gundo\|NERD_tree'
         return ''
@@ -349,7 +347,7 @@ endfunction
 
 function! LL_GitHunkSummary() abort "{{{2
     if exists('b:coc_git_status')
-        return b:coc_git_status
+        return trim(b:coc_git_status)
     elseif !exists('*GitGutterGetHunkSummary')
         return ''
     endif
@@ -357,14 +355,18 @@ function! LL_GitHunkSummary() abort "{{{2
     let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
     let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
     let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''
-    return added . changed . deleted
+    return printf('%s%s%s',
+        \ added,
+        \ changed,
+        \ deleted,
+        \ )
 endfunction
 
 function! LL_GitBranch() abort "{{{2
     if exists('g:coc_git_status')
         return g:coc_git_status
     elseif exists('*fugitive#head')
-        return g:LL_GitSymbol.' '.fugitive#head()
+        return g:LL_BranchSymbol.' '.fugitive#head()
     endif
     return ''
 endfunction
@@ -372,10 +374,11 @@ endfunction
 function! LL_GitStatus() abort "{{{2
     if !LL_IsNotFile() && winwidth(0) > g:LL_MinWidth
         let branch = LL_GitBranch()
+        let hunks = LL_GitHunkSummary()
         return branch !=# '' ? printf('%s%s%s',
             \ g:LL_GitSymbol,
             \ branch,
-            \ LL_GitHunkSummary(),
+            \ hunks !=# '' ? ' '.hunks : ''
             \ ) : ''
     endif
     return ''
@@ -388,17 +391,20 @@ function! LL_VirtualEnvName() abort "{{{2
 endfunction
 
 function! LL_CurrentTag() abort "{{{2
+    if winwidth(0) < g:LL_MedWidth | return '' | endif
     " if get(b:, 'vista_nearest_method_or_function', '') !=# ''
     "     return get(g:vista#renderer#icons, 'function', '') . ' ' . b:vista_nearest_method_or_function . '()'
     " endif
-    if exists('*tagbar#currenttag') && winwidth(0) > g:LL_MedWidth
-        return tagbar#currenttag('[%s]', '', 'f')
-    end
+    let coc_func = get(b:, 'coc_current_function', '')
+    if coc_func !=# '' | return coc_func | endif
+    if exists('*tagbar#currenttag')
+        return tagbar#currenttag('%s', '', 'f')
+    endif
     return ''
 endfunction
 
 function! LL_CocStatus() abort "{{{2
-    if get(g:, 'did_coc_loaded', 0)
+    if winwidth(0) > g:LL_MinWidth && get(g:, 'did_coc_loaded', 0)
         return coc#status()
     endif
     return ''

@@ -13,11 +13,11 @@ let g:lightline = {
     \ 'tabline': {
     \   'left':
     \   [
-    \       [ 'buffers' ],
+    \       [ 'filename' ],
     \   ],
     \   'right':
     \   [
-    \       [ 'filename', 'filesize' ],
+    \       [ 'filesize' ],
     \   ],
     \ },
     \ 'active': {
@@ -25,11 +25,11 @@ let g:lightline = {
     \    [
     \       [ 'vim_mode', 'paste' ],
     \       [ 'filename_short' ],
-    \       [ 'git_status', 'coc_status'],
+    \       [ 'git_status', 'linter_checking', 'linter_errors', 'linter_warnings', 'coc_status'],
     \    ],
     \   'right':
     \    [
-    \       [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok', 'line_info' ],
+    \       [ 'line_info' ],
     \       [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
     \       [ 'current_tag' ],
     \    ]
@@ -68,8 +68,6 @@ let g:lightline = {
     \   'linter_errors': 'LL_LinterErrors',
     \   'linter_ok': 'lightline#ale#ok',
     \   'buffers' : 'lightline#bufferline#buffers',
-    \   'cocerror': 'LL_CocError',
-    \   'cocwarn': 'LL_CocWarn',
     \ },
     \ 'component_type': {
     \   'readonly': 'error',
@@ -99,8 +97,8 @@ let g:LL_FnSymbol = 'ƒ '                                        " Use for curre
 
 " Linter indicators
 let g:LL_LinterChecking = g:LL_nf ? "\uf110 " : '...'
-let g:LL_LinterWarnings = g:LL_nf ? "\uf071 " : '⧍'
-let g:LL_LinterErrors = g:LL_nf ? "\uf05e " : '✗'
+let g:LL_LinterWarnings = g:LL_nf ? "\uf071 " : '•'
+let g:LL_LinterErrors = g:LL_nf ? "\uf05e " : '•'
 let g:LL_LinterOK = ''
 
 " lightline#bufferline {{{2
@@ -139,10 +137,13 @@ let g:lightline#ale#indicator_warnings = g:LL_LinterWarnings
 let g:lightline#ale#indicator_errors = g:LL_LinterErrors
 let g:lightline#ale#indicator_ok = g:LL_LinterOK
 
-" coc#status {{{2
-if exists('*lightline#update')
-    autocmd vimrc User CocDiagnosticChange call lightline#update()
-endif
+" Autocommand for lightline#update {{{2
+augroup lightline_update
+    autocmd!
+    autocmd User CocDiagnosticChange
+        \ if exists('*lightline#update')
+        \ | call lightline#update() | endif
+augroup END
 
 " Section separators {{{2
 " Get separators based on settings above "{{{
@@ -447,12 +448,12 @@ endfunction
 
 function! LL_CocStatus() abort "{{{2
     if winwidth(0) > g:LL_MinWidth && get(g:, 'did_coc_loaded', 0)
-        return coc#status()
+        return get(g:, 'coc_status', '')
     endif
     return ''
 endfunction
 
-function! LL_CocError() abort "{{{2
+function! s:coc_error() abort "{{{2
   let info = get(b:, 'coc_diagnostic_info', {})
   if empty(info)
     return ''
@@ -464,7 +465,7 @@ function! LL_CocError() abort "{{{2
   return trim(join(errmsgs, ' ') . ' ')
 endfunction
 
-function! LL_CocWarn() abort " {{{2
+function! s:coc_warn() abort " {{{2
   let info = get(b:, 'coc_diagnostic_info', {})
   if empty(info)
     return ''
@@ -477,16 +478,19 @@ function! LL_CocWarn() abort " {{{2
 endfunction
 
 function! LL_LinterErrors() abort " {{{2
-    return LL_CocError() ==# '' ?
+    let coc = s:coc_error()
+    return empty(coc) ?
         \ lightline#ale#errors() :
-        \ LL_CocError()
+        \ coc
 endfunction
 
 function! LL_LinterWarnings() abort " {{{2
-    return LL_CocWarn() ==# '' ?
+    let coc = s:coc_warn()
+    return empty(coc) ?
         \ lightline#ale#warnings() :
-        \ LL_CocWarn()
+        \ coc
 endfunction
 
-" Set lightline theme
-let lightline['colorscheme'] = g:statusline_theme
+" Theme {{{2
+" let lightline['colorscheme'] = g:statusline_theme
+let lightline['colorscheme'] = 'Tomorrow_Night'

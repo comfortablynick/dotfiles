@@ -17,15 +17,15 @@ let g:lightline = {
     \   ],
     \   'right':
     \   [
-    \       [ 'filename' ],
+    \       [ 'filename', 'filesize' ],
     \   ],
     \ },
     \ 'active': {
     \   'left':
     \    [
     \       [ 'vim_mode', 'paste' ],
-    \       [ 'git_status', 'filename' ],
-    \       [ 'coc_status'],
+    \       [ 'filename_short' ],
+    \       [ 'git_status', 'coc_status'],
     \    ],
     \   'right':
     \    [
@@ -48,6 +48,8 @@ let g:lightline = {
     \ 'component_function': {
     \   'git_status': 'LL_GitStatus',
     \   'filename': 'LL_FileName',
+    \   'filename_short': 'LL_FileNameShort',
+    \   'filesize': 'LL_FileSize',
     \   'filetype_icon': 'LL_FileType',
     \   'fileformat_icon': 'LL_FileFormat',
     \   'fileencoding_non_utf': 'LL_FileEncoding',
@@ -85,7 +87,7 @@ let g:lightline = {
 
 " Section settings / glyphs {{{2
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
-let g:LL_MedWidth = 120                                         " Secondary width for some sections
+let g:LL_MedWidth = 140                                         " Secondary width for some sections
 let g:LL_LineNoSymbol = ''                                     " Use  for line no unless no PL fonts; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let g:LL_BranchSymbol = ' '                                    " Git branch symbol
@@ -152,10 +154,11 @@ function! LL_Separator(side) abort "{{{
     elseif a:side ==? 'right'
         return ''
     else
-        return
+        return ''
     end
 endfunction
 "}}}
+
 function! LL_Subseparator(side) abort "{{{
     if !g:LL_pl || g:LL_SimpleSep
         return '|'
@@ -164,7 +167,7 @@ function! LL_Subseparator(side) abort "{{{
     elseif a:side ==? 'right'
         return ''
     else
-        return
+        return ''
     endif
 endfunction
 "}}}
@@ -181,9 +184,9 @@ endfunction
 function! LL_Mode() abort "{{{2
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
-        \ 'n' :     ['NORMAL','NORM','N'],
+        \ 'n' :     ['NORMAL','NRM','N'],
         \ 'i' :     ['INSERT','INS','I'],
-        \ 'R' :     ['REPLACE','REPL','R'],
+        \ 'R' :     ['REPLACE','REP','R'],
         \ 'v' :     ['VISUAL','VIS','V'],
         \ 'V' :     ['V-LINE','V-LN','V-L'],
         \ '\<C-v>': ['V-BLOCK','V-BL','V-B'],
@@ -266,9 +269,12 @@ function! LL_FileType() abort "{{{2
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
     let venv = LL_VirtualEnvName()
-    return winwidth(0) > g:LL_MinWidth
-        \ ? (&filetype . ftsymbol .venv )
-        \ : ''
+    if winwidth(0) > g:LL_MedWidth
+        return &filetype.ftsymbol.venv
+    elseif winwidth(0) > g:LL_MinWidth
+        return expand('%:e')
+    endif
+    return ''
 endfunction
 
 function! LL_FileFormat() abort "{{{2
@@ -285,6 +291,23 @@ function! LL_FileFormat() abort "{{{2
         \ : ''
 endfunction
 
+function! LL_FileSize() abort "{{{2
+    let div = 1024.0
+    let num = getfsize(expand(@%))
+    if num <= 0 | return '' | endif
+    " Return bytes plain without decimal or unit
+    if num < div | return num | endif
+    let num /= div
+    for unit in ['k', 'M', 'G', 'T', 'P', 'E', 'Z']
+        if num < div
+            return printf('%.1f%s', num, unit)
+        endif
+        let num /= div
+    endfor
+    " This is quite a large file!
+    return printf('%.1fY')
+endfunction
+
 function! LL_FileEncoding() abort "{{{2
     " Only return a value if != utf-8
     return &fileencoding !=? 'utf-8' ? &fileencoding : ''
@@ -298,10 +321,10 @@ function! LL_IsNerd() abort "{{{2
     return expand('%:t') =~? 'NERD_tree'
 endfunction
 
-function! LL_FileName() abort "{{{2
+function! LL_IsSpecialFile() abort "{{{2
     let f = @%
     let b = &buftype
-    if empty(@%)
+    if empty(f)
         return '[No Name]'
     elseif f =~? '__Tagbar__'
         return ''
@@ -313,29 +336,47 @@ function! LL_FileName() abort "{{{2
         return empty(f) ? '[Scratch]' : f
     elseif b ==? 'help'
         return fnamemodify(f, ':t')
-    else
-        " Regular filename
-        " Shorten it gracefully
-        let p = substitute(f, expand('~'), '~', '')
-        let s = p
-        let numChars = winwidth(0) <= g:LL_MinWidth ? 1 :
-            \ winwidth(0) <= g:LL_MedWidth ? 2 : 999
-        if winwidth(0) <= g:LL_MedWidth
-            let parts = split(p, '/')
-            let i = 1
-            for part in parts
-                if i == 1
-                    let s = part
-                elseif i == len(parts)
-                    let s = s.'/'.part
-                else
-                    let s = s.'/'.part[0:numChars - 1]
-                endif
-                let i += 1
-            endfor
-        endif
-        return LL_ReadOnly().s.LL_Modified()
     endif
+    return -1
+endfunction
+
+function! LL_FileName() abort "{{{2
+    let f = @%
+    let special = LL_IsSpecialFile()
+    if special != -1
+        return special
+    endif
+    " Regular filename
+    " Shorten it gracefully
+    let p = substitute(f, expand('~'), '~', '')
+    let s = p
+    let numChars = winwidth(0) <= g:LL_MinWidth ? 1 :
+        \ winwidth(0) <= g:LL_MedWidth ? 2 : 999
+    if winwidth(0) <= g:LL_MedWidth
+        let parts = split(p, '/')
+        let i = 1
+        for part in parts
+            if i == 1
+                let s = part
+            elseif i == len(parts)
+                let s = s.'/'.part
+            else
+                let s = s.'/'.part[0:numChars - 1]
+            endif
+            let i += 1
+        endfor
+    endif
+    return LL_ReadOnly().s.LL_Modified()
+endfunction
+
+function! LL_FileNameShort() abort "{{{2
+    " Filename only
+    let f = @%
+    let special = LL_IsSpecialFile()
+    if special != -1
+        return special
+    endif
+    return printf('%s%s%s', LL_ReadOnly(), expand('%:t'), LL_Modified())
 endfunction
 
 function! LL_TabName() abort "{{{2
@@ -385,6 +426,7 @@ function! LL_GitStatus() abort "{{{2
 endfunction
 
 function! LL_VirtualEnvName() abort "{{{2
+    if exists('g:did_coc_loaded') | return '' | endif
     return &filetype ==# 'python' && !empty($VIRTUAL_ENV)
         \ ? printf(' (%s)', split($VIRTUAL_ENV, '/')[-1])
         \ : ''

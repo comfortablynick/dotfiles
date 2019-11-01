@@ -491,6 +491,6 @@ function! LL_LinterWarnings() abort " {{{2
         \ coc
 endfunction
 
-" Theme {{{2
+" Theme {{{1
 " let lightline['colorscheme'] = g:statusline_theme
-let lightline['colorscheme'] = 'Tomorrow_Night'
+" let lightline['colorscheme'] = 'Tomorrow_Night'

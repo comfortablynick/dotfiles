@@ -38,7 +38,7 @@
   "python.jediEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.linting.pydocstyleEnabled": true,
-  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Enabled": false,
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Args": ["--max-line-length=100"],
 

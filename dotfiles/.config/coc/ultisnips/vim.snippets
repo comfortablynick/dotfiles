@@ -24,9 +24,7 @@
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 snippet scriptguard "script reload guard" b
-if exists('${1:g:loaded_`!p snip.rv = snip.fn.replace('.','_')`}')
-	finish
-endif
+if exists('${1:g:loaded_`!p snip.rv = snip.fn.replace('.','_')`}') | finish | endif
 let $1 = 1$3
 endsnippet
 

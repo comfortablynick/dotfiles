@@ -1,10 +1,7 @@
 " vim:fdl=1
 " Config for lightline.vim status line
 scriptencoding utf-8
-
-if exists('g:loaded_lightline_vim_config')
-    finish
-endif
+if exists('g:loaded_lightline_vim_config') | finish | endif
 let g:loaded_lightline_vim_config = 1
 
 " Definitions {{{1
@@ -24,7 +21,7 @@ let g:lightline = {
     \   'left':
     \    [
     \       [ 'vim_mode', 'paste' ],
-    \       [ 'filename_short' ],
+    \       [ 'filename' ],
     \       [ 'git_status', 'linter_checking', 'linter_errors', 'linter_warnings', 'coc_status'],
     \    ],
     \   'right':
@@ -45,10 +42,11 @@ let g:lightline = {
     \           [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
     \       ]
     \ },
+    \ 'component': {
+    \   'filename': '%<%{LL_FileName()}',
+    \ },
     \ 'component_function': {
     \   'git_status': 'LL_GitStatus',
-    \   'filename': 'LL_FileName',
-    \   'filename_short': 'LL_FileNameShort',
     \   'filesize': 'LL_FileSize',
     \   'filetype_icon': 'LL_FileType',
     \   'fileformat_icon': 'LL_FileFormat',
@@ -83,10 +81,13 @@ let g:lightline = {
     \ 'subseparator': { 'left': '|', 'right': '|' },
     \ }
 
-" Section settings / glyphs {{{2
+" Window widths {{{2
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
 let g:LL_MedWidth = 140                                         " Secondary width for some sections
-let g:LL_LineNoSymbol = ''                                     " Use  for line no unless no PL fonts; alt: '␤'
+let g:LL_MaxWidth = 200                                         " Largest width for some (unnecessary) sections
+
+" Symbols/glyphs {{{2
+let g:LL_LineNoSymbol = ''                                     " Use  for line; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let g:LL_BranchSymbol = ' '                                    " Git branch symbol
 let g:LL_LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
@@ -344,40 +345,41 @@ endfunction
 function! LL_FileName() abort "{{{2
     let f = @%
     let special = LL_IsSpecialFile()
-    if special != -1
-        return special
-    endif
-    " Regular filename
-    " Shorten it gracefully
-    let p = substitute(f, expand('~'), '~', '')
-    let s = p
-    let numChars = winwidth(0) <= g:LL_MinWidth ? 1 :
-        \ winwidth(0) <= g:LL_MedWidth ? 2 : 999
-    if winwidth(0) <= g:LL_MedWidth
-        let parts = split(p, '/')
-        let i = 1
-        for part in parts
-            if i == 1
-                let s = part
-            elseif i == len(parts)
-                let s = s.'/'.part
-            else
-                let s = s.'/'.part[0:numChars - 1]
-            endif
-            let i += 1
-        endfor
-    endif
-    return LL_ReadOnly().s.LL_Modified()
-endfunction
+    if special != -1 | return special | endif
 
-function! LL_FileNameShort() abort "{{{2
-    " Filename only
-    let f = @%
-    let special = LL_IsSpecialFile()
-    if special != -1
-        return special
+    let s = expand('%:t')
+    let ww = winwidth(0)
+    if ww > g:LL_MinWidth
+        " Get full path and truncate gracefully
+        let p = substitute(f, expand('~'), '~', '')
+        let s = p
+        let chars = ww <= g:LL_MedWidth ? 2 :
+            \ ww <= g:LL_MaxWidth ? 3 :
+            \ 999 " No truncation
+        if chars < 999
+            if !empty(LL_CocStatus()) | let chars -= 1 | endif
+            let Shorten = { part -> part[0:chars - 1] }
+            let parts = split(p, '/')
+            let i = 1
+            if len(parts) > 1
+                for part in parts
+                    if i == 1
+                        let s = Shorten(part, chars)
+                    elseif i == len(parts)
+                        let s = s.'/'.part
+                    else
+                        let s = s.'/'.Shorten(part, chars)
+                    endif
+                    let i += 1
+                endfor
+            endif
+        endif
     endif
-    return printf('%s%s%s', LL_ReadOnly(), expand('%:t'), LL_Modified())
+    return printf('%s%s%s',
+        \ LL_ReadOnly(),
+        \ s,
+        \ LL_Modified()
+        \ )
 endfunction
 
 function! LL_TabName() abort "{{{2
@@ -434,10 +436,7 @@ function! LL_VirtualEnvName() abort "{{{2
 endfunction
 
 function! LL_CurrentTag() abort "{{{2
-    if winwidth(0) < g:LL_MedWidth | return '' | endif
-    " if get(b:, 'vista_nearest_method_or_function', '') !=# ''
-    "     return get(g:vista#renderer#icons, 'function', '') . ' ' . b:vista_nearest_method_or_function . '()'
-    " endif
+    if winwidth(0) < g:LL_MaxWidth | return '' | endif
     let coc_func = get(b:, 'coc_current_function', '')
     if coc_func !=# '' | return coc_func | endif
     if exists('*tagbar#currenttag')

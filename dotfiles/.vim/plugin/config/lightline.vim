@@ -180,9 +180,6 @@ let g:lightline.subseparator.left = LL_Subseparator('left')
 let g:lightline.subseparator.right = LL_Subseparator('right')
 
 " Component functions {{{1
-function! LL_Modified() abort "{{{2
-    return &filetype =~? 'help\|vimfiler' ? '' : &modified ? g:LL_ModSymbol : &modifiable ? '' : '-'
-endfunction
 function! LL_Mode() abort "{{{2
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
@@ -198,48 +195,32 @@ function! LL_Mode() abort "{{{2
         \ '\<C-s>': ['S-BLOCK','S-BL','S-B'],
         \ 't':      ['TERMINAL','TERM','T'],
         \ }
+    let l:special_modes = {
+        \ 'nerdtree':   'NERD',
+        \ 'tagbar':     'TAGS',
+        \ 'undotree':   'UNDO',
+        \ 'vista':      'VISTA',
+        \ 'qf':         '',
+        \ }
     let l:mode = mode()
-    let f = @%
-    if LL_IsNerd()
-        return 'NERD'
-    elseif f =~? '__Tagbar__'
-        return 'TAGS'
-    elseif f =~? 'undotree'
-        return 'UNDO'
-    elseif winwidth(0) > g:LL_MedWidth
+    if winwidth(0) > g:LL_MedWidth
         " No abbreviation
-        return l:mode_map[l:mode][0]
+        let l:mode_out = l:mode_map[l:mode][0]
     elseif winwidth(0) > g:LL_MinWidth
         " Medium abbreviation
-        return l:mode_map[l:mode][1]
+        let l:mode_out = l:mode_map[l:mode][1]
     else
         " Short abbrevation
-        return l:mode_map[l:mode][2]
+        let l:mode_out = l:mode_map[l:mode][2]
     endif
+    return get(l:special_modes, &filetype, l:mode_out)
 endfunction
 
-function! LL_IsNotFile() abort "{{{2
-    " Return true if not treated as file
-    let exclude = [
-        \ 'gitcommit',
-        \ 'nerdtree',
-        \ 'output',
-        \ 'vista',
-        \ 'undotree',
-        \ 'vimfiler',
-        \ 'tagbar',
-        \ ]
-    if index(exclude, &filetype) > -1 || index(exclude, expand('%:t')) > -1
-        return 1
-    endif
-    return 0
-endfunction
-
-function! LL_LinePercent() abort "{{{2
+function! s:line_percent() abort "{{{2
     return printf('%3d%%', line('.') * 100 / line('$'))
 endfunction
 
-function! LL_LineNo() abort "{{{2
+function! s:line_no() abort "{{{2
     let totlines = line('$')
     let maxdigits = len(string(totlines))
     return printf('%*d/%*d',
@@ -250,18 +231,18 @@ function! LL_LineNo() abort "{{{2
         \ )
 endfunction
 
-function! LL_ColNo() abort "{{{2
+function! s:col_no() abort "{{{2
     return printf('%3d', virtcol('.'))
 endfunction
 
 function! LL_LineInfo() abort "{{{2
-    return LL_IsNotFile() ? '' :
+    return s:is_not_file() ? '' :
         \ printf('%s %s %s %s :%s',
-        \ LL_LinePercent(),
+        \ s:line_percent(),
         \ g:LL_LineSymbol,
-        \ LL_LineNo(),
+        \ s:line_no(),
         \ g:LL_LineNoSymbol,
-        \ LL_ColNo()
+        \ s:col_no()
         \ )
 endfunction
 
@@ -286,44 +267,42 @@ function! LL_FileFormat() abort "{{{2
         \ ''
     " No output if fileformat is unix (standard)
     return &fileformat !=? 'unix' ?
-            \ LL_IsNotFile() ?
+            \ s:is_not_file() ?
             \ '' : winwidth(0) > g:LL_MedWidth
             \ ? (&fileformat . ' ' . ffsymbol )
             \ : ''
         \ : ''
 endfunction
 
-function! LL_FileSize() abort "{{{2
-    let div = 1024.0
-    let num = getfsize(expand(@%))
-    if num <= 0 | return '' | endif
-    " Return bytes plain without decimal or unit
-    if num < div | return num | endif
-    let num /= div
-    for unit in ['k', 'M', 'G', 'T', 'P', 'E', 'Z']
-        if num < div
-            return printf('%.1f%s', num, unit)
-        endif
-        let num /= div
-    endfor
-    " This is quite a large file!
-    return printf('%.1fY')
+function! s:is_not_file() abort "{{{2
+    " Return true if not treated as file
+    let exclude = [
+        \ 'gitcommit',
+        \ 'nerdtree',
+        \ 'output',
+        \ 'vista',
+        \ 'undotree',
+        \ 'vimfiler',
+        \ 'tagbar',
+        \ 'minpac',
+        \ 'vista',
+        \ 'qf',
+        \ ]
+    if index(exclude, &filetype) > -1 || index(exclude, expand('%:t')) > -1
+        return 1
+    endif
+    return 0
 endfunction
 
-function! LL_FileEncoding() abort "{{{2
-    " Only return a value if != utf-8
-    return &fileencoding !=? 'utf-8' ? &fileencoding : ''
+function! s:modified() abort "{{{2
+    return &filetype =~? 'help\|vimfiler' ? '' : &modified ? g:LL_ModSymbol : &modifiable ? '' : '-'
 endfunction
 
-function! LL_ReadOnly() abort "{{{2
+function! s:read_only() abort "{{{2
     return &filetype !~? 'help' && &readonly ? g:LL_ROSymbol : ''
 endfunction
 
-function! LL_IsNerd() abort "{{{2
-    return expand('%:t') =~? 'NERD_tree'
-endfunction
-
-function! LL_IsSpecialFile() abort "{{{2
+function! s:is_special_file() abort "{{{2
     let f = @%
     let b = &buftype
     if empty(f)
@@ -343,10 +322,11 @@ function! LL_IsSpecialFile() abort "{{{2
 endfunction
 
 function! LL_FileName() abort "{{{2
-    let f = @%
-    let special = LL_IsSpecialFile()
+    if s:is_not_file() | return '' | endif
+    let special = s:is_special_file()
     if special != -1 | return special | endif
 
+    let f = @%
     let s = expand('%:t')
     let ww = winwidth(0)
     if ww > g:LL_MinWidth
@@ -376,10 +356,32 @@ function! LL_FileName() abort "{{{2
         endif
     endif
     return printf('%s%s%s',
-        \ LL_ReadOnly(),
+        \ s:read_only(),
         \ s,
-        \ LL_Modified()
+        \ s:modified()
         \ )
+endfunction
+
+function! LL_FileSize() abort "{{{2
+    let div = 1024.0
+    let num = getfsize(expand(@%))
+    if num <= 0 | return '' | endif
+    " Return bytes plain without decimal or unit
+    if num < div | return num | endif
+    let num /= div
+    for unit in ['k', 'M', 'G', 'T', 'P', 'E', 'Z']
+        if num < div
+            return printf('%.1f%s', num, unit)
+        endif
+        let num /= div
+    endfor
+    " This is quite a large file!
+    return printf('%.1fY')
+endfunction
+
+function! LL_FileEncoding() abort "{{{2
+    " Only return a value if != utf-8
+    return &fileencoding !=? 'utf-8' ? &fileencoding : ''
 endfunction
 
 function! LL_TabName() abort "{{{2
@@ -416,7 +418,7 @@ function! LL_GitBranch() abort "{{{2
 endfunction
 
 function! LL_GitStatus() abort "{{{2
-    if !LL_IsNotFile() && winwidth(0) > g:LL_MinWidth
+    if !s:is_not_file() && winwidth(0) > g:LL_MinWidth
         let branch = LL_GitBranch()
         let hunks = LL_GitHunkSummary()
         return branch !=# '' ? printf('%s%s%s',

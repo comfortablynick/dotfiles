@@ -188,11 +188,11 @@ function! LL_Mode() abort "{{{2
         \ 'R' :     ['REPLACE','REP','R'],
         \ 'v' :     ['VISUAL','VIS','V'],
         \ 'V' :     ['V-LINE','V-LN','V-L'],
-        \ '\<C-v>': ['V-BLOCK','V-BL','V-B'],
+        \ "\<C-v>": ['V-BLOCK','V-BL','V-B'],
         \ 'c' :     ['COMMAND','CMD','C'],
         \ 's' :     ['SELECT','SEL','S'],
         \ 'S' :     ['S-LINE','S-LN','S-L'],
-        \ '\<C-s>': ['S-BLOCK','S-BL','S-B'],
+        \ "\<C-s>": ['S-BLOCK','S-BL','S-B'],
         \ 't':      ['TERMINAL','TERM','T'],
         \ }
     let l:special_modes = {
@@ -202,16 +202,16 @@ function! LL_Mode() abort "{{{2
         \ 'vista':      'VISTA',
         \ 'qf':         '',
         \ }
-    let l:mode = mode()
+    let l:mode = get(l:mode_map, mode(), mode())
     if winwidth(0) > g:LL_MedWidth
         " No abbreviation
-        let l:mode_out = l:mode_map[l:mode][0]
+        let l:mode_out = l:mode[0]
     elseif winwidth(0) > g:LL_MinWidth
         " Medium abbreviation
-        let l:mode_out = l:mode_map[l:mode][1]
+        let l:mode_out = l:mode[1]
     else
         " Short abbrevation
-        let l:mode_out = l:mode_map[l:mode][2]
+        let l:mode_out = l:mode[2]
     endif
     return get(l:special_modes, &filetype, l:mode_out)
 endfunction
@@ -277,7 +277,6 @@ endfunction
 function! s:is_not_file() abort "{{{2
     " Return true if not treated as file
     let exclude = [
-        \ 'gitcommit',
         \ 'nerdtree',
         \ 'output',
         \ 'vista',

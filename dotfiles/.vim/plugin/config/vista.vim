@@ -5,26 +5,39 @@ endif
 let g:loaded_vista_config_vim = 1
 
 " Calculate fzf preview width based on window width
-function s:vista_fzf_preview_width() abort
+function s:vista_fzf_preview_width(basewidth) abort
     let winwidth = winwidth(0)
-    let pwidth = 50
-    if winwidth < 200
-        let pwidth = 60 - (200 - winwidth)
+    let pwidth = a:basewidth
+    if winwidth < 225
+        let pwidth = a:basewidth - (200 - winwidth)
     endif
     return insert([], printf('right:%d%%', pwidth < 0 ? 0 : pwidth))
 endfunction
 
-if exists('*nvim_open_win') || exists('*popup_create')
+" Calculate sidebar width based on window width
+" Too complicated; just use simple binary choice
+function s:vista_sidebar_width(maxwidth, minwidth) abort
+    let winwidth = winwidth(0)
+    let diff = a:maxwidth - a:minwidth
+    let vwidth = a:maxwidth
+    if winwidth < 225
+        let vwidth = float2nr(round(((1 - ((225 - winwidth)/225.0)) * diff) + a:minwidth))
+    endif
+    return min([vwidth, a:maxwidth])
+endfunction
+
+if (exists('*nvim_open_win') || exists('*popup_create')) && winwidth(0) > 200
     let g:vista_echo_cursor_strategy = 'floating_win'
 else
     let g:vista_echo_cursor_strategy = 'echo'
 endif
 
+let g:vista_floating_delay = 1000
 let g:vista#renderer#enable_icon = 1
 let g:vista_close_on_jump = 0
-let g:vista_fzf_preview = s:vista_fzf_preview_width()
+let g:vista_fzf_preview = s:vista_fzf_preview_width(50)
 let g:vista_disable_statusline = exists('g:loaded_airline') || exists('g:loaded_lightline') || exists('g:loaded_eleline')
-let g:vista_sidebar_width = winwidth(0) > 200 ? 60 : 40
+let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
 
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious.

@@ -58,6 +58,9 @@ let g:completion_filetypes = {
     \       'txt',
     \       'ini',
     \       'muttrc',
+    \   ],
+    \ 'tabnine':
+    \   [
     \       'markdown',
     \   ],
     \ }
@@ -154,6 +157,7 @@ function! s:pack_init() abort
     endif
     Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
     Pack 'lifepillar/vim-mucomplete'
+    Pack 'zxqfl/tabnine-vim'
     Pack 'zchee/deoplete-jedi'
     Pack 'ponko2/deoplete-fish'
 
@@ -171,6 +175,11 @@ endfunction
 autocmd vimrc FileType *
     \ if index(g:completion_filetypes['coc'], &filetype) < 0
     \ | packadd vim-gitgutter
+    \ | endif
+
+autocmd vimrc FileType *
+    \ if index(g:completion_filetypes['tabnine'], &filetype) >= 0
+    \ | packadd tabnine-vim
     \ | endif
 
 autocmd vimrc FileType *

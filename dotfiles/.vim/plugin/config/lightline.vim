@@ -493,4 +493,4 @@ endfunction
 
 " Theme {{{1
 " let lightline['colorscheme'] = g:statusline_theme
-" let lightline['colorscheme'] = 'Tomorrow_Night'
+let lightline['colorscheme'] = 'oneish'

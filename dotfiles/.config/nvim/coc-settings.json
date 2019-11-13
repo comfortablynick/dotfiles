@@ -82,5 +82,11 @@
     //   "filetypes": ["rust"],
     //   "rootPatterns": ["Cargo.toml"]
     // }
+  },
+
+  // Explorer
+  "explorer.quitOnOpen": true,
+  "explorer.keyMappings": {
+    "s": "openInVsplit"
   }
 }

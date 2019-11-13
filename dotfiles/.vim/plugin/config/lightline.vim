@@ -1,4 +1,3 @@
-" vim:fdl=1
 " Config for lightline.vim status line
 scriptencoding utf-8
 if exists('g:loaded_lightline_vim_config') | finish | endif
@@ -196,11 +195,12 @@ function! LL_Mode() abort "{{{2
         \ 't':      ['TERMINAL','TERM','T'],
         \ }
     let l:special_modes = {
-        \ 'nerdtree':   'NERD',
-        \ 'tagbar':     'TAGS',
-        \ 'undotree':   'UNDO',
-        \ 'vista':      'VISTA',
-        \ 'qf':         '',
+        \ 'nerdtree':       'NERD',
+        \ 'tagbar':         'TAGS',
+        \ 'undotree':       'UNDO',
+        \ 'vista':          'VISTA',
+        \ 'qf':             '',
+        \ 'coc-explorer':   'EXPLORER',
         \ }
     let l:mode = get(l:mode_map, mode(), mode())
     if winwidth(0) > g:LL_MedWidth
@@ -286,6 +286,7 @@ function! s:is_not_file() abort "{{{2
         \ 'minpac',
         \ 'vista',
         \ 'qf',
+        \ 'coc-explorer',
         \ ]
     if index(exclude, &filetype) > -1 || index(exclude, expand('%:t')) > -1
         return 1

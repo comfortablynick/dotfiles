@@ -43,5 +43,9 @@ let g:neoformat_enabled_go = [ 'goimports' ]
 let g:neoformat_enabled_yaml = [ 'prettier' ]
 
 " Maps/Commands
-noremap <silent> <F2> :Neoformat<CR>
-autocmd vimrc BufWritePre *.{bash,sh} Neoformat
+noremap <silent> <F3> :Neoformat<CR>
+
+augroup neoformat_config
+    autocmd!
+    autocmd BufWritePre *.{bash,sh} Neoformat
+augroup END

@@ -34,9 +34,11 @@ function! config#coc#maps() abort
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gr <Plug>(coc-rename)
+    nmap <silent> <F2> <Plug>(coc-rename)
     nmap <silent> gt <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gy <Plug>(coc-references)
+    nmap <silent> ge :CocCommand explorer --toggle<CR>
 
     " coc-git
     nmap [g <Plug>(coc-git-prevchunk)

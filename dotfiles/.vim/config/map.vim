@@ -40,8 +40,5 @@ nnoremap <CR> :nohlsearch<CR><CR>
 " Use q to close buffer on read-only files
 autocmd vimrc FileType netrw,help nnoremap <silent> q :bd<CR>
 
-" Set Executable
-nnoremap <F3> :call nick#functions#set_executable()<CR>
-
 " View highlight under cursor
 nnoremap <Leader>h :echo nick#functions#syn_group()<CR>

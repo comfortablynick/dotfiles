@@ -26,6 +26,7 @@
   "coc.preferences.formatOnType": false,
   "coc.preferences.messageLevel": "error",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+  "coc.preferences.formatOnSaveFiletypes": [],
 
   // Rust
   "rust-client.channel": "nightly",
@@ -44,6 +45,8 @@
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,
+  "tslint.autoFixOnSave": true,
+  "tslint.suppressWhileTypeErrorsPresent": true,
 
   // YAML
   "yaml.format.enable": true,

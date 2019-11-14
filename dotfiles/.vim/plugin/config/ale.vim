@@ -35,6 +35,7 @@ let g:ale_linters = {
     \ 'go': ['golint'],
     \ 'rust': [],
     \ 'sh': ['shellcheck'],
+    \ 'typescript': [],
     \ 'yaml.ansible': ['ansible-lint'],
     \ }
 
@@ -57,7 +58,7 @@ let g:ale_python_flake8_options = '--max-line-length 100  --ignore E203,E302,W50
 let g:ale_python_mypy_ignore_invalid_syntax = 1
 let g:ale_python_mypy_options = '--ignore-missing-imports'
 let g:ale_python_auto_pipenv = 1
-let g:ale_javascript_prettier_options = '--trailing-comma es5 --tab-width 4 --endOfLine lf'
+let g:ale_javascript_prettier_options = '--trailing-comma all --tab-width 4 --endOfLine lf'
 let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
 let g:ale_rust_rls_toolchain = 'stable'

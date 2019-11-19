@@ -15,6 +15,7 @@ let g:airline_themes = {
     \ 'snow-light': 'snow_light',
     \ 'papercolor': 'papercolor',
     \ 'PaperColor': 'PaperColor',
+    \ 'PaperColor-dark': 'oneish',
     \ 'gruvbox': 'gruvbox',
     \ }
 " Vim / Neovim Theme {{{1
@@ -52,4 +53,3 @@ let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
 
 " Set airline theme
 let g:airline_theme = tolower(g:statusline_theme)
-

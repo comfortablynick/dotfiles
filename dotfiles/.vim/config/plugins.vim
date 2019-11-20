@@ -54,7 +54,6 @@ let g:completion_filetypes = {
     \       'pro',
     \       'toml',
     \       'mail',
-    \       'gitcommit',
     \       'txt',
     \       'ini',
     \       'muttrc',
@@ -62,6 +61,7 @@ let g:completion_filetypes = {
     \ 'tabnine':
     \   [
     \       'markdown',
+    \       'gitcommit',
     \   ],
     \ }
 

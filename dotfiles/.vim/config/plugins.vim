@@ -61,7 +61,6 @@ let g:completion_filetypes = {
     \ 'tabnine':
     \   [
     \       'markdown',
-    \       'gitcommit',
     \   ],
     \ }
 

@@ -45,7 +45,7 @@
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,
-  "tslint.autoFixOnSave": true,
+  "tslint.autoFixOnSave": false, // not reliable; use autocmd instead
   "tslint.suppressWhileTypeErrorsPresent": true,
 
   // YAML

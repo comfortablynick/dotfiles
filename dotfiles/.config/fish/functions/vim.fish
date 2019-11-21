@@ -6,12 +6,12 @@ function vim --description 'Calls Neovim or Vim based on nvim and availability'
         command nvim $argv
         return
     end
-	if test -n (type -qf "$VISUAL" 2>/dev/null)
+	if type -qf "$VISUAL" 2>/dev/null
         command $VISUAL $argv
-    else if test -n (type -qf "$EDITOR" 2>/dev/null)
+    else if type -qf "$EDITOR" 2>/dev/null
         command $EDITOR $argv
     else
         # No VISUAL/EDITOR defined; call vim
-        command vim $argv
+        command nvim $argv
     end
 end

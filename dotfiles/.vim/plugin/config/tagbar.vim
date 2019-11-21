@@ -9,7 +9,21 @@ let g:tagbar_compact = 1                                        " Eliminate help
 let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
 let g:tagbar_sort = 0                                           " Sort tags alphabetically vs. in file order
 
-" Maps
+" Filetypes
+let g:tagbar_type_typescript = {
+  \ 'ctagstype': 'typescript',
+  \ 'kinds': [
+    \ 'c:classes',
+    \ 'n:modules',
+    \ 'f:functions',
+    \ 'v:variables',
+    \ 'v:varlambdas',
+    \ 'm:members',
+    \ 'i:interfaces',
+    \ 'e:enums',
+  \ ]
+\ }
 
+" Maps
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 noremap <silent> <F8> :TagbarToggle<CR>

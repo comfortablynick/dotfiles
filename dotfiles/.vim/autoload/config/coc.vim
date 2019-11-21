@@ -16,7 +16,7 @@ function! config#coc#cmds() abort
             autocmd CursorHold * silent call CocActionAsync('highlight')
         endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-        autocmd BufWritePre *.ts :call CocAction('runCommand', 'tsserver.executeAutoFix')
+        " autocmd BufWritePre *.ts :call CocAction('runCommand', 'tsserver.executeAutoFix')
     augroup END
 endfunction
 

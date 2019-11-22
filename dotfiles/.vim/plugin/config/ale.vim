@@ -32,6 +32,7 @@ let g:ale_linters = {
     \ 'python': [],
     \ 'cpp': [],
     \ 'c': ['clangtidy','gcc'],
+    \ 'lua': [],
     \ 'go': ['golint'],
     \ 'rust': [],
     \ 'sh': ['shellcheck'],

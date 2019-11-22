@@ -35,6 +35,7 @@ let g:completion_filetypes = {
     \       'typescript',
     \       'javascript',
     \       'json',
+    \       'lua',
     \       'go',
     \       'python',
     \       'sh',
@@ -45,7 +46,6 @@ let g:completion_filetypes = {
     \ 'mucomplete':
     \   [
     \       'pro',
-    \       'toml',
     \       'mail',
     \       'txt',
     \       'ini',
@@ -54,6 +54,7 @@ let g:completion_filetypes = {
     \ 'tabnine':
     \   [
     \       'markdown',
+    \       'toml',
     \   ],
     \  'nvim-lsp':
     \   [],
@@ -116,6 +117,9 @@ function! s:pack_init() abort
     Pack 'liuchengxu/vim-clap'
     Pack 'itchyny/lightline.vim'
 
+    " Lua {{{2
+    Pack 'norcalli/nvim_utils',             {'type': 'start'}
+
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
@@ -134,8 +138,8 @@ function! s:pack_init() abort
     Pack 'pearofducks/ansible-vim'
 
     " Git {{{2
-    Pack 'airblade/vim-gitgutter',      {'type': 'opt'}
-    Pack 'tpope/vim-fugitive',          {'type': 'opt'}
+    Pack 'airblade/vim-gitgutter'
+    Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
 
     " Snippets {{{2
@@ -150,7 +154,7 @@ function! s:pack_init() abort
         Pack 'neoclide/coc.nvim',
             \ { 'do': 'split term://yarn install --frozen-lockfile' }
     endif
-    Pack 'Shougo/deoplete.nvim',    {'type': 'opt'}
+    Pack 'Shougo/deoplete.nvim'
     Pack 'lifepillar/vim-mucomplete'
     Pack 'zxqfl/tabnine-vim'
     Pack 'zchee/deoplete-jedi'
@@ -193,6 +197,7 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
+packloadall
 Load lightline.vim
 Load fzf
 Load fzf.vim

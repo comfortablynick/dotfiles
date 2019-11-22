@@ -1,3 +1,4 @@
+-- From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
 function NavigationFloatingWin()
   -- get the editor's max width and height
   local width = vim.api.nvim_get_option("columns")

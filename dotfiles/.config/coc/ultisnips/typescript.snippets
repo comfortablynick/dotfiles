@@ -23,6 +23,12 @@
 #		endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+snippet iife "Immediately-Invoked Function Expression (iife) ES6"
+((${1}) => {
+	${VISUAL}$0
+})(${2:$1});
+endsnippet
+
 snippet exfun "exported function (exfun)" b
 export function ${1:function_name}(${2:argument}: ${3:type}) {
 	${VISUAL}$0

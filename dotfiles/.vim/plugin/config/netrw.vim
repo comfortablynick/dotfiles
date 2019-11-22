@@ -1,6 +1,10 @@
-if exists('g:loaded_netrw_vim_config')
-    finish
-endif
+" ====================================================
+" Filename: plugin/config/netrw.vim
+" Author: Nick Murphy
+" License: MIT License
+" Last Change: 2019-11-22
+" ====================================================
+if exists('g:loaded_netrw_vim_config') | finish | endif
 let g:loaded_netrw_vim_config = 1
 
 "Toggles explorer buffer

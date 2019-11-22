@@ -23,8 +23,28 @@
 #		endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+global !p
+from pathlib import PurePath
+def file_relative_path(path):
+	"""Return path relative to .vim directory."""
+	fp = PurePath(path)
+	rel = fp.relative_to(os.path.expanduser("~/dotfiles/dotfiles/.vim"))
+	return str(rel)
+endglobal
+
+# Author:   ${1:`!v g:snippets_author`} <${2:`!v g:snippets_author_email`}>
+snippet doc "Script documetation" b
+" ====================================================
+" Filename: `!p snip.rv = file_relative_path(path)`
+" Author:   Nick Murphy
+" License:  MIT
+" Last Change: `date -I`
+" ====================================================
+$0
+endsnippet
+
 snippet scriptguard "script reload guard" b
-if exists('${1:g:loaded_`!p snip.rv = snip.fn.replace('.','_')`}') | finish | endif
+if exists('${1:g:loaded_`!p snip.rv = snip.fn.replace('.','_').replace('-', '_')`}') | finish | endif
 let $1 = 1$3
 endsnippet
 

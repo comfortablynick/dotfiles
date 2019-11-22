@@ -9,6 +9,7 @@ let g:coc_global_extensions = [
     \ 'coc-snippets',
     \ 'coc-json',
     \ 'coc-rls',
+    \ 'coc-lua',
     \ 'coc-python',
     \ 'coc-tsserver',
     \ 'coc-git',

@@ -63,6 +63,10 @@ dotfiles:
     dst: ~/.vim/ftplugin
     link: link
     src: .vim/ftplugin
+  d_lua_2:
+    src: .vim/lua
+    dst: ~/.vim/lua
+    link: link
   d_git:
     dst: ~/.config/git
     link: link
@@ -87,6 +91,10 @@ dotfiles:
     dst: ~/.config/omf
     link: link
     src: .config/omf
+  d_lua:
+    src: .vim/lua
+    dst: ~/.local/share/nvim/site/lua
+    link: link
   d_plugin:
     dst: ~/.local/share/nvim/site/plugin
     link: link
@@ -267,6 +275,7 @@ profiles:
     - d_rustfmt
     - d_pip
     - f_direnvrc
+    - d_lua
   io:
     dotfiles:
     - f_bash_linux
@@ -283,6 +292,7 @@ profiles:
     - d_config_2
     - d_ftdetect_2
     - d_ftplugin_2
+    - d_lua_2
     include:
     - core
     - ansible

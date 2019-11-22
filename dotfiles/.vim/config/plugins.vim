@@ -9,13 +9,6 @@
 
 scriptencoding utf-8
 " Helper functions/variables {{{1
-" Vim-Plug Cond() {{{2
-" Add conditions that aren't supported directly by vim-plug
-" function! Cond(cond, ...)
-"     let opts = get(a:000, 0, {})
-"     return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
-" endfunction
-
 let g:vim_exists = executable('vim')
 
 " Completion filetypes {{{2
@@ -39,14 +32,14 @@ let g:completion_filetypes = {
     \       'rust',
     \       'cpp',
     \       'c',
+    \       'typescript',
+    \       'javascript',
     \       'json',
     \       'go',
-    \       'javascript',
-    \       'typescript',
+    \       'python',
     \       'sh',
     \       'bash',
     \       'vim',
-    \       'python',
     \       'yaml',
     \   ],
     \ 'mucomplete':
@@ -62,6 +55,8 @@ let g:completion_filetypes = {
     \   [
     \       'markdown',
     \   ],
+    \  'nvim-lsp':
+    \   [],
     \ }
 
 " Exclude from default completion
@@ -151,6 +146,7 @@ function! s:pack_init() abort
 
     " Completion {{{2
     if has('nvim')
+        Pack 'neovim/nvim-lsp'
         Pack 'neoclide/coc.nvim',
             \ { 'do': 'split term://yarn install --frozen-lockfile' }
     endif

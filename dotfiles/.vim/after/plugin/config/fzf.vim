@@ -32,7 +32,9 @@ command! -bang -nargs=* -complete=dir Files
   \                    <bang>0)
 
 " use bottom split
-let g:fzf_layout = { 'down': '~30%' }
+" let g:fzf_layout = { 'down': '~30%' }
+lua require('fzf_nav')
+let g:fzf_layout = { 'window': 'lua NavigationFloatingWin()' }
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Clear'],

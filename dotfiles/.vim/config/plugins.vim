@@ -66,7 +66,6 @@ let g:nocompletion_filetypes = [
     \ ]
 
 " Packages {{{1
-let g:use_nerdtree = 1                                          " Use NERDTree instead of netrw as explorer
 " Minpac Init {{{2
 if has('nvim')
     let minpac_path = expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/minpac')

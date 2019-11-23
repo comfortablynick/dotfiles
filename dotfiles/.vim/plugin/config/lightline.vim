@@ -196,6 +196,7 @@ function! LL_Mode() abort "{{{2
         \ }
     let l:special_modes = {
         \ 'nerdtree':       'NERD',
+        \ 'netrw':          'NETRW',
         \ 'tagbar':         'TAGS',
         \ 'undotree':       'UNDO',
         \ 'vista':          'VISTA',
@@ -278,6 +279,7 @@ function! s:is_not_file() abort "{{{2
     " Return true if not treated as file
     let exclude = [
         \ 'nerdtree',
+        \ 'netrw',
         \ 'output',
         \ 'vista',
         \ 'undotree',

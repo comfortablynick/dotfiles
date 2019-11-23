@@ -1,4 +1,10 @@
-" Coc.nvim configuration
+" ====================================================
+" Filename:    autoload/config/coc.vim
+" Description: Coc configuration
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-11-23
+" ====================================================
 
 " Set autocmds if LC is loaded
 function! config#coc#cmds() abort
@@ -73,6 +79,7 @@ function! config#coc#maps() abort
 endfunction
 
 function! config#coc#init() abort
+    let g:use_explorer = 'coc-explorer'
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'

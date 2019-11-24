@@ -98,6 +98,7 @@ function! s:pack_init() abort
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
     Pack 'scrooloose/nerdcommenter'
+    Pack 'tomtom/tcomment_vim'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
     Pack 'liuchengxu/vista.vim'
@@ -200,7 +201,7 @@ packloadall
 Load lightline.vim
 Load fzf
 Load fzf.vim
-Load nerdcommenter
+Load tcomment_vim
 Load tagbar
 Load vista.vim
 Load ale

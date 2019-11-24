@@ -51,7 +51,7 @@ function! config#coc#maps() abort
     nmap [g <Plug>(coc-git-prevchunk)
     nmap ]g <Plug>(coc-git-nextchunk)
     nmap gs <Plug>(coc-git-chunkinfo)
-    nmap gc <Plug>(coc-git-commit)
+    nmap gco <Plug>(coc-git-commit)
 
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)

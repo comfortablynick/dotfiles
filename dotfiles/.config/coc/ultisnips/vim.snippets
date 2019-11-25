@@ -44,8 +44,16 @@ snippet doc "Script documetation" b
 $0
 endsnippet
 
-snippet scriptguard "script reload guard" b
-if exists('${1:g:loaded_`!p snip.rv = snip.fn.replace('.','_').replace('-', '_')`}') | finish | endif
+# Uses unique string so guards aren't duplicated easily
+snippet scriptguard "script reinclusion guard" b
+if exists('${1:g:loaded_`!p
+if not snip.c:
+	import random, string
+	name = re.sub(r'[^A-Za-z0-9]+','_', snip.fn)
+	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()
+	snip.rv = '%s_%s' % (name,rand)
+else:
+	snip.rv = snip.c`}') | finish | endif
 let $1 = 1$3
 endsnippet
 

@@ -1,0 +1,45 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+snippet docfunc "document function with types" "re.search(r'def (?P<name>.*)\((?P<params>.*)\)(?: -> )?(?P<ret_type>.*):', snip.buffer[snip.line-1])" e
+"""${1:Description.}
+
+${2:`!p
+params = [
+	"- %s" % p.strip()
+	for p in snip.context.group('params').split(',')
+	if p.strip() != "self"
+	]
+snip.rv = "Parameters\n__________\n\n"
+snip.rv += "\n".join(params)
+snip.rv += "\n"
+ret = snip.context.group('ret_type').strip()
+if ret:
+	snip.rv += "\nReturns\n_______\n\n"
+	snip.rv += "- %s" % ret
+snip.rv += "\n"
+`}
+"""
+endsnippet

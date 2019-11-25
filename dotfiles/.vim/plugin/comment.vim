@@ -5,6 +5,8 @@
 " License:     MIT
 " Last Change: 2019-11-24
 " ====================================================
+if exists('g:loaded_comment_vim_qsyxneop') | finish | endif
+let g:loaded_comment_vim_qsyxneop = 1
 
 " Uses b:commentstring or 'commentstring' as the comment pattern
 " example:

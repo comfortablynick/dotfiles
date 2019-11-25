@@ -1,11 +1,12 @@
-if exists('g:loaded_minpac_vim_funcs')
-    finish
-endif
-let g:loaded_minpac_vim_funcs = 1
+" ====================================================
+" Filename:    autoload/config/minpac.vim
+" Description: Custom minpac functions
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-11-24
+" ====================================================
 
-" TODO: add FileType autocmd function
-
-function! nick#minpac#add(repo, ...) abort
+function! config#minpac#add(repo, ...) abort
     let l:opts = extend(copy(get(a:000, 0, {})),
         \ { 'type': 'opt'}, 'keep')
     if has_key(l:opts, 'for')
@@ -18,7 +19,7 @@ function! nick#minpac#add(repo, ...) abort
     end
 endfunction
 
-function! nick#minpac#update_all() abort
+function! config#minpac#update_all() abort
     " Load remote plugins
     let g:deoplete#enable_at_startup = 0
     Load deoplete.nvim

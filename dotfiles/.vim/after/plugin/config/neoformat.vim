@@ -41,6 +41,7 @@ let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 
 let g:neoformat_enabled_go = [ 'goimports' ]
 let g:neoformat_enabled_yaml = [ 'prettier' ]
+let g:neoformat_enabled_lua = ['luafmt']
 
 " Maps/Commands
 noremap <silent> <F3> :Neoformat<CR>

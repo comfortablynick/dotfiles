@@ -83,7 +83,7 @@ function! s:pack_init() abort
         echo "Minpac doesn't exist! Check download location"
         return
     endif
-    command! -nargs=+ Pack call nick#minpac#add(<args>)
+    command! -nargs=+ Pack call config#minpac#add(<args>)
     if has('nvim')
         call minpac#init({'dir': expand('$XDG_DATA_HOME/nvim/site')})
     else
@@ -99,6 +99,7 @@ function! s:pack_init() abort
     Pack 'mhinz/vim-startify'
     Pack 'scrooloose/nerdcommenter'
     Pack 'tomtom/tcomment_vim'
+    Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
     Pack 'liuchengxu/vista.vim'
@@ -190,42 +191,42 @@ autocmd vimrc FileType *
 
 " Pack commands {{{2
 " Define commands for updating/cleaning the plugins.
-command! PackUpdate call <SID>pack_init() | call nick#minpac#update_all()
+command! PackUpdate call <SID>pack_init() | call config#minpac#update_all()
 command! PackClean  call <SID>pack_init() | call minpac#clean()
 command! PackStatus call <SID>pack_init() | call minpac#status()
 " Load :: use in vimrc files to load on startup
+" (is this needed? `packadd` should work fine)
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
 packloadall
-Load lightline.vim
-Load fzf
-Load fzf.vim
-Load tcomment_vim
-Load tagbar
-Load vista.vim
-Load ale
-Load neoformat
-Load undotree
-Load asyncrun.vim
-Load vim-sneak
-Load vim-fugitive
-Load vim-surround
-Load vim-localvimrc
-Load vim-clap
+packadd! lightline.vim
+packadd! fzf
+packadd! fzf.vim
+packadd! tagbar
+packadd! vista.vim
+packadd! ale
+packadd! neoformat
+packadd! undotree
+packadd! asyncrun.vim
+packadd! vim-sneak
+packadd! vim-fugitive
+packadd! vim-surround
+packadd! vim-localvimrc
+packadd! vim-clap
 
 " Snippets
 " Load ultisnips
-Load vim-snippets
+packadd! vim-snippets
 
 " Syntax
-Load vim-cpp-modern
-Load vim-markdown
-Load ansible-vim
-Load semshi
+packadd! vim-cpp-modern
+packadd! vim-markdown
+packadd! ansible-vim
+packadd! semshi
 
 " Tmux
-Load vim-tmux-runner
-Load vim-tmux-navigator
+packadd! vim-tmux-runner
+packadd! vim-tmux-navigator
 
 " vim:set fdm=marker fdl=1:

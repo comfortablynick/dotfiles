@@ -41,4 +41,4 @@ nnoremap <CR> :nohlsearch<CR><CR>
 autocmd vimrc FileType netrw,help nnoremap <silent> q :bd<CR>
 
 " View highlight under cursor
-nnoremap <Leader>h :echo nick#functions#syn_group()<CR>
+nnoremap <Leader>h :echo syntax#syn_group()<CR>

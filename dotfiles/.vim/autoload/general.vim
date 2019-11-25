@@ -1,6 +1,13 @@
-" Personal functions
+" ====================================================
+" Filename:    autoload/general.vim
+" Description: Misc functions
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-11-24
+" ====================================================
+
 " Add shebang for new file
-function! nick#functions#set_shebang() abort
+function! general#set_shebang() abort
     python3 << EOP
 import vim
 shebang = {
@@ -26,12 +33,12 @@ EOP
 endfunction
 
 " Get path of current file
-function! nick#functions#get_path() abort
+function! general#get_path() abort
     return expand('%:p')
 endfunction
 
 " Set file as executable by user
-function! nick#functions#set_executable_bit() abort
+function! general#set_executable_bit() abort
     python3 << EOP
 import os
 import stat
@@ -55,27 +62,13 @@ EOP
 endfunction
 
 " Set shebang and executable bit
-function! nick#functions#set_executable() abort
-    call nick#functions#set_executable_bit()
-    call nick#functions#set_shebang()
+function! general#set_executable() abort
+    call general#set_executable_bit()
+    call general#set_shebang()
 endfunction
 
 " Get character under cursor
-function! nick#functions#get_cursor_char() abort
+function! general#get_cursor_char() abort
     return strcharpart(strpart(getline('.'), col('.') - 1), 0, 1)
 endfunction
 
-" Get syntax group of item under cursor
-function! nick#functions#syn_group() abort
-    let l:s = synID(line('.'), col('.'), 1)
-    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun
-
-" Return details of syntax highlight
-function! nick#functions#extract_highlight(group, what, ...) abort
-    if a:0 == 1
-        return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
-    else
-        return synIDattr(synIDtrans(hlID(a:group)), a:what)
-    endif
-endfunction

@@ -25,13 +25,13 @@ set autoread                                                    " Detect when a 
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{1
-filetype plugin on                                              " Allow loading .vim files for different filetypes
-syntax enable                                                   " Syntax highlighting on
+" filetype plugin on                                              " Allow loading .vim files for different filetypes
+" syntax enable                                                   " Syntax highlighting on
 
 " set encoding=utf-8                                              " Default to unicode
 " scriptencoding utf-8
 " set shell=bash                                                  " Use bash to execute commands instead of sh
-colorscheme default                                             " Def colors (overwritten by theme.vim)
+" colorscheme default                                             " Def colors (overwritten by theme.vim)
 " set hidden                                                      " Don't unload hidden buffers
 " set fileformat=unix                                             " Always use LF and not CRLF
 " set termencoding=utf-8                                          " Unicode
@@ -48,7 +48,7 @@ colorscheme default                                             " Def colors (ov
 " set noruler                                                     " Line position (not needed if using a statusline plugin
 " set showmatch                                                   " Show matching pair of brackets (), [], {}
 " set updatetime=300                                              " Update more often (helps GitGutter)
-set signcolumn=yes                                              " Always show; keep appearance consistent
+" set signcolumn=yes                                              " Always show; keep appearance consistent
 " set scrolloff=10                                                " Lines before/after cursor during scroll
 " set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
 " set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)

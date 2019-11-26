@@ -19,7 +19,9 @@ augroup vimrc
 augroup END
 
 " CONFIG FILES ==================================
-lua require('init')
+lua init = require('init')
+lua init.Set_Options()
+
 let g:vim_home = get(g:, 'vim_home', expand('$HOME/dotfiles/dotfiles/.vim/config/'))
 
 let config_list = [

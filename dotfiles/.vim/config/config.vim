@@ -8,11 +8,11 @@
 " Vim/Neovim Only {{{1
 if has('nvim')
     " Neovim Only
-    set inccommand=split                                        " Live substitution
-    let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
-    let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
-    let &shadafile =
-        \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
+    " set inccommand=split                                        " Live substitution
+    " let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
+    " let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
+    " let &shadafile =
+    "     \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
@@ -20,9 +20,9 @@ else
 endif
 
 " Files/Swap/Backup {{{1
-set noswapfile                                                  " Swap files if vim quits without saving
-set autoread                                                    " Detect when a file has been changed outside of vim
-set backupdir=~/.vim/backup//                                   " Store backup files
+" set noswapfile                                                  " Swap files if vim quits without saving
+" set autoread                                                    " Detect when a file has been changed outside of vim
+" set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{1
 " filetype plugin on                                              " Allow loading .vim files for different filetypes
@@ -63,21 +63,21 @@ set backupdir=~/.vim/backup//                                   " Store backup f
 " set secure                                                      " Don't execute code in local .vimrcs
 
 " Completion {{{1
-set completeopt+=preview                                        " Enable preview option for completion
-set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
+" set completeopt+=preview                                        " Enable preview option for completion
+" set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{1
-set foldenable                                                  " Enable folds by default
-set foldmethod=marker                                           " Fold using markers by default
-set foldnestmax=5                                               " Max nested levels (default=20)
+" set foldenable                                                  " Enable folds by default
+" set foldmethod=marker                                           " Fold using markers by default
+" set foldnestmax=5                                               " Max nested levels (default=20)
 
 " Indents {{{1
-set expandtab                                                   " Expand tab to spaces
-set smartindent                                                 " Attempt smart indenting
-set autoindent                                                  " Attempt auto indenting
-set tabstop=4                                                   " How many spaces a tab is worth
-set shiftwidth=0                                                " Columns of whitespace per indent (0 = &tabstop)
-set backspace=2                                                 " Backspace behaves as expected
+" set expandtab                                                   " Expand tab to spaces
+" set smartindent                                                 " Attempt smart indenting
+" set autoindent                                                  " Attempt auto indenting
+" set tabstop=4                                                   " How many spaces a tab is worth
+" set shiftwidth=0                                                " Columns of whitespace per indent (0 = &tabstop)
+" set backspace=2                                                 " Backspace behaves as expected
 let g:vim_indent_cont = &tabstop                                " Indent after \ in Vim script
 
 " Search & replace {{{1
@@ -139,12 +139,12 @@ if &term =~# '^screen'
 endif
 
 " Get color theme from env var {{{2
-function! GetColorTheme() abort
+function! s:get_color_theme() abort
     return has('nvim') ?
         \ !empty('$NVIM_COLOR') ? $NVIM_COLOR : 'papercolor-dark' :
         \ !empty('$VIM_COLOR') ? $VIM_COLOR : 'gruvbox-dark'
 endfunction
-let g:vim_color = GetColorTheme()
+let g:vim_color = s:get_color_theme()
 
 " g:vim_base_color: 'nord-dark' -> 'nord'
 let g:vim_base_color = substitute(
@@ -164,8 +164,3 @@ let g:vim_color_variant = substitute(
 if $TMUX_SESSION ==? 'ios'
     set timeoutlen=400
 endif
-
-" Cursor {{{1
-" set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
-"     \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-"     \,sm:block-blinkwait175-blinkoff150-blinkon175

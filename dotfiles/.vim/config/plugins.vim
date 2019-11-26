@@ -98,7 +98,6 @@ function! s:pack_init() abort
     Pack 'scrooloose/nerdtree'
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
-    Pack 'scrooloose/nerdcommenter'
     Pack 'tomtom/tcomment_vim'
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'

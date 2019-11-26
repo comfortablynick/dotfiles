@@ -17,6 +17,7 @@ let g:airline_themes = {
     \ 'PaperColor': 'PaperColor',
     \ 'PaperColor-dark': 'oneish',
     \ 'gruvbox': 'gruvbox',
+    \ 'onedark': 'onedark',
     \ }
 " Vim / Neovim Theme {{{1
 " Set theme options/overrides {{{2

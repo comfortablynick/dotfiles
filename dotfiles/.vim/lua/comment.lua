@@ -24,5 +24,5 @@ local function text_object_define(mapping, function_name)
 end
 
 function TestComment()
-    text_object_define(",j", "text_object_comment")
+    text_object_define(",e", "text_object_comment")
 end

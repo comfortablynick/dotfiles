@@ -25,41 +25,42 @@ set autoread                                                    " Detect when a 
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{1
-set encoding=utf-8                                              " Default to unicode
-scriptencoding utf-8
-set shell=bash                                                  " Use bash to execute commands instead of sh
 filetype plugin on                                              " Allow loading .vim files for different filetypes
 syntax enable                                                   " Syntax highlighting on
+
+" set encoding=utf-8                                              " Default to unicode
+" scriptencoding utf-8
+" set shell=bash                                                  " Use bash to execute commands instead of sh
 colorscheme default                                             " Def colors (overwritten by theme.vim)
-set hidden                                                      " Don't unload hidden buffers
-set fileformat=unix                                             " Always use LF and not CRLF
-set termencoding=utf-8                                          " Unicode
-set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
-set laststatus=2                                                " Always show statusline
-set showtabline=2                                               " Always show tabline
-set visualbell                                                  " Visual bell instead of audible
-set nowrap                                                      " Text wrapping mode
-set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
-set cmdheight=1                                                 " Add extra line for function definition
-set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
-set clipboard=unnamed                                           " Use system clipboard
-set nocursorline                                                " Show line under cursor's line (check autocmds)
-set noruler                                                     " Line position (not needed if using a statusline plugin
-set showmatch                                                   " Show matching pair of brackets (), [], {}
-set updatetime=300                                              " Update more often (helps GitGutter)
+" set hidden                                                      " Don't unload hidden buffers
+" set fileformat=unix                                             " Always use LF and not CRLF
+" set termencoding=utf-8                                          " Unicode
+" set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
+" set laststatus=2                                                " Always show statusline
+" set showtabline=2                                               " Always show tabline
+" set visualbell                                                  " Visual bell instead of audible
+" set nowrap                                                      " Text wrapping mode
+" set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
+" set cmdheight=1                                                 " Add extra line for function definition
+" set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
+" set clipboard=unnamed                                           " Use system clipboard
+" set nocursorline                                                " Show line under cursor's line (check autocmds)
+" set noruler                                                     " Line position (not needed if using a statusline plugin
+" set showmatch                                                   " Show matching pair of brackets (), [], {}
+" set updatetime=300                                              " Update more often (helps GitGutter)
 set signcolumn=yes                                              " Always show; keep appearance consistent
-set scrolloff=10                                                " Lines before/after cursor during scroll
-set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
-set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)
-set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
-" set lazyredraw                                                  " Don't redraw screen when not needed
-" set ttyfast                                                     " Terminal acceleration
-set nostartofline                                               " Don't move to start of line with j/k
-set conceallevel=1                                              " Enable concealing, if defined
-set concealcursor=                                              " Don't conceal when cursor goes to line
-set virtualedit=onemore                                         " Allow cursor to extend past line
-set exrc                                                        " Load project local .vimrc
-set secure                                                      " Don't execute code in local .vimrcs
+" set scrolloff=10                                                " Lines before/after cursor during scroll
+" set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
+" set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)
+" set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
+" " set lazyredraw                                                  " Don't redraw screen when not needed
+" " set ttyfast                                                     " Terminal acceleration
+" set nostartofline                                               " Don't move to start of line with j/k
+" set conceallevel=1                                              " Enable concealing, if defined
+" set concealcursor=                                              " Don't conceal when cursor goes to line
+" set virtualedit=onemore                                         " Allow cursor to extend past line
+" " set exrc                                                        " Load project local .vimrc
+" set secure                                                      " Don't execute code in local .vimrcs
 
 " Completion {{{1
 set completeopt+=preview                                        " Enable preview option for completion

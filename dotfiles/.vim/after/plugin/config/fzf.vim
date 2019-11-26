@@ -1,7 +1,12 @@
-" Fzf.vim commands/config
-if exists('g:loaded_fzf_config_vim') || ! exists(':FZF')
-    finish
-endif
+" ====================================================
+" Filename:    after/plugin/config/fzf.vim
+" Description: Configure settings and commands for FZF
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-11-26
+" ====================================================
+
+if exists('g:loaded_fzf_config_vim') || ! exists(':FZF') | finish | endif
 let g:loaded_fzf_config_vim = 1
 
 " Rg with preview window
@@ -31,10 +36,9 @@ command! -bang -nargs=* -complete=dir Files
   \                            : fzf#vim#with_preview('right:60%', '?'),
   \                    <bang>0)
 
-" use bottom split
-" let g:fzf_layout = { 'down': '~30%' }
-lua require('fzf_nav')
-let g:fzf_layout = { 'window': 'lua NavigationFloatingWin()' }
+lua fzf_lua = require('fzf_nav')
+let g:fzf_layout = { 'window': 'lua fzf_lua.NavigationFloatingWin()' } " Floating window
+" let g:fzf_layout = { 'down': '~30%' } " bottom split
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Clear'],
@@ -55,15 +59,10 @@ if has('nvim') || has('gui_running')
 endif
 
 " Maps
-" Search command history
-noremap <silent> <C-r> :History:<CR>
-
-" Tags
-noremap <silent> <C-t> :BTags<CR>
-nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
-
-" Search/lines
-nnoremap <silent> <Leader>l :BLines<CR>
+noremap  <silent> <C-r>     :History:<CR>
+" noremap  <silent> <C-t>     :BTags<CR>
+" nnoremap <silent> <Leader>l :BLines<CR>
+" nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
 
 augroup fzf_config
     autocmd!
@@ -73,7 +72,5 @@ augroup fzf_config
         \ index(g:completion_filetypes['coc'], &filetype) < 0
         \ | nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
         \ | endif
-    " Don't show status bar in fzf window
-    autocmd FileType fzf set laststatus=0 noruler
-        \| autocmd BufLeave <buffer> set laststatus=2 ruler
+    autocmd FileType fzf tunmap <buffer> <ESC>
 augroup END

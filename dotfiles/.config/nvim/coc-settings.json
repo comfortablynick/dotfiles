@@ -91,5 +91,6 @@
   "explorer.quitOnOpen": true,
   "explorer.keyMappings": {
     "s": "openInVsplit"
-  }
+  },
+  "explorer.file.showHiddenFiles": true
 }

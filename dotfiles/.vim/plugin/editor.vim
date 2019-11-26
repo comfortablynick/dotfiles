@@ -25,7 +25,9 @@ augroup editor_vim_rrxslb6k
     " NORMAL:       Turn on relativenumber for easy navigation
     " NO FOCUS:     Turn off relativenumber (testing code, etc.)
     " QuickFix:     Turn off relativenumber (running code)
+    " Terminal:     Turn off all numbering
     autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
     autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
     autocmd FileType qf if &nu | set nornu | endif
+    autocmd TermOpen * setlocal nonumber norelativenumber
 augroup end

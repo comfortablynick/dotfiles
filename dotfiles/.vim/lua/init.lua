@@ -154,7 +154,6 @@ local autocmds = {
     terminal = {
         {"TermOpen",    "*",    "startinsert"},
         {"TermOpen",    "*",    [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
-        {"FileType",    "fzf",  [[tunmap <buffer> <Esc>]]}
     }
 }
 

@@ -118,8 +118,6 @@ function! s:pack_init() abort
     Pack 'liuchengxu/vim-clap'
     Pack 'itchyny/lightline.vim'
 
-    " Lua {{{2
-    Pack 'norcalli/nvim_utils',             {'type': 'start'}
 
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
@@ -199,7 +197,6 @@ command! PackStatus call <SID>pack_init() | call minpac#status()
 command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
-packloadall
 packadd! lightline.vim
 packadd! fzf
 packadd! fzf.vim

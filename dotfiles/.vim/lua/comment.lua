@@ -19,8 +19,8 @@ end
 
 local function text_object_define(mapping, function_name)
     local options = {silent = true, noremap = true}
-    nvim.set_keymap("n", mapping, ("<Cmd>lua %s(%s)<CR>"):format(function_name, false), options)
-    nvim.set_keymap("x", mapping, (":lua %s(%s)<CR>"):format(function_name, true), options)
+    nvim.set_keymap("n", mapping, ("<Cmd>lua %s(%s)<CR>"):format(function_name, "false"), options)
+    nvim.set_keymap("x", mapping, (":lua %s(%s)<CR>"):format(function_name, "true"), options)
 end
 
 function TestComment()

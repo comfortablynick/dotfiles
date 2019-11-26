@@ -1,3 +1,4 @@
+require "nvim_utils"
 local nvim = vim.api --luacheck: ignore
 local vim = vim -- luacheck: ignore
 
@@ -24,7 +25,9 @@ local general = {
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
-    termguicolors = false,
+    termguicolors = true,
+    -- Undo file dir
+    undodir = os.getenv("HOME") .. "/.vim/undo//",
     -- Save file backups here
     backupdir = os.getenv("HOME") .. "/.vim/backup//",
     -- Avoid redrawing the screen
@@ -38,7 +41,21 @@ local general = {
     -- Allow loading of local .vimrc
     exrc = true,
     -- Don't execute code in local .vimrc
-    secure = true
+    secure = true,
+    -- Ignore case while searching
+    ignorecase = true,
+    -- Case sensitive if uppercase in pattern
+    smartcase = true,
+    -- Move cursor to matched string
+    incsearch = true,
+    -- Magic escaping for regex
+    magic = true,
+    -- Global replacement by default
+    gdefault = true,
+    -- Split right instead of left
+    splitright = true,
+    -- Split below instead of above
+    splitbelow = true
 }
 
 local editor = {
@@ -84,6 +101,8 @@ local editor = {
 
 -- Buffer-local options {{{1
 local buffer = {
+    -- Enable persistent undo
+    undofile = true,
     -- Max columns to syntax highlight (for performance)
     synmaxcol = 200,
     -- Expand tab to spaces
@@ -95,7 +114,9 @@ local buffer = {
     -- Width of shift (0=tabstop)
     shiftwidth = 0,
     -- How many spaces a tab is worth
-    tabstop = 4
+    tabstop = 4,
+    -- Don't insert comment leader after hitting 'o' or 'O'
+    formatoptions = nvim.nvim_buf_get_option(0, 'formatoptions'):gsub("o", "")
 }
 
 -- Window-local options {{{1
@@ -107,13 +128,34 @@ local window = {
     -- Fold using markers by default
     foldmethod = "marker",
     -- Max nested levels (default=20)
-    foldnestmax = 5
+    foldnestmax = 5,
+    -- Show linenumbers
+    number = true,
+    -- Show relative numbers (hybrid with `number` enabled)
+    relativenumber = true
 }
 
 -- Global variables {{{1
 local global_vars = {
+    -- Python 2 dir
     python_host_prog = os.getenv("NVIM_PY2_DIR"),
-    python3_host_prog = os.getenv("NVIM_PY3_DIR")
+    -- Python 3 dir
+    python3_host_prog = os.getenv("NVIM_PY3_DIR"),
+    -- Initial window size (use to determine if on iPad)
+    window_width = nvim.nvim_get_option("columns"),
+    -- Use powerline fonts with lightline
+    LL_pl = 1,
+    -- Use nerd fonts with lightline
+    LL_nf = 1
+}
+
+-- Autocommands {{{1
+local autocmds = {
+    terminal = {
+        {"TermOpen",    "*",    "startinsert"},
+        {"TermOpen",    "*",    [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
+        {"FileType",    "fzf",  [[tunmap <buffer> <Esc>]]}
+    }
 }
 
 -- set_options() :: Loop through options and set them in vim {{{1
@@ -138,6 +180,7 @@ local function set_options()
     for name, value in pairs(global_vars) do
         nvim.nvim_set_var(name, value)
     end
+    nvim_create_augroups(autocmds)
 end
 
 return {

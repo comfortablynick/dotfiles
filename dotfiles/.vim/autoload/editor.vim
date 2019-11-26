@@ -1,5 +1,5 @@
 " Restore cursor position and folding
-function! cursor#recall_last_position() abort
+function! editor#recall_cursor_position() abort
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 

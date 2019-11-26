@@ -6,18 +6,18 @@
 "                         |___/
 " General Configuration
 " Vim/Neovim Only {{{1
-if has('nvim')
-    " Neovim Only
-    " set inccommand=split                                        " Live substitution
-    " let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
-    " let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
-    " let &shadafile =
-    "     \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
-else
-    " Vim Only
-    set pyxversion=3                                            " Use Python3 for pyx
-    let g:python3_host_prog = '/usr/local/bin/python3.7'
-endif
+" if has('nvim')
+"     Neovim Only
+"     set inccommand=split                                        " Live substitution
+"     let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
+"     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
+"     let &shadafile =
+"         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
+" else
+"     " Vim Only
+"     set pyxversion=3                                            " Use Python3 for pyx
+"     let g:python3_host_prog = '/usr/local/bin/python3.7'
+" endif
 
 " Files/Swap/Backup {{{1
 " set noswapfile                                                  " Swap files if vim quits without saving
@@ -78,14 +78,13 @@ endif
 " set tabstop=4                                                   " How many spaces a tab is worth
 " set shiftwidth=0                                                " Columns of whitespace per indent (0 = &tabstop)
 " set backspace=2                                                 " Backspace behaves as expected
-let g:vim_indent_cont = &tabstop                                " Indent after \ in Vim script
 
 " Search & replace {{{1
-set ignorecase                                                  " Ignore case while searching
-set smartcase                                                   " Case sensitive if uppercase in pattern
-set incsearch                                                   " Move cursor to matched string
-set magic                                                       " Magic escaping for regex
-set gdefault                                                    " Global replacement by default
+" set ignorecase                                                  " Ignore case while searching
+" set smartcase                                                   " Case sensitive if uppercase in pattern
+" set incsearch                                                   " Move cursor to matched string
+" set magic                                                       " Magic escaping for regex
+" set gdefault                                                    " Global replacement by default
 
 " use ripgrep as grepprg
 if executable('rg')
@@ -94,73 +93,15 @@ if executable('rg')
 endif
 
 " Undo {{{1
-set undodir=~/.vim/undo//                                       " Undo file directory
-set undofile                                                    " Enable persistent undo
+" set undodir=~/.vim/undo//                                       " Undo file directory
+" set undofile                                                    " Enable persistent undo
 
 " Windows/Splits {{{1
-set splitright                                                  " Split right instead of left
-set splitbelow                                                  " Split below instead of above
-let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
-set fillchars+=vert:\│
+" set splitright                                                  " Split right instead of left
+" set splitbelow                                                  " Split below instead of above
+" let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
+" set fillchars+=vert:\│
 
 " Line numbers {{{1
-set number                                                      " Show linenumbers
-set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
-
-" Terminal client compatibility {{{1
-" Defaults: turn all fonts and colors ON {{{2
-let g:LL_pl = 1
-let g:LL_nf = 1
-set termguicolors
-
-" SSH: remove background to try to work better with iOS SSH apps {{{2
-if $VIM_SSH_COMPAT == 1
-    hi Normal guibg=NONE ctermbg=NONE
-    hi nonText guibg=NONE ctermbg=NONE
-    let g:LL_nf = 0
-    set notermguicolors
-endif
-
-" FONTS: check env vars to see if we need to turn off fancy fonts {{{2
-if ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
-    " We can turn off both, since NF are a superset of PL fonts
-    let g:LL_nf = 0
-    let g:LL_pl = 0
-elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
-    " Disable NF but keep PL fonts (iOS SSH apps, etc.)
-    let g:LL_nf = 0
-    let g:LL_pl = 1
-endif
-
-" TMUX: make it work with termguicolors {{{2
-if &term =~# '^screen'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-
-" Get color theme from env var {{{2
-function! s:get_color_theme() abort
-    return has('nvim') ?
-        \ !empty('$NVIM_COLOR') ? $NVIM_COLOR : 'papercolor-dark' :
-        \ !empty('$VIM_COLOR') ? $VIM_COLOR : 'gruvbox-dark'
-endfunction
-let g:vim_color = s:get_color_theme()
-
-" g:vim_base_color: 'nord-dark' -> 'nord'
-let g:vim_base_color = substitute(
-    \ g:vim_color,
-    \ '-dark\|-light',
-    \ '',
-    \ '')
-
-" g:vim_color_variant: 'nord-dark' -> 'dark'
-let g:vim_color_variant = substitute(
-    \ g:vim_color,
-    \ g:vim_base_color . '-',
-    \ '',
-    \ '')
-
-" Increase timeoutlen {{{2
-if $TMUX_SESSION ==? 'ios'
-    set timeoutlen=400
-endif
+" set number                                                      " Show linenumbers
+" set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)

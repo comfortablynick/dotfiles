@@ -22,6 +22,12 @@ augroup vimrc
     autocmd!
 augroup END
 
+" Vim-only Python ====================================
+if !has('nvim')
+    set pyxversion=3
+    let g:python3_host_prog = '/usr/local/bin/python3.7'
+endif
+
 " CONFIG FILES ==================================
 let g:vim_home = get(g:, 'vim_home', expand('~/.vim/config/'))
 

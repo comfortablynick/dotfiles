@@ -29,6 +29,19 @@ let g:coc_filetype_map = {
     \ 'yaml.ansible': 'yaml'
     \ }
 
+" Show_Documentation() :: use K for vim docs or language servers
+function! Show_Documentation() abort
+    if &filetype ==# 'vim'
+        execute 'h '.expand('<cword>')
+    else
+        if exists('g:did_coc_loaded')
+            call CocActionAsync('doHover')
+            return
+        endif
+    endif
+endfunction
+set keywordprg=:silent!\ call\ Show_Documentation()
+
 " Call func to set autocmds if LC is loaded
 augroup coc_config
     autocmd!

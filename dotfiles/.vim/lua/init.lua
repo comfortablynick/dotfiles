@@ -3,10 +3,7 @@ local nvim = require("nvim")
 local HOMEDIR = nvim.env.HOME
 
 -- Commands {{{1
-local commands = {
-    filetype = "indent plugin on",
-    colorscheme = "default"
-}
+local commands = {filetype = "indent plugin on", colorscheme = "default"}
 
 -- Global options {{{1
 local general = {
@@ -56,7 +53,7 @@ local general = {
             return nvim.o.grepprg
         end
     end)(),
-    grepformat = "%f:%l:%c:%m,%f:%l:%m"
+    grepformat = "%f:%l:%c:%m,%f:%l:%m",
 }
 
 local editor = {
@@ -97,7 +94,7 @@ local editor = {
     -- How long in ms to wait for key combinations (if used)
     timeoutlen = 200,
     -- Use mouse in all modes (allows mouse scrolling in tmux)
-    mouse = "a"
+    mouse = "a",
 }
 
 -- Buffer-local options {{{1
@@ -122,7 +119,7 @@ local buffer = {
     tabstop = 4,
     -- Don't insert comment leader after hitting 'o' or 'O'
     -- If still present, overwrite in after/ftplugin/filetype.vim
-    formatoptions = (nvim.bo.formatoptions:gsub("o", ""))
+    formatoptions = (nvim.bo.formatoptions:gsub("o", "")),
 }
 
 -- Window-local options {{{1
@@ -142,7 +139,7 @@ local window = {
     -- Enable concealing, if defined
     conceallevel = 1,
     -- Don't conceal when cursor goes to line
-    concealcursor = ""
+    concealcursor = "",
 }
 
 -- Global variables {{{1
@@ -158,15 +155,15 @@ local global_vars = {
     -- Use powerline fonts with lightline
     LL_pl = 1,
     -- Use nerd fonts with lightline
-    LL_nf = 1
+    LL_nf = 1,
 }
 
 -- Autocommands {{{1
 local autocmds = {
     terminal = {
         {"TermOpen", "*", "startinsert"},
-        {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]}
-    }
+        {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
+    },
 }
 
 -- Maps {{{1
@@ -177,7 +174,7 @@ local mappings = {
     ["nza"] = {"zA"},
     -- indent/dedent
     ["v<Tab>"] = {[[>><ESC>gv]]},
-    ["v<S-Tab>"] = {[[<<<ESC>gv]]}
+    ["v<S-Tab>"] = {[[<<<ESC>gv]]},
     --
 }
 
@@ -208,8 +205,6 @@ local function set_options()
     nvim.apply_mappings(mappings, map_default_options)
 end
 
-return {
-    Set_Options = set_options
-}
+return {Set_Options = set_options}
 
 -- vim:fdl=1:

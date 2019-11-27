@@ -1,6 +1,12 @@
-if exists('g:loaded_neoformat_config_vim') || ! exists(':Neoformat')
-    finish
-endif
+" ====================================================
+" Filename:    after/plugin/config/neoformat.vim
+" Description: Async formatting config
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-11-27
+" ====================================================
+
+if exists('g:loaded_neoformat_config_vim') || ! exists(':Neoformat') | finish | endif
 let g:loaded_neoformat_config_vim = 1
 
 " Global Settings
@@ -41,12 +47,12 @@ let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 
 let g:neoformat_enabled_go = [ 'goimports' ]
 let g:neoformat_enabled_yaml = [ 'prettier' ]
-let g:neoformat_enabled_lua = ['luafmt']
+let g:neoformat_enabled_lua = [ 'luaformat', 'luafmt' ]
 
 " Maps/Commands
 noremap <silent> <F3> :Neoformat<CR>
 
 augroup neoformat_config
     autocmd!
-    autocmd BufWritePre *.{bash,sh} Neoformat
+    autocmd BufWritePre *.{bash,sh,lua} Neoformat
 augroup END

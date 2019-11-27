@@ -231,6 +231,10 @@ dotfiles:
     src: .config/direnv/direnvrc
     dst: ~/.config/direnv/direnvrc
     link: link
+  f_lua-format:
+    src: .config/.lua-format
+    dst: ~/.config/.lua-format
+    link: link
 profiles:
   core:
     dotfiles:
@@ -276,6 +280,7 @@ profiles:
     - d_pip
     - f_direnvrc
     - d_lua
+    - f_lua-format
   io:
     dotfiles:
     - f_bash_linux

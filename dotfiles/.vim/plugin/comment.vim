@@ -26,7 +26,10 @@ if get(g:, 'comment_plugin') ==# 'commentary'
     endif
 elseif get(g:, 'comment_plugin') ==# 'tcomment'
     packadd tcomment_vim
-    nmap <Leader>c<Space>   <Plug>TComment_gcc
+    " Add additional mappings for nerdcomment muscle memory
+    xmap <silent><Leader>c          <Plug>TComment_gc
+    nmap <Leader>c<Space>           <Plug>TComment_gcc
+    omap <silent><Leader>c          <Plug>TComment_gc
 endif
 
 lua require('comment')

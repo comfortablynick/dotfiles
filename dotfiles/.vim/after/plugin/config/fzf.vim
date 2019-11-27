@@ -60,8 +60,6 @@ endif
 
 " Maps
 noremap  <silent> <C-r>     :History:<CR>
-" noremap  <silent> <C-t>     :BTags<CR>
-" nnoremap <silent> <Leader>l :BLines<CR>
 " nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
 
 augroup fzf_config

@@ -1,6 +1,6 @@
-require "nvim_utils"
-local nvim = vim.api --luacheck: ignore
-local vim = vim -- luacheck: ignore
+local nvim = require("nvim")
+
+local HOMEDIR = nvim.env.HOME
 
 -- Commands {{{1
 local commands = {
@@ -11,31 +11,23 @@ local commands = {
 -- Global options {{{1
 local general = {
     -- Shared data file location
-    shadafile = os.getenv("XDG_DATA_HOME") .. "/nvim/shada/main.shada",
+    shadafile = nvim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
     -- Live substitution
     inccommand = "split",
     -- Shell to use instead of sh
     shell = "bash",
-    -- Default line endings
-    fileformat = "unix",
     -- Don't unload hidden buffers
     hidden = true,
-    -- Use swapfile for edits
-    swapfile = false,
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
     termguicolors = true,
     -- Undo file dir
-    undodir = os.getenv("HOME") .. "/.vim/undo//",
+    undodir = HOMEDIR .. "/.vim/undo//",
     -- Save file backups here
-    backupdir = os.getenv("HOME") .. "/.vim/backup//",
+    backupdir = HOMEDIR .. "/.vim/backup//",
     -- Avoid redrawing the screen
     lazyredraw = false,
-    -- Enable concealing, if defined
-    conceallevel = 1,
-    -- Don't conceal when cursor goes to line
-    concealcursor = "",
     -- Allow cursor to extend past line
     virtualedit = "onemore",
     -- Allow loading of local .vimrc
@@ -55,7 +47,16 @@ local general = {
     -- Split right instead of left
     splitright = true,
     -- Split below instead of above
-    splitbelow = true
+    splitbelow = true,
+    -- Program used for grep
+    grepprg = (function()
+        if nvim.fn.executable("rg") then
+            return [[rg --vimgrep --hidden --no-ignore-vcs]]
+        else
+            return nvim.o.grepprg
+        end
+    end)(),
+    grepformat = "%f:%l:%c:%m,%f:%l:%m"
 }
 
 local editor = {
@@ -74,9 +75,9 @@ local editor = {
     -- Add extra line for function definition
     cmdheight = 1,
     -- Suppress echoing of 'Match x of x' during completion
-    shortmess = nvim.nvim_get_option("shortmess") .. "c",
+    shortmess = nvim.o.shortmess .. "c",
     -- Dictionary file for dict completion
-    dictionary = nvim.nvim_get_option("dictionary") .. "/usr/share/dict/words-insane",
+    dictionary = nvim.o.dictionary .. "/usr/share/dict/words-insane",
     -- Use system clipboard
     clipboard = "unnamed",
     -- Show line under cursor's line (check autocmds)
@@ -101,8 +102,12 @@ local editor = {
 
 -- Buffer-local options {{{1
 local buffer = {
+    -- Default line endings
+    fileformat = "unix",
     -- Enable persistent undo
     undofile = true,
+    -- Use swapfile for edits
+    swapfile = false,
     -- Max columns to syntax highlight (for performance)
     synmaxcol = 200,
     -- Expand tab to spaces
@@ -116,7 +121,8 @@ local buffer = {
     -- How many spaces a tab is worth
     tabstop = 4,
     -- Don't insert comment leader after hitting 'o' or 'O'
-    formatoptions = nvim.nvim_buf_get_option(0, 'formatoptions'):gsub("o", "")
+    -- If still present, overwrite in after/ftplugin/filetype.vim
+    formatoptions = (nvim.bo.formatoptions:gsub("o", ""))
 }
 
 -- Window-local options {{{1
@@ -132,17 +138,23 @@ local window = {
     -- Show linenumbers
     number = true,
     -- Show relative numbers (hybrid with `number` enabled)
-    relativenumber = true
+    relativenumber = true,
+    -- Enable concealing, if defined
+    conceallevel = 1,
+    -- Don't conceal when cursor goes to line
+    concealcursor = ""
 }
 
 -- Global variables {{{1
 local global_vars = {
+    -- Leader key
+    mapleader = ",",
     -- Python 2 dir
-    python_host_prog = os.getenv("NVIM_PY2_DIR"),
+    python_host_prog = nvim.env.NVIM_PY2_DIR,
     -- Python 3 dir
-    python3_host_prog = os.getenv("NVIM_PY3_DIR"),
+    python3_host_prog = nvim.env.NVIM_PY3_DIR,
     -- Initial window size (use to determine if on iPad)
-    window_width = nvim.nvim_get_option("columns"),
+    window_width = nvim.o.columns,
     -- Use powerline fonts with lightline
     LL_pl = 1,
     -- Use nerd fonts with lightline
@@ -152,38 +164,51 @@ local global_vars = {
 -- Autocommands {{{1
 local autocmds = {
     terminal = {
-        {"TermOpen",    "*",    "startinsert"},
-        {"TermOpen",    "*",    [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
+        {"TermOpen", "*", "startinsert"},
+        {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]}
     }
+}
+
+-- Maps {{{1
+local map_default_options = {silent = true, unique = true}
+local mappings = {
+    -- toggle folds
+    ["n<Space>"] = {"za"},
+    ["nza"] = {"zA"},
+    -- indent/dedent
+    ["v<Tab>"] = {[[>><ESC>gv]]},
+    ["v<S-Tab>"] = {[[<<<ESC>gv]]}
+    --
 }
 
 -- set_options() :: Loop through options and set them in vim {{{1
 local function set_options()
     local global_settings = vim.tbl_extend("error", general, editor)
     for name, value in pairs(global_settings) do
-        nvim.nvim_set_option(name, value)
+        nvim.o[name] = value
     end
 
     for name, value in pairs(buffer) do
-        nvim.nvim_buf_set_option(0, name, value)
+        nvim.bo[name] = value
     end
 
     for name, value in pairs(window) do
-        nvim.nvim_win_set_option(0, name, value)
+        nvim.wo[name] = value
     end
 
     for name, value in pairs(commands) do
-        nvim.nvim_command(name .. " " .. value)
+        nvim.command(name .. " " .. value)
     end
 
     for name, value in pairs(global_vars) do
-        nvim.nvim_set_var(name, value)
+        nvim.g[name] = value
     end
-    nvim_create_augroups(autocmds)
+
+    nvim.create_augroups(autocmds)
+    nvim.apply_mappings(mappings, map_default_options)
 end
 
 return {
-    --{{{1
     Set_Options = set_options
 }
 

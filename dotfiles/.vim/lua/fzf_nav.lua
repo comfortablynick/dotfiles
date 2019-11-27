@@ -1,14 +1,14 @@
-local nvim = vim.api --luacheck: ignore
+local nvim = require 'nvim'
 
 -- From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
 local function NavigationFloatingWin()
     -- get the editor's max width and height
-    local width = nvim.nvim_win_get_width(0)
-    local height = nvim.nvim_win_get_height(0)
+    local width = nvim.win_get_width(0)
+    local height = nvim.win_get_height(0)
 
     -- create a new, scratch buffer, for fzf
-    local buf = nvim.nvim_create_buf(false, true)
-    nvim.nvim_buf_set_option(buf, "buftype", "nofile")
+    local buf = nvim.create_buf(false, true)
+    nvim.buf_set_option(buf, "buftype", "nofile")
 
     -- if the editor is big enough
     if (width > 150 or height > 35) then
@@ -36,7 +36,7 @@ local function NavigationFloatingWin()
         }
 
         -- create a new floating window, centered in the editor
-        nvim.nvim_open_win(buf, true, opts)
+        nvim.open_win(buf, true, opts)
     end
 end
 

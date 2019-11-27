@@ -86,6 +86,8 @@ let g:LL_MedWidth = 140                                         " Secondary widt
 let g:LL_MaxWidth = 200                                         " Largest width for some (unnecessary) sections
 
 " Symbols/glyphs {{{2
+let g:LL_pl = get(g:, 'LL_pl', 0)
+let g:LL_nf = get(g:, 'LL_nf', 0)
 let g:LL_LineNoSymbol = ''                                     " Use  for line; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let g:LL_BranchSymbol = ' '                                    " Git branch symbol

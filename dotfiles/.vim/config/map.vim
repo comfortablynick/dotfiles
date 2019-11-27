@@ -8,19 +8,19 @@
 "
 " General Keymaps
 
-" Leader key
-let g:mapleader = ','
-
-" Indent/outdent
-vnoremap <Tab>   >><Esc>gv
-vnoremap <S-Tab> <<<Esc>gv
-
-" Toggle folds
-noremap <Space> za
-
-" Open all folds under cursor
-noremap za zA
-
+" " Leader key
+" let g:mapleader = ','
+"
+" " Indent/outdent
+" vnoremap <Tab>   >><Esc>gv
+" vnoremap <S-Tab> <<<Esc>gv
+"
+" " Toggle folds
+" noremap <Space> za
+"
+" " Open all folds under cursor
+" noremap za zA
+"
 " `U` to redo
 nnoremap U <C-r>
 

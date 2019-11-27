@@ -57,7 +57,7 @@ endfunction
 -- RETURNS: table
 function nvim_buf_get_region_lines(buf, mark_a, mark_b, mode)
 	mode = mode or VISUAL_MODE.char
-	buf = buf or vim.api.nvim_get_current_buf()
+	buf = buf or 0
 	-- TODO keep these? @refactor
 	mark_a = mark_a or '<'
 	mark_b = mark_b or '>'
@@ -87,7 +87,7 @@ function nvim_buf_get_region_lines(buf, mark_a, mark_b, mode)
 end
 
 function nvim_buf_set_region_lines(buf, mark_a, mark_b, mode, lines)
-	buf = buf or vim.api.nvim_get_current_buf()
+	buf = buf or 0
 	-- TODO keep these? @refactor
 	mark_a = mark_a or '<'
 	mark_b = mark_b or '>'
@@ -105,7 +105,7 @@ end
 -- It's also the only way to do transformations that are correct with `char` mode
 -- since it has to have access to the initial values of the region lines.
 function nvim_buf_transform_region_lines(buf, mark_a, mark_b, mode, fn)
-	buf = buf or vim.api.nvim_get_current_buf()
+	buf = buf or 0
 	-- TODO keep these? @refactor
 	mark_a = mark_a or '<'
 	mark_b = mark_b or '>'
@@ -351,7 +351,7 @@ end
 -- 	-- lua nvim_print(nvim.win_get_cursor(nvim.get_current_win()))
 -- 	local win = vim.api.nvim_get_current_win()
 -- 	local row, col = unpack(vim.api.nvim_win_get_cursor(win))
--- 	local buf = vim.api.nvim_get_current_buf()
+-- 	local buf = 0
 -- 	-- local row, col = unpack(vim.api.nvim_buf_get_mark(buf, '.'))
 -- 	local line = nvim_buf_get_region_lines(buf, row, row, VISUAL_MODE.line)[1]
 -- 	local start_idx, end_idx
@@ -438,7 +438,7 @@ local valid_modes = {
 -- TODO(ashkan) @feature Disable noremap if the rhs starts with <Plug>
 function nvim_apply_mappings(mappings, default_options)
 	-- May or may not be used.
-	local current_bufnr = vim.api.nvim_get_current_buf()
+	local current_bufnr = 0
 	for key, options in pairs(mappings) do
 		options = vim.tbl_extend("keep", options, default_options or {})
 		local bufnr = current_bufnr
@@ -577,5 +577,3 @@ function epoch_ns()
 	local s, ns = vim.loop.gettimeofday()
 	return s * 1000000 + ns
 end
-
-

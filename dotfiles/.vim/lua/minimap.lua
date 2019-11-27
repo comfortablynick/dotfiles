@@ -1,9 +1,9 @@
-require 'nvim_utils'
--- local nvim = vim.api --luacheck: ignore
+local nvim = require('nvim')
+local M = {}
 local MINIMAP = "vim-minimap"
 local WIDTH = 20
 
-local function show_minimap()
+function M.show_minimap()
     local src = nvim.win_get_number(0)
     local buf_opts = {
         buftype = "nofile",
@@ -21,7 +21,7 @@ local function show_minimap()
     nvim.command(("botright vnew %s"):format(MINIMAP))
     nvim.command("setlocal nonumber norelativenumber nolist nospell")
     for name, value in pairs(buf_opts) do
-        nvim.buf_set_option(0, name, value)
+        nvim.bo[name] = value
     end
     nvim_create_augroups(autocmds)
     local minimap = nvim.get_window(0)
@@ -29,6 +29,4 @@ local function show_minimap()
     nvim.win_set_option(minimap, "winfixwidth", true)
 end
 
-return {
-    show_minimap = show_minimap
-}
+return M

@@ -25,9 +25,7 @@ lua init.Set_Options()
 let g:vim_home = get(g:, 'vim_home', expand('$HOME/dotfiles/dotfiles/.vim/config/'))
 
 let config_list = [
-	\ 'config.vim',
     \ 'plugins.vim',
-    \ 'functions.vim',
     \ 'theme.vim',
     \ 'map.vim'
     \ ]

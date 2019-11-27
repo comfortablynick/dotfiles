@@ -7,7 +7,7 @@
 " General Configuration
 " Vim/Neovim Only {{{1
 if has('nvim')
-    Neovim Only
+    " Neovim Only
     set inccommand=split                                        " Live substitution
     let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary

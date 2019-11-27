@@ -1,5 +1,3 @@
-local nvim = require("nvim")
-
 local HOMEDIR = nvim.env.HOME
 
 -- Commands {{{1
@@ -160,9 +158,12 @@ local global_vars = {
 
 -- Autocommands {{{1
 local autocmds = {
-    terminal = {
+    init_lua = {
+        -- Terminal starts in insert mode
         {"TermOpen", "*", "startinsert"},
         {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
+        -- Close read-only filetypes with only 'q'
+        {"FileType", "netrw,help", "nnoremap <silent> q :bd<CR>"},
     },
 }
 
@@ -173,9 +174,17 @@ local mappings = {
     ["n<Space>"] = {"za"},
     ["nza"] = {"zA"},
     -- indent/dedent
-    ["v<Tab>"] = {[[>><ESC>gv]]},
-    ["v<S-Tab>"] = {[[<<<ESC>gv]]},
-    --
+    ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
+    ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
+    -- Redo
+    ["nU"] = {":redo<CR>"},
+    -- Close/save from insert mode
+    ["ikj"] = {"<Esc>`^"},
+    ["ilkj"] = {"<Esc>`^:w<CR>"},
+    ["i;lkj"] = {"<Esc>`^:wq<CR>"},
+    ["n<CR>"] = {":nohlsearch<CR>", silent = false},
+    -- Show syntax group under cursor
+    ["n<Leader>h"] = {":echo syntax#syn_group()<CR>"},
 }
 
 -- set_options() :: Loop through options and set them in vim {{{1

@@ -5,7 +5,6 @@
 "  |  _| |_| | | | | (__| |_| | (_) | | | \__ \\ V /| | | | | | |
 "  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___(_)_/ |_|_| |_| |_|
 "
-" TODO: move these to canonical vim folders (plugin,ftplugin,autoload,indent)
 " AsyncRun
 " CheckRun() :: check AsyncRun return code
 " function! CheckRun(cmdName) abort
@@ -25,11 +24,11 @@
 
 " (Auto)commands
 " Terminal
-" if has('nvim')
-"     " Start in TERMINAL mode (any key will exit)
-"     autocmd vimrc TermOpen * startinsert
-"     " `<Esc>` to exit terminal mode
-"     autocmd vimrc TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
-"     " Unmap <Esc> so it can be used to exit FZF
-"     autocmd vimrc FileType fzf tunmap <buffer> <Esc>
-" endif
+if has('nvim')
+    " Start in TERMINAL mode (any key will exit)
+    autocmd vimrc TermOpen * startinsert
+    " `<Esc>` to exit terminal mode
+    autocmd vimrc TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
+    " Unmap <Esc> so it can be used to exit FZF
+    autocmd vimrc FileType fzf tunmap <buffer> <Esc>
+endif

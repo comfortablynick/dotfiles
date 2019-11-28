@@ -1,4 +1,4 @@
-local nvim = require('nvim')
+local nvim = require("nvim")
 local M = {}
 local MINIMAP = "vim-minimap"
 local WIDTH = 20
@@ -15,7 +15,7 @@ function M.show_minimap()
         minimap = {
             {"WinEnter", "<buffer>", "if winnr($) == 1|q|endif"},
             -- {"CursorMoved,CursorMovedI,TextChanged,TextChangedI,BufWinEnter", "*", "MinimapUpdate"}
-        }
+        },
     }
     -- TODO: replace with nvim_create_buf(false, true)?
     nvim.command(("botright vnew %s"):format(MINIMAP))
@@ -23,8 +23,8 @@ function M.show_minimap()
     for name, value in pairs(buf_opts) do
         nvim.bo[name] = value
     end
-    nvim_create_augroups(autocmds)
-    local minimap = nvim.get_window(0)
+    nvim.create_augroups(autocmds)
+    local minimap = 0
     nvim.win_set_width(minimap, WIDTH)
     nvim.win_set_option(minimap, "winfixwidth", true)
 end

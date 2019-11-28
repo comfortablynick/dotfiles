@@ -1,6 +1,5 @@
 --- Customized from:
 --- https://github.com/norcalli/nvim_utils/blob/master/lua/nvim_utils.lua
-
 --- NVIM SPECIFIC SHORTCUTS
 vim = vim or {}
 nvim = {}
@@ -8,7 +7,7 @@ nvim = {}
 local VISUAL_MODE = {
     line = "line", -- linewise
     block = "block", -- characterwise
-    char = "char" -- blockwise-visual
+    char = "char", -- blockwise-visual
 }
 
 -- TODO I fucking didn't know that vim.api.nvim_buf_* methods could take 0
@@ -31,13 +30,14 @@ local function nvim_mark_or_index(buf, input)
         return input
     elseif type(input) == "string" then
         return vim.api.nvim_buf_get_mark(buf, input)
-    -- local result = vim.api.nvim_buf_get_mark(buf, input)
-    -- if result[2] == 2147483647 then
-    -- 	result[2] = -1
-    -- end
-    -- return result
+        -- local result = vim.api.nvim_buf_get_mark(buf, input)
+        -- if result[2] == 2147483647 then
+        -- 	result[2] = -1
+        -- end
+        -- return result
     end
-    assert(false, ("nvim_mark_or_index: Invalid input buf=%q, input=%q"):format(buf, input))
+    assert(false, ("nvim_mark_or_index: Invalid input buf=%q, input=%q"):format(
+               buf, input))
 end
 
 -- TODO should I be wary of `&selection` in the nvim_buf_get functions?
@@ -67,7 +67,8 @@ local function nvim_buf_get_region_lines(buf, mark_a, mark_b, mode)
 
     local start = nvim_mark_or_index(buf, mark_a)
     local finish = nvim_mark_or_index(buf, mark_b)
-    local lines = vim.api.nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
+    local lines = vim.api
+                      .nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
 
     if mode == VISUAL_MODE.line then
         return lines
@@ -100,7 +101,8 @@ local function nvim_buf_set_region_lines(buf, mark_a, mark_b, mode, lines)
     local start = nvim_mark_or_index(buf, mark_a)
     local finish = nvim_mark_or_index(buf, mark_b)
 
-    return vim.api.nvim_buf_set_lines(buf, start[1] - 1, finish[1], false, lines)
+    return vim.api
+               .nvim_buf_set_lines(buf, start[1] - 1, finish[1], false, lines)
 end
 
 -- This is actually more efficient if what you're doing is modifying a region
@@ -129,7 +131,8 @@ local function nvim_buf_transform_region_lines(buf, mark_a, mark_b, mode, fn)
     -- 	return lines
     -- end
 
-    local lines = vim.api.nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
+    local lines = vim.api
+                      .nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
 
     local result
     if mode == VISUAL_MODE.char then
@@ -175,7 +178,8 @@ local function nvim_buf_transform_region_lines(buf, mark_a, mark_b, mode, fn)
         end
     end
 
-    return vim.api.nvim_buf_set_lines(buf, start[1] - 1, finish[1], false, result)
+    return vim.api.nvim_buf_set_lines(buf, start[1] - 1, finish[1], false,
+                                      result)
 end
 
 -- Equivalent to `echo vim.inspect(...)`
@@ -183,7 +187,7 @@ local function nvim_print(...)
     if select("#", ...) == 1 then
         vim.api.nvim_out_write(vim.inspect((...)))
     else
-        vim.api.nvim_out_write(vim.inspect {...})
+        vim.api.nvim_out_write(vim.inspect{...})
     end
     vim.api.nvim_out_write("\n")
 end
@@ -210,7 +214,9 @@ end
 -- Return the selection as a string
 -- RETURNS: string
 local function nvim_selection(mode)
-    return table.concat(nvim_buf_get_region_lines(nil, "<", ">", mode or VISUAL_MODE.char), "\n")
+    return table.concat(nvim_buf_get_region_lines(nil, "<", ">",
+                                                  mode or VISUAL_MODE.char),
+                        "\n")
 end
 
 -- TODO Use iskeyword
@@ -248,25 +254,19 @@ endfunction
 
 local function nvim_text_operator(fn)
     LUA_FUNCTION = fn
-    nvim.g.lua_expr = "LUA_FUNCTION(_A[1])"
+    vim.api.nvim_set_var("lua_expr", "LUA_FUNCTION(_A[1])")
     vim.api.nvim_set_option("opfunc", "LuaExprCallback")
     vim.api.nvim_feedkeys("g@", "ni", false)
 end
 
 local function nvim_text_operator_transform_selection(fn, forced_visual_mode)
-    return nvim_text_operator(
-        function(visualmode)
-            nvim_buf_transform_region_lines(
-                nil,
-                "[",
-                "]",
-                forced_visual_mode or visualmode,
-                function(lines)
-                    return fn(lines, visualmode)
-                end
-            )
-        end
-    )
+    return nvim_text_operator(function(visualmode)
+        nvim_buf_transform_region_lines(nil, "[", "]",
+                                        forced_visual_mode or visualmode,
+                                        function(lines)
+            return fn(lines, visualmode)
+        end)
+    end)
 end
 
 local function nvim_visual_mode()
@@ -284,8 +284,7 @@ local function nvim_transform_cword(fn)
     nvim_text_operator_transform_selection(
         function(lines)
             return {fn(lines[1])}
-        end
-    )
+        end)
     vim.api.nvim_feedkeys("iw", "ni", false)
 end
 
@@ -293,13 +292,13 @@ local function nvim_transform_cWORD(fn)
     nvim_text_operator_transform_selection(
         function(lines)
             return {fn(lines[1])}
-        end
-    )
+        end)
     vim.api.nvim_feedkeys("iW", "ni", false)
 end
 
 local function nvim_source_current_buffer()
-    loadstring(table.concat(nvim_buf_get_region_lines(nil, 1, -1, VISUAL_MODE.line), "\n"))()
+    loadstring(table.concat(nvim_buf_get_region_lines(nil, 1, -1,
+                                                      VISUAL_MODE.line), "\n"))()
 end
 
 local LUA_BUFFER_MAPPING = {}
@@ -320,7 +319,7 @@ local valid_modes = {
     s = "s",
     -- :map! and :map
     ["!"] = "!",
-    [" "] = ""
+    [" "] = "",
 }
 
 -- TODO(ashkan) @feature Disable noremap if the rhs starts with <Plug>
@@ -337,8 +336,12 @@ local function nvim_apply_mappings(mappings, default_options)
             bufnr = options.buffer
         end
         local mode, mapping = key:match("^(.)(.+)$")
-        assert(mode, "nvim_apply_mappings: invalid mode specified for keymapping " .. key)
-        assert(valid_modes[mode], "nvim_apply_mappings: invalid mode specified for keymapping. mode=" .. mode)
+        assert(mode,
+               "nvim_apply_mappings: invalid mode specified for keymapping " ..
+                   key)
+        assert(valid_modes[mode],
+               "nvim_apply_mappings: invalid mode specified for keymapping. mode=" ..
+                   mode)
         mode = valid_modes[mode]
         local rhs = options[1]
         -- Remove this because we're going to pass it straight to nvim_set_keymap
@@ -356,7 +359,9 @@ local function nvim_apply_mappings(mappings, default_options)
                     -- local repeat_expr = mapping
                     -- repeat_expr = vim.api.nvim_replace_termcodes(repeat_expr, true, true, true)
                     -- nvim.fn["repeat#set"](repeat_expr, nvim.v.count)
-                    nvim.fn["repeat#set"](nvim.replace_termcodes(key_mapping, true, true, true), nvim.v.count)
+                    nvim.fn["repeat#set"](
+                        nvim.replace_termcodes(key_mapping, true, true, true),
+                        nvim.v.count)
                 end
                 options.dot_repeat = nil
             end
@@ -365,30 +370,32 @@ local function nvim_apply_mappings(mappings, default_options)
                 if not LUA_BUFFER_MAPPING[bufnr] then
                     LUA_BUFFER_MAPPING[bufnr] = {}
                     -- Clean up our resources.
-                    vim.api.nvim_buf_attach(
-                        bufnr,
-                        false,
-                        {
-                            on_detach = function()
-                                LUA_BUFFER_MAPPING[bufnr] = nil
-                            end
-                        }
-                    )
+                    vim.api.nvim_buf_attach(bufnr, false, {
+                        on_detach = function()
+                            LUA_BUFFER_MAPPING[bufnr] = nil
+                        end,
+                    })
                 end
                 LUA_BUFFER_MAPPING[bufnr][escaped] = rhs
                 -- TODO HACK figure out why <Cmd> doesn't work in visual mode.
                 if mode == "x" or mode == "v" then
-                    key_mapping = (":<C-u>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(bufnr, escaped)
+                    key_mapping =
+                        (":<C-u>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(
+                            bufnr, escaped)
                 else
-                    key_mapping = ("<Cmd>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(bufnr, escaped)
+                    key_mapping =
+                        ("<Cmd>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(
+                            bufnr, escaped)
                 end
             else
                 LUA_MAPPING[escaped] = rhs
                 -- TODO HACK figure out why <Cmd> doesn't work in visual mode.
                 if mode == "x" or mode == "v" then
-                    key_mapping = (":<C-u>lua LUA_MAPPING.%s()<CR>"):format(escaped)
+                    key_mapping = (":<C-u>lua LUA_MAPPING.%s()<CR>"):format(
+                                      escaped)
                 else
-                    key_mapping = ("<Cmd>lua LUA_MAPPING.%s()<CR>"):format(escaped)
+                    key_mapping = ("<Cmd>lua LUA_MAPPING.%s()<CR>"):format(
+                                      escaped)
                 end
             end
             rhs = key_mapping
@@ -412,7 +419,7 @@ local function nvim_create_augroups(definitions)
             -- if type(def) == 'table' and type(def[#def]) == 'function' then
             -- 	def[#def] = lua_callback(def[#def])
             -- end
-            local command = table.concat(vim.tbl_flatten {"autocmd", def}, " ")
+            local command = table.concat(vim.tbl_flatten{"autocmd", def}, " ")
             vim.api.nvim_command(command)
         end
         vim.api.nvim_command("augroup END")
@@ -427,7 +434,7 @@ function string.startswith(s, n) -- luacheck: ignore
     return s:sub(1, #n) == n
 end
 
-function string.endswith(self, str) --luacheck: ignore
+function string.endswith(self, str) -- luacheck: ignore
     return self:sub(-(#str)) == str
 end
 
@@ -449,18 +456,13 @@ end
 
 local function spawn(cmd, params, onexit)
     local handle, pid
-    handle, pid =
-        vim.loop.spawn(
-        cmd,
-        params,
-        function(code, signal)
-            if type(onexit) == "function" then
-                onexit(code, signal)
-            end
-            handle:close()
-            clean_handles()
+    handle, pid = vim.loop.spawn(cmd, params, function(code, signal)
+        if type(onexit) == "function" then
+            onexit(code, signal)
         end
-    )
+        handle:close()
+        clean_handles()
+    end)
     table.insert(HANDLES, handle)
     return handle, pid
 end
@@ -485,178 +487,144 @@ end
 -- `nvim.echo(...)` is approximately `echo table.concat({...}, '\n')`
 -- Both methods cache the inital lookup in the metatable, but there is a small overhead regardless.
 -- nvim =
-return setmetatable(
-    {
-        print = nvim_print,
-        echo = nvim_echo,
-        mark_or_index = nvim_mark_or_index,
-        buf_get_region_lines = nvim_buf_get_region_lines,
-        buf_set_region_lines = nvim_buf_set_region_lines,
-        buf_transform_region_lines = nvim_buf_transform_region_lines,
-        set_selection_lines = nvim_set_selection_lines,
-        selection = nvim_selection,
-        text_operator = nvim_text_operator,
-        text_operator_transform_selection = nvim_text_operator_transform_selection,
-        visual_mode = nvim_visual_mode,
-        transform_cword = nvim_transform_cword,
-        transform_cWORD = nvim_transform_cWORD,
-        source_current_buffer = nvim_source_current_buffer,
-        escape_keymap = escape_keymap,
-        apply_mappings = nvim_apply_mappings,
-        create_augroups = nvim_create_augroups,
-        clean_handles = clean_handles,
-        spawn = spawn,
-        epoch_ms = epoch_ms,
-        epoch_ns = epoch_ns,
-        fn = setmetatable(
-            {},
-            {
-                __index = function(self, k)
-                    local mt = getmetatable(self)
-                    local x = mt[k]
-                    if x ~= nil then
-                        return x
-                    end
-                    local f = function(...)
-                        return vim.api.nvim_call_function(k, {...})
-                    end
-                    mt[k] = f
-                    return f
-                end
-            }
-        ),
-        buf = setmetatable(
-            {},
-            {
-                __index = function(self, k)
-                    local mt = getmetatable(self)
-                    local x = mt[k]
-                    if x ~= nil then
-                        return x
-                    end
-                    local f = vim.api["nvim_buf_" .. k]
-                    mt[k] = f
-                    return f
-                end
-            }
-        ),
-        ex = setmetatable(
-            {},
-            {
-                __index = function(self, k)
-                    local mt = getmetatable(self)
-                    local x = mt[k]
-                    if x ~= nil then
-                        return x
-                    end
-                    local command = k:gsub("_$", "!")
-                    local f = function(...)
-                        return vim.api.nvim_command(table.concat(vim.tbl_flatten {command, ...}, " "))
-                    end
-                    mt[k] = f
-                    return f
-                end
-            }
-        ),
-        g = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_get_var(k)
-                end,
-                __newindex = function(_, k, v)
-                    if v == nil then
-                        return vim.api.nvim_del_var(k)
-                    else
-                        return vim.api.nvim_set_var(k, v)
-                    end
-                end
-            }
-        ),
-        v = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_get_vvar(k)
-                end,
-                __newindex = function(_, k, v)
-                    return vim.api.nvim_set_vvar(k, v)
-                end
-            }
-        ),
-        b = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_buf_get_var(0, k)
-                end,
-                __newindex = function(_, k, v)
-                    if v == nil then
-                        return vim.api.nvim_buf_del_var(0, k)
-                    else
-                        return vim.api.nvim_buf_set_var(0, k, v)
-                    end
-                end
-            }
-        ),
-        o = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_get_option(k)
-                end,
-                __newindex = function(_, k, v)
-                    return vim.api.nvim_set_option(k, v)
-                end
-            }
-        ),
-        bo = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_buf_get_option(0, k)
-                end,
-                __newindex = function(_, k, v)
-                    return vim.api.nvim_buf_set_option(0, k, v)
-                end
-            }
-        ),
-        wo = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_win_get_option(0, k)
-                end,
-                __newindex = function(_, k, v)
-                    return vim.api.nvim_win_set_option(0, k, v)
-                end
-            }
-        ),
-        env = setmetatable(
-            {},
-            {
-                __index = function(_, k)
-                    return vim.api.nvim_call_function("getenv", {k})
-                end,
-                __newindex = function(_, k, v)
-                    return vim.api.nvim_call_function("setenv", {k, v})
-                end
-            }
-        )
-    },
-    {
+return setmetatable({
+    VISUAL_MODE = VISUAL_MODE,
+    print = nvim_print,
+    echo = nvim_echo,
+    mark_or_index = nvim_mark_or_index,
+    buf_get_region_lines = nvim_buf_get_region_lines,
+    buf_set_region_lines = nvim_buf_set_region_lines,
+    buf_transform_region_lines = nvim_buf_transform_region_lines,
+    set_selection_lines = nvim_set_selection_lines,
+    selection = nvim_selection,
+    text_operator = nvim_text_operator,
+    text_operator_transform_selection = nvim_text_operator_transform_selection,
+    visual_mode = nvim_visual_mode,
+    transform_cword = nvim_transform_cword,
+    transform_cWORD = nvim_transform_cWORD,
+    source_current_buffer = nvim_source_current_buffer,
+    escape_keymap = escape_keymap,
+    apply_mappings = nvim_apply_mappings,
+    create_augroups = nvim_create_augroups,
+    clean_handles = clean_handles,
+    spawn = spawn,
+    epoch_ms = epoch_ms,
+    epoch_ns = epoch_ns,
+    fn = setmetatable({}, {
         __index = function(self, k)
             local mt = getmetatable(self)
             local x = mt[k]
             if x ~= nil then
                 return x
             end
-            local f = vim.api["nvim_" .. k]
+            local f = function(...)
+                return vim.api.nvim_call_function(k, {...})
+            end
             mt[k] = f
             return f
+        end,
+    }),
+    buf = setmetatable({}, {
+        __index = function(self, k)
+            local mt = getmetatable(self)
+            local x = mt[k]
+            if x ~= nil then
+                return x
+            end
+            local f = vim.api["nvim_buf_" .. k]
+            mt[k] = f
+            return f
+        end,
+    }),
+    ex = setmetatable({}, {
+        __index = function(self, k)
+            local mt = getmetatable(self)
+            local x = mt[k]
+            if x ~= nil then
+                return x
+            end
+            local command = k:gsub("_$", "!")
+            local f = function(...)
+                return vim.api.nvim_command(
+                           table.concat(vim.tbl_flatten{command, ...}, " "))
+            end
+            mt[k] = f
+            return f
+        end,
+    }),
+    g = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_get_var(k)
+        end,
+        __newindex = function(_, k, v)
+            if v == nil then
+                return vim.api.nvim_del_var(k)
+            else
+                return vim.api.nvim_set_var(k, v)
+            end
+        end,
+    }),
+    v = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_get_vvar(k)
+        end,
+        __newindex = function(_, k, v)
+            return vim.api.nvim_set_vvar(k, v)
+        end,
+    }),
+    b = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_buf_get_var(0, k)
+        end,
+        __newindex = function(_, k, v)
+            if v == nil then
+                return vim.api.nvim_buf_del_var(0, k)
+            else
+                return vim.api.nvim_buf_set_var(0, k, v)
+            end
+        end,
+    }),
+    o = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_get_option(k)
+        end,
+        __newindex = function(_, k, v)
+            return vim.api.nvim_set_option(k, v)
+        end,
+    }),
+    bo = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_buf_get_option(0, k)
+        end,
+        __newindex = function(_, k, v)
+            return vim.api.nvim_buf_set_option(0, k, v)
+        end,
+    }),
+    wo = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_win_get_option(0, k)
+        end,
+        __newindex = function(_, k, v)
+            return vim.api.nvim_win_set_option(0, k, v)
+        end,
+    }),
+    env = setmetatable({}, {
+        __index = function(_, k)
+            return vim.api.nvim_call_function("getenv", {k})
+        end,
+        __newindex = function(_, k, v)
+            return vim.api.nvim_call_function("setenv", {k, v})
+        end,
+    }),
+}, {
+    __index = function(self, k)
+        local mt = getmetatable(self)
+        local x = mt[k]
+        if x ~= nil then
+            return x
         end
-    }
-)
-
--- nvim.option = nvim.o
--- return {nvim}
+        local f = vim.api["nvim_" .. k]
+        mt[k] = f
+        return f
+    end,
+})

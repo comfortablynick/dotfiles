@@ -32,8 +32,7 @@ elseif get(g:, 'comment_plugin') ==# 'tcomment'
     omap <silent><Leader>c          <Plug>TComment_gc
 endif
 
-lua require('comment')
-lua TestComment()
+lua require('comment').test_comment()
 
 " nnoremap gcc :<c-u>.,.+<c-r>=v:count<cr>call <SID>toggle_comment()<cr>
 " nnoremap gc :<c-u>set opfunc=<SID>comment_op<cr>g@

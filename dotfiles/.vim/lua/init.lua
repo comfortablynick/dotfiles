@@ -1,3 +1,4 @@
+local nvim = require("nvim")
 local HOMEDIR = nvim.env.HOME
 
 -- Commands {{{1
@@ -180,6 +181,8 @@ local mappings = {
     ["nU"] = {":redo<CR>"},
     -- Close/save from insert mode
     ["ikj"] = {"<Esc>`^"},
+    -- TODO: how to do <expr> in lua?
+    -- ["ikj"] = {"<expr> pumvisible() ? <C-e> : <Esc>`^"},
     ["ilkj"] = {"<Esc>`^:w<CR>"},
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
     ["n<CR>"] = {":nohlsearch<CR>", silent = false},

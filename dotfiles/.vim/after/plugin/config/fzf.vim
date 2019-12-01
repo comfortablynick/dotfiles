@@ -70,5 +70,5 @@ augroup fzf_config
         \ index(g:completion_filetypes['coc'], &filetype) < 0
         \ | nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
         \ | endif
-    autocmd FileType fzf tunmap <buffer> <ESC>
+    " autocmd FileType fzf tunmap <buffer> <ESC>
 augroup END

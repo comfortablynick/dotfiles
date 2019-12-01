@@ -26,8 +26,7 @@ let config_list = [
 
 let g:use_init_lua = 1
 
-if get(g:, 'use_init_lua') == 0
-    lua local nvim = require('nvim')
+if get(g:, 'use_init_lua') == 1
     lua require('init').Set_Options()
 else
     call insert(config_list, 'config.vim')

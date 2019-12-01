@@ -192,9 +192,6 @@ autocmd vimrc FileType *
 command! PackUpdate call <SID>pack_init() | call config#minpac#update_all()
 command! PackClean  call <SID>pack_init() | call minpac#clean()
 command! PackStatus call <SID>pack_init() | call minpac#status()
-" Load :: use in vimrc files to load on startup
-" (is this needed? `packadd` should work fine)
-command! -nargs=+ -complete=packadd Load silent! packadd! <args>
 
 " Load packages {{{1
 packadd! lightline.vim

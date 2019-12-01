@@ -22,6 +22,6 @@ endfunction
 function! config#minpac#update_all() abort
     " Load remote plugins
     let g:deoplete#enable_at_startup = 0
-    Load deoplete.nvim
+    packadd! deoplete.nvim
     call minpac#update('', {'do': 'call minpac#status()'})
 endfunction

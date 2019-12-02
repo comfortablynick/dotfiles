@@ -8,6 +8,8 @@ local commands = {filetype = "indent plugin on", colorscheme = "default"}
 local general = {
     -- Shared data file location
     shadafile = nvim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
+    -- Shared data settings (use 20 instead of default 100 to speed up)
+    shada = [[!,'20,<50,s10,h]],
     -- Live substitution
     inccommand = "split",
     -- Shell to use instead of sh
@@ -180,7 +182,7 @@ local mappings = {
     -- Redo
     ["nU"] = {":redo<CR>"},
     -- Close/save from insert mode
-    ["ikj"] = {"pumvisible() ? '<C-e>': '<Esc>`^'", expr = true},
+    ["ikj"] = {"<Esc>`^"},
     ["ilkj"] = {"<Esc>`^:w<CR>"},
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
     ["n<CR>"] = {":nohlsearch<CR><CR>"},

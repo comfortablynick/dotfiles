@@ -58,9 +58,9 @@ let $1 = 1$3
 endsnippet
 
 snippet f "function" b
-fun ${1:function_name}($2)
-	${3:" code}
-endf
+function! ${1:function_name}($2) abort
+	${3:code}
+endfunction
 endsnippet
 
 snippet filetype_detect "filetype detection boilerplate" b

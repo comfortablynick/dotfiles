@@ -35,6 +35,7 @@ let g:lightline = {
     \       [ 'line_info' ],
     \       [ 'filetype_icon', 'fileencoding_non_utf', 'fileformat_icon' ],
     \       [ 'current_tag' ],
+    \       [ 'asyncrun_status' ],
     \    ]
     \ },
     \ 'inactive': {
@@ -62,6 +63,7 @@ let g:lightline = {
     \   'venv': 'LL_VirtualEnvName',
     \   'current_tag': 'LL_CurrentTag',
     \   'coc_status': 'LL_CocStatus',
+    \   'asyncrun_status': 'LL_AsyncRunStatus',
     \ },
     \ 'tab_component_function': {
     \   'filename': 'LL_TabName',
@@ -243,6 +245,11 @@ endfunction
 
 function! s:col_no() abort "{{{2
     return printf('%3d', virtcol('.'))
+endfunction
+
+function! LL_AsyncJobStatus() abort "{{{2
+    let l:status = get(g:, 'asyncrun_status', '')
+    return l:status
 endfunction
 
 function! LL_LineInfo() abort "{{{2

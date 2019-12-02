@@ -169,7 +169,7 @@ local autocmds = {
 }
 
 -- Maps {{{1
-local map_default_options = {silent = true, unique = true}
+local map_default_options = {silent = true, unique = true, noremap = true}
 local mappings = {
     -- toggle folds
     ["n<Space>"] = {"za"},
@@ -180,12 +180,10 @@ local mappings = {
     -- Redo
     ["nU"] = {":redo<CR>"},
     -- Close/save from insert mode
-    ["ikj"] = {"<Esc>`^"},
-    -- TODO: how to do <expr> in lua?
-    -- ["ikj"] = {"<expr> pumvisible() ? <C-e> : <Esc>`^"},
+    ["ikj"] = {"pumvisible() ? '<C-e>': '<Esc>`^'", expr = true},
     ["ilkj"] = {"<Esc>`^:w<CR>"},
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
-    ["n<CR>"] = {":nohlsearch<CR>", silent = false},
+    ["n<CR>"] = {":nohlsearch<CR><CR>"},
     -- Show syntax group under cursor
     ["n<Leader>h"] = {":echo syntax#syn_group()<CR>"},
 }

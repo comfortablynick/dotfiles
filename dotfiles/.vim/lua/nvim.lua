@@ -489,6 +489,7 @@ end
 -- nvim =
 return setmetatable({
     VISUAL_MODE = VISUAL_MODE,
+    tbl_extend = vim.tbl_extend,
     print = nvim_print,
     echo = nvim_echo,
     mark_or_index = nvim_mark_or_index,

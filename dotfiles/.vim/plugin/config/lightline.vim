@@ -1,4 +1,11 @@
-" Config for lightline.vim status line
+" vim: fdl=1
+" ====================================================
+" Filename:    plugin/config/lightline.vim
+" Description: Config for lightline.vim
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-01
+" ====================================================
 scriptencoding utf-8
 if exists('g:loaded_lightline_vim_config') | finish | endif
 let g:loaded_lightline_vim_config = 1
@@ -242,13 +249,30 @@ function! LL_LineInfo() abort "{{{2
     return s:is_not_file() ? '' :
         \ printf('%s %s %s %s :%s',
         \ s:line_percent(),
-        \ g:LL_LineSymbol,
+        \ LL_LinePos(),
         \ s:line_no(),
         \ g:LL_LineNoSymbol,
         \ s:col_no()
         \ )
 endfunction
 
+function! LL_LinePos() abort "{{{2
+    let l:line_no_indicator_chars = ['⎺', '⎻', '─', '⎼', '⎽']
+    " Zero index line number so 1/3 = 0, 2/3 = 0.5, and 3/3 = 1
+    let l:current_line = line('.') - 1
+    let l:total_lines = line('$') - 1
+
+    if l:current_line == 0
+        let l:index = 0
+    elseif l:current_line == l:total_lines
+        let l:index = -1
+    else
+        let l:line_no_fraction = floor(l:current_line) / floor(l:total_lines)
+        let l:index = float2nr(l:line_no_fraction * len(l:line_no_indicator_chars))
+    endif
+
+    return l:line_no_indicator_chars[l:index]
+endfunction
 function! LL_FileType() abort "{{{2
     let ftsymbol = g:LL_nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
@@ -258,7 +282,7 @@ function! LL_FileType() abort "{{{2
     if winwidth(0) > g:LL_MedWidth
         return &filetype.ftsymbol.venv
     elseif winwidth(0) > g:LL_MinWidth
-        return expand('%:e')
+        return &filetype ==# 'help' ? 'help' : expand('%:e')
     endif
     return ''
 endfunction
@@ -498,4 +522,3 @@ endfunction
 
 " Theme {{{1
 let lightline['colorscheme'] = g:statusline_theme
-" let lightline['colorscheme'] = 'gruvbox'

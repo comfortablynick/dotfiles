@@ -68,14 +68,9 @@ let g:nocompletion_filetypes = [
 
 " Packages {{{1
 " Minpac Init {{{2
-if has('nvim')
-    let minpac_path = expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/minpac')
-else
-    let minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
-endif
-if empty(glob(minpac_path))
+if empty(glob(g:minpac_path))
     echo 'Downloading Minpac'
-    let clone = system('git clone https://github.com/k-takata/minpac.git ' . minpac_path)
+    call system('git clone https://github.com/k-takata/minpac.git '.g:minpac_path)
 endif
 
 function! s:pack_init() abort

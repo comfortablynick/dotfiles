@@ -1,4 +1,4 @@
-local nvim = require 'nvim'
+local nvim = require "nvim"
 
 -- From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
 local function NavigationFloatingWin()
@@ -14,16 +14,7 @@ local function NavigationFloatingWin()
     if (width > 150 or height > 35) then
         -- fzf's window height is 3/4 of the max height, but not more than 30
         local win_height = math.min(math.ceil(height * 3 / 4), 30)
-        local win_width
-
-        -- if the width is small
-        if (width < 150) then
-            -- just subtract 8 from the editor's width
-            win_width = math.ceil(width - 8)
-        else
-            -- use 90% of the editor's width
-            win_width = math.ceil(width * 0.9)
-        end
+        local win_width = math.ceil((width < 150 and width - 12) or width * 0.9)
 
         -- settings for the fzf window
         local opts = {
@@ -32,7 +23,7 @@ local function NavigationFloatingWin()
             width = win_width,
             height = win_height,
             row = math.ceil((height - win_height) / 2),
-            col = math.ceil((width - win_width) / 2)
+            col = math.ceil((width - win_width) / 2),
         }
 
         -- create a new floating window, centered in the editor
@@ -40,6 +31,4 @@ local function NavigationFloatingWin()
     end
 end
 
-return {
-    NavigationFloatingWin = NavigationFloatingWin,
-}
+return {NavigationFloatingWin = NavigationFloatingWin}

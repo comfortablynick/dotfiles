@@ -1,5 +1,5 @@
 local nvim = require("nvim")
-local HOMEDIR = nvim.env.HOME
+local vim = vim or {}
 
 -- Commands {{{1
 local commands = {filetype = "indent plugin on", colorscheme = "default"}
@@ -7,7 +7,7 @@ local commands = {filetype = "indent plugin on", colorscheme = "default"}
 -- Global options {{{1
 local general = {
     -- Shared data file location
-    shadafile = nvim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
+    shadafile = vim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
     -- Shared data settings (use 20 instead of default 100 to speed up)
     shada = [[!,'20,<50,s10,h]],
     -- Live substitution
@@ -21,9 +21,9 @@ local general = {
     -- Use true color
     termguicolors = true,
     -- Undo file dir
-    undodir = HOMEDIR .. "/.vim/undo//",
+    undodir = vim.env.HOME .. "/.vim/undo//",
     -- Save file backups here
-    backupdir = HOMEDIR .. "/.vim/backup//",
+    backupdir = vim.env.HOME .. "/.vim/backup//",
     -- Avoid redrawing the screen
     lazyredraw = false,
     -- Allow cursor to extend past line
@@ -47,13 +47,8 @@ local general = {
     -- Split below instead of above
     splitbelow = true,
     -- Program used for grep
-    grepprg = (function()
-        if nvim.fn.executable("rg") then
-            return [[rg --vimgrep --hidden --no-ignore-vcs]]
-        else
-            return nvim.o.grepprg
-        end
-    end)(),
+    grepprg = vim.fn.executable("rg") and
+        [[rg --vimgrep --hidden --no-ignore-vcs]] or nvim.o.grepprg,
     grepformat = "%f:%l:%c:%m,%f:%l:%m",
 }
 
@@ -73,9 +68,9 @@ local editor = {
     -- Add extra line for function definition
     cmdheight = 1,
     -- Suppress echoing of 'Match x of x' during completion
-    shortmess = nvim.o.shortmess .. "c",
+    shortmess = vim.o.shortmess .. "c",
     -- Dictionary file for dict completion
-    dictionary = nvim.o.dictionary .. "/usr/share/dict/words-insane",
+    dictionary = vim.o.dictionary .. "/usr/share/dict/words-insane",
     -- Use system clipboard
     clipboard = "unnamed",
     -- Show line under cursor's line (check autocmds)
@@ -120,7 +115,7 @@ local buffer = {
     tabstop = 4,
     -- Don't insert comment leader after hitting 'o' or 'O'
     -- If still present, overwrite in after/ftplugin/filetype.vim
-    formatoptions = (nvim.bo.formatoptions:gsub("o", "")),
+    formatoptions = (vim.bo.formatoptions:gsub("o", "")),
 }
 
 -- Window-local options {{{1
@@ -148,15 +143,17 @@ local global_vars = {
     -- Leader key
     mapleader = ",",
     -- Python 2 dir
-    python_host_prog = nvim.env.NVIM_PY2_DIR,
+    python_host_prog = vim.env.NVIM_PY2_DIR,
     -- Python 3 dir
-    python3_host_prog = nvim.env.NVIM_PY3_DIR,
+    python3_host_prog = vim.env.NVIM_PY3_DIR,
     -- Initial window size (use to determine if on iPad)
-    window_width = nvim.o.columns,
+    window_width = vim.o.columns,
     -- Use powerline fonts with lightline
     LL_pl = 1,
     -- Use nerd fonts with lightline
     LL_nf = 1,
+    -- Path to find minpac plugin manager
+    minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
 }
 
 -- Autocommands {{{1
@@ -194,23 +191,23 @@ local mappings = {
 local function set_options()
     local global_settings = vim.tbl_extend("error", general, editor)
     for name, value in pairs(global_settings) do
-        nvim.o[name] = value
+        vim.o[name] = value
     end
 
     for name, value in pairs(buffer) do
-        nvim.bo[name] = value
+        vim.bo[name] = value
     end
 
     for name, value in pairs(window) do
-        nvim.wo[name] = value
+        vim.wo[name] = value
     end
 
     for name, value in pairs(commands) do
-        nvim.command(name .. " " .. value)
+        vim.cmd(name .. " " .. value)
     end
 
     for name, value in pairs(global_vars) do
-        nvim.g[name] = value
+        vim.g[name] = value
     end
 
     nvim.create_augroups(autocmds)

@@ -13,10 +13,12 @@ if has('nvim')
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
     let &shadafile =
         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
+    let g:minpac_path = expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/minpac')
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
     let g:python3_host_prog = '/usr/local/bin/python3.7'
+    let g:minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
 endif
 
 " Files/Swap/Backup {{{1

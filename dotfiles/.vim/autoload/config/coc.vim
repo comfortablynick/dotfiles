@@ -3,14 +3,12 @@
 " Description: Coc configuration
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-11-23
+" Last Change: 2019-12-02
 " ====================================================
 
 " Set autocmds if LC is loaded
 function! config#coc#cmds() abort
-    if ! coc#rpc#ready() || exists('b:coc_suggest_disable')
-        return
-    endif
+    if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif
     augroup coc_config_auto
         autocmd!
         if get(b:, 'coc_disable_cursorhold_hover', 1) == 0 ||
@@ -22,7 +20,6 @@ function! config#coc#cmds() abort
             autocmd CursorHold * silent call CocActionAsync('highlight')
         endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-        " autocmd BufWritePre *.ts :call CocAction('runCommand', 'tsserver.executeAutoFix')
     augroup END
 endfunction
 
@@ -33,10 +30,8 @@ function! s:check_back_space() abort
 endfunction
 
 " Remap only if active for filetype
-function! config#coc#maps() abort
-    if exists('b:coc_suggest_disable')
-        return
-    endif
+function! config#coc#apply_maps() abort
+    if exists('b:coc_suggest_disable') | return | endif
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gr <Plug>(coc-rename)
@@ -70,9 +65,6 @@ function! config#coc#maps() abort
 
     " Use <CR> to select snippet/completion
     inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-    " inoremap <silent><expr> <CR>
-    "     \ pumvisible() ? coc#_select_confirm() :
-    "     \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
     " Use `:Fold` to fold current buffer
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
@@ -84,5 +76,5 @@ function! config#coc#init() abort
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'
     call config#coc#cmds()
-    call config#coc#maps()
+    call config#coc#apply_maps()
 endfunction

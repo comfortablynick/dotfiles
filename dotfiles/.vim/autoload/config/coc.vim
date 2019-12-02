@@ -70,6 +70,10 @@ function! config#coc#apply_maps() abort
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
 endfunction
 
+function! config#coc#abbrev() abort
+    cnoreabbrev es CocCommand snippets.editSnippets
+endfunction
+
 function! config#coc#init() abort
     let g:use_explorer = 'coc-explorer'
     let g:coc_status_error_sign = 'E'
@@ -77,4 +81,5 @@ function! config#coc#init() abort
     let g:coc_snippet_next = '<tab>'
     call config#coc#cmds()
     call config#coc#apply_maps()
+    call config#coc#abbrev()
 endfunction

@@ -9,6 +9,11 @@
 function! config#minpac#add(repo, ...) abort
     let l:opts = extend(copy(get(a:000, 0, {})),
         \ { 'type': 'opt'}, 'keep')
+    " Allow simple `if` conditions to adding the plugin
+    " Note: only evaluated during PackUpdate
+    if has_key(l:opts, 'if')
+        if !eval(l:opts.if) | return | endif
+    endif
     if has_key(l:opts, 'for')
         let l:name = substitute(a:repo, '^.*/', '', '')
         let l:ft = type(l:opts.for) == type([]) ? join(l:opts.for, ',') : l:opts.for

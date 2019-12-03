@@ -72,6 +72,7 @@ endfunction
 
 function! config#coc#abbrev() abort
     cnoreabbrev es CocCommand snippets.editSnippets
+    cnoreabbrev ci CocInfo
 endfunction
 
 function! config#coc#init() abort

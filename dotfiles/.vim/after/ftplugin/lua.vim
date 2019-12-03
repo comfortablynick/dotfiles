@@ -6,6 +6,9 @@
 " Last Change: 2019-11-27
 " ====================================================
 
+" Lua development tools
+packadd nvim-luadev
+
 " Override vim ftplugin and set not to add comment leader on new line
 setlocal formatoptions-=o
 setlocal formatoptions-=r

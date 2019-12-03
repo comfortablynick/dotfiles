@@ -1,8 +1,9 @@
 --- Customized from:
 --- https://github.com/norcalli/nvim_utils/blob/master/lua/nvim_utils.lua
 --- NVIM SPECIFIC SHORTCUTS
-vim = vim or {}
-nvim = {}
+local vim = vim or {}
+assert(vim)
+local nvim = {}
 
 local VISUAL_MODE = {
     line = "line", -- linewise
@@ -479,6 +480,14 @@ local function epoch_ns()
     return s * 1000000 + ns
 end
 
+local function split(s, delim)
+    local result = {}
+    for match in (s .. delim):gmatch("(.-)" .. delim) do
+        table.insert(result, match)
+    end
+    return result
+end
+
 -- nvim object
 -- `nvim.$method(...)` redirects to `nvim.api.nvim_$method(...)`
 -- `nvim.fn.$method(...)` redirects to `vim.api.nvim_call_function($method, {...})`
@@ -511,6 +520,7 @@ return setmetatable({
     spawn = spawn,
     epoch_ms = epoch_ms,
     epoch_ns = epoch_ns,
+    split = split,
     fn = setmetatable({}, {
         __index = function(self, k)
             local mt = getmetatable(self)

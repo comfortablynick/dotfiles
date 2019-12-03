@@ -36,8 +36,7 @@ command! -bang -nargs=* -complete=dir Files
   \                            : fzf#vim#with_preview('right:60%', '?'),
   \                    <bang>0)
 
-lua fzf_lua = require('fzf_nav')
-let g:fzf_layout = { 'window': 'lua fzf_lua.NavigationFloatingWin()' } " Floating window
+let g:fzf_layout = { 'window': 'lua require("window").centered_floating_win()' } " Floating window
 " let g:fzf_layout = { 'down': '~30%' } " bottom split
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],

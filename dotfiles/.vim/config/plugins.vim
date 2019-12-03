@@ -88,7 +88,6 @@ function! s:pack_init() abort
 
     " General Packages {{{2
     Pack 'k-takata/minpac'
-    Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
     Pack 'scrooloose/nerdtree'
     Pack 'chrisbra/Colorizer'
@@ -114,15 +113,21 @@ function! s:pack_init() abort
     Pack 'itchyny/lightline.vim'
 
 
+    " Vim Development {{{2
+    Pack 'tpope/vim-scriptease'
+    Pack 'bfredl/nvim-luadev', {'if': 'has("nvim")'}
+
     " Themes {{{2
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
 
     " Syntax highlighting {{{2
-    if has('nvim')
-        " Python
-        Pack 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
-    endif
+    " Python
+    Pack 'numirias/semshi',
+        \ {
+        \   'if': 'has("nvim")',
+        \   'do': ':UpdateRemotePlugins',
+        \ }
     Pack 'HerringtonDarkholme/yats'
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
@@ -143,11 +148,12 @@ function! s:pack_init() abort
     Pack 'honza/vim-snippets'
 
     " Completion {{{2
-    if has('nvim')
-        Pack 'neovim/nvim-lsp'
-        Pack 'neoclide/coc.nvim',
-            \ { 'do': 'split term://yarn install --frozen-lockfile' }
-    endif
+    Pack 'neovim/nvim-lsp', { 'if': 'has("nvim")' }
+    Pack 'neoclide/coc.nvim',
+        \ {
+        \   'if': 'has("nvim")',
+        \   'do': 'split term://yarn install --frozen-lockfile',
+        \ }
     Pack 'Shougo/deoplete.nvim'
     Pack 'lifepillar/vim-mucomplete'
     Pack 'zxqfl/tabnine-vim'

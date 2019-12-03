@@ -1,3 +1,11 @@
+" ====================================================
+" Filename:    autoload/editor.vim
+" Description: General editor behavior functions
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-03
+" ====================================================
+
 " Restore cursor position and folding
 function! editor#recall_cursor_position() abort
     " Derived from and simplified:
@@ -30,9 +38,7 @@ function! editor#recall_cursor_position() abort
 
     " Do nothing if file does not exist on disk
     try
-        if empty(glob(@%))
-            return
-        endif
+        if empty(glob(@%)) | return | endif
     catch
         return
     endtry
@@ -64,19 +70,20 @@ endfunction
 
 " get_usuable_width() :: get actual usable width of current buffer
 function! editor#get_usuable_width()
-    let width = winwidth(0)
-    let numberwidth = max([&numberwidth, strlen(line('$'))+1])
-    let numwidth = (&number || &relativenumber)? numberwidth : 0
-    let foldwidth = &foldcolumn
-
-    if &signcolumn ==? 'yes'
-        let signwidth = 2
-    elseif &signcolumn ==? 'auto'
-        let signs = execute(printf('sign place buffer=%d', bufnr('')))
-        let signs = split(signs, "\n")
-        let signwidth = len(signs)>2? 2: 0
-    else
-        let signwidth = 0
-    endif
-    return width - numwidth - foldwidth - signwidth
+    " let width = winwidth(0)
+    " let numberwidth = max([&numberwidth, strlen(line('$'))+1])
+    " let numwidth = (&number || &relativenumber)? numberwidth : 0
+    " let foldwidth = &foldcolumn
+    "
+    " if &signcolumn ==? 'yes'
+    "     let signwidth = 2
+    " elseif &signcolumn ==? 'auto'
+    "     let signs = execute(printf('sign place buffer=%d', bufnr('')))
+    "     let signs = split(signs, "\n")
+    "     let signwidth = len(signs)>2? 2: 0
+    " else
+    "     let signwidth = 0
+    " endif
+    " return width - numwidth - foldwidth - signwidth
+    lua require('floating').get_usable_width(0)
 endfunction

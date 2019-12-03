@@ -1,5 +1,6 @@
 local nvim = require("nvim")
-local vim = vim or {}
+local vim = vim
+assert(vim)
 
 -- Commands {{{1
 local commands = {filetype = "indent plugin on", colorscheme = "default"}

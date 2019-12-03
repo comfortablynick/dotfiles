@@ -213,6 +213,7 @@ function! LL_Mode() abort "{{{2
         \ 'vista':          'VISTA',
         \ 'qf':             '',
         \ 'coc-explorer':   'EXPLORER',
+        \ 'output:///info': 'COC-INFO',
         \ }
     let l:mode = get(l:mode_map, mode(), mode())
     if winwidth(0) > g:LL_MedWidth
@@ -225,7 +226,7 @@ function! LL_Mode() abort "{{{2
         " Short abbrevation
         let l:mode_out = l:mode[2]
     endif
-    return get(l:special_modes, &filetype, l:mode_out)
+    return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
 endfunction
 
 function! s:line_percent() abort "{{{2
@@ -322,8 +323,11 @@ function! s:is_not_file() abort "{{{2
         \ 'vista',
         \ 'qf',
         \ 'coc-explorer',
+        \ 'output:///info',
         \ ]
-    if index(exclude, &filetype) > -1 || index(exclude, expand('%:t')) > -1
+    if index(exclude, &filetype) > -1
+        \ || index(exclude, expand('%:t')) > -1
+        \ || index(exclude, expand('%')) > -1
         return 1
     endif
     return 0
@@ -352,6 +356,8 @@ function! s:is_special_file() abort "{{{2
         return empty(f) ? '[Scratch]' : f
     elseif b ==? 'help'
         return fnamemodify(f, ':t')
+    elseif f ==# 'output:///info'
+        return ''
     endif
     return -1
 endfunction

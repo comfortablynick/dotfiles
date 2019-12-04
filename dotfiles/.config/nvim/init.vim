@@ -7,9 +7,9 @@
 " SHELL =========================================
 " Vim apparently doesn't care for fish
 " Load bash instead for Vim purposes
-if $SHELL =~# 'bin/fish'
-    set shell=/bin/sh
-endif
+" if $SHELL =~# 'bin/fish'
+"     set shell=zsh
+" endif
 
 " AUGROUP =======================================
 " General augroup for vimrc files

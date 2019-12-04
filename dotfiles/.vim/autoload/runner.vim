@@ -1,20 +1,30 @@
+" ====================================================
+" Filename:    autoload/runner.vim
+" Description: Run code actions based on justfile
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-04
+" ====================================================
+
 " Build command based on file type and command type
 function! runner#run_cmd(cmd_type) abort
     let l:cmd = 'just '.a:cmd_type
-
-    " Decide where to run the command
-    let l:run_loc = exists('b:run_cmd_in') ?
-        \ b:run_cmd_in :
-        \ get(g:, 'run_cmd_in', runner#get_cmd_run_loc())
-
-    if l:run_loc ==# 'term'
+    let l:run_loc = runner#get_cmd_run_loc()
+    if l:run_loc ==? 'term'
         call runner#run_in_term(l:cmd)
-    elseif l:run_loc ==# 'AsyncRun'
+    elseif l:run_loc ==? 'AsyncRun'
+        packadd asyncrun.vim
+        packadd vim-plugin-AnsiEsc
+        execute 'AsyncRun '.l:cmd
         return
-    elseif l:run_loc ==# 'Vtr'
-        execute 'VtrSendCommandToRunner! ' . l:cmd
+    elseif l:run_loc ==? 'Vtr'
+        execute 'VtrSendCommandToRunner! '.l:cmd
         return
     endif
+endfunction
+
+" Use AsyncRun to run and display results in quickfix
+function! runner#asyncrun(cmd) abort
 endfunction
 
 " Send cmd output to integrated terminal buffer
@@ -26,10 +36,15 @@ endfunction
 
 " Determine default command output
 function! runner#get_cmd_run_loc() abort
-    if !empty($TMUX_PANE) && winwidth(0) > 200
-        let b:run_cmd_in = 'Vtr'
-        return 'Vtr'
+    if !exists('b:run_cmd_in')
+        if exists('g:run_cmd_in')
+            let b:run_cmd_in = g:run_cmd_in
+        elseif !empty($TMUX_PANE) && winwidth(0) > 200
+            let b:run_cmd_in = 'Vtr'
+        else
+            " Use built-in terminal
+            let b:run_cmd_in = 'term'
+        endif
     endif
-    let b:run_cmd_in = 'term'
-    return 'term'
+    return b:run_cmd_in
 endfunction

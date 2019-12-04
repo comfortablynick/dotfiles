@@ -24,6 +24,12 @@ let g:tagbar_type_typescript = {
   \ ]
 \ }
 
+
+function! s:tagbar_toggle() abort
+    packadd tagbar
+    TagbarToggle
+endfunction
+
 " Maps
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
-noremap <silent> <F8> :TagbarToggle<CR>
+nnoremap <silent> <Leader>t :call <SID>tagbar_toggle()<CR>
+noremap <silent> <F8> :call <SID>tagbar_toggle()<CR>

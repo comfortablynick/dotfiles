@@ -12,7 +12,7 @@ let g:loaded_comment_vim_qsyxneop = 1
 " example:
 "    let &commentstring = '/*%s*/'
 
-let g:comment_plugin = 'tcomment'
+let g:comment_plugin = 'commentary'
 
 if get(g:, 'comment_plugin') ==# 'commentary'
     packadd vim-commentary

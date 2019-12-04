@@ -97,5 +97,5 @@ let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
 " \    'default': 'd',
 " \}
 
-nnoremap <silent> <Leader>v :Vista!!<CR>
-nnoremap <silent> <Leader>m :Vista finder<CR>
+nnoremap <silent> <Leader>v :packadd vista.vim \| :Vista!!<CR>
+nnoremap <silent> <Leader>m :packadd vista.vim \| :Vista finder<CR>

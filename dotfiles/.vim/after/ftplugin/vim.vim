@@ -1,4 +1,10 @@
-" VIM SCRIPTS ===================================
+" ====================================================
+" Filename:    after/ftplugin/vim.vim
+" Description: Vim script files
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-04
+" ====================================================
 
 " Local vim editor settings
 setlocal tabstop=4                                              " Treat spaces as tab

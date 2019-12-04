@@ -14,7 +14,7 @@ local general = {
     -- Live substitution
     inccommand = "split",
     -- Shell to use instead of sh
-    shell = "bash",
+    shell = vim.o.shell:match("fish") and "bash" or vim.o.shell,
     -- Don't unload hidden buffers
     hidden = true,
     -- Read changes in files from outside vim

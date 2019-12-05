@@ -1,7 +1,5 @@
-if exists('g:loaded_mucomplete_vim_config')
-    finish
-endif
-let g:loaded_mucomplete_vim_config = 1
+if exists('g:loaded_plugin_config_mucomplete_vxafc3iu') | finish | endif
+let g:loaded_plugin_config_mucomplete_vxafc3iu = 1
 
 function! s:init_mucomplete() abort
     let g:mucomplete#enable_auto_at_startup = 1

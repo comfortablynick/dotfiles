@@ -28,14 +28,13 @@ from pathlib import PurePath
 def file_relative_path(path):
 	"""Return path relative to .vim directory."""
 	fp = PurePath(path)
-	rel = fp.relative_to(os.path.expanduser("~/dotfiles/dotfiles/.vim"))
-	return str(rel)
+	return fp.relative_to(os.path.expanduser("~/dotfiles/dotfiles/.vim"))
 endglobal
 
 # Author:   ${1:`!v g:snippets_author`} <${2:`!v g:snippets_author_email`}>
 snippet doc "Script documetation" b
 " ====================================================
-" Filename:    `!p snip.rv = file_relative_path(path)`
+" Filename:    `!p snip.rv = str(file_relative_path(path))`
 " Description: ${1}
 " Author:      Nick Murphy
 " License:     MIT
@@ -49,12 +48,15 @@ snippet scriptguard "script reinclusion guard" b
 if exists('${1:g:loaded_`!p
 if not snip.c:
 	import random, string
-	name = re.sub(r'[^A-Za-z0-9]+','_', snip.fn)
+	relpath = file_relative_path(os.path.splitext(path)[0])
+	relpath = '_'.join(os.path.split(relpath))
+	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()
-	snip.rv = '%s_%s' % (name,rand)
+	snip.rv = '%s_%s' % (relpath,rand)
 else:
 	snip.rv = snip.c`}') | finish | endif
-let $1 = 1$3
+let $1 = 1
+$0
 endsnippet
 
 snippet f "function" b

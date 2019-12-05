@@ -1,5 +1,5 @@
-if exists('g:loaded_nvim_lsp_vim') | finish | endif
-let g:loaded_nvim_lsp_vim = 1
+if exists('g:loaded_plugin_config_nvim_lsp_d5gcrfhu') | finish | endif
+let g:loaded_plugin_config_nvim_lsp_d5gcrfhu = 1
 
 " Call func to set autocmds if LC is loaded
 augroup nvim_lsp_config

@@ -5,8 +5,8 @@
 " License:     MIT
 " Last Change: 2019-11-23
 " ====================================================
-if exists('g:loaded_coc_config') | finish | endif
-let g:loaded_coc_config = 1
+if exists('g:loaded_plugin_config_coc_s5zywzm2') | finish | endif
+let g:loaded_plugin_config_coc_s5zywzm2 = 1
 
 " let g:coc_force_debug = 1
 let g:coc_global_extensions = [

@@ -1,7 +1,12 @@
-if exists('g:loaded_tagbar_config_vim')
-    finish
-endif
-let g:loaded_tagbar_config_vim = 1
+" ====================================================
+" Filename:    plugin/config/tagbar.vim
+" Description: Tagbar tag explorer lazy load/config
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
+if exists('g:loaded_plugin_config_tagbar_8ftwpz9y') | finish | endif
+let g:loaded_plugin_config_tagbar_8ftwpz9y = 1
 
 let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
 let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened

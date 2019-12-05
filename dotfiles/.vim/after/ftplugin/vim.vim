@@ -5,6 +5,8 @@
 " License:     MIT
 " Last Change: 2019-12-04
 " ====================================================
+if exists('g:loaded_after_ftplugin_vim_xsakimlh') | finish | endif
+let g:loaded_after_ftplugin_vim_xsakimlh = 1
 
 " Local vim editor settings
 setlocal tabstop=4                                              " Treat spaces as tab

@@ -1,3 +1,6 @@
+if exists('g:loaded_ftplugin_python_42efmoai') | finish | endif
+let g:loaded_ftplugin_python_42efmoai = 1
+
 " Settings for Python files
 
 " PEP8 Compatibile Indenting

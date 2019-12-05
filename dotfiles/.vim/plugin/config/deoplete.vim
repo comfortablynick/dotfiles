@@ -1,7 +1,12 @@
-if exists('g:loaded_deoplete_config_vim')
-    finish
-endif
-let g:loaded_deoplete_config_vim = 1
+" ====================================================
+" Filename:    plugin/config/deoplete.vim
+" Description: Deoplete completion plugin config
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
+if exists('g:loaded_plugin_config_deoplete_jdh6forp') | finish | endif
+let g:loaded_plugin_config_deoplete_jdh6forp = 1
 
 " Load deoplete
 augroup deoplete_config

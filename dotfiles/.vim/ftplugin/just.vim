@@ -1,6 +1,4 @@
-if exists('g:just_ftplugin')
-    finish
-endif
-let g:just_ftplugin = 1
+if exists('g:loaded_ftplugin_just_mywko9q6') | finish | endif
+let g:loaded_ftplugin_just_mywko9q6 = 1
 
 set commentstring=#\ %s

@@ -1,3 +1,6 @@
+if exists('g:loaded_ftplugin_go_gdqna1rp') | finish | endif
+let g:loaded_ftplugin_go_gdqna1rp = 1
+
 " Golang Options
 setlocal formatoptions-=t                                       " Don't autowrap text
 

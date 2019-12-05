@@ -1,9 +1,14 @@
-scriptencoding utf-8
+" ====================================================
+" Filename:    plugin/config/ale.vim
+" Description: Ale plugin config
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
+if exists('g:loaded_plugin_config_ale_fyqh3zdm') | finish | endif
+let g:loaded_plugin_config_ale_fyqh3zdm = 1
 
-if exists('g:loaded_ale_config_vim')
-    finish
-endif
-let g:loaded_ale_config_vim = 1
+scriptencoding utf-8
 
 " Main options
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode

@@ -7,8 +7,8 @@
 " Last Change: 2019-12-01
 " ====================================================
 scriptencoding utf-8
-if exists('g:loaded_lightline_vim_config') | finish | endif
-let g:loaded_lightline_vim_config = 1
+if exists('g:loaded_plugin_config_lightline_mh4pwx8p') | finish | endif
+let g:loaded_plugin_config_lightline_mh4pwx8p = 1
 
 " Definitions {{{1
 " Status bar definition {{{2

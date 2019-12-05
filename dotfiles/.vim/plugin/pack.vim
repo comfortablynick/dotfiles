@@ -9,6 +9,6 @@ if exists('g:loaded_plugin_pack_gdjlcrz2') | finish | endif
 let g:loaded_plugin_pack_gdjlcrz2 = 1
 
 " Call minpac or minpac wrappers
-command! PackUpdate call pack#update()
-command! PackClean  call pack#clean()
-command! PackStatus call pack#status()
+command! PackUpdate call plugins#init() | call pack#update()
+command! PackClean  call plugins#init() | call pack#clean()
+command! PackStatus call plugins#init() | call pack#status()

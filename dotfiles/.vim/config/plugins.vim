@@ -8,6 +8,7 @@
 " Common Vim/Neovim plugins
 
 " Helper functions/variables {{{1
+" TODO: move everything but `packadd`s to canonical path
 " Completion filetypes {{{2
 let g:completion_filetypes = {
     \ 'deoplete':
@@ -63,91 +64,6 @@ let g:nocompletion_filetypes = [
     \ 'nerdtree',
     \ ]
 
-" Packages {{{1
-call pack#init()
-
-" General {{{2
-Pack 'k-takata/minpac'
-Pack 'mhinz/vim-lookup'
-Pack 'scrooloose/nerdtree'
-Pack 'chrisbra/Colorizer'
-Pack 'mhinz/vim-startify'
-Pack 'tomtom/tcomment_vim'
-Pack 'tpope/vim-commentary'
-Pack 'tpope/vim-surround'
-Pack 'tpope/vim-projectionist'
-Pack 'liuchengxu/vista.vim'
-Pack 'dense-analysis/ale'
-Pack 'sbdchd/neoformat'
-Pack 'mbbill/undotree'
-Pack 'majutsushi/tagbar'
-Pack 'skywind3000/asyncrun.vim'
-Pack 'vhdirk/vim-cmake'
-Pack 'junegunn/fzf'
-Pack 'junegunn/fzf.vim'
-Pack 'airblade/vim-rooter'
-Pack 'freitass/todo.txt-vim'
-Pack 'justinmk/vim-sneak'
-Pack 'embear/vim-localvimrc'
-Pack 'liuchengxu/vim-clap'
-Pack 'itchyny/lightline.vim'
-
-
-" Vim Development {{{2
-Pack 'tpope/vim-scriptease'
-Pack 'bfredl/nvim-luadev', {'if': 'has("nvim")'}
-
-" Themes {{{2
-Pack 'NLKNguyen/papercolor-theme'
-Pack 'gruvbox-community/gruvbox'
-
-" Syntax highlighting {{{2
-" Python
-Pack 'numirias/semshi',
-    \ {
-    \   'if': 'has("nvim")',
-    \   'do': ':UpdateRemotePlugins',
-    \ }
-Pack 'HerringtonDarkholme/yats'
-Pack 'gabrielelana/vim-markdown'
-Pack 'dag/vim-fish'
-Pack 'cespare/vim-toml'
-Pack 'bfrg/vim-cpp-modern'
-Pack 'vim-jp/syntax-vim-ex'
-Pack 'pearofducks/ansible-vim'
-
-" Git {{{2
-Pack 'airblade/vim-gitgutter'
-Pack 'tpope/vim-fugitive'
-Pack 'junegunn/gv.vim'
-
-" Snippets {{{2
-Pack 'Shougo/neosnippet.vim'
-Pack 'Shougo/neosnippet-snippets'
-Pack 'SirVer/ultisnips'
-Pack 'honza/vim-snippets'
-
-" Completion {{{2
-Pack 'neovim/nvim-lsp', { 'if': 'has("nvim")' }
-Pack 'neoclide/coc.nvim',
-    \ {
-    \   'if': 'has("nvim")',
-    \   'do': 'split term://yarn install --frozen-lockfile',
-    \ }
-Pack 'Shougo/deoplete.nvim'
-Pack 'lifepillar/vim-mucomplete'
-Pack 'zxqfl/tabnine-vim'
-Pack 'zchee/deoplete-jedi'
-Pack 'ponko2/deoplete-fish'
-
-" Tmux {{{2
-Pack 'christoomey/vim-tmux-navigator'
-Pack 'christoomey/vim-tmux-runner'
-" endfunction
-
-" Local plugins {{{2
-" Have to add to rtp manually
-" set runtimepath+=~/git/eleline.vim
 
 " FileType Autocmds {{{2
 " Don't load if we're using coc (use coc-git instead)

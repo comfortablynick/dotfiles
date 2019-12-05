@@ -13,8 +13,6 @@ function! runner#run_cmd(cmd_type) abort
     if l:run_loc ==? 'term'
         call runner#run_in_term(l:cmd)
     elseif l:run_loc ==? 'AsyncRun'
-        packadd asyncrun.vim
-        packadd vim-plugin-AnsiEsc
         execute 'AsyncRun '.l:cmd
         return
     elseif l:run_loc ==? 'Vtr'

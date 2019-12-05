@@ -155,6 +155,8 @@ local global_vars = {
     LL_nf = 1,
     -- Path to find minpac plugin manager
     minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
+    -- Check existence of vim executable
+    vim_exists = vim.fn.executable("vim"),
 }
 
 -- Autocommands {{{1

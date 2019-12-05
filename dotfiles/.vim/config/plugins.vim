@@ -7,10 +7,7 @@
 "
 " Common Vim/Neovim plugins
 
-scriptencoding utf-8
 " Helper functions/variables {{{1
-let g:vim_exists = executable('vim')
-
 " Completion filetypes {{{2
 let g:completion_filetypes = {
     \ 'deoplete':
@@ -118,7 +115,6 @@ Pack 'cespare/vim-toml'
 Pack 'bfrg/vim-cpp-modern'
 Pack 'vim-jp/syntax-vim-ex'
 Pack 'pearofducks/ansible-vim'
-Pack 'powerman/vim-plugin-AnsiEsc'
 
 " Git {{{2
 Pack 'airblade/vim-gitgutter'
@@ -179,7 +175,8 @@ packadd! fzf.vim
 packadd! ale
 packadd! neoformat
 packadd! undotree
-packadd! asyncrun.vim
+" TODO: replace with something else like async.vim?
+" packadd! asyncrun.vim
 packadd! vim-sneak
 packadd! vim-fugitive
 packadd! vim-surround

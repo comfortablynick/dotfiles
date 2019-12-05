@@ -70,20 +70,6 @@ endfunction
 
 " get_usuable_width() :: get actual usable width of current buffer
 function! editor#get_usuable_width()
-    " let width = winwidth(0)
-    " let numberwidth = max([&numberwidth, strlen(line('$'))+1])
-    " let numwidth = (&number || &relativenumber)? numberwidth : 0
-    " let foldwidth = &foldcolumn
-    "
-    " if &signcolumn ==? 'yes'
-    "     let signwidth = 2
-    " elseif &signcolumn ==? 'auto'
-    "     let signs = execute(printf('sign place buffer=%d', bufnr('')))
-    "     let signs = split(signs, "\n")
-    "     let signwidth = len(signs)>2? 2: 0
-    " else
-    "     let signwidth = 0
-    " endif
-    " return width - numwidth - foldwidth - signwidth
-    lua require('floating').get_usable_width(0)
+    lua win = require('window')
+    return v:lua.win.get_usable_width(0)
 endfunction

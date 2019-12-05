@@ -1,6 +1,6 @@
 " vim: fdl=1
 " ====================================================
-" Filename:    plugin/config/lightline.vim
+" Filename:    plugin/lightline.vim
 " Description: Config for lightline.vim
 " Author:      Nick Murphy
 " License:     MIT

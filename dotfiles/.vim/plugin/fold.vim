@@ -1,11 +1,14 @@
-if exists('g:loaded_custom_foldtext_vim')
-    finish
-endif
-let g:loaded_custom_foldtext_vim = 1
+" ====================================================
+" Filename:    plugin/fold.vim
+" Description: Fold-related operations
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
 
 " Customized version of folded text, idea by
 " https://github.com/chrisbra/vim_dotfiles/blob/master/plugin/CustomFoldText.vim
-function! CustomFoldText(string) abort "{{{ Test comment
+function! CustomFoldText(string) abort
     "get first non-blank line
     let fs = v:foldstart
     if getline(fs) =~? '^\s*$'

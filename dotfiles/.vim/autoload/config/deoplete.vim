@@ -5,7 +5,10 @@ function! config#deoplete#init() abort
     let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
     inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-    autocmd vimrc CompleteDone * if pumvisible() == 0 | pclose | endif
+    augroup config_deoplete
+        autocmd!
+        autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+    augroup END
     packadd deoplete.nvim
     silent! UpdateRemotePlugins
 endfunction

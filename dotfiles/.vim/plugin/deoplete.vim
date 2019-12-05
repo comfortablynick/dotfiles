@@ -1,5 +1,5 @@
 " ====================================================
-" Filename:    plugin/config/deoplete.vim
+" Filename:    plugin/deoplete.vim
 " Description: Deoplete completion plugin config
 " Author:      Nick Murphy
 " License:     MIT

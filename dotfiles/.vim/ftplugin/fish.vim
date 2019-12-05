@@ -1,5 +1,5 @@
-if exists('g:loaded_after_ftplugin_fish_u2qefc9q') | finish | endif
-let g:loaded_after_ftplugin_fish_u2qefc9q = 1
+if exists('g:loaded_ftplugin_fish_u2qefc9q') | finish | endif
+let g:loaded_ftplugin_fish_u2qefc9q = 1
 
 " Load syntax
 packadd vim-fish

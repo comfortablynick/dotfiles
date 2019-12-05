@@ -1,13 +1,47 @@
 " ====================================================
-" Filename:    autoload/general.vim
-" Description: Misc functions
+" Filename:    autoload/file.vim
+" Description: File/folder operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-11-24
+" Last Change: 2019-12-05
 " ====================================================
 
+" Get the root path based on git or parent folder
+function! file#get_project_root() abort
+    " Check if this has already been defined
+    if exists('b:project_root_dir')
+        return b:project_root_dir
+    endif
+    packadd vim-rooter
+    if exists('*FindRootDirectory')
+        let l:root = FindRootDirectory()
+    else
+        " Get root from git or file parent dir
+        let l:root = substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', '')
+        if ! isdirectory(l:root)
+            let l:root = expand('%:p:h')
+        endif
+    endif
+    " Save root in buffer local variable
+    let b:project_root_dir = l:root
+    return b:project_root_dir
+endfunction
+
+" Get just the name of the folder
+function! file#get_root_folder_name() abort
+    let l:root = file#get_project_root()
+    return matchstr(l:root, '[^\/\\]*$')
+endfunction
+
+" Set vim cwd to project root dir
+" (git project root or directory of current file if not git project)
+function! file#set_project_root() abort
+    let l:root_dir = file#get_project_root()
+    lcd `=l:root_dir`
+endfunction
+
 " Add shebang for new file
-function! general#set_shebang() abort
+function! file#set_shebang() abort
     python3 << EOP
 import vim
 shebang = {
@@ -33,12 +67,12 @@ EOP
 endfunction
 
 " Get path of current file
-function! general#get_path() abort
+function! file#get_path() abort
     return expand('%:p')
 endfunction
 
 " Set file as executable by user
-function! general#set_executable_bit() abort
+function! file#set_executable_bit() abort
     python3 << EOP
 import os
 import stat
@@ -62,13 +96,7 @@ EOP
 endfunction
 
 " Set shebang and executable bit
-function! general#set_executable() abort
-    call general#set_executable_bit()
-    call general#set_shebang()
+function! file#set_executable() abort
+    call file#set_executable_bit()
+    call file#set_shebang()
 endfunction
-
-" Get character under cursor
-function! general#get_cursor_char() abort
-    return strcharpart(strpart(getline('.'), col('.') - 1), 0, 1)
-endfunction
-

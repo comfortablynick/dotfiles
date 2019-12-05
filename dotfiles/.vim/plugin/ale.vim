@@ -1,5 +1,5 @@
 " ====================================================
-" Filename:    plugin/config/ale.vim
+" Filename:    plugin/ale.vim
 " Description: Ale plugin config
 " Author:      Nick Murphy
 " License:     MIT

@@ -1,5 +1,5 @@
 " ====================================================
-" Filename:    plugin/config/coc.vim
+" Filename:    plugin/coc.vim
 " Description: Coc (au)commands and some settings
 " Author:      Nick Murphy
 " License:     MIT

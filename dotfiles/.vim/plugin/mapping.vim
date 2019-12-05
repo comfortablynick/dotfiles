@@ -1,14 +1,19 @@
-if exists('g:loaded_navigation_vim')
-    finish
-endif
-let g:loaded_navigation_vim = 1
+" ====================================================
+" Filename:    plugin/mapping.vim
+" Description: General keymaps
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
+if exists('g:loaded_plugin_mapping_xwfnry3p') | finish | endif
+let g:loaded_plugin_mapping_xwfnry3p = 1
 
 " Line navigation
 " Easy navigation in insert mode
-" inoremap <C-k> <Up>
-" inoremap <C-j> <Down>
-" inoremap <C-h> <Left>
-" inoremap <C-l> <Right>
+inoremap <C-k> <Up>
+inoremap <C-j> <Down>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
 
 " `CTRL+{h,j,k,l}` to navigate in normal mode
 nnoremap <C-J> <C-W><C-J>

@@ -3,10 +3,10 @@
 " Description: Lua filetype overrides
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-11-27
+" Last Change: 2019-12-05
 " ====================================================
-if exists('g:loaded_ftplugin_lua_dzkzqoxu') | finish | endif
-let g:loaded_ftplugin_lua_dzkzqoxu = 1
+if exists('g:loaded_after_ftplugin_lua_dzkzqoxu') | finish | endif
+let g:loaded_after_ftplugin_lua_dzkzqoxu = 1
 
 " Lua development tools
 packadd nvim-luadev

@@ -1,8 +1,13 @@
+" ====================================================
+" Filename:    plugin/vista.vim
+" Description: Vista explorer configuration
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-05
+" ====================================================
 scriptencoding utf-8
-if exists('g:loaded_vista_config_vim')
-    finish
-endif
-let g:loaded_vista_config_vim = 1
+if exists('g:loaded_plugin_vista_xuwor4nb') | finish | endif
+let g:loaded_plugin_vista_xuwor4nb = 1
 
 " Calculate fzf preview width based on window width
 function s:vista_fzf_preview_width(basewidth) abort
@@ -40,26 +45,16 @@ let g:vista_fzf_preview = s:vista_fzf_preview_width(50)
 let g:vista_disable_statusline = exists('g:loaded_airline') || exists('g:loaded_lightline') || exists('g:loaded_eleline')
 let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
 
+nnoremap <silent> <Leader>v :packadd vista.vim \| :Vista!!<CR>
+nnoremap <silent> <Leader>m :packadd vista.vim \| :Vista finder<CR>
+" Icons {{{
+" Using this seems to mess up syntax highlighting in the vista window
+
 " How each level is indented and what to prepend.
 " This could make the display more compact or more spacious.
 " e.g., more compact: ['▸ ', '']
 " let g:vista_icon_indent = ['╰─▸ ', '├─▸ ']
 " let g:vista_icon_indent = ['▸ ', '']
-
-" Set default service for filetypes to override ctags
-" let g:vista_executive_for = {
-"   \ 'cpp': 'coc',
-"   \ 'c': 'coc',
-"   \ 'rust': 'coc',
-"   \ 'json': 'coc',
-"   \ 'go': 'coc',
-"   \ 'javascript': 'coc',
-"   \ 'typescript': 'coc',
-"   \ 'sh': 'coc',
-"   \ 'bash': 'coc',
-"   \ }
-
-" Using this seems to mess up syntax highlighting in the vista window
 " let g:vista#renderer#icons = {
 " \    'func': 'ƒ',
 " \    'function': 'ƒ',
@@ -96,6 +91,4 @@ let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
 " \    'typeParameter': '𝑡',
 " \    'default': 'd',
 " \}
-
-nnoremap <silent> <Leader>v :packadd vista.vim \| :Vista!!<CR>
-nnoremap <silent> <Leader>m :packadd vista.vim \| :Vista finder<CR>
+" }}}

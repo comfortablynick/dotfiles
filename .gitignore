@@ -16,3 +16,4 @@ yarn.lock
 */.vim/ftplugin/go/gocomplete.vim
 .netrwhist
 */.ansible/tmp/
+*/.vim/**/*.txt

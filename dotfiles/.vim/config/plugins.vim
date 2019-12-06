@@ -110,7 +110,6 @@ packadd! ansible-vim
 packadd! semshi
 
 " Tmux
-packadd! vim-tmux-runner
 packadd! vim-tmux-navigator
 
 " vim:set fdm=marker fdl=1:

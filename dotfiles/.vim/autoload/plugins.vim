@@ -10,39 +10,40 @@ command! -nargs=+ Pack call pack#add(<args>)
 function! plugins#init() abort
     " General
     Pack 'k-takata/minpac'
-    Pack 'mhinz/vim-lookup'
-    Pack 'scrooloose/nerdtree'
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
     Pack 'tomtom/tcomment_vim'
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
-    Pack 'liuchengxu/vista.vim'
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
-    Pack 'mbbill/undotree'
-    Pack 'majutsushi/tagbar'
     Pack 'skywind3000/asyncrun.vim'
     Pack 'vhdirk/vim-cmake'
-    Pack 'junegunn/fzf'
-    Pack 'junegunn/fzf.vim'
     Pack 'airblade/vim-rooter'
-    Pack 'freitass/todo.txt-vim'
     Pack 'justinmk/vim-sneak'
     Pack 'embear/vim-localvimrc'
+
+    " Explorer/finder utils
+    Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap'
-    Pack 'itchyny/lightline.vim'
+    Pack 'junegunn/fzf'
+    Pack 'junegunn/fzf.vim'
+    Pack 'majutsushi/tagbar'
+    Pack 'mbbill/undotree'
+    Pack 'scrooloose/nerdtree'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'
+    Pack 'mhinz/vim-lookup'
     Pack 'bfredl/nvim-luadev', {'if': 'has("nvim")'}
 
-    " Themes
+    " Editor appearance
+    Pack 'itchyny/lightline.vim'
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
 
-    " Syntax highlighting
+    " Syntax/filetype
     " Python
     Pack 'numirias/semshi',
         \ {
@@ -56,6 +57,7 @@ function! plugins#init() abort
     Pack 'bfrg/vim-cpp-modern'
     Pack 'vim-jp/syntax-vim-ex'
     Pack 'pearofducks/ansible-vim'
+    Pack 'freitass/todo.txt-vim'
 
     " Git
     Pack 'airblade/vim-gitgutter'

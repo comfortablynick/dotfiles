@@ -8,6 +8,8 @@
 if exists('g:loaded_plugin_pack_gdjlcrz2') | finish | endif
 let g:loaded_plugin_pack_gdjlcrz2 = 1
 
+let g:package_manager = 'vim-packager'
+
 " Call minpac or minpac wrappers
 command! PackUpdate call plugins#init() | call pack#update()
 command! PackClean  call plugins#init() | call pack#clean()

@@ -32,6 +32,8 @@ function! plugins#init() abort
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'scrooloose/nerdtree'
+    Pack 'Shougo/defx.nvim',
+        \ {'if': 'has("nvim")', 'do': ':UpdateRemotePlugins'}
 
     " Vim Development
     Pack 'tpope/vim-scriptease'
@@ -46,10 +48,7 @@ function! plugins#init() abort
     " Syntax/filetype
     " Python
     Pack 'numirias/semshi',
-        \ {
-        \   'if': 'has("nvim")',
-        \   'do': ':UpdateRemotePlugins',
-        \ }
+        \ {'if': 'has("nvim")', 'do': ':UpdateRemotePlugins'}
     Pack 'HerringtonDarkholme/yats'
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'

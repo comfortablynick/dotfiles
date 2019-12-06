@@ -19,10 +19,7 @@ augroup vimrc
 augroup END
 
 " CONFIG FILES ==================================
-let config_list = [
-    \ 'plugins.vim',
-    \ 'theme.vim',
-    \ ]
+let config_list = []
 
 let g:use_init_lua = 1
 
@@ -41,3 +38,27 @@ for files in config_list
         exec 'source' f
     endfor
 endfor
+
+packadd! lightline.vim
+packadd! fzf
+packadd! fzf.vim
+packadd! ale
+packadd! neoformat
+packadd! undotree
+packadd! vim-sneak
+packadd! vim-fugitive
+packadd! vim-surround
+packadd! vim-localvimrc
+packadd! vim-clap
+
+" Snippets
+packadd! vim-snippets
+
+" Syntax
+packadd! vim-cpp-modern
+packadd! vim-markdown
+packadd! ansible-vim
+packadd! semshi
+
+" Tmux
+packadd! vim-tmux-navigator

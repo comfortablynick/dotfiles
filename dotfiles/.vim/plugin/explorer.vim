@@ -8,7 +8,7 @@
 if exists('g:loaded_plugin_explorer_eblucpym') | finish | endif
 let g:loaded_plugin_explorer_eblucpym = 1
 
-let g:use_explorer = 'netrw'         " netrw/nerdtree/coc-explorer (set from coc config)
+let g:use_explorer = 'defx'         " netrw/nerdtree/defx/coc-explorer (set from coc config)
 
 " NERDTree
 let NERDTreeHighlightCursorline = 1
@@ -23,7 +23,72 @@ let NERDTreeQuitOnOpen = 1
 augroup plugin_explorer_eblucpym
     autocmd!
     autocmd FileType netrw call s:netrw_maps()
+	autocmd FileType defx  call s:defx_maps()
 augroup END
+
+function! s:defx_maps() abort
+    nnoremap <silent><buffer><expr> <CR>
+    \ defx#do_action('open')
+    nnoremap <silent><buffer><expr> c
+    \ defx#do_action('copy')
+    nnoremap <silent><buffer><expr> m
+    \ defx#do_action('move')
+    nnoremap <silent><buffer><expr> p
+    \ defx#do_action('paste')
+    nnoremap <silent><buffer><expr> l
+    \ defx#do_action('open')
+    nnoremap <silent><buffer><expr> s
+    \ defx#do_action('open', 'vsplit')
+    nnoremap <silent><buffer><expr> P
+    \ defx#do_action('open', 'pedit')
+    nnoremap <silent><buffer><expr> o
+    \ defx#do_action('open_or_close_tree')
+    nnoremap <silent><buffer><expr> K
+    \ defx#do_action('new_directory')
+    nnoremap <silent><buffer><expr> N
+    \ defx#do_action('new_file')
+    nnoremap <silent><buffer><expr> M
+    \ defx#do_action('new_multiple_files')
+    nnoremap <silent><buffer><expr> C
+    \ defx#do_action('toggle_columns',
+    \                'mark:indent:icon:filename:type:size:time')
+    nnoremap <silent><buffer><expr> S
+    \ defx#do_action('toggle_sort', 'time')
+    nnoremap <silent><buffer><expr> d
+    \ defx#do_action('remove')
+    nnoremap <silent><buffer><expr> r
+    \ defx#do_action('rename')
+    nnoremap <silent><buffer><expr> !
+    \ defx#do_action('execute_command')
+    nnoremap <silent><buffer><expr> x
+    \ defx#do_action('execute_system')
+    nnoremap <silent><buffer><expr> yy
+    \ defx#do_action('yank_path')
+    nnoremap <silent><buffer><expr> .
+    \ defx#do_action('toggle_ignored_files')
+    nnoremap <silent><buffer><expr> ;
+    \ defx#do_action('repeat')
+    nnoremap <silent><buffer><expr> h
+    \ defx#do_action('cd', ['..'])
+    nnoremap <silent><buffer><expr> ~
+    \ defx#do_action('cd')
+    nnoremap <silent><buffer><expr> q
+    \ defx#do_action('quit')
+    nnoremap <silent><buffer><expr> <Space>
+    \ defx#do_action('toggle_select') . 'j'
+    nnoremap <silent><buffer><expr> *
+    \ defx#do_action('toggle_select_all')
+    nnoremap <silent><buffer><expr> j
+    \ line('.') == line('$') ? 'gg' : 'j'
+    nnoremap <silent><buffer><expr> k
+    \ line('.') == 1 ? 'G' : 'k'
+    nnoremap <silent><buffer><expr> <C-l>
+    \ defx#do_action('redraw')
+    nnoremap <silent><buffer><expr> <C-g>
+    \ defx#do_action('print')
+    nnoremap <silent><buffer><expr> cd
+    \ defx#do_action('change_vim_cwd')
+endfunction
 
 function! s:netrw_maps() abort
     nnoremap <silent><buffer> <C-L> :TmuxNavigateRight<CR>
@@ -70,6 +135,9 @@ function! s:toggle_v_explorer() abort
         exe 'NERDTreeToggle'
     elseif g:use_explorer ==# 'coc-explorer'
         exe 'CocCommand explorer --toggle'
+    elseif g:use_explorer ==# 'defx'
+        packadd defx.nvim
+        exe 'Defx -split=vertical -winwidth=30 -direction=topleft'
     else
         call s:use_netrw()
     endif

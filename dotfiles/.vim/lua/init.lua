@@ -20,7 +20,7 @@ local general = {
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
-    termguicolors = true,
+    termguicolors = vim.env.VIM_SSH_COMPAT == 1 and false or true,
     -- Undo file dir
     undodir = vim.env.HOME .. "/.vim/undo//",
     -- Save file backups here
@@ -150,13 +150,26 @@ local global_vars = {
     -- Initial window size (use to determine if on iPad)
     window_width = vim.o.columns,
     -- Use powerline fonts with lightline
-    LL_pl = 1,
+    LL_pl = vim.env.POWERLINE_FONTS or 1,
     -- Use nerd fonts with lightline
-    LL_nf = 1,
+    LL_nf = (vim.env.NERD_FONTS == 0 or vim.env.VIM_SSH_COMPAT) and 0 or 1,
     -- Path to find minpac plugin manager
     minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
     -- Check existence of vim executable
     vim_exists = vim.fn.executable("vim"),
+    -- Filetypes that will use a completion plugin
+    completion_filetypes = {
+        deoplete = {"fish"},
+        coc = {
+            "c", "cpp", "go", "rust", "typescript", "javascript", "json", "lua",
+            "python", "bash", "sh", "vim", "yaml", "snippets",
+        },
+        mucomplete = {},
+        tabnine = {"markdown", "toml", "txt", "mail", "pro", "ini", "muttrc"},
+        ["nvim-lsp"] = {},
+    },
+    nocompletion_filetypes = {"nerdtree"},
+    vim_color = vim.env.NVIM_COLOR or "papercolor-dark",
 }
 
 -- Autocommands {{{1

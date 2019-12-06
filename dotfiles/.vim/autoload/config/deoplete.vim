@@ -9,6 +9,9 @@ function! config#deoplete#init() abort
         autocmd!
         autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
     augroup END
+
     packadd deoplete.nvim
+    packadd deoplete-jedi
+    packadd deoplete-fish
     silent! UpdateRemotePlugins
 endfunction

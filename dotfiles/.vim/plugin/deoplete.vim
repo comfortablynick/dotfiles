@@ -3,13 +3,12 @@
 " Description: Deoplete completion plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2019-12-06
 " ====================================================
-if exists('g:loaded_plugin_config_deoplete_jdh6forp') | finish | endif
-let g:loaded_plugin_config_deoplete_jdh6forp = 1
+if exists('g:loaded_plugin_deoplete_jdh6forp') | finish | endif
+let g:loaded_plugin_deoplete_jdh6forp = 1
 
-" Load deoplete
-augroup deoplete_config
+augroup plugin_deoplete_jdh6forp
     autocmd!
     autocmd FileType *
         \ if exists('g:completion_filetypes') &&

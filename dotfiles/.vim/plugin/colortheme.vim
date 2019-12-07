@@ -27,11 +27,11 @@ scriptencoding utf-8
 "     let g:LL_pl = 1
 " endif
 
-" TMUX: make it work with termguicolors {{{2
-if &term =~# '^screen'
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
+"" TMUX: make it work with termguicolors (is this needed?) {{{2
+" if &term =~# '^screen'
+"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" endif
 
 " " Get color theme from env var {{{2
 " function! s:get_color_theme() abort
@@ -41,19 +41,19 @@ endif
 " endfunction
 " let g:vim_color = s:get_color_theme()
 
-" g:vim_base_color: 'nord-dark' -> 'nord'
-let g:vim_base_color = substitute(
-    \ g:vim_color,
-    \ '-dark\|-light',
-    \ '',
-    \ '')
+" " g:vim_base_color: 'nord-dark' -> 'nord'
+" let g:vim_base_color = substitute(
+"     \ g:vim_color,
+"     \ '-dark\|-light',
+"     \ '',
+"     \ '')
 
-" g:vim_color_variant: 'nord-dark' -> 'dark'
-let g:vim_color_variant = substitute(
-    \ g:vim_color,
-    \ g:vim_base_color . '-',
-    \ '',
-    \ '')
+" " g:vim_color_variant: 'nord-dark' -> 'dark'
+" let g:vim_color_variant = substitute(
+"     \ g:vim_color,
+"     \ g:vim_base_color . '-',
+"     \ '',
+"     \ '')
 
 " Airline {{{1
 " Map colorscheme -> theme {{{2
@@ -97,7 +97,7 @@ let g:PaperColor_Theme_Options = {
 " Set colors based on theme {{{2
 " Assign to variables
 execute 'silent! colorscheme' g:vim_base_color
-let &background = g:vim_color_variant
+" let &background = g:vim_color_variant
 let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
 
 " Set airline theme

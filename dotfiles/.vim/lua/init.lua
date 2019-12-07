@@ -7,6 +7,7 @@ local commands = {filetype = "indent plugin on", colorscheme = "default"}
 
 -- Global options {{{1
 local general = {
+    background = "dark",
     -- Shared data file location
     shadafile = vim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
     -- Shared data settings (use 20 instead of default 100 to speed up)
@@ -20,7 +21,7 @@ local general = {
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
-    termguicolors = vim.env.VIM_SSH_COMPAT == 1 and false or true,
+    termguicolors = vim.env.VIM_SSH_COMPAT ~= "1",
     -- Undo file dir
     undodir = vim.env.HOME .. "/.vim/undo//",
     -- Save file backups here
@@ -150,9 +151,11 @@ local global_vars = {
     -- Initial window size (use to determine if on iPad)
     window_width = vim.o.columns,
     -- Use powerline fonts with lightline
-    LL_pl = vim.env.POWERLINE_FONTS or 1,
+    LL_pl = (vim.env.POWERLINE_FONTS == "1" or vim.env.NERD_FONTS == "1") and 1 or
+        0,
     -- Use nerd fonts with lightline
-    LL_nf = (vim.env.NERD_FONTS == 0 or vim.env.VIM_SSH_COMPAT) and 0 or 1,
+    LL_nf = (vim.env.NERD_FONTS == "1" and vim.env.VIM_SSH_COMPAT ~= "1") and 1 or
+        0,
     -- Path to find minpac plugin manager
     minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
     -- Check existence of vim executable
@@ -169,7 +172,17 @@ local global_vars = {
         ["nvim-lsp"] = {},
     },
     nocompletion_filetypes = {"nerdtree"},
+    -- TODO: move color stuff to own func
     vim_color = vim.env.NVIM_COLOR or "papercolor-dark",
+    vim_base_color = (function()
+        local color = vim.env.NVIM_COLOR or "papercolor-dark"
+        local sub, n = color:gsub("-dark$", "")
+        if n == 0 then
+            general.background = "light"
+            sub = (color:gsub("-light$", ""))
+        end
+        return sub
+    end)(),
 }
 
 -- Autocommands {{{1

@@ -33,12 +33,14 @@
 #     set -g theme_display_ruby no
 #     set -g theme_display_user ssh
 #     set -g theme_display_hostname ssh
+#     set -g theme_display_sudo_user yes
 #     set -g theme_display_vi no
 #     set -g theme_display_nvm yes
 #     set -g theme_avoid_ambiguous_glyphs yes
 #     set -g theme_powerline_fonts no
 #     set -g theme_nerd_fonts yes
 #     set -g theme_show_exit_status yes
+#     set -g theme_display_jobs_verbose yes
 #     set -g default_user your_normal_user
 #     set -g theme_color_scheme dark
 #     set -g fish_prompt_pwd_dir_length 0
@@ -73,7 +75,9 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
         and return
 
         # truncate the middle of the branch name, but only if it's 25+ characters
-        set -l truncname (string replace -r '^(.{28}).{3,}(.{5})$' "\$1…\$2" $ref)
+        set -l truncname $ref
+        [ "$theme_use_abbreviated_branch_name" = 'yes' ]
+        and set truncname (string replace -r '^(.{28}).{3,}(.{5})$' "\$1…\$2" $ref)
 
         string replace -r '^refs/heads/' "$branch_glyph " $truncname
         and return
@@ -414,13 +418,30 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
     # will be wrong. But I can't think of a single reason that would happen, and
     # it is literally 99.5% faster to check it this way, so that's a tradeoff I'm
     # willing to make.
-    [ -w / ]
+    [ -w / -o -w /private/ ]
     and [ (id -u) -eq 0 ]
     and set superuser 1
 
     # Jobs display
-    jobs -c | grep -v Command | grep -v autojump >/dev/null
-    and set bg_jobs 1
+    if set -q AUTOJUMP_SOURCED
+        # Autojump special case: check if there are jobs besides the `autojump`
+        # job, since that one is (briefly) backgrounded every time we `cd`
+        set bg_jobs (jobs -c | string match -v --regex '(Command|autojump)' | wc -l)
+        [ "$bg_jobs" -eq 0 ]
+        and set bg_jobs # clear it out so it doesn't show when `0`
+    else
+        if [ "$theme_display_jobs_verbose" = 'yes' ]
+            set bg_jobs (jobs -p | wc -l)
+            [ "$bg_jobs" -eq 0 ]
+            and set bg_jobs # clear it out so it doesn't show when `0`
+        else
+            # `jobs -p` is faster if we redirect to /dev/null, because it exits
+            # after the first match. We'll use that unless the user wants to
+            # display the actual job count
+            jobs -p >/dev/null
+            and set bg_jobs 1
+        end
+    end
 
     if [ "$nonzero" -o "$superuser" -o "$bg_jobs" ]
         __bobthefish_start_segment $color_initial_segment_exit
@@ -448,7 +469,11 @@ function __bobthefish_prompt_status -S -a last_status -d 'Display flags for a no
         if [ "$bg_jobs" ]
             set_color normal
             set_color -b $color_initial_segment_jobs
-            echo -n $bg_job_glyph
+            if [ "$theme_display_jobs_verbose" = 'yes' ]
+                echo -ns $bg_job_glyph $bg_jobs ' '
+            else
+                echo -n $bg_job_glyph
+            end
         end
     end
 end
@@ -645,6 +670,9 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     [ "$theme_display_user" = 'yes' -o \( "$theme_display_user" != 'no' -a -n "$SSH_CLIENT" \) -o \( -n "$default_user" -a "$USER" != "$default_user" \) ]
     and set -l display_user
 
+    [ "$theme_display_sudo_user" = 'yes' -a -n "$SUDO_USER" ]
+    and set -l display_sudo_user
+
     [ "$theme_display_hostname" = 'yes' -o \( "$theme_display_hostname" != 'no' -a -n "$SSH_CLIENT" \) ]
     and set -l display_hostname
 
@@ -653,8 +681,18 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
         echo -ns (whoami)
     end
 
+    if set -q display_sudo_user
+        if set -q display_user
+            echo -ns ' '
+        else
+            __bobthefish_start_segment $color_username
+        end
+        echo -ns "($SUDO_USER)"
+    end
+
     if set -q display_hostname
         if set -q display_user
+            or set -q display_sudo_user
             # reset colors without starting a new segment...
             # (so we can have a bold username and non-bold hostname)
             set_color normal
@@ -667,6 +705,7 @@ function __bobthefish_prompt_user -S -d 'Display current user and hostname'
     end
 
     set -q display_user
+    or set -q display_sudo_user
     or set -q display_hostname
     and echo -ns ' '
 end
@@ -787,21 +826,21 @@ function __bobthefish_virtualenv_python_version -S -d 'Get current Python versio
 end
 
 function __bobthefish_prompt_virtualfish -S -d "Display current Python virtual environment (only for virtualfish, virtualenv's activate.fish changes prompt by itself) or conda environment."
-  [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]; and return
-  set -l version_glyph (__bobthefish_virtualenv_python_version)
-  if [ "$version_glyph" ]
-    __bobthefish_start_segment $color_virtualfish
-    if [ "$virtualenv_glyph" ]
-        echo -ns $virtualenv_glyph ' '
+    [ "$theme_display_virtualenv" = 'no' -o -z "$VIRTUAL_ENV" -a -z "$CONDA_DEFAULT_ENV" ]
+    and return
+
+    set -l version_glyph (__bobthefish_virtualenv_python_version)
+
+    if [ "$version_glyph" ]
+        __bobthefish_start_segment $color_virtualfish
+        echo -ns $virtualenv_glyph $version_glyph ' '
     end
-      if [ "$VIRTUAL_ENV" ]
-        echo -ns (basename "$VIRTUAL_ENV")
-      else if [ "$CONDA_DEFAULT_ENV" ]
-        echo -ns (basename "$CONDA_DEFAULT_ENV")
-      end
-    echo -ns $version_glyph
-  end
-  echo -ns ' '
+
+    if [ "$VIRTUAL_ENV" ]
+        echo -ns (basename "$VIRTUAL_ENV") ' '
+    else if [ "$CONDA_DEFAULT_ENV" ]
+        echo -ns (basename "$CONDA_DEFAULT_ENV") ' '
+    end
 end
 
 function __bobthefish_prompt_virtualgo -S -d 'Display current Go virtual environment'
@@ -998,15 +1037,6 @@ function __bobthefish_prompt_dir -S -a real_pwd -d 'Display a shortened form of 
     __bobthefish_path_segment "$real_pwd"
 end
 
-# function __bobthefish_pre_prompt -d 'Adjust settings before prompt is shown' --on-event fish_prompt
-#     if test "$COLUMNS" -lt "$theme_short_prompt_cols"
-#         set -g theme_newline_cursor yes
-#         set -g theme_display_date no
-#     else
-#         set -g theme_newline_cursor no
-#         set -g theme_display_date yes
-#     end
-# end
 
 # ==============================
 # Apply theme

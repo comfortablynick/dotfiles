@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Print $PATH with line breaks
-# TODO: add line numbers and total count for easy diff
 
-pathlines="${PATH//:/$'\n'}"
-echo "$pathlines"
-echo "-----------------"
-printf "\$PATH count: %d\n" "$(echo "$pathlines" | wc -l)"
+# pathlines="${PATH//:/$'\n'}"
+# echo "$pathlines"
+# echo "-----------------"
+# printf "\$PATH count: %d\n" "$(echo "$pathlines" | wc -l)"
+
+echo "$PATH" | tr ":" "\n" | nl

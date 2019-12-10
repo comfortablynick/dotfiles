@@ -5,8 +5,8 @@ export PATH="$HOME/.local/bin:$PATH"
         [[ $TERM_PROGRAM == "vscode" ]] ||
         [[ -n $TMUX ]] ||
         [[ -f "$HOME/.no_zsh_tmux_login" ]] ||
-        ! (( $+commands[tmux] ))
-} && return
+        ! (($+commands[tmux]))
+    } && return
 
 if [[ ! -f $HOME/.no_zsh_tmux_next_login ]]; then
     # Start tmux
@@ -14,7 +14,8 @@ if [[ ! -f $HOME/.no_zsh_tmux_next_login ]]; then
     export RSUB='|'
     session_name=""
     echo "Starting tmux..."
-    [[ -n $SSH_CONNECTION ]] && session_name="ios" || session_name="def"
+    # is_mosh && session_name="ios" || session_name="def"
+    session_name="def"
     exec tmux -2 new-session -A -s "$session_name"
 else
     rm $HOME/.no_zsh_tmux_next_login

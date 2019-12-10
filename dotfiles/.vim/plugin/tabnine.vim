@@ -10,7 +10,7 @@ let g:loaded_plugin_tabnine_mikt08z7 = 1
 
 augroup plugin_tabnine_mikt08z7
     autocmd!
-    autocmd vimrc FileType *
+    autocmd FileType *
         \ if index(g:completion_filetypes['tabnine'], &filetype) >= 0
         \ | packadd tabnine-vim
         \ | endif

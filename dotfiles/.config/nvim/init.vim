@@ -4,20 +4,6 @@
 " | | | | | | |_ \ V /| | | | | | |
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
-" SHELL =========================================
-" Vim apparently doesn't care for fish
-" Load bash instead for Vim purposes
-" if $SHELL =~# 'bin/fish'
-"     set shell=zsh
-" endif
-
-" AUGROUP =======================================
-" General augroup for vimrc files
-" Add to this group freely throughout config
-augroup vimrc
-    autocmd!
-augroup END
-
 " CONFIG FILES ==================================
 let config_list = []
 

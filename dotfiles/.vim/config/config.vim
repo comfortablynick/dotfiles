@@ -21,6 +21,13 @@ else
     let g:minpac_path = expand('$HOME/.vim/pack/minpac/opt/minpac')
 endif
 
+" Augroup {{{1
+" General augroup for vimrc files
+" Add to this group safely throughout config
+augroup vimrc
+    autocmd!
+augroup END
+
 " Files/Swap/Backup {{{1
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim

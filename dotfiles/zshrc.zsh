@@ -39,6 +39,34 @@ case "$(uname -s)" in
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
 
+# SSH/MOSH DETECTION {{{1
+# is_ssh :: Return true if in SSH session {{{2
+is_ssh() {
+  if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# is_mosh :: Return true if in Mosh session {{{2
+is_mosh() {
+    local tmux_current_session tmux_client_id pid mosh_found
+    if [[ -n $TMUX ]]; then
+        # current shell is under tmux
+        tmux_current_session=$(tmux display-message -p '#S')
+        tmux_client_id=$(tmux list-clients -t "${tmux_current_session}" -F '#{client_pid}')
+        pid="$tmux_client_id"
+    else
+        pid="$$"
+    fi
+    mosh_found=$(pstree -ps $pid | grep mosh-server) # or empty if not found
+    if [[ -z $mosh_found ]]; then
+        return 1 # exit code 1: not mosh
+    fi
+    return 0 # exit code 0: is mosh
+}
+
 # Completion {{{2
 autoload -Uz compinit && compinit                               # Needed to autoload completions
 autoload -Uz bashcompinit && bashcompinit                       # Bash completions must be sourced
@@ -61,10 +89,14 @@ export UPDATE_ZSH_DAYS=7                                        # How often to c
 # Set theme {{{2
 export ZSH_THEME="powerlevel10k"
 export SSH_THEME="$ZSH_THEME"
+export VIM_SSH_COMPAT=0
 
-if [ is_ssh ]; then
-    export VIM_SSH_COMPAT=1
+if is_ssh; then
     export ZSH_THEME=$SSH_THEME
+fi
+
+if is_mosh; then
+    export VIM_SSH_COMPAT=1
 fi
 
 # SHELL OPTS {{{1
@@ -203,15 +235,6 @@ bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ES
 # zle -N zle-keymap-select
 
 # FUNCTIONS {{{1
-# is_ssh :: Return true if in SSH session {{{2
-is_ssh() {
-  if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 # mc :: make directory and cd into it {{{2
 mc() {
     if [[ $# -ge 1 ]]; then

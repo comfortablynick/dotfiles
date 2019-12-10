@@ -23,9 +23,20 @@ local general = {
     -- Use true color
     termguicolors = vim.env.VIM_SSH_COMPAT ~= "1",
     -- Undo file dir
-    undodir = vim.env.HOME .. "/.vim/undo//",
-    -- Save file backups here
-    backupdir = vim.env.HOME .. "/.vim/backup//",
+    undodir = (function()
+        local dir = vim.env.HOME .. "/.vim/undo"
+        os.execute("mkdir -p " .. dir)
+        return dir .. "//"
+    end)(),
+    -- Backups
+    backup = true,
+    backupdir = (function()
+        local dir = "/tmp/neovim_backup"
+        os.execute("mkdir -p " .. dir)
+        return dir .. "//"
+    end)(),
+    writebackup = true,
+    backupcopy = "auto",
     -- Avoid redrawing the screen
     lazyredraw = false,
     -- Allow cursor to extend past line
@@ -61,6 +72,8 @@ local editor = {
     laststatus = 2,
     -- Always show tabline
     showtabline = 2,
+    -- Show character on line break
+    showbreak = "↪",
     -- Visual bell instead of audible
     visualbell = true,
     -- Text wrapping mode
@@ -138,6 +151,10 @@ local window = {
     conceallevel = 1,
     -- Don't conceal when cursor goes to line
     concealcursor = "",
+    -- Degree of transparency of floating windows
+    -- 0 = opaque; 100 = transparent
+    -- Only seems to take effect when termguicolors
+    winblend = 30,
 }
 
 -- Global variables {{{1
@@ -193,6 +210,8 @@ local autocmds = {
         {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
         -- Close read-only filetypes with only 'q'
         {"FileType", "netrw,help", "nnoremap <silent> q :bd<CR>"},
+        -- Create backup files with useful names
+        {"BufWritePre", "*", [[let &bex = '@' . strftime("%F.%H:%M")]]},
     },
 }
 

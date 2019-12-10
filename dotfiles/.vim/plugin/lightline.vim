@@ -282,14 +282,15 @@ function! LL_LinePos() abort "{{{2
     return l:line_no_indicator_chars[l:index]
 endfunction
 function! LL_FileType() abort "{{{2
-    let ftsymbol = g:LL_nf &&
+    let l:ftsymbol = g:LL_nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
-    let venv = LL_VirtualEnvName()
+    let l:venv = LL_VirtualEnvName()
     if winwidth(0) > g:LL_MedWidth
-        return &filetype.ftsymbol.venv
+        return &filetype.l:ftsymbol.l:venv
     elseif winwidth(0) > g:LL_MinWidth
+        let l:ext = expand('%:e')
         return &filetype ==# 'help' ? 'help' : expand('%:e')
     endif
     return ''

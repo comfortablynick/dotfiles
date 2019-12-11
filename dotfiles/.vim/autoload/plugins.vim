@@ -44,6 +44,7 @@ function! plugins#init() abort
     Pack 'itchyny/lightline.vim'
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
+    Pack 'ryanoasis/vim-devicons'
 
     " Syntax/filetype
     " Python

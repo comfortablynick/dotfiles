@@ -112,6 +112,10 @@ let g:LL_LinterWarnings = g:LL_nf ? "\uf071 " : '•'
 let g:LL_LinterErrors = g:LL_nf ? "\uf05e " : '•'
 let g:LL_LinterOK = ''
 
+" if g:LL_nf == 1
+"     packadd vim-devicons
+" endif
+
 " lightline#bufferline {{{2
 let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
 let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified

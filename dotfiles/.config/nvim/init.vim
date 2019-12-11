@@ -36,15 +36,15 @@ packadd! vim-fugitive
 packadd! vim-surround
 packadd! vim-localvimrc
 packadd! vim-clap
-
-" Snippets
 packadd! vim-snippets
+packadd! vim-tmux-navigator
+
+if get(g:, 'LL_nf', 0) == 1
+    packadd! vim-devicons
+endif
 
 " Syntax
 packadd! vim-cpp-modern
 packadd! vim-markdown
 packadd! ansible-vim
 packadd! semshi
-
-" Tmux
-packadd! vim-tmux-navigator

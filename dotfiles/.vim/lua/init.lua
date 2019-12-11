@@ -154,7 +154,7 @@ local window = {
     -- Degree of transparency of floating windows
     -- 0 = opaque; 100 = transparent
     -- Only seems to take effect when termguicolors
-    winblend = vim.env.VIM_SSH_COMPAT ~= "1" and 30 or 0,
+    winblend = vim.env.VIM_SSH_COMPAT ~= "1" and 10 or 0,
 }
 
 -- Global variables {{{1

@@ -7,56 +7,7 @@
 
 " Vim Themes / Statusline
 scriptencoding utf-8
-" Terminal client compatibility {{{1
-" SSH: remove background to try to work better with iOS SSH apps {{{2
-" if $VIM_SSH_COMPAT == 1
-"     hi Normal guibg=NONE ctermbg=NONE
-"     hi nonText guibg=NONE ctermbg=NONE
-"     let g:LL_nf = 0
-"     set notermguicolors
-" endif
-
-" " FONTS: check env vars to see if we need to turn off fancy fonts {{{2
-" if ! empty($POWERLINE_FONTS) && $POWERLINE_FONTS == 0
-"     " We can turn off both, since NF are a superset of PL fonts
-"     let g:LL_nf = 0
-"     let g:LL_pl = 0
-" elseif ! empty($NERD_FONTS) && $NERD_FONTS == 0
-"     " Disable NF but keep PL fonts (iOS SSH apps, etc.)
-"     let g:LL_nf = 0
-"     let g:LL_pl = 1
-" endif
-
-"" TMUX: make it work with termguicolors (is this needed?) {{{2
-" if &term =~# '^screen'
-"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-" endif
-
-" " Get color theme from env var {{{2
-" function! s:get_color_theme() abort
-"     return has('nvim') ?
-"         \ !empty('$NVIM_COLOR') ? $NVIM_COLOR : 'papercolor-dark' :
-"         \ !empty('$VIM_COLOR') ? $VIM_COLOR : 'gruvbox-dark'
-" endfunction
-" let g:vim_color = s:get_color_theme()
-
-" " g:vim_base_color: 'nord-dark' -> 'nord'
-" let g:vim_base_color = substitute(
-"     \ g:vim_color,
-"     \ '-dark\|-light',
-"     \ '',
-"     \ '')
-
-" " g:vim_color_variant: 'nord-dark' -> 'dark'
-" let g:vim_color_variant = substitute(
-"     \ g:vim_color,
-"     \ g:vim_base_color . '-',
-"     \ '',
-"     \ '')
-
-" Airline {{{1
-" Map colorscheme -> theme {{{2
+" Map colorscheme -> statusline theme {{{1
 let g:airline_themes = {
     \ 'nord': 'nord',
     \ 'snow-dark': 'snow_dark',
@@ -67,8 +18,8 @@ let g:airline_themes = {
     \ 'gruvbox': 'gruvbox',
     \ 'onedark': 'onedark',
     \ }
-" Vim / Neovim Theme {{{1
-" Set theme options/overrides {{{2
+
+" Set theme options/overrides {{{1
 let g:PaperColor_Theme_Options = {
   \   'language': {
   \     'python': {

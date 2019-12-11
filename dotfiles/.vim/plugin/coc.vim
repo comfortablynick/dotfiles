@@ -13,6 +13,7 @@ let g:coc_global_extensions = [
     \ 'coc-snippets',
     \ 'coc-explorer',
     \ 'coc-json',
+    \ 'coc-fish',
     \ 'coc-rls',
     \ 'coc-lua',
     \ 'coc-python',

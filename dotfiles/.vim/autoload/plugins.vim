@@ -64,8 +64,6 @@ function! plugins#init() abort
     Pack 'junegunn/gv.vim'
 
     " Snippets
-    Pack 'Shougo/neosnippet.vim'
-    Pack 'Shougo/neosnippet-snippets'
     Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
 
@@ -76,11 +74,8 @@ function! plugins#init() abort
         \   'if': 'has("nvim")',
         \   'do': 'split term://yarn install --frozen-lockfile',
         \ }
-    Pack 'Shougo/deoplete.nvim'
     Pack 'lifepillar/vim-mucomplete'
     Pack 'zxqfl/tabnine-vim'
-    Pack 'zchee/deoplete-jedi'
-    Pack 'ponko2/deoplete-fish'
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'

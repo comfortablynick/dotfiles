@@ -157,8 +157,7 @@ augroup lightline_update
 augroup END
 
 " Section separators {{{2
-" Get separators based on settings above "{{{
-function! LL_Separator(side) abort "{{{
+function! LL_Separator(side) abort
     if !g:LL_pl || g:LL_SimpleSep
         return ''
     elseif a:side ==? 'left'
@@ -169,9 +168,8 @@ function! LL_Separator(side) abort "{{{
         return ''
     end
 endfunction
-"}}}
 
-function! LL_Subseparator(side) abort "{{{
+function! LL_Subseparator(side) abort
     if !g:LL_pl || g:LL_SimpleSep
         return '|'
     elseif a:side ==? 'left'
@@ -182,8 +180,7 @@ function! LL_Subseparator(side) abort "{{{
         return ''
     endif
 endfunction
-"}}}
-"}}}
+
 let g:lightline.separator.left = LL_Separator('left')
 let g:lightline.separator.right = LL_Separator('right')
 let g:lightline.subseparator.left = LL_Subseparator('left')

@@ -154,7 +154,7 @@ local window = {
     -- Degree of transparency of floating windows
     -- 0 = opaque; 100 = transparent
     -- Only seems to take effect when termguicolors
-    winblend = 30,
+    winblend = vim.env.VIM_SSH_COMPAT ~= "1" and 30 or 0,
 }
 
 -- Global variables {{{1
@@ -179,10 +179,9 @@ local global_vars = {
     vim_exists = vim.fn.executable("vim"),
     -- Filetypes that will use a completion plugin
     completion_filetypes = {
-        deoplete = {"fish"},
         coc = {
-            "c", "cpp", "go", "rust", "typescript", "javascript", "json", "lua",
-            "python", "bash", "sh", "vim", "yaml", "snippets",
+            "c", "cpp", "fish", "go", "rust", "typescript", "javascript",
+            "json", "lua", "python", "bash", "sh", "vim", "yaml", "snippets",
         },
         mucomplete = {},
         tabnine = {"markdown", "toml", "txt", "mail", "pro", "ini", "muttrc"},
@@ -282,8 +281,6 @@ local mappings = {
 --     ["airblade/vim-gitgutter"] = true,
 --     ["tpope/vim-fugitive"] = true,
 --     ["junegunn/gv.vim"] = true,
---     ["Shougo/neosnippet.vim"] = true,
---     ["Shougo/neosnippet-snippets"] = true,
 --     ["SirVer/ultisnips"] = true,
 --     ["honza/vim-snippets"] = true,
 --     ["neovim/nvim-lsp"] = {["if"] = "has('nvim')"},
@@ -291,11 +288,8 @@ local mappings = {
 --         ["if"] = "has('nvim')",
 --         ["do"] = "split term://yarn install --frozen-lockfile",
 --     },
---     ["Shougo/deoplete.nvim"] = true,
 --     ["lifepillar/vim-mucomplete"] = true,
 --     ["zxqfl/tabnine-vim"] = true,
---     ["zchee/deoplete-jedi"] = true,
---     ["ponko2/deoplete-fish"] = true,
 --     ["christoomey/vim-tmux-navigator"] = true,
 --     ["christoomey/vim-tmux-runner"] = true,
 -- }

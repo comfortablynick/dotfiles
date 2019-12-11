@@ -9,11 +9,17 @@ if status is-interactive
 
     # Run parsing script to update env.fish
     echo "env.toml has changed!"
-    parse_env "$HOME/dotfiles/dotfiles/env.toml" -f
+    set -l py_path ($HOME/.asdf/bin/asdf which python)
+    set -l parse_env "$HOME/.config/shell/functions/parse_env"
+    if test -e "$py_path"
+        echo "$py_path $parse_env $HOME/dotfiles/dotfiles/env.toml -f" | source
 
-    # Set variable to reload file on shell init
-    set -U env_file_sourced 0
+        # Set variable to reload file on shell init
+        set -U env_file_sourced 0
 
-    # Update checksum
-    set -U env_toml_sha "$env_sha"
+        # Update checksum
+        set -U env_toml_sha "$env_sha"
+    else
+        echo "01_check_env.fish error: no asdf python interpreter found. Aborting!"
+    end
 end

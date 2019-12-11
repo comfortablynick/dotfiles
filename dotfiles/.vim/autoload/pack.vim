@@ -94,9 +94,6 @@ endfunction
 function! pack#update() abort
     call s:pack_init()
     call s:pack_add_all()
-    " Load remote plugins
-    let g:deoplete#enable_at_startup = 0
-    packadd! deoplete.nvim
     return s:pack_update()
 endfunction
 

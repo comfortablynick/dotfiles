@@ -9,13 +9,13 @@ command! -nargs=+ Pack call pack#add(<args>)
 
 function! plugins#init() abort
     " General
-    Pack 'k-takata/minpac'
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
     Pack 'tomtom/tcomment_vim'
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
+    Pack 'tpope/vim-tbone'
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'skywind3000/asyncrun.vim'
@@ -64,7 +64,6 @@ function! plugins#init() abort
     Pack 'junegunn/gv.vim'
 
     " Snippets
-    Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
 
     " Completion
@@ -75,7 +74,6 @@ function! plugins#init() abort
         \   'do': 'split term://yarn install --frozen-lockfile',
         \ }
     Pack 'lifepillar/vim-mucomplete'
-    Pack 'zxqfl/tabnine-vim'
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'

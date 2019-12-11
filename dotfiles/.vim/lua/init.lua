@@ -182,9 +182,8 @@ local global_vars = {
         coc = {
             "c", "cpp", "fish", "go", "rust", "typescript", "javascript",
             "json", "lua", "python", "bash", "sh", "vim", "yaml", "snippets",
+            "markdown", "toml", "txt", "mail", "pro", "ini", "muttrc",
         },
-        mucomplete = {},
-        tabnine = {"markdown", "toml", "txt", "mail", "pro", "ini", "muttrc"},
         ["nvim-lsp"] = {},
     },
     nocompletion_filetypes = {"nerdtree"},
@@ -288,8 +287,6 @@ local mappings = {
 --         ["if"] = "has('nvim')",
 --         ["do"] = "split term://yarn install --frozen-lockfile",
 --     },
---     ["lifepillar/vim-mucomplete"] = true,
---     ["zxqfl/tabnine-vim"] = true,
 --     ["christoomey/vim-tmux-navigator"] = true,
 --     ["christoomey/vim-tmux-runner"] = true,
 -- }

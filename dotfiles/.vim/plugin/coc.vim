@@ -18,6 +18,7 @@ let g:coc_global_extensions = [
     \ 'coc-lua',
     \ 'coc-python',
     \ 'coc-tsserver',
+    \ 'coc-tabnine',
     \ 'coc-git',
     \ 'coc-vimlsp',
     \ 'coc-yank',

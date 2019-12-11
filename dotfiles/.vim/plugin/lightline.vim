@@ -211,6 +211,7 @@ function! LL_Mode() abort "{{{2
         \ 'qf':             '',
         \ 'coc-explorer':   'EXPLORER',
         \ 'output:///info': 'COC-INFO',
+        \ 'packager':       'PACK',
         \ }
     let l:mode = get(l:mode_map, mode(), mode())
     if winwidth(0) > g:LL_MedWidth
@@ -318,6 +319,7 @@ function! s:is_not_file() abort "{{{2
         \ 'vimfiler',
         \ 'tagbar',
         \ 'minpac',
+        \ 'packager',
         \ 'vista',
         \ 'qf',
         \ 'coc-explorer',

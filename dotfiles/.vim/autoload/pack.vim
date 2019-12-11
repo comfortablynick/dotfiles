@@ -31,6 +31,7 @@ function! s:pack_init() abort
             return
         endif
         call minpac#init({'dir': l:pack_dir})
+        call pack#add('k-takata/minpac')
     elseif g:package_manager ==# 'vim-packager'
         if exists('g:packager') | return | endif
         let l:packager_path = get(g:, 'vim_packager_path', expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/vim-packager'))
@@ -44,6 +45,7 @@ function! s:pack_init() abort
             return
         endif
         call packager#init({'dir': l:pack_dir.'/pack/minpac'})
+        call pack#add('kristijanhusak/vim-packager')
     else
         echoerr 'Unrecognized package manager: '.g:package_manager
     endif
@@ -100,11 +102,11 @@ endfunction
 function! pack#clean(...) abort
     call s:pack_init()
     call s:pack_add_all()
-    return call('minpac#clean', a:000)
+    return call('packager#clean', a:000)
 endfunction
 
 function! pack#status(...) abort
     call s:pack_init()
     call s:pack_add_all()
-    return call('minpac#status', a:000)
+    return call('packager#status', a:000)
 endfunction

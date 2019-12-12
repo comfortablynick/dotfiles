@@ -226,11 +226,12 @@ local mappings = {
     ["ikj"] = {"<Esc>`^"},
     ["ilkj"] = {"<Esc>`^:w<CR>"},
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
-    ["n<CR>"] = {":nohlsearch<CR><CR>"},
+    ["n<CR>"] = {":noh<CR><CR>", silent = false},
     -- Show syntax group under cursor
     ["n<Leader>h"] = {":echo syntax#syn_group()<CR>"},
 }
 
+-- Test: define plugins for vim-packager {{{1
 -- vim.g.plugtest = {
 --     ["k-takata/minpac"] = true,
 --     ["chrisbra/Colorizer"] = true,

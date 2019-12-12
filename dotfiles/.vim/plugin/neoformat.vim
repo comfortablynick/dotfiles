@@ -13,5 +13,5 @@ noremap <silent> <F3> :call config#neoformat#run()<CR>
 
 augroup neoformat_config
     autocmd!
-    autocmd BufWritePre *.{bash,sh,lua} Neoformat
+    autocmd BufWritePre *.{bash,sh,lua} :call config#neoformat#run()
 augroup END

@@ -11,6 +11,6 @@ let g:loaded_plugin_pack_gdjlcrz2 = 1
 let g:package_manager = 'vim-packager'
 
 " Call minpac or minpac wrappers
-command! PackUpdate call plugins#init() | call pack#update()
-command! PackClean  call plugins#init() | call pack#clean()
-command! PackStatus call plugins#init() | call pack#status()
+command! -bang PackUpdate call plugins#init() | call pack#update({'force_hooks': '<bang>'})
+command!       PackClean  call plugins#init() | call pack#clean()
+command!       PackStatus call plugins#init() | call pack#status()

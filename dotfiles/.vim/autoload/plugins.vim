@@ -15,7 +15,6 @@ function! plugins#init() abort
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-projectionist'
-    Pack 'tpope/vim-tbone'
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'skywind3000/asyncrun.vim'
@@ -26,14 +25,15 @@ function! plugins#init() abort
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'
-    Pack 'liuchengxu/vim-clap'
+    Pack 'liuchengxu/vim-clap',
+        \ {'do': ':call clap#helper#build_maple()'}
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'scrooloose/nerdtree'
     Pack 'Shougo/defx.nvim',
-        \ {'if': 'has("nvim")', 'do': ':UpdateRemotePlugins'}
+        \ {'if': 'has("nvim")', 'rplugin': '1'}
 
     " Vim Development
     Pack 'tpope/vim-scriptease'
@@ -49,7 +49,7 @@ function! plugins#init() abort
     " Syntax/filetype
     " Python
     Pack 'numirias/semshi',
-        \ {'if': 'has("nvim")', 'do': ':UpdateRemotePlugins'}
+        \ {'if': 'has("nvim")', 'rplugin': '1'}
     Pack 'HerringtonDarkholme/yats'
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
@@ -72,9 +72,8 @@ function! plugins#init() abort
     Pack 'neoclide/coc.nvim',
         \ {
         \   'if': 'has("nvim")',
-        \   'do': 'split term://yarn install --frozen-lockfile',
+        \   'do': { -> 'yarn install --frozen-lockfile'},
         \ }
-    Pack 'lifepillar/vim-mucomplete'
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'

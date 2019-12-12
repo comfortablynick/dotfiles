@@ -65,25 +65,26 @@ function! s:pack_add_all() abort
     endfor
 endfunction
 
-function! s:pack_update() abort
+function! s:pack_update(...) abort
     if g:package_manager ==# 'minpac'
         return minpac#update('', {'do': 'call minpac#status()'})
     elseif g:package_manager ==# 'vim-packager'
-        return packager#update()
+        return call('packager#update', a:000)
     endif
 endfunction
 
 function! pack#add(repo, ...) abort
     call s:pack_init()
     let l:opts = extend(copy(get(a:000, 0, {})),
-        \ { 'type': 'opt'}, 'keep')
+        \ {'type': 'opt'}, 'keep')
+    let l:name = substitute(a:repo, '^.*/', '', '')
     " Allow simple `if` conditions to adding the plugin
     " Note: only evaluated during PackUpdate
-    if has_key(l:opts, 'if')
-        if !eval(l:opts.if) | return | endif
+    if has_key(l:opts, 'if') && !eval(l:opts.if) | return | endif
+    if has_key(l:opts, 'rplugin') && eval(l:opts.rplugin)
+        let g:packlist_rplugins = add(get(g:, 'packlist_rplugins', []), l:name)
     endif
     if has_key(l:opts, 'for')
-        let l:name = substitute(a:repo, '^.*/', '', '')
         let l:ft = type(l:opts.for) == type([]) ? join(l:opts.for, ',') : l:opts.for
         execute printf('autocmd FileType %s packadd %s', l:ft, l:name)
     else
@@ -93,10 +94,16 @@ function! pack#add(repo, ...) abort
     end
 endfunction
 
-function! pack#update() abort
+function! pack#update(...) abort
     call s:pack_init()
     call s:pack_add_all()
-    return s:pack_update()
+    call s:pack_update(a:000)
+    if exists('g:packlist_rplugins')
+        for item in g:packlist_rplugins
+            execute 'packadd! '.item
+        endfor
+        UpdateRemotePlugins
+    endif
 endfunction
 
 function! pack#clean(...) abort

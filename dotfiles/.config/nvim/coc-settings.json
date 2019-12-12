@@ -29,10 +29,11 @@
   "coc.preferences.formatOnSaveFiletypes": [],
 
   // Rust
-  "rust-client.channel": "nightly",
-  "rust.clippy_preference": "on",
-  "rust.show_hover_context": true,
-  "rust.all_targets": false,
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+  // "rust-client.channel": "nightly",
+  // "rust.clippy_preference": "on",
+  // "rust.show_hover_context": true,
+  // "rust.all_targets": false,
 
   // Python
   "python.linting.enabled": true,
@@ -80,11 +81,6 @@
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
     }
-    // "rust": {
-    //   "command": "ra_lsp_server",
-    //   "filetypes": ["rust"],
-    //   "rootPatterns": ["Cargo.toml"]
-    // }
   },
 
   // Explorer

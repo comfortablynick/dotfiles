@@ -14,7 +14,7 @@ let g:coc_global_extensions = [
     \ 'coc-explorer',
     \ 'coc-json',
     \ 'coc-fish',
-    \ 'coc-rls',
+    \ 'coc-rust-analyzer',
     \ 'coc-lua',
     \ 'coc-python',
     \ 'coc-tsserver',

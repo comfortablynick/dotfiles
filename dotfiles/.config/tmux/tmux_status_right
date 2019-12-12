@@ -25,7 +25,7 @@ if [[ -x $SYSINFO ]]; then
     temp_cmd='temp 2>/dev/null'
     # cpu_usage_cmd='cpu -i 2 2>/dev/null'
     if [[ $WIDTH -lt $MEDIUM_LARGE ]]; then
-        memusage_cmd='memory -p'
+        memusage_cmd='memory -u'
         loadavg_cmd='load -n 1'
     fi
     MEMUSAGE="$(eval "$SYSINFO" "$memusage_cmd")"
@@ -52,7 +52,7 @@ fi
 
 if [[ $WIDTH -gt $MEDIUM ]]; then
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
-    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB#[fg=colour252,bg=colour236,noitalics,nounderscore]$(date +'%R')"
+    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB#[fg=colour252,bg=colour236,noitalics,nounderscore]$SP$(date +'%R')"
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
     LOAD="#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
 

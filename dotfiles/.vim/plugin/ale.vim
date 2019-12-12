@@ -75,10 +75,3 @@ let g:ale_cmake_cmakelint_options = '--config=$HOME/.config/cmake/cmakelintrc'
 " Maps
 nmap <silent> <Leader>f <Plug>(ale_next_wrap)
 nmap <silent> <Leader>g <Plug>(ale_previous_wrap)
-
-" Paste from register
-nnoremap <Leader>0 "0p<CR>
-nnoremap <Leader>1 "1p<CR>
-nnoremap <Leader>2 "2p<CR>
-nnoremap <Leader>3 "3p<CR>
-nnoremap <Leader>4 "4p<CR>

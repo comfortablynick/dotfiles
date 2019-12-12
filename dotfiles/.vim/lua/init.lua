@@ -72,8 +72,6 @@ local editor = {
     laststatus = 2,
     -- Always show tabline
     showtabline = 2,
-    -- Show character on line break
-    showbreak = "↪",
     -- Visual bell instead of audible
     visualbell = true,
     -- Text wrapping mode

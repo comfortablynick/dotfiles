@@ -29,8 +29,6 @@ packadd! lightline.vim
 packadd! fzf
 packadd! fzf.vim
 packadd! ale
-packadd! neoformat
-packadd! undotree
 packadd! vim-sneak
 packadd! vim-fugitive
 packadd! vim-surround

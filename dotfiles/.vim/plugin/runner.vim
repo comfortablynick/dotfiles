@@ -9,6 +9,7 @@ if exists('g:loaded_plugin_runner_btro6nqr') | finish | endif
 let g:loaded_plugin_runner_btro6nqr = 1
 
 nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
-nnoremap <silent> <Leader>w :w \| :call runner#run_cmd('install')<CR>
+" TODO: move timer to runner#run_cmd
+nnoremap <silent> <Leader>w :w \| :call timer_start(300, { tid -> runner#run_cmd('install')})<CR>
 nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
 " nnoremap <silent> <Leader>c :call runner#run_cmd('test')<CR>

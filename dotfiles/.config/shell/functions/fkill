@@ -3,12 +3,12 @@
 
 user_id="$(id -u)"
 
-if [ "$user_id" != "0" ]; then
-    pid=$(ps -f -u $user_id | sed 1d | fzf-tmux -m | awk '{print $2}')
+if [[ $user_id -ne 0 ]]; then
+    pid=$(ps -f -u "$user_id" | sed 1d | fzf-tmux -m | awk '{print $2}')
 else
     pid=$(ps -ef | sed 1d | fzf-tmux -m | awk '{print $2}')
 fi
 
-if [ "x$pid" != "x" ]; then
-    echo $pid | xargs kill -${1:-9}
+if [[ x$pid != "x" ]]; then
+    echo "$pid" | xargs kill -"${1:-9}"
 fi

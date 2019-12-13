@@ -45,9 +45,9 @@ function var -d "export environment variable if not defined universally"
 end
 
 # j :: alias for __fzf_autojump {{{2
-function j -d "alias for __fzf_autojump"
-    __fzf_autojump $argv
-end
+# function j -d "alias for __fzf_autojump"
+#     __fzf_autojump $argv
+# end
 
 # PACKAGES {{{1
 # Package manager setup {{{2
@@ -202,7 +202,12 @@ and set -g yimmy_solarized false
 
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2
-# set fish_key_bindings fish_user_vi_key_bindings
+set -g use_vi_mode yes
+
+if test "$use_vi_mode" = 'yes'
+    set -g fish_key_bindings fish_vi_key_bindings
+    bind -M insert -m default kj force-repaint
+end
 
 # PRE SHELL LOAD {{{1
 # Vim/Mosh {{{2

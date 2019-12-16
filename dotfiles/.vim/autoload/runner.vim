@@ -3,7 +3,7 @@
 " Description: Run code actions based on justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-04
+" Last Change: 2019-12-15
 " ====================================================
 
 " Build command based on file type and command type
@@ -21,10 +21,6 @@ function! runner#run_cmd(cmd_type) abort
         execute 'VtrSendCommandToRunner! '.l:cmd
         return
     endif
-endfunction
-
-" Use AsyncRun to run and display results in quickfix
-function! runner#asyncrun(cmd) abort
 endfunction
 
 " Send cmd output to integrated terminal buffer

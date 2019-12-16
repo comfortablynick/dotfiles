@@ -180,7 +180,7 @@ local global_vars = {
         coc = {
             "c", "cpp", "fish", "go", "rust", "typescript", "javascript",
             "json", "lua", "python", "bash", "sh", "vim", "yaml", "snippets",
-            "markdown", "toml", "txt", "mail", "pro", "ini", "muttrc",
+            "markdown", "toml", "txt", "mail", "pro", "ini", "muttrc", "cmake",
         },
         ["nvim-lsp"] = {},
     },

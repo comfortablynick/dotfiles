@@ -26,6 +26,7 @@ for files in config_list
 endfor
 
 packadd! lightline.vim
+packadd! lightline-bufferline
 packadd! fzf
 packadd! fzf.vim
 packadd! ale

@@ -16,7 +16,7 @@ let g:lightline = {
     \ 'tabline': {
     \   'left':
     \   [
-    \       [ 'filename' ],
+    \       [ 'buffers' ],
     \   ],
     \   'right':
     \   [
@@ -117,23 +117,11 @@ let g:LL_LinterOK = ''
 " endif
 
 " lightline#bufferline {{{2
-let g:lightline#bufferline#enable_devicons = 1                  " Show devicons in buffer name
+let g:lightline#bufferline#enable_devicons = g:LL_nf            " Show devicons in buffer name
 let g:lightline#bufferline#unicode_symbols = 1                  " Show unicode instead of ascii for readonly and modified
 let g:lightline#bufferline#show_number  = 1
 let g:lightline#bufferline#shorten_path = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
-" let g:lightline#bufferline#number_map = {
-"     \ 0: '➓ ',
-"     \ 1: '❶ ',
-"     \ 2: '❷ ',
-"     \ 3: '❸ ',
-"     \ 4: '❹ ',
-"     \ 5: '❺ ',
-"     \ 6: '❻ ',
-"     \ 7: '❼ ',
-"     \ 8: '❽ ',
-"     \ 9: '❾ ',
-"     \ }
 
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)

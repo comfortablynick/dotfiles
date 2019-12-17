@@ -42,6 +42,7 @@ function! plugins#init() abort
 
     " Editor appearance
     Pack 'itchyny/lightline.vim'
+    Pack 'mengelbrecht/lightline-bufferline'
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
     Pack 'ryanoasis/vim-devicons'

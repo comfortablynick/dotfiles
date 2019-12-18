@@ -37,6 +37,7 @@ packadd! vim-localvimrc
 packadd! vim-clap
 packadd! vim-snippets
 packadd! vim-tmux-navigator
+packadd! vim-lion
 
 if get(g:, 'LL_nf', 0) == 1
     packadd! vim-devicons

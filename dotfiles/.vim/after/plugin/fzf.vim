@@ -58,8 +58,8 @@ if has('nvim') || has('gui_running')
 endif
 
 " Maps
-noremap  <silent> <C-r>     :History:<CR>
-" nnoremap <silent> <Leader>k :call fzf#vim#buffer_tags('^' . expand('<cword>'))<CR>
+noremap  <silent> <C-r>      :History:<CR>
+nnoremap <silent> <Leader>gg :Rg<CR>
 
 augroup fzf_config
     autocmd!

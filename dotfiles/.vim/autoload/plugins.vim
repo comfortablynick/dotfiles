@@ -11,17 +11,20 @@ function! plugins#init() abort
     " General
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
-    Pack 'tomtom/tcomment_vim'
-    Pack 'tpope/vim-commentary'
-    Pack 'tpope/vim-surround'
-    Pack 'tpope/vim-projectionist'
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'skywind3000/asyncrun.vim'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
-    Pack 'justinmk/vim-sneak'
     Pack 'embear/vim-localvimrc'
+    Pack 'tpope/vim-projectionist'
+
+    " Editing behavior
+    Pack 'tpope/vim-commentary'
+    Pack 'tpope/vim-surround'
+    Pack 'tomtom/tcomment_vim'
+    Pack 'justinmk/vim-sneak'
+    Pack 'tommcdo/vim-lion'
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'

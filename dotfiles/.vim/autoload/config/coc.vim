@@ -40,7 +40,7 @@ function! config#coc#apply_maps() abort
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gy <Plug>(coc-references)
     nmap <silent> ge :CocCommand explorer --toggle<CR>
-    nmap <silent> gl :CocList<CR>
+    nmap <silent> <Leader>l :CocList<CR>
 
     " coc-git
     nmap [g <Plug>(coc-git-prevchunk)

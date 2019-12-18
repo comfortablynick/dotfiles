@@ -173,6 +173,8 @@ local global_vars = {
         0,
     -- Path to find minpac plugin manager
     minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
+    -- vim-lion extra spaces
+    lion_squeeze_spaces = 1,
     -- Check existence of vim executable
     vim_exists = vim.fn.executable("vim"),
     -- Filetypes that will use a completion plugin

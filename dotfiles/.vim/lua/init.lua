@@ -175,6 +175,8 @@ local global_vars = {
     minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
     -- vim-lion extra spaces
     lion_squeeze_spaces = 1,
+    -- vim-sneak
+    ["sneak#label"] = 1,
     -- Check existence of vim executable
     vim_exists = vim.fn.executable("vim"),
     -- Filetypes that will use a completion plugin
@@ -297,6 +299,9 @@ local mappings = {
     ["nth"] = {":tabprev<CR>"},
     ["ntl"] = {":tabnext<CR>"},
     ["ntn"] = {":tabnew<CR>"},
+    -- b + {h,l,n} to navigate buffers
+    ["nbh"] = {":bprevious<CR>"},
+    ["nbl"] = {":bnext<CR>"},
 }
 
 -- Test: define plugins for vim-packager {{{1

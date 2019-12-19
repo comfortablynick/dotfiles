@@ -1,12 +1,14 @@
-" vim:fdl=1:
-"  _   _                               _
-" | |_| |__   ___ _ __ ___   _____   _(_)_ __ ___
-" | __| '_ \ / _ \ '_ ` _ \ / _ \ \ / / | '_ ` _ \
-" | |_| | | |  __/ | | | | |  __/\ V /| | | | | | |
-"  \__|_| |_|\___|_| |_| |_|\___(_)_/ |_|_| |_| |_|
+" ====================================================
+" Filename:    plugin/colortheme.vim
+" Description: Color and theme settings
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2019-12-19
+" ====================================================
+if exists('g:loaded_plugin_colortheme_brhrevkl') | finish | endif
+let g:loaded_plugin_colortheme_brhrevkl = 1
 
 " Vim Themes / Statusline
-scriptencoding utf-8
 " Map colorscheme -> statusline theme {{{1
 let g:airline_themes = {
     \ 'nord': 'nord',
@@ -45,6 +47,16 @@ let g:PaperColor_Theme_Options = {
   \   }
   \ }
 
+" Change default ugly magenta highlight
+function! s:add_sneak_highlights() abort
+    highlight Sneak         ctermfg=red ctermbg=234 guifg=#ff0000 guibg=#1c1c1c
+endfunction
+
+augroup plugin_colortheme_brhrevkl
+    autocmd!
+    autocmd ColorScheme * call s:add_sneak_highlights()
+augroup END
+
 " Set colors based on theme {{{2
 " Assign to variables
 execute 'silent! colorscheme' g:vim_base_color
@@ -53,3 +65,5 @@ let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
 
 " Set airline theme
 let g:airline_theme = tolower(g:statusline_theme)
+
+" vim:fdl=1:

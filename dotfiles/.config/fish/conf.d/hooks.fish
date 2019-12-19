@@ -20,7 +20,10 @@ function __remove_failed_command_history --on-event fish_postexec --description 
 
     if test $cmd_status -ne 0
         set -l cmd (string trim -r $argv)
+        test -z "$cmd"
+        and return
         history delete -eC -- (string trim -r $argv)
-        echo "command deleted from history: `$cmd' (Status $cmd_status)";
+        echo "command deleted from history: `$cmd' (Status $cmd_status)"
+
     end
 end

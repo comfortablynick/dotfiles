@@ -1,9 +1,19 @@
-# Defined in /tmp/fish.vtrWgg/__fzf_cd.fish @ line 2
-function __fzf_cd --description 'Change directory'
-	set -l commandline (__fzf_parse_commandline)
+function __fzf_cd -d "Change directory"
+    set -l commandline (__fzf_parse_commandline)
     set -l dir $commandline[1]
     set -l fzf_query $commandline[2]
 
+    if not type -q argparse
+        # Fallback for fish shell version < 2.7
+        function argparse
+            functions -e argparse # deletes itself
+        end
+        if contains -- --hidden $argv; or contains -- -h $argv
+            set _flag_hidden "yes"
+        end
+    end
+
+    # Fish shell version >= v2.7, use argparse
     set -l options  "h/hidden"
     argparse $options -- $argv
 

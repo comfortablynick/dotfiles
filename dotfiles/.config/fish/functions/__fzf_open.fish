@@ -1,5 +1,6 @@
-function __fzf_open -d "Open files and directories."
-    function __fzf_open_get_open_cmd -d "Find appropriate open command."
+# Defined in /tmp/fish.giBpJ9/__fzf_open.fish @ line 2
+function __fzf_open --description 'Open files and directories.'
+	function __fzf_open_get_open_cmd -d "Find appropriate open command."
         if type -q xdg-open
             echo "xdg-open"
         else if type -q open

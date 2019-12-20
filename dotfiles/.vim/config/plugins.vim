@@ -64,28 +64,28 @@
 "     \ ]
 
 " Load packages {{{1
-packadd! lightline.vim
-packadd! fzf
-packadd! fzf.vim
-packadd! ale
-packadd! neoformat
-packadd! undotree
-packadd! vim-sneak
-packadd! vim-fugitive
-packadd! vim-surround
-packadd! vim-localvimrc
-packadd! vim-clap
+silent! packadd! lightline.vim
+silent! packadd! fzf
+silent! packadd! fzf.vim
+silent! packadd! ale
+silent! packadd! neoformat
+silent! packadd! undotree
+silent! packadd! vim-sneak
+silent! packadd! vim-fugitive
+silent! packadd! vim-surround
+silent! packadd! vim-localvimrc
+silent! packadd! vim-clap
 
 " Snippets
-packadd! vim-snippets
+silent! packadd! vim-snippets
 
 " Syntax
-packadd! vim-cpp-modern
-packadd! vim-markdown
-packadd! ansible-vim
-packadd! semshi
+silent! packadd! vim-cpp-modern
+silent! packadd! vim-markdown
+silent! packadd! ansible-vim
+silent! packadd! semshi
 
 " Tmux
-packadd! vim-tmux-navigator
+silent! packadd! vim-tmux-navigator
 
 " vim:set fdm=marker fdl=1:

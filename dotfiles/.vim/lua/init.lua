@@ -304,64 +304,35 @@ local mappings = {
     ["nbl"] = {":bnext<CR>"},
 }
 
--- Test: define plugins for vim-packager {{{1
--- vim.g.plugtest = {
---     ["k-takata/minpac"] = true,
---     ["chrisbra/Colorizer"] = true,
---     ["mhinz/vim-startify"] = true,
---     ["tomtom/tcomment_vim"] = true,
---     ["tpope/vim-commentary"] = true,
---     ["tpope/vim-surround"] = true,
---     ["tpope/vim-projectionist"] = true,
---     ["dense-analysis/ale"] = true,
---     ["sbdchd/neoformat"] = true,
---     ["skywind3000/asyncrun.vim"] = true,
---     ["vhdirk/vim-cmake"] = true,
---     ["airblade/vim-rooter"] = true,
---     ["justinmk/vim-sneak"] = true,
---     ["embear/vim-localvimrc"] = true,
---     ["liuchengxu/vista.vim"] = true,
---     ["liuchengxu/vim-clap"] = true,
---     ["junegunn/fzf"] = true,
---     ["junegunn/fzf.vim"] = true,
---     ["majutsushi/tagbar"] = true,
---     ["mbbill/undotree"] = true,
---     ["scrooloose/nerdtree"] = true,
---     ["Shougo/defx.nvim"] = {
---         ["if"] = "has('nvim')",
---         ["do"] = ":UpdateRemotePlugins",
---     },
---     ["tpope/vim-scriptease"] = true,
---     ["mhinz/vim-lookup"] = true,
---     ["bfredl/nvim-luadev"] = {["if"] = "has('nvim')"},
---     ["itchyny/lightline.vim"] = true,
---     ["NLKNguyen/papercolor-theme"] = true,
---     ["gruvbox-community/gruvbox"] = true,
---     ["numirias/semshi"] = {
---         ["if"] = "has('nvim')",
---         ["do"] = ":UpdateRemotePlugins",
---     },
---     ["HerringtonDarkholme/yats"] = true,
---     ["gabrielelana/vim-markdown"] = true,
---     ["dag/vim-fish"] = true,
---     ["cespare/vim-toml"] = true,
---     ["bfrg/vim-cpp-modern"] = true,
---     ["vim-jp/syntax-vim-ex"] = true,
---     ["pearofducks/ansible-vim"] = true,
---     ["freitass/todo.txt-vim"] = true,
---     ["airblade/vim-gitgutter"] = true,
---     ["tpope/vim-fugitive"] = true,
---     ["junegunn/gv.vim"] = true,
---     ["SirVer/ultisnips"] = true,
---     ["honza/vim-snippets"] = true,
---     ["neovim/nvim-lsp"] = {["if"] = "has('nvim')"},
---     ["neoclide/coc.nvim"] = {
---         ["if"] = "has('nvim')",
---         ["do"] = "split term://yarn install --frozen-lockfile",
---     },
---     ["christoomey/vim-tmux-navigator"] = true,
---     ["christoomey/vim-tmux-runner"] = true,
--- }
+-- load_packages() :: Add packages to runtimepath for loading
+local function load_packages()
+    local packages = {
+        "lightline.vim",
+        "lightline-bufferline",
+        "fzf",
+        "fzf.vim",
+        "ale",
+        "vim-sneak",
+        "vim-fugitive",
+        "vim-surround",
+        "vim-localvimrc",
+        "vim-clap",
+        "vim-snippets",
+        "vim-tmux-navigator",
+        "vim-lion",
+        "vim-cpp-modern",
+        "vim-markdown",
+        "ansible-vim",
+        "semshi",
+    }
+    if global_vars.LL_nf == 1 then
+        table.insert(packages, "vim-devicons")
+    end
+
+    for _, package in ipairs(packages) do
+        vim.cmd("silent! packadd! " .. package)
+    end
+end
 
 -- set_options() :: Loop through options and set them in vim {{{1
 local function set_options()
@@ -388,6 +359,7 @@ local function set_options()
 
     nvim.create_augroups(autocmds)
     nvim.apply_mappings(mappings, map_default_options)
+    load_packages()
 end
 
 return {Set_Options = set_options}

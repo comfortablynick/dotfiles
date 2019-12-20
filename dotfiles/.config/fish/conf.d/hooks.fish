@@ -13,17 +13,18 @@ function __echo_cd --on-variable PWD --description 'echo directory listing on ch
 end
 
 # delete failed command history
-function __remove_failed_command_history --on-event fish_postexec --description 'delete failed command from history'
-    set -l cmd_status $status
-    status --is-command-substitution
-    and return
+# (can't tell if invalid cmd or other error)
+# function __remove_failed_command_history --on-event fish_postexec --description 'delete failed command from history'
+#     set -l cmd_status $status
+#     status --is-command-substitution
+#     and return
 
-    if test $cmd_status -ne 0
-        set -l cmd (string trim -r $argv)
-        test -z "$cmd"
-        and return
-        history delete -eC -- (string trim -r $argv)
-        echo "command deleted from history: `$cmd' (Status $cmd_status)"
+#     if test $cmd_status -ne 0
+#         set -l cmd (string trim -r $argv)
+#         test -z "$cmd"
+#         and return
+#         history delete -eC -- (string trim -r $argv)
+#         echo "command deleted from history: `$cmd' (Status $cmd_status)"
 
-    end
-end
+#     end
+# end

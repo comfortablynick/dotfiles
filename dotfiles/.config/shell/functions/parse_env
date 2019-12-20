@@ -102,7 +102,7 @@ def get_shell_vars(  # {{{1
         "fish": {
             "abbr": {"format": "abbr {0} {1} {2}", "default_args": "-U"},
             "alias": {"format": "alias {0} {1}={2}"},
-            "env": {"format": "set {0} {1} {2}", "default_args": "-Ux"},
+            "env": {"format": "set {0} {1} {2}", "default_args": "-U"},
             "path": {"format": "set {0} {1} {2}", "default_args": "-U --path"},
         },
         "bash": {

@@ -1,10 +1,8 @@
-function cdf -d "Fuzzy change directory"
-    set -l cmd "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
--o -type d -print 2> /dev/null | sort | cut -b3-"
+# Defined in /tmp/fish.xyyiSF/cdf.fish @ line 2
+function cdf --description 'Fuzzy change directory'
+	
 
-    eval "$cmd | fzy" | read -l select
-
-    if not test -z "$select"
-        builtin cd "$select"
-    end
+    # eval "$cmd | fzy" | read -l select
+    fd -t d -HL | fzy | read -l select
+    test -n "$select"; and builtin cd "$select"
 end

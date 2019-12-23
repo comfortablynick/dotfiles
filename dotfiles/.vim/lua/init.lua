@@ -320,10 +320,7 @@ local function load_packages()
         "vim-snippets",
         "vim-tmux-navigator",
         "vim-lion",
-        "vim-cpp-modern",
         "vim-markdown",
-        "ansible-vim",
-        "semshi",
     }
     if global_vars.LL_nf == 1 then
         table.insert(packages, "vim-devicons")

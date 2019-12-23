@@ -34,7 +34,7 @@ function! s:pack_init() abort
         call pack#add('k-takata/minpac')
     elseif g:package_manager ==# 'vim-packager'
         if exists('g:packager') | return | endif
-        let l:packager_path = get(g:, 'vim_packager_path', expand('$XDG_DATA_HOME/nvim/site/pack/minpac/opt/vim-packager'))
+        let l:packager_path = get(g:, 'vim_packager_path', expand('$XDG_DATA_HOME/nvim/site/pack/packager/opt/vim-packager'))
         if !isdirectory(l:packager_path)
             echo 'Downloading vim-packager'
             call system('git clone https://github.com/kristijanhusak/vim-packager '.l:packager_path)
@@ -44,7 +44,7 @@ function! s:pack_init() abort
             echoerr "vim-packager doesn't exist! Check download location"
             return
         endif
-        call packager#init({'dir': l:pack_dir.'/pack/minpac'})
+        call packager#init({'dir': l:pack_dir.'/pack/packager'})
         call pack#add('kristijanhusak/vim-packager')
     else
         echoerr 'Unrecognized package manager: '.g:package_manager

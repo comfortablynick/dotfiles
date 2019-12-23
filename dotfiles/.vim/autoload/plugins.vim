@@ -51,17 +51,18 @@ function! plugins#init() abort
     Pack 'ryanoasis/vim-devicons'
 
     " Syntax/filetype
-    " Python
+    " Some must be loaded at start
     Pack 'numirias/semshi',
         \ {'if': 'has("nvim")', 'rplugin': '1'}
-    Pack 'HerringtonDarkholme/yats'
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
-    Pack 'cespare/vim-toml'
-    Pack 'bfrg/vim-cpp-modern'
-    Pack 'vim-jp/syntax-vim-ex'
-    Pack 'pearofducks/ansible-vim'
-    Pack 'freitass/todo.txt-vim'
+    Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
+    Pack 'cespare/vim-toml',            {'type': 'start'}
+    Pack 'bfrg/vim-cpp-modern',         {'type': 'start'}
+    Pack 'vim-jp/syntax-vim-ex',        {'type': 'start'}
+    Pack 'pearofducks/ansible-vim',     {'type': 'start'}
+    Pack 'freitass/todo.txt-vim',       {'type': 'start'}
+    Pack 'ziglang/zig.vim',             {'type': 'start'}
 
     " Git
     Pack 'airblade/vim-gitgutter'
@@ -76,7 +77,7 @@ function! plugins#init() abort
     Pack 'neoclide/coc.nvim',
         \ {
         \   'if': 'has("nvim")',
-        \   'do': { -> 'yarn install --frozen-lockfile'},
+        \   'do': 'yarn install --frozen-lockfile',
         \ }
 
     " Tmux

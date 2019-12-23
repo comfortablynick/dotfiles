@@ -15,7 +15,7 @@ let g:loaded_comment_vim_qsyxneop = 1
 let g:comment_plugin = 'commentary'
 
 if get(g:, 'comment_plugin') ==# 'commentary'
-    packadd vim-commentary
+    silent! packadd vim-commentary
     xmap <Leader>c          <Plug>Commentary
     nmap <Leader>c          <Plug>Commentary
     omap <Leader>c          <Plug>Commentary
@@ -25,7 +25,7 @@ if get(g:, 'comment_plugin') ==# 'commentary'
         nmap c<Leader>c     <Plug>ChangeCommentary
     endif
 elseif get(g:, 'comment_plugin') ==# 'tcomment'
-    packadd tcomment_vim
+    silent! packadd tcomment_vim
     " Add additional mappings for nerdcomment muscle memory
     xmap <silent><Leader>c          <Plug>TComment_gc
     nmap <Leader>c<Space>           <Plug>TComment_gcc
@@ -39,7 +39,7 @@ lua require('comment').test_comment()
 " xnoremap gc :call <SID>toggle_comment()<cr>
 
 function! s:comment_op(...)
-  '[,']call s:toggle_comment()
+  call s:toggle_comment()
 endfunction
 
 function! s:toggle_comment() range

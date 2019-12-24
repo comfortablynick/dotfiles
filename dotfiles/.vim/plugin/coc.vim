@@ -45,12 +45,12 @@ endfunction
 set keywordprg=:silent!\ call\ Show_Documentation()
 
 " Call func to set autocmds if LC is loaded
-augroup coc_config
+augroup plugin_config_coc_s5zywzm2
     autocmd!
     autocmd User CocNvimInit call config#coc#init()
-    autocmd FileType *
-        \ if exists('g:completion_filetypes') &&
-        \ index(g:completion_filetypes['coc'], &filetype) >= 0
-        \ | packadd coc.nvim
-        \ | endif
 augroup END
+
+let coc_filetypes = join(get(g:, 'completion_filetypes', {})['coc'], ',')
+
+execute printf('autocmd plugin_config_coc_s5zywzm2 FileType %s silent! packadd coc.nvim',
+    \ coc_filetypes)

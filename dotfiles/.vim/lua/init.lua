@@ -191,7 +191,7 @@ local global_vars = {
             "javascript",
             "json",
             "lua",
-            "python",
+            -- "python",
             "bash",
             "sh",
             "vim",
@@ -206,7 +206,10 @@ local global_vars = {
             "muttrc",
             "cmake",
         },
-        ["nvim-lsp"] = {},
+        ["nvim-lsp"] = {
+            -- "rust",
+            "python",
+        },
     },
     nocompletion_filetypes = {"nerdtree"},
     -- TODO: move color stuff to own func

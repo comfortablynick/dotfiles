@@ -526,4 +526,6 @@ function! LL_LinterWarnings() abort " {{{2
 endfunction
 
 " Theme {{{1
-let lightline['colorscheme'] = g:statusline_theme
+if !empty(get(g:, 'statusline_theme'))
+    let lightline['colorscheme'] = g:statusline_theme
+endif

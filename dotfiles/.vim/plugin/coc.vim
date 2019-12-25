@@ -50,7 +50,11 @@ augroup plugin_config_coc_s5zywzm2
     autocmd User CocNvimInit call config#coc#init()
 augroup END
 
-let coc_filetypes = join(get(g:, 'completion_filetypes', {})['coc'], ',')
+if exists('g:completion_filetypes')
+    let coc_filetypes = join(get(g:, 'completion_filetypes', {})['coc'], ',')
 
-execute printf('autocmd plugin_config_coc_s5zywzm2 FileType %s silent! packadd coc.nvim',
-    \ coc_filetypes)
+    if !empty(coc_filetypes)
+        execute printf('autocmd plugin_config_coc_s5zywzm2 FileType %s silent! packadd coc.nvim',
+            \ coc_filetypes)
+    endif
+endif

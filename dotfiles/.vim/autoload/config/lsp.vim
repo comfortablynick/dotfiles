@@ -6,8 +6,8 @@
 " Last Change: 2019-12-24
 " ====================================================
 
-function config#lsp#init() abort
-    " silent! packadd nvim-lsp
+function! config#lsp#init() abort
+      silent! packadd nvim-lsp
       nnoremap <silent> ;dc <cmd>lua vim.lsp.buf.declaration()<CR>
       nnoremap <silent> ;df <cmd>lua vim.lsp.buf.definition()<CR>
       nnoremap <silent> ;h  <cmd>lua vim.lsp.buf.hover()<CR>
@@ -17,7 +17,8 @@ function config#lsp#init() abort
     if &filetype ==# 'rust'
         lua require'nvim_lsp'.rust_analyzer.setup{}
     elseif &filetype ==# 'python'
-        lua require'nvim_lsp'.pyls_ms.setup{ log_level = 2 }
+        lua require'nvim_lsp'["pyls_ms"].setup{ log_level = 2 }
+        lua require'nvim_lsp'["pyls_ms"].manager.try_add()
     endif
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 endfunction

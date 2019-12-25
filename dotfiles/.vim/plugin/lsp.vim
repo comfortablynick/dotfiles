@@ -12,9 +12,11 @@ augroup plugin_lsp_5sjdin1r
     autocmd!
 augroup END
 
-let lsp_filetypes = join(get(g:, 'completion_filetypes', {})['nvim-lsp'], ',')
+if exists('g:completion_filetypes')
+    let lsp_filetypes = join(get(g:, 'completion_filetypes', {})['nvim-lsp'], ',')
 
-if !empty(lsp_filetypes)
-    execute printf('autocmd plugin_lsp_5sjdin1r FileType %s call config#lsp#init()',
-        \ lsp_filetypes)
+    if !empty(lsp_filetypes)
+        execute printf('autocmd plugin_lsp_5sjdin1r FileType %s call config#lsp#init()',
+            \ lsp_filetypes)
+    endif
 endif

@@ -57,13 +57,14 @@ augroup plugin_colortheme_brhrevkl
     autocmd ColorScheme * call s:add_sneak_highlights()
 augroup END
 
-" Set colors based on theme {{{2
-" Assign to variables
-execute 'silent! colorscheme' g:vim_base_color
-" let &background = g:vim_color_variant
-let g:statusline_theme = get(g:airline_themes, vim_color, g:vim_base_color)
+if !empty(get(g:, 'vim_base_color'))
+    execute 'silent! colorscheme ' g:vim_base_color
 
-" Set airline theme
-let g:airline_theme = tolower(g:statusline_theme)
+    if !empty(get(g:, 'vim_color')) && !empty(get(g:, 'airline_themes'))
+        let g:statusline_theme = get(g:airline_themes, g:vim_color, g:vim_base_color)
+        " Set airline theme
+        let g:airline_theme = tolower(g:statusline_theme)
+    endif
+endif
 
 " vim:fdl=1:

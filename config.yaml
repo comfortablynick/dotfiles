@@ -235,6 +235,10 @@ dotfiles:
     src: .config/.lua-format
     dst: ~/.config/.lua-format
     link: link
+  f_kakrc:
+    src: .config/kak/kakrc
+    dst: ~/.config/kak/kakrc
+    link: link
 profiles:
   core:
     dotfiles:
@@ -281,6 +285,7 @@ profiles:
     - f_direnvrc
     - d_lua
     - f_lua-format
+    - f_kakrc
   io:
     dotfiles:
     - f_bash_linux

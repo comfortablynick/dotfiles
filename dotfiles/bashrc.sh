@@ -39,41 +39,27 @@ export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look here
 # Located in $BASEDIR
 INCLUDES=(
     "bash_functions.sh" # General functions
-    "bash_mac.sh" # Code to run on Mac
-    "bash_windows.sh" # Code to run on Win (Git bash)
-    "bash_prompt.sh" # Prompt-specific settings
-    # "bash_colors.sh"                                            # Color definitions (slow)
+    "bash_mac.sh"       # Code to run on Mac
+    "bash_windows.sh"   # Code to run on Win (Git bash)
+    "bash_prompt.sh"    # Prompt-specific settings
 )
 
 # Set vim compatibility if SSH connection
-[ -n "$SSH_CONNECTION" ] && export VIM_SSH_COMPAT=1
-
-# PROMPT ------------------------------------------------------------
-
-# set variable identifying the chroot you work in (used in the prompt below)
-# if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-#     debian_chroot=$(cat /etc/debian_chroot)
-# fi
-
-# case "$TERM" in
-#     xterm-color|*-256color) color_prompt=yes;;
-# esac
-
 #INCLUDES ------------------------------------------------------------
 
 # Source all .bash files in config snippets subdir
-if [ -d ${BASEDIR}/.config/bash/conf.d ]; then
-    for file in ${BASEDIR}/.config/bash/conf.d/*.bash; do
-        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing snippet: ${file}"
+if [[ -d ${BASEDIR}/.config/bash/conf.d ]]; then
+    for file in "${BASEDIR}"/.config/bash/conf.d/*.bash; do
+        [[ $DEBUG_MODE ]] && echo "$(date +"%T.%3N"): Sourcing snippet: ${file}"
         source "$file"
     done
 fi
 unset file
 
 # Source all .bash files in completions dir
-if [ -d ${BASEDIR}/.config/bash/completions ]; then
-    for file in ${BASEDIR}/.config/bash/completions/*.bash; do
-        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing completion: ${file}"
+if [[ -d ${BASEDIR}/.config/bash/completions ]]; then
+    for file in "${BASEDIR}"/.config/bash/completions/*.bash; do
+        [[ $DEBUG_MODE ]] && echo "$(date +"%T.%3N"): Sourcing completion: ${file}"
         source "$file"
     done
 fi
@@ -81,18 +67,23 @@ unset file
 
 # Load includes if they exist; add timestamp for debug mode
 for file in "${INCLUDES[@]}"; do
-    if [ -f $BASEDIR/$file ]; then
-        [ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Sourcing ${file}"
+    if [[ -f $BASEDIR/$file ]]; then
+        [[ $DEBUG_MODE ]] && echo "$(date +"%T.%3N"): Sourcing ${file}"
         source "$BASEDIR/$file"
     fi
 done
 unset file
 
+# mosh/ssh detection
+if is_mosh; then
+    export VIM_SSH_COMPAT=1
+fi
+
 # BEGIN ANSIBLE MANAGED BLOCK: asdf
 if [[ -e $HOME/.asdf/asdf.sh ]]; then
-  source $HOME/.asdf/asdf.sh
-  source $HOME/.asdf/completions/asdf.bash
+    source "$HOME/.asdf/asdf.sh"
+    source "$HOME/.asdf/completions/asdf.bash"
 fi
 # END ANSIBLE MANAGED BLOCK: asdf
 
-[ "$DEBUG_MODE" = true ] && echo "$(date +"%T.%3N"): Leaving .bashrc"
+[[ $DEBUG_MODE ]] && echo "$(date +"%T.%3N"): Leaving .bashrc"

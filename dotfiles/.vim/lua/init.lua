@@ -325,6 +325,7 @@ local function load_packages()
         "vim-tmux-navigator",
         "vim-lion",
         "vim-markdown",
+        "vim-symlink",
     }
     if global_vars.LL_nf == 1 then
         table.insert(packages, "vim-devicons")

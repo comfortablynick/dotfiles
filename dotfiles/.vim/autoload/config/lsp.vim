@@ -14,6 +14,10 @@ function! config#lsp#init() abort
       nnoremap <silent> ;i  <cmd>lua vim.lsp.buf.implementation()<CR>
       nnoremap <silent> ;s  <cmd>lua vim.lsp.buf.signature_help()<CR>
       nnoremap <silent> ;td <cmd>lua vim.lsp.buf.type_definition()<CR>
+      inoremap <silent><Leader>, <C-X><C-O>
+      inoremap <silent><C-Space> <C-X><C-O>
+      inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+      inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
     if &filetype ==# 'rust'
         lua require'nvim_lsp'.rust_analyzer.setup{}
     elseif &filetype ==# 'python'

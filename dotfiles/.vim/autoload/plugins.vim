@@ -25,6 +25,7 @@ function! plugins#init() abort
     Pack 'tomtom/tcomment_vim'
     Pack 'justinmk/vim-sneak'
     Pack 'tommcdo/vim-lion'
+    Pack 'aymericbeaumet/vim-symlink'
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'

@@ -35,7 +35,7 @@ hook global NormalIdle .* %{
         set-option buffer curword "\b\Q%val{selection}\E\b"
     } catch %{
         set-option buffer curword ''
-    } }
+    }}
 }
 add-highlighter global/ dynregex '%opt{curword}' 0:CurWord
 
@@ -57,18 +57,37 @@ evaluate-commands %sh{
 # Various mappings
 # ────────────────
 
-hook global InsertChar j %{ try %{
-      exec -draft hH <a-k>kj<ret> d
-        exec <esc>
+define-command -docstring "map-sequence <sEquence> <command>: map <sequence> of keys to <command> in insert mode." \
+map-sequence -params 2 %{ evaluate-commands %sh{
+    keys=$(printf "%s" "$1" | sed "s/\([&|]\)/\1\1/g")
+    cmd=$(printf "%s" "$2" | sed "s/\([@&|]\)/\1\1/g")
+    printf "%s\n" "hook global -group $1-seq InsertChar ${1##${1%%?}} %|
+        try %&
+            execute-keys -draft h<a-B> <a-k>$keys<ret> s$keys\z<ret> d
+            evaluate-commands %@$cmd@
+        &
+    |"
 }}
+
+define-command -docstring "unmap-sequence <scope> <sequence>: unmap <sequence> of keys in insert mode." \
+unmap-sequence -params 2 %{
+    remove-hooks "%arg{1}" "%arg{2}-seq"
+}
+
+# Map kj to <esc> 
+# Make sure relative numbers are toggled
+map-sequence kj %{
+    exec <esc>
+    number-toggle-update '-relative'
+}
 
 map global normal '#' :comment-line<ret>
 
 map global user -docstring 'next lint error' n ':lint-next-error<ret>'
 map global normal <c-p> :lint<ret>
 
-map global user -docstring 'gdb helper mode' g ':gdb-helper<ret>'
-map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>'
+# map global user -docstring 'gdb helper mode' g ':gdb-helper<ret>'
+# map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>'
 
 map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
 map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
@@ -77,11 +96,34 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 hook global -always BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next-match<ret>' }
 hook global -always BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next-error<ret>' }
 
+# TAB Handling
+
+# hook global InsertChar \t %{ try %{
+#     execute-keys -draft "h<a-h><a-k>\A\h+\z<ret><a-;>;%opt{indentwidth}@"
+# }}
+# hook global InsertDelete ' ' %{ try %{
+#     execute-keys -draft 'h<a-h><a-k>\A\h+\z<ret>i<space><esc><lt>'
+# }}
+
 # Enable <tab>/<s-tab> for insert completion selection
 # ──────────────────────────────────────────────────────
 
-hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <s-tab> <c-p> }
-hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <s-tab> <c-p> }
+hook global InsertCompletionShow .* %{
+    try %{
+        # this command temporarily removes cursors preceded by whitespace;
+        # if there are no cursors left, it raises an error, does not
+        # continue to execute the mapping commands, and the error is eaten
+        # by the `try` command so no warning appears.
+        execute-keys -draft 'h<a-K>\h<ret>'
+        map window insert <tab> <c-n>
+        map window insert <s-tab> <c-p>
+    }
+}
+
+hook global InsertCompletionHide .* %{
+    unmap window insert <tab> <c-n>
+    unmap window insert <s-tab> <c-p>
+}
 
 # Helper commands
 # ───────────────
@@ -121,6 +163,39 @@ plug "andreyorst/plug.kak" noload
 plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
 plug "evanrelf/number-toggle.kak" config %{
     set-option global number_toggle_params -hlcursor -separator ' '
+}
+plug "andreyorst/smarttab.kak" defer smarttab %{
+    # when `backspace' is pressed, 4 spaces are deleted at once
+    set-option global softtabstop 4
+} config %{
+    # these languages will use `expandtab' behavior
+    hook global WinSetOption filetype=(rust|markdown|kak|sh|perl) expandtab
+    # these languages will use `noexpandtab' behavior
+    hook global WinSetOption filetype=(makefile|go) noexpandtab
+    # these languages will use `smarttab' behavior
+    hook global WinSetOption filetype=(c|cpp) smarttab
+}
+
+
+hook global ModuleLoaded smarttab %{
+    set-option global softtabstop 4
+}
+
+hook global ModuleLoaded tmux %{
+    define-command -docstring "vsplit [<commands>]: split tmux vertically" \
+    vsplit -params .. -command-completion %{
+        tmux-terminal-horizontal kak -c %val{session} -e "%arg{@}"
+    }
+
+    define-command -docstring "split [<commands>]: split tmux horizontally" \
+    split -params .. -command-completion %{
+        tmux-terminal-vertical kak -c %val{session} -e "%arg{@}"
+    }
+
+    define-command -docstring "tabnew [<commands>]: create new tmux window" \
+    tabnew -params .. -command-completion %{
+        tmux-terminal-window kak -c %val{session} -e "%arg{@}"
+    }
 }
 
 # Status line

@@ -17,6 +17,9 @@ try:
 except ModuleNotFoundError:
     from toml import loads as parse
 
+RE_CMD = re.compile(r"\$\(")
+RE_AND = re.compile(r" && ")
+
 # globals {{{1
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
@@ -137,7 +140,8 @@ def get_shell_vars(  # {{{1
                 v = repr(v)
             # Convert posix subshell `$()` to fish `()`
             if shell == "fish":
-                v = re.sub(r"\$\(", "(", str(v))
+                v = RE_CMD.sub("(", str(v))
+                v = RE_AND.sub("; and ", str(v))
 
             if var.get("eval", False):
                 LOG.debug("Eval called on %s", v)

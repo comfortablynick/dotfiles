@@ -104,7 +104,7 @@ def get_shell_vars(  # {{{1
     var_defs = {
         "fish": {
             "abbr": {"format": "abbr {0} {1} {2}", "default_args": "-U"},
-            "alias": {"format": "alias {0} {1}={2}"},
+            "alias": {"format": "alias {1}={2}; and funcsave {1}", "default_args": "",},
             "env": {"format": "set {0} {1} {2}", "default_args": "-U"},
             "path": {"format": "set {0} {1} {2}", "default_args": "-U --path"},
         },
@@ -139,6 +139,7 @@ def get_shell_vars(  # {{{1
             if var.get("quote", False):
                 v = repr(v)
             # Convert posix subshell `$()` to fish `()`
+            # Convert posix `&&` to fish `; and`
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))

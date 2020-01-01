@@ -328,6 +328,7 @@ local function load_packages()
         "vim-lion",
         "vim-markdown",
         "vim-symlink",
+        "vim-startify",
     }
     if global_vars.LL_nf == 1 then
         table.insert(packages, "vim-devicons")

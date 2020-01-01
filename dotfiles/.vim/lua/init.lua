@@ -206,6 +206,7 @@ local global_vars = {
             "ini",
             "muttrc",
             "cmake",
+            "zig",
         },
         ["nvim-lsp"] = {
             -- "rust",

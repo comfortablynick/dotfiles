@@ -239,6 +239,10 @@ dotfiles:
     src: .config/kak/kakrc
     dst: ~/.config/kak/kakrc
     link: link
+  f_ignore:
+    src: .ignore
+    dst: ~/.ignore
+    link: link
 profiles:
   core:
     dotfiles:
@@ -286,6 +290,7 @@ profiles:
     - d_lua
     - f_lua-format
     - f_kakrc
+    - f_ignore
   io:
     dotfiles:
     - f_bash_linux

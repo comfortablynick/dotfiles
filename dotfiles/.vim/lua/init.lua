@@ -266,6 +266,7 @@ local mappings = {
     ["n<Leader>iv"] = {
         (":vsplit %s<CR>"):format(vim.env.XDG_CONFIG_HOME .. "/nvim/init.vim"),
     },
+    ["n+"] = {":"},
     -- Navigation
     -- Line navigation in insert mode
     ["i<C-k>"] = {"<Up>"},

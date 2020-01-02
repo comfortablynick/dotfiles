@@ -97,14 +97,7 @@ endfunction
 function! pack#update(...) abort
     call s:pack_init()
     call s:pack_add_all()
-    call s:pack_update(a:000)
-    " vim-packager appears to already care for this
-    " if exists('g:packlist_rplugins')
-    "     for item in g:packlist_rplugins
-    "         execute 'packadd! '.item
-    "     endfor
-    "     UpdateRemotePlugins
-    " endif
+    return call('s:pack_update', a:000)
 endfunction
 
 function! pack#clean(...) abort

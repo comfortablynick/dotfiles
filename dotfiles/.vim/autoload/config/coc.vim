@@ -54,17 +54,20 @@ function! config#coc#apply_maps() abort
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
     noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
 
-    " Map <TAB> as key to scroll completion results and jump through
-    " snippets
+    " Use <TAB> to scroll completion results and jump through snippets
     inoremap <silent><expr> <TAB>
-          \ pumvisible() ? "\<C-n>" :
-          \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
-          \ <SID>check_back_space() ? "\<TAB>" :
-          \ coc#refresh()
-    inoremap <silent><expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+        \ pumvisible() ? "\<C-n>" :
+        \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ coc#refresh()
+
+    " Use S-TAB to scroll backward
+    inoremap <silent><expr> <S-TAB>
+        \ pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
     " Use <CR> to select snippet/completion
-    inoremap <silent><expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    inoremap <silent><expr> <CR>
+        \ complete_info()['selected'] != '-1' ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Use `:Fold` to fold current buffer
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
@@ -83,4 +86,10 @@ function! config#coc#init() abort
     call config#coc#cmds()
     call config#coc#apply_maps()
     call config#coc#abbrev()
+endfunction
+
+" Vim-packager can call this hook
+function! config#coc#install(plugin) abort
+  " execute '!cd '.a:plugin.dir.' && yarn install --frozen-lockfile'
+  term yarn install --frozen-lockfile
 endfunction

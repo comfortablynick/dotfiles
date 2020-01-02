@@ -29,20 +29,18 @@ function! plugins#init() abort
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'
-    Pack 'liuchengxu/vim-clap',
-        \ {'do': ':call clap#helper#build_maple()'}
+    Pack 'liuchengxu/vim-clap',         {'do': ':call clap#helper#build_maple()'}
     Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'scrooloose/nerdtree'
-    Pack 'Shougo/defx.nvim',
-        \ {'if': 'has("nvim")', 'rplugin': '1'}
+    Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
 
     " Vim Development
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
-    Pack 'bfredl/nvim-luadev', {'if': 'has("nvim")'}
+    Pack 'bfredl/nvim-luadev',          {'if': 'has("nvim")'}
 
     " Editor appearance
     Pack 'itchyny/lightline.vim'
@@ -53,8 +51,7 @@ function! plugins#init() abort
 
     " Syntax/filetype
     " Some must be loaded at start
-    Pack 'numirias/semshi',
-        \ {'if': 'has("nvim")', 'rplugin': '1'}
+    Pack 'numirias/semshi',             {'if': 'has("nvim")'}
     Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish'
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
@@ -74,11 +71,11 @@ function! plugins#init() abort
     Pack 'honza/vim-snippets'
 
     " Completion
-    Pack 'neovim/nvim-lsp', { 'if': 'has("nvim")' }
+    Pack 'neovim/nvim-lsp',             {'if': 'has("nvim")'}
     Pack 'neoclide/coc.nvim',
         \ {
         \   'if': 'has("nvim")',
-        \   'do': 'yarn install --frozen-lockfile',
+        \   'do': {-> 'yarn install --frozen-lockfile'},
         \ }
 
     " Tmux

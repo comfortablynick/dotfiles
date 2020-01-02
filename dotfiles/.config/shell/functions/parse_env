@@ -77,13 +77,16 @@ def get_toml(file_path: str) -> dict:  # {{{1
 
 
 def write_shell_file(shell_vars: list, file: str) -> None:  # {{{1
-    """Write settings file to disk, formatted for shell."""
-    LOG.debug("Writing output to: %s", file)
-    with open(file, "w", encoding="utf-8") as f:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        f.write("# File generated from env.toml: {}\n".format(timestamp))
-        for line in shell_vars:
-            f.write("{}\n".format(line))
+    """Write settings file to disk, formatted for shell.
+
+    Writes to stdout if no valid file is specified.
+    """
+    try:
+        f = open(file, "w", encoding="utf-8")
+    except TypeError:
+        f = sys.stdout
+    print(*shell_vars, sep="\n", file=f)
+    f.close()
 
 
 def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
@@ -103,22 +106,25 @@ def get_shell_vars(  # {{{1
     """
     var_defs = {
         "fish": {
-            "abbr": {"format": "abbr {0} {1} {2}", "default_args": "-U"},
-            "alias": {"format": "alias {1}={2}; and funcsave {1}", "default_args": "",},
-            "env": {"format": "set {0} {1} {2}", "default_args": "-U"},
-            "path": {"format": "set {0} {1} {2}", "default_args": "-U --path"},
+            "abbr": {"format": "abbr {0} {1} {2} {3}", "default_args": "-U"},
+            "alias": {
+                "format": "function {1} {0}; {2}; end; and funcsave {1} {3}",
+                "default_args": "",
+            },
+            "env": {"format": "set {0} {1} {2} {3}", "default_args": "-U"},
+            "path": {"format": "set {0} {1} {2} {3}", "default_args": "-U --path"},
         },
         "bash": {
-            "abbr": {"format": "alias {1}={2}", "default_args": ""},
-            "alias": {"format": "alias {1}={2}", "default_args": ""},
-            "env": {"format": "export {1}={2}", "default_args": ""},
-            "path": {"format": "export PATH={2}:$PATH", "default_args": ""},
+            "abbr": {"format": "alias {1}={2} {3}", "default_args": ""},
+            "alias": {"format": "alias {1}={2} {3}", "default_args": ""},
+            "env": {"format": "export {1}={2} {3}", "default_args": ""},
+            "path": {"format": "export PATH={2}:$PATH {3}", "default_args": ""},
         },
         "zsh": {
-            "abbr": {"format": "alias {1}={2}", "default_args": ""},
-            "alias": {"format": "alias {1}={2}", "default_args": ""},
-            "env": {"format": "export {1}={2}", "default_args": ""},
-            "path": {"format": "export PATH={2}:$PATH", "default_args": ""},
+            "abbr": {"format": "alias {1}={2} {3}", "default_args": ""},
+            "alias": {"format": "alias {1}={2} {3}", "default_args": ""},
+            "env": {"format": "export {1}={2} {3}", "default_args": ""},
+            "path": {"format": "export PATH={2}:$PATH {3}", "default_args": ""},
         },
     }
     all_vars = []
@@ -129,14 +135,14 @@ def get_shell_vars(  # {{{1
         ):
             var_def = var_defs[shell][var["var_type"]]
             k = var["key"]
-            a = var.get("args", var_def.get("default_args", ""))
+            a = var.get("args", var_def.get("default_args"))
 
             if isinstance(var["val"], list):
                 # Probably path array
                 v = " ".join(map(str, var["val"]))
             else:
                 v = var["val"]
-            if var.get("quote", False):
+            if var.get("quote"):
                 v = repr(v)
             # Convert posix subshell `$()` to fish `()`
             # Convert posix `&&` to fish `; and`
@@ -144,12 +150,12 @@ def get_shell_vars(  # {{{1
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
 
-            if var.get("eval", False):
+            if var.get("eval"):
                 LOG.debug("Eval called on %s", v)
                 v = eval(v)
                 LOG.debug("Eval result: %s", v)
 
-            if var.get("shell_eval", False):
+            if var.get("shell_eval"):
                 LOG.debug("Shell eval called on %s", v)
                 v = (
                     run(v, shell=True, capture_output=True)
@@ -168,16 +174,19 @@ def get_shell_vars(  # {{{1
                     LOG.info("'%s' is not a valid directory", v)
                     continue
 
+            desc = var.get("desc")
+            c = f"# {desc}" if print_comments and desc else ""
             # Remove extra whitespace
-            str_out = " ".join(var_def["format"].format(a, k, v).split())
-            if print_comments:
-                try:
-                    c = " # {}".format(var["desc"])
-                except AttributeError:
-                    c = ""
-            else:
-                c = ""
-            all_vars.append("{0}{1}".format(str_out, c))
+            str_out = " ".join(var_def["format"].format(a, k, v, c).split())
+            # if print_comments:
+            #     try:
+            #         c = " # {}".format(var["desc"])
+            #     except AttributeError:
+            #         c = ""
+            # else:
+            #     c = ""
+            # all_vars.append("{0}{1}".format(str_out, c))
+            all_vars.append(str_out)
     return all_vars
 
 
@@ -202,7 +211,17 @@ def process_args(args: list):  # {{{1
     )
     parser.add_argument("file", action="store", nargs="?", help="TOML file to parse")
     parser.add_argument("-d", "--debug", action="count", help="print debug info")
+    parser.add_argument(
+        "-c",
+        "--print-comments",
+        action="store_true",
+        help="print description as comment for each item",
+    )
+    parser.add_argument(
+        "-p", "--print-output", action="store_true", help="print output to stdout"
+    )
     shells = parser.add_mutually_exclusive_group()
+    # TODO: use proper argument for this, e.g. --shell=zsh
     shells.add_argument(
         "-f", "--fish", action="store_true", help="parse for Fish (default)"
     )
@@ -222,7 +241,6 @@ def main():  # {{{1
         args = process_args(cli_args)
 
     # Set up logger
-    # logging.getLogger(__name__)
     if args.debug == 0:
         LOG.setLevel(logging.WARNING)
     if args.debug == 1:
@@ -252,12 +270,17 @@ def main():  # {{{1
 
     for shell in shells:
         output_file = default_shell_file(shell)
-        shell_vars = get_shell_vars(toml, shell)
-        write_shell_file(shell_vars=shell_vars, file=output_file)
+        shell_vars = get_shell_vars(toml, shell, args.print_comments)
 
-        # Debug output
-        for v in shell_vars:
-            LOG.debug(v)
+        # Prepend shebang/timestamp
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        shell_vars.insert(0, f"#!/usr/bin/env {shell}")
+        shell_vars.insert(1, f"# File generated from env.toml: {timestamp}")
+
+        # write to file and/or stdout
+        write_shell_file(shell_vars=shell_vars, file=output_file)
+        if args.print_output:
+            write_shell_file(shell_vars=shell_vars, file=None)
 
 
 if __name__ == "__main__":

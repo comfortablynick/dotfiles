@@ -430,11 +430,12 @@ function! LL_GitHunkSummary() abort "{{{2
     " 2. gitgutter
     " 3. signify
     if exists('b:coc_git_status') | return trim(b:coc_git_status) | endif
-    let githunks = []
     if exists('*GitGutterGetHunkSummary')
         let githunks = GitGutterGetHunkSummary()
     elseif exists('*sy#repo#get_stats')
         let githunks = sy#repo#get_stats()
+    else
+        return ''
     endif
     let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
     let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''

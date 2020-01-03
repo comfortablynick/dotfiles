@@ -94,7 +94,7 @@ local editor = {
     -- Show matching pair of brackets (), [], {}
     showmatch = true,
     -- Update more often (helps tools which use sign column)
-    updatetime = 100,
+    updatetime = 300,
     -- Lines before/after cursor during scroll
     scrolloff = 10,
     -- Don't move to start of line with j/k
@@ -321,7 +321,6 @@ local function load_packages()
         "fzf.vim",
         "ale",
         "vim-sneak",
-        "vim-fugitive",
         "vim-surround",
         "vim-localvimrc",
         "vim-clap",

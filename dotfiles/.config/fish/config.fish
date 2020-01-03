@@ -190,8 +190,6 @@ end
 
 # bigfish {{{2
 if test "$FISH_THEME" = 'bigfish'
-    # test $NERD_FONTS -eq 0
-    # and set -gx glyph_git_on_branch '🜉'
     set -gx glyph_bg_jobs '⚒'
 end
 
@@ -211,10 +209,7 @@ end
 
 # PRE SHELL LOAD {{{1
 # Vim/Mosh {{{2
-# Set vim compat if SSH (until there's a better way)
-set -gx VIM_SSH_COMPAT 0
-set -gx NERD_FONTS 1
-
+# Set vim compat if Mosh
 if test "$MOSH_CONNECTION" -eq 1
     set VIM_SSH_COMPAT 1
     set NERD_FONTS 0

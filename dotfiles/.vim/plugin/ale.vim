@@ -42,6 +42,7 @@ let g:ale_linters = {
     \ 'rust': [],
     \ 'sh': ['shellcheck'],
     \ 'typescript': [],
+    \ 'toml': ['validtoml'],
     \ 'yaml.ansible': ['ansible-lint'],
     \ }
 

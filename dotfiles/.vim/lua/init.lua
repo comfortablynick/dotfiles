@@ -93,8 +93,8 @@ local editor = {
     ruler = false,
     -- Show matching pair of brackets (), [], {}
     showmatch = true,
-    -- Update more often (helps GitGutter)
-    updatetime = 300,
+    -- Update more often (helps tools which use sign column)
+    updatetime = 100,
     -- Lines before/after cursor during scroll
     scrolloff = 10,
     -- Don't move to start of line with j/k
@@ -172,8 +172,10 @@ local global_vars = {
     -- Use nerd fonts with lightline
     LL_nf = (vim.env.NERD_FONTS == "1" and vim.env.VIM_SSH_COMPAT ~= "1") and 1 or
         0,
+    -- Default packages path
+    package_path = vim.env.XDG_DATA_HOME .. "/nvim/site/pack",
     -- Path to find minpac plugin manager
-    minpac_path = nvim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
+    minpac_path = vim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
     -- vim-lion extra spaces
     lion_squeeze_spaces = 1,
     -- vim-sneak

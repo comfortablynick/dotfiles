@@ -213,6 +213,7 @@ end
 # Vim/Mosh {{{2
 # Set vim compat if SSH (until there's a better way)
 set -gx VIM_SSH_COMPAT 0
+set -gx NERD_FONTS 1
 
 if test "$MOSH_CONNECTION" -eq 1
     set VIM_SSH_COMPAT 1

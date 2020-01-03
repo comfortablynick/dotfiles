@@ -99,7 +99,7 @@ let g:LL_pl = get(g:, 'LL_pl', 0)
 let g:LL_nf = get(g:, 'LL_nf', 0)
 let g:LL_LineNoSymbol = ''                                     " Use  for line; alt: '␤'
 let g:LL_GitSymbol = g:LL_nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
-let g:LL_BranchSymbol = ' '                                    " Git branch symbol
+let g:LL_BranchSymbol = ''                                    " Git branch symbol
 let g:LL_LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
 let g:LL_ROSymbol = g:LL_pl ? ' ' : '--RO-- '                  " Read-only symbol
 let g:LL_ModSymbol = ' [+]'                                     " File modified symbol
@@ -425,12 +425,17 @@ function! LL_TabName() abort "{{{2
 endfunction
 
 function! LL_GitHunkSummary() abort "{{{2
-    if exists('b:coc_git_status')
-        return trim(b:coc_git_status)
-    elseif !exists('*GitGutterGetHunkSummary')
-        return ''
+    " Look for status in this order
+    " 1. coc-git
+    " 2. gitgutter
+    " 3. signify
+    if exists('b:coc_git_status') | return trim(b:coc_git_status) | endif
+    let githunks = []
+    if exists('*GitGutterGetHunkSummary')
+        let githunks = GitGutterGetHunkSummary()
+    elseif exists('*sy#repo#get_stats')
+        let githunks = sy#repo#get_stats()
     endif
-    let githunks =  GitGutterGetHunkSummary()
     let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
     let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
     let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''

@@ -19,10 +19,8 @@ let g:coc_global_extensions = [
     \ 'coc-python',
     \ 'coc-tsserver',
     \ 'coc-tabnine',
-    \ 'coc-git',
     \ 'coc-vimlsp',
     \ 'coc-yank',
-    \ 'coc-highlight',
     \ 'coc-yaml',
     \ 'coc-pairs',
     \ ]

@@ -16,9 +16,9 @@ function! config#coc#cmds() abort
             autocmd CursorHold * silent
                 \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
         endif
-        if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
-            autocmd CursorHold * silent call CocActionAsync('highlight')
-        endif
+        " if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
+        "     autocmd CursorHold * silent call CocActionAsync('highlight')
+        " endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
     augroup END
 endfunction
@@ -43,10 +43,14 @@ function! config#coc#apply_maps() abort
     nmap <silent> <Leader>l :CocList<CR>
 
     " coc-git
-    nmap [g <Plug>(coc-git-prevchunk)
-    nmap ]g <Plug>(coc-git-nextchunk)
-    nmap gs <Plug>(coc-git-chunkinfo)
-    nmap gco <Plug>(coc-git-commit)
+    " if exists('g:coc_global_extensions')
+    "     \ && index('g:coc_global_extensions', 'coc-git') > -1
+    "     " Map only if extension is enabled
+    "     nmap [g <Plug>(coc-git-prevchunk)
+    "     nmap ]g <Plug>(coc-git-nextchunk)
+    "     nmap gs <Plug>(coc-git-chunkinfo)
+    "     nmap gco <Plug>(coc-git-commit)
+    " endif
 
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)

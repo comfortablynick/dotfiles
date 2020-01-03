@@ -64,6 +64,7 @@ function! plugins#init() abort
 
     " Git
     Pack 'airblade/vim-gitgutter'
+    Pack 'mhinz/vim-signify'
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
 

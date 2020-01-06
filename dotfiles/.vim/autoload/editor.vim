@@ -48,7 +48,7 @@ function! editor#recall_cursor_position() abort
     let winend = line('w$')
     let winstart = line('w0')
 
-    if lastpos > 0 && lastpos <= line('$')
+    if lastpos > 0 && lastpos <= buffend
         " Last edit pos is set and is < no of lines in buffer
         if winend == buffend
             " Last line in buffer is also last line visible

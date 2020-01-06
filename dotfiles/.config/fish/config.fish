@@ -210,6 +210,7 @@ end
 # PRE SHELL LOAD {{{1
 # Vim/Mosh {{{2
 # Set vim compat if Mosh
+set VIM_SSH_COMPAT 0
 if test "$MOSH_CONNECTION" -eq 1
     set VIM_SSH_COMPAT 1
     set NERD_FONTS 0

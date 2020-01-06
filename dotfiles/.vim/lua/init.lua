@@ -1,4 +1,6 @@
-local nvim = require("nvim")
+local helpers = require "nvim"
+local create_augroups = helpers.create_augroups
+local apply_mappings = helpers.apply_mappings
 local vim = vim
 assert(vim)
 
@@ -62,7 +64,7 @@ local general = {
     splitbelow = true,
     -- Program used for grep
     grepprg = vim.fn.executable("rg") and
-        [[rg --vimgrep --hidden --no-ignore-vcs]] or nvim.o.grepprg,
+        [[rg --vimgrep --hidden --no-ignore-vcs]] or vim.o.grepprg,
     grepformat = "%f:%l:%c:%m,%f:%l:%m",
 }
 
@@ -159,6 +161,11 @@ local window = {
 
 -- Global variables {{{1
 local global_vars = {
+    -- Disable default plugins
+    loaded_gzip = 1,
+    loaded_tarPlugin = 1,
+    loaded_2html_plugin = 1,
+    loaded_zipPlugin = 1,
     -- Leader key
     mapleader = ",",
     -- Python 2 dir
@@ -371,8 +378,8 @@ local function set_options()
         vim.g[name] = value
     end
 
-    nvim.create_augroups(autocmds)
-    nvim.apply_mappings(mappings, map_default_options)
+    create_augroups(autocmds)
+    apply_mappings(mappings, map_default_options)
     load_packages()
 end
 

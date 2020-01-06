@@ -4,11 +4,10 @@
 " | | | | | | |_ \ V /| | | | | | |
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
-
 let g:use_init_lua = 1
 
 if get(g:, 'use_init_lua') == 1
-    lua require('init').Set_Options()
+    lua require 'init'
 else
     " Use vim files instead
     let config_list = ['config.vim', 'functions.vim', 'map.vim', 'theme.vim']

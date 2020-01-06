@@ -1,8 +1,5 @@
-local helpers = require "helpers"
-local create_augroups = helpers.create_augroups
-local apply_mappings = helpers.apply_mappings
 local vim = vim
-assert(vim)
+local helpers = require "helpers"
 
 -- Commands {{{1
 local commands = {filetype = "indent plugin on", colorscheme = "default"}
@@ -20,7 +17,7 @@ local general = {
     -- shell = vim.o.shell:match("fish") and "bash" or vim.o.shell,
     shell = "sh",
     -- Don't unload hidden buffers
-    hidden = false,
+    hidden = true,
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
@@ -355,7 +352,7 @@ local function load_packages()
     end
 end
 
--- set_options() :: Loop through options and set them in vim {{{1
+-- set_options() :: loop through options and set
 local function set_options()
     local global_settings = vim.tbl_extend("error", general, editor)
     for name, value in pairs(global_settings) do
@@ -369,20 +366,29 @@ local function set_options()
     for name, value in pairs(window) do
         vim.wo[name] = value
     end
+end
 
-    for name, value in pairs(commands) do
-        vim.cmd(name .. " " .. value)
-    end
-
+-- set_globals() :: loop through global vars and set
+local function set_globals()
     for name, value in pairs(global_vars) do
         vim.g[name] = value
     end
-
-    create_augroups(autocmds)
-    apply_mappings(mappings, map_default_options)
-    load_packages()
 end
 
-return {Set_Options = set_options}
+-- create_cmds() :: loop through commands and set
+local function create_cmds()
+    for name, value in pairs(commands) do
+        vim.cmd(name .. " " .. value)
+    end
+end
+
+-- Execute settings
+set_options()
+set_globals()
+create_cmds()
+helpers.create_augroups(autocmds)
+helpers.apply_mappings(mappings, map_default_options)
+load_packages()
+require "lightline"
 
 -- vim:fdl=1:

@@ -16,6 +16,7 @@ function pkg.scandir(directory)
     local pfile = assert(
                       io.popen(
 
+
                               ("find %s -type d -exec test -e '{}/.git' ';' -print0 -prune"):format(
                                   directory
                               ), "r"

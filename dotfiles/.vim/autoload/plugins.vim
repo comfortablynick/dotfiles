@@ -18,6 +18,7 @@ function! plugins#init() abort
     Pack 'airblade/vim-rooter'
     Pack 'embear/vim-localvimrc'
     Pack 'tpope/vim-projectionist'
+    Pack 'tpope/vim-repeat'
 
     " Editing behavior
     Pack 'tpope/vim-commentary'
@@ -64,7 +65,6 @@ function! plugins#init() abort
 
     " Git
     Pack 'airblade/vim-gitgutter'
-    Pack 'mhinz/vim-signify'
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
 

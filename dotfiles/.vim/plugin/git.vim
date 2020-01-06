@@ -9,25 +9,18 @@ if exists('g:loaded_plugin_git_9vbutkh3') | finish | endif
 let g:loaded_plugin_git_9vbutkh3 = 1
 
 " Gitgutter
+command -count=1 GitNextHunk call git#next_hunk(<count>)
+command -count=1 GitPrevHunk call git#prev_hunk(<count>)
 
 let g:gitgutter_map_keys = 0
 
 silent! packadd vim-gitgutter
 
-nmap ]g <Plug>(GitGutterNextHunk)
-nmap [g <Plug>(GitGutterPrevHunk)
+nmap <silent> ]g :GitNextHunk<CR>
+nmap <silent> [g :GitPrevHunk<CR>
 nmap ghs <Plug>(GitGutterStageHunk)
 nmap ghu <Plug>(GitGutterUndoHunk)
 nmap gs <Plug>(GitGutterPreviewHunk)
-
-" Signify
-
-" nmap ]g <Plug>(signify-next-hunk)
-" nmap [g <Plug>(signify-prev-hunk)
-" nmap <silent> ghu :SignifyHunkUndo<CR>
-" nmap <silent> gs  :SignifyHunkDiff<CR>
-
-" silent! packadd vim-signify
 
 " Fugitive
 

@@ -18,7 +18,7 @@ local general = {
     -- shell = vim.o.shell:match("fish") and "bash" or vim.o.shell,
     shell = "sh",
     -- Don't unload hidden buffers
-    hidden = true,
+    hidden = false,
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
@@ -87,8 +87,6 @@ local editor = {
     dictionary = vim.o.dictionary .. "/usr/share/dict/words-insane",
     -- Use system clipboard
     clipboard = "unnamed",
-    -- Show line under cursor's line (check autocmds)
-    cursorline = false,
     -- Line position (not needed if using a statusline plugin
     ruler = false,
     -- Show matching pair of brackets (), [], {}
@@ -99,10 +97,11 @@ local editor = {
     scrolloff = 10,
     -- Don't move to start of line with j/k
     startofline = false,
-    -- How long in ms to wait for key combinations (if used)
+    -- How long in ms to wait for key combinations
     ttimeoutlen = 10,
-    -- How long in ms to wait for key combinations (if used)
-    timeoutlen = 200,
+    -- How long in ms to wait for map combinations
+    -- (Allow more time on MOSH connections)
+    timeoutlen = vim.env.VIM_SSH_COMPAT ~= "1" and 200 or 400,
     -- Use mouse in all modes (allows mouse scrolling in tmux)
     mouse = "a",
 }
@@ -134,6 +133,8 @@ local buffer = {
 
 -- Window-local options {{{1
 local window = {
+    -- Show line under cursor's line (check autocmds)
+    cursorline = true,
     -- Always show sign column
     signcolumn = "yes",
     -- Enable folds by default
@@ -310,6 +311,12 @@ local mappings = {
     -- b + {h,l,n} to navigate buffers
     ["nbh"] = {":bprevious<CR>"},
     ["nbl"] = {":bnext<CR>"},
+    -- Navigate wrapped lines normally with k/j
+    ["nk"] = {"v:count == 0 ? 'gk' : 'k'", expr = true},
+    ["nj"] = {"v:count == 0 ? 'gj' : 'j'", expr = true},
+    -- Pop-up menu
+    ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : <Tab>]], expr = true},
+    ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : <S-Tab>]], expr = true},
 }
 
 -- load_packages() :: Add packages to runtimepath for loading
@@ -322,6 +329,7 @@ local function load_packages()
         "ale",
         "vim-sneak",
         "vim-surround",
+        "vim-repeat",
         "vim-localvimrc",
         "vim-clap",
         "vim-snippets",

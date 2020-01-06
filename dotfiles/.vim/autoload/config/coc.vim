@@ -41,23 +41,13 @@ function! config#coc#apply_maps() abort
     nmap <silent> gy <Plug>(coc-references)
     nmap <silent> ge :CocCommand explorer --toggle<CR>
     nmap <silent> <Leader>l :CocList<CR>
-
-    " coc-git
-    " if exists('g:coc_global_extensions')
-    "     \ && index('g:coc_global_extensions', 'coc-git') > -1
-    "     " Map only if extension is enabled
-    "     nmap [g <Plug>(coc-git-prevchunk)
-    "     nmap ]g <Plug>(coc-git-nextchunk)
-    "     nmap gs <Plug>(coc-git-chunkinfo)
-    "     nmap gco <Plug>(coc-git-commit)
-    " endif
-
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
     noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
 
+    let g:tab_orig = maparg('<Tab>', 'n', 1)
     " Use <TAB> to scroll completion results and jump through snippets
     inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :
@@ -83,7 +73,7 @@ function! config#coc#abbrev() abort
 endfunction
 
 function! config#coc#init() abort
-    let g:use_explorer = 'coc-explorer'
+    " let g:use_explorer = 'coc-explorer'
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'

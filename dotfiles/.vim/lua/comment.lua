@@ -1,4 +1,4 @@
-local nvim = require("nvim")
+local nvim = require "helpers"
 
 function text_object_comment(is_visual_mode) -- luacheck: ignore
     local visual_mode = nvim.VISUAL_MODE.line

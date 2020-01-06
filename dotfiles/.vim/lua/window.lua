@@ -1,5 +1,5 @@
 local vim = vim
-assert(vim)
+local a = vim.api
 
 -- Calculate actual usable width of window
 local function get_usable_width(winnr)
@@ -10,9 +10,11 @@ local function get_usable_width(winnr)
         end
         return result
     end
-    local width = vim.api.nvim_win_get_width(winnr or 0)
-    local numberwidth = math.max(vim.wo.numberwidth,
-                                 string.len(vim.api.nvim_buf_line_count(0)) + 1)
+    local width = a.nvim_win_get_width(winnr or 0)
+    local numberwidth = math.max(
+                            vim.wo.numberwidth,
+                            string.len(a.nvim_buf_line_count(0)) + 1
+                        )
     local numwidth = (vim.wo.number or vim.wo.relativenumber) and numberwidth or
                          0
     local foldwidth = vim.wo.foldcolumn
@@ -21,28 +23,25 @@ local function get_usable_width(winnr)
     if vim.wo.signcolumn == "yes" then
         signwidth = 2
     elseif vim.wo.signcolumn == "auto" then
-        signs = split(vim.fn.execute(("sign place buffer=%d"):format(
-                                         vim.fn.bufnr(""))), "\n")
+        signs = split(
+                    vim.fn.execute(
+                        ("sign place buffer=%d"):format(vim.fn.bufnr(""))
+                    ), "\n"
+                )
         signwidth = #signs > 3 and 2 or 0
     end
-    -- return {
-    --     width = width,
-    --     numwidth = numwidth,
-    --     foldwidth = foldwidth,
-    --     signwidth = signwidth,
-    --     signs = signs or {},
-    -- }
     return width - numwidth - foldwidth - signwidth
 end
--- From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
+
+-- Adapted From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
 local function centered_floating_win()
     -- get the editor's max width and height
     local width = get_usable_width(nil)
-    local height = vim.api.nvim_win_get_height(0)
+    local height = a.nvim_win_get_height(0)
 
     -- create a new, scratch buffer, for fzf
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+    local buf = a.nvim_create_buf(false, true)
+    a.nvim_buf_set_option(buf, "buftype", "nofile")
 
     -- if the editor is big enough
     if (width > 150 or height > 35) then
@@ -58,7 +57,7 @@ local function centered_floating_win()
             col = math.ceil((width - win_width) / 2),
         }
         -- create a new floating window, centered in the editor
-        vim.api.nvim_open_win(buf, true, opts)
+        a.nvim_open_win(buf, true, opts)
     end
 end
 

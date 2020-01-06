@@ -1,6 +1,5 @@
-local nvim = require("nvim")
+local nvim = require "helpers"
 local vim = vim
-assert(vim)
 
 local M = {}
 local MINIMAP = "vim-minimap"

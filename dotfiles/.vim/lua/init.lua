@@ -1,4 +1,4 @@
-local helpers = require "nvim"
+local helpers = require "helpers"
 local create_augroups = helpers.create_augroups
 local apply_mappings = helpers.apply_mappings
 local vim = vim

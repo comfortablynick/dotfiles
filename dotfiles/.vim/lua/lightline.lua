@@ -21,7 +21,7 @@ local vars = {
     LL_LinterOK = "",
 }
 
-local function lightline_config()
+local function lightline_config() -- luacheck: ignore
     vim.g.lightline_test = {
         tabline = {left = {{"buffers"}}, right = {{"filesize"}}},
         active = {
@@ -92,6 +92,31 @@ end
 
 -- lightline_config()
 
+function LL.is_not_file(filetype)
+    local exclude = {
+        "nerdtree",
+        "netrw",
+        "defx",
+        "output",
+        "vista",
+        "undotree",
+        "vimfiler",
+        "tagbar",
+        "minpac",
+        "packager",
+        "vista",
+        "qf",
+        "coc-explorer",
+        "output:///info",
+    }
+    for _, v in ipairs(exclude) do
+        if v == filetype or v == vim.fn.expand("%:t") or v == vim.fn.expand("%") then
+            return true
+        end
+    end
+    return false
+end
+
 function LL.line_info()
     local line_ct = a.nvim_buf_line_count(0)
     local pos = a.nvim_win_get_cursor(0)
@@ -107,4 +132,49 @@ function LL.line_info()
                "%3d%% %s %s %s :%3d", row * 100 / line_ct, vars.LL_LineSymbol,
                row_pos(), vars.LL_LineNoSymbol, col
            )
+end
+
+function LL.mode_map()
+    local mode_map = {
+        n = {"NORMAL", "NRM", "N"},
+        i = {"INSERT", "INS", "I"},
+        R = {"REPLACE", "REP", "R"},
+        v = {"VISUAL", "VIS", "V"},
+        V = {"V-LINE", "V-LN", "V-L"},
+        ["<C-V>"] = {"V-BLOCK", "V-BL", "V-B"},
+        c = {"COMMAND", "CMD", "C"},
+        s = {"SELECT", "SEL", "S"},
+        S = {"S-LINE", "S-LN", "S-L"},
+        ["<C-s>"] = {"S-BLOCK", "S-BL", "S-B"},
+        t = {"TERMINAL", "TERM", "T"},
+    }
+    local special_modes = {
+        nerdtree = "NERD",
+        netrw = "NETRW",
+        defx = "DEFX",
+        tagbar = "TAGS",
+        undotree = "UNDO",
+        vista = "VISTA",
+        qf = "",
+        ["coc-explorer"] = "EXPLORER",
+        ["output=///info"] = "COC-INFO",
+        packager = "PACK",
+    }
+    -- let l:mode = get(l:mode_map, mode(), mode())
+    local mode_key = a.nvim_get_mode().mode
+    local mode = mode_map[mode_key]
+    local winwidth = a.nvim_win_get_width(0)
+    local mode_out = function()
+        if winwidth > vars.LL_MedWidth then
+            return mode[1]
+        end
+        if winwidth > vars.LL_MinWidth then
+            return mode[2]
+        end
+        return mode[3]
+    end
+    -- return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
+    return
+        special_modes[vim.bo.filetype] or special_modes[vim.fn.expand("%")] or
+            mode_out()
 end

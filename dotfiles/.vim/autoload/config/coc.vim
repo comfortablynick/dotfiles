@@ -3,7 +3,7 @@
 " Description: Coc configuration
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:39:11 CST
+" Last Change: 2020-01-08 17:17:48 CST
 " ====================================================
 
 " Show_Documentation() :: use K for vim docs or language servers

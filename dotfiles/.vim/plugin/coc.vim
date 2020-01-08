@@ -3,7 +3,7 @@
 " Description: Coc (au)commands and some settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:44:00 CST
+" Last Change: 2020-01-08 17:18:58 CST
 " ====================================================
 if exists('g:loaded_plugin_config_coc_s5zywzm2')
     \ || exists('g:no_load_packages')

@@ -340,6 +340,7 @@ local function load_packages() -- {{{2
         "lightline-bufferline",
         "fzf.vim",
         "ale",
+        "neoformat",
         "vim-sneak",
         "vim-surround",
         "vim-repeat",

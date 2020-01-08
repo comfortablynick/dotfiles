@@ -81,5 +81,6 @@ function! plugins#init() abort
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'
-    Pack 'christoomey/vim-tmux-runner'
+    Pack '~/git/vim-tmux-runner',       {'local': 1}
+    " Pack 'christoomey/vim-tmux-runner'
 endfunction

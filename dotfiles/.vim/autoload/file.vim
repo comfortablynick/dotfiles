@@ -3,7 +3,7 @@
 " Description: File/folder operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-01-07
 " ====================================================
 
 " Get the root path based on git or parent folder
@@ -99,4 +99,33 @@ endfunction
 function! file#set_executable() abort
     call file#set_executable_bit()
     call file#set_shebang()
+endfunction
+
+" Update timestamp within the 20 first lines; matches:
+" Last [Cc]hange(d)
+" Changed
+" Last [Mm]odified
+" Modified
+" Last [Uu]pdate(d)
+function! file#update_timestamp() abort
+    let pat = '\(\(Last\)\?\s*\([Cc]hanged\?\|[Mm]odified\|[Uu]pdated\?\)\s*:\s*\).*'
+    let rep = '\1' . strftime(get(g:, 'timestamp_format', '%F %H:%M:%S %Z'))
+    call s:subst(1, 20, pat, rep)
+endfunction
+
+" subst( start, end, pat, rep): substitute on range start - end.
+" Taken from timestamp.vim
+function! s:subst(start, end, pat, rep) abort
+    let lineno = a:start
+    while lineno <= a:end
+	let curline = getline(lineno)
+	if match(curline, a:pat) != -1
+	    let newline = substitute(curline, a:pat, a:rep, '')
+	    if( newline != curline )
+		" Only substitute if we made a change
+		keepjumps call setline(lineno, newline)
+	    endif
+	endif
+	let lineno = lineno + 1
+    endwhile
 endfunction

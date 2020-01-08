@@ -1,24 +1,45 @@
 a = vim.api
-LL = {}
+ll = {}
+
+vim.g.LL_pl = vim.g.LL_pl or 0
+vim.g.LL_nf = vim.g.LL_nf or 0
 
 local vars = {
-    LL_MinWidth = 90,
-    LL_MedWidth = 140,
-    LL_MaxWidth = 200,
-    LL_pl = vim.g.LL_pl or 0,
-    LL_nf = vim.g.LL_nf or 0,
-    LL_LineNoSymbol = "",
-    LL_GitSymbol = vim.g.LL_nf ~= "1" and "" or " ",
-    LL_BranchSymbol = "",
-    LL_LineSymbol = "☰",
-    LL_ROSymbol = vim.g.LL_pl ~= "1" and "--RO-- " or " ",
-    LL_ModSymbol = " [+]",
-    LL_SimpleSep = vim.env.SUB ~= "|" and 0 or 1,
-    LL_FnSymbol = "ƒ ",
-    LL_LinterChecking = vim.g.LL_nf ~= "1" and "..." or "\u{f110}",
-    LL_LinterWarnings = vim.g.LL_nf ~= "1" and "•" or "\u{f071}",
-    LL_LinterErrors = vim.g.LL_nf ~= "1" and "•" or "\u{f05e}",
-    LL_LinterOK = "",
+    min_width = 90,
+    med_width = 140,
+    max_width = 200,
+    use_simple_sep = vim.env.SUB ~= "|" and 0 or 1,
+    use_pl_fonts = vim.g.LL_pl,
+    use_nerd_fonts = vim.g.LL_nf,
+    glyphs = {
+        line_no = "",
+        vcs = vim.g.LL_nf ~= "1" and "" or " ",
+        branch = "",
+        line = "☰",
+        read_only = vim.g.LL_pl ~= "1" and "--RO-- " or " ",
+        modified = " [+]",
+        func = "ƒ ",
+        linter_checking = vim.g.LL_nf ~= "1" and "..." or "\u{f110}",
+        linter_warnings = vim.g.LL_nf ~= "1" and "•" or "\u{f071}",
+        linter_errors = vim.g.LL_nf ~= "1" and "•" or "\u{f05e}",
+        linter_ok = "",
+    },
+}
+
+-- List of plugins/non-files for special handling
+local special_filetypes = {
+    nerdtree = "NERD",
+    netrw = "NETRW",
+    defx = "DEFX",
+    vista = "VISTA",
+    tagbar = "TAGS",
+    undotree = "UNDO",
+    qf = "",
+    ["coc-explorer"] = "EXPLORER",
+    ["output=///info"] = "COC-INFO",
+    vimfiler = "FILER",
+    minpac = "PACK",
+    packager = "PACK",
 }
 
 local function lightline_config() -- luacheck: ignore
@@ -85,14 +106,14 @@ local function lightline_config() -- luacheck: ignore
         separator = {left = "", right = ""},
         subseparator = {left = "|", right = "|"},
     }
-    for name, value in pairs(vars) do
-        vim.g[name] = value
-    end
+    -- for name, value in pairs(vars) do
+    --     vim.g[name] = value
+    -- end
 end
 
 -- lightline_config()
 
-function LL.is_not_file(filetype)
+function ll.is_not_file(filetype)
     local exclude = {
         "nerdtree",
         "netrw",
@@ -104,7 +125,6 @@ function LL.is_not_file(filetype)
         "tagbar",
         "minpac",
         "packager",
-        "vista",
         "qf",
         "coc-explorer",
         "output:///info",
@@ -117,7 +137,7 @@ function LL.is_not_file(filetype)
     return false
 end
 
-function LL.line_info()
+function ll.line_info()
     local line_ct = a.nvim_buf_line_count(0)
     local pos = a.nvim_win_get_cursor(0)
     local row = pos[1]
@@ -129,12 +149,12 @@ function LL.line_info()
                )
     end
     return string.format(
-               "%3d%% %s %s %s :%3d", row * 100 / line_ct, vars.LL_LineSymbol,
-               row_pos(), vars.LL_LineNoSymbol, col
+               "%3d%% %s %s %s :%3d", row * 100 / line_ct, vars.glyphs.line,
+               row_pos(), vars.glyphs.line_no, col
            )
 end
 
-function LL.mode_map()
+function ll.mode()
     local mode_map = {
         n = {"NORMAL", "NRM", "N"},
         i = {"INSERT", "INS", "I"},
@@ -148,33 +168,20 @@ function LL.mode_map()
         ["<C-s>"] = {"S-BLOCK", "S-BL", "S-B"},
         t = {"TERMINAL", "TERM", "T"},
     }
-    local special_modes = {
-        nerdtree = "NERD",
-        netrw = "NETRW",
-        defx = "DEFX",
-        tagbar = "TAGS",
-        undotree = "UNDO",
-        vista = "VISTA",
-        qf = "",
-        ["coc-explorer"] = "EXPLORER",
-        ["output=///info"] = "COC-INFO",
-        packager = "PACK",
-    }
     -- let l:mode = get(l:mode_map, mode(), mode())
     local mode_key = a.nvim_get_mode().mode
     local mode = mode_map[mode_key]
     local winwidth = a.nvim_win_get_width(0)
     local mode_out = function()
-        if winwidth > vars.LL_MedWidth then
+        if winwidth > vars.med_width then
             return mode[1]
         end
-        if winwidth > vars.LL_MinWidth then
+        if winwidth > vars.min_width then
             return mode[2]
         end
         return mode[3]
     end
-    -- return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
-    return
-        special_modes[vim.bo.filetype] or special_modes[vim.fn.expand("%")] or
-            mode_out()
+    -- TODO: is filename ever going to match special_filetypes?
+    -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
+    return special_filetypes[vim.bo.filetype] or mode_out()
 end

@@ -3,7 +3,7 @@
 " Description: File/folder operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-07
+" Last Change: 2020-01-07 22:30:34 CST
 " ====================================================
 
 " Get the root path based on git or parent folder

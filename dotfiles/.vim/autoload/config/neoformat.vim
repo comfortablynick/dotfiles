@@ -3,11 +3,12 @@
 " Description: Lazy load neoformat config upon execution
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-12
+" Last Change: 2020-01-08 07:33:22 CST
 " ====================================================
 
 function! s:neoformat_set_opts() abort
-    let g:loaded_neoformat_config_vim = 1
+    let g:loaded_neoformat_set_opts = 1
+    silent! packadd neoformat
 
     " Global Settings
     let g:neoformat_run_all_formatters = 1   " By default, stops after first formatter succeeds
@@ -48,9 +49,10 @@ endfunction
 
 " Load neoformat on first run and load options before calling
 function! config#neoformat#run() abort
-    if !exists(':Neoformat')
-        packadd neoformat
+    if !exists('g:loaded_neoformat_set_opts')
         call s:neoformat_set_opts()
-    end
-    Neoformat
+    endif
+    if exists(':Neoformat')
+        Neoformat
+    endif
 endfunction

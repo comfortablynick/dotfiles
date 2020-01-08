@@ -4,6 +4,8 @@ ll = {}
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
+local ft = vim.bo.filetype
+
 local vars = {
     min_width = 90,
     med_width = 140,
@@ -113,28 +115,29 @@ end
 
 -- lightline_config()
 
-function ll.is_not_file(filetype)
-    local exclude = {
-        "nerdtree",
-        "netrw",
-        "defx",
-        "output",
-        "vista",
-        "undotree",
-        "vimfiler",
-        "tagbar",
-        "minpac",
-        "packager",
-        "qf",
-        "coc-explorer",
-        "output:///info",
-    }
-    for _, v in ipairs(exclude) do
-        if v == filetype or v == vim.fn.expand("%:t") or v == vim.fn.expand("%") then
-            return true
-        end
-    end
-    return false
+function ll.is_not_file()
+    -- local exclude = {
+    --     "nerdtree",
+    --     "netrw",
+    --     "defx",
+    --     "output",
+    --     "vista",
+    --     "undotree",
+    --     "vimfiler",
+    --     "tagbar",
+    --     "minpac",
+    --     "packager",
+    --     "qf",
+    --     "coc-explorer",
+    --     "output:///info",
+    -- }
+    -- for _, v in ipairs(exclude) do
+    --     if v == filetype or v == vim.fn.expand("%:t") or v == vim.fn.expand("%") then
+    --         return true
+    --     end
+    -- end
+    -- return false
+    return special_filetypes[ft] ~= nil
 end
 
 function ll.line_info()

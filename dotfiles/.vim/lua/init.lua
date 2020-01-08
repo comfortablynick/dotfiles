@@ -158,6 +158,8 @@ local window = {
 
 -- Global variables {{{1
 local global_vars = {
+    -- Disable package loading at start for troubleshooting
+    no_load_packages = 1,
     -- Disable default plugins
     loaded_gzip = 1,
     loaded_tarPlugin = 1,
@@ -198,7 +200,7 @@ local global_vars = {
             "typescript",
             "javascript",
             "json",
-            "lua",
+            -- "lua",
             -- "python",
             "bash",
             "sh",
@@ -325,6 +327,9 @@ local mappings = {
 
 -- load_packages() :: Add packages to runtimepath for loading
 local function load_packages()
+    if global_vars.no_load_packages == 1 then
+        return
+    end
     local packages = {
         "lightline.vim",
         "lightline-bufferline",

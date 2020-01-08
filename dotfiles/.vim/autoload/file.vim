@@ -3,7 +3,7 @@
 " Description: File/folder operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-07 22:30:34 CST
+" Last Change: 2020-01-08 08:06:05 CST
 " ====================================================
 
 " Get the root path based on git or parent folder
@@ -101,6 +101,11 @@ function! file#set_executable() abort
     call file#set_shebang()
 endfunction
 
+" Any files we don't want timestamps for
+let g:timestamp_file_ignore = [
+    \ 'gitcommit',
+    \ ]
+
 " Update timestamp within the 20 first lines; matches:
 " Last [Cc]hange(d)
 " Changed
@@ -108,6 +113,7 @@ endfunction
 " Modified
 " Last [Uu]pdate(d)
 function! file#update_timestamp() abort
+    if index(g:timestamp_file_ignore, &filetype) > -1 | return | endif
     let pat = '\(\(Last\)\?\s*\([Cc]hanged\?\|[Mm]odified\|[Uu]pdated\?\)\s*:\s*\).*'
     let rep = '\1' . strftime(get(g:, 'timestamp_format', '%F %H:%M:%S %Z'))
     call s:subst(1, 20, pat, rep)

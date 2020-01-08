@@ -3,7 +3,7 @@
 " Description: Vista explorer config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 07:58:04 CST
+" Last Change: 2020-01-08 10:09:59 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -31,6 +31,7 @@ endfunction
 
 function! s:vista_set_opts() abort
     let g:vista_set_opts = 1
+    if !exists('*fzf#vim#with_preview') | packadd fzf.vim | endif
     if (exists('*nvim_open_win') || exists('*popup_create')) && winwidth(0) > 200
         let g:vista_echo_cursor_strategy = 'floating_win'
     else

@@ -3,9 +3,12 @@
 " Description: Config for builtin nvim lsp
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-24
+" Last Change: 2020-01-08 12:51:52 CST
 " ====================================================
-if exists('g:loaded_plugin_lsp_5sjdin1r') | finish | endif
+if exists('g:loaded_plugin_lsp_5sjdin1r')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_lsp_5sjdin1r = 1
 
 augroup plugin_lsp_5sjdin1r

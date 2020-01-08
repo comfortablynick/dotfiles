@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-01-08 16:39:27 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -31,7 +31,6 @@ function! plugins#init() abort
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':call clap#helper#build_maple()'}
-    Pack 'junegunn/fzf'
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
@@ -42,6 +41,7 @@ function! plugins#init() abort
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
     Pack 'bfredl/nvim-luadev',          {'if': 'has("nvim")'}
+    Pack 'tweekmonster/startuptime.vim',
 
     " Editor appearance
     Pack 'itchyny/lightline.vim'

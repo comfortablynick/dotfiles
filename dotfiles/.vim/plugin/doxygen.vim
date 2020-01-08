@@ -1,6 +1,13 @@
-" set up abbreviations for doxygen autoload funcs
+" ====================================================
+" Filename:    plugin/doxygen.vim
+" Description: Abbreviatins for doxygen funcs
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2020-01-08 12:46:02 CST
+" ====================================================
 
 if exists('g:loaded_doxygen_abbr_vim')
+    \ || exists('g:no_load_plugins')
     finish
 endif
 let g:loaded_doxygen_abbr_vim = 1

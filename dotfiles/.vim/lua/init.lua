@@ -1,10 +1,8 @@
 local vim = vim
 local helpers = require "helpers"
 
--- Commands {{{1
-local commands = {filetype = "indent plugin on", colorscheme = "default"}
-
--- Global options {{{1
+-- Options {{{1
+-- Global options {{{2
 local general = {
     background = "dark",
     -- Shared data file location
@@ -105,7 +103,7 @@ local editor = {
     mouse = "a",
 }
 
--- Buffer-local options {{{1
+-- Buffer-local options {{{2
 local buffer = {
     -- Default line endings
     fileformat = "unix",
@@ -130,7 +128,7 @@ local buffer = {
     formatoptions = (vim.bo.formatoptions:gsub("o", "")),
 }
 
--- Window-local options {{{1
+-- Window-local options {{{2
 local window = {
     -- Show line under cursor's line (check autocmds)
     cursorline = true,
@@ -156,10 +154,11 @@ local window = {
     winblend = vim.env.VIM_SSH_COMPAT ~= "1" and 10 or 0,
 }
 
--- Global variables {{{1
+-- Variables {{{1
+-- Global variables {{{2
 local global_vars = {
     -- Disable package loading at start for troubleshooting
-    no_load_packages = 1,
+    -- no_load_packages = 1,
     -- Disable default plugins
     loaded_gzip = 1,
     loaded_tarPlugin = 1,
@@ -237,6 +236,7 @@ local global_vars = {
 }
 
 -- Autocommands {{{1
+-- General init {{{2
 local autocmds = {
     init_lua = {
         -- Terminal starts in insert mode
@@ -250,8 +250,11 @@ local autocmds = {
 }
 
 -- Maps {{{1
+-- Map default options {{{2
 local map_default_options = {silent = true, unique = true, noremap = true}
-local mappings = {
+
+-- General editor maps {{{2
+local general_maps = {
     -- toggle folds
     ["n<Space>"] = {"za"},
     ["nza"] = {"zA"},
@@ -265,8 +268,9 @@ local mappings = {
     ["ilkj"] = {"<Esc>`^:w<CR>"},
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
     ["n<CR>"] = {":noh<CR><CR>", silent = false},
-    -- Show syntax group under cursor
-    ["n<Leader>h"] = {":echo syntax#syn_group()<CR>"},
+    -- Pop-up menu
+    ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : <Tab>]], expr = true},
+    ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : <S-Tab>]], expr = true},
     -- Shortcuts to open files
     ["n<Leader>il"] = {
         (":vsplit %s<CR>"):format(
@@ -277,6 +281,10 @@ local mappings = {
         (":vsplit %s<CR>"):format(vim.env.XDG_CONFIG_HOME .. "/nvim/init.vim"),
     },
     ["n+"] = {":"},
+}
+
+-- Navigation maps {{{2
+local navigation_maps = {
     -- Navigation
     -- Line navigation in insert mode
     ["i<C-k>"] = {"<Up>"},
@@ -320,20 +328,16 @@ local mappings = {
     -- Navigate wrapped lines normally with k/j
     ["nk"] = {"v:count == 0 ? 'gk' : 'k'", expr = true},
     ["nj"] = {"v:count == 0 ? 'gj' : 'j'", expr = true},
-    -- Pop-up menu
-    ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : <Tab>]], expr = true},
-    ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : <S-Tab>]], expr = true},
 }
 
--- load_packages() :: Add packages to runtimepath for loading
-local function load_packages()
+-- Functions {{{1
+local function load_packages() -- {{{2
     if global_vars.no_load_packages == 1 then
         return
     end
     local packages = {
         "lightline.vim",
         "lightline-bufferline",
-        "fzf",
         "fzf.vim",
         "ale",
         "vim-sneak",
@@ -357,8 +361,7 @@ local function load_packages()
     end
 end
 
--- set_options() :: loop through options and set
-local function set_options()
+local function set_options() -- {{{2
     local global_settings = vim.tbl_extend("error", general, editor)
     for name, value in pairs(global_settings) do
         vim.o[name] = value
@@ -373,26 +376,32 @@ local function set_options()
     end
 end
 
--- set_globals() :: loop through global vars and set
-local function set_globals()
+local function set_globals() -- {{{2
     for name, value in pairs(global_vars) do
         vim.g[name] = value
     end
 end
 
--- create_cmds() :: loop through commands and set
-local function create_cmds()
+local function create_cmds() -- {{{2
     for name, value in pairs(commands) do
         vim.cmd(name .. " " .. value)
     end
 end
 
--- Execute settings
+local function create_autocmds() -- {{{2
+    helpers.create_augroups(autocmds)
+end
+
+local function apply_maps() -- {{{2
+    local maps = vim.tbl_extend("error", general_maps, navigation_maps)
+    helpers.apply_mappings(maps, map_default_options)
+end
+
+-- Execute settings {{{2
 set_options()
 set_globals()
-create_cmds()
-helpers.create_augroups(autocmds)
-helpers.apply_mappings(mappings, map_default_options)
+apply_maps()
+create_autocmds()
 load_packages()
 require "lightline"
 

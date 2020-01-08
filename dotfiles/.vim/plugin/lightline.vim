@@ -4,10 +4,13 @@
 " Description: Config for lightline.vim
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-01
+" Last Change: 2020-01-08 12:51:32 CST
 " ====================================================
 scriptencoding utf-8
-if exists('g:loaded_plugin_config_lightline_mh4pwx8p') | finish | endif
+if exists('g:loaded_plugin_config_lightline_mh4pwx8p')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_config_lightline_mh4pwx8p = 1
 
 " Definitions {{{1

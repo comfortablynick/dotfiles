@@ -3,9 +3,12 @@
 " Description: Run commands located in justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-01-08 12:55:24 CST
 " ====================================================
-if exists('g:loaded_plugin_runner_btro6nqr') | finish | endif
+if exists('g:loaded_plugin_runner_btro6nqr')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_runner_btro6nqr = 1
 
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun

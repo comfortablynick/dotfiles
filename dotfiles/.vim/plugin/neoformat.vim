@@ -3,9 +3,12 @@
 " Description: Async formatting config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-11-27
+" Last Change: 2020-01-08 12:53:04 CST
 " ====================================================
-if exists('g:loaded_plugin_neoformat_n7k61rqd') | finish | endif
+if exists('g:loaded_plugin_neoformat_n7k61rqd')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_neoformat_n7k61rqd = 1
 
 " Maps/Commands

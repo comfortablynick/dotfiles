@@ -3,9 +3,12 @@
 " Description: File-related commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-07 23:30:56 CST
+" Last Change: 2020-01-08 12:47:15 CST
 " ====================================================
-if exists('g:loaded_plugin_file_qjxx1opc') | finish | endif
+if exists('g:loaded_plugin_file_qjxx1opc')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_file_qjxx1opc = 1
 
 " Timestamp YYYY-MM-DD HH:MM:SS CST

@@ -3,9 +3,12 @@
 " Description: Git-related config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-03
+" Last Change: 2020-01-08 12:51:01 CST
 " ====================================================
-if exists('g:loaded_plugin_git_9vbutkh3') | finish | endif
+if exists('g:loaded_plugin_git_9vbutkh3')
+    \ || exists('g:no_load_plugins')
+    finish
+endif
 let g:loaded_plugin_git_9vbutkh3 = 1
 
 " Gitgutter

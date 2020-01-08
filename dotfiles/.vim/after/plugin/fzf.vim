@@ -3,9 +3,8 @@
 " Description: Configure settings and commands for FZF
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-11-26
+" Last Change: 2020-01-08 10:40:18 CST
 " ====================================================
-
 if exists('g:loaded_fzf_config_vim') || ! exists(':FZF') | finish | endif
 let g:loaded_fzf_config_vim = 1
 
@@ -63,11 +62,5 @@ nnoremap <silent> <Leader>gg :Rg<CR>
 
 augroup fzf_config
     autocmd!
-    " Add fzf vista finder if not a coc filetype
-    autocmd FileType *
-        \ if ! exists('g:completion_filetypes') ||
-        \ index(g:completion_filetypes['coc'], &filetype) < 0
-        \ | nnoremap <silent> <Leader>m :call vista#finder#fzf#Run()<CR>
-        \ | endif
     autocmd FileType fzf silent! tunmap <buffer> <Esc>
 augroup END

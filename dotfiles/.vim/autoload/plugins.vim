@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 16:39:27 CST
+" Last Change: 2020-01-09 08:05:06 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -34,7 +34,7 @@ function! plugins#init() abort
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
-    Pack 'scrooloose/nerdtree'
+    Pack 'preservim/nerdtree'
     Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
 
     " Vim Development
@@ -81,6 +81,5 @@ function! plugins#init() abort
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'
-    Pack '~/git/vim-tmux-runner',       {'local': 1}
-    " Pack 'christoomey/vim-tmux-runner'
+    Pack 'comfortablynick/vim-tmux-runner'
 endfunction

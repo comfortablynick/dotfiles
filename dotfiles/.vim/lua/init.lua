@@ -352,6 +352,7 @@ local function load_packages() -- {{{2
         "vim-markdown",
         "vim-symlink",
         "vim-startify",
+        "vista.vim",
     }
     if global_vars.LL_nf == 1 then
         table.insert(packages, "vim-devicons")

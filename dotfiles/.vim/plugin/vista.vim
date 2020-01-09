@@ -3,13 +3,10 @@
 " Description: Vista explorer configuration
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:57:45 CST
+" Last Change: 2020-01-09 07:25:28 CST
 " ====================================================
-if exists('g:loaded_plugin_vista_xuwor4nb')
-    \ || exists('g:no_load_plugins')
-    finish
-endif
+if exists('g:loaded_plugin_vista_xuwor4nb') | finish | endif
 let g:loaded_plugin_vista_xuwor4nb = 1
 
-nnoremap <silent> <Leader>v :call config#vista#run('toggle')<CR>
-nnoremap <silent> <Leader>m :call config#vista#run('finder')<CR>
+nnoremap <silent> <Leader>v :Vista!!<CR>
+nnoremap <silent> <Leader>m :Vista finder<CR>

@@ -199,7 +199,7 @@ local global_vars = {
             "typescript",
             "javascript",
             "json",
-            -- "lua",
+            "lua",
             -- "python",
             "bash",
             "sh",
@@ -384,11 +384,11 @@ local function set_globals() -- {{{2
     end
 end
 
-local function create_cmds() -- {{{2
-    for name, value in pairs(commands) do
-        vim.cmd(name .. " " .. value)
-    end
-end
+-- local function create_cmds() -- {{{2
+--     for name, value in pairs(commands) do
+--         vim.cmd(name .. " " .. value)
+--     end
+-- end
 
 local function create_autocmds() -- {{{2
     helpers.create_augroups(autocmds)

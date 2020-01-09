@@ -3,7 +3,7 @@
 " Description: Configure settings and commands for FZF
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 10:40:18 CST
+" Last Change: 2020-01-09 16:11:24 CST
 " ====================================================
 if exists('g:loaded_fzf_config_vim') || ! exists(':FZF') | finish | endif
 let g:loaded_fzf_config_vim = 1
@@ -35,7 +35,7 @@ command! -bang -nargs=* -complete=dir Files
   \                            : fzf#vim#with_preview('right:60%', '?'),
   \                    <bang>0)
 
-let g:fzf_layout = { 'window': 'lua require("window").centered_floating_win()' } " Floating window
+let g:fzf_layout = { 'window': 'lua require"window".new_centered_floating()' }
 " let g:fzf_layout = { 'down': '~30%' } " bottom split
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],

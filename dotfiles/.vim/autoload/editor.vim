@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-03
+" Last Change: 2020-01-09 12:51:39 CST
 " ====================================================
 
 " Restore cursor position and folding
@@ -66,10 +66,4 @@ function! editor#recall_cursor_position() abort
         " Cursor was inside a fold; open it
         execute 'normal! zv'
     endif
-endfunction
-
-" get_usuable_width() :: get actual usable width of current buffer
-function! editor#get_usuable_width()
-    lua win = require('window')
-    return v:lua.win.get_usable_width(0)
 endfunction

@@ -405,6 +405,8 @@ set_globals()
 apply_maps()
 create_autocmds()
 load_packages()
+
+-- Load lua modules {{{2
 require "lightline"
 
 -- vim:fdl=1:

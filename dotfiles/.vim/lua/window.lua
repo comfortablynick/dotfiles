@@ -1,15 +1,10 @@
 local vim = vim
 local a = vim.api
+local M = {}
 
--- Calculate actual usable width of window
-local function get_usable_width(winnr)
-    local function split(s, delim)
-        local result = {}
-        for match in (s .. delim):gmatch("(.-)" .. delim) do
-            table.insert(result, match)
-        end
-        return result
-    end
+-- Calculate usable width of window
+-- Takes into account sign column, numberwidth, and foldwidth
+function M.get_usable_width(winnr)
     local width = a.nvim_win_get_width(winnr or 0)
     local numberwidth = math.max(
                             vim.wo.numberwidth,
@@ -23,7 +18,7 @@ local function get_usable_width(winnr)
     if vim.wo.signcolumn == "yes" then
         signwidth = 2
     elseif vim.wo.signcolumn == "auto" then
-        signs = split(
+        signs = vim.split(
                     vim.fn.execute(
                         ("sign place buffer=%d"):format(vim.fn.bufnr(""))
                     ), "\n"
@@ -34,9 +29,9 @@ local function get_usable_width(winnr)
 end
 
 -- Adapted From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
-local function centered_floating_win()
+function M.new_centered_floating()
     -- get the editor's max width and height
-    local width = get_usable_width(nil)
+    local width = M.get_usable_width()
     local height = a.nvim_win_get_height(0)
 
     -- create a new, scratch buffer, for fzf
@@ -61,7 +56,4 @@ local function centered_floating_win()
     end
 end
 
-return {
-    centered_floating_win = centered_floating_win,
-    get_usable_width = get_usable_width,
-}
+return M

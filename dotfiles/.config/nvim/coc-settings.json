@@ -8,6 +8,7 @@
   "diagnostic.checkCurrentLine": true,
   "diagnostic.joinMessageLines": true,
   "diagnostic.messageTarget": "float",
+  "diagnostic.refreshAfterSave": true,
 
   // Suggestion options
   "suggest.echodocSupport": false,

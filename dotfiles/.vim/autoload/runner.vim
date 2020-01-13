@@ -3,12 +3,14 @@
 " Description: Run code actions based on justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-15
+" Last Change: 2020-01-10 20:58:16 CST
 " ====================================================
 
 " Build command based on file type and command type
 function! runner#run_cmd(cmd_type) abort
-    let l:cmd = 'just '.a:cmd_type
+    let l:cmds = get(g:, 'runner_cmd_overrides', {})
+    let l:cmd = get(l:cmds, &filetype, 'just '.a:cmd_type)
+    let l:cmd = substitute(l:cmd, '{file}', expand('%'), 'g')
     let l:run_loc = runner#get_cmd_run_loc()
     if l:run_loc ==? 'term'
         call runner#run_in_term(l:cmd)

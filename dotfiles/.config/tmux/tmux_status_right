@@ -6,7 +6,7 @@ HOSTNAME=''
 WIDTH="$(tmux display -p '#{client_width}')"
 TABS="$(tmux list-windows | wc -l)"
 SMALL=40
-MEDIUM=80
+MEDIUM=100
 MEDIUM_LARGE=150
 LARGE=200
 

@@ -429,14 +429,6 @@ local function epoch_ns()
     return s * 1000000 + ns
 end
 
-local function split(s, delim)
-    local result = {}
-    for match in (s .. delim):gmatch("(.-)" .. delim) do
-        table.insert(result, match)
-    end
-    return result
-end
-
 -- nvim object
 -- `nvim.$method(...)` redirects to `na.nvim_$method(...)`
 -- `nvim.fn.$method(...)` redirects to `a.nvim_call_function($method, {...})`
@@ -470,7 +462,6 @@ return setmetatable(
         spawn = spawn,
         epoch_ms = epoch_ms,
         epoch_ns = epoch_ns,
-        split = split,
         fn = setmetatable(
             {}, {
                 __index = function(self, k)

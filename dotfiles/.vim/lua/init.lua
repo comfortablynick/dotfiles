@@ -58,8 +58,15 @@ local general = {
     -- Split below instead of above
     splitbelow = true,
     -- Program used for grep
-    grepprg = vim.fn.executable("rg") and
-        [[rg --vimgrep --hidden --no-ignore-vcs]] or vim.o.grepprg,
+    grepprg = (function()
+        if vim.fn.executable("ag") then
+            return [[ag --vimgrep --hidden --skip-vcs-ignores --smart-case]]
+        end
+        if vim.fn.executable("rg") then
+            return [[rg --vimgrep --hidden --no-ignore-vcs --smart-case]]
+        end
+        return vim.o.grepprg
+    end)(),
     grepformat = "%f:%l:%c:%m,%f:%l:%m",
 }
 
@@ -256,8 +263,8 @@ local map_default_options = {silent = true, unique = true, noremap = true}
 -- General editor maps {{{2
 local general_maps = {
     -- toggle folds
-    ["n<Space>"] = {"za"},
-    ["nza"] = {"zA"},
+    -- ["n<Space>"] = {"za"},
+    -- ["nza"] = {"zA"},
     -- indent/dedent
     ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
     ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
@@ -332,9 +339,7 @@ local navigation_maps = {
 
 -- Functions {{{1
 local function load_packages() -- {{{2
-    if global_vars.no_load_packages == 1 then
-        return
-    end
+    if global_vars.no_load_packages == 1 then return end
     local packages = {
         "lightline.vim",
         "lightline-bufferline",
@@ -354,9 +359,7 @@ local function load_packages() -- {{{2
         "vim-startify",
         "vista.vim",
     }
-    if global_vars.LL_nf == 1 then
-        table.insert(packages, "vim-devicons")
-    end
+    if global_vars.LL_nf == 1 then table.insert(packages, "vim-devicons") end
 
     for _, package in ipairs(packages) do
         vim.cmd("silent! packadd! " .. package)
@@ -365,30 +368,20 @@ end
 
 local function set_options() -- {{{2
     local global_settings = vim.tbl_extend("error", general, editor)
-    for name, value in pairs(global_settings) do
-        vim.o[name] = value
-    end
+    for name, value in pairs(global_settings) do vim.o[name] = value end
 
-    for name, value in pairs(buffer) do
-        vim.bo[name] = value
-    end
+    for name, value in pairs(buffer) do vim.bo[name] = value end
 
-    for name, value in pairs(window) do
-        vim.wo[name] = value
-    end
+    for name, value in pairs(window) do vim.wo[name] = value end
 end
 
 local function set_globals() -- {{{2
-    for name, value in pairs(global_vars) do
-        vim.g[name] = value
-    end
+    for name, value in pairs(global_vars) do vim.g[name] = value end
 end
 
--- local function create_cmds() -- {{{2
---     for name, value in pairs(commands) do
---         vim.cmd(name .. " " .. value)
---     end
--- end
+local function create_cmds() -- {{{2
+    vim.cmd [[command! -nargs=1 Grep lua require'tools'.async_grep('<args>')]]
+end
 
 local function create_autocmds() -- {{{2
     helpers.create_augroups(autocmds)
@@ -404,9 +397,10 @@ set_options()
 set_globals()
 apply_maps()
 create_autocmds()
+create_cmds()
 load_packages()
 
 -- Load lua modules {{{2
 require "lightline"
 
--- vim:fdl=1:
+-- vim:foldmethod=marker fdl=1:

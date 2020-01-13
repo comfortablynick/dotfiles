@@ -17,7 +17,7 @@
 # SHELL STARTUP {{{1
 # Non-interactive {{{2
 if not status --is-interactive
-  exit 0
+    exit 0
 end
 
 # Everything below is for interactive shells
@@ -56,17 +56,17 @@ switch "$FISH_PKG_MGR"
         set -gx OMF_PATH "$XDG_DATA_HOME/omf"
         # Install OMF if needed
         if not functions -q omf
-          echo "OMF set as pkg manager but not installed. Installing now... "
-          curl -L https://get.oh-my.fish | fish
+            echo "OMF set as pkg manager but not installed. Installing now... "
+            curl -L https://get.oh-my.fish | fish
         end
     case "Fisher"
-    # Fisher
-    if not functions -q fisher
-        echo "Installing fisher for the first time..." >&2
-        set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
-        curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-        fish -c fisher
-    end
+        # Fisher
+        if not functions -q fisher
+            echo "Installing fisher for the first time..." >&2
+            set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
+            curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+            fish -c fisher
+        end
     case "*"
 end
 
@@ -133,7 +133,12 @@ if functions -q __bobthefish_colors
 
     # Are the fancy fonts needed?
     set -g theme_powerline_fonts yes
-    set -g theme_nerd_fonts no
+
+    if test $MOSH_CONNECTION -ne 0
+        set -g theme_nerd_fonts yes
+    else
+        set -g theme_nerd_fonts no
+    end
 
     # Git
     set -g theme_display_git_master_branch yes
@@ -183,9 +188,9 @@ if functions -q _pure_prompt
     set -g pure_color_ssh_user_root $pure_color_danger
 
     # Display options
-    set -g pure_begin_prompt_with_current_directory false          # Loc of u@h; 0 = end, 1 = beg
-    set -g pure_separate_prompt_on_error false                     # Show addl char if error
-    set -g pure_threshold_command_duration 5                       # Secs elapsed before exec time shown
+    set -g pure_begin_prompt_with_current_directory false # Loc of u@h; 0 = end, 1 = beg
+    set -g pure_separate_prompt_on_error false # Show addl char if error
+    set -g pure_threshold_command_duration 5 # Secs elapsed before exec time shown
 end
 
 # bigfish {{{2

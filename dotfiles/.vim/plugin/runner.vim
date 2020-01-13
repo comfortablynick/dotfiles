@@ -3,7 +3,7 @@
 " Description: Run commands located in justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:55:24 CST
+" Last Change: 2020-01-10 21:00:56 CST
 " ====================================================
 if exists('g:loaded_plugin_runner_btro6nqr')
     \ || exists('g:no_load_plugins')
@@ -22,6 +22,10 @@ let g:VtrPercentage = 40                                        " Percent of tmu
 " Put filetypes here if we need to pause between
 " saving and executing the command
 let s:wait_before_run_fts = ['rust']
+
+let g:runner_cmd_overrides = {
+    \ 'lua': 'just runfile {file}',
+    \}
 
 function! s:run(cmd) abort
     if &modified

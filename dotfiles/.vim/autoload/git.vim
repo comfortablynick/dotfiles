@@ -3,7 +3,7 @@
 " Description: Git-related functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-06
+" Last Change: 2020-01-12 14:36:06 CST
 " ====================================================
 
 " Wrap around buffer when navigating hunks

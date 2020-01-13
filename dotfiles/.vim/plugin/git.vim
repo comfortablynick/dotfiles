@@ -3,7 +3,7 @@
 " Description: Git-related config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-09 08:29:44 CST
+" Last Change: 2020-01-12 15:17:39 CST
 " ====================================================
 if exists('g:loaded_plugin_git_9vbutkh3')
     \ || exists('g:no_load_plugins')

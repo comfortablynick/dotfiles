@@ -1,2 +1,3 @@
 .git
 zig-cache/
+Cargo.lock

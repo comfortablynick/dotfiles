@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-09 08:37:08 CST
+" Last Change: 2020-01-10 07:50:13 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -30,7 +30,7 @@ function! plugins#init() abort
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'
-    Pack 'liuchengxu/vim-clap',         {'do': ':call clap#helper#build_maple()'}
+    Pack 'liuchengxu/vim-clap',         {'do': {-> clap#helper#build_all()}}
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
@@ -54,7 +54,7 @@ function! plugins#init() abort
     " Some must be loaded at start
     Pack 'numirias/semshi',             {'if': 'has("nvim")'}
     Pack 'gabrielelana/vim-markdown'
-    Pack 'dag/vim-fish',                {'type': 'start'}
+    Pack 'dag/vim-fish'
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}
     Pack 'bfrg/vim-cpp-modern',         {'type': 'start'}

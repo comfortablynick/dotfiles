@@ -3,10 +3,26 @@
 " Description: Configure settings and commands for FZF
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-09 16:11:24 CST
+" Last Change: 2020-01-14 07:44:41 CST
 " ====================================================
 if exists('g:loaded_fzf_config_vim') || ! exists(':FZF') | finish | endif
 let g:loaded_fzf_config_vim = 1
+
+" View maps in any mode
+command! -bang -nargs=1 -complete=customlist,s:map_modes Map call fzf#vim#maps(<q-args>, <bang>0)
+
+function! s:map_modes(a,l,p) abort
+    return [
+        \ 'n',
+        \ 'i',
+        \ 'o',
+        \ 'x',
+        \ 'v',
+        \ 's',
+        \ 'c',
+        \ 't',
+        \ ]
+endfunction
 
 " Rg with preview window
 "   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key

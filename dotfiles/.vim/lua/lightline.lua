@@ -1,4 +1,3 @@
-local h = require "helpers"
 local a = vim.api
 ll = {}
 
@@ -185,7 +184,7 @@ end
 
 local function python_venv()
     return not vim.g.did_coc_loaded and
-               (vim.bo.ft == "python" and h.basename(vim.env.VIRTUAL_ENV)) or ""
+               (vim.bo.ft == "python" and nvim.basename(vim.env.VIRTUAL_ENV)) or ""
 end
 
 function ll.filetype()

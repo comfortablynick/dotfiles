@@ -1,7 +1,6 @@
 local vim = vim
 local a = vim.api
 local uv = vim.loop
-local h = require "helpers"
 local M = {}
 
 function M.async_grep(term)
@@ -47,11 +46,11 @@ end
 -- TODO: figure out how to return stdout,stderr from these
 -- in simplest way possible
 function M.git_pull()
-    h.spawn("git", {args = {"pull"}}, function() print("Git pull complete") end)
+    nvim.spawn("git", {args = {"pull"}}, function() print("Git pull complete") end)
 end
 
 function M.git_push()
-    h.spawn("git", {args = {"push"}}, function() print("Git push complete") end)
+    nvim.spawn("git", {args = {"push"}}, function() print("Git push complete") end)
 end
 
 -- Test lower level vim apis
@@ -79,4 +78,12 @@ function M.readdir(path)
     print(vim.inspect(out))
     uv.fs_closedir(handle)
 end
+
+function M.clap_maps()
+    local cmd = {}
+    cmd.source = function() return vim.split(a.nvim_exec("map", true), "\n") end
+    cmd.sink = function() return "" end
+    return cmd
+end
+
 return M

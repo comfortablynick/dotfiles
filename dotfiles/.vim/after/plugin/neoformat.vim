@@ -3,7 +3,7 @@
 " Description: Plugin settings for neoformat
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 17:29:15 CST
+" Last Change: 2020-01-14 12:10:02 CST
 " ====================================================
 if exists('g:loaded_after_plugin_neoformat_sgyavx6j')
     \ || !exists(':Neoformat')
@@ -14,6 +14,7 @@ let g:loaded_after_plugin_neoformat_sgyavx6j = 1
 noremap <silent> <F3> :Neoformat<CR>
 
 " Global Settings
+let g:neoformat_try_formatprg = 1        " Use formatprg if defined
 let g:neoformat_run_all_formatters = 1   " By default, stops after first formatter succeeds
 let g:neoformat_basic_format_align = 1   " Enable basic formatting
 let g:neoformat_basic_format_retab = 1   " Enable tab -> spaces
@@ -47,4 +48,4 @@ let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier
 
 let g:neoformat_enabled_go = [ 'goimports' ]
 let g:neoformat_enabled_yaml = [ 'prettier' ]
-let g:neoformat_enabled_lua = [ 'luaformat', 'luafmt' ]
+let g:neoformat_enabled_lua = []

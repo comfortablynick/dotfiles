@@ -1,4 +1,3 @@
-local nvim = require "helpers"
 local vim = vim
 
 local M = {}
@@ -30,7 +29,7 @@ function M.show_minimap()
     for name, value in pairs(buf_opts) do
         vim.bo[name] = value
     end
-    nvim.create_augroups(autocmds)
+    nvim_create_augroups(autocmds)
     local minimap = 0
     vim.api.nvim_win_set_width(minimap, WIDTH)
     vim.api.nvim_win_set_option(minimap, "winfixwidth", true)

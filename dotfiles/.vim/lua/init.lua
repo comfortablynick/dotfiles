@@ -1,5 +1,7 @@
+-- vim:foldmethod=marker fdl=1:
 local vim = vim
-local helpers = require "helpers"
+require "helpers"
+init = {}
 
 -- Options {{{1
 -- Global options {{{2
@@ -248,7 +250,7 @@ local autocmds = {
     init_lua = {
         -- Terminal starts in insert mode
         {"TermOpen", "*", "startinsert"},
-        {"TermOpen", "*", [[tnoremap <buffer> <Esc> <C-\><C-n>]]},
+        {"TermOpen", "*", [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]]},
         -- Close read-only filetypes with only 'q'
         {"FileType", "netrw,help", "nnoremap <silent> q :bd<CR>"},
         -- Create backup files with useful names
@@ -262,9 +264,10 @@ local map_default_options = {silent = true, unique = true, noremap = true}
 
 -- General editor maps {{{2
 local general_maps = {
-    -- toggle folds
-    -- ["n<Space>"] = {"za"},
-    -- ["nza"] = {"zA"},
+    -- format buffer and restore position
+    ["n<Leader>ff"] = {
+        ":let b:wv=winsaveview()<CR>gggqG:call winrestview(b:wv)<CR>",
+    },
     -- indent/dedent
     ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
     ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
@@ -276,8 +279,8 @@ local general_maps = {
     ["i;lkj"] = {"<Esc>`^:wq<CR>"},
     ["n<CR>"] = {":noh<CR><CR>", silent = false},
     -- Pop-up menu
-    ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : <Tab>]], expr = true},
-    ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : <S-Tab>]], expr = true},
+    ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : "\<Tab>"]], expr = true},
+    ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], expr = true},
     -- Shortcuts to open files
     ["n<Leader>il"] = {
         (":vsplit %s<CR>"):format(
@@ -338,6 +341,25 @@ local navigation_maps = {
 }
 
 -- Functions {{{1
+function init.text_object_comment_and_duplicate(is_visual_mode)
+    local visual_mode = "line"
+    local commentstring = vim.bo.commentstring
+    local function comment_dupe(lines)
+        local commented = {}
+        for _, line in ipairs(lines) do
+            table.insert(commented, commentstring:format(line))
+        end
+        return vim.tbl_flatten {lines, commented}
+    end
+    if is_visual_mode then
+        nvim.buf_transform_region_lines(nil, "<", ">", visual_mode, comment_dupe)
+    else
+        nvim.text_operator_transform_selection(comment_dupe, visual_mode)
+    end
+end
+
+nvim.define_text_object("gd", "init.text_object_comment_and_duplicate")
+
 local function load_packages() -- {{{2
     if global_vars.no_load_packages == 1 then return end
     local packages = {
@@ -355,9 +377,10 @@ local function load_packages() -- {{{2
         "vim-tmux-navigator",
         "vim-lion",
         "vim-markdown",
-        "vim-symlink",
         "vim-startify",
         "vista.vim",
+        "vim-textobj-user",
+        "vim-textobj-lua",
     }
     if global_vars.LL_nf == 1 then table.insert(packages, "vim-devicons") end
 
@@ -384,12 +407,12 @@ local function create_cmds() -- {{{2
 end
 
 local function create_autocmds() -- {{{2
-    helpers.create_augroups(autocmds)
+    nvim.create_augroups(autocmds)
 end
 
 local function apply_maps() -- {{{2
     local maps = vim.tbl_extend("error", general_maps, navigation_maps)
-    helpers.apply_mappings(maps, map_default_options)
+    nvim.apply_mappings(maps, map_default_options)
 end
 
 -- Execute settings {{{2
@@ -403,4 +426,4 @@ load_packages()
 -- Load lua modules {{{2
 require "lightline"
 
--- vim:foldmethod=marker fdl=1:
+return init

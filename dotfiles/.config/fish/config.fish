@@ -133,10 +133,9 @@ if functions -q __bobthefish_colors
 
     # Are the fancy fonts needed?
     set -g theme_powerline_fonts yes
+    set -g theme_nerd_fonts yes
 
-    if test $MOSH_CONNECTION -ne 0
-        set -g theme_nerd_fonts yes
-    else
+    if test $MOSH_CONNECTION -eq 1
         set -g theme_nerd_fonts no
     end
 
@@ -215,7 +214,8 @@ end
 # PRE SHELL LOAD {{{1
 # Vim/Mosh {{{2
 # Set vim compat if Mosh
-set VIM_SSH_COMPAT 0
+set -Ux VIM_SSH_COMPAT 0
+set -Ux NERD_FONTS 1
 if test "$MOSH_CONNECTION" -eq 1
     set VIM_SSH_COMPAT 1
     set NERD_FONTS 0

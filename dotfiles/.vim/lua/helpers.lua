@@ -375,7 +375,7 @@ local function nvim_create_augroups(definitions)
 end
 
 ---
--- Things Lua should've had
+-- Strings
 ---
 
 function string.startswith(s, n) -- luacheck: ignore
@@ -384,6 +384,11 @@ end
 
 function string.endswith(self, str) -- luacheck: ignore
     return self:sub(-(#str)) == str
+end
+
+function basename(str)
+	local name = string.gsub(str, "(.*/)(.*)", "%2")
+	return name
 end
 
 ---
@@ -458,6 +463,7 @@ return setmetatable(
         escape_keymap = escape_keymap,
         apply_mappings = nvim_apply_mappings,
         create_augroups = nvim_create_augroups,
+        basename = basename,
         clean_handles = clean_handles,
         spawn = spawn,
         epoch_ms = epoch_ms,

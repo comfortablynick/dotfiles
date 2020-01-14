@@ -1,10 +1,9 @@
-a = vim.api
+local h = require "helpers"
+local a = vim.api
 ll = {}
 
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
-
-local ft = vim.bo.filetype
 
 local vars = {
     min_width = 90,
@@ -137,7 +136,7 @@ function ll.is_not_file()
     --     end
     -- end
     -- return false
-    return special_filetypes[ft] ~= nil
+    return special_filetypes[vim.bo.filetype] ~= nil
 end
 
 function ll.line_info()
@@ -171,20 +170,25 @@ function ll.mode()
         ["<C-s>"] = {"S-BLOCK", "S-BL", "S-B"},
         t = {"TERMINAL", "TERM", "T"},
     }
-    -- let l:mode = get(l:mode_map, mode(), mode())
     local mode_key = a.nvim_get_mode().mode
     local mode = mode_map[mode_key]
     local winwidth = a.nvim_win_get_width(0)
     local mode_out = function()
-        if winwidth > vars.med_width then
-            return mode[1]
-        end
-        if winwidth > vars.min_width then
-            return mode[2]
-        end
+        if winwidth > vars.med_width then return mode[1] end
+        if winwidth > vars.min_width then return mode[2] end
         return mode[3]
     end
     -- TODO: is filename ever going to match special_filetypes?
     -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
     return special_filetypes[vim.bo.filetype] or mode_out()
+end
+
+local function python_venv()
+    return not vim.g.did_coc_loaded and
+               (vim.bo.ft == "python" and h.basename(vim.env.VIRTUAL_ENV)) or ""
+end
+
+function ll.filetype()
+    local venv = python_venv()
+    return venv
 end

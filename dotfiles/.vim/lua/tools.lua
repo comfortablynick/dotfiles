@@ -81,8 +81,8 @@ end
 
 function M.clap_maps()
     local cmd = {}
-    cmd.source = function() return vim.split(a.nvim_exec("map", true), "\n") end
-    cmd.sink = function() return "" end
+    cmd.source = vim.split(a.nvim_exec("map", true), "\n")
+    cmd.sink = ""
     return cmd
 end
 

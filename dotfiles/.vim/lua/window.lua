@@ -56,4 +56,25 @@ function M.new_centered_floating()
     end
 end
 
+-- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
+function M.float_term(command)
+    local width = M.get_usable_width(0)
+    local height = a.nvim_win_get_height(0)
+    local opts = {
+        relative = "editor",
+        width = math.floor(width * 50 / 100),
+        height = math.floor(height * 50 / 100),
+        anchor = "NW",
+        style = "minimal",
+        focusable = false,
+    }
+    opts.col = math.floor((width - opts.width) / 2)
+    opts.row = math.floor((height - opts.height) / 2)
+    local bufnr = a.nvim_create_buf(false, true)
+    local winnr = a.nvim_open_win(bufnr, true, opts)
+
+    a.nvim_call_function("termopen", {command})
+    return bufnr, winnr
+end
+
 return M

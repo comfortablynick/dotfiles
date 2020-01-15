@@ -403,7 +403,7 @@ local function set_globals() -- {{{2
 end
 
 local function create_cmds() -- {{{2
-    vim.cmd [[command! -nargs=1 Grep lua require'tools'.async_grep('<args>')]]
+    vim.cmd [[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
 end
 
 local function create_autocmds() -- {{{2

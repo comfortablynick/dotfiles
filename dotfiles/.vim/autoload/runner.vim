@@ -3,7 +3,7 @@
 " Description: Run code actions based on justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-10 20:58:16 CST
+" Last Change: 2020-01-15 16:46:45 CST
 " ====================================================
 
 " Build command based on file type and command type
@@ -12,17 +12,19 @@ function! runner#run_cmd(cmd_type) abort
     let l:cmd = get(l:cmds, &filetype, 'just '.a:cmd_type)
     let l:cmd = substitute(l:cmd, '{file}', expand('%'), 'g')
     let l:run_loc = runner#get_cmd_run_loc()
-    if l:run_loc ==? 'term'
-        call runner#run_in_term(l:cmd)
-    elseif l:run_loc ==? 'AsyncRun'
-        packadd asyncrun.vim
-        execute 'AsyncRun '.l:cmd
-        return
-    elseif l:run_loc ==? 'Vtr'
-        packadd vim-tmux-runner
-        execute 'VtrSendCommandToRunner! '.l:cmd
-        return
-    endif
+    " if l:run_loc ==? 'term'
+        let b:runner_term_scale = get(b:, 'runner_term_scale', 50)
+        call luaeval('require"window".float_term(_A.cmd, _A.scale)',
+            \ {'cmd': l:cmd, 'scale': b:runner_term_scale})
+    " elseif l:run_loc ==? 'AsyncRun'
+    "     packadd asyncrun.vim
+    "     execute 'AsyncRun '.l:cmd
+    "     return
+    " elseif l:run_loc ==? 'Vtr'
+    "     packadd vim-tmux-runner
+    "     execute 'VtrSendCommandToRunner! '.l:cmd
+    "     return
+    " endif
 endfunction
 
 " Send cmd output to integrated terminal buffer

@@ -186,7 +186,8 @@ end
 
 local function python_venv()
     return not vim.g.did_coc_loaded and
-               (vim.bo.ft == "python" and nvim.basename(vim.env.VIRTUAL_ENV)) or ""
+               (vim.bo.ft == "python" and nvim.basename(vim.env.VIRTUAL_ENV)) or
+               ""
 end
 
 function ll.filetype()
@@ -236,12 +237,20 @@ function ll.git_status()
                    hunks ~= "" and " " .. hunks or ""
                )
     end
-    return ''
+    return ""
 end
-
 
 function ll.file_size()
     local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
     if size <= 0 then return "" end
     return util.humanize_bytes(size)
+end
+
+-- TODO: turn into util function
+function ll.bench()
+    local start_time = util.epoch_ms()
+    for _ = 1, 100000 do ll.file_size() end
+    end_time = util.epoch_ms()
+    elapsed_time = end_time - start_time
+    p("time elapsed: %d ms", elapsed_time)
 end

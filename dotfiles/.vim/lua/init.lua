@@ -341,7 +341,7 @@ local navigation_maps = {
 }
 
 -- Functions {{{1
-function init.text_object_comment_and_duplicate(is_visual_mode)
+function init.text_object_comment_and_duplicate(is_visual_mode) -- {{{2
     local visual_mode = "line"
     local commentstring = vim.bo.commentstring
     local function comment_dupe(lines)

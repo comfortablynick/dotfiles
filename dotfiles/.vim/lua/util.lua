@@ -10,4 +10,14 @@ function M.humanize_bytes(size)
     end
 end
 
+function M.epoch_ms()
+    local s, ns = vim.loop.gettimeofday()
+    return s * 1000 + math.floor(ns / 1000)
+end
+
+function M.epoch_ns()
+    local s, ns = vim.loop.gettimeofday()
+    return s * 1000000 + ns
+end
+
 return M

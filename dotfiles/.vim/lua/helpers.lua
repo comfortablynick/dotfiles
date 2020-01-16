@@ -426,11 +426,12 @@ function printf(msg, ...) print(string.format(msg, ...)) end
 
 -- Debug print helper
 -- If `val` is a table, prints it as formatted
-function p(val)
+-- Else treat as printf
+function p(val, ...)
     if type(val) == "table" then
         print(vim.inspect(val))
     else
-        print(val)
+        print(string.format(val, ...))
     end
 end
 
@@ -474,17 +475,4 @@ function nvim.spawn(cmd, params, onexit)
     table.insert(HANDLES, handle)
     return handle, pid
 end
-
---- MISC UTILS
-
-function nvim.epoch_ms()
-    local s, ns = vim.loop.gettimeofday()
-    return s * 1000 + math.floor(ns / 1000)
-end
-
-function nvim.epoch_ns()
-    local s, ns = vim.loop.gettimeofday()
-    return s * 1000000 + ns
-end
-
 return nvim

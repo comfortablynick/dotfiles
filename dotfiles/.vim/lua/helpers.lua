@@ -329,7 +329,7 @@ function nvim.apply_mappings(mappings, default_options)
                     key_function()
                     vim.fn["repeat#set"](
 
-                       
+
                             api.nvim_replace_termcodes(
                                 key_mapping, true, true, true
                             ), vim.v.count
@@ -425,12 +425,15 @@ function printf(msg, ...) print(msg ~= nil and string.format(msg, ...) or nil) e
 -- If `val` is not a simple type, run it through inspect() first
 -- Else treat as printf
 function p(val, ...)
-    local printable_types = {"string", "number", "boolean"}
-    if vim.tbl_contains(printable_types, type(val)) then
-        print(string.format(val, ...))
-    else
-        print(vim.inspect(val))
+    local wrapper = function(s, ...)
+        if type(val) == ("string" or "number") then
+            print(string.format(s, ...))
+        else
+            print(vim.inspect(s))
+        end
     end
+    -- Just print if there's an error (bad format str, etc.)
+    if not pcall(wrapper, val, ...) then print(val, ...) end
 end
 
 ---

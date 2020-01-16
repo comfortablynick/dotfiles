@@ -3,7 +3,7 @@
 " Description: Lua filetype overrides
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 11:31:48 CST
+" Last Change: 2020-01-16 16:08:06 CST
 " ====================================================
 if exists('g:loaded_after_ftplugin_lua_dzkzqoxu') | finish | endif
 let g:loaded_after_ftplugin_lua_dzkzqoxu = 1
@@ -14,10 +14,11 @@ setlocal formatprg=lua-format\ --config=$XDG_CONFIG_HOME/.lua-format
 
 iabbrev l local
 
-" Lua development
-silent! packadd nvim-luadev
+command! Luadev call s:luadev()
 
-if exists(':Luadev')
-    vmap lr <Plug>(Luadev-Run)
-    map lrl <Plug>(Luadev-RunLine)
-end
+function! s:luadev() abort
+    packadd nvim-luadev
+    Luadev
+    map lr   <Plug>(Luadev-Run)
+    map lrl  <Plug>(Luadev-RunLine)
+endfunction

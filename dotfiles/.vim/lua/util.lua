@@ -23,9 +23,10 @@ end
 function M.bench(iters, cb)
     assert(cb, "Must provide callback to benchmark")
     local start_time = M.epoch_ms()
-    for _ = 1, iters or 100000 do cb() end
+    iters = iters or 100
+    for _ = 1, iters do cb() end
     end_time = M.epoch_ms()
     elapsed_time = end_time - start_time
-    p("time elapsed: %d ms", elapsed_time)
+    p("time elapsed for %d runs: %d ms", iters, elapsed_time)
 end
 return M

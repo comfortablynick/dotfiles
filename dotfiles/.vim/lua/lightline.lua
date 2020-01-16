@@ -203,14 +203,13 @@ function ll.git_summary()
     local hunks = (function()
         if vim.fn.exists("b:coc_git_status") ~= 0 then
             return vim.trim(a.nvim_buf_get_var(0, "coc_git_status"))
-        end
-        if vim.fn.exists("*GitGutterGetHunkSummary") ~= 0 then
+        elseif vim.fn.exists("*GitGutterGetHunkSummary") ~= 0 then
             return vim.call("GitGutterGetHunkSummary")
-        end
-        if vim.fn.exists("*sy#repo#get_stats") ~= 0 then
+        elseif vim.fn.exists("*sy#repo#get_stats") ~= 0 then
             return vim.call("sy#repo#get_stats")
+        else
+            return ""
         end
-        return ""
     end)()
     local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
     local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
@@ -219,20 +218,12 @@ function ll.git_summary()
 end
 
 function ll.git_branch()
-    if vim.fn.exists("g:coc_git_status") ~= 0 then
+    if vim.fn.exists("g:coc_git_status") == 1 then
         return vim.g.coc_git_status
-    end
-    -- if vim.fn.exists("*fugitive#head") then
-    local fugitive = vim.fn['fugitive#head']
-    -- if vim.fn['fugitive#head'] ~= nil then
-    if fugitive ~= nil then
-        return vars.glyphs.branch .. " " ..  fugitive() --vim.call("fugitive#head")
+    elseif vim.is_callable(vim.fn["fugitive#head"]) then
+        return vars.glyphs.branch .. " " .. vim.call("fugitive#head")
     end
     return ""
-end
-
-function ll.git_branch2()
-    return vim.fn.system('git rev-parse --abbrev-ref HEAD 2>/dev/null') or ''
 end
 
 function ll.git_status()
@@ -253,5 +244,6 @@ function ll.file_size()
     return util.humanize_bytes(size)
 end
 
--- require'util'.bench(100, ll.git_branch)
--- require'util'.bench(100, vim.fn.LL_GitBranch)
+-- local runs = 1000
+-- require'util'.bench(runs, ll.git_status)
+-- require'util'.bench(runs, vim.fn.LL_GitStatus)

@@ -1,6 +1,6 @@
-# Defined in /tmp/fish.KzvhkJ/edit.fish @ line 2
+# Defined in /tmp/fish.aS6tuS/edit.fish @ line 2
 function edit
-    set -l fuzzy_finders rff fzy fzf sk
+    set -l fuzzy_finders fzy rff fzf sk
     # Use the first executable fuzzy finder
     for finder in $fuzzy_finders
         if type -qf $finder

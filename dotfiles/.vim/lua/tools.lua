@@ -79,11 +79,4 @@ function M.readdir(path)
     uv.fs_closedir(handle)
 end
 
-function M.clap_maps()
-    local cmd = {}
-    cmd.source = vim.split(a.nvim_exec("map", true), "\n")
-    cmd.sink = ""
-    return cmd
-end
-
 return M

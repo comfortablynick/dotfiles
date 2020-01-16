@@ -207,13 +207,10 @@ end
 -- Return the selection as a string
 -- RETURNS: string
 function nvim.selection(mode)
-    return table.concat(
-
-
-                   nvim.buf_get_region_lines(
-                       nil, "<", ">", mode or VISUAL_MODE.char
-                   ), "\n"
-           )
+    local sel = nvim.buf_get_region_lines(
+                    nil, "<", ">", mode or VISUAL_MODE.char
+                )
+    return table.concat(sel, "\n")
 end
 
 -- Necessary glue for nvim_text_operator
@@ -332,7 +329,7 @@ function nvim.apply_mappings(mappings, default_options)
                     key_function()
                     vim.fn["repeat#set"](
 
-
+                       
                             api.nvim_replace_termcodes(
                                 key_mapping, true, true, true
                             ), vim.v.count
@@ -422,16 +419,17 @@ function nvim.basename(str)
 end
 
 -- C-style printf
-function printf(msg, ...) print(string.format(msg, ...)) end
+function printf(msg, ...) print(msg ~= nil and string.format(msg, ...) or nil) end
 
 -- Debug print helper
--- If `val` is a table, prints it as formatted
+-- If `val` is not a simple type, run it through inspect() first
 -- Else treat as printf
 function p(val, ...)
-    if type(val) == "table" then
-        print(vim.inspect(val))
-    else
+    local printable_types = {"string", "number", "boolean"}
+    if vim.tbl_contains(printable_types, type(val)) then
         print(string.format(val, ...))
+    else
+        print(vim.inspect(val))
     end
 end
 

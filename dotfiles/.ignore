@@ -1,3 +1,7 @@
 .git
 zig-cache/
 Cargo.lock
+.rustup/
+.cargo/
+.cache/
+.vscode*/

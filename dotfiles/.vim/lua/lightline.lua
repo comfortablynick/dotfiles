@@ -222,10 +222,17 @@ function ll.git_branch()
     if vim.fn.exists("g:coc_git_status") ~= 0 then
         return vim.g.coc_git_status
     end
-    if vim.fn.exists("*fugitive#head") then
-        return vars.glyphs.branch .. " " .. vim.call("fugitive#head")
+    -- if vim.fn.exists("*fugitive#head") then
+    local fugitive = vim.fn['fugitive#head']
+    -- if vim.fn['fugitive#head'] ~= nil then
+    if fugitive ~= nil then
+        return vars.glyphs.branch .. " " ..  fugitive() --vim.call("fugitive#head")
     end
     return ""
+end
+
+function ll.git_branch2()
+    return vim.fn.system('git rev-parse --abbrev-ref HEAD 2>/dev/null') or ''
 end
 
 function ll.git_status()
@@ -246,11 +253,5 @@ function ll.file_size()
     return util.humanize_bytes(size)
 end
 
--- TODO: turn into util function
-function ll.bench()
-    local start_time = util.epoch_ms()
-    for _ = 1, 100000 do ll.file_size() end
-    end_time = util.epoch_ms()
-    elapsed_time = end_time - start_time
-    p("time elapsed: %d ms", elapsed_time)
-end
+-- require'util'.bench(100, ll.git_branch)
+-- require'util'.bench(100, vim.fn.LL_GitBranch)

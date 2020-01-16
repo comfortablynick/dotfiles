@@ -1,4 +1,4 @@
--- Utility functions, not necessarily vim specific
+-- Utility functions, not necessarily integral to vim
 local M = {}
 
 function M.humanize_bytes(size)
@@ -20,4 +20,12 @@ function M.epoch_ns()
     return s * 1000000 + ns
 end
 
+function M.bench(iters, cb)
+    assert(cb, "Must provide callback to benchmark")
+    local start_time = M.epoch_ms()
+    for _ = 1, iters or 100000 do cb() end
+    end_time = M.epoch_ms()
+    elapsed_time = end_time - start_time
+    p("time elapsed: %d ms", elapsed_time)
+end
 return M

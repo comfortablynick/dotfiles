@@ -4,7 +4,7 @@
 " Description: Config for lightline.vim
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:51:32 CST
+" Last Change: 2020-01-16 11:38:26 CST
 " ====================================================
 scriptencoding utf-8
 if exists('g:loaded_plugin_config_lightline_mh4pwx8p')
@@ -400,7 +400,7 @@ endfunction
 
 function! LL_FileSize() abort "{{{2
     let div = 1024.0
-    let num = getfsize(expand(@%))
+    let num = getfsize(expand('%:p'))
     if num <= 0 | return '' | endif
     " Return bytes plain without decimal or unit
     if num < div | return num | endif

@@ -173,6 +173,7 @@ local global_vars = {
     loaded_tarPlugin = 1,
     loaded_2html_plugin = 1,
     loaded_zipPlugin = 1,
+    loaded_matchit = 1,
     -- Leader key
     mapleader = ",",
     -- Python 2 dir

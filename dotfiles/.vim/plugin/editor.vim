@@ -3,10 +3,13 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 08:33:49 CST
+" Last Change: 2020-01-16 10:47:51 CST
 " ====================================================
 if exists('g:loaded_editor_vim_rrxslb6k') | finish | endif
 let g:loaded_editor_vim_rrxslb6k = 1
+
+" Save if file has changed and reload vimrc
+command! S update | source $MYVIMRC
 
 augroup editor_vim_rrxslb6k
     autocmd!

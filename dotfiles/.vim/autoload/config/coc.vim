@@ -3,7 +3,7 @@
 " Description: Coc configuration
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-14 08:21:15 CST
+" Last Change: 2020-01-15 22:31:31 CST
 " ====================================================
 
 " Show_Documentation() :: use K for vim docs or language servers
@@ -59,7 +59,7 @@ function! config#coc#apply_maps() abort
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
     noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
-    if empty(mapcheck('al', ['o','x']))
+    if empty(mapcheck('al', ' '))
         omap <buffer> if <Plug>(coc-funcobj-i)
         xmap <buffer> if <Plug>(coc-funcobj-i)
         omap <buffer> af <Plug>(coc-funcobj-a)

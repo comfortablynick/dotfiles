@@ -1,9 +1,11 @@
 local a = vim.api
+local util = require "util"
 ll = {}
 
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
+local WINWIDTH = vim.api.nvim_win_get_width(0)
 local vars = {
     min_width = 90,
     med_width = 140,
@@ -190,4 +192,56 @@ end
 function ll.filetype()
     local venv = python_venv()
     return venv
+end
+
+function ll.git_summary()
+    -- Look for git hunk summary in this order:
+    -- 1. coc-git
+    -- 2. gitgutter
+    -- 3. signify
+    local hunks = (function()
+        if vim.fn.exists("b:coc_git_status") ~= 0 then
+            return vim.trim(a.nvim_buf_get_var(0, "coc_git_status"))
+        end
+        if vim.fn.exists("*GitGutterGetHunkSummary") ~= 0 then
+            return vim.call("GitGutterGetHunkSummary")
+        end
+        if vim.fn.exists("*sy#repo#get_stats") ~= 0 then
+            return vim.call("sy#repo#get_stats")
+        end
+        return ""
+    end)()
+    local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
+    local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
+    local deleted = hunks[3] ~= 0 and string.format("-%d ", hunks[3]) or ""
+    return added .. changed .. deleted
+end
+
+function ll.git_branch()
+    if vim.fn.exists("g:coc_git_status") ~= 0 then
+        return vim.g.coc_git_status
+    end
+    if vim.fn.exists("*fugitive#head") then
+        return vars.glyphs.branch .. " " .. vim.call("fugitive#head")
+    end
+    return ""
+end
+
+function ll.git_status()
+    if not ll.is_not_file() and WINWIDTH > vars.min_width then
+        local branch = ll.git_branch()
+        local hunks = ll.git_summary()
+        return branch ~= "" and string.format(
+                   "%s%s%s", vars.glyphs.vcs, branch,
+                   hunks ~= "" and " " .. hunks or ""
+               )
+    end
+    return ''
+end
+
+
+function ll.file_size()
+    local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
+    if size <= 0 then return "" end
+    return util.humanize_bytes(size)
 end

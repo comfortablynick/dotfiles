@@ -336,6 +336,8 @@ local navigation_maps = {
     -- b + {h,l,n} to navigate buffers
     ["nbh"] = {":bprevious<CR>"},
     ["nbl"] = {":bnext<CR>"},
+    -- gb: goto buffer
+    ["ngb"] = {":ls<CR>:b<Space>"},
     -- Navigate wrapped lines normally with k/j
     ["nk"] = {"v:count == 0 ? 'gk' : 'k'", expr = true},
     ["nj"] = {"v:count == 0 ? 'gj' : 'j'", expr = true},

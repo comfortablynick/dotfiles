@@ -449,7 +449,7 @@ function string.endswith(self, str) -- luacheck: ignore
 end
 
 ---
--- SPAWN UTILS
+-- Spawn utils
 ---
 local HANDLES = {}
 
@@ -476,4 +476,6 @@ function nvim.spawn(cmd, params, onexit)
     table.insert(HANDLES, handle)
     return handle, pid
 end
+
+-- Return module
 return nvim

@@ -29,4 +29,14 @@ function M.bench(iters, cb)
     elapsed_time = end_time - start_time
     p("time elapsed for %d runs: %d ms", iters, elapsed_time)
 end
+
+---
+-- Error handling
+---
+
+function M.try(cb)
+    local status, retval = pcall(cb)
+    return status and retval or nil
+end
+
 return M

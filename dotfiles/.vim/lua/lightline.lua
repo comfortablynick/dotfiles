@@ -17,15 +17,16 @@ local vars = {
     use_nerd_fonts = vim.g.LL_nf,
     glyphs = {
         line_no = "",
-        vcs = vim.g.LL_nf ~= "1" and "" or " ",
+        vcs = vim.g.LL_nf ~= 1 and "" or " ",
         branch = "",
         line = "☰",
-        read_only = vim.g.LL_pl ~= "1" and "--RO-- " or " ",
-        modified = " [+]",
+        read_only = vim.g.LL_pl ~= 1 and "--RO-- " or " ",
+        -- modified = " [+]",
+        modified = " ●",
         func = "ƒ ",
-        linter_checking = vim.g.LL_nf ~= "1" and "..." or "\u{f110}",
-        linter_warnings = vim.g.LL_nf ~= "1" and "•" or "\u{f071}",
-        linter_errors = vim.g.LL_nf ~= "1" and "•" or "\u{f05e}",
+        linter_checking = vim.g.LL_nf ~= 1 and "..." or "\u{f110}",
+        linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
+        linter_errors = vim.g.LL_nf ~= 1 and "•" or "\u{f05e}",
         linter_ok = "",
     },
 }
@@ -192,9 +193,28 @@ local function python_venv()
                ""
 end
 
-function ll.filetype()
-    local venv = python_venv()
-    return venv
+function ll.file_type()
+    local ft_glyph = WINWIDTH > vars.med_width and
+                         try(
+                             function()
+                return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
+            end
+                         ) or ""
+    local venv = WINWIDTH > vars.med_width and python_venv() or ""
+    return vim.bo.filetype .. ft_glyph .. venv
+end
+
+function ll.file_format()
+    local ff = vim.bo.fileformat
+    if ll.is_not_file() or ff == "unix" then return "" end
+    local ff_glyph = WINWIDTH > vars.med_width and vim.g.LL_nf and
+                         try(vim.fn.WebDevIconsGetFileFormatSymbol) or ""
+    return ff .. " " .. ff_glyph
+end
+
+function ll.file_size()
+    local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
+    return size > 0 and util.humanize_bytes(size) or ""
 end
 
 function ll.git_summary()
@@ -236,15 +256,6 @@ function ll.git_status()
                ) or ""
     end
     return ""
-end
-
-function ll.file_size()
-    local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
-    return size > 0 and util.humanize_bytes(size) or ""
-end
-
-function ll.file_type()
-    return try(vim.fn.LL_FileType)
 end
 
 -- local runs = 1000

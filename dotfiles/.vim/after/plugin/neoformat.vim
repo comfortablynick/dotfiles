@@ -3,7 +3,7 @@
 " Description: Plugin settings for neoformat
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-14 12:10:02 CST
+" Last Change: 2020-01-17 13:14:14 CST
 " ====================================================
 if exists('g:loaded_after_plugin_neoformat_sgyavx6j')
     \ || !exists(':Neoformat')
@@ -41,7 +41,7 @@ let g:neoformat_typescript_prettier = {
 
 let g:neoformat_cmake_cmakeformat = {
     \ 'exe': 'cmake-format',
-    \ 'args': ['--config-file $HOME/.config/cmake/cmake-format.py'],
+    \ 'args': ['-c', '$HOME/.config/cmake/cmake-format.py'],
     \ }
 " Same options for javascript
 let g:neoformat_javascript_prettier = g:neoformat_typescript_prettier

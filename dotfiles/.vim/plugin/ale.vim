@@ -3,7 +3,7 @@
 " Description: Ale plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-01-17 13:04:49 CST
 " ====================================================
 if exists('g:loaded_plugin_config_ale_fyqh3zdm') | finish | endif
 let g:loaded_plugin_config_ale_fyqh3zdm = 1
@@ -70,7 +70,8 @@ let g:ale_typescript_prettier_options = g:ale_javascript_prettier_options
 let g:ale_go_gometalinter_options = '--fast --aggregate --cyclo-over=20'
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_c_gcc_options = '-std=gnu11 -Wall -Wextra'
-let g:ale_cmake_cmakeformat_options = '--config-file $HOME/.config/cmake/cmake-format.py'
+let g:ale_cmake_cmakeformat_executable = 'cmake-format'
+let g:ale_cmake_cmakeformat_options = '-c $HOME/.config/cmake/cmake-format.py'
 let g:ale_cmake_cmakelint_options = '--config=$HOME/.config/cmake/cmakelintrc'
 
 " Maps

@@ -1,102 +1,208 @@
-# How wide to allow formatted cmake files
-line_width = 80
+# ----------------------------------
+# Options affecting listfile parsing
+# ----------------------------------
+with section("parse"):
 
-# How many spaces to tab for indent
-tab_size = 2
+  # Specify structure for custom cmake functions
+  additional_commands = { 'foo': { 'flags': ['BAR', 'BAZ'],
+             'kwargs': {'DEPENDS': '*', 'HEADERS': '*', 'SOURCES': '*'}}}
 
-# If arglists are longer than this, break them always
-max_subargs_per_line = 4
+# -----------------------------
+# Options effecting formatting.
+# -----------------------------
+with section("format"):
 
-# If true, separate flow control names from their parentheses with a space
-separate_ctrl_name_with_space = False
+  # How wide to allow formatted cmake files
+  line_width = 80
 
-# If true, separate function names from parentheses with a space
-separate_fn_name_with_space = False
+  # How many spaces to tab for indent
+  tab_size = 2
 
-# If a statement is wrapped to more than one line, than dangle the closing
-# parenthesis on it's own line
-dangle_parens = False
+  # If an argument group contains more than this many sub-groups (parg or kwarg
+  # groups) then force it to a vertical layout.
+  max_subgroups_hwrap = 2
 
-# What character to use for bulleted lists
-bullet_char = '*'
+  # If a positional argument group contains more than this many arguments, then
+  # force it to a vertical layout.
+  max_pargs_hwrap = 6
 
-# What character to use as punctuation after numerals in an enumerated list
-enum_char = '.'
+  # If true, separate flow control names from their parentheses with a space
+  separate_ctrl_name_with_space = False
 
-# What style line endings to use in the output.
-line_ending = 'unix'
+  # If true, separate function names from parentheses with a space
+  separate_fn_name_with_space = False
 
-# Format command names consistently as 'lower' or 'upper' case
-command_case = 'canonical'
+  # If a statement is wrapped to more than one line, than dangle the closing
+  # parenthesis on its own line.
+  dangle_parens = False
 
-# Format keywords consistently as 'lower' or 'upper' case
-keyword_case = 'unchanged'
+  # If the trailing parenthesis must be 'dangled' on its on line, then align it
+  # to this reference: `prefix`: the start of the statement,  `prefix-indent`:
+  # the start of the statement, plus one indentation  level, `child`: align to
+  # the column of the arguments
+  dangle_align = 'prefix'
 
-# Specify structure for custom cmake functions
-additional_commands = {
-  "foo": {
-    "flags": [
-      "BAR",
-      "BAZ"
-    ],
-    "kwargs": {
-      "HEADERS": "*",
-      "SOURCES": "*",
-      "DEPENDS": "*"
-    }
-  }
-}
+  # If the statement spelling length (including space and parenthesis) is
+  # smaller than this amount, then force reject nested layouts.
+  min_prefix_chars = 4
 
-# A list of command names which should always be wrapped
-always_wrap = []
+  # If the statement spelling length (including space and parenthesis) is larger
+  # than the tab width by more than this amount, then force reject un-nested
+  # layouts.
+  max_prefix_chars = 10
 
-# Specify the order of wrapping algorithms during successive reflow attempts
-algorithm_order = [0, 1, 2, 3, 4]
+  # If a candidate layout is wrapped horizontally but it exceeds this many
+  # lines, then reject the layout.
+  max_lines_hwrap = 2
 
-# If true, the argument lists which are known to be sortable will be sorted
-# lexicographicall
-autosort = True
+  # What style line endings to use in the output.
+  line_ending = 'unix'
 
-# enable comment markup parsing and reflow
-enable_markup = True
+  # Format command names consistently as 'lower' or 'upper' case
+  command_case = 'canonical'
 
-# If comment markup is enabled, don't reflow the first comment block in
-# eachlistfile. Use this to preserve formatting of your
-# copyright/licensestatements.
-first_comment_is_literal = False
+  # Format keywords consistently as 'lower' or 'upper' case
+  keyword_case = 'unchanged'
 
-# If comment markup is enabled, don't reflow any comment block which matchesthis
-# (regex) pattern. Default is `None` (disabled).
-literal_comment_pattern = None
+  # A list of command names which should always be wrapped
+  always_wrap = []
 
-# Regular expression to match preformat fences in comments
-# default=r'^\s*([`~]{3}[`~]*)(.*)$'
-fence_pattern = '^\\s*([`~]{3}[`~]*)(.*)$'
+  # If true, the argument lists which are known to be sortable will be sorted
+  # lexicographicall
+  enable_sort = True
 
-# Regular expression to match rulers in comments
-# default=r'^\s*[^\w\s]{3}.*[^\w\s]{3}$'
-ruler_pattern = '^\\s*[^\\w\\s]{3}.*[^\\w\\s]{3}$'
+  # If true, the parsers may infer whether or not an argument list is sortable
+  # (without annotation).
+  autosort = False
 
-# If true, emit the unicode byte-order mark (BOM) at the start of the file
-emit_byteorder_mark = False
+  # By default, if cmake-format cannot successfully fit everything into the
+  # desired linewidth it will apply the last, most agressive attempt that it
+  # made. If this flag is True, however, cmake-format will print error, exit
+  # with non-zero status code, and write-out nothing
+  require_valid_layout = False
 
-# If a comment line starts with at least this many consecutive hash characters,
-# then don't lstrip() them off. This allows for lazy hash rulers where the first
-# hash char is not separated by space
-hashruler_min_length = 10
+  # A dictionary mapping layout nodes to a list of wrap decisions. See the
+  # documentation for more information.
+  layout_passes = {}
 
-# If true, then insert a space between the first hash char and remaining hash
-# chars in a hash ruler, and normalize it's length to fill the column
-canonicalize_hashrulers = True
+# ------------------------------------------------
+# Options affecting comment reflow and formatting.
+# ------------------------------------------------
+with section("markup"):
 
-# Specify the encoding of the input file. Defaults to utf-8.
-input_encoding = 'utf-8'
+  # What character to use for bulleted lists
+  bullet_char = '*'
 
-# Specify the encoding of the output file. Defaults to utf-8. Note that cmake
-# only claims to support utf-8 so be careful when using anything else
-output_encoding = 'utf-8'
+  # What character to use as punctuation after numerals in an enumerated list
+  enum_char = '.'
 
-# A dictionary containing any per-command configuration overrides. Currently
-# only `command_case` is supported.
-per_command = {}
+  # If comment markup is enabled, don't reflow the first comment block in each
+  # listfile. Use this to preserve formatting of your copyright/license
+  # statements.
+  first_comment_is_literal = False
+
+  # If comment markup is enabled, don't reflow any comment block which matches
+  # this (regex) pattern. Default is `None` (disabled).
+  literal_comment_pattern = None
+
+  # Regular expression to match preformat fences in comments
+  # default=r'^\s*([`~]{3}[`~]*)(.*)$'
+  fence_pattern = '^\\s*([`~]{3}[`~]*)(.*)$'
+
+  # Regular expression to match rulers in comments
+  # default=r'^\s*[^\w\s]{3}.*[^\w\s]{3}$'
+  ruler_pattern = '^\\s*[^\\w\\s]{3}.*[^\\w\\s]{3}$'
+
+  # If a comment line matches starts with this pattern then it is explicitly a
+  # trailing comment for the preceeding argument. Default is '#<'
+  explicit_trailing_pattern = '#<'
+
+  # If a comment line starts with at least this many consecutive hash
+  # characters, then don't lstrip() them off. This allows for lazy hash rulers
+  # where the first hash char is not separated by space
+  hashruler_min_length = 10
+
+  # If true, then insert a space between the first hash char and remaining hash
+  # chars in a hash ruler, and normalize its length to fill the column
+  canonicalize_hashrulers = True
+
+  # enable comment markup parsing and reflow
+  enable_markup = True
+
+# ----------------------------
+# Options affecting the linter
+# ----------------------------
+with section("lint"):
+
+  # a list of lint codes to disable
+  disabled_codes = []
+
+  # regular expression pattern describing valid function names
+  function_pattern = '[0-9a-z_]+'
+
+  # regular expression pattern describing valid macro names
+  macro_pattern = '[0-9A-Z_]+'
+
+  # regular expression pattern describing valid names for variables with global
+  # scope
+  global_var_pattern = '[0-9A-Z][0-9A-Z_]+'
+
+  # regular expression pattern describing valid names for variables with global
+  # scope (but internal semantic)
+  internal_var_pattern = '_[0-9A-Z][0-9A-Z_]+'
+
+  # regular expression pattern describing valid names for variables with local
+  # scope
+  local_var_pattern = '[0-9a-z_]+'
+
+  # regular expression pattern describing valid names for privatedirectory
+  # variables
+  private_var_pattern = '_[0-9a-z_]+'
+
+  # regular expression pattern describing valid names for publicdirectory
+  # variables
+  public_var_pattern = '[0-9A-Z][0-9A-Z_]+'
+
+  # regular expression pattern describing valid names for keywords used in
+  # functions or macros
+  keyword_pattern = '[0-9A-Z_]+'
+
+  # In the heuristic for C0201, how many conditionals to match within a loop in
+  # before considering the loop a parser.
+  max_conditionals_custom_parser = 2
+
+  # Require at least this many newlines between statements
+  min_statement_spacing = 1
+
+  # Require no more than this many newlines between statements
+  max_statement_spacing = 1
+  max_returns = 6
+  max_branches = 12
+  max_arguments = 5
+  max_localvars = 15
+  max_statements = 50
+
+# -------------------------------
+# Options effecting file encoding
+# -------------------------------
+with section("encode"):
+
+  # If true, emit the unicode byte-order mark (BOM) at the start of the file
+  emit_byteorder_mark = False
+
+  # Specify the encoding of the input file. Defaults to utf-8
+  input_encoding = 'utf-8'
+
+  # Specify the encoding of the output file. Defaults to utf-8. Note that cmake
+  # only claims to support utf-8 so be careful when using anything else
+  output_encoding = 'utf-8'
+
+# -------------------------------------
+# Miscellaneous configurations options.
+# -------------------------------------
+with section("misc"):
+
+  # A dictionary containing any per-command configuration overrides. Currently
+  # only `command_case` is supported.
+  per_command = {}
 

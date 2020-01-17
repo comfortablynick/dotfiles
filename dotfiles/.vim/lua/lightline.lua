@@ -1,6 +1,7 @@
 local a = vim.api
 local exists = vim.fn.exists
 local util = require "util"
+local try = util.try
 ll = {}
 
 vim.g.LL_pl = vim.g.LL_pl or 0
@@ -202,15 +203,11 @@ function ll.git_summary()
     -- 2. gitgutter
     -- 3. signify
     local hunks = (function()
-        if exists("b:coc_git_status") ~= 0 then
+        if exists("b:coc_git_status") == 1 then
             return vim.trim(a.nvim_buf_get_var(0, "coc_git_status"))
-        elseif exists("*GitGutterGetHunkSummary") ~= 0 then
-            return vim.call("GitGutterGetHunkSummary")
-        elseif exists("*sy#repo#get_stats") ~= 0 then
-            return vim.call("sy#repo#get_stats")
-        else
-            return ""
         end
+        return try(vim.fn.GitGutterGetHunkSummary) or
+                   try(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
     end)()
     local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
     local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
@@ -222,12 +219,11 @@ function ll.git_branch()
     if vim.fn.exists("g:coc_git_status") == 1 then
         return vim.g.coc_git_status
     end
-    local _, head = xpcall(
-                        function()
+    return try(
+               function()
             return vars.glyphs.branch .. " " .. vim.fn["fugitive#head"]()
-        end, function() return "" end
-                    )
-    return head
+        end
+           ) or ""
 end
 
 function ll.git_status()
@@ -244,13 +240,11 @@ end
 
 function ll.file_size()
     local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
-    if size <= 0 then return "" end
-    return util.humanize_bytes(size)
+    return size > 0 and util.humanize_bytes(size) or ""
 end
 
 function ll.file_type()
-    local _, result = pcall(vim.fn.LL_FileType)
-    return result
+    return try(vim.fn.LL_FileType)
 end
 
 -- local runs = 1000

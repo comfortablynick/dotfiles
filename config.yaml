@@ -243,6 +243,10 @@ dotfiles:
     src: .ignore
     dst: ~/.ignore
     link: link
+  d_ripgrep:
+    src: .config/ripgrep
+    dst: ~/.config/ripgrep
+    link: link
 profiles:
   core:
     dotfiles:
@@ -291,6 +295,7 @@ profiles:
     - f_lua-format
     - f_kakrc
     - f_ignore
+    - d_ripgrep
   io:
     dotfiles:
     - f_bash_linux

@@ -7,7 +7,8 @@ ll = {}
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
-local WINWIDTH = vim.api.nvim_win_get_width(0)
+local WINWIDTH = a.nvim_win_get_width(0)
+local FILENAME = a.nvim_buf_get_name(0)
 local vars = {
     min_width = 90,
     med_width = 140,
@@ -213,8 +214,23 @@ function ll.file_format()
 end
 
 function ll.file_size()
-    local size = vim.loop.fs_stat(a.nvim_buf_get_name(0)).size
+    local size = vim.loop.fs_stat(FILENAME).size
     return size > 0 and util.humanize_bytes(size) or ""
+end
+
+function ll.file_name()
+    if ll.is_not_file() then return "" end
+    local p = string.gsub(FILENAME, vim.env.HOME, "~")
+    local chars = (function()
+        if WINWIDTH <= vars.med_width then
+            return 2
+        elseif WINWIDTH <= vars.max_width then
+            return 3
+        else
+            return 999
+        end
+    end)()
+    return p
 end
 
 function ll.git_summary()

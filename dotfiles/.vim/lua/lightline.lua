@@ -48,76 +48,81 @@ local special_filetypes = {
     packager = "PACK",
 }
 
-local function lightline_config() -- luacheck: ignore
-    vim.g.lightline_test = {
-        tabline = {left = {{"buffers"}}, right = {{"filesize"}}},
-        active = {
-            left = {
-                {"vim_mode", "paste"},
-                {"filename"},
-                {
-                    "git_status",
-                    "linter_checking",
-                    "linter_errors",
-                    "linter_warnings",
-                    "coc_status",
-                },
-            },
-            right = {
-                {"line_info"},
-                {"filetype_icon", "fileencoding_non_utf", "fileformat_icon"},
-                {"current_tag"},
-                {"asyncrun_status"},
+vim.g.lightline_test = {
+    tabline = {left = {{"buffers"}}, right = {{"filesize"}}},
+    active = {
+        left = {
+            {"mode", "paste"},
+            {"filename"},
+            {
+                "git_status",
+                "linter_checking",
+                "linter_errors",
+                "linter_warnings",
+                "coc_status",
             },
         },
-        inactive = {
-            left = {{"filename"}},
-            right = {
-                {"line_info"},
-                {"filetype_icon", "fileencoding_non_utf", "fileformat_icon"},
-            },
+        right = {
+            {"line_info"},
+            {"filetype", "fileencoding", "fileformat"},
+            {"current_tag"},
+            {"asyncrun_status"},
         },
-        component = {filename = "%<%{LL_FileName()}"},
-        component_function = {
-            git_status = "LL_GitStatus",
-            filesize = "LL_FileSize",
-            filetype_icon = "LL_FileType",
-            fileformat_icon = "LL_FileFormat",
-            fileencoding_non_utf = "LL_FileEncoding",
-            line_info = "LL_LineInfo",
-            vim_mode = "LL_Mode",
-            venv = "LL_VirtualEnvName",
-            current_tag = "LL_CurrentTag",
-            coc_status = "LL_CocStatus",
-            asyncrun_status = "LL_AsyncRunStatus",
-        },
-        tab_component_function = {filename = "LL_TabName"},
-        component_expand = {
-            linter_checking = "lightline#ale#checking",
-            linter_warnings = "LL_LinterWarnings",
-            linter_errors = "LL_LinterErrors",
-            linter_ok = "lightline#ale#ok",
-            buffers = "lightline#bufferline#buffers",
-        },
-        component_type = {
-            readonly = "error",
-            linter_checking = "left",
-            linter_warnings = "warning",
-            linter_errors = "error",
-            linter_ok = "left",
-            buffers = "tabsel",
-            cocerror = "error",
-            cocwarn = "warn",
-        },
-        separator = {left = "", right = ""},
-        subseparator = {left = "|", right = "|"},
-    }
-    -- for name, value in pairs(vars) do
-    --     vim.g[name] = value
-    -- end
-end
-
--- lightline_config()
+    },
+    inactive = {
+        left = {{"filename"}},
+        right = {{"line_info"}, {"filetype", "fileencoding", "fileformat"}},
+    },
+    component = {
+        mode = "%{v:lua.ll.vim_mode()}",
+        filename = "%<%{v:lua.ll.file_name()}",
+        git_status = "%{v:lua.ll.git_status()}",
+        filetype = "%{v:lua.ll.file_type()}",
+        fileencoding = "%{v:lua.ll.file_encoding()}",
+        fileformat = "%{v:lua.ll.file_format()}",
+        line_info = "%{v:lua.ll.line_info()}",
+        filesize = "%{v:lua.ll.file_size()}",
+        coc_status = "%{v:lua.ll.coc_status()}",
+    },
+    component_visible_condition = {
+        filetype = "v:lua.ll.file_type()",
+        fileencoding = "v:lua.ll.file_encoding()",
+        fileformat = "v:lua.ll.file_format()",
+        coc_status = "v:lua.ll.coc_status()",
+    },
+    component_function = {
+        -- git_status = "LL_GitStatus",
+        -- filesize = "LL_FileSize",
+        -- filetype_icon = "LL_FileType",
+        -- fileformat_icon = "LL_FileFormat",
+        -- fileencoding_non_utf = "LL_FileEncoding",
+        -- line_info = "LL_LineInfo",
+        -- vim_mode = "LL_Mode",
+        current_tag = "LL_CurrentTag",
+        -- coc_status = "LL_CocStatus",
+        asyncrun_status = "LL_AsyncRunStatus",
+    },
+    tab_component_function = {filename = "LL_TabName"},
+    component_expand = {
+        linter_checking = "lightline#ale#checking",
+        linter_warnings = "LL_LinterWarnings",
+        linter_errors = "LL_LinterErrors",
+        linter_ok = "lightline#ale#ok",
+        buffers = "lightline#bufferline#buffers",
+    },
+    component_type = {
+        readonly = "error",
+        linter_checking = "left",
+        linter_warnings = "warning",
+        linter_errors = "error",
+        linter_ok = "left",
+        buffers = "tabsel",
+        cocerror = "error",
+        cocwarn = "warn",
+    },
+    separator = {left = "", right = ""},
+    subseparator = {left = "|", right = "|"},
+}
 
 function ll.is_not_file()
     -- local exclude = {
@@ -161,10 +166,13 @@ function ll.line_info()
            )
 end
 
-function ll.mode()
+function ll.vim_mode()
     local mode_map = {
         n = {"NORMAL", "NRM", "N"},
+        niI = {"NORMAL-CMD", "NRM", "N"},
         i = {"INSERT", "INS", "I"},
+        ic = {"INSERT COMPL", "I-COMPL", "IC"},
+        ix = {"INSERT COMPL", "I-COMPL", "IC"},
         R = {"REPLACE", "REP", "R"},
         v = {"VISUAL", "VIS", "V"},
         V = {"V-LINE", "V-LN", "V-L"},
@@ -175,23 +183,17 @@ function ll.mode()
         ["<C-s>"] = {"S-BLOCK", "S-BL", "S-B"},
         t = {"TERMINAL", "TERM", "T"},
     }
+
     local mode_key = a.nvim_get_mode().mode
-    local mode = mode_map[mode_key]
-    local winwidth = a.nvim_win_get_width(0)
+    local curr_mode = mode_map[mode_key] or mode_key
     local mode_out = function()
-        if winwidth > vars.med_width then return mode[1] end
-        if winwidth > vars.min_width then return mode[2] end
-        return mode[3]
+        if WINWIDTH > vars.med_width then return curr_mode[1] end
+        if WINWIDTH > vars.min_width then return curr_mode[2] end
+        return curr_mode[3]
     end
     -- TODO: is filename ever going to match special_filetypes?
     -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
     return special_filetypes[vim.bo.filetype] or mode_out()
-end
-
-local function python_venv()
-    return not vim.g.did_coc_loaded and
-               (vim.bo.ft == "python" and nvim.basename(vim.env.VIRTUAL_ENV)) or
-               ""
 end
 
 function ll.file_type()
@@ -201,6 +203,13 @@ function ll.file_type()
                 return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
             end
                          ) or ""
+    local python_venv = function()
+        local venv = not vim.g.did_coc_loaded and
+                         (vim.bo.ft == "python" and
+                             nvim.basename(vim.env.VIRTUAL_ENV)) or ""
+        return venv ~= "" and string.format(" (%s)", venv) or ""
+    end
+
     local venv = WINWIDTH > vars.med_width and python_venv() or ""
     return vim.bo.filetype .. ft_glyph .. venv
 end
@@ -208,20 +217,24 @@ end
 function ll.file_format()
     local ff = vim.bo.fileformat
     if ll.is_not_file() or ff == "unix" then return "" end
-    local ff_glyph = WINWIDTH > vars.med_width and vim.g.LL_nf and
-                         try(vim.fn.WebDevIconsGetFileFormatSymbol) or ""
-    return ff .. " " .. ff_glyph
+    local ff_glyph = WINWIDTH > vars.med_width and
+                         try(
+                             function()
+                return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
+            end
+                         ) or ""
+    return ff .. ff_glyph
 end
 
 function ll.file_size()
-    local size = vim.loop.fs_stat(FILENAME).size
+    local stat = vim.loop.fs_stat(FILENAME)
+    local size = stat ~= nil and stat.size or 0
     return size > 0 and util.humanize_bytes(size) or ""
 end
 
 function ll.file_name()
     if ll.is_not_file() then return "" end
-    -- local path = string.gsub(vim.fn.expand('%'), vim.env.HOME, "~")
-    local path = vim.fn.expand("%")
+    local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
     local num_chars = (function()
         if WINWIDTH <= vars.med_width then
             return 2
@@ -242,15 +255,26 @@ function ll.file_name()
                 table.insert(shortened, shorten(parts[i]))
             end
             table.insert(shortened, basename)
-            return table.concat(shortened, "/")
+            path = table.concat(shortened, "/")
         end
     end
-    return path
+    local read_only = function()
+        return not ll.is_not_file() and vim.bo.readonly and
+                   vars.glyphs.read_only or ""
+    end
+    local modified = function()
+        return
+            not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or
+                ""
+    end
+    return read_only() .. path .. modified()
 end
 
 function ll.file_encoding()
     return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
 end
+
+function ll.tab_name() return not ll.is_not_file() and "" or ll.file_name() end
 
 function ll.git_summary()
     -- Look for git hunk summary in this order:
@@ -294,8 +318,44 @@ function ll.git_status()
 end
 
 function ll.coc_status()
-    return WINWIDTH > vars.min_width and vim.fn.exists("g:coc_status") == 1 and
-               vim.g.coc_status
+    if WINWIDTH > vars.min_width and vim.fn.exists("g:coc_status") == 1 then
+        local st = vim.g.coc_status
+        return st and st
+    end
+    return ""
+end
+
+function ll.linter_errors()
+    local coc_error_ct = function()
+        if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
+        local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
+        return info.error
+    end
+    local ale_error_ct = function()
+        local counts = vim.call("ale#statusline#Count", 0)
+        return counts.error + counts.style_error
+    end
+    local coc_errors = coc_error_ct()
+    local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
+    return error_ct > 0 and
+               string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
+end
+
+function ll.linter_warnings()
+    local coc_warning_ct = function()
+        if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
+        local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
+        return info.warning
+    end
+    local ale_warning_ct = function()
+        local counts = vim.call("ale#statusline#Count", 0)
+        return counts.warning + counts.style_warning
+    end
+    local coc_warnings = coc_warning_ct()
+    local warning_ct = coc_warnings > 0 and coc_warnings or ale_warning_ct()
+    return warning_ct > 0 and
+               string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or
+               ""
 end
 
 -- local runs = 1000

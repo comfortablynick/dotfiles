@@ -4,7 +4,7 @@
 " Description: Config for lightline.vim
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 11:38:26 CST
+" Last Change: 2020-01-20 15:27:21 CST
 " ====================================================
 scriptencoding utf-8
 if exists('g:loaded_plugin_config_lightline_mh4pwx8p')
@@ -91,7 +91,7 @@ let g:lightline = {
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '|', 'right': '|' },
     \ }
-
+let g:lightline = g:lightline_test
 " Window widths {{{2
 let g:LL_MinWidth = 90                                          " Width for using some expanded sections
 let g:LL_MedWidth = 140                                         " Secondary width for some sections

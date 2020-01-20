@@ -33,6 +33,8 @@ local vars = {
 }
 
 -- List of plugins/non-files for special handling
+-- Key: filetype
+-- Value: special mode (set to `false` to skip setting mode)
 local special_filetypes = {
     nerdtree = "NERD",
     netrw = "NETRW",
@@ -46,6 +48,7 @@ local special_filetypes = {
     vimfiler = "FILER",
     minpac = "PACK",
     packager = "PACK",
+    fugitive = "FUGITIVE",
 }
 
 vim.g.lightline_test = {
@@ -125,27 +128,6 @@ vim.g.lightline_test = {
 }
 
 function ll.is_not_file()
-    -- local exclude = {
-    --     "nerdtree",
-    --     "netrw",
-    --     "defx",
-    --     "output",
-    --     "vista",
-    --     "undotree",
-    --     "vimfiler",
-    --     "tagbar",
-    --     "minpac",
-    --     "packager",
-    --     "qf",
-    --     "coc-explorer",
-    --     "output:///info",
-    -- }
-    -- for _, v in ipairs(exclude) do
-    --     if v == filetype or v == vim.fn.expand("%:t") or v == vim.fn.expand("%") then
-    --         return true
-    --     end
-    -- end
-    -- return false
     return special_filetypes[vim.bo.filetype] ~= nil
 end
 
@@ -193,6 +175,7 @@ function ll.vim_mode()
     end
     -- TODO: is filename ever going to match special_filetypes?
     -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
+    -- return type(special_filetypes[vim.bo.filetype]) == "string" or mode_out()
     return special_filetypes[vim.bo.filetype] or mode_out()
 end
 

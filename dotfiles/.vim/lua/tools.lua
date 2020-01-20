@@ -103,7 +103,12 @@ function M.set_executable(file)
         end
         return table.concat(chars)
     end
-    local orig_mode = uv.fs_stat(file).mode
+    local stat = uv.fs_stat(file)
+    if stat == nil then
+        a.nvim_err_writeln(string.format("File '%s' does not exist!", file))
+        return
+    end
+    local orig_mode = stat.mode
     local orig_mode_oct = string.sub(string.format("%o", orig_mode), 4)
     nvim.spawn(
         "chmod", {args = {"u+x", file}}, function()

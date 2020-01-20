@@ -220,8 +220,9 @@ end
 
 function ll.file_name()
     if ll.is_not_file() then return "" end
-    local p = string.gsub(FILENAME, vim.env.HOME, "~")
-    local chars = (function()
+    -- local path = string.gsub(vim.fn.expand('%'), vim.env.HOME, "~")
+    local path = vim.fn.expand("%")
+    local num_chars = (function()
         if WINWIDTH <= vars.med_width then
             return 2
         elseif WINWIDTH <= vars.max_width then
@@ -230,8 +231,25 @@ function ll.file_name()
             return nil
         end
     end)()
-    -- if chars
-    return p
+    if num_chars ~= nil then
+        local shorten = function(part) return part:sub(1, num_chars) end
+        local parts = vim.split(path, "/")
+        local basename = parts[#parts]
+        if ll.coc_status() ~= "" then return basename end
+        if #parts > 1 then
+            local shortened = {}
+            for i = 1, #parts - 1 do
+                table.insert(shortened, shorten(parts[i]))
+            end
+            table.insert(shortened, basename)
+            return table.concat(shortened, "/")
+        end
+    end
+    return path
+end
+
+function ll.file_encoding()
+    return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
 end
 
 function ll.git_summary()
@@ -273,6 +291,11 @@ function ll.git_status()
                ) or ""
     end
     return ""
+end
+
+function ll.coc_status()
+    return WINWIDTH > vars.min_width and vim.fn.exists("g:coc_status") == 1 and
+               vim.g.coc_status
 end
 
 -- local runs = 1000

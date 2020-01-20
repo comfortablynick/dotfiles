@@ -24,7 +24,9 @@
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 snippet fn "anonymous inline function"
-function()
-    $1
-end$0
+function() $1 end$0
+endsnippet
+
+snippet l "local x = 1" b
+local ${1:x} = ${0:1}
 endsnippet

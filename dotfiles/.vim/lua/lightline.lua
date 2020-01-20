@@ -227,9 +227,10 @@ function ll.file_name()
         elseif WINWIDTH <= vars.max_width then
             return 3
         else
-            return 999
+            return nil
         end
     end)()
+    -- if chars
     return p
 end
 

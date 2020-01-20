@@ -8,8 +8,8 @@ function M.async_grep(term)
         a.nvim_err_writeln("async grep: Search term missing")
         return
     end
-    local stdout = vim.loop.new_pipe(false)
-    local stderr = vim.loop.new_pipe(false)
+    local stdout = uv.new_pipe(false)
+    local stderr = uv.new_pipe(false)
     local results = {}
     local onread = function(err, data)
         assert(not err, err)
@@ -32,13 +32,13 @@ function M.async_grep(term)
     end
     local grepprg = vim.split(vim.o.grepprg, " ")
     -- local grepprg = vim.split("rg --vimgrep --smart-case", " ")
-    handle = vim.loop.spawn(
+    handle = uv.spawn(
                  table.remove(grepprg, 1),
                  {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
                  vim.schedule_wrap(onexit)
              )
-    vim.loop.read_start(stdout, onread)
-    vim.loop.read_start(stderr, onread)
+    uv.read_start(stdout, onread)
+    uv.read_start(stderr, onread)
 end
 
 -- GIT
@@ -46,11 +46,15 @@ end
 -- TODO: figure out how to return stdout,stderr from these
 -- in simplest way possible
 function M.git_pull()
-    nvim.spawn("git", {args = {"pull"}}, function() print("Git pull complete") end)
+    nvim.spawn(
+        "git", {args = {"pull"}}, function() print("Git pull complete") end
+    )
 end
 
 function M.git_push()
-    nvim.spawn("git", {args = {"push"}}, function() print("Git push complete") end)
+    nvim.spawn(
+        "git", {args = {"push"}}, function() print("Git push complete") end
+    )
 end
 
 -- Test lower level vim apis
@@ -77,6 +81,43 @@ function M.readdir(path)
     end
     print(vim.inspect(out))
     uv.fs_closedir(handle)
+end
+
+function M.set_executable(file)
+    file = file or a.nvim_buf_get_name(0)
+    local get_perm_str = function(dec_mode)
+        local mode = string.format("%o", dec_mode)
+        local perms = {
+            [0] = "---", -- No access.
+            [1] = "--x", -- Execute access.
+            [2] = "-w-", -- Write access.
+            [3] = "-wx", -- Write and execute access.
+            [4] = "r--", -- Read access.
+            [5] = "r-x", -- Read and execute access.
+            [6] = "rw-", -- Read and write access.
+            [7] = "rwx", -- Read, write and execute access.
+        }
+        local chars = {}
+        for i = 4, #mode do
+            table.insert(chars, perms[tonumber(mode:sub(i, i))])
+        end
+        return table.concat(chars)
+    end
+    local orig_mode = uv.fs_stat(file).mode
+    nvim.spawn(
+        "chmod", {args = {"+x", file}}, function()
+            local new_mode = uv.fs_stat(file).mode
+            local new_mode_str = get_perm_str(new_mode)
+            if orig_mode ~= new_mode then
+                printf(
+                    "Permissions changed: %s -> %s", get_perm_str(orig_mode),
+                    new_mode_str
+                )
+            else
+                print("Permissions not changed: " .. new_mode_str)
+            end
+        end
+    )
 end
 
 return M

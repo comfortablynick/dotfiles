@@ -3,7 +3,7 @@
 " Description: Lua filetype overrides
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 16:08:06 CST
+" Last Change: 2020-01-19 11:55:45 CST
 " ====================================================
 if exists('g:loaded_after_ftplugin_lua_dzkzqoxu') | finish | endif
 let g:loaded_after_ftplugin_lua_dzkzqoxu = 1
@@ -12,7 +12,6 @@ let g:loaded_after_ftplugin_lua_dzkzqoxu = 1
 setlocal formatoptions-=o formatoptions-=r
 setlocal formatprg=lua-format\ --config=$XDG_CONFIG_HOME/.lua-format
 
-iabbrev l local
 
 command! Luadev call s:luadev()
 

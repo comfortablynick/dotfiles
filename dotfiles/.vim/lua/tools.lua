@@ -104,17 +104,23 @@ function M.set_executable(file)
         return table.concat(chars)
     end
     local orig_mode = uv.fs_stat(file).mode
+    local orig_mode_oct = string.sub(string.format("%o", orig_mode), 4)
     nvim.spawn(
-        "chmod", {args = {"+x", file}}, function()
+        "chmod", {args = {"u+x", file}}, function()
             local new_mode = uv.fs_stat(file).mode
+            local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
             local new_mode_str = get_perm_str(new_mode)
             if orig_mode ~= new_mode then
                 printf(
-                    "Permissions changed: %s -> %s", get_perm_str(orig_mode),
-                    new_mode_str
+                    "Permissions changed: %s (%s) -> %s (%s)",
+                    get_perm_str(orig_mode), orig_mode_oct, new_mode_str,
+                    new_mode_oct
                 )
             else
-                print("Permissions not changed: " .. new_mode_str)
+                printf(
+                    "Permissions not changed: %s (%s)", new_mode_str,
+                    new_mode_oct
+                )
             end
         end
     )

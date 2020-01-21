@@ -3,7 +3,7 @@
 " Description: Color and theme settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-19
+" Last Change: 2020-01-20 21:43:47 CST
 " ====================================================
 if exists('g:loaded_plugin_colortheme_brhrevkl') | finish | endif
 let g:loaded_plugin_colortheme_brhrevkl = 1
@@ -67,4 +67,7 @@ if !empty(get(g:, 'vim_base_color'))
     endif
 endif
 
+if !empty(get(g:, 'statusline_theme'))
+    let g:lightline.colorscheme = g:statusline_theme
+endif
 " vim:fdl=1:

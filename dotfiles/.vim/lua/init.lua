@@ -1,4 +1,4 @@
--- vim:foldmethod=marker fdl=1:
+-- vim:fdm=marker fmr={{{,}}} fdl=1:
 local vim = vim
 require "helpers"
 init = {}
@@ -292,6 +292,8 @@ local general_maps = {
         (":vsplit %s<CR>"):format(vim.env.XDG_CONFIG_HOME .. "/nvim/init.vim"),
     },
     ["n+"] = {":"},
+    -- Make Y behave as D (yank to end of line)
+    ["nY"] = {"y$"},
 }
 
 -- Navigation maps {{{2
@@ -384,6 +386,7 @@ local function load_packages() -- {{{2
         "vista.vim",
         "vim-textobj-user",
         "vim-textobj-lua",
+        "targets.vim",
     }
     if global_vars.LL_nf == 1 then table.insert(packages, "vim-devicons") end
 

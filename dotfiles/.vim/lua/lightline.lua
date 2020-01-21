@@ -1,15 +1,19 @@
 local a = vim.api
 local exists = vim.fn.exists
-local util = require "util"
+local util = require"util"
 local try = util.try
 ll = {}
 
+-- Local vars --{{{1
+-- Vim global settings --{{{2
+-- vim.g.lightline_use_lua = 1
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
+-- Script globals {{{2
 local WINWIDTH = a.nvim_win_get_width(0)
 local FILENAME = a.nvim_buf_get_name(0)
-local vars = {
+local vars = { -- {{{2
     min_width = 90,
     med_width = 140,
     max_width = 200,
@@ -35,7 +39,7 @@ local vars = {
 -- List of plugins/non-files for special handling
 -- Key: filetype
 -- Value: special mode (set to `false` to skip setting mode)
-local special_filetypes = {
+local special_filetypes = { -- {{{2
     nerdtree = "NERD",
     netrw = "NETRW",
     defx = "DEFX",
@@ -51,8 +55,12 @@ local special_filetypes = {
     fugitive = "FUGITIVE",
 }
 
-vim.g.lightline_test = {
-    tabline = {left = {{"buffers"}}, right = {{"filesize"}}},
+local lightline = { -- {{{2
+    tabline = {
+        left = {{"buffers"}},
+        right = {{"filesize"}},
+        -- preserve fold
+    },
     active = {
         left = {
             {"mode", "paste"},
@@ -127,28 +135,26 @@ vim.g.lightline_test = {
     subseparator = {left = "|", right = "|"},
 }
 
-function ll.is_not_file()
-    return special_filetypes[vim.bo.filetype] ~= nil
+-- Functions --{{{1
+function ll.is_not_file() -- {{{2
+    return special_filetypes[vim.bo.filetype] ~= nil or vim.bo.filetype == ""
 end
 
-function ll.line_info()
+function ll.line_info() -- {{{2
     local line_ct = a.nvim_buf_line_count(0)
     local pos = a.nvim_win_get_cursor(0)
     local row = pos[1]
     local col = pos[2] + 1
     local row_pos = function()
         local max_digits = string.len(tostring(line_ct))
-        return string.format(
-                   "%" .. max_digits .. "d/%" .. max_digits .. "d", row, line_ct
-               )
+        return string.format("%" .. max_digits .. "d/%" .. max_digits .. "d",
+                             row, line_ct)
     end
-    return string.format(
-               "%3d%% %s %s %s :%3d", row * 100 / line_ct, vars.glyphs.line,
-               row_pos(), vars.glyphs.line_no, col
-           )
+    return string.format("%3d%% %s %s %s :%3d", row * 100 / line_ct,
+                         vars.glyphs.line, row_pos(), vars.glyphs.line_no, col)
 end
 
-function ll.vim_mode()
+function ll.vim_mode() -- {{{2
     local mode_map = {
         n = {"NORMAL", "NRM", "N"},
         niI = {"NORMAL-CMD", "NRM", "N"},
@@ -179,13 +185,11 @@ function ll.vim_mode()
     return special_filetypes[vim.bo.filetype] or mode_out()
 end
 
-function ll.file_type()
+function ll.file_type() -- {{{2
     local ft_glyph = WINWIDTH > vars.med_width and
-                         try(
-                             function()
-                return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
-            end
-                         ) or ""
+                         try(function()
+            return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
+        end) or ""
     local python_venv = function()
         local venv = not vim.g.did_coc_loaded and
                          (vim.bo.ft == "python" and
@@ -197,25 +201,23 @@ function ll.file_type()
     return vim.bo.filetype .. ft_glyph .. venv
 end
 
-function ll.file_format()
+function ll.file_format() -- {{{2
     local ff = vim.bo.fileformat
     if ll.is_not_file() or ff == "unix" then return "" end
     local ff_glyph = WINWIDTH > vars.med_width and
-                         try(
-                             function()
-                return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
-            end
-                         ) or ""
+                         try(function()
+            return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
+        end) or ""
     return ff .. ff_glyph
 end
 
-function ll.file_size()
+function ll.file_size() -- {{{2
     local stat = vim.loop.fs_stat(FILENAME)
     local size = stat ~= nil and stat.size or 0
     return size > 0 and util.humanize_bytes(size) or ""
 end
 
-function ll.file_name()
+function ll.file_name() -- {{{2
     if ll.is_not_file() then return "" end
     local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
     local num_chars = (function()
@@ -253,13 +255,15 @@ function ll.file_name()
     return read_only() .. path .. modified()
 end
 
-function ll.file_encoding()
+function ll.file_encoding() -- {{{2
     return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
 end
 
-function ll.tab_name() return not ll.is_not_file() and "" or ll.file_name() end
+function ll.tab_name() -- {{{2
+    return not ll.is_not_file() and "" or ll.file_name()
+end
 
-function ll.git_summary()
+function ll.git_summary() -- {{{2
     -- Look for git hunk summary in this order:
     -- 1. coc-git
     -- 2. gitgutter
@@ -277,30 +281,27 @@ function ll.git_summary()
     return added .. changed .. deleted
 end
 
-function ll.git_branch()
+function ll.git_branch() -- {{{2
     if vim.fn.exists("g:coc_git_status") == 1 then
         return vim.g.coc_git_status
     end
-    return try(
-               function()
-            return vars.glyphs.branch .. " " .. vim.fn["fugitive#head"]()
-        end
-           ) or ""
+    return try(function()
+        return vars.glyphs.branch .. " " .. vim.fn["fugitive#head"]()
+    end) or ""
 end
 
-function ll.git_status()
+function ll.git_status() -- {{{2
     if not ll.is_not_file() and WINWIDTH > vars.min_width then
         local branch = ll.git_branch()
         local hunks = ll.git_summary()
-        return branch ~= "" and string.format(
-                   "%s%s%s", vars.glyphs.vcs, branch,
-                   hunks ~= "" and " " .. hunks or ""
-               ) or ""
+        return branch ~= "" and string.format("%s%s%s", vars.glyphs.vcs, branch,
+                                              hunks ~= "" and " " .. hunks or "") or
+                   ""
     end
     return ""
 end
 
-function ll.coc_status()
+function ll.coc_status() -- {{{2
     if WINWIDTH > vars.min_width and vim.fn.exists("g:coc_status") == 1 then
         local st = vim.g.coc_status
         return st and st
@@ -308,7 +309,7 @@ function ll.coc_status()
     return ""
 end
 
-function ll.linter_errors()
+function ll.linter_errors() -- {{{2
     local coc_error_ct = function()
         if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
         local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
@@ -324,7 +325,7 @@ function ll.linter_errors()
                string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
 end
 
-function ll.linter_warnings()
+function ll.linter_warnings() -- {{{2
     local coc_warning_ct = function()
         if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
         local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
@@ -341,6 +342,12 @@ function ll.linter_warnings()
                ""
 end
 
+-- Post config {{{1
+-- Set g:lightline {{{2
+vim.g.lightline = lightline
+
+-- Tests {{{2
 -- local runs = 1000
 -- require'util'.bench(runs, ll.git_status)
 -- require'util'.bench(runs, vim.fn.LL_GitStatus)
+-- vim:fdm=marker fdl=1:

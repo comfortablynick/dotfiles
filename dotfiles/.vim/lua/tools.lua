@@ -3,7 +3,7 @@ local a = vim.api
 local uv = vim.loop
 local M = {}
 
-function M.async_grep(term)
+function M.async_grep(term) -- {{{1
     if not term then
         a.nvim_err_writeln("async grep: Search term missing")
         return
@@ -45,20 +45,20 @@ end
 
 -- TODO: figure out how to return stdout,stderr from these
 -- in simplest way possible
-function M.git_pull()
+function M.git_pull() -- {{{1
     nvim.spawn(
         "git", {args = {"pull"}}, function() print("Git pull complete") end
     )
 end
 
-function M.git_push()
+function M.git_push() -- {{{1
     nvim.spawn(
         "git", {args = {"push"}}, function() print("Git push complete") end
     )
 end
 
 -- Test lower level vim apis
-function M.scandir(path)
+function M.scandir(path) -- {{{1
     local d = uv.fs_scandir(vim.fn.expand(path))
     local out = {}
     while true do
@@ -69,7 +69,7 @@ function M.scandir(path)
     print(vim.inspect(out))
 end
 
-function M.readdir(path)
+function M.readdir(path) -- {{{1
     local handle = uv.fs_opendir(vim.fn.expand(path), nil, 10)
     local out = {}
     while true do
@@ -83,7 +83,7 @@ function M.readdir(path)
     uv.fs_closedir(handle)
 end
 
-function M.set_executable(file)
+function M.set_executable(file) -- {{{1
     file = file or a.nvim_buf_get_name(0)
     local get_perm_str = function(dec_mode)
         local mode = string.format("%o", dec_mode)

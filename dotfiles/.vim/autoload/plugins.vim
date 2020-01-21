@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-14 10:51:00 CST
+" Last Change: 2020-01-21 12:09:34 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -26,6 +26,7 @@ function! plugins#init() abort
     Pack 'tomtom/tcomment_vim'
     Pack 'justinmk/vim-sneak'
     Pack 'tommcdo/vim-lion'
+    Pack 'wellle/targets.vim'
 
     " Text objects
     Pack 'kana/vim-textobj-user'
@@ -65,6 +66,7 @@ function! plugins#init() abort
     Pack 'pearofducks/ansible-vim',     {'type': 'start'}
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'ziglang/zig.vim',             {'type': 'start'}
+    Pack 'tbastos/vim-lua',             {'type': 'start'}
 
     " Git
     Pack 'airblade/vim-gitgutter'

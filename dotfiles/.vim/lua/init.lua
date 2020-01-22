@@ -1,6 +1,5 @@
--- vim:fdm=marker fmr={{{,}}} fdl=1:
 local vim = vim
-require "helpers"
+require"helpers"
 init = {}
 
 -- Options {{{1
@@ -10,7 +9,7 @@ local general = {
     -- Shared data file location
     shadafile = vim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
     -- Shared data settings (use 20 instead of default 100 to speed up)
-    shada = [[!,'20,<50,s10,h]],
+    -- shada = [[!,'20,<50,s10,h]],
     -- Live substitution
     inccommand = "split",
     -- Shell to use instead of sh
@@ -251,7 +250,11 @@ local autocmds = {
     init_lua = {
         -- Terminal starts in insert mode
         {"TermOpen", "*", "startinsert"},
-        {"TermOpen", "*", [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]]},
+        {
+            "TermOpen",
+            "*",
+            [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]],
+        },
         -- Close read-only filetypes with only 'q'
         {"FileType", "netrw,help", "nnoremap <silent> q :bd<CR>"},
         -- Create backup files with useful names
@@ -284,9 +287,8 @@ local general_maps = {
     ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], expr = true},
     -- Shortcuts to open files
     ["n<Leader>il"] = {
-        (":vsplit %s<CR>"):format(
-            vim.env.XDG_DATA_HOME .. "/nvim/site/lua/init.lua"
-        ),
+        (":vsplit %s<CR>"):format(vim.env.XDG_DATA_HOME ..
+                                      "/nvim/site/lua/init.lua"),
     },
     ["n<Leader>iv"] = {
         (":vsplit %s<CR>"):format(vim.env.XDG_CONFIG_HOME .. "/nvim/init.vim"),
@@ -354,7 +356,7 @@ function init.text_object_comment_and_duplicate(is_visual_mode) -- {{{2
         for _, line in ipairs(lines) do
             table.insert(commented, commentstring:format(line))
         end
-        return vim.tbl_flatten {lines, commented}
+        return vim.tbl_flatten{lines, commented}
     end
     if is_visual_mode then
         nvim.buf_transform_region_lines(nil, "<", ">", visual_mode, comment_dupe)
@@ -409,7 +411,7 @@ local function set_globals() -- {{{2
 end
 
 local function create_cmds() -- {{{2
-    vim.cmd [[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
+    vim.cmd[[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
 end
 
 local function create_autocmds() -- {{{2
@@ -430,6 +432,7 @@ create_cmds()
 load_packages()
 
 -- Load lua modules {{{2
-require "lightline"
+require"lightline"
 
 return init
+-- vim:fdm=marker fdl=1:

@@ -70,14 +70,13 @@ local lightline = { -- {{{2
                 "linter_checking",
                 "linter_errors",
                 "linter_warnings",
-                "coc_status",
             },
         },
         right = {
             {"line_info"},
             {"filetype", "fileencoding", "fileformat"},
-            {"current_tag"},
-            {"asyncrun_status"},
+            {"coc_status"},
+            -- {"current_tag"},
         },
     },
     inactive = {
@@ -94,6 +93,7 @@ local lightline = { -- {{{2
         line_info = "%{v:lua.ll.line_info()}",
         filesize = "%{v:lua.ll.file_size()}",
         coc_status = "%{v:lua.ll.coc_status()}",
+        current_tag = "%{v:lua.ll.current_tag()}",
     },
     component_visible_condition = {
         filetype = "v:lua.ll.file_type()",
@@ -101,19 +101,6 @@ local lightline = { -- {{{2
         fileformat = "v:lua.ll.file_format()",
         coc_status = "v:lua.ll.coc_status()",
     },
-    component_function = {
-        -- git_status = "LL_GitStatus",
-        -- filesize = "LL_FileSize",
-        -- filetype_icon = "LL_FileType",
-        -- fileformat_icon = "LL_FileFormat",
-        -- fileencoding_non_utf = "LL_FileEncoding",
-        -- line_info = "LL_LineInfo",
-        -- vim_mode = "LL_Mode",
-        current_tag = "LL_CurrentTag",
-        -- coc_status = "LL_CocStatus",
-        asyncrun_status = "LL_AsyncRunStatus",
-    },
-    tab_component_function = {filename = "LL_TabName"},
     component_expand = {
         linter_checking = "lightline#ale#checking",
         linter_warnings = "LL_LinterWarnings",
@@ -193,7 +180,7 @@ function ll.file_type() -- {{{2
     local python_venv = function()
         local venv = not vim.g.did_coc_loaded and
                          (vim.bo.ft == "python" and
-                             nvim.basename(vim.env.VIRTUAL_ENV)) or ""
+                             string.basename(vim.env.VIRTUAL_ENV)) or ""
         return venv ~= "" and string.format(" (%s)", venv) or ""
     end
 
@@ -260,7 +247,7 @@ function ll.file_encoding() -- {{{2
 end
 
 function ll.tab_name() -- {{{2
-    return not ll.is_not_file() and "" or ll.file_name()
+    return ll.is_not_file() and "" or ll.file_name()
 end
 
 function ll.git_summary() -- {{{2
@@ -278,7 +265,7 @@ function ll.git_summary() -- {{{2
     local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
     local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
     local deleted = hunks[3] ~= 0 and string.format("-%d ", hunks[3]) or ""
-    return added .. changed .. deleted
+    return " " .. added .. changed .. deleted
 end
 
 function ll.git_branch() -- {{{2
@@ -294,9 +281,8 @@ function ll.git_status() -- {{{2
     if not ll.is_not_file() and WINWIDTH > vars.min_width then
         local branch = ll.git_branch()
         local hunks = ll.git_summary()
-        return branch ~= "" and string.format("%s%s%s", vars.glyphs.vcs, branch,
-                                              hunks ~= "" and " " .. hunks or "") or
-                   ""
+        return branch ~= "" and
+                   string.format("%s%s%s", vars.glyphs.vcs, branch, hunks) or ""
     end
     return ""
 end
@@ -307,6 +293,22 @@ function ll.coc_status() -- {{{2
         return st and st
     end
     return ""
+end
+
+function ll.current_tag() -- {{{2
+    if WINWIDTH < vars.max_width then return "" end
+    local coc_tag = (function()
+        return vim.fn.exists("b:coc_current_function") == 1 and
+                   a.nvim_buf_get_var(0, "coc_current_function") or ""
+    end)()
+    local tagbar_tag = function()
+        if vim.fn.exists("g:loaded_tagbar") ~= 1 then
+            vim.cmd("packadd tagbar")
+        end
+        return vim.fn["tagbar#currenttag"]("%s", "", "f")
+    end
+    -- return coc_tag or tagbar_tag() or ""
+    return coc_tag ~= "" and coc_tag or tagbar_tag() or ""
 end
 
 function ll.linter_errors() -- {{{2

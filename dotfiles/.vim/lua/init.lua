@@ -210,7 +210,7 @@ local global_vars = {
             "javascript",
             "json",
             "lua",
-            -- "python",
+            "python",
             "bash",
             "sh",
             "vim",
@@ -228,7 +228,7 @@ local global_vars = {
         },
         ["nvim-lsp"] = {
             -- "rust",
-            "python",
+            -- "python",
         },
     },
     nocompletion_filetypes = {"nerdtree"},

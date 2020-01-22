@@ -3,13 +3,16 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 10:47:51 CST
+" Last Change: 2020-01-21 18:05:28 CST
 " ====================================================
 if exists('g:loaded_editor_vim_rrxslb6k') | finish | endif
 let g:loaded_editor_vim_rrxslb6k = 1
 
 " Save if file has changed and reload vimrc
 command! S update | source $MYVIMRC
+" Lazy load startuptime.vim plugin
+command! -nargs=* -complete=file StartupTime
+    \ packadd startuptime.vim | StartupTime <args>
 
 augroup editor_vim_rrxslb6k
     autocmd!

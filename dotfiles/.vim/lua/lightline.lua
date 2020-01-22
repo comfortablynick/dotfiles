@@ -25,8 +25,7 @@ local vars = { -- {{{2
         vcs = vim.g.LL_nf ~= 1 and "" or " ",
         branch = "",
         line = "☰",
-        read_only = vim.g.LL_pl ~= 1 and "--RO-- " or " ",
-        -- modified = " [+]",
+        read_only = " ",
         modified = " ●",
         func = "ƒ ",
         linter_checking = vim.g.LL_nf ~= 1 and "..." or "\u{f110}",
@@ -128,6 +127,7 @@ function ll.is_not_file() -- {{{2
 end
 
 function ll.line_info() -- {{{2
+    if ll.is_not_file() then return "" end
     local line_ct = a.nvim_buf_line_count(0)
     local pos = a.nvim_win_get_cursor(0)
     local row = pos[1]
@@ -173,6 +173,7 @@ function ll.vim_mode() -- {{{2
 end
 
 function ll.file_type() -- {{{2
+    if ll.is_not_file() then return "" end
     local ft_glyph = WINWIDTH > vars.med_width and
                          try(function()
             return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
@@ -207,6 +208,9 @@ end
 function ll.file_name() -- {{{2
     if ll.is_not_file() then return "" end
     local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
+    if ll.coc_status() ~= "" or vim.bo.filetype == "help" then
+        return path:basename()
+    end
     local num_chars = (function()
         if WINWIDTH <= vars.med_width then
             return 2
@@ -220,7 +224,6 @@ function ll.file_name() -- {{{2
         local shorten = function(part) return part:sub(1, num_chars) end
         local parts = vim.split(path, "/")
         local basename = parts[#parts]
-        if ll.coc_status() ~= "" then return basename end
         if #parts > 1 then
             local shortened = {}
             for i = 1, #parts - 1 do
@@ -273,7 +276,8 @@ function ll.git_branch() -- {{{2
         return vim.g.coc_git_status
     end
     return try(function()
-        return vars.glyphs.branch .. " " .. vim.fn["fugitive#head"]()
+        local head = vim.fn["fugitive#head"]()
+        return head ~= "" and vars.glyphs.branch .. " " .. head
     end) or ""
 end
 

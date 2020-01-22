@@ -139,5 +139,11 @@ function M.floating_help(query) -- {{{1
     vim.cmd("help " .. query)
 end
 
+function M.floating_terminal(cmd) -- {{{1
+    local buf = M.create_centered_floating()
+    a.nvim_set_current_buf(buf)
+    vim.fn.termopen(cmd)
+end
+
 -- Return module --{{{1
 return M

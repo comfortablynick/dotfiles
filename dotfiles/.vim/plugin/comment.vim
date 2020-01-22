@@ -3,7 +3,7 @@
 " Description: Simple comment/uncomment script, inspired by Tim Pope's commentary.vim
 " From:        https://gist.github.com/PeterRincker/13bde011c01b7fc188c5
 " License:     MIT
-" Last Change: 2020-01-21 17:10:11 CST
+" Last Change: 2020-01-21 20:00:45 CST
 " ====================================================
 if exists('g:loaded_comment_vim_qsyxneop')
     \ || exists('g:no_load_plugins')
@@ -11,8 +11,8 @@ if exists('g:loaded_comment_vim_qsyxneop')
 endif
 let g:loaded_comment_vim_qsyxneop = 1
 
-" let g:comment_plugin = 'commentary'
-let g:comment_plugin = 'tcomment'
+let g:comment_plugin = 'commentary'
+" let g:comment_plugin = 'tcomment'
 
 if get(g:, 'comment_plugin') ==# 'commentary'
     silent! packadd vim-commentary

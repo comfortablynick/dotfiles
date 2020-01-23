@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-21 18:05:28 CST
+" Last Change: 2020-01-22 12:37:17 CST
 " ====================================================
 if exists('g:loaded_editor_vim_rrxslb6k') | finish | endif
 let g:loaded_editor_vim_rrxslb6k = 1
@@ -14,6 +14,20 @@ command! S update | source $MYVIMRC
 command! -nargs=* -complete=file StartupTime
     \ packadd startuptime.vim | StartupTime <args>
 
+" Maps
+" Format paragraph and restore cursor position
+nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
+" Format buffer and restore cursor position
+nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
+" Indent buffer and restore cursor position
+nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
+
+" Abbreviations
+cnoreabbrev <expr> l editor#cabbr('l', 'lua')
+cnoreabbrev <expr> lp
+    \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
+
+" Autocmds
 augroup editor_vim_rrxslb6k
     autocmd!
     " Cursor configuration
@@ -37,11 +51,6 @@ augroup editor_vim_rrxslb6k
         \ if &number | setlocal norelativenumber | endif
     autocmd TermOpen * setlocal nonumber norelativenumber
 augroup end
-
-" Abbreviations
-cnoreabbrev <expr> l editor#cabbr('l', 'lua')
-cnoreabbrev <expr> lp
-    \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
 " Restore cursor position and folding
 function! s:recall_cursor_position() abort "{{{1

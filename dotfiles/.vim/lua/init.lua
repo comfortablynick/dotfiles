@@ -268,10 +268,6 @@ local map_default_options = {silent = true, unique = true, noremap = true}
 
 -- General editor maps {{{2
 local general_maps = {
-    -- format buffer and restore position
-    ["n<Leader>ff"] = {
-        ":let b:wv=winsaveview()<CR>gggqG:call winrestview(b:wv)<CR>",
-    },
     -- indent/dedent
     ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
     ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
@@ -383,12 +379,12 @@ local function load_packages() -- {{{2
         "vim-snippets",
         "vim-tmux-navigator",
         "vim-lion",
-        "vim-markdown",
         "vim-startify",
         "vista.vim",
         "vim-textobj-user",
         "vim-textobj-lua",
         "targets.vim",
+        "nvim-luadev",
     }
     if global_vars.LL_nf == 1 then table.insert(packages, "vim-devicons") end
 

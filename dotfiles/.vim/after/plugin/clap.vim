@@ -3,7 +3,7 @@
 " Description: Clap.vim plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 16:59:46 CST
+" Last Change: 2020-01-23 09:19:54 CST
 " ====================================================
 if exists('g:loaded_after_plugin_clap_2dn7l3mw') || !exists(':Clap')
     finish
@@ -17,7 +17,6 @@ let g:clap_enable_icon = get(g:, 'LL_nf', 0)
 " Providers
 let g:clap_provider_alias = {
     \ 'hist': 'command_history',
-    \ 'maps': 'maps',
     \ }
 
 let g:clap#provider#maps# = config#clap#maps

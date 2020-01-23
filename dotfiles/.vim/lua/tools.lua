@@ -131,4 +131,15 @@ function M.set_executable(file) -- {{{1
     )
 end
 
+function M.get_history() -- {{{1
+    local hist_ct = vim.fn.histnr("cmd")
+    local hist = {}
+    for i = 1, hist_ct do
+        table.insert(hist,
+                     string.format("%" .. #tostring(hist_ct) .. "d, %s",
+                                   hist_ct - i, vim.fn.histget("cmd", -i)))
+    end
+    return hist
+end
+
 return M

@@ -3,8 +3,15 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 08:28:15 CST
+" Last Change: 2020-01-22 11:25:42 CST
 " ====================================================
+
+" Restore cursor position after motion
+function! editor#restore_cursor_after(motion) abort
+    let l:wv = winsaveview()
+    execute 'normal! '.a:motion
+    call winrestview(l:wv)
+endfunction
 
 " Expand cabbr if it's the only command
 function! editor#cabbr(lhs, rhs) abort

@@ -151,7 +151,7 @@ function ll.vim_mode() -- {{{2
         R = {"REPLACE", "REP", "R"},
         v = {"VISUAL", "VIS", "V"},
         V = {"V-LINE", "V-LN", "V-L"},
-        ["<C-V>"] = {"V-BLOCK", "V-BL", "V-B"},
+        ["\x16"] = {"V-BLOCK", "V-BL", "V-B"},
         c = {"COMMAND", "CMD", "C"},
         s = {"SELECT", "SEL", "S"},
         S = {"S-LINE", "S-LN", "S-L"},

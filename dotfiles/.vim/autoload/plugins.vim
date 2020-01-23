@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-21 12:09:34 CST
+" Last Change: 2020-01-22 15:12:25 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -57,7 +57,6 @@ function! plugins#init() abort
     " Syntax/filetype
     " Some must be loaded at start
     Pack 'numirias/semshi',             {'if': 'has("nvim")'}
-    Pack 'gabrielelana/vim-markdown'
     Pack 'dag/vim-fish',                {'type': 'start'}
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}
@@ -67,6 +66,9 @@ function! plugins#init() abort
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'ziglang/zig.vim',             {'type': 'start'}
     Pack 'tbastos/vim-lua',             {'type': 'start'}
+    Pack 'SidOfc/mkdx',                 {'type': 'start'}
+    Pack 'masukomi/vim-markdown-folding',
+        \ {'type': 'start'}
 
     " Git
     Pack 'airblade/vim-gitgutter'

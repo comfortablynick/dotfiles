@@ -3,7 +3,7 @@
 " Description: Lazy-loaded providers for clap.vim
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-23 09:16:38 CST
+" Last Change: 2020-01-23 17:01:10 CST
 " ====================================================
 
 " Maps :: show defined maps for all modes
@@ -26,8 +26,9 @@ function! s:scriptnames.source() abort
     return split(l:names, '\n')
 endfunction
 
-function! s:scriptnames.sink() abort
-    return ''
+function! s:scriptnames.sink(selected) abort
+    let l:fname = split(a:selected, ' ')[-1]
+    execute 'edit' trim(l:fname)
 endfunction
 
 let config#clap#scriptnames = s:scriptnames

@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-22 11:25:42 CST
+" Last Change: 2020-01-23 11:04:55 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -26,3 +26,17 @@ function! editor#eatchar(pat) abort
     let c = nr2char(getchar(0))
     return (c =~ a:pat) ? '' : c
 endfunc
+
+" Close buffer if not modifiable; quit if last buf
+" Map this fn to q for desired filetypes
+function! editor#quick_close_buffer() abort
+    if &l:modifiable
+        echohl WarningMsg echo "Cannot use 'q' on modifiable buffer"
+        return
+    endif
+    if bufnr('$') == 1
+        quit
+    else
+        bdelete
+    endif
+endfunction

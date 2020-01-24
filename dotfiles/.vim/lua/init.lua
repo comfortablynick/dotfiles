@@ -255,8 +255,12 @@ local autocmds = {
             "*",
             [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]],
         },
-        -- Close read-only filetypes with only 'q'
-        {"FileType", "netrw,help", "nnoremap <silent> q :bd<CR>"},
+        -- Close certain read-only filetypes with only 'q'
+        {
+            "FileType",
+            "netrw,help,fugitive",
+            "nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>",
+        },
         -- Create backup files with useful names
         {"BufWritePre", "*", [[let &bex = '@' . strftime("%F.%H:%M")]]},
     },

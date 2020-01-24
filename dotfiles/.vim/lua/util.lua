@@ -34,9 +34,12 @@ end
 -- Error handling
 ---
 
-function M.try(cb)
-    local status, retval = pcall(cb)
-    return status and retval or nil
+function M.npcall(fn, ...)
+    local ok_or_nil = function(status, ...)
+        if not status then return end
+        return ...
+    end
+    return ok_or_nil(pcall(fn, ...))
 end
 
 return M

@@ -1,7 +1,7 @@
 local a = vim.api
 local exists = vim.fn.exists
 local util = require"util"
-local try = util.try
+local npcall = util.npcall
 ll = {}
 
 -- Local vars --{{{1
@@ -176,7 +176,7 @@ end
 function ll.file_type() -- {{{2
     if ll.is_not_file() then return "" end
     local ft_glyph = WINWIDTH > vars.med_width and
-                         try(function()
+                         npcall(function()
             return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
         end) or ""
     local python_venv = function()
@@ -194,7 +194,7 @@ function ll.file_format() -- {{{2
     local ff = vim.bo.fileformat
     if ll.is_not_file() or ff == "unix" then return "" end
     local ff_glyph = WINWIDTH > vars.med_width and
-                         try(function()
+                         npcall(function()
             return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
         end) or ""
     return ff .. ff_glyph
@@ -244,7 +244,7 @@ function ll.file_name() -- {{{2
                 ""
     end
     local lvimrc = function()
-        return a.nvim_buf_get_var(0, "localrc_loaded") > 0 and vars.glyphs.lvimrc or ""
+        return npcall(a.nvim_buf_get_var, 0, "localrc_loaded") ~= (nil or 0) and vars.glyphs.lvimrc or ""
     end
     return read_only() .. path .. modified() .. lvimrc()
 end
@@ -266,8 +266,8 @@ function ll.git_summary() -- {{{2
         if exists("b:coc_git_status") == 1 then
             return vim.trim(a.nvim_buf_get_var(0, "coc_git_status"))
         end
-        return try(vim.fn.GitGutterGetHunkSummary) or
-                   try(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
+        return npcall(vim.fn.GitGutterGetHunkSummary) or
+                   npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
     end)()
     local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
     local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
@@ -279,10 +279,8 @@ function ll.git_branch() -- {{{2
     if vim.fn.exists("g:coc_git_status") == 1 then
         return vim.g.coc_git_status
     end
-    return try(function()
-        local head = vim.fn["fugitive#head"]()
-        return head ~= "" and vars.glyphs.branch .. " " .. head
-    end) or ""
+    local head = npcall(vim.fn["fugitive#head"])
+    return head ~= (nil or "") and vars.glyphs.branch .. " " .. head or ""
 end
 
 function ll.git_status() -- {{{2

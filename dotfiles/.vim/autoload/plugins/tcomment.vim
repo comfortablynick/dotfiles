@@ -1,0 +1,6 @@
+function! plugins#tcomment#post() abort
+    " Add additional mappings for nerdcomment muscle memory
+    xmap <silent><Leader>c          <Plug>TComment_gc
+    nmap <Leader>c<Space>           <Plug>TComment_gcc
+    omap <silent><Leader>c          <Plug>TComment_gc
+endfunction

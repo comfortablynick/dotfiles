@@ -378,9 +378,13 @@ local function load_packages() -- {{{2
         "vim-sneak",
         "vim-surround",
         "vim-repeat",
+        "vim-fugitive",
+        "vim-commentary",
+        -- "tcomment_vim"
         "vim-localvimrc",
         "vim-clap",
         "vim-snippets",
+        "vim-gitgutter",
         "vim-tmux-navigator",
         "vim-lion",
         "vim-startify",

@@ -1,13 +1,7 @@
-" ====================================================
-" Filename:    autoload/config/lsp.vim
-" Description: Config for builtin lsp
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2019-12-24
-" ====================================================
+if exists('g:loaded_autoload_plugins_nvim_lsp') | finish | endif
+let g:loaded_autoload_plugins_nvim_lsp = 1
 
-function! config#lsp#init() abort
-      silent! packadd nvim-lsp
+function! plugins#nvim_lsp#post() abort
       nnoremap <silent> ;dc <cmd>lua vim.lsp.buf.declaration()<CR>
       nnoremap <silent> ;df <cmd>lua vim.lsp.buf.definition()<CR>
       nnoremap <silent> ;h  <cmd>lua vim.lsp.buf.hover()<CR>
@@ -18,9 +12,9 @@ function! config#lsp#init() abort
       inoremap <silent><C-Space> <C-X><C-O>
       inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
       inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    if &filetype ==# 'rust'
+    if &l:filetype ==# 'rust'
         lua require'nvim_lsp'.rust_analyzer.setup{}
-    elseif &filetype ==# 'python'
+    elseif &l:filetype ==# 'python'
         lua require'nvim_lsp'["pyls_ms"].setup{ log_level = 2 }
         lua require'nvim_lsp'["pyls_ms"].manager.try_add()
     endif

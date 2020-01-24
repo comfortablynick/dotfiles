@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-22 15:12:25 CST
+" Last Change: 2020-01-24 07:45:02 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -16,7 +16,6 @@ function! plugins#init() abort
     Pack 'skywind3000/asyncrun.vim'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
-    Pack 'embear/vim-localvimrc'
     Pack 'tpope/vim-projectionist'
     Pack 'tpope/vim-repeat'
 

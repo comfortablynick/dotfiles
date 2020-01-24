@@ -51,8 +51,9 @@ if not snip.c:
 	relpath = file_relative_path(os.path.splitext(path)[0])
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
-	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()
-	snip.rv = '%s_%s' % (relpath,rand)
+	# rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()
+	# snip.rv = '%s_%s' % (relpath,rand)
+	snip.rv = relpath
 else:
 	snip.rv = snip.c`}') | finish | endif
 let $1 = 1$0

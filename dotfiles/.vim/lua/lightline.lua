@@ -32,6 +32,7 @@ local vars = { -- {{{2
         linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
         linter_errors = vim.g.LL_nf ~= 1 and "•" or "\u{f05e}",
         linter_ok = "",
+        lvimrc = [[ Ⓛ ]],
     },
 }
 
@@ -242,7 +243,10 @@ function ll.file_name() -- {{{2
             not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or
                 ""
     end
-    return read_only() .. path .. modified()
+    local lvimrc = function()
+        return a.nvim_buf_get_var(0, "localrc_loaded") > 0 and vars.glyphs.lvimrc or ""
+    end
+    return read_only() .. path .. modified() .. lvimrc()
 end
 
 function ll.file_encoding() -- {{{2

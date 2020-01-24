@@ -3,25 +3,8 @@
 " Description: File explorer functions/settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 11:53:12 CST
+" Last Change: 2020-01-23 19:34:31 CST
 " ====================================================
-
-function! s:nerdtree_set_opts() abort
-    if exists('g:nerdtree_set_opts') | return | endif
-    if !exists(':NERDTreeToggle')
-        silent! packadd nerdtree
-    endif
-    let g:nerdtree_set_opts = 1
-
-    let NERDTreeHighlightCursorline = 1
-    let NERDTreeIgnore = [
-        \ '\.pyc$',
-        \ '^__pycache__$',
-        \ '.vscode',
-        \ ]
-    let NERDTreeShowHidden = 1
-    let NERDTreeQuitOnOpen = 1
-endfunction
 
 function! s:defx_set_opts() abort
     if exists('g:defx_set_opts') | return | endif

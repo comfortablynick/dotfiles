@@ -3,7 +3,7 @@
 " Description: Vim script files
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-16 16:34:40 CST
+" Last Change: 2020-01-24 07:37:06 CST
 " ====================================================
 if exists('g:loaded_after_ftplugin_vim_xsakimlh') | finish | endif
 let g:loaded_after_ftplugin_vim_xsakimlh = 1
@@ -14,5 +14,3 @@ let g:vim_indent_cont = &tabstop                                " Indent \ newli
 setlocal foldmethod=marker                                      " Fold using markers
 setlocal formatoptions-=o                                       " Don't insert comment marker automatically on O, o
 setlocal formatoptions-=r                                       " Don't insert comment marker automatically on <Enter>
-
-command! Scriptnames packadd vim-scriptease<bar>Scriptnames

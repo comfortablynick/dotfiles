@@ -1,9 +1,9 @@
 " ====================================================
 " Filename:    plugin/explorer.vim
-" Description: Handle project file explorer settings such as netrw or NERDTree
+" Description: Handle project file explorer plugin settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:46:46 CST
+" Last Change: 2020-01-24 07:41:25 CST
 " ====================================================
 if exists('g:loaded_plugin_explorer_eblucpym')
     \ || exists('g:no_load_plugins')
@@ -13,7 +13,10 @@ let g:loaded_plugin_explorer_eblucpym = 1
 
 " let g:use_explorer = 'defx'         " netrw/nerdtree/defx/coc-explorer (set from coc config)
 
-" Mapping
+" Commands
+command -nargs=0 TagbarToggle call plugins#tagbar#toggle()
+
+" Maps
 nnoremap <silent> <Leader>n :call explorer#toggle_v_explorer()<CR>
 nnoremap <silent>    <C-E>  :call explorer#toggle_v_explorer()<CR>
 

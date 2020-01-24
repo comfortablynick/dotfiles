@@ -1,15 +1,7 @@
-" ====================================================
-" Filename:    autoload/config/tagbar.vim
-" Description: Functions/settings for tagbar
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2020-01-08 12:32:19 CST
-" ====================================================
+if exists('g:loaded_autoload_plugins_tagbar') | finish | endif
+let g:loaded_autoload_plugins_tagbar = 1
 
-function! s:set_tagbar_opts() abort
-    if exists('g:set_tagbar_opts') | return | endif
-    let g:set_tagbar_opts = 1
-
+function! plugins#tagbar#pre() abort
     let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
     let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened
     let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
@@ -30,10 +22,9 @@ function! s:set_tagbar_opts() abort
         \   'e:enums',
         \   ]
         \ }
-    silent! packadd tagbar
 endfunction
 
-function! config#tagbar#tagbar_toggle() abort
-    call s:set_tagbar_opts()
+function! plugins#tagbar#toggle() abort
+    silent! packadd tagbar
     TagbarToggle
 endfunction

@@ -263,8 +263,26 @@ local autocmds = {
         },
         -- Create backup files with useful names
         {"BufWritePre", "*", [[let &bex = '@' . strftime("%F.%H:%M")]]},
+        {
+            "VimEnter",
+            "*",
+            [[if !empty('$LOCAL_VIMRC')|call localrc#load('$LOCAL_VIMRC')|endif]],
+        },
     },
 }
+
+-- Lsp {{{2
+vim.g.coc_fts = table.concat(global_vars.completion_filetypes.coc or {}, ",")
+vim.g.lsp_fts = table.concat(global_vars.completion_filetypes["nvim-lsp"] or {},
+                             ",")
+if vim.g.coc_fts ~= "" then
+    table.insert(autocmds.init_lua,
+                 {"FileType", vim.g.coc_fts, "silent! packadd coc.nvim"})
+end
+if vim.g.lsp_fts ~= "" then
+    table.insert(autocmds.init_lua,
+                 {"FileType", vim.g.lsp_fts, "silent! packadd nvim-lsp"})
+end
 
 -- Maps {{{1
 -- Map default options {{{2
@@ -380,8 +398,8 @@ local function load_packages() -- {{{2
         "vim-repeat",
         "vim-fugitive",
         "vim-commentary",
-        -- "tcomment_vim"
-        "vim-localvimrc",
+        -- "tcomment_vim",
+        -- "vim-localvimrc",
         "vim-clap",
         "vim-snippets",
         "vim-gitgutter",

@@ -1,26 +1,8 @@
-" ====================================================
-" Filename:    autoload/config/coc.vim
-" Description: Coc configuration
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2020-01-15 22:31:31 CST
-" ====================================================
-
-" Show_Documentation() :: use K for vim docs or language servers
-function! Show_Documentation() abort
-    if &filetype ==# 'vim'
-        execute 'h '.expand('<cword>')
-    else
-        if exists('g:did_coc_loaded')
-            call CocActionAsync('doHover')
-            return
-        endif
-    endif
-endfunction
-set keywordprg=:silent!\ call\ Show_Documentation()
+if exists('g:loaded_autoload_plugins_coc') | finish | endif
+let g:loaded_autoload_plugins_coc = 1
 
 " Set autocmds if LC is loaded
-function! config#coc#cmds() abort
+function! plugins#coc#cmds() abort
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif
     augroup coc_config_auto
         autocmd!
@@ -29,9 +11,6 @@ function! config#coc#cmds() abort
             autocmd CursorHold * silent
                 \ if ! coc#util#has_float() | call CocActionAsync('doHover') | endif
         endif
-        " if get(b:, 'coc_disable_cursorhold_highlight', 0) == 0
-        "     autocmd CursorHold * silent call CocActionAsync('highlight')
-        " endif
         autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
     augroup END
 endfunction
@@ -43,7 +22,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Remap only if active for filetype
-function! config#coc#apply_maps() abort
+function! plugins#coc#apply_maps() abort
     if exists('b:coc_suggest_disable') | return | endif
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
@@ -66,6 +45,8 @@ function! config#coc#apply_maps() abort
         xmap <buffer> af <Plug>(coc-funcobj-a)
     endif
 
+    set keywordprg=:silent!\ call\ CocActionAsync('doHover')
+
     let g:tab_orig = maparg('<Tab>', 'n', 1)
     " Use <TAB> to scroll completion results and jump through snippets
     inoremap <silent><expr> <TAB>
@@ -86,12 +67,12 @@ function! config#coc#apply_maps() abort
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
 endfunction
 
-function! config#coc#abbrev() abort
+function! plugins#coc#abbrev() abort
     cnoreabbrev es CocCommand snippets.editSnippets
     cnoreabbrev ci CocInfo
 endfunction
 
-function! config#coc#init() abort
+function! plugins#coc#post() abort
     " let g:coc_force_debug = 1
     let g:coc_global_extensions = [
         \ 'coc-snippets',
@@ -117,13 +98,7 @@ function! config#coc#init() abort
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'
-    call config#coc#cmds()
-    call config#coc#apply_maps()
-    call config#coc#abbrev()
-endfunction
-
-" Vim-packager can call this hook
-function! config#coc#install(plugin) abort
-  " execute '!cd '.a:plugin.dir.' && yarn install --frozen-lockfile'
-  term yarn install --frozen-lockfile
+    call plugins#coc#cmds()
+    call plugins#coc#apply_maps()
+    call plugins#coc#abbrev()
 endfunction

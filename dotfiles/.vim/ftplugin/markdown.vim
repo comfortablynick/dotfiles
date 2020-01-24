@@ -3,7 +3,7 @@
 " Description: Markdown ft settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-22 15:14:21 CST
+" Last Change: 2020-01-24 06:28:03 CST
 " ====================================================
 if exists('g:loaded_ftplugin_markdown_th9csdve') | finish | endif
 let g:loaded_ftplugin_markdown_th9csdve = 1
@@ -15,7 +15,7 @@ let g:mkdx#settings = {
     \ 'toc':  {
     \       'position': 2,
     \       'text': 'Table of Contents',
-    \       'update_on_write': 1,
+    \       'update_on_write': 0,
     \   },
     \ }
 

@@ -1,3 +1,6 @@
+if exists('g:loaded_autoload_plugins_commentary') | finish | endif
+let g:loaded_autoload_plugins_commentary = 1
+
 function! plugins#commentary#post() abort
     xmap <Leader>c          <Plug>Commentary
     nmap <Leader>c          <Plug>Commentary

@@ -3,9 +3,8 @@
 " Description: Commands for quickfix window
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:54:46 CST
+" Last Change: 2020-01-24 07:38:22 CST
 " ====================================================
-
 if exists('g:loaded_plugin_quickfix_9wgejmpc')
     \ || exists('g:no_load_plugins')
     finish
@@ -20,4 +19,6 @@ augroup plugin_quickfix_9wgejmpc
 augroup end
 
 nnoremap <silent> <Leader>q :call quickfix#toggle()<CR>
-noremap  <silent> <F10>     :call quickfix#toggle()<CR>
+
+" Load rtp in quickfix
+command! Scriptnames packadd vim-scriptease<bar>Scriptnames

@@ -4,19 +4,29 @@
 " Author:      Nick Murphy
 " License:     MIT
 " Acknowledgments: Code from thinca <thinca+vim@gmail.com> (zlib License)
-" Last Change: 2020-01-24 08:06:09 CST
+" Last Change: 2020-01-24 12:16:32 CST
 " ====================================================
 if exists('g:loaded_autoload_localrc') | finish | endif
 let g:loaded_autoload_localrc = 1
 
 let b:localrc_loaded = 0
+let b:localrc_files = []
+
+function! localrc#load_from_env() abort
+    if !empty('$LOCAL_VIMRC') && get(b:, 'localrc_loaded', 0) == 0
+        call localrc#load('$LOCAL_VIMRC')
+    endif
+endfunction
 
 function! localrc#load(fnames, ...) abort
     for file in localrc#search(a:fnames,
         \ 1 <= a:0 ? a:1 : expand('%:p:h'),
         \ 2 <= a:0 ? a:2 : -1)
-        source `=file`
-        let b:localrc_loaded += 1
+        if index(b:localrc_files, file) < 0
+            source `=file`
+            let b:localrc_loaded += 1
+            let b:localrc_files += [file]
+        endif
     endfor
 endfunction
 

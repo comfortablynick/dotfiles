@@ -1,5 +1,8 @@
 " Quickfix window functions
 " Toggle quickfix window
+if exists('g:loaded_autoload_quickfix') | finish | endif
+let g:loaded_autoload_quickfix = 1
+
 function! quickfix#toggle() abort
     if exists('*asyncrun#quickfix_toggle')
         " AsyncRun is loaded; use this handy function

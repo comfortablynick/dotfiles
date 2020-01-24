@@ -263,11 +263,6 @@ local autocmds = {
         },
         -- Create backup files with useful names
         {"BufWritePre", "*", [[let &bex = '@' . strftime("%F.%H:%M")]]},
-        {
-            "VimEnter",
-            "*",
-            [[if !empty('$LOCAL_VIMRC')|call localrc#load('$LOCAL_VIMRC')|endif]],
-        },
     },
 }
 
@@ -391,28 +386,29 @@ local function load_packages() -- {{{2
         "lightline.vim",
         "lightline-bufferline",
         "fzf.vim",
-        "ale",
         "neoformat",
-        "vim-sneak",
         "vim-surround",
         "vim-repeat",
         "vim-fugitive",
         "vim-commentary",
         -- "tcomment_vim",
-        -- "vim-localvimrc",
         "vim-clap",
         "vim-snippets",
-        "vim-gitgutter",
         "vim-tmux-navigator",
         "vim-lion",
         "vim-startify",
         "vista.vim",
         "vim-textobj-user",
         "vim-textobj-lua",
-        "targets.vim",
         "nvim-luadev",
     }
-    if global_vars.LL_nf == 1 then table.insert(packages, "vim-devicons") end
+
+    -- Delay these plugins until after vim window opens
+    -- Helps with startuptime if plugins aren't needed right away
+    vim.g.pack_deferred = {"vim-sneak", "vim-gitgutter", "targets.vim", "ale"}
+    if global_vars.LL_nf == 1 then
+        table.insert(vim.g.pack_deferred, "vim-devicons")
+    end
 
     for _, package in ipairs(packages) do
         vim.cmd("silent! packadd! " .. package)

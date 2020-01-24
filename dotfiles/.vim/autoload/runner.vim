@@ -3,8 +3,10 @@
 " Description: Run code actions based on justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-21 19:02:24 CST
+" Last Change: 2020-01-24 12:18:35 CST
 " ====================================================
+if exists('g:loaded_autoload_runner') | finish | endif
+let g:loaded_autoload_runner = 1
 
 " Build command based on file type and command type
 function! runner#run_cmd(cmd_type) abort

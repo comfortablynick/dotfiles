@@ -3,17 +3,8 @@
 " Description: File explorer functions/settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-23 19:34:31 CST
+" Last Change: 2020-01-24 12:56:52 CST
 " ====================================================
-
-function! s:defx_set_opts() abort
-    if exists('g:defx_set_opts') | return | endif
-    let g:defx_set_opts = 1
-    if !exists(':Defx')
-        silent! packadd defx.nvim
-    endif
-endfunction
-
 
 function! s:netrw_set_opts() abort
     if exists('g:netrw_set_opts') | return | endif
@@ -41,8 +32,6 @@ function! s:netrw_run() abort
         endif
         unlet t:expl_buf_num
     else
-        " exec '1wincmd w'
-        " Vexplore
         Lexplore
         let t:expl_buf_num = bufnr('%')
     endif
@@ -53,18 +42,15 @@ endfunction
 function! explorer#toggle_v_explorer() abort
     let g:use_explorer = get(g:, 'use_explorer', 'netrw')
     if g:use_explorer ==# 'nerdtree'
-        call s:nerdtree_set_opts()
-        if !exists(':NERDTreeToggle') | return | endif
+        if !exists(':NERDTreeToggle') | packadd nerdtree | endif
         exe 'NERDTreeToggle'
     elseif g:use_explorer ==# 'coc-explorer'
         exe 'CocCommand explorer --toggle'
     elseif g:use_explorer ==# 'defx'
-        call s:defx_set_opts()
-        if !exists(':Defx') | return | endif
+        if !exists(':Defx') | packadd defx.nvim | endif
         exe 'Defx -toggle -split=vertical -winwidth=30 -direction=topleft'
     else
         call s:netrw_set_opts()
         call s:netrw_run()
     endif
 endfunction
-

@@ -3,11 +3,12 @@
 " Description: Markdown ft settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-24 06:28:03 CST
+" Last Change: 2020-01-25 16:49:36 CST
 " ====================================================
-if exists('g:loaded_ftplugin_markdown_th9csdve') | finish | endif
-let g:loaded_ftplugin_markdown_th9csdve = 1
+if exists('g:loaded_ftplugin_markdown') | finish | endif
+let g:loaded_ftplugin_markdown = 1
 
+setlocal tabstop=2
 
 " Mkdx plugin settings
 let g:mkdx#settings = {
@@ -17,6 +18,7 @@ let g:mkdx#settings = {
     \       'text': 'Table of Contents',
     \       'update_on_write': 0,
     \   },
+    \ 'enter': {'shift': 1},
     \ }
 
 " vim-markdown-folding settings

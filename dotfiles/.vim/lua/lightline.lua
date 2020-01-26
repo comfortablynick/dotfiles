@@ -174,7 +174,7 @@ function ll.vim_mode() -- {{{2
 end
 
 function ll.file_type() -- {{{2
-    if ll.is_not_file() then return "" end
+    if ll.is_not_file() or WINWIDTH <= vars.med_width then return "" end
     local ft_glyph = WINWIDTH > vars.med_width and
                          npcall(function()
             return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()

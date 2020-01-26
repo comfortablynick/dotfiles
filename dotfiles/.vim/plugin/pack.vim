@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-24 13:27:15 CST
+" Last Change: 2020-01-25 19:08:39 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -21,7 +21,9 @@ function! s:deferred_load(...) abort
         execute 'silent! packadd' pack
     endfor
     " Load local vimrc if env var
-    call localrc#load_from_env()
+    if exists('*localrc#load_from_env')
+        call localrc#load_from_env()
+    endif
 endfunction
 
 augroup deferred_pack_load

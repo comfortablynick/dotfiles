@@ -244,7 +244,8 @@ function ll.file_name() -- {{{2
                 ""
     end
     local lvimrc = function()
-        return npcall(a.nvim_buf_get_var, 0, "localrc_loaded") ~= (nil or 0) and vars.glyphs.lvimrc or ""
+        local lrc = npcall(a.nvim_buf_get_var, 0, "localrc_loaded")
+        return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
     end
     return read_only() .. path .. modified() .. lvimrc()
 end

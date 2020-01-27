@@ -27,6 +27,12 @@ function! plugins#clap#post() abort
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
     nnoremap <silent> <Leader>h :Clap command_history<CR>
+
+    "Autocmds
+    augroup autoload_plugins_clap
+        autocmd!
+        autocmd User ClapOnExit setlocal relativenumber
+    augroup END
 endfunction
 
 " Clap providers

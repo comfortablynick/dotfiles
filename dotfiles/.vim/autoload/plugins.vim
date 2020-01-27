@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-24 07:45:02 CST
+" Last Change: 2020-01-26 22:57:58 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -68,6 +68,7 @@ function! plugins#init() abort
     Pack 'SidOfc/mkdx',                 {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding',
         \ {'type': 'start'}
+    " Pack 'gabrielelana/vim-markdown',   {'type': 'start'}
 
     " Git
     Pack 'airblade/vim-gitgutter'

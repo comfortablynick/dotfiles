@@ -3,10 +3,10 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-22 12:37:17 CST
+" Last Change: 2020-01-26 13:26:47 CST
 " ====================================================
-if exists('g:loaded_editor_vim_rrxslb6k') | finish | endif
-let g:loaded_editor_vim_rrxslb6k = 1
+if exists('g:loaded_plugin_editor') | finish | endif
+let g:loaded_plugin_editor = 1
 
 " Save if file has changed and reload vimrc
 command! S update | source $MYVIMRC
@@ -28,28 +28,26 @@ cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
 " Autocmds
-augroup editor_vim_rrxslb6k
+augroup plugin_editor
     autocmd!
     " Cursor configuration
     " Remember last place in file
     autocmd BufWinEnter * call s:recall_cursor_position()
 
     " Set cursorline depending on mode, if cursorline is enabled in vimrc
-    if &cursorline
+    if &l:cursorline
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
 
-    " Toggle to number mode depending on vim mode
-    " INSERT:       Turn off relativenumber while writing code
-    " NORMAL:       Turn on relativenumber for easy navigation
-    " NO FOCUS:     Turn off relativenumber (testing code, etc.)
-    " Terminal:     Turn off all numbering
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter *
-        \ if &number | setlocal relativenumber   | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   *
-        \ if &number | setlocal norelativenumber | endif
+    " No numbers in terminal
     autocmd TermOpen * setlocal nonumber norelativenumber
+
+    " Toggle relativenumber depending on mode and focus
+    autocmd FocusGained,WinEnter *
+        \ if &l:number | setlocal relativenumber | endif
+    autocmd FocusLost,WinLeave *
+        \ if &l:number | setlocal norelativenumber | endif
 augroup end
 
 " Restore cursor position and folding

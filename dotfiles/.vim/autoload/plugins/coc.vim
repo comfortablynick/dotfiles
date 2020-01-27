@@ -17,8 +17,8 @@ endfunction
 
 " Helper function for <TAB> completion keymap
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Remap only if active for filetype
@@ -94,7 +94,9 @@ function! plugins#coc#post() abort
         \ 'yaml.ansible': 'yaml'
         \ }
 
-    let g:use_explorer = 'coc-explorer'
+    if get(g:, 'use_explorer_coc', 'coc-explorer') ==# 'coc-explorer'
+        let g:use_explorer = 'coc-explorer'
+    endif
     let g:coc_status_error_sign = 'E'
     let g:coc_status_warn_sign = 'W'
     let g:coc_snippet_next = '<tab>'

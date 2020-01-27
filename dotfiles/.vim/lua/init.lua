@@ -165,39 +165,46 @@ local window = {
 -- Variables {{{1
 -- Global variables {{{2
 local global_vars = {
-    -- Disable package loading at start for troubleshooting
-    -- no_load_packages = 1,
-    -- Disable default plugins
-    loaded_gzip = 1,
-    loaded_tarPlugin = 1,
-    loaded_2html_plugin = 1,
-    loaded_zipPlugin = 1,
-    loaded_matchit = 1,
-    -- Leader key
-    mapleader = ",",
-    -- Python 2 dir
-    python_host_prog = vim.env.NVIM_PY2_DIR,
-    -- Python 3 dir
-    python3_host_prog = vim.env.NVIM_PY3_DIR,
-    -- Initial window size (use to determine if on iPad)
-    window_width = vim.o.columns,
     -- Use powerline fonts with lightline
     LL_pl = (vim.env.POWERLINE_FONTS == "1" or vim.env.NERD_FONTS == "1") and 1 or
         0,
     -- Use nerd fonts with lightline
     LL_nf = (vim.env.NERD_FONTS == "1" and vim.env.VIM_SSH_COMPAT ~= "1") and 1 or
         0,
+    -- Leader key
+    mapleader = ",",
+    -- Check existence of vim executable
+    vim_exists = vim.fn.executable("vim"),
+    -- Initial window size
+    window_width = vim.o.columns,
+    -- Debug {{{
+    -- Disable package loading at start for troubleshooting
+    -- no_load_packages = 1,
+    -- }}}
+    -- Disable default plugins {{{
+    loaded_gzip = 1,
+    loaded_tarPlugin = 1,
+    loaded_2html_plugin = 1,
+    loaded_zipPlugin = 1,
+    loaded_matchit = 1,
+    -- }}}
+    -- Paths {{{
+    -- Python 2 dir
+    python_host_prog = vim.env.NVIM_PY2_DIR,
+    -- Python 3 dir
+    python3_host_prog = vim.env.NVIM_PY3_DIR,
     -- Default packages path
     package_path = vim.env.XDG_DATA_HOME .. "/nvim/site/pack",
     -- Path to find minpac plugin manager
     minpac_path = vim.env.XDG_DATA_HOME .. "/nvim/site/pack/minpac/opt/minpac",
+    -- }}}
+    -- Plugin settings {{{
     -- vim-lion extra spaces
     lion_squeeze_spaces = 1,
     -- vim-sneak
     ["sneak#label"] = 1,
-    -- Check existence of vim executable
-    vim_exists = vim.fn.executable("vim"),
-    -- Filetypes that will use a completion plugin
+    -- }}}
+    -- Completion filetypes {{{
     completion_filetypes = {
         coc = {
             "c",
@@ -230,18 +237,7 @@ local global_vars = {
             -- "python",
         },
     },
-    nocompletion_filetypes = {"nerdtree"},
-    -- TODO: move color stuff to own func
-    vim_color = vim.env.NVIM_COLOR or "papercolor-dark",
-    vim_base_color = (function()
-        local color = vim.env.NVIM_COLOR or "papercolor-dark"
-        local sub, n = color:gsub("-dark$", "")
-        if n == 0 then
-            general.background = "light"
-            sub = (color:gsub("-light$", ""))
-        end
-        return sub
-    end)(),
+    nocompletion_filetypes = {"nerdtree"}, -- }}}
 }
 
 -- Autocommands {{{1
@@ -428,6 +424,19 @@ local function set_globals() -- {{{2
     for name, value in pairs(global_vars) do vim.g[name] = value end
 end
 
+local function set_color() -- {{{2
+    vim.g.vim_color = vim.env.NVIM_COLOR or "papercolor-dark"
+    vim.g.vim_base_color = (function()
+        local color = vim.env.NVIM_COLOR or "papercolor-dark"
+        local sub, n = color:gsub("-dark$", "")
+        if n == 0 then
+            general.background = "light"
+            sub = (color:gsub("-light$", ""))
+        end
+        return sub
+    end)()
+end
+
 local function create_cmds() -- {{{2
     vim.cmd[[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
 end
@@ -444,6 +453,7 @@ end
 -- Execute settings {{{2
 set_options()
 set_globals()
+set_color()
 apply_maps()
 create_autocmds()
 create_cmds()

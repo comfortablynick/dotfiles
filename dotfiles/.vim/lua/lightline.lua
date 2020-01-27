@@ -147,7 +147,7 @@ function ll.vim_mode() -- {{{2
         n = {"NORMAL", "NRM", "N"},
         niI = {"NORMAL-CMD", "NRM", "N"},
         i = {"INSERT", "INS", "I"},
-        ic = {"INSERT COMPL", "I-COMPL", "IC"},
+        ic = {"INSERT", "INS", "I"},
         ix = {"INSERT COMPL", "I-COMPL", "IC"},
         R = {"REPLACE", "REP", "R"},
         v = {"VISUAL", "VIS", "V"},
@@ -270,9 +270,9 @@ function ll.git_summary() -- {{{2
         return npcall(vim.fn.GitGutterGetHunkSummary) or
                    npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
     end)()
-    local added = hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
-    local changed = hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
-    local deleted = hunks[3] ~= 0 and string.format("-%d ", hunks[3]) or ""
+    local added = not not hunks[1] and hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
+    local changed = not not hunks[2] and hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
+    local deleted = not not hunks[3] and hunks[3] ~= 0 and string.format("-%d ", hunks[3]) or ""
     return " " .. added .. changed .. deleted
 end
 

@@ -60,11 +60,11 @@ local general = {
     splitbelow = true,
     -- Program used for grep
     grepprg = (function()
-        if vim.fn.executable("ag") then
-            return [[ag --vimgrep --hidden --skip-vcs-ignores --smart-case]]
-        end
         if vim.fn.executable("rg") then
             return [[rg --vimgrep --hidden --no-ignore-vcs --smart-case]]
+        end
+        if vim.fn.executable("ag") then
+            return [[ag --vimgrep --hidden --skip-vcs-ignores --smart-case]]
         end
         return vim.o.grepprg
     end)(),
@@ -252,9 +252,10 @@ local autocmds = {
             [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]],
         },
         -- Close certain read-only filetypes with only 'q'
+        -- Not likely to be using macros in these files
         {
             "FileType",
-            "netrw,help,fugitive",
+            "netrw,help,fugitive,qf",
             "nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>",
         },
         -- Create backup files with useful names
@@ -397,6 +398,7 @@ local function load_packages() -- {{{2
         "vim-textobj-user",
         "vim-textobj-lua",
         "nvim-luadev",
+        "clever-f.vim",
     }
 
     -- Delay these plugins until after vim window opens

@@ -25,7 +25,7 @@ function M.async_grep(term) -- {{{1
         vim.fn.setqflist({}, "r", {title = "Search Results", lines = results})
         local result_ct = #results
         if result_ct > 0 then
-            vim.cmd("copen " .. math.min(result_ct, 10))
+            vim.cmd("cwindow " .. math.min(result_ct, 10))
         else
             print "grep: no results found"
         end

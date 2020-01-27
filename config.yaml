@@ -27,10 +27,6 @@ dotfiles:
     dst: ~/.config/cmake
     link: link
     src: .config/cmake
-  d_config:
-    dst: ~/.local/share/nvim/site/config
-    link: link
-    src: .vim/config
   d_fish:
     dst: ~/.config/fish
     link: link
@@ -51,10 +47,6 @@ dotfiles:
     dst: ~/.vim/autoload
     link: link
     src: .vim/autoload
-  d_config_2:
-    dst: ~/.vim/config
-    link: link
-    src: .vim/config
   d_ftdetect_2:
     dst: ~/.vim/ftdetect
     link: link
@@ -267,7 +259,6 @@ profiles:
     - d_after
     - d_autoload
     - d_cmake
-    - d_config
     - d_bash
     - d_fish
     - d_ftplugin
@@ -309,7 +300,6 @@ profiles:
     - f_muttrc
     - d_after_2
     - d_autoload_2
-    - d_config_2
     - d_ftdetect_2
     - d_ftplugin_2
     - d_lua_2

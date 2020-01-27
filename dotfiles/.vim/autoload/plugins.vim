@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-26 22:57:58 CST
+" Last Change: 2020-01-27 11:12:14 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -24,6 +24,7 @@ function! plugins#init() abort
     Pack 'tpope/vim-surround'
     Pack 'tomtom/tcomment_vim'
     Pack 'justinmk/vim-sneak'
+    Pack 'rhysd/clever-f.vim'
     Pack 'tommcdo/vim-lion'
     Pack 'wellle/targets.vim'
 

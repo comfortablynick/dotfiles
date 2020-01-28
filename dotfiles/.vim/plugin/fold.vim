@@ -3,22 +3,13 @@
 " Description: Fold-related operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-13 15:47:36 CST
+" Last Change: 2020-01-27 19:11:01 CST
 " ====================================================
 if exists('g:loaded_plugin_fold_xhmvdtqd') | finish | endif
 let g:loaded_plugin_fold_xhmvdtqd = 1
 
-nnoremap <silent><Space> :call <SID>fold_or_scroll()<CR>
+nnoremap <silent><Space> :silent! exe 'normal! za'<CR>
 nnoremap <silent>za zA
-
-" Fold if on a fold, otherwise scroll down
-function! s:fold_or_scroll() abort
-    try
-        exe 'normal! za'
-    catch /^Vim\%((\a\+)\)\=:E490/
-        exe "normal! \<PageDown>"
-    endtry
-endfunction
 
 " Customized version of folded text, idea by
 " https://github.com/chrisbra/vim_dotfiles/blob/master/plugin/CustomFoldText.vim

@@ -240,41 +240,19 @@ local global_vars = {
     nocompletion_filetypes = {"nerdtree"}, -- }}}
 }
 
--- Autocommands {{{1
--- General init {{{2
-local autocmds = {
-    init_lua = {
-        -- Terminal starts in insert mode
-        {"TermOpen", "*", "startinsert"},
-        {
-            "TermOpen",
-            "*",
-            [[tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>]],
-        },
-        -- Close certain read-only filetypes with only 'q'
-        -- Not likely to be using macros in these files
-        {
-            "FileType",
-            "netrw,help,fugitive,qf",
-            "nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>",
-        },
-        -- Create backup files with useful names
-        {"BufWritePre", "*", [[let &bex = '@' . strftime("%F.%H:%M")]]},
-    },
-}
 
 -- Lsp {{{2
 vim.g.coc_fts = table.concat(global_vars.completion_filetypes.coc or {}, ",")
 vim.g.lsp_fts = table.concat(global_vars.completion_filetypes["nvim-lsp"] or {},
                              ",")
-if vim.g.coc_fts ~= "" then
-    table.insert(autocmds.init_lua,
-                 {"FileType", vim.g.coc_fts, "silent! packadd coc.nvim"})
-end
-if vim.g.lsp_fts ~= "" then
-    table.insert(autocmds.init_lua,
-                 {"FileType", vim.g.lsp_fts, "silent! packadd nvim-lsp"})
-end
+-- if vim.g.coc_fts ~= "" then
+--     table.insert(autocmds.init_lua,
+--                  {"FileType", vim.g.coc_fts, "silent! packadd coc.nvim"})
+-- end
+-- if vim.g.lsp_fts ~= "" then
+--     table.insert(autocmds.init_lua,
+--                  {"FileType", vim.g.lsp_fts, "silent! packadd nvim-lsp"})
+-- end
 
 -- Maps {{{1
 -- Map default options {{{2
@@ -380,13 +358,14 @@ nvim.define_text_object("gd", "init.text_object_comment_and_duplicate")
 local function load_packages() -- {{{2
     if global_vars.no_load_packages == 1 then return end
     local packages = {
-        "lightline.vim",
-        "lightline-bufferline",
+        -- "lightline.vim",
+        -- "lightline-bufferline",
         "fzf.vim",
         "neoformat",
         "vim-surround",
         "vim-repeat",
         "vim-fugitive",
+        "vim-scriptease",
         "vim-commentary",
         -- "tcomment_vim",
         "vim-clap",
@@ -443,10 +422,6 @@ local function create_cmds() -- {{{2
     vim.cmd[[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
 end
 
-local function create_autocmds() -- {{{2
-    nvim.create_augroups(autocmds)
-end
-
 local function apply_maps() -- {{{2
     local maps = vim.tbl_extend("error", general_maps, navigation_maps)
     nvim.apply_mappings(maps, map_default_options)
@@ -457,7 +432,6 @@ set_options()
 set_globals()
 set_color()
 apply_maps()
-create_autocmds()
 create_cmds()
 load_packages()
 

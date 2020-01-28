@@ -1,4 +1,4 @@
-local a = vim.api
+local api = vim.api
 local exists = vim.fn.exists
 local util = require"util"
 local npcall = util.npcall
@@ -11,8 +11,8 @@ vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
 -- Script globals {{{2
-local WINWIDTH = a.nvim_win_get_width(0)
-local FILENAME = a.nvim_buf_get_name(0)
+local WINWIDTH = api.nvim_win_get_width(0)
+local FILENAME = api.nvim_buf_get_name(0)
 local vars = { -- {{{2
     min_width = 90,
     med_width = 140,
@@ -30,7 +30,7 @@ local vars = { -- {{{2
         func = "ƒ ",
         linter_checking = vim.g.LL_nf ~= 1 and "..." or "\u{f110}",
         linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
-        linter_errors = vim.g.LL_nf ~= 1 and "•" or "\u{f05e}",
+        linter_errors = vim.g.LL_nf ~= 1 and "✘" or "\u{f05e}",
         linter_ok = "",
         lvimrc = [[ Ⓛ ]],
     },
@@ -129,8 +129,8 @@ end
 
 function ll.line_info() -- {{{2
     if ll.is_not_file() then return "" end
-    local line_ct = a.nvim_buf_line_count(0)
-    local pos = a.nvim_win_get_cursor(0)
+    local line_ct = api.nvim_buf_line_count(0)
+    local pos = api.nvim_win_get_cursor(0)
     local row = pos[1]
     local col = pos[2] + 1
     local row_pos = function()
@@ -145,22 +145,22 @@ end
 function ll.vim_mode() -- {{{2
     local mode_map = {
         n = {"NORMAL", "NRM", "N"},
-        niI = {"NORMAL-CMD", "NRM", "N"},
+        niI = {"NORMAL·CMD", "NRM", "N"},
         i = {"INSERT", "INS", "I"},
         ic = {"INSERT", "INS", "I"},
-        ix = {"INSERT COMPL", "I-COMPL", "IC"},
+        ix = {"INSERT COMPL", "I·COMPL", "IC"},
         R = {"REPLACE", "REP", "R"},
         v = {"VISUAL", "VIS", "V"},
-        V = {"V-LINE", "V-LN", "V-L"},
-        ["\x16"] = {"V-BLOCK", "V-BL", "V-B"},
+        V = {"V·LINE", "V·LN", "V·L"},
+        ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
         c = {"COMMAND", "CMD", "C"},
         s = {"SELECT", "SEL", "S"},
-        S = {"S-LINE", "S-LN", "S-L"},
-        ["<C-s>"] = {"S-BLOCK", "S-BL", "S-B"},
+        S = {"S·LINE", "S·LN", "S·L"},
+        ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
         t = {"TERMINAL", "TERM", "T"},
     }
 
-    local mode_key = a.nvim_get_mode().mode
+    local mode_key = api.nvim_get_mode().mode
     local curr_mode = mode_map[mode_key] or mode_key
     local mode_out = function()
         if WINWIDTH > vars.med_width then return curr_mode[1] end
@@ -244,7 +244,7 @@ function ll.file_name() -- {{{2
                 ""
     end
     local lvimrc = function()
-        local lrc = npcall(a.nvim_buf_get_var, 0, "localrc_loaded")
+        local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
         return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
     end
     return read_only() .. path .. modified() .. lvimrc()
@@ -265,7 +265,7 @@ function ll.git_summary() -- {{{2
     -- 3. signify
     local hunks = (function()
         if exists("b:coc_git_status") == 1 then
-            return vim.trim(a.nvim_buf_get_var(0, "coc_git_status"))
+            return vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
         end
         return npcall(vim.fn.GitGutterGetHunkSummary) or
                    npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
@@ -306,7 +306,7 @@ function ll.current_tag() -- {{{2
     if WINWIDTH < vars.max_width then return "" end
     local coc_tag = (function()
         return vim.fn.exists("b:coc_current_function") == 1 and
-                   a.nvim_buf_get_var(0, "coc_current_function") or ""
+                   api.nvim_buf_get_var(0, "coc_current_function") or ""
     end)()
     local tagbar_tag = function()
         if vim.fn.exists("g:loaded_tagbar") ~= 1 then
@@ -321,12 +321,12 @@ end
 function ll.linter_errors() -- {{{2
     local coc_error_ct = function()
         if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-        local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
+        local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
         return info.error
     end
     local ale_error_ct = function()
-        local counts = vim.call("ale#statusline#Count", 0)
-        return counts.error + counts.style_error
+        local counts = npcall(vim.fn["ale#statusline#Count"], 0)
+        return not not counts and counts.error + counts.style_error or 0
     end
     local coc_errors = coc_error_ct()
     local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
@@ -337,12 +337,12 @@ end
 function ll.linter_warnings() -- {{{2
     local coc_warning_ct = function()
         if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-        local info = a.nvim_buf_get_var(0, "coc_diagnostic_info")
+        local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
         return info.warning
     end
     local ale_warning_ct = function()
-        local counts = vim.call("ale#statusline#Count", 0)
-        return counts.warning + counts.style_warning
+        local counts = npcall(vim.fn["ale#statusline#Count"], 0)
+        return not not counts and counts.warning + counts.style_warning or 0
     end
     local coc_warnings = coc_warning_ct()
     local warning_ct = coc_warnings > 0 and coc_warnings or ale_warning_ct()

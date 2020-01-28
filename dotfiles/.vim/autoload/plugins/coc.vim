@@ -1,6 +1,7 @@
 if exists('g:loaded_autoload_plugins_coc') | finish | endif
 let g:loaded_autoload_plugins_coc = 1
 
+
 " Set autocmds if LC is loaded
 function! plugins#coc#cmds() abort
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif

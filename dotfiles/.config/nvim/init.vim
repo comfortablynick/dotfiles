@@ -16,15 +16,37 @@ let g:plugin_config_files = map(
     \ split(globpath(&runtimepath, 'autoload/plugins/*'), '\n'),
     \ {_, val -> fnamemodify(val, ':t:r')}
     \ )
+
 let g:plugins_sourced = []
+let g:plugins_skipped = []
+let g:plugins_called = []
+let g:plugins_source_errors = []
 
 function! s:source_handler(sourced, type) abort
-    if a:sourced !~# '[pack|runtime]/.*/plugin' | return | endif
-    if a:type ==# 'pre' | let g:plugins_sourced += [a:sourced] | endif
     let l:file = substitute(fnamemodify(tolower(a:sourced), ':t:r'), '-', '_', 'g')
+    if a:sourced =~# '^[plugin|autoload]'
+        if index(g:plugins_skipped, a:sourced) < 0
+            let g:plugins_skipped += [a:sourced]
+        endif
+        return
+    endif
+    if a:type ==# 'pre'
+        if index(g:plugins_sourced, a:sourced) < 0
+            let g:plugins_sourced += [a:sourced]
+        endif
+        if index(g:plugins_called, l:file) < 0
+            let g:plugins_called += [l:file]
+        endif
+    endif
     if index(g:plugin_config_files, l:file) > -1
         let l:funcname = printf('plugins#%s#%s()', l:file, a:type)
-        execute 'silent! call' l:funcname
+        try
+            execute 'call' l:funcname
+        catch /E117:/
+            if index(g:plugins_source_errors, l:file) < 0
+                let g:plugins_source_errors += [v:exception]
+            endif
+        endtry
     endif
 endfunction
 
@@ -33,18 +55,13 @@ if has('nvim') && get(g:, 'use_init_lua') == 1
     finish
 endif
 
-" Use vim files instead
-" let config_list = ['config.vim', 'functions.vim', 'map.vim', 'theme.vim']
-" let g:vim_home = get(g:, 'vim_home', expand('$HOME/dotfiles/dotfiles/.vim/config/'))
+function! PluginsSkipped() abort
+    let l:pl = map(g:plugins_skipped, {_, v -> {'filename': v}})
+    return l:pl
+endfunction
 
-" for files in config_list
-"     for f in glob(g:vim_home.files, 1, 1)
-"         exec 'source' f
-"     endfor
-" endfor
-
-" Non-lua General Configuration
-" Vim/Neovim Only {{{1
+" Non-lua General Configuration {{{1
+" Vim/Neovim Only {{{2
 if has('nvim')
     " Neovim Only
     set inccommand=split                                        " Live substitution
@@ -60,19 +77,19 @@ else
     let g:package_path = expand('$HOME/.vim/pack')
 endif
 
-" Augroup {{{1
+" Augroup {{{2
 " General augroup for vimrc files
 " Add to this group safely throughout config
 augroup vimrc
     autocmd!
 augroup END
 
-" Files/Swap/Backup {{{1
+" Files/Swap/Backup {{{2
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
 set backupdir=/tmp/neovim_backup//                              " Store backup files
 
-" General {{{1
+" General {{{2
 filetype plugin on                                              " Allow loading .vim files for different filetypes
 syntax enable                                                   " Syntax highlighting on
 
@@ -108,16 +125,16 @@ set virtualedit=onemore                                         " Allow cursor t
 set exrc                                                        " Load project local .vimrc
 set secure                                                      " Don't execute code in local .vimrcs
 
-" Completion {{{1
+" Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion
 set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
-" Folds {{{1
+" Folds {{{2
 set foldenable                                                  " Enable folds by default
 set foldmethod=marker                                           " Fold using markers by default
 set foldnestmax=5                                               " Max nested levels (default=20)
 
-" Indents {{{1
+" Indents {{{2
 set expandtab                                                   " Expand tab to spaces
 set smartindent                                                 " Attempt smart indenting
 set autoindent                                                  " Attempt auto indenting
@@ -125,7 +142,7 @@ set tabstop=4                                                   " How many space
 set shiftwidth=0                                                " Columns of whitespace per indent (0 = &tabstop)
 set backspace=2                                                 " Backspace behaves as expected
 
-" Search & replace {{{1
+" Search & replace {{{2
 set ignorecase                                                  " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
@@ -138,25 +155,20 @@ if executable('rg')
     set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
 
-" Undo {{{1
+" Undo {{{2
 set undodir=~/.vim/undo//                                       " Undo file directory
 set undofile                                                    " Enable persistent undo
 
-" Windows/Splits {{{1
+" Windows/Splits {{{2
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
 
-" Line numbers {{{1
+" Line numbers {{{2
 set number                                                      " Show linenumbers
 set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
 
-if has('nvim')
-    lua require'helpers'
-    lua require'lightline'
-endif
-
-" Keymaps {{{1
+" Keymaps {{{2
 " Leader key
 let g:mapleader = ','
 
@@ -189,7 +201,7 @@ nnoremap <CR> :nohlsearch<CR><CR>
 " Use q to close buffer on read-only files
 autocmd vimrc FileType netrw,help nnoremap <silent> q :bd<CR>
 
-" Autocommands {{{1
+" Autocommands {{{2
 " Terminal
 if has('nvim')
     " Start in TERMINAL mode (any key will exit)
@@ -198,4 +210,10 @@ if has('nvim')
     autocmd vimrc TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
     " Unmap <Esc> so it can be used to exit FZF
     autocmd vimrc FileType fzf tunmap <buffer> <Esc>
+endif
+
+" Lua tools {{{2
+if has('nvim')
+    lua require'helpers'
+    lua require'lightline'
 endif

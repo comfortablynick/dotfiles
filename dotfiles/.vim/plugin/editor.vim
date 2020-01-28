@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-26 13:26:47 CST
+" Last Change: 2020-01-27 15:27:44 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -33,16 +33,20 @@ augroup plugin_editor
     " Cursor configuration
     " Remember last place in file
     autocmd BufWinEnter * call s:recall_cursor_position()
-
+    " Close certain read-only filetypes with only 'q'
+    " Not likely to be using macros in these files
+    autocmd FileType netrw,help,fugitive,qf
+        \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
+    " Terminal starts in insert mode
+    autocmd TermOpen * :startinsert
+    autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
     " Set cursorline depending on mode, if cursorline is enabled in vimrc
     if &l:cursorline
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
-
     " No numbers in terminal
     autocmd TermOpen * setlocal nonumber norelativenumber
-
     " Toggle relativenumber depending on mode and focus
     autocmd FocusGained,WinEnter *
         \ if &l:number | setlocal relativenumber | endif

@@ -3,6 +3,6 @@ if type -q direnv
 
         status --is-command-substitution
         and return
-        command direnv export fish | source
+        direnv export fish | source
     end
 end

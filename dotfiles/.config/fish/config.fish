@@ -221,10 +221,6 @@ if test "$MOSH_CONNECTION" -eq 1
     set NERD_FONTS 0
 end
 
-# asdf {{{2
-set -l asdf_file "$HOME/.asdf/asdf.fish"
-test -f "$asdf_file"; and source "$asdf_file"
-
 # END CONFIG {{{1
 # Print config.fish load time {{{2
 set -l end_time (get_date)

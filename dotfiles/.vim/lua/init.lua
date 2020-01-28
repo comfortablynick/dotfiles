@@ -240,7 +240,6 @@ local global_vars = {
     nocompletion_filetypes = {"nerdtree"}, -- }}}
 }
 
-
 -- Lsp {{{2
 vim.g.coc_fts = table.concat(global_vars.completion_filetypes.coc or {}, ",")
 vim.g.lsp_fts = table.concat(global_vars.completion_filetypes["nvim-lsp"] or {},
@@ -366,8 +365,7 @@ local function load_packages() -- {{{2
         "vim-repeat",
         "vim-fugitive",
         "vim-scriptease",
-        "vim-commentary",
-        -- "tcomment_vim",
+        -- "vim-commentary",
         "vim-clap",
         "vim-snippets",
         "vim-tmux-navigator",
@@ -382,7 +380,12 @@ local function load_packages() -- {{{2
 
     -- Delay these plugins until after vim window opens
     -- Helps with startuptime if plugins aren't needed right away
-    vim.g.pack_deferred = {"vim-sneak", "vim-gitgutter", "targets.vim", "ale"}
+    vim.g.pack_deferred = {
+        "vim-gitgutter",
+        "targets.vim",
+        "ale",
+        "tcomment_vim",
+    }
     if global_vars.LL_nf == 1 then
         table.insert(vim.g.pack_deferred, "vim-devicons")
     end

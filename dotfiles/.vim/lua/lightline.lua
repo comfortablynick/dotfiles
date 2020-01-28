@@ -2,10 +2,11 @@ local api = vim.api
 local exists = vim.fn.exists
 local util = require"util"
 local npcall = util.npcall
+local nvim = require"helpers"
 ll = {}
 
--- Local vars --{{{1
--- Vim global settings --{{{2
+-- Local vars {{{1
+-- Vim global settings {{{2
 -- vim.g.lightline_use_lua = 1
 vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
@@ -53,6 +54,23 @@ local special_filetypes = { -- {{{2
     minpac = "PACK",
     packager = "PACK",
     fugitive = "FUGITIVE",
+}
+
+ll.mode_map = {
+    n = {"NORMAL", "NRM", "N"},
+    niI = {"NORMAL·CMD", "NRM", "N"},
+    i = {"INSERT", "INS", "I"},
+    ic = {"INSERT", "INS", "I"},
+    ix = {"INSERT COMPL", "I·COMPL", "IC"},
+    R = {"REPLACE", "REP", "R"},
+    v = {"VISUAL", "VIS", "V"},
+    V = {"V·LINE", "V·LN", "V·L"},
+    ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
+    c = {"COMMAND", "CMD", "C"},
+    s = {"SELECT", "SEL", "S"},
+    S = {"S·LINE", "S·LN", "S·L"},
+    ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
+    t = {"TERMINAL", "TERM", "T"},
 }
 
 local lightline = { -- {{{2
@@ -122,7 +140,7 @@ local lightline = { -- {{{2
     subseparator = {left = "|", right = "|"},
 }
 
--- Functions --{{{1
+-- Component Functions {{{1
 function ll.is_not_file() -- {{{2
     return special_filetypes[vim.bo.filetype] ~= nil or vim.bo.filetype == ""
 end
@@ -143,25 +161,8 @@ function ll.line_info() -- {{{2
 end
 
 function ll.vim_mode() -- {{{2
-    local mode_map = {
-        n = {"NORMAL", "NRM", "N"},
-        niI = {"NORMAL·CMD", "NRM", "N"},
-        i = {"INSERT", "INS", "I"},
-        ic = {"INSERT", "INS", "I"},
-        ix = {"INSERT COMPL", "I·COMPL", "IC"},
-        R = {"REPLACE", "REP", "R"},
-        v = {"VISUAL", "VIS", "V"},
-        V = {"V·LINE", "V·LN", "V·L"},
-        ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
-        c = {"COMMAND", "CMD", "C"},
-        s = {"SELECT", "SEL", "S"},
-        S = {"S·LINE", "S·LN", "S·L"},
-        ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
-        t = {"TERMINAL", "TERM", "T"},
-    }
-
     local mode_key = api.nvim_get_mode().mode
-    local curr_mode = mode_map[mode_key] or mode_key
+    local curr_mode = ll.mode_map[mode_key] or mode_key
     local mode_out = function()
         if WINWIDTH > vars.med_width then return curr_mode[1] end
         if WINWIDTH > vars.min_width then return curr_mode[2] end
@@ -270,9 +271,12 @@ function ll.git_summary() -- {{{2
         return npcall(vim.fn.GitGutterGetHunkSummary) or
                    npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
     end)()
-    local added = not not hunks[1] and hunks[1] ~= 0 and string.format("+%d ", hunks[1]) or ""
-    local changed = not not hunks[2] and hunks[2] ~= 0 and string.format("~%d ", hunks[2]) or ""
-    local deleted = not not hunks[3] and hunks[3] ~= 0 and string.format("-%d ", hunks[3]) or ""
+    local added = not not hunks[1] and hunks[1] ~= 0 and
+                      string.format("+%d ", hunks[1]) or ""
+    local changed = not not hunks[2] and hunks[2] ~= 0 and
+                        string.format("~%d ", hunks[2]) or ""
+    local deleted = not not hunks[3] and hunks[3] ~= 0 and
+                        string.format("-%d ", hunks[3]) or ""
     return " " .. added .. changed .. deleted
 end
 
@@ -325,11 +329,12 @@ function ll.linter_errors() -- {{{2
         return info.error
     end
     local ale_error_ct = function()
-        local counts = npcall(vim.fn["ale#statusline#Count"], 0)
+        local counts = npcall(vim.fn["ale#statusline#Count"],
+                              api.nvim_win_get_buf(0))
         return not not counts and counts.error + counts.style_error or 0
     end
-    local coc_errors = coc_error_ct()
-    local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
+    -- local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
+    local error_ct = coc_error_ct() + ale_error_ct()
     return error_ct > 0 and
                string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
 end
@@ -341,21 +346,80 @@ function ll.linter_warnings() -- {{{2
         return info.warning
     end
     local ale_warning_ct = function()
-        local counts = npcall(vim.fn["ale#statusline#Count"], 0)
+        local counts = npcall(vim.fn["ale#statusline#Count"],
+                              api.nvim_win_get_buf(0))
         return not not counts and counts.warning + counts.style_warning or 0
     end
-    local coc_warnings = coc_warning_ct()
-    local warning_ct = coc_warnings > 0 and coc_warnings or ale_warning_ct()
+    local warning_ct = coc_warning_ct() + ale_warning_ct()
     return warning_ct > 0 and
                string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or
                ""
 end
 
--- Post config {{{1
+-- Statusline definition {{{1
 -- Set g:lightline {{{2
 vim.g.lightline = lightline
 
--- Tests {{{2
+-- Set manual statusline {{{1
+local function def(fn) -- {{{2
+    return string.format(" %%{v:lua.ll.%s()} ", fn)
+end
+
+-- define statusline section
+-- params: fn, width, style
+-- local function define(args) -- {{{2
+--     return string.format(" %%#%s#%%{v:lua.ll.%s()}%%* ", args.fn)
+-- end
+
+function ll.statusline() -- {{{2
+    local mode = def("vim_mode")
+    local fname = def("file_name")
+    local git = def("git_status")
+    local warnings = def("linter_warnings")
+    local errors = def("linter_errors")
+    local left = string.format("%s%%<%s%s%s%s", mode, fname, git, warnings,
+                               errors)
+
+    local line = def("line_info")
+    local right = string.format("%s", line)
+    return left .. "%=" .. right
+end
+
+function ll.set_statusline() -- {{{2
+    api.nvim_win_set_option(0, "statusline", "%!v:lua.ll.statusline()")
+end
+
+-- Statusline autocommands {{{2
+local set_statusline_events =
+    { -- events where `setlocal statusline` would be called
+        -- "WinEnter",
+        -- "BufWinEnter",
+        -- "ShellCmdPost",
+        -- "BufWritePost",
+        -- "FileChangedShellPost",
+        "ColorScheme",
+        -- "FileReadPre",
+        -- "FileWritePost",
+    }
+
+local set_statusline_user_events = {"GitGutter", "Startified", "CocNvimInit"}
+
+local set_statusline_command = "lua ll.set_statusline()"
+local augroups = {
+    statusline = {
+        {table.concat(set_statusline_events, ","), "*", set_statusline_command},
+        {
+            "User ",
+            table.concat(set_statusline_user_events, ","),
+            set_statusline_command,
+        },
+    },
+}
+
+nvim.create_augroups(augroups)
+
+-- Tests {{{1
+-- Benchmarks {{{2
 -- local runs = 1000
 -- require'util'.bench(runs, ll.git_status)
 -- require'util'.bench(runs, vim.fn.LL_GitStatus)

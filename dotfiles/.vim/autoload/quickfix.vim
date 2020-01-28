@@ -3,26 +3,53 @@
 if exists('g:loaded_autoload_quickfix') | finish | endif
 let g:loaded_autoload_quickfix = 1
 
-function! quickfix#toggle() abort
-    if exists('*asyncrun#quickfix_toggle')
-        " AsyncRun is loaded; use this handy function
-        " Open qf window of specific size in most elegant way
-        let qf_lines = len(getqflist())
-        let qf_size = qf_lines ?
-            \ min([qf_lines, get(g:, 'quickfix_size', 12)]) :
-            \ 1
-        call asyncrun#quickfix_toggle(qf_size)
-        return
-    endif
-    for buffer in tabpagebuflist()
-        if bufname(buffer) ==? ''
-          " then it should be the quickfix window
-          cclose
-          return
+" Originally from:
+" https://github.com/skywind3000/asyncrun.vim/blob/master/plugin/asyncrun.vim
+function! s:qf_toggle(size, ...)
+    let l:mode = (a:0 == 0)? 2 : (a:1)
+    function! s:window_check(mode)
+        if &l:buftype ==# 'quickfix'
+            let s:quickfix_open = 1
+            return
         endif
-    endfor
-    " Quickfix window not open, so open it
-    copen
+        if a:mode == 0
+            let w:quickfix_save = winsaveview()
+        else
+            if exists('w:quickfix_save')
+                call winrestview(w:quickfix_save)
+                unlet w:quickfix_save
+            endif
+        endif
+    endfunc
+    let s:quickfix_open = 0
+    let l:winnr = winnr()
+    noautocmd windo call s:window_check(0)
+    noautocmd silent! execute ''.l:winnr.'wincmd w'
+    if l:mode == 0
+        if s:quickfix_open != 0
+            silent! cclose
+        endif
+    elseif l:mode == 1
+        if s:quickfix_open == 0
+            execute 'botright copen '. ((a:size > 0)? a:size : ' ')
+            wincmd k
+        endif
+    elseif l:mode == 2
+        if s:quickfix_open == 0
+            execute 'botright copen '. ((a:size > 0)? a:size : ' ')
+            wincmd k
+        else
+            silent! cclose
+        endif
+    endif
+    noautocmd windo call s:window_check(1)
+    noautocmd silent! exec ''.l:winnr.'wincmd w'
+endfunction
+
+function! quickfix#toggle() abort
+    let l:qf_lines = len(getqflist())
+    let l:qf_size = min([max([1, qf_lines]), get(g:, 'quickfix_size', 12)])
+    call s:qf_toggle(l:qf_size)
 endfunction
 
 " Close an empty quickfix window

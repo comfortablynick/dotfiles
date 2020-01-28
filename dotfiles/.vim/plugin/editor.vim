@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-27 15:27:44 CST
+" Last Change: 2020-01-28 15:46:05 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -13,6 +13,14 @@ command! S update | source $MYVIMRC
 " Lazy load startuptime.vim plugin
 command! -nargs=* -complete=file StartupTime
     \ packadd startuptime.vim | StartupTime <args>
+" Easily change background
+command! Light set background=light
+command! Dark  set background=dark
+" Make these commonly mistyped commands still work
+command! WQ wq
+command! Wq wq
+command! Wqa wqa
+command! W w
 
 " Maps
 " Format paragraph and restore cursor position
@@ -30,27 +38,30 @@ cnoreabbrev <expr> lp
 " Autocmds
 augroup plugin_editor
     autocmd!
-    " Cursor configuration
     " Remember last place in file
     autocmd BufWinEnter * call s:recall_cursor_position()
+
     " Close certain read-only filetypes with only 'q'
     " Not likely to be using macros in these files
     autocmd FileType netrw,help,fugitive,qf
         \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
+
     " Terminal starts in insert mode
     autocmd TermOpen * :startinsert
     autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
-    " Set cursorline depending on mode, if cursorline is enabled in vimrc
+
+    " Set cursorline depending on mode, if cursorline is enabled locally
     if &l:cursorline
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
-    " No numbers in terminal
+
+    " Toggle &(relative)number
     autocmd TermOpen * setlocal nonumber norelativenumber
     " Toggle relativenumber depending on mode and focus
-    autocmd FocusGained,WinEnter *
+    autocmd FocusGained,WinEnter,BufEnter *
         \ if &l:number | setlocal relativenumber | endif
-    autocmd FocusLost,WinLeave *
+    autocmd FocusLost,WinLeave,BufLeave *
         \ if &l:number | setlocal norelativenumber | endif
 augroup end
 

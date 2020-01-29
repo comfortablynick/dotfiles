@@ -4,7 +4,8 @@ init = {}
 
 -- Options {{{1
 -- Global options {{{2
-local general = {
+local global = {
+    -- General {{{3
     background = "dark",
     -- Shared data file location
     shadafile = vim.env.XDG_DATA_HOME .. "/nvim/shada/main.shada",
@@ -69,9 +70,7 @@ local general = {
         return vim.o.grepprg
     end)(),
     grepformat = "%f:%l:%c:%m,%f:%l:%m",
-}
-
-local editor = {
+    -- Editor {{{3
     -- Backspace behaves as expected
     backspace = "2",
     -- Always show statusline
@@ -82,8 +81,8 @@ local editor = {
     visualbell = true,
     -- Text wrapping mode
     wrap = false,
-    -- Hide default mode text (e.g. -- INSERT -- below statusline)
-    showmode = false,
+    -- Show default mode text (e.g. -- INSERT -- below statusline)
+    showmode = true,
     -- Add extra line for function definition
     cmdheight = 1,
     -- Suppress echoing of 'Match x of x' during completion
@@ -396,8 +395,7 @@ local function load_packages() -- {{{2
 end
 
 local function set_options() -- {{{2
-    local global_settings = vim.tbl_extend("error", general, editor)
-    for name, value in pairs(global_settings) do vim.o[name] = value end
+    for name, value in pairs(global) do vim.o[name] = value end
 
     for name, value in pairs(buffer) do vim.bo[name] = value end
 
@@ -414,7 +412,7 @@ local function set_color() -- {{{2
         local color = vim.env.NVIM_COLOR or "papercolor-dark"
         local sub, n = color:gsub("-dark$", "")
         if n == 0 then
-            general.background = "light"
+            global.background = "light"
             sub = (color:gsub("-light$", ""))
         end
         return sub

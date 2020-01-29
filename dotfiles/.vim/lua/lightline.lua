@@ -160,6 +160,18 @@ function ll.line_info() -- {{{2
                          vars.glyphs.line, row_pos(), vars.glyphs.line_no, col)
 end
 
+function ll.simple_line_info() -- {{{2
+    local line_ct = api.nvim_buf_line_count(0)
+    local pos = api.nvim_win_get_cursor(0)
+    local row = pos[1]
+    local col = pos[2] + 1
+    return string.format("%d,%d %3d%% ",  row, col, row * 100 / line_ct)
+end
+
+function ll.bufnr() -- {{{2
+    return api.nvim_win_get_buf(0)
+end
+
 function ll.vim_mode() -- {{{2
     local mode_key = api.nvim_get_mode().mode
     local curr_mode = ll.mode_map[mode_key] or mode_key
@@ -209,31 +221,13 @@ end
 
 function ll.file_name() -- {{{2
     if ll.is_not_file() then return "" end
-    local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
-    if ll.coc_status() ~= "" or vim.bo.filetype == "help" then
-        return path:basename()
-    end
-    local num_chars = (function()
-        if WINWIDTH <= vars.med_width then
-            return 2
-        elseif WINWIDTH <= vars.max_width then
-            return 3
-        else
-            return nil
+    local path = function()
+        if WINWIDTH < vars.min_width or vim.bo.filetype == "help" then
+            return vim.fn.expand("%:t")
         end
-    end)()
-    if num_chars ~= nil then
-        local shorten = function(part) return part:sub(1, num_chars) end
-        local parts = vim.split(path, "/")
-        local basename = parts[#parts]
-        if #parts > 1 then
-            local shortened = {}
-            for i = 1, #parts - 1 do
-                table.insert(shortened, shorten(parts[i]))
-            end
-            table.insert(shortened, basename)
-            path = table.concat(shortened, "/")
-        end
+        local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
+        if WINWIDTH < vars.max_width then return vim.fn.pathshorten(path) end
+        return path
     end
     local read_only = function()
         return not ll.is_not_file() and vim.bo.readonly and
@@ -248,7 +242,7 @@ function ll.file_name() -- {{{2
         local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
         return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
     end
-    return read_only() .. path .. modified() .. lvimrc()
+    return read_only() .. path() .. modified() .. lvimrc()
 end
 
 function ll.file_encoding() -- {{{2
@@ -367,57 +361,68 @@ end
 
 -- define statusline section
 -- params: fn, width, style
--- local function define(args) -- {{{2
---     return string.format(" %%#%s#%%{v:lua.ll.%s()}%%* ", args.fn)
--- end
+local function define(args) -- {{{2
+    return string.format(" %%#%s#%%{v:lua.ll.%s()}%%* ", args.hl, args.fn)
+end
 
 function ll.statusline() -- {{{2
-    local mode = def("vim_mode")
+    local bufnr = define({fn = "bufnr", hl = "WarningMsg"})
     local fname = def("file_name")
     local git = def("git_status")
     local warnings = def("linter_warnings")
     local errors = def("linter_errors")
-    local left = string.format("%s%%<%s%s%s%s", mode, fname, git, warnings,
+    local left = string.format("%%<%s%s%s%s%s", bufnr, git, fname, warnings,
                                errors)
 
-    local line = def("line_info")
-    local right = string.format("%s", line)
+    local coc = def("coc_status")
+    local line = def("simple_line_info")
+    local right = string.format("%s%s", coc, line)
     return left .. "%=" .. right
 end
 
 function ll.set_statusline() -- {{{2
-    api.nvim_win_set_option(0, "statusline", "%!v:lua.ll.statusline()")
+    api.nvim_win_set_option(0, "statusline", ll.statusline())
 end
 
--- Statusline autocommands {{{2
-local set_statusline_events =
-    { -- events where `setlocal statusline` would be called
-        -- "WinEnter",
-        -- "BufWinEnter",
-        -- "ShellCmdPost",
-        -- "BufWritePost",
-        -- "FileChangedShellPost",
-        "ColorScheme",
-        -- "FileReadPre",
-        -- "FileWritePost",
+-- Statusline init {{{2
+function ll.init()
+    local set_statusline_events =
+        { -- events where `setlocal statusline` would be called
+            -- "WinEnter",
+            -- "BufWinEnter",
+            -- "ShellCmdPost",
+            -- "BufWritePost",
+            -- "FileChangedShellPost",
+            "ColorScheme",
+            -- "FileReadPre",
+            -- "FileWritePost",
+        }
+
+    local set_statusline_user_events = {
+        "GitGutter",
+        "Startified",
+        "CocNvimInit",
     }
 
-local set_statusline_user_events = {"GitGutter", "Startified", "CocNvimInit"}
-
-local set_statusline_command = "lua ll.set_statusline()"
-local augroups = {
-    statusline = {
-        {table.concat(set_statusline_events, ","), "*", set_statusline_command},
-        {
-            "User ",
-            table.concat(set_statusline_user_events, ","),
-            set_statusline_command,
+    local set_statusline_command = "lua ll.set_statusline()"
+    local augroups = {
+        statusline = {
+            {
+                table.concat(set_statusline_events, ","),
+                "*",
+                set_statusline_command,
+            },
+            {
+                "User ",
+                table.concat(set_statusline_user_events, ","),
+                set_statusline_command,
+            },
         },
-    },
-}
+    }
 
-nvim.create_augroups(augroups)
-
+    nvim.create_augroups(augroups)
+end
+ll.init()
 -- Tests {{{1
 -- Benchmarks {{{2
 -- local runs = 1000

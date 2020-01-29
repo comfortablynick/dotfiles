@@ -39,7 +39,6 @@ case "$(uname -s)" in
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
 
-# SSH/MOSH DETECTION {{{1
 # is_ssh :: Return true if in SSH session {{{2
 is_ssh() {
   if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
@@ -100,6 +99,7 @@ if is_mosh; then
 fi
 
 # SHELL OPTS {{{1
+# General {{{2
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack
@@ -111,7 +111,7 @@ COMPLETION_WAITING_DOTS="true"                                  # Display dots w
 DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
 DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
 
-# SHELL HISTORY {{{1
+# History {{{2
 HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
@@ -128,6 +128,19 @@ setopt HIST_REDUCE_BLANKS                                       # Remove superfl
 setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
 setopt SHARE_HISTORY                                            # Shells share history
+
+# Keymaps {{{2
+bindkey -v
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+# kj :: <Esc>
+bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
 
 # PLUGINS {{{1
 # Zplugin Config {{{2
@@ -220,20 +233,6 @@ export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
 
 
-# KEYMAP {{{1
-bindkey -v
-
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
-
-# kj :: <Esc>
-bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
-# zle -N zle-keymap-select
-
 # FUNCTIONS {{{1
 # mc :: make directory and cd into it {{{2
 mc() {
@@ -257,9 +256,10 @@ function cd() {
         return
     fi
     local fuzzy_finder="fzy"
-    local lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
--o -type d -print 2> /dev/null | sort | cut -b3-")
-    local dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
+    #     local lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+    # -o -type d -print 2> /dev/null | sort | cut -b3-")
+    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | fzy)
+    # local dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
     [[ ${#dir} -ne 0 ]] || return 0
     builtin cd "$dir"
 }

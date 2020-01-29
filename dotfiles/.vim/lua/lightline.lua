@@ -422,7 +422,7 @@ function ll.init()
 
     nvim.create_augroups(augroups)
 end
-ll.init()
+-- ll.init()
 -- Tests {{{1
 -- Benchmarks {{{2
 -- local runs = 1000

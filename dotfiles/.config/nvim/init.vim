@@ -5,15 +5,17 @@
 " | | | | | | |_ \ V /| | | | | | |
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
-let g:use_init_lua = 1
+let g:use_init_lua = 0
 
 " Plugin config handler {{{1
+" Autocmds {{{2
 augroup plugin_config_handler
     autocmd!
     autocmd! SourcePre * call s:source_handler(expand('<afile>'), 'pre')
     autocmd! SourcePost * call s:source_handler(expand('<afile>'), 'post')
 augroup END
 
+" Variables {{{2
 let g:plugin_config_files = map(
     \ split(globpath(&runtimepath, 'autoload/plugins/*'), '\n'),
     \ {_, val -> fnamemodify(val, ':t:r')}
@@ -24,7 +26,7 @@ let g:plugins_skipped = []
 let g:plugins_called = []
 let g:plugins_source_errors = []
 
-function! s:source_handler(sourced, type) abort
+function! s:source_handler(sourced, type) abort "{{{2
     let l:file = substitute(fnamemodify(tolower(a:sourced), ':t:r'), '-', '_', 'g')
     if a:sourced =~# '^[plugin|autoload]'
         if index(g:plugins_skipped, a:sourced) < 0
@@ -52,18 +54,20 @@ function! s:source_handler(sourced, type) abort
     endif
 endfunction
 
+function! PluginsSkipped() abort "{{{2
+    let l:pl = map(g:plugins_skipped, {_, v -> {'filename': v}})
+    return l:pl
+endfunction
+
 if has('nvim') && get(g:, 'use_init_lua') == 1
     lua require 'init'
     finish
 endif
 
-function! PluginsSkipped() abort
-    let l:pl = map(g:plugins_skipped, {_, v -> {'filename': v}})
-    return l:pl
-endfunction
-
 " Non-lua General Configuration {{{1
 " Vim/Neovim Only {{{2
+let g:vim_exists = executable('vim')
+
 if has('nvim')
     " Neovim Only
     set inccommand=split                                        " Live substitution
@@ -79,16 +83,10 @@ else
     let g:package_path = expand('$HOME/.vim/pack')
 endif
 
-" Augroup {{{2
-" General augroup for vimrc files
-" Add to this group safely throughout config
-augroup vimrc
-    autocmd!
-augroup END
-
 " Files/Swap/Backup {{{2
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
+set backup
 set backupdir=/tmp/neovim_backup//                              " Store backup files
 
 " General {{{2
@@ -107,9 +105,8 @@ set laststatus=2                                                " Always show st
 set showtabline=2                                               " Always show tabline
 set visualbell                                                  " Visual bell instead of audible
 set nowrap                                                      " Text wrapping mode
-set noshowmode                                                  " Hide default mode text (e.g. -- INSERT -- below statusline)
-set cmdheight=1                                                 " Add extra line for function definition
-set shortmess+=c                                                " Don't suppress echodoc with 'Match x of x'
+set showmode                                                  " Show default mode text (e.g. -- INSERT -- below statusline)
+set shortmess+=c                                                " Don't show 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
 set nocursorline                                                " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
@@ -126,10 +123,11 @@ set concealcursor=                                              " Don't conceal 
 set virtualedit=onemore                                         " Allow cursor to extend past line
 set exrc                                                        " Load project local .vimrc
 set secure                                                      " Don't execute code in local .vimrcs
+let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion
-set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
+" set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{2
 set foldenable                                                  " Enable folds by default
@@ -149,7 +147,7 @@ set ignorecase                                                  " Ignore case wh
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
 set magic                                                       " Magic escaping for regex
-set gdefault                                                    " Global replacement by default
+" set gdefault                                                    " Global replacement by default
 
 " use ripgrep as grepprg
 if executable('rg')
@@ -165,57 +163,43 @@ set undofile                                                    " Enable persist
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
+" let &winblend = $VIM_SSH_COMPAT ? 0 : 10                        " Transparency of floating windows (0=opaque, 100=transparent)
 
 " Line numbers {{{2
 set number                                                      " Show linenumbers
 set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
 
-" Keymaps {{{2
-" Leader key
-let g:mapleader = ','
+" Disable Vim default plugins {{{2
+let g:loaded_gzip = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_2html_plugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_matchit = 1
 
-" Indent/outdent
-vnoremap <Tab>   >><Esc>gv
-vnoremap <S-Tab> <<<Esc>gv
-
-" Toggle folds
-noremap <Space> za
-
-" Open all folds under cursor
-noremap za zA
-
-" `U` to redo
-nnoremap U <C-r>
-
-" Insert mode <Esc> maps
-" `kj` :: escape
-inoremap kj <Esc>`^
-
-" `lkj` :: escape + save
-inoremap lkj <Esc>`^:w<CR>
-
-" `;lkj` :: escape + save + quit
-inoremap ;lkj <Esc>`^:wq<CR>
-
-" Search - CR turns off search highlighting
-nnoremap <CR> :nohlsearch<CR><CR>
-
-" Use q to close buffer on read-only files
-autocmd vimrc FileType netrw,help nnoremap <silent> q :bd<CR>
-
-" Autocommands {{{2
-" Terminal
-if has('nvim')
-    " Start in TERMINAL mode (any key will exit)
-    autocmd vimrc TermOpen * startinsert
-    " `<Esc>` to exit terminal mode
-    autocmd vimrc TermOpen * tnoremap <buffer> <Esc> <C-\><C-n>
-    " Unmap <Esc> so it can be used to exit FZF
-    autocmd vimrc FileType fzf tunmap <buffer> <Esc>
-endif
+" Plugins {{{1
+" Load packages at startup {{{2
+packadd! fzf.vim
+packadd! neoformat
+packadd! vim-surround
+packadd! vim-repeat
+packadd! vim-fugitive
+packadd! vim-scriptease
+packadd! vim-commentary
+packadd! vim-clap
+packadd! vim-snippets
+packadd! vim-tmux-navigator
+packadd! vim-lion
+packadd! vim-startify
+packadd! vista.vim
+packadd! vim-textobj-user
+packadd! vim-textobj-lua
+packadd! nvim-luadev
+packadd! clever-f.vim
+" packadd! 'lightline.vim'
+" packadd! 'lightline-bufferline'
 
 " Lua tools {{{2
 if has('nvim')
     lua require'helpers'
-    lua require'lightline'
+    " lua require'lightline'
 endif

@@ -3,18 +3,53 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-30 09:08:27 CST
+" Last Change: 2020-01-30 15:09:31 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
 
-let g:completion_filetypes = get(g:, 'completion_filetypes', {})
-let g:coc_filetypes = get(g:completion_filetypes, 'coc', [])
+let g:completion_filetypes = {
+    \ 'coc': [
+    \    'c',
+    \    'cpp',
+    \    'fish',
+    \    'go',
+    \    'rust',
+    \    'typescript',
+    \    'javascript',
+    \    'json',
+    \    'lua',
+    \    'python',
+    \    'bash',
+    \    'sh',
+    \    'vim',
+    \    'yaml',
+    \    'snippets',
+    \    'markdown',
+    \    'toml',
+    \    'txt',
+    \    'mail',
+    \    'pro',
+    \    'ini',
+    \    'muttrc',
+    \    'cmake',
+    \    'zig',
+    \ ],
+    \ 'nvim-lsp': [
+    \ ],
+    \ 'none': [
+    \    'nerdtree',
+    \ ]
+    \ }
 
 augroup plugin_completion
     autocmd!
-    if !empty(g:coc_filetypes)
-        autocmd FileType * if index(g:coc_filetypes, &ft) > -1|call completion#coc()|endif
+    if !empty(g:completion_filetypes.coc)
+        autocmd FileType * if index(g:completion_filetypes.coc, &ft) > -1
+            \ | call completion#coc()
+            \ | endif
         autocmd User CocNvimInit ++once call completion#coc_init()
+        " Disable folding on floating windows (coc-git chunk diff)
+        autocmd User CocOpenFloat if exists('w:float') | setl nofoldenable | endif
     endif
 augroup END

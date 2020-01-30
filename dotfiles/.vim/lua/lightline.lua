@@ -259,10 +259,10 @@ function ll.git_summary() -- {{{2
     -- 1. coc-git
     -- 2. gitgutter
     -- 3. signify
+    if exists("b:coc_git_status") == 1 then
+        return " "..vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
+    end
     local hunks = (function()
-        if exists("b:coc_git_status") == 1 then
-            return vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
-        end
         return npcall(vim.fn.GitGutterGetHunkSummary) or
                    npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
     end)()
@@ -277,9 +277,9 @@ end
 
 function ll.git_branch() -- {{{2
     if vim.fn.exists("g:coc_git_status") == 1 then
-        return vim.g.coc_git_status
+        return string.gsub(vim.g.coc_git_status, "master", "")
     end
-    local head = npcall(vim.fn["fugitive#head"])
+    local head = npcall(vim.fn.FugitiveHead)
     return not not head and head ~= "master" and vars.glyphs.branch .. " " .. head or ""
 end
 
@@ -387,6 +387,7 @@ end
 
 -- Statusline init {{{2
 function ll.init()
+    vim.g.statusline_set = 1
     local set_statusline_events =
         { -- events where `setlocal statusline` would be called
             -- "WinEnter",
@@ -423,7 +424,7 @@ function ll.init()
 
     nvim.create_augroups(augroups)
 end
-ll.init()
+-- ll.init()
 -- Tests {{{1
 -- Benchmarks {{{2
 -- local runs = 1000

@@ -4,15 +4,16 @@
 " Description: Config for lightline.vim
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-21 07:08:00 CST
+" Last Change: 2020-01-30 15:26:34 CST
 " ====================================================
 scriptencoding utf-8
-if exists('g:loaded_plugin_config_lightline_mh4pwx8p')
+let g:loaded_plugin_lightline = 1
+if exists('g:loaded_plugin_lightline')
     \ || exists('g:no_load_plugins')
     \ || exists('g:lightline')
     finish
 endif
-let g:loaded_plugin_config_lightline_mh4pwx8p = 1
+let g:loaded_plugin_lightline = 1
 
 " Definitions {{{1
 " Status bar definition {{{2

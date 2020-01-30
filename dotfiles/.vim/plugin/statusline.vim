@@ -6,13 +6,17 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-01-29 18:42:27 CST
+" Last Change: 2020-01-30 17:09:04 CST
 " ====================================================
-let g:loaded_plugin_statusline = 1
+" let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
     finish
 endif
 let g:loaded_plugin_statusline = 1
+
+" lua require'lightline'
+" lua ll.init()
+" finish
 
 " Variables {{{1
 let g:devicons = $VIM_SSH_COMPAT ? 0 : 1
@@ -103,7 +107,6 @@ function! SL_modified() abort " {{{2
     return &modified ? s:sl.symbol.modified : ''
 endfunction
 
-
 function! SL_format_and_encoding() abort " {{{2
     let encoding = winwidth(0) < s:sl.width.min
         \ ? ''
@@ -125,7 +128,6 @@ endfunction
 function! SL_hi_group() abort " {{{2
     return '> ' . synIDattr(synID(line('.'), col('.'), 1), 'name') . ' <'
 endfunction
-
 
 function! SL_paste() abort " {{{2
     if &paste
@@ -263,12 +265,13 @@ function! SL_coc_status() abort " {{{2
 endfunction
 
 " Helpers {{{1
-function! s:hi(group, bg, fg, opt) abort " {{{2
+let g:sl_hg = []
+function! SL_hi(group, bg, fg, opt) abort " {{{2
     let bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
     let fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
     let opt = empty(a:opt) ? ['none', 'none'] : [a:opt, a:opt]
     let mode = ['gui', 'cterm']
-    let cmd = 'hi ' . a:group . ' term=' . opt[1]
+    let cmd = 'hi '.a:group.' term='.opt[1]
     for i in (range(0, len(mode)-1))
         let cmd .= printf(' %sbg=%s %sfg=%s %s=%s',
             \ mode[i], bg[i],
@@ -276,23 +279,26 @@ function! s:hi(group, bg, fg, opt) abort " {{{2
             \ mode[i], opt[i]
             \ )
     endfor
+    let g:sl_hg += [cmd]
     execute cmd
 endfunction
 
 function! s:set_sl_colors() abort " {{{2
-    call s:hi('User1', s:sl.colors['main'], s:sl.colors['background'], 'bold')
-    call s:hi('User2', s:sl.colors['backgroundLight'], s:sl.colors['text'], 'none')
-    call s:hi('User3', s:sl.colors['backgroundLight'], s:sl.colors['textDark'], 'none')
-    call s:hi('User4', s:sl.colors['main'], s:sl.colors['background'], 'none')
+    let statusline = GetHighlight('StatusLine')
+    call SL_hi('User1', s:sl.colors['main'], s:sl.colors['background'], 'bold')
+    call SL_hi('User2', s:sl.colors['backgroundLight'], s:sl.colors['text'], 'none')
+    " call SL_hi('User2', statusline['ctermfg'], statusline)
+    call SL_hi('User3', s:sl.colors['backgroundLight'], s:sl.colors['textDark'], 'none')
+    call SL_hi('User4', s:sl.colors['main'], s:sl.colors['background'], 'none')
 
     " Modified state
-    call s:hi('User5', s:sl.colors['backgroundLight'], s:sl.colors['red'], 'bold')
+    call SL_hi('User5', s:sl.colors['backgroundLight'], s:sl.colors['red'], 'bold')
 
     " Success & error states
-    call s:hi('User6', s:sl.colors['backgroundLight'], s:sl.colors['green'], 'bold')
-    call s:hi('User7', s:sl.colors['backgroundLight'], s:sl.colors['orange'], 'bold')
+    call SL_hi('User6', s:sl.colors['backgroundLight'], s:sl.colors['green'], 'bold')
+    call SL_hi('User7', s:sl.colors['backgroundLight'], s:sl.colors['orange'], 'bold')
     " Inactive statusline
-    call s:hi('User8', s:sl.colors['backgroundDark'], s:sl.colors['backgroundLight'], 'none')
+    call SL_hi('User8', s:sl.colors['backgroundDark'], s:sl.colors['backgroundLight'], 'none')
 endfunction
 
 function! s:toggle_sl_item(var, funcref) abort " {{{2
@@ -304,6 +310,31 @@ function! s:toggle_sl_item(var, funcref) abort " {{{2
     endif
 endfunction
 
+function! SL_extract(group, what, ...) abort
+    if a:0 == 1
+        return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
+    else
+        return synIDattr(synIDtrans(hlID(a:group)), a:what)
+    endif
+endfunction
+
+function! GetHighlight(src) abort
+    let hl = execute('highlight '.a:src)
+    let mregex = '\v(\w+)\=(\S+)'
+    let idx = 0
+    let arr = {}
+    while 1
+        let idx = match(hl, mregex, idx)
+        if idx == -1
+            break
+        endif
+        let m = matchlist(hl, mregex, idx)
+        let idx += len(m[0])
+        let arr[m[1]]=m[2]
+    endwhile
+    return arr
+endfunction
+
 function! Get_SL(...) abort " {{{2
     let sl = ''
     " Custom functions
@@ -311,18 +342,18 @@ function! Get_SL(...) abort " {{{2
         let fun = get(s:sl.apply, &filetype)
         let len_f = len(fun)
         if len_f == 1
-            let sl = '%{' . fun[0] . '}'
+            let sl = '%{'.fun[0].'}'
         elseif len_f == 2
-            let sl = '%{' . fun[0] . '}'
-            let sl .= '%=%{' . fun[-1] . '}'
+            let sl = '%{'.fun[0].'}'
+            let sl .= '%=%{'.fun[-1].'}'
         else
             for i in range(0, len_f - 2)
-                if exists('*' . fun[i])
-                    let sl .= (i isnot# 0 ? s:sl.separator . ' ' : '') .
-                        \ '%{' . fun[i] . '}'
+                if exists('*'.fun[i])
+                    let sl .= (i != 0 ? s:sl.separator.' ' : '') .
+                        \ '%{'.fun[i].'}'
                 endif
             endfor
-            let sl .= '%=%{' . fun[-1] . '}'
+            let sl .= '%=%{'.fun[-1].'}'
         endif
         return sl
     endif
@@ -358,9 +389,9 @@ function! Get_SL(...) abort " {{{2
 
     " Git
     let sl .= '%( %{SL_git_hunks()} %)'
-    let sl .= '%(%{SL_fugitive()} ' . s:sl.separator . '%)'
+    let sl .= '%(%{SL_fugitive()} '.s:sl.separator.'%)'
 
-    let sl .= '%( %{SL_spell()} ' . s:sl.separator . '%)'
+    let sl .= '%( %{SL_spell()} '.s:sl.separator.'%)'
     let sl .= '%( %{SL_filetype()} %)'
 
     let sl .= '%4*'

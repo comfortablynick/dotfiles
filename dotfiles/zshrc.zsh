@@ -115,6 +115,8 @@ DIRSTACKSIZE=20                                                 # Limit size of 
 HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
+setopt NO_SHARE_HISTORY
+unsetopt SHARE_HISTORY                                          # Shells share history
 setopt BANG_HIST                                                # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY                                         # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY                                       # Write to the history file immediately, not when the shell exits.
@@ -127,7 +129,6 @@ setopt HIST_SAVE_NO_DUPS                                        # Don't write du
 setopt HIST_REDUCE_BLANKS                                       # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
-setopt SHARE_HISTORY                                            # Shells share history
 
 # Keymaps {{{2
 bindkey -v
@@ -242,6 +243,7 @@ mc() {
         echo "ERROR usage: $0 [DIR]"
     fi
 }
+
 # npm :: wrapper for asdf npm {{{2
 npm() {
     export ASDF_SKIP_RESHIM=1
@@ -258,7 +260,7 @@ function cd() {
     local fuzzy_finder="fzy"
     #     local lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     # -o -type d -print 2> /dev/null | sort | cut -b3-")
-    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | fzy)
+    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | $fuzzy_finder)
     # local dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
     [[ ${#dir} -ne 0 ]] || return 0
     builtin cd "$dir"
@@ -351,6 +353,11 @@ remove_last_history_entry() {
     mv "$history_temp_file" "$history_file" > /dev/null 2>&1
 
     fc -R # read history file.
+}
+
+# e :: fuzzy find file and edit in $EDITOR
+ed() {
+    eval "$FZY_DEFAULT_COMMAND" | fzy | xargs -r "$EDITOR" $file
 }
 
 # SHELL STARTUP {{{1

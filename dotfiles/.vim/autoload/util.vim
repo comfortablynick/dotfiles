@@ -9,3 +9,19 @@ function! util#highlights() abort
     endfor
     return l:qf
 endfunction
+
+function! util#capture_output(cmd) abort
+    " Capture output of command and return as list
+    if has('nvim')
+        let out = execute(a:cmd)
+    else
+        " Do it the old way
+        try
+            redir => out
+            execute 'silent!'.a:cmd
+        finally
+            redir END
+        endtry
+    endif
+    return split(out, '\n')
+endfunction

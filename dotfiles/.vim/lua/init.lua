@@ -259,15 +259,15 @@ local map_default_options = {silent = true, unique = true, noremap = true}
 -- General editor maps {{{2
 local general_maps = {
     -- indent/dedent
-    ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
-    ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
-    -- Redo
-    ["nU"] = {":redo<CR>"},
-    -- Close/save from insert mode
-    ["ikj"] = {"<Esc>`^"},
-    ["ilkj"] = {"<Esc>`^:w<CR>"},
-    ["i;lkj"] = {"<Esc>`^:wq<CR>"},
-    ["n<CR>"] = {":noh<CR><CR>", silent = false},
+    -- ["v<Tab>"] = {"<Cmd>normal! >gv<CR>"},
+    -- ["v<S-Tab>"] = {"<Cmd>normal! <gv<CR>"},
+    -- -- Redo
+    -- ["nU"] = {":redo<CR>"},
+    -- -- Close/save from insert mode
+    -- ["ikj"] = {"<Esc>`^"},
+    -- ["ilkj"] = {"<Esc>`^:w<CR>"},
+    -- ["i;lkj"] = {"<Esc>`^:wq<CR>"},
+    -- ["n<CR>"] = {":noh<CR><CR>", silent = false},
     -- Pop-up menu
     ["i<Tab>"] = {[[pumvisible() ? "\<C-n>" : "\<Tab>"]], expr = true},
     ["i<S-Tab>"] = {[[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], expr = true},
@@ -286,51 +286,51 @@ local general_maps = {
 
 -- Navigation maps {{{2
 local navigation_maps = {
-    -- Navigation
-    -- Line navigation in insert mode
-    ["i<C-k>"] = {"<Up>"},
-    ["i<C-j>"] = {"<Down>"},
-    ["i<C-h>"] = {"<Left>"},
-    ["i<C-l>"] = {"<Right>"},
-    -- CTRL+{h,j,k,l} to navigate in normal mode
-    -- Likely overridden by vim-tmux-navigator
-    ["n<C-k>"] = {"<C-w><C-k>"},
-    ["n<C-j>"] = {"<C-w><C-j>"},
-    ["n<C-h>"] = {"<C-w><C-h>"},
-    ["n<C-l>"] = {"<C-w><C-l>"},
-    -- ALT+{h,j,k,l} to navigate from any mode
-    -- Terminal
-    ["t<A-k>"] = {[[<C-\><C-N><C-w>k]]},
-    ["t<A-j>"] = {[[<C-\><C-N><C-w>j]]},
-    ["t<A-h>"] = {[[<C-\><C-N><C-w>h]]},
-    ["t<A-l>"] = {[[<C-\><C-N><C-w>l]]},
-    -- Insert
-    ["i<A-k>"] = {[[<C-\><C-N><C-w>k]]},
-    ["i<A-j>"] = {[[<C-\><C-N><C-w>j]]},
-    ["i<A-h>"] = {[[<C-\><C-N><C-w>h]]},
-    ["i<A-l>"] = {[[<C-\><C-N><C-w>l]]},
-    -- Normal
-    ["n<A-k>"] = {"<C-w>k"},
-    ["n<A-j>"] = {"<C-w>j"},
-    ["n<A-h>"] = {"<C-w>h"},
-    ["n<A-l>"] = {"<C-w>l"},
-    -- Delete window with d<C-h,j,k,l>
-    ["ndk"] = {"<C-w>k<C-w>c", silent = false},
-    ["ndj"] = {"<C-w>j<C-w>c"},
-    ["ndh"] = {"<C-w>h<C-w>c"},
-    ["ndl"] = {"<C-w>l<C-w>c", silent = false},
-    -- t + {h,l,n} to navigate tabs
-    ["nth"] = {":tabprev<CR>"},
-    ["ntl"] = {":tabnext<CR>"},
-    ["ntn"] = {":tabnew<CR>"},
-    -- b + {h,l,n} to navigate buffers
-    ["nbh"] = {":bprevious<CR>"},
-    ["nbl"] = {":bnext<CR>"},
-    -- gb: goto buffer
-    ["ngb"] = {":ls<CR>:b<Space>"},
-    -- Navigate wrapped lines normally with k/j
-    ["nk"] = {"v:count == 0 ? 'gk' : 'k'", expr = true},
-    ["nj"] = {"v:count == 0 ? 'gj' : 'j'", expr = true},
+--     -- Navigation
+--     -- Line navigation in insert mode
+--     ["i<C-k>"] = {"<Up>"},
+--     ["i<C-j>"] = {"<Down>"},
+--     ["i<C-h>"] = {"<Left>"},
+--     ["i<C-l>"] = {"<Right>"},
+--     -- CTRL+{h,j,k,l} to navigate in normal mode
+--     -- Likely overridden by vim-tmux-navigator
+--     ["n<C-k>"] = {"<C-w><C-k>"},
+--     ["n<C-j>"] = {"<C-w><C-j>"},
+--     ["n<C-h>"] = {"<C-w><C-h>"},
+--     ["n<C-l>"] = {"<C-w><C-l>"},
+--     -- ALT+{h,j,k,l} to navigate from any mode
+--     -- Terminal
+--     ["t<A-k>"] = {[[<C-\><C-N><C-w>k]]},
+--     ["t<A-j>"] = {[[<C-\><C-N><C-w>j]]},
+--     ["t<A-h>"] = {[[<C-\><C-N><C-w>h]]},
+--     ["t<A-l>"] = {[[<C-\><C-N><C-w>l]]},
+--     -- Insert
+--     ["i<A-k>"] = {[[<C-\><C-N><C-w>k]]},
+--     ["i<A-j>"] = {[[<C-\><C-N><C-w>j]]},
+--     ["i<A-h>"] = {[[<C-\><C-N><C-w>h]]},
+--     ["i<A-l>"] = {[[<C-\><C-N><C-w>l]]},
+--     -- Normal
+--     ["n<A-k>"] = {"<C-w>k"},
+--     ["n<A-j>"] = {"<C-w>j"},
+--     ["n<A-h>"] = {"<C-w>h"},
+--     ["n<A-l>"] = {"<C-w>l"},
+--     -- Delete window with d<C-h,j,k,l>
+--     ["ndk"] = {"<C-w>k<C-w>c", silent = false},
+--     ["ndj"] = {"<C-w>j<C-w>c"},
+--     ["ndh"] = {"<C-w>h<C-w>c"},
+--     ["ndl"] = {"<C-w>l<C-w>c", silent = false},
+--     -- t + {h,l,n} to navigate tabs
+--     ["nth"] = {":tabprev<CR>"},
+--     ["ntl"] = {":tabnext<CR>"},
+--     ["ntn"] = {":tabnew<CR>"},
+--     -- b + {h,l,n} to navigate buffers
+--     ["nbh"] = {":bprevious<CR>"},
+--     ["nbl"] = {":bnext<CR>"},
+--     -- gb: goto buffer
+--     ["ngb"] = {":ls<CR>:b<Space>"},
+--     -- Navigate wrapped lines normally with k/j
+--     ["nk"] = {"v:count == 0 ? 'gk' : 'k'", expr = true},
+--     ["nj"] = {"v:count == 0 ? 'gj' : 'j'", expr = true},
 }
 
 -- Functions {{{1

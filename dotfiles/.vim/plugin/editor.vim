@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-28 15:46:05 CST
+" Last Change: 2020-01-30 11:16:55 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -23,6 +23,7 @@ command! Wqa wqa
 command! W w
 
 " Maps
+
 " Format paragraph and restore cursor position
 nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
 " Format buffer and restore cursor position

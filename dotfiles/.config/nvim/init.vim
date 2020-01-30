@@ -1,3 +1,4 @@
+" vim:fdl=1:
 "  _       _ _         _
 " (_)_ __ (_) |___   _(_)_ __ ___
 " | | '_ \| | __\ \ / / | '_ ` _ \
@@ -6,6 +7,7 @@
 "
 let g:use_init_lua = 1
 
+" Plugin config handler {{{1
 augroup plugin_config_handler
     autocmd!
     autocmd! SourcePre * call s:source_handler(expand('<afile>'), 'pre')

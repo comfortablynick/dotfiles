@@ -380,15 +380,14 @@ local function load_packages() -- {{{2
     -- Delay these plugins until after vim window opens
     -- Helps with startuptime if plugins aren't needed right away
     vim.g.pack_deferred = {
-        "vim-gitgutter",
         "targets.vim",
         "ale",
         "tcomment_vim",
     }
+
     if global_vars.LL_nf == 1 then
         table.insert(vim.g.pack_deferred, "vim-devicons")
     end
-
     for _, package in ipairs(packages) do
         vim.cmd("silent! packadd! " .. package)
     end

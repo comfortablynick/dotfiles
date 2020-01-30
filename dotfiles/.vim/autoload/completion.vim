@@ -1,9 +1,13 @@
-if exists('g:loaded_autoload_plugins_coc') | finish | endif
-let g:loaded_autoload_plugins_coc = 1
+" ====================================================
+" Filename:    autoload/completion.vim
+" Description: Completion plugin config
+" Author:      Nick Murphy
+" License:     MIT
+" Last Change: 2020-01-30 08:59:35 CST
+" ====================================================
 
-
-" Set autocmds if LC is loaded
-function! plugins#coc#cmds() abort
+" Coc.nvim {{{1
+function! completion#coc_cmds() abort "{{{2
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif
     augroup coc_config_auto
         autocmd!
@@ -17,13 +21,13 @@ function! plugins#coc#cmds() abort
 endfunction
 
 " Helper function for <TAB> completion keymap
-function! s:check_back_space() abort
+function! s:check_back_space() abort "{{{2
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Remap only if active for filetype
-function! plugins#coc#apply_maps() abort
+function! completion#coc_apply_maps() abort "{{{2
     if exists('b:coc_suggest_disable') | return | endif
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
@@ -68,16 +72,33 @@ function! plugins#coc#apply_maps() abort
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
 endfunction
 
-function! plugins#coc#abbrev() abort
+function! completion#coc_abbrev() abort "{{{2
     cnoreabbrev es CocCommand snippets.editSnippets
     cnoreabbrev ci CocInfo
 endfunction
 
-function! plugins#coc#post() abort
+function! completion#coc_init() abort "{{{2
     " let g:coc_force_debug = 1
+    let g:coc_filetype_map = {
+        \ 'yaml.ansible': 'yaml'
+        \ }
+
+    if get(g:, 'use_explorer_coc', 'coc-explorer') ==# 'coc-explorer'
+        let g:use_explorer = 'coc-explorer'
+    endif
+    let g:coc_status_error_sign = 'E'
+    let g:coc_status_warn_sign = 'W'
+    let g:coc_snippet_next = '<tab>'
+    call completion#coc_cmds()
+    call completion#coc_apply_maps()
+    call completion#coc_abbrev()
+endfunction
+
+function! completion#coc() abort
     let g:coc_global_extensions = [
         \ 'coc-snippets',
         \ 'coc-explorer',
+        \ 'coc-git',
         \ 'coc-json',
         \ 'coc-fish',
         \ 'coc-rust-analyzer',
@@ -90,18 +111,7 @@ function! plugins#coc#post() abort
         \ 'coc-yaml',
         \ 'coc-pairs',
         \ ]
-
-    let g:coc_filetype_map = {
-        \ 'yaml.ansible': 'yaml'
-        \ }
-
-    if get(g:, 'use_explorer_coc', 'coc-explorer') ==# 'coc-explorer'
-        let g:use_explorer = 'coc-explorer'
-    endif
-    let g:coc_status_error_sign = 'E'
-    let g:coc_status_warn_sign = 'W'
-    let g:coc_snippet_next = '<tab>'
-    call plugins#coc#cmds()
-    call plugins#coc#apply_maps()
-    call plugins#coc#abbrev()
+    packadd coc.nvim
 endfunction
+
+" vim:fdl=1:

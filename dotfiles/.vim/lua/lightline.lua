@@ -165,11 +165,12 @@ function ll.simple_line_info() -- {{{2
     local pos = api.nvim_win_get_cursor(0)
     local row = pos[1]
     local col = pos[2] + 1
-    return string.format("%d,%d %3d%% ",  row, col, row * 100 / line_ct)
+    return string.format("%d,%d %3d%% ", row, col, row * 100 / line_ct)
 end
 
 function ll.bufnr() -- {{{2
-    return api.nvim_win_get_buf(0)
+    local buf = api.nvim_win_get_buf(0)
+    return '['..buf..']'
 end
 
 function ll.vim_mode() -- {{{2
@@ -279,7 +280,7 @@ function ll.git_branch() -- {{{2
         return vim.g.coc_git_status
     end
     local head = npcall(vim.fn["fugitive#head"])
-    return head ~= (nil or "") and vars.glyphs.branch .. " " .. head or ""
+    return not not head and head ~= "master" and vars.glyphs.branch .. " " .. head or ""
 end
 
 function ll.git_status() -- {{{2
@@ -422,7 +423,7 @@ function ll.init()
 
     nvim.create_augroups(augroups)
 end
--- ll.init()
+ll.init()
 -- Tests {{{1
 -- Benchmarks {{{2
 -- local runs = 1000

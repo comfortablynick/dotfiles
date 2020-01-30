@@ -29,10 +29,10 @@ function! plugins#clap#post() abort
     nnoremap <silent> <Leader>h :Clap command_history<CR>
 
     "Autocmds
-    augroup autoload_plugins_clap
-        autocmd!
-        autocmd User ClapOnExit setlocal relativenumber
-    augroup END
+"     augroup autoload_plugins_clap
+"         autocmd!
+"         autocmd User ClapOnExit setlocal relativenumber
+"     augroup END
 endfunction
 
 " Clap providers

@@ -6,8 +6,9 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-01-29 17:06:45 CST
+" Last Change: 2020-01-29 18:42:27 CST
 " ====================================================
+let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
     finish
 endif
@@ -28,7 +29,7 @@ let s:sl  = {
     \     'modified': '+',
     \     'warning_sign' : '•',
     \     'error_sign'   : '✘',
-    \     'success_sign' : '',
+    \     'success_sign' : '✓',
     \ },
     \ 'ignore': [
     \     'pine',
@@ -258,14 +259,6 @@ endfunction
 
 function! SL_coc_status() abort " {{{2
     let status = get(g:, 'coc_status', '')
-    " let first_word = matchstr(status, '^\s*\zs\S*')
-
-    " if empty(status) | return ''
-    " else
-    "     \ ? ''
-    "     \ : first_word == 'TSC'
-    "     \ ? ''
-    "     \ : first_word
     return status
 endfunction
 

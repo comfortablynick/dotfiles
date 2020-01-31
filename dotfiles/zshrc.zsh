@@ -77,7 +77,7 @@ export ZDOTDIR=${HOME}                                          # ZSH dotfile su
 export ZPLG_HOME=${ZDOTDIR}/.zplugin                            # Zplugin install dir
 
 for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
-fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
+fpath=($XDG_CONFIG_HOME/zsh/completions $XDG_CONFIG_HOME/zsh/functions $fpath)
 
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor
@@ -140,8 +140,13 @@ bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
-# kj :: <Esc>
 bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+
+bindkey -M vicmd '!' edit-command-line
+bindkey '^E' fzy-file-widget
 
 # PLUGINS {{{1
 # Zplugin Config {{{2
@@ -344,6 +349,16 @@ remove_last_history_entry() {
 
     fc -R # read history file.
 }
+
+_fzy-edit() {
+    # zle kill-whole-line
+    local file=$(eval "$FZY_DEFAULT_COMMAND" | fzy)
+    # zle -U "$EDITOR $file"
+    # zle accept-line
+    echo -n "$file"
+    echo
+}
+zle -N _fzy-edit
 
 # e :: fuzzy find file and edit in $EDITOR
 ed() {

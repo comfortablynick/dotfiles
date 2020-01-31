@@ -1,6 +1,4 @@
-#! /bin/zsh
-
-fzy-file-widget() {
+fzy-edit() {
     emulate -L zsh
     zle -I
     local cmd="$(eval "$FZY_DEFAULT_COMMAND" | fzy | read file && echo $file)"
@@ -9,4 +7,3 @@ fzy-file-widget() {
     fi
     zle reset-prompt
 }
-zle -N fzy-file-widget

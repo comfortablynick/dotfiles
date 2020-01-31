@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-30 11:16:55 CST
+" Last Change: 2020-01-31 09:22:20 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -35,6 +35,7 @@ nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
+inoreabbrev <expr> fff syntax#is_comment_line() ? '{{{' : printf(&commentstring, '{{{')
 
 " Autocmds
 augroup plugin_editor

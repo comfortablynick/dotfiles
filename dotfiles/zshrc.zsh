@@ -8,14 +8,6 @@
 
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
 
-# INSTANT PROMPT {{{1
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # PROFILE / DEBUG {{{1
 export DEBUG_MODE=false
 export PROFILE=0
@@ -305,16 +297,6 @@ chpwd() {
     # exa --group-directories-first
 }
 
-# direnv :: change environment based on .envrc file
-if [[ -x /usr/bin/direnv ]]; then
-    _direnv_hook() {
-      eval "$("/usr/bin/direnv" export zsh)";
-    }
-    typeset -ag precmd_functions;
-    if [[ -z ${precmd_functions[(r)_direnv_hook]} ]]; then
-      precmd_functions+=_direnv_hook;
-    fi
-fi
 
 # asdf :: version manager {{{2
 # BEGIN ANSIBLE MANAGED BLOCK: asdf

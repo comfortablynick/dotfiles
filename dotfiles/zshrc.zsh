@@ -303,13 +303,12 @@ chpwd() {
     # exa --group-directories-first
 }
 
-
 # asdf :: version manager {{{2
 # BEGIN ANSIBLE MANAGED BLOCK: asdf
-if [[ -e $HOME/.asdf/asdf.sh ]]; then
-  source $HOME/.asdf/asdf.sh
-  source $HOME/.asdf/completions/asdf.bash
-fi
+# if [[ -e $HOME/.asdf/asdf.sh ]]; then
+#   source $HOME/.asdf/asdf.sh
+#   source $HOME/.asdf/completions/asdf.bash
+# fi
 # END ANSIBLE MANAGED BLOCK: asdf
 
 # Autoload functions {{{2

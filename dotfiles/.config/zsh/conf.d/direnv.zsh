@@ -1,13 +1,6 @@
-_direnv_hook() {
-    trap -- '' SIGINT;
-    eval "$(direnv export zsh)";
-    trap - SIGINT;
-}
-typeset -ag precmd_functions;
-if [[ -z ${precmd_functions[(r)_direnv_hook]} ]]; then
-    precmd_functions=( _direnv_hook ${precmd_functions[@]} )
-fi
-typeset -ag chpwd_functions;
-if [[ -z ${chpwd_functions[(r)_direnv_hook]} ]]; then
-    chpwd_functions=( _direnv_hook ${chpwd_functions[@]} )
-fi
+# In order to bypass asdf shims. We *only* add the `ASDF_DIR/bin`
+# directory to PATH, since we still want to use `asdf` but not its shims.
+export PATH="$HOME/.asdf/bin:$PATH"
+
+# Hook direnv into your shell.
+eval "$(asdf exec direnv hook zsh)"

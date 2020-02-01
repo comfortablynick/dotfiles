@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-23 11:04:55 CST
+" Last Change: 2020-01-31 19:30:05 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -19,6 +19,10 @@ function! editor#cabbr(lhs, rhs) abort
         return a:rhs
     endif
     return a:lhs
+endfunction
+
+function! editor#iabbr(lhs, rhs) abort
+    return a:rhs
 endfunction
 
 " Eat space (from h: abbr)

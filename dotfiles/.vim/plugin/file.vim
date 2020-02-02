@@ -3,13 +3,15 @@
 " Description: File-related commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-27 15:30:31 CST
+" Last Change: 2020-02-01 14:42:53 CST
 " ====================================================
 if exists('g:loaded_plugin_file_qjxx1opc')
     \ || exists('g:no_load_plugins')
     finish
 endif
 let g:loaded_plugin_file_qjxx1opc = 1
+
+command! -nargs=0 -complete=file SetExecutable call file#set_executable_bit()
 
 " Timestamp YYYY-MM-DD HH:MM:SS CST
 let g:timestamp_format = '%F %H:%M:%S %Z'

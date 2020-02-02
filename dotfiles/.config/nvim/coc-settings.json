@@ -44,6 +44,7 @@
   "python.linting.flake8Enabled": false,
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Args": ["--max-line-length=100"],
+  "python.formatting.provider": "black",
 
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,

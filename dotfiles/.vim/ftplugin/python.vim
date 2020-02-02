@@ -7,6 +7,7 @@ let g:loaded_ftplugin_python_42efmoai = 1
 setlocal smartindent                        " Attempt smart indenting
 setlocal autoindent                         " Attempt auto indenting
 setlocal foldmethod=marker                  " Use 3x{ for folding
+setlocal formatprg=black\ --quiet\ -        " Use black for formatting
 
 " Other
 let python_highlight_all=1                  " Highlight all builtins

@@ -215,10 +215,6 @@ dotfiles:
     src: .config/pip
     dst: ~/.config/pip
     link: link
-  f_direnvrc:
-    src: .config/direnv/direnvrc
-    dst: ~/.config/direnv/direnvrc
-    link: link
   f_lua-format:
     src: .config/.lua-format
     dst: ~/.config/.lua-format
@@ -238,6 +234,10 @@ dotfiles:
   d_ptpython:
     src: .config/ptpython
     dst: ~/.config/ptpython
+    link: link
+  d_direnv:
+    src: .config/direnv
+    dst: ~/.config/direnv
     link: link
 profiles:
   core:
@@ -280,13 +280,13 @@ profiles:
     - d_pacman
     - d_rustfmt
     - d_pip
-    - f_direnvrc
     - d_lua
     - f_lua-format
     - f_kakrc
     - f_ignore
     - d_ripgrep
     - d_ptpython
+    - d_direnv
   io:
     dotfiles:
     - f_bash_linux

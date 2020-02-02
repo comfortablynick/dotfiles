@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-30 15:09:31 CST
+" Last Change: 2020-02-01 17:02:15 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -34,6 +34,7 @@ let g:completion_filetypes = {
     \    'muttrc',
     \    'cmake',
     \    'zig',
+    \    'zsh',
     \ ],
     \ 'nvim-lsp': [
     \ ],

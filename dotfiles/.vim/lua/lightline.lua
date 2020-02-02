@@ -280,7 +280,7 @@ function ll.git_branch() -- {{{2
         return string.gsub(vim.g.coc_git_status, "master", "")
     end
     local head = npcall(vim.fn.FugitiveHead)
-    return not not head and head ~= "master" and vars.glyphs.branch .. " " .. head or ""
+    return not not head and vars.glyphs.branch .. " " .. head or ""
 end
 
 function ll.git_status() -- {{{2
@@ -288,7 +288,7 @@ function ll.git_status() -- {{{2
         local branch = ll.git_branch()
         local hunks = ll.git_summary()
         return branch ~= "" and
-                   string.format("%s%s%s", vars.glyphs.vcs, branch, hunks) or ""
+                   string.format("%s%s%s", vars.glyphs.vcs, branch:gsub("master", ""), hunks)
     end
     return ""
 end

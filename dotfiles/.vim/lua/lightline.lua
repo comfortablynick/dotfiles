@@ -54,6 +54,7 @@ local special_filetypes = { -- {{{2
     minpac = "PACK",
     packager = "PACK",
     fugitive = "FUGITIVE",
+    startify = "STARTIFY",
 }
 
 ll.mode_map = {
@@ -170,7 +171,7 @@ end
 
 function ll.bufnr() -- {{{2
     local buf = api.nvim_win_get_buf(0)
-    return '['..buf..']'
+    return "[" .. buf .. "]"
 end
 
 function ll.vim_mode() -- {{{2
@@ -260,7 +261,7 @@ function ll.git_summary() -- {{{2
     -- 2. gitgutter
     -- 3. signify
     if exists("b:coc_git_status") == 1 then
-        return " "..vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
+        return " " .. vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
     end
     local hunks = (function()
         return npcall(vim.fn.GitGutterGetHunkSummary) or
@@ -287,8 +288,10 @@ function ll.git_status() -- {{{2
     if not ll.is_not_file() and WINWIDTH > vars.min_width then
         local branch = ll.git_branch()
         local hunks = ll.git_summary()
-        return branch ~= "" and
-                   string.format("%s%s%s", vars.glyphs.vcs, branch:gsub("master", ""), hunks)
+        if branch ~= "" then
+            return string.format("%s%s%s", vars.glyphs.vcs,
+                                 branch:gsub("master", ""), hunks)
+        end
     end
     return ""
 end

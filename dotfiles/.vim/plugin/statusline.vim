@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-01-31 19:20:48 CST
+" Last Change: 2020-02-02 13:43:17 CST
 " ====================================================
 " let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
@@ -14,9 +14,9 @@ if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
 endif
 let g:loaded_plugin_statusline = 1
 
-lua require'lightline'
-lua ll.init()
-finish
+" lua require'lightline'
+" lua ll.init()
+" finish
 
 " Variables {{{1
 " General
@@ -410,7 +410,7 @@ endfunction
 
 function! s:sl_init() abort " {{{2
     set laststatus=2
-    call s:set_sl_colors()
+    " call s:set_sl_colors()
     call s:apply_sl()
     augroup SL
         autocmd!

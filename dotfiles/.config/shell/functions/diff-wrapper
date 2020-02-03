@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Use wrapper for diffs based on what's installed
+# and any other specified conditions
+
+if type delta >/dev/null 2>&1 && ; then
+    echo "found it!"
+fi

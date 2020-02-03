@@ -29,3 +29,4 @@ is_mosh() {
     [ -n "$VERBOSE" ] && echo "mosh"
     return 0 # exit code 0: is mosh
 }
+# vim:ft=sh:

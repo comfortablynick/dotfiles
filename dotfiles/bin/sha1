@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PATH="$(path_remove "$PWD")"
+PATH="$("$HOME/bin/path_remove" "$PWD")"
 
 # Wrapper for (g)sha1sum
 # cmd="$(type -p sha1sum || type -p gsha1sum)"

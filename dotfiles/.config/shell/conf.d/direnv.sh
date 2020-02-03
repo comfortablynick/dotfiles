@@ -3,7 +3,6 @@
 if [ -d "$HOME/.asdf" ]; then
     export PATH="$HOME/.asdf/bin:$PATH"
 
-    # shell="$(basename "$SHELL")"
     eval "$(asdf exec direnv hook "$CURRENT_SHELL")"
 
     # Shouldn't need our `.` alias on zsh for this one

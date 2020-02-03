@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-31 19:34:47 CST
+" Last Change: 2020-02-02 19:34:47 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -130,3 +130,4 @@ function! s:recall_cursor_position() abort "{{{1
         execute 'normal! zv'
     endif
 endfunction
+" vim:fdm=expr:

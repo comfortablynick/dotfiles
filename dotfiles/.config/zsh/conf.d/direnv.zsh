@@ -5,19 +5,3 @@
 
 # Hook direnv into your shell.
 eval "$(asdf exec direnv hook zsh)"
-
-local shims=(~/.asdf/shims/*)
-local hashfile="$HOME/.asdf_shim_sha"
-local funcfile="$XDG_CONFIG_HOME/zsh/conf.d/functions.zsh"
-
-local new_hash=$(hashdir "$HOME/.asdf/shims")
-
-if [[ ! -f $hashfile ]] || [[ $new_hash != $(<$hashfile) ]]; then
-    echo "ASDF shims have changed since last shell start...recreating shim functions"
-    echo "# File created by direnv.zsh" >"$funcfile"
-    for f in "${shims[@]}"; do
-        local s=$(basename "$f")
-        echo "$s() { asdf exec $s \$@ }" >>"$funcfile"
-    done
-    echo "$new_hash" >"$hashfile"
-fi

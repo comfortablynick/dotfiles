@@ -313,6 +313,7 @@ chpwd() {
 
 # Autoload functions {{{2
 autoload -Uz remove_last_history_entry
+autoload -Uz fh
 
 # SHELL STARTUP {{{1
 # Debug end {{{2

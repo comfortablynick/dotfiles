@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-
-# Install one or more versions of specified language
-# e.g. `vmi rust` # => fzf multimode, tab to mark, enter to install
+# Remove one or more versions of specified language
+# e.g. `vmi rust` # => fzf multimode, tab to mark, enter to remove
 # if no plugin is supplied (e.g. `vmi<CR>`), fzf will list them for you
-# Mnemonic [V]ersion [M]anager [I]nstall
-vmi() {
+# Mnemonic [V]ersion [M]anager [C]lean
+vmc() {
     local lang=${1}
 
     if [[ -z $lang ]]; then
@@ -13,13 +12,13 @@ vmi() {
 
     if [[ -n $lang ]]; then
         local versions
-        versions=$(asdf list-all "$lang" | fzf-tmux -m)
-        if [[ -n $versions ]]; then
+        versions=$(asdf list "$lang" | fzf-tmux -m)
+        if [[ $versions ]]; then
             for version in $versions; do
-                asdf install "$lang" "$version"
+                asdf uninstall "$lang" "$version"
             done
         fi
     fi
 }
 
-vmi "$@"
+vmc "$@"

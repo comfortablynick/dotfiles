@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Parse env settings from TOML file for shells."""
+# imports {{{1
 import argparse
 import hashlib
 import logging
@@ -9,20 +10,19 @@ import socket
 import sys
 from datetime import datetime
 from pprint import pformat
-from typing import Iterator
 from subprocess import run
+from typing import Iterator
 
 try:
     from tomlkit import parse
 except ModuleNotFoundError:
     from toml import loads as parse
 
-RE_CMD = re.compile(r"\$\(")
-RE_AND = re.compile(r" && ")
-
 # globals {{{1
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
+RE_CMD = re.compile(r"\$\(")
+RE_AND = re.compile(r" && ")
 
 
 def get_file_hash(filepath: str) -> str:  # {{{1
@@ -190,27 +190,28 @@ def get_shell_vars(  # {{{1
     return all_vars
 
 
-def default_shell_file(shell: str) -> str:  # {{{1
-    """Return default env source file for shell."""
-    file = ""
-    if shell == "fish":
-        file = "$XDG_CONFIG_HOME/fish/env.fish"
-    elif shell == "bash":
-        file = "$XDG_CONFIG_HOME/bash/conf.d/10_env.bash"
-    elif shell == "zsh":
-        file = "$XDG_CONFIG_HOME/zsh/conf.d/01_env.zsh"
-    else:
-        raise AttributeError
-    return os.path.expandvars(file)
-
-
 def process_args(args: list):  # {{{1
     """Parse command line input."""
     parser = argparse.ArgumentParser(
         prog="parse_env", description="parse shell environment from TOML config file"
     )
-    parser.add_argument("file", action="store", nargs="?", help="TOML file to parse")
-    parser.add_argument("-d", "--debug", action="count", help="print debug info")
+    parser.add_argument(
+        "input_file",
+        metavar="INPUT",
+        action="store",
+        help="Parse environment from this TOML file",
+    )
+    parser.add_argument(
+        "output_file",
+        metavar="OUTPUT",
+        action="store",
+        nargs="?",
+        default=None,
+        help="Save output in this file, otherwise print to stdout",
+    )
+    parser.add_argument(
+        "-d", "--debug", action="count", help="Print debug info to terminal", default=0,
+    )
     parser.add_argument(
         "-c",
         "--print-comments",
@@ -218,15 +219,14 @@ def process_args(args: list):  # {{{1
         help="print description as comment for each item",
     )
     parser.add_argument(
-        "-p", "--print-output", action="store_true", help="print output to stdout"
+        "-s",
+        "--shell",
+        action="store",
+        choices=["fish", "bash", "zsh"],
+        help="Shell syntax for output [fish,bash,zsh] (default $SHELL)",
+        metavar="SHELL",
+        default=os.path.basename(os.environ.get("SHELL")),
     )
-    shells = parser.add_mutually_exclusive_group()
-    # TODO: use proper argument for this, e.g. --shell=zsh
-    shells.add_argument(
-        "-f", "--fish", action="store_true", help="parse for Fish (default)"
-    )
-    shells.add_argument("-b", "--bash", action="store_true", help="parse for Bash")
-    shells.add_argument("-z", "--zsh", action="store_true", help="parse for Z-Shell")
     return parser.parse_args(args)
 
 
@@ -236,52 +236,36 @@ def main():  # {{{1
         sys.argv[1]
         cli_args = sys.argv[1:]
     except IndexError:
-        cli_args = ["--debug", "-z"]
+        cli_args = [os.path.expanduser("~/dotfiles/dotfiles/env.toml"), "-dd"]
     finally:
         args = process_args(cli_args)
 
     # Set up logger
     if args.debug == 0:
         LOG.setLevel(logging.WARNING)
-    if args.debug == 1:
+    elif args.debug == 1:
         LOG.setLevel(logging.INFO)
-    if args.debug == 2:
+    else:
         LOG.setLevel(logging.DEBUG)
     LOG.debug(args)
 
-    # Default TOML file used if nothing supplied from cli
-    if args.file is None:
-        args.file = os.path.expanduser("~/dotfiles/dotfiles/env.toml")
-    toml = get_toml(args.file)
+    toml = get_toml(args.input_file)
     LOG.debug(pformat(toml))
 
-    # Shells
-    shells = []
-    if args.bash:
-        shells.append("bash")
-    if args.zsh:
-        shells.append("zsh")
-    if args.fish:
-        shells.append("fish")
+    shell_vars = get_shell_vars(toml, args.shell, args.print_comments)
 
-    if len(shells) == 0:
-        current_shell = os.path.basename(os.environ.get("SHELL"))
-        shells.append(current_shell)
+    # Prepend header
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # shell_vars.insert(0, f"#!/usr/bin/env {args.shell}")
+    shell_vars.insert(0, f"# File generated from env.toml: {timestamp}")
 
-    for shell in shells:
-        output_file = default_shell_file(shell)
-        shell_vars = get_shell_vars(toml, shell, args.print_comments)
-
-        # Prepend shebang/timestamp
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        shell_vars.insert(0, f"#!/usr/bin/env {shell}")
-        shell_vars.insert(1, f"# File generated from env.toml: {timestamp}")
-
-        # write to file and/or stdout
-        write_shell_file(shell_vars=shell_vars, file=output_file)
-        if args.print_output:
-            write_shell_file(shell_vars=shell_vars, file=None)
+    # write to file and/or stdout
+    if args.output_file:
+        write_shell_file(shell_vars=shell_vars, file=args.output_file)
+    else:
+        write_shell_file(shell_vars=shell_vars, file=None)
 
 
+# Run {{{1
 if __name__ == "__main__":
     main()

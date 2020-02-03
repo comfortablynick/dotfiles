@@ -12,16 +12,16 @@
 #     asdf_bashrc_path: "{{ asdf_bashrc_st.stat.lnk_source }}"
 #   when: asdf_bashrc_st.stat.exists and asdf_bashrc_st.stat.islnk
 
-- name: Load asdf in .bashrc
-  blockinfile:
-    dest: "{{ asdf_bashrc_path }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: asdf"
-    block: |
-      if [[ -e $HOME/.asdf/asdf.sh ]]; then
-        source $HOME/.asdf/asdf.sh
-        source $HOME/.asdf/completions/asdf.bash
-      fi
-  when: asdf_bashrc_st.stat.exists
+# - name: Load asdf in .bashrc
+#   blockinfile:
+#     dest: "{{ asdf_bashrc_path }}"
+#     marker: "# {mark} ANSIBLE MANAGED BLOCK: asdf"
+#     block: |
+#       if [[ -e $HOME/.asdf/asdf.sh ]]; then
+#         source $HOME/.asdf/asdf.sh
+#         source $HOME/.asdf/completions/asdf.bash
+#       fi
+#   when: asdf_bashrc_st.stat.exists
 
 # - name: Set path to .zshrc
 #   set_fact:
@@ -39,16 +39,16 @@
 #     asdf_zshrc_path: "{{ asdf_zshrc_st.stat.lnk_source }}"
 #   when: asdf_zshrc_st.stat.exists and asdf_zshrc_st.stat.islnk
 
-- name: Load asdf in .zshrc
-  blockinfile:
-    dest: "{{ asdf_zshrc_path }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: asdf"
-    block: |
-      if [[ -e $HOME/.asdf/asdf.sh ]]; then
-        source $HOME/.asdf/asdf.sh
-        source $HOME/.asdf/completions/asdf.bash
-      fi
-  when: asdf_zshrc_st.stat.exists
+# - name: Load asdf in .zshrc
+#   blockinfile:
+#     dest: "{{ asdf_zshrc_path }}"
+#     marker: "# {mark} ANSIBLE MANAGED BLOCK: asdf"
+#     block: |
+#       if [[ -e $HOME/.asdf/asdf.sh ]]; then
+#         source $HOME/.asdf/asdf.sh
+#         source $HOME/.asdf/completions/asdf.bash
+#       fi
+#   when: asdf_zshrc_st.stat.exists
 
 # FISH ------------------------------
 - name: Check whether config.fish file exists

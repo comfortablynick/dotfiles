@@ -2,17 +2,17 @@ if exists('g:loaded_autoload_plugins_vista') | finish | endif
 let g:loaded_autoload_plugins_vista = 1
 scriptencoding utf-8
 
+function! s:vista_fzf_preview_width(basewidth) abort
+    let winwidth = winwidth(0)
+    let pwidth = a:basewidth
+    if winwidth < 225
+        let pwidth = a:basewidth - (200 - winwidth)
+    endif
+    return insert([], printf('right:%d%%', pwidth < 0 ? 0 : pwidth))
+endfunction
+
 function! plugins#vista#post() abort
     " Calculate fzf preview width based on window width
-    function s:vista_fzf_preview_width(basewidth) abort
-        let winwidth = winwidth(0)
-        let pwidth = a:basewidth
-        if winwidth < 225
-            let pwidth = a:basewidth - (200 - winwidth)
-        endif
-        return insert([], printf('right:%d%%', pwidth < 0 ? 0 : pwidth))
-    endfunction
-
     if (exists('*nvim_open_win') || exists('*popup_create')) && winwidth(0) > 200
         let g:vista_echo_cursor_strategy = 'floating_win'
     else

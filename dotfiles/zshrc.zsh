@@ -11,6 +11,7 @@
 # PROFILE / DEBUG {{{1
 export DEBUG_MODE=false
 export PROFILE=0
+export CURRENT_SHELL=zsh
 
 # Check for debug mode {{{2
 [[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
@@ -48,23 +49,18 @@ is_ssh() {
   fi
 }
 
-# is_mosh :: Return true if in Mosh session {{{2
-is_mosh() {
-    local tmux_current_session tmux_client_id pid mosh_found
-    if [[ -n $TMUX ]]; then
-        # current shell is under tmux
-        tmux_current_session=$(tmux display-message -p '#S')
-        tmux_client_id=$(tmux list-clients -t "${tmux_current_session}" -F '#{client_pid}')
-        pid="$tmux_client_id"
-    else
-        pid="$$"
-    fi
-    mosh_found=$(pstree -ps $pid | grep mosh-server) # or empty if not found
-    if [[ -z $mosh_found ]]; then
-        return 1 # exit code 1: not mosh
-    fi
-    return 0 # exit code 0: is mosh
+# sh_source :: source with sh compatibilty {{{2
+sh_source() {
+    alias shopt=':'
+    alias _expand=_bash_expand
+    alias _complete=_bash_comp
+    emulate -L sh
+    setopt kshglob noshglob braceexpand
+
+    builtin source "$@"
 }
+
+alias .=sh_source
 
 # Completion {{{2
 autoload -Uz compinit && compinit                               # Needed to autoload completions
@@ -76,14 +72,24 @@ export XDG_DATA_HOME=${HOME}/.local/share                       # Common data di
 export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
 export ZPLG_HOME=${ZDOTDIR}/.zplugin                            # Zplugin install dir
 
+for shfile ($XDG_CONFIG_HOME/shell/conf.d/*.sh) sh_source $shfile
 for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
-fpath=($XDG_CONFIG_HOME/zsh/completions $XDG_CONFIG_HOME/zsh/functions $fpath)
+
+fpath=($XDG_CONFIG_HOME/zsh/completions
+    $XDG_CONFIG_HOME/zsh/functions
+    $XDG_CONFIG_HOME/shell/functions
+    $fpath)
 
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
+
+# Autoload functions {{{2
+autoload -Uz remove_last_history_entry
+autoload -Uz fh
+autoload -Uz is_mosh
 
 # Set theme {{{2
 export ZSH_THEME="powerlevel10k"
@@ -251,11 +257,11 @@ mc() {
 }
 
 # npm :: wrapper for asdf npm {{{2
-npm() {
-    export ASDF_SKIP_RESHIM=1
-    $HOME/.asdf/shims/npm "$@"
-    asdf reshim nodejs
-}
+# npm() {
+#     export ASDF_SKIP_RESHIM=1
+#     $HOME/.asdf/shims/npm "$@"
+#     asdf reshim nodejs
+# }
 
 # cd :: cd with fuzzy find {{{2
 function cd() {
@@ -311,9 +317,6 @@ chpwd() {
 # fi
 # END ANSIBLE MANAGED BLOCK: asdf
 
-# Autoload functions {{{2
-autoload -Uz remove_last_history_entry
-autoload -Uz fh
 
 # SHELL STARTUP {{{1
 # Debug end {{{2

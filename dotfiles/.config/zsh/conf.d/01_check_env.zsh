@@ -7,6 +7,6 @@ env_sha="$(eval $sha_cmd $HOME/dotfiles/dotfiles/env.toml | cut -d' ' -f1)"
 
 if [[ ! -f $env_file ]] || [[ $env_sha != $(<$env_file) ]]; then
     echo "Changes made to env.toml since zsh last started."
-    asdf exec python3 "$HOME/.config/shell/functions/parse_env" -z "$HOME/dotfiles/dotfiles/env.toml"
+    asdf exec python3 "$HOME/bin/parse_env" -z "$HOME/dotfiles/dotfiles/env.toml"
     echo "$env_sha" >"$env_file"
 fi

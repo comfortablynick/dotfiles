@@ -239,6 +239,10 @@ dotfiles:
     src: .config/direnv
     dst: ~/.config/direnv
     link: link
+  d_bin:
+    src: bin
+    dst: ~/bin
+    link: link
 profiles:
   core:
     dotfiles:
@@ -287,6 +291,7 @@ profiles:
     - d_ripgrep
     - d_ptpython
     - d_direnv
+    - d_bin
   io:
     dotfiles:
     - f_bash_linux

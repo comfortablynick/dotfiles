@@ -3,12 +3,36 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-03 17:37:58 CST
+" Last Change: 2020-02-05 13:42:09 CST
 " ====================================================
 scriptencoding utf-8
 
-" Test {{{1
-" }}}
+" Variables {{{1
+" Window widths {{{2
+let s:MinWidth = 90                                          " Width for using some expanded sections
+let s:MedWidth = 140                                         " Secondary width for some sections
+let s:MaxWidth = 200                                         " Largest width for some (unnecessary) sections
+
+" Symbols/glyphs {{{2
+let s:pl = get(g:, 'LL_pl', 0)
+let s:nf = get(g:, 'LL_nf', 0)
+let s:LineNoSymbol = ''                                     " Use  for line; alt: '␤'
+let s:GitSymbol = s:nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
+let s:BranchSymbol = ''                                    " Git branch symbol
+let s:LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
+let s:ROSymbol = s:pl ? ' ' : '--RO-- '                  " Read-only symbol
+let s:ModSymbol = ' [+]'                                     " File modified symbol
+let s:SimpleSep = $SUB ==# '|' ? 1 : 0                       " Use simple section separators instead of PL (no other effects)
+let s:FnSymbol = 'ƒ '                                        " Use for current function
+
+" Linter indicators {{{2
+let s:LinterChecking = s:nf ? "\uf110 " : '...'
+let s:LinterWarnings = s:nf ? "\uf071 " : '•'
+let s:LinterErrors = s:nf ? "\uf05e " : '•'
+let s:LinterOK = ''
+
+
+" Functions {{{1
 function! statusline#Mode() abort
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
@@ -36,10 +60,10 @@ function! statusline#Mode() abort
         \ 'packager':       'PACK',
         \ }
     let l:mode = get(l:mode_map, mode(), mode())
-    if winwidth(0) > g:statusline#MedWidth
+    if winwidth(0) > s:MedWidth
         " No abbreviation
         let l:mode_out = l:mode[0]
-    elseif winwidth(0) > g:statusline#MinWidth
+    elseif winwidth(0) > s:MinWidth
         " Medium abbreviation
         let l:mode_out = l:mode[1]
     else
@@ -79,7 +103,7 @@ function! statusline#LineInfo() abort "{{{2
         \ s:line_percent(),
         \ statusline#LinePos(),
         \ s:line_no(),
-        \ g:statusline#LineNoSymbol,
+        \ s:LineNoSymbol,
         \ s:col_no()
         \ )
 endfunction
@@ -102,14 +126,14 @@ function! statusline#LinePos() abort "{{{2
     return l:line_no_indicator_chars[l:index]
 endfunction
 function! statusline#FileType() abort "{{{2
-    let l:ftsymbol = g:statusline#nf &&
+    let l:ftsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
     let l:venv = statusline#VirtualEnvName()
-    if winwidth(0) > g:statusline#MedWidth
+    if winwidth(0) > s:MedWidth
         return &filetype.l:ftsymbol.l:venv
-    elseif winwidth(0) > g:statusline#MinWidth
+    elseif winwidth(0) > s:MinWidth
         let l:ext = expand('%:e')
         return &filetype ==# 'help' ? 'help' : expand('%:e')
     endif
@@ -117,14 +141,14 @@ function! statusline#FileType() abort "{{{2
 endfunction
 
 function! statusline#FileFormat() abort "{{{2
-    let ffsymbol = g:statusline#nf &&
+    let ffsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileFormatSymbol') ?
         \ WebDevIconsGetFileFormatSymbol() :
         \ ''
     " No output if fileformat is unix (standard)
     return &fileformat !=? 'unix' ?
             \ s:is_not_file() ?
-            \ '' : winwidth(0) > g:statusline#MedWidth
+            \ '' : winwidth(0) > s:MedWidth
             \ ? (&fileformat . ' ' . ffsymbol )
             \ : ''
         \ : ''
@@ -156,11 +180,11 @@ function! s:is_not_file() abort "{{{2
 endfunction
 
 function! s:modified() abort "{{{2
-    return &filetype =~? 'help\|vimfiler' ? '' : &modified ? g:statusline#ModSymbol : &modifiable ? '' : '-'
+    return &filetype =~? 'help\|vimfiler' ? '' : &modified ? s:ModSymbol : &modifiable ? '' : '-'
 endfunction
 
 function! s:read_only() abort "{{{2
-    return &filetype !~? 'help' && &readonly ? g:statusline#ROSymbol : ''
+    return &filetype !~? 'help' && &readonly ? s:ROSymbol : ''
 endfunction
 
 function! s:is_special_file() abort "{{{2
@@ -192,12 +216,12 @@ function! statusline#FileName() abort "{{{2
     let f = @%
     let s = expand('%:t')
     let ww = winwidth(0)
-    if ww > g:statusline#MinWidth
+    if ww > s:MinWidth
         " Get full path and truncate gracefully
         let p = substitute(f, expand('~'), '~', '')
         let s = p
-        let chars = ww <= g:statusline#MedWidth ? 2 :
-            \ ww <= g:statusline#MaxWidth ? 3 :
+        let chars = ww <= s:MedWidth ? 2 :
+            \ ww <= s:MaxWidth ? 3 :
             \ 999 " No truncation
         if chars < 999
             if !empty(statusline#CocStatus()) | let chars -= 1 | endif
@@ -281,17 +305,17 @@ function! statusline#GitBranch() abort "{{{2
     if exists('g:coc_git_status')
         return g:coc_git_status
     elseif exists('*fugitive#head')
-        return g:statusline#BranchSymbol.' '.fugitive#head()
+        return s:BranchSymbol.' '.fugitive#head()
     endif
     return ''
 endfunction
 
 function! statusline#GitStatus() abort "{{{2
-    if !s:is_not_file() && winwidth(0) > g:statusline#MinWidth
+    if !s:is_not_file() && winwidth(0) > s:MinWidth
         let branch = statusline#GitBranch()
         let hunks = statusline#GitHunkSummary()
         return branch !=# '' ? printf('%s%s%s',
-            \ g:statusline#GitSymbol,
+            \ s:GitSymbol,
             \ branch,
             \ hunks !=# '' ? ' '.hunks : ''
             \ ) : ''
@@ -307,7 +331,7 @@ function! statusline#VirtualEnvName() abort "{{{2
 endfunction
 
 function! statusline#CurrentTag() abort "{{{2
-    if winwidth(0) < g:statusline#MaxWidth | return '' | endif
+    if winwidth(0) < s:MaxWidth | return '' | endif
     let coc_func = get(b:, 'coc_current_function', '')
     if coc_func !=# '' | return coc_func | endif
     if exists('*tagbar#currenttag')
@@ -317,7 +341,7 @@ function! statusline#CurrentTag() abort "{{{2
 endfunction
 
 function! statusline#CocStatus() abort "{{{2
-    if winwidth(0) > g:statusline#MinWidth && get(g:, 'did_coc_loaded', 0)
+    if winwidth(0) > s:MinWidth && get(g:, 'did_coc_loaded', 0)
         return get(g:, 'coc_status', '')
     endif
     return ''
@@ -330,7 +354,7 @@ function! s:coc_error() abort "{{{2
   endif
   let errmsgs = []
   if get(info, 'error', 0)
-    call add(errmsgs, g:statusline#LinterErrors . info['error'])
+    call add(errmsgs, s:LinterErrors . info['error'])
   endif
   return trim(join(errmsgs, ' ') . ' ')
 endfunction
@@ -342,7 +366,7 @@ function! s:coc_warn() abort " {{{2
   endif
   let warnmsgs = []
   if get(info, 'warning', 0)
-    call add(warnmsgs, g:statusline#LinterWarnings . info['warning'])
+    call add(warnmsgs, s:LinterWarnings . info['warning'])
   endif
   return trim(join(warnmsgs, ' ') . ' ')
 endfunction

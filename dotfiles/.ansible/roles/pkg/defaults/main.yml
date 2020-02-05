@@ -26,18 +26,22 @@ pip3_default_pkgs:
   - tomlkit
 
 pipx_default_pkgs:
+  # dev tools
+  - pipenv
+  - ptpython
   - black
-  - dirtools
   - mypy
-  - optimize-images
-  - dotdrop
+  - pydocstyle
+  - vim-vint
   - cmake_format[yaml]
   - cmakelint
-  - ptpython
-  - pydocstyle
+  - dirtools
+  - optimize-images
+  # system utils
+  - ranger-fm
+  - dotdrop
   - topydo
   - speedtest-cli
-  - vim-vint
 
 pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
 new_mirrorlist_path: /tmp/mirrorlist

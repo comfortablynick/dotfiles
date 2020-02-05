@@ -99,7 +99,6 @@ set shell=sh                                                    " Use posix-comp
 colorscheme default                                             " Default colors
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
-set termencoding=utf-8                                          " Unicode
 set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
 set laststatus=2                                                " Always show statusline
 set showtabline=2                                               " Always show tabline
@@ -178,24 +177,24 @@ let g:loaded_matchit = 1
 
 " Plugins {{{1
 " Load packages at startup {{{2
-packadd! fzf.vim
-packadd! neoformat
-packadd! vim-surround
-packadd! vim-repeat
-packadd! vim-fugitive
-packadd! vim-scriptease
-packadd! vim-commentary
-packadd! vim-clap
-packadd! vim-snippets
-packadd! vim-tmux-navigator
-packadd! vim-lion
-packadd! vim-startify
-packadd! vista.vim
-packadd! vim-textobj-user
-packadd! vim-textobj-lua
-packadd! nvim-luadev
-packadd! clever-f.vim
-packadd! vim-sneak
+silent! packadd! fzf.vim
+silent! packadd! neoformat
+silent! packadd! vim-surround
+silent! packadd! vim-repeat
+silent! packadd! vim-fugitive
+silent! packadd! vim-scriptease
+silent! packadd! vim-commentary
+silent! packadd! vim-clap
+silent! packadd! vim-snippets
+silent! packadd! vim-tmux-navigator
+silent! packadd! vim-lion
+silent! packadd! vim-startify
+silent! packadd! vista.vim
+silent! packadd! vim-textobj-user
+silent! packadd! vim-textobj-lua
+silent! packadd! nvim-luadev
+silent! packadd! clever-f.vim
+silent! packadd! vim-sneak
 " packadd! 'lightline.vim'
 " packadd! 'lightline-bufferline'
 

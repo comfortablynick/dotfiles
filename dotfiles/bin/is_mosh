@@ -33,4 +33,4 @@ is_mosh() {
     return 0 # exit code 0: is mosh
 }
 
-# is_mosh "$@"
+is_mosh "$@"

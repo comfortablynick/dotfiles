@@ -1,25 +1,24 @@
 ---
 # asdf defaults
 asdf_git_repo: "https://github.com/asdf-vm/asdf.git"
-asdf_version: "v0.7.3"
+asdf_version: "v0.7.6"
 asdf_home: "{{ ansible_env.HOME }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
 
 # shell config
 # leave any shell blank to skip config
 asdf_install_shell: /bin/bash
-asdf_bashrc_path: "{{ asdf_home }}/.bashrc"
-asdf_zshrc_path: "{{ asdf_home }}/.zshrc"
-asdf_fish_config_path: "{{ asdf_home }}/.config/fish/config.fish"
+asdf_bashrc_path: # "{{ asdf_home }}/.bashrc"
+asdf_zshrc_path: # "{{ asdf_home }}/.zshrc"
+asdf_fish_config_path: # "{{ asdf_home }}/.config/fish/config.fish"
 
 # plugins
 asdf_plugins:
   - name: python
     versions:
-      - "3.7.4"
-      - "3.8.0b4"
+      - "3.8.1"
       - "2.7.16"
-    global: "3.7.4 2.7.16"
+    global: "3.8.1 2.7.16"
     environment:
       PYTHON_CONFIGURE_OPTS: "--enable-shared"
   - name: nodejs

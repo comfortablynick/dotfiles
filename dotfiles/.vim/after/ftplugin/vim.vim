@@ -3,7 +3,7 @@
 " Description: Vim script files
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-02 22:59:01 CST
+" Last Change: 2020-02-03 17:37:48 CST
 " ====================================================
 
 " Local vim editor settings
@@ -28,9 +28,17 @@ function! VimFoldLevel() abort
         return '0'
     endif
     " Markers
-    "TODO: extract number for level
-    if line =~# '\v\{\{\{\d*$'
+    " TODO: extract number for level
+    if line =~# '{{{\d*$'
         return '>1'
     endif
+    " let fdl = matchstr(line, '{{{')
+    " if !empty(fdl)
+    "     let fl = matchstr(line, '{{{\d')
+    "     if fl > 0
+    "         return fl
+    "     endif
+    "     return '>1'
+    " endif
     return '='
 endfunction

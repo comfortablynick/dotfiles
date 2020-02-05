@@ -3,7 +3,7 @@
 " Description: Syntax related functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-31 09:21:39 CST
+" Last Change: 2020-02-03 16:59:46 CST
 " ====================================================
 
 " Enable embedded syntax

@@ -195,6 +195,7 @@ packadd! vim-textobj-user
 packadd! vim-textobj-lua
 packadd! nvim-luadev
 packadd! clever-f.vim
+packadd! vim-sneak
 " packadd! 'lightline.vim'
 " packadd! 'lightline-bufferline'
 

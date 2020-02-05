@@ -3,10 +3,12 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-02 22:57:15 CST
+" Last Change: 2020-02-03 17:37:58 CST
 " ====================================================
 scriptencoding utf-8
 
+" Test {{{1
+" }}}
 function! statusline#Mode() abort
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {

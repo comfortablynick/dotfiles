@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-02 14:03:46 CST
+" Last Change: 2020-02-05 08:37:28 CST
 " ====================================================
 " let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
@@ -20,7 +20,7 @@ finish
 
 " Variables {{{1
 " General
-let g:devicons = $VIM_SSH_COMPAT ? 0 : 1
+let g:devicons = $MOSH_CONNECTION ? 0 : 1
 " s:sl {{{2
 let s:sl  = {
     \ 'width': {

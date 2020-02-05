@@ -2,7 +2,6 @@ if exists('g:loaded_autoload_plugins_fugitive') | finish | endif
 let g:loaded_autoload_plugins_fugitive = 1
 
 function! plugins#fugitive#post() abort
-    nnoremap <silent><Leader>gs :Gstatus<CR>
     nnoremap <silent><Leader>gp :Gpush<CR>
     nnoremap <silent><Leader>gd :Gvdiffsplit!<CR>
     " TODO: use only in &diff

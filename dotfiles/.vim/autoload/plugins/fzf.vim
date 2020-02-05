@@ -45,8 +45,14 @@ function! plugins#fzf#post() abort
         \                            : fzf#vim#with_preview('right:60%', '?'),
         \                    <bang>0)
 
-    let g:fzf_layout = { 'window': 'lua require"window".create_centered_floating()' }
-    " let g:fzf_layout = { 'down': '~30%' } " bottom split
+    let g:fzf_use_floating = get(g:, 'fzf_use_floating', 0)
+
+    if g:fzf_use_floating == 1
+        let g:fzf_layout = { 'window': 'lua require"window".create_centered_floating()' }
+    else
+        let g:fzf_layout = { 'down': '~30%' } " bottom split
+    endif
+
     let g:fzf_colors = {
         \ 'fg':      ['fg', 'Normal'],
         \ 'bg':      ['bg', 'Clear'],

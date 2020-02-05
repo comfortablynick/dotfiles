@@ -40,15 +40,6 @@ case "$(uname -s)" in
     *)          OS_NAME="UNKNOWN:$(uname -s)"
 esac
 
-# is_ssh :: Return true if in SSH session {{{2
-is_ssh() {
-  if [[ -n $SSH_CLIENT ]] || [[ -n $SSH_TTY ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 # sh_source :: source with sh compatibilty {{{2
 sh_source() {
     alias shopt=':'
@@ -80,32 +71,21 @@ fpath=($XDG_CONFIG_HOME/zsh/completions
     $XDG_CONFIG_HOME/shell/functions
     $fpath)
 
+# Environment variables {{{2
 export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
 export VISUAL=nvim                                              # Set default visual editor
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
+export ZSH_THEME="powerlevel10k"                                # Prompt theme
 
 # Autoload functions {{{2
 autoload -Uz remove_last_history_entry
 autoload -Uz fh
-autoload -Uz is_mosh
-
-# Set theme {{{2
-export ZSH_THEME="powerlevel10k"
-export SSH_THEME="$ZSH_THEME"
-export VIM_SSH_COMPAT=0
-
-if is_ssh; then
-    export ZSH_THEME=$SSH_THEME
-fi
-
-if is_mosh; then
-    export VIM_SSH_COMPAT=1
-fi
 
 # SHELL OPTS {{{1
 # General {{{2
+typeset -U path                                                 # Unique PATH entries only
 setopt auto_cd;                                                 # Perform cd if command matches dir
 setopt auto_list;                                               # List choices if unambiguous completion
 setopt auto_pushd;                                              # Push old directory into stack

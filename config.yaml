@@ -131,38 +131,10 @@ dotfiles:
     dst: ~/.config/zsh
     link: link
     src: .config/zsh
-  f_bash_aliases:
-    dst: ~/.bash_aliases
-    link: link
-    src: bash_aliases.sh
-  f_bash_colors:
-    dst: ~/.bash_colors
-    link: link
-    src: bash_colors.sh
-  f_bash_functions:
-    dst: ~/.bash_functions
-    link: link
-    src: bash_functions.sh
-  f_bash_linux:
-    dst: ~/.bash_linux
-    link: link
-    src: bash_linux.sh
-  f_bash_mac:
-    dst: ~/.bash_mac
-    link: link
-    src: bash_mac.sh
   f_bash_profile:
     dst: ~/.bash_profile
     link: link
     src: bash_profile.sh
-  f_bash_prompt:
-    dst: ~/.bash_prompt
-    link: link
-    src: bash_prompt.sh
-  f_bash_windows:
-    dst: ~/.bash_windows
-    link: link
-    src: bash_windows.sh
   f_bashrc:
     dst: ~/.bashrc
     link: link
@@ -247,11 +219,7 @@ profiles:
   core:
     dotfiles:
     - f_bashrc
-    - f_bash_colors
-    - f_bash_prompt
     - f_bash_profile
-    - f_bash_aliases
-    - f_bash_functions
     - f_dircolors
     - f_gitconfig
     - f_tmux.conf
@@ -293,14 +261,10 @@ profiles:
     - d_direnv
     - d_bin
   io:
-    dotfiles:
-    - f_bash_linux
-    - f_bash_windows
     include:
     - core
   jupiter:
     dotfiles:
-    - f_bash_linux
     - d_mutt
     - f_muttrc
     - d_after_2
@@ -312,30 +276,12 @@ profiles:
     - core
     - ansible
   mars:
-    dotfiles:
-    - f_bash_linux
-    include:
-    - core
-  saturn:
-    dotfiles:
-    - f_bash_linux
-    - d_mutt
-    - f_muttrc
     include:
     - core
   thor.local:
-    dotfiles:
-    - f_bash_mac
     include:
     - core
   titan:
-    dotfiles:
-    - f_bash_linux
-    include:
-    - core
-  uranus:
-    dotfiles:
-    - f_bash_windows
     include:
     - core
   ansible:

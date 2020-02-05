@@ -21,7 +21,7 @@ local global = {
     -- Read changes in files from outside vim
     autoread = true,
     -- Use true color
-    termguicolors = vim.env.VIM_SSH_COMPAT ~= "1",
+    termguicolors = vim.env.MOSH_CONNECTION ~= "1",
     -- Undo file dir
     undodir = (function()
         local dir = vim.env.HOME .. "/.vim/undo"
@@ -105,7 +105,7 @@ local global = {
     ttimeoutlen = 10,
     -- How long in ms to wait for map combinations
     -- (Allow more time on MOSH connections)
-    timeoutlen = vim.env.VIM_SSH_COMPAT ~= "1" and 200 or 400,
+    timeoutlen = vim.env.MOSH_CONNECTION ~= "1" and 200 or 400,
     -- Use mouse in all modes (allows mouse scrolling in tmux)
     mouse = "a",
 }
@@ -158,7 +158,7 @@ local window = {
     -- Degree of transparency of floating windows
     -- 0 = opaque; 100 = transparent
     -- Only seems to take effect when termguicolors
-    winblend = vim.env.VIM_SSH_COMPAT ~= "1" and 10 or 0,
+    winblend = vim.env.MOSH_CONNECTION ~= "1" and 10 or 0,
 }
 
 -- Variables {{{1
@@ -168,7 +168,7 @@ local global_vars = {
     LL_pl = (vim.env.POWERLINE_FONTS == "1" or vim.env.NERD_FONTS == "1") and 1 or
         0,
     -- Use nerd fonts with lightline
-    LL_nf = (vim.env.NERD_FONTS == "1" and vim.env.VIM_SSH_COMPAT ~= "1") and 1 or
+    LL_nf = (vim.env.NERD_FONTS == "1" and vim.env.MOSH_CONNECTION ~= "1") and 1 or
         0,
     -- Leader key
     mapleader = ",",

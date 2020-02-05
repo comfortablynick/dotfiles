@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-30 14:25:42 CST
+" Last Change: 2020-02-05 08:36:09 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -28,7 +28,7 @@ function! s:deferred_load() abort
     packadd ale
     packadd tcomment_vim
 
-    if $VIM_SSH_COMPAT != 1
+    if $MOSH_CONNECTION != 1
         packadd vim-devicons
     endif
 

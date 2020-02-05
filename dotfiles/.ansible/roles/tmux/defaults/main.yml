@@ -9,8 +9,8 @@ make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
 # building from source
 libevent_version: "2.1.11"
 ncurses_version: "6.1"
-tmux_version: "3.0"
-tmux_release: "3.0-rc4"
+tmux_version: "3.1"
+tmux_release: "3.1-rc"
 tmux_force_build: False
 tmux_source_dir: /tmp/src/tmux
 install_path: "{{ ansible_facts['user_dir'] }}/.local"

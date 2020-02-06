@@ -18,3 +18,4 @@ yarn.lock
 */.ansible/tmp/
 */.vim/**/*.txt
 tags
+dotfiles/.config/direnv/allow/

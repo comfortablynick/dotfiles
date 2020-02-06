@@ -22,4 +22,11 @@ fmtstr=""
 
 [ -n "$format" ] && fmtstr="?format=$format"
 
-curl "wttr.in/$loc$fmtstr"
+weather=$(curl -s "wttr.in/$loc$fmtstr")
+
+if [ -n "$format" ]; then
+    # Remove space and positive temp sign "+" in one-line output
+    echo "$weather" | sed -e "s/[[:space:]]+//"
+else
+    echo "$weather"
+fi

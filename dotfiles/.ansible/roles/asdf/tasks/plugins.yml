@@ -1,9 +1,7 @@
 ---
 # asdf plugins
 - name: Install asdf plugins
-  shell: >-
-    . {{ asdf_dir }}/asdf.sh &&
-    asdf plugin-add {{ item.name }} {{ item.repository|d() }}
+  shell: asdf plugin-add {{ item.name }} {{ item.repository|d() }}
   args:
     executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/plugins/{{ item.name }}"
@@ -19,9 +17,7 @@
 
 # Install binaries using plugins
 - name: Install asdf packages
-  shell: >-
-    . {{ asdf_dir }}/asdf.sh &&
-    asdf install {{ item.0.name }} {{ item.1 }}
+  shell: asdf install {{ item.0.name }} {{ item.1 }}
   args:
     executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
@@ -31,8 +27,6 @@
 
 - name: Get current asdf package versions
   shell: >-
-    set -o pipefail &&
-    . {{ asdf_dir }}/asdf.sh &&
     asdf current {{ item.name }} |
     grep -o '{{ item.global| d(item.versions[0]) }}'
   args:
@@ -46,7 +40,6 @@
 
 - name: Set global asdf package versions
   shell: >-
-    . {{ asdf_dir }}/asdf.sh &&
     asdf global {{ item.item.name }}
     {{ item.item.global|d(item.item.versions[0]) }}
   args:

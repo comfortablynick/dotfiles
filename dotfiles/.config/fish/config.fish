@@ -162,10 +162,9 @@ if functions -q __bobthefish_colors
         set -g theme_display_user ssh
         set -g theme_display_hostname ssh
     end
-end
 
 # pure {{{2
-if functions -q _pure_prompt
+else if functions -q _pure_prompt
     set -g pure_symbol_prompt "❯"
     set -g pure_symbol_git_unpulled_commits '↓' # "⇣"
     set -g pure_symbol_git_unpushed_commits '↑' #  "⇡"
@@ -190,17 +189,14 @@ if functions -q _pure_prompt
     set -g pure_begin_prompt_with_current_directory false # Loc of u@h; 0 = end, 1 = beg
     set -g pure_separate_prompt_on_error false # Show addl char if error
     set -g pure_threshold_command_duration 5 # Secs elapsed before exec time shown
+
+else
+    if type -qf starship
+        starship init fish --print-full-init | source
+        set fish_greeting
+    end
 end
 
-# bigfish {{{2
-if test "$FISH_THEME" = 'bigfish'
-    set -gx glyph_bg_jobs '⚒'
-end
-
-# yimmy {{{2
-test "$FISH_THEME" = 'yimmy'
-# Disable solarized theme
-and set -g yimmy_solarized false
 
 # KEYBINDINGS {{{1
 # vi-mode with custom keybindings {{{2

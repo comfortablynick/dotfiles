@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/sh
 script="$HOME/git/python/shell/weather/weather.py"
-py3bin="$PYENV_ROOT/versions/weather/bin/python3"
+py3bin="python3"
 
-[ ! -x "$py3bin" ] && echo "$py3bin not executable" && exit 1
+# [ ! -x "$py3bin" ] && echo "$py3bin not executable" && exit 1
 
 if [ -x "$script" ]; then
-    "$py3bin" "$script" "$@"
+    eval "$py3bin $script" "$@"
 elif [ -e "$script" ]; then
     echo "Script exists but is not executable: $script"
     exit 1

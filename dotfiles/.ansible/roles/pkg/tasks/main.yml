@@ -3,33 +3,38 @@
 - name: Handle os-specific packages
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
+- name: Get pip3 path
+  command: bash -lc "command -v pip3"
+  register: pip3_path
+  changed_when: false
+
 - block:
   - name: Install/update python2 pip packages
     pip:
       name:
         - virtualenv
         - pip
-      executable: ~/.asdf/shims/pip2
+      executable: pip2
       state: latest
   - name: Install/update python3 pip packages
     pip:
       name: "{{ pip3_default_pkgs }}"
-      executable: ~/.asdf/shims/pip3
+      executable: "{{ pip3_path }}"
       state: latest
-  - name: Make asdf binaries available
-    shell: . {{ asdf_dir }}/asdf.sh && asdf reshim
-    changed_when: false
+    when: "'asdf' in pip3_path.stdout"
 
 - name: Get installed pipx packages
-  command: "{{ asdf_dir }}/shims/pipx list"
+  command: bash -lc "pipx list"
   register: pipx_installed
   changed_when: false
 
 - name: Install pipx packages
-  command: "{{ asdf_dir }}/shims/pipx install {{ item }}"
+  command: bash -lc "pipx install {{ item }}"
   loop: "{{ pipx_default_pkgs }}"
   register: pipx
-  changed_when: "'already seems to be installed' not in pipx.stdout"
+  changed_when: "'--force' not in pipx.stdout"
   environment:
     - PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
-  when: item not in pipx_installed.stdout
+  when:
+    - pipx_installed.stdout is defined
+    - item not in pipx_installed.stdout

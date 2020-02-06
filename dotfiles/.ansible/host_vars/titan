@@ -1,5 +1,5 @@
 ---
-ansible_host: 780f075cbdbc.sn.mynetname.net
+ansible_host: b8f40aadbf5d.sn.mynetname.net
 ansible_port: 5022
 ansible_user: pi
 ansible_shell_executable: /bin/bash

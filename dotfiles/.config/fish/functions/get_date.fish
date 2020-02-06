@@ -1,10 +1,9 @@
-# Defined in /tmp/fish.UMPSCC/get_date.fish @ line 2
+# Defined in /tmp/fish.ULRvvL/get_date.fish @ line 2
 function get_date --description 'return current date'
-	set -l d (date +%s.%N)
-if echo $d | grep -v 'N' > /dev/null 2>&1
-echo $d
-else
-gdate +%s.%N
-end
-return 0
+    set -l d
+    if type -qf date
+        echo (date +%s.%N)
+    else
+        echo (gdate +%s.%N)
+    end
 end

@@ -2,10 +2,10 @@
 # asdf
 
 # BASH --------------------------------
-- name: Check whether .bashrc file exists
-  stat:
-    path: "{{ asdf_bashrc_path }}"
-  register: asdf_bashrc_st
+# - name: Check whether .bashrc file exists
+#   stat:
+#     path: "{{ asdf_bashrc_path }}"
+#   register: asdf_bashrc_st
 
 # - name: Resolve .bashrc symlink
 #   set_fact:
@@ -29,10 +29,10 @@
 #   when: asdf_zshrc_path is undefined
 
 # ZSH ---------------------------------
-- name: Check whether .zshrc exists
-  stat:
-    path: "{{ asdf_zshrc_path }}"
-  register: asdf_zshrc_st
+# - name: Check whether .zshrc exists
+#   stat:
+#     path: "{{ asdf_zshrc_path }}"
+#   register: asdf_zshrc_st
 
 # - name: Resolve .zshrc symlink
 #   set_fact:
@@ -51,10 +51,15 @@
 #   when: asdf_zshrc_st.stat.exists
 
 # FISH ------------------------------
-- name: Check whether config.fish file exists
+# - name: Check whether config.fish file exists
+#   stat:
+#     path: "{{ asdf_fish_config_path }}"
+#   register: asdf_fish_config_st
+
+- name: Check whether fish completion dir exists
   stat:
-    path: "{{ asdf_fish_config_path }}"
-  register: asdf_fish_config_st
+    path: "{{ asdf_fish_config_dir }}"
+  register: asdf_fish_config_dir_st
 
 - name: Check whether asdf.fish file exists
   stat:
@@ -66,4 +71,6 @@
     src: "{{ asdf_dir }}/completions/asdf.fish"
     dest: "{{ asdf_home }}/.config/fish/completions/asdf.fish"
     remote_src: true
-  when: asdf_fish_config_st.stat.exists and asdf_fish_completions_st.stat.exists
+  when:
+    - asdf_fish_config_dir_st.stat.exists
+    - asdf_fish_completions_st.stat.exists

@@ -1,5 +1,6 @@
-#!/usr/bin/env bash
-# Load weather in terminal
+#!/bin/sh
+# Print weather from wttr.in
+# TODO: use ipinfo to get location from ip
 
 # Formats:
 #       ?format=1       One line output of temp
@@ -10,7 +11,22 @@
 host="$(hostname)"
 
 loc="75067"
+
 [ "$host" = "jupiter" ] && loc="76207"
+
 loc="${1:-$loc}"
 
-curl "wttr.in/$loc"
+format=$2
+
+fmtstr=""
+
+[ -n "$format" ] && fmtstr="?format=$format"
+
+weather=$(curl -s "wttr.in/$loc$fmtstr")
+
+if [ -n "$format" ]; then
+    # Remove space and positive temp sign "+" in one-line output
+    echo "$weather" | sed -e "s/[[:space:]]+//"
+else
+    echo "$weather"
+fi

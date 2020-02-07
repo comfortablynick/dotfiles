@@ -25,17 +25,18 @@
 - name: Update mirrorlist
   block:
     - name: Install reflector
+      become: yes
       pacman:
         name: reflector
         state: present
     - name: Run reflector
       command: /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ new_mirrorlist_path }}
     - name: Replace mirrorlist with new file
+      become: yes
       copy:
         src: "{{ new_mirrorlist_path }}"
         dest: /etc/pacman.d/mirrorlist
         backup: yes
-  become: yes
   when: mirrorlist_found['matched'] > 0
 
 - name: Upgrade pacman packages

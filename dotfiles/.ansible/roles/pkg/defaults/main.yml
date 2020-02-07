@@ -41,6 +41,16 @@ pipx_default_pkgs:
   - topydo
   - speedtest-cli
 
+pipx_inject_dependencies:
+  - pkg: optimize-images
+    inject: pillow
+  - pkg: ptpython
+    inject: pynvim
+
+asdf_bin: "{{ ansible_env.HOME }}/.asdf/bin/asdf"
+asdf_shims_path: "{{ ansible_env.HOME }}/.asdf/shims"
 pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
+pip3_path: "{{ asdf_shims_path }}/pip3"
+pipx_path: "{{ asdf_shims_path }}/pipx"
 new_mirrorlist_path: /tmp/mirrorlist
 mirrorlist_file_age: "1w"

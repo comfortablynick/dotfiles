@@ -3,38 +3,34 @@
 - name: Handle os-specific packages
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-- name: Get pip3 path
-  command: bash -lc "command -v pip3"
-  register: pip3_path
-  changed_when: false
+- name: Check if pip2 installed
+  stat:
+    path: /usr/bin/pip2
+  register: pip2_st
 
-- block:
-  - name: Install/update python2 pip packages
-    pip:
-      name:
-        - virtualenv
-        - pip
-      executable: pip2
-      state: latest
-  - name: Install/update python3 pip packages
-    pip:
-      name: "{{ pip3_default_pkgs }}"
-      executable: "{{ pip3_path }}"
-      state: latest
-    when: "'asdf' in pip3_path.stdout"
+- name: Check if pip3 installed
+  stat:
+    path: "{{ pip3_path }}"
+  register: pip3_st
 
-- name: Get installed pipx packages
-  command: bash -lc "pipx list"
-  register: pipx_installed
-  changed_when: false
+- name: Install/update python2 pip packages
+  pip:
+    name:
+      - virtualenv
+      - pip
+    executable: pip2
+    state: latest
+  when: pip2_st.exists is defined and pip2_st.exists
 
-- name: Install pipx packages
-  command: bash -lc "pipx install {{ item }}"
-  loop: "{{ pipx_default_pkgs }}"
-  register: pipx
-  changed_when: "'--force' not in pipx.stdout"
-  environment:
-    - PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
-  when:
-    - pipx_installed.stdout is defined
-    - item not in pipx_installed.stdout
+- name: Install/update python3 pip packages
+  pip:
+    name: "{{ pip3_default_pkgs }}"
+    executable: "{{ pip3_path }}"
+    state: latest
+  when: pip3_st.exists is defined and pip3_st.exists
+
+- name: asdf reshim
+  command: "{{ asdf_bin }} reshim"
+
+- name: Install/update pipx packages
+  include_tasks: pipx.yml

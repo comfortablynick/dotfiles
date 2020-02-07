@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cache_file=~/.tmux_weather
-cache_ttl=900
+cache_ttl=300
 weather_bin=$HOME/bin/wttr
 
 weather() {

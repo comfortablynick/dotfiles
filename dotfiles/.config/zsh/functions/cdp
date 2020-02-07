@@ -1,0 +1,31 @@
+# cdp :: cd with fzf preview
+function cdp() {
+    if [[ $# -ne 0 ]]; then
+        builtin cd "$@"
+        return
+    fi
+    local lsd
+    local dir
+    FZF_OPTS=("$FZF_DEFAULT_OPTS")
+    FZF_OPTS+=("--ansi")
+    FZF_OPTS+=("--bind='alt-k:preview-up,alt-p:preview-up'")
+    FZF_OPTS+=("--bind='alt-j:preview-down,alt-n:preview-down'")
+    FZF_OPTS+=("--bind='ctrl-r:toggle-all'")
+    FZF_OPTS+=("--bind='ctrl-s:toggle-sort'")
+    FZF_OPTS+=("--bind='?:toggle-preview'")
+    FZF_OPTS+=("--preview-window='right:60%'")
+    FZF_OPTS+=("--bind='alt-w:toggle-preview-wrap'")
+    FZF_OPTS+=("--border")
+    FZF_OPTS+=("--reverse")
+    FZF_OPTS+=("--header 'Press ? to toggle preview'")
+    export FZF_DEFAULT_OPTS="${FZF_OPTS[*]}"
+    lsd=$(eval ${FZF_CD_WITH_HIDDEN_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+        -o -type d -print 2> /dev/null | sort | cut -b3-"})
+    dir="$(printf '%s\n' "${lsd[@]}" |
+        fzf-tmux --reverse --preview '
+            exa -laTL3 --group-directories-first --color=always {};
+    ')"
+    [[ ${#dir} -ne 0 ]] || return 0
+    builtin cd "$dir"
+}
+# vim:ft=zsh:

@@ -1,0 +1,9 @@
+# mc :: make directory and cd into it
+mc() {
+    if [[ $# -ge 1 ]]; then
+        mkdir -p "$1" && cd "$1" || return 1
+    else
+        echo "ERROR usage: $0 [DIR]"
+    fi
+}
+# vim:ft=zsh:

@@ -86,6 +86,8 @@ fi
 # Autoload functions {{{2
 autoload -Uz remove_last_history_entry
 autoload -Uz fh
+autoload -Uz cdp
+autoload -Uz mc
 
 # SHELL OPTS {{{1
 # General {{{2
@@ -231,22 +233,6 @@ export LESS_TERMCAP_mh=$(tput dim)
 
 
 # FUNCTIONS {{{1
-# mc :: make directory and cd into it {{{2
-mc() {
-    if [[ $# -ge 1 ]]; then
-        mkdir -p "$1" && cd "$1" || return 1
-    else
-        echo "ERROR usage: $0 [DIR]"
-    fi
-}
-
-# npm :: wrapper for asdf npm {{{2
-# npm() {
-#     export ASDF_SKIP_RESHIM=1
-#     $HOME/.asdf/shims/npm "$@"
-#     asdf reshim nodejs
-# }
-
 # cd :: cd with fuzzy find {{{2
 function cd() {
     if [[ $# -ne 0 ]]; then
@@ -262,28 +248,6 @@ function cd() {
     builtin cd "$dir"
 }
 
-# cdp :: cd with fzf preview {{{2
-function cdp() {
-    if [[ $# -ne 0 ]]; then
-        builtin cd "$@";
-        return
-    fi
-    local lsd
-    local dir
-    lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
--o -type d -print 2> /dev/null | sort | cut -b3-")
-    dir="$(printf '%s\n' "${lsd[@]}" |
-        fzf-tmux --reverse --preview '
-            __cd_nxt="$(echo {})";
-            __cd_path="$(echo $(pwd)/${__cd_nxt})";
-            echo $__cd_path;
-            echo;
-            ls -lA --group-directories-first --color=always "${__cd_path}";
-    ')"
-    [[ ${#dir} -ne 0 ]] || return 0
-    builtin cd "$dir"
-}
-
 # chpwd :: execute on directory change {{{2
 chpwd() {
     # List directory contents
@@ -292,15 +256,6 @@ chpwd() {
     ls --group-directories-first 2>/dev/null
     # exa --group-directories-first
 }
-
-# asdf :: version manager {{{2
-# BEGIN ANSIBLE MANAGED BLOCK: asdf
-# if [[ -e $HOME/.asdf/asdf.sh ]]; then
-#   source $HOME/.asdf/asdf.sh
-#   source $HOME/.asdf/completions/asdf.bash
-# fi
-# END ANSIBLE MANAGED BLOCK: asdf
-
 
 # SHELL STARTUP {{{1
 # Debug end {{{2

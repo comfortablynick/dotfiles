@@ -6,19 +6,22 @@ weather_bin=$HOME/bin/wttr
 
 weather() {
     if [ -f "$cache_file" ]; then
+        read -r existing <$cache_file
+        echo "$existing"
+
         NOW=$(date +%s)
         MOD=$(date -r "$cache_file" +%s)
-        if [ $((NOW - MOD)) -gt $cache_ttl ]; then
-            rm "$cache_file"
+        if [ $((NOW - MOD)) -le $cache_ttl ]; then
+            return
         fi
-    elif [ -x "$weather_bin" ]; then
+    fi
+    if [ -x "$weather_bin" ]; then
         # GEO=$(curl -s https://ipinfo.io | jq -r '.loc')
         GEO=76207
-        $weather_bin $GEO 3 >"$cache_file"
+        $weather_bin $GEO 3 >$cache_file
     else
-        echo "$weather_bin is not executable!"
+        echo "TMUX weather: \`$weather_bin' is not accessible"
     fi
-    /bin/cat "$cache_file"
 }
 
 weather

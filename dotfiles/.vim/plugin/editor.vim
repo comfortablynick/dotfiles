@@ -3,27 +3,32 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-02 19:34:47 CST
+" Last Change: 2020-02-07 12:47:59 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
 
+" # Commands
 " Save if file has changed and reload vimrc
 command! S update | source $MYVIMRC
-" Lazy load startuptime.vim plugin
-command! -nargs=* -complete=file StartupTime
-    \ packadd startuptime.vim | StartupTime <args>
 " Easily change background
 command! Light set background=light
 command! Dark  set background=dark
-" Make these commonly mistyped commands still work
+" Lua async grep
+command! -nargs=+ -complete=dir -bar Grep
+    \ lua require'tools'.async_grep(<q-args>)
+
+" Commonly mistyped commands
 command! WQ wq
 command! Wq wq
 command! Wqa wqa
 command! W w
 
-" Maps
+" Lazy load startuptime.vim plugin
+command! -nargs=* -complete=file StartupTime
+    \ packadd startuptime.vim | StartupTime <args>
 
+" # Maps
 " Format paragraph and restore cursor position
 nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
 " Format buffer and restore cursor position
@@ -31,7 +36,7 @@ nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
-" Abbreviations
+" # Abbreviations
 cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
@@ -39,7 +44,7 @@ cnoreabbrev <expr> lp
 inoreabbrev <expr>
     \ fff syntax#is_comment_line() ? '{{{' : printf(&commentstring, '{{{')
 
-" Autocmds
+" # Autocmds
 augroup plugin_editor
     autocmd!
     " Remember last place in file

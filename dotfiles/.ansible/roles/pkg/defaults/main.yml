@@ -17,6 +17,10 @@ pacman_default_packages:
 aur_default_packages:
   - todotxt
 
+pip2_default_pkgs:
+  - virtualenv
+  - pip
+
 pip3_default_pkgs:
   - pip
   - pipx
@@ -49,8 +53,11 @@ pipx_inject_dependencies:
 
 asdf_bin: "{{ ansible_env.HOME }}/.asdf/bin/asdf"
 asdf_shims_path: "{{ ansible_env.HOME }}/.asdf/shims"
-pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
-pip3_path: "{{ asdf_shims_path }}/pip3"
 pipx_path: "{{ asdf_shims_path }}/pipx"
+pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
+python2_path: /usr/bin/python2
+pip2_path: /usr/bin/pip2
+python3_path: "{{ asdf_shims_path }}/python3"
+pip3_path: "{{ asdf_shims_path }}/pip3"
 new_mirrorlist_path: /tmp/mirrorlist
 mirrorlist_file_age: "1w"

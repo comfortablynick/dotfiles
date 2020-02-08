@@ -22,7 +22,7 @@ function M.async_grep(term) -- {{{1
         stdout:close()
         stderr:close()
         handle:close()
-        vim.fn.setqflist({}, "r", {title = "Search Results", lines = results})
+        vim.fn.setqflist({}, "r", {title = "AsyncGrep Results", lines = results})
         local result_ct = #results
         if result_ct > 0 then
             vim.cmd("cwindow " .. math.min(result_ct, 10))

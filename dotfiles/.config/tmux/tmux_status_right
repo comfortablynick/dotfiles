@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Calculate tmux status bar on right side
+# TODO: there _has_ to be a better way of doing this
 
 HOSTNAME=''
 WIDTH="$(tmux display -p '#{client_width}')"
@@ -17,51 +18,54 @@ TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
 
 # Status commands
-if [ -x "$SYSINFO" ]; then
+if [[ -x $SYSINFO ]]; then
     memusage_cmd='memory'
     loadavg_cmd='load'
     uptime_cmd='uptime -p'
     temp_cmd='temp 2>/dev/null'
     # cpu_usage_cmd='cpu -i 2 2>/dev/null'
-    if [ "$WIDTH" -lt "$MEDIUM_LARGE" ]; then
+    if [[ $WIDTH -lt $MEDIUM_LARGE ]]; then
         memusage_cmd='memory -u'
         loadavg_cmd='load -n 1'
     fi
-    MEMUSAGE="$(eval "$SYSINFO" "$memusage_cmd")"
-    LOADAVG="$(eval "$SYSINFO" "$loadavg_cmd")"
-    UP="$(eval "$SYSINFO" "$uptime_cmd")"
-    CPUTEMP="$(eval "$SYSINFO" "$temp_cmd")"
+    MEMUSAGE=$(eval "$SYSINFO" "$memusage_cmd")
+    LOADAVG=$(eval "$SYSINFO" "$loadavg_cmd")
+    UP=$(eval "$SYSINFO" "$uptime_cmd")
+    CPUTEMP=$(eval "$SYSINFO" "$temp_cmd")
     # CPUUSAGE="$(eval "$SYSINFO" "$cpu_usage_cmd")"
 else
-    if [ -x "$TMUX_TOP" ]; then
+    if [[ -x $TMUX_TOP ]]; then
         MEMUSAGE="$("$TMUX_TOP" m)"
         LOADAVG="$("$TMUX_TOP" l)"
     else
         MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
         LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
     fi
-    UP="$("$HOME/.config/tmux/_uptime")"
+    UP=$("$HOME/.config/tmux/_uptime")
 fi
 
 SYSLOAD="$MEMUSAGE $LOADAVG"
 
-if [ -n "$CPUTEMP" ]; then
+if [[ -n $CPUTEMP ]]; then
     SYSLOAD="$SYSLOAD $CPUTEMP"
 fi
 
-if [ "$WIDTH" -gt "$MEDIUM" ]; then
+if [[ $WIDTH -gt $MEDIUM ]]; then
     DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
     TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB#[fg=colour252,bg=colour236,noitalics,nounderscore]$SP$(date +'%R')"
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
     LOAD="#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
 
-    if [ "$WIDTH" -gt "$LARGE" ] || [ "$TABS" -lt 5 ]; then
+    if [[ $WIDTH -gt $LARGE ]] || [[ $TABS -lt 5 ]]; then
         UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
-        WEATHER="#[fg=colour251]$("$HOME"/.config/tmux/_weather)$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
+        if [[ $MOSH_CONNECTION -ne 1 ]]; then
+            WTTR=$("$HOME/.config/tmux/_weather")
+            WEATHER="#[fg=colour251,bg=default,nobold,noitalics,nounderscore]$WTTR$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
+        fi
     fi
 fi
 
-if [ "$WIDTH" -ge "$SMALL" ]; then
+if [[ $WIDTH -ge $SMALL ]]; then
     USER="#[fg=colour31,bg=colour236,nobold,noitalics,nounderscore]$RSEP#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$(whoami)"
     UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOSTNAME $(uname -n)"
 fi

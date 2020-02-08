@@ -3,7 +3,7 @@
 " Description: Completion plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-04 14:28:34 CST
+" Last Change: 2020-02-07 12:16:15 CST
 " ====================================================
 
 " Coc.nvim {{{1
@@ -89,11 +89,6 @@ function! completion#coc_abbrev() abort "{{{2
 endfunction
 
 function! completion#coc_init() abort "{{{2
-    " let g:coc_force_debug = 1
-    let g:coc_filetype_map = {
-        \ 'yaml.ansible': 'yaml'
-        \ }
-
     if get(g:, 'use_explorer_coc', 'coc-explorer') ==# 'coc-explorer'
         let g:use_explorer = 'coc-explorer'
     endif
@@ -106,6 +101,10 @@ function! completion#coc_init() abort "{{{2
 endfunction
 
 function! completion#coc() abort
+    " let g:coc_force_debug = 1
+    let g:coc_filetype_map = {
+        \ 'yaml.ansible': 'yaml'
+        \ }
     let g:coc_global_extensions = [
         \ 'coc-snippets',
         \ 'coc-explorer',

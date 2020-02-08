@@ -418,9 +418,6 @@ local function set_color() -- {{{2
     end)()
 end
 
-local function create_cmds() -- {{{2
-    vim.cmd[[command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)]]
-end
 
 local function apply_maps() -- {{{2
     local maps = vim.tbl_extend("error", general_maps, navigation_maps)
@@ -432,7 +429,6 @@ set_options()
 set_globals()
 set_color()
 apply_maps()
-create_cmds()
 load_packages()
 
 -- Load lua modules {{{2

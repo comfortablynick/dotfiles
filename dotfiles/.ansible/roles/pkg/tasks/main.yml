@@ -3,34 +3,8 @@
 - name: Handle os-specific packages
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-- name: Check if pip2 installed
-  stat:
-    path: /usr/bin/pip2
-  register: pip2
-
-- name: Check if pip3 installed
-  stat:
-    path: "{{ pip3_path }}"
-  register: pip3
-
-- name: Install/update python2 pip packages
-  pip:
-    name:
-      - virtualenv
-      - pip
-    executable: pip2
-    state: latest
-  when: pip2.stat.exists is defined and pip2.stat.exists
-
-- name: Install/update python3 pip packages
-  pip:
-    name: "{{ pip3_default_pkgs }}"
-    executable: "{{ pip3_path }}"
-    state: latest
-  when: pip3.stat.exists is defined and pip3.stat.exists
-
-- name: asdf reshim
-  command: "{{ asdf_bin }} reshim"
+- name: Install/update pip packages
+  include_tasks: pip.yml
 
 - name: Install/update pipx packages
   include_tasks: pipx.yml

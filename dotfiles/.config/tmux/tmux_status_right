@@ -58,10 +58,10 @@ if [[ $WIDTH -gt $MEDIUM ]]; then
 
     if [[ $WIDTH -gt $LARGE ]] || [[ $TABS -lt 5 ]]; then
         UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
-        if [[ $MOSH_CONNECTION -ne 1 ]]; then
-            WTTR=$("$HOME/.config/tmux/_weather")
-            WEATHER="#[fg=colour251,bg=default,nobold,noitalics,nounderscore]$WTTR$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
-        fi
+        # if [[ $MOSH_CONNECTION -ne 1 ]]; then
+        #     WTTR=$("$HOME/.config/tmux/_weather")
+        #     WEATHER="#[fg=colour251,bg=default,nobold,noitalics,nounderscore]$WTTR$SP$SP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
+        # fi
     fi
 fi
 

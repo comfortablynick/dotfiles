@@ -61,7 +61,8 @@ autoload -Uz bashcompinit && bashcompinit                       # Bash completio
 export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
 export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
 export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
-export ZPLG_HOME=${ZDOTDIR}/.zplugin                            # Zplugin install dir
+typeset -A ZINIT
+ZINIT[HOME_DIR]=${ZDOTDIR}/.zinit
 
 for shfile ($XDG_CONFIG_HOME/shell/conf.d/*.sh) sh_source $shfile
 for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
@@ -142,41 +143,40 @@ zle -N fzy-edit
 bindkey '^E' fzy-edit
 
 # PLUGINS {{{1
-# Zplugin Config {{{2
-if ! [[ -d $ZPLG_HOME ]]; then
-    mkdir $ZPLG_HOME
-    chmod g-rwX $ZPLG_HOME
+# zinit Config {{{2
+if ! [[ -d $ZINIT[HOME_DIR] ]]; then
+    mkdir $ZINIT[HOME_DIR]
+    chmod g-rwX $ZINIT[HOME_DIR]
 fi
 
-if ! [[ -d $ZPLG_HOME/bin/.git ]]; then
-    echo ">>> Downloading zplugin to $ZPLG_HOME/bin"
-    cd $ZPLG_HOME
-    git clone --depth 10 https://github.com/zdharma/zplugin.git bin
+if ! [[ -d $ZINIT[HOME_DIR]/bin/.git ]]; then
+    echo ">>> Downloading zinit to $ZINIT[HOME_DIR]/bin"
+    git clone --depth 10 https://github.com/zdharma/zinit.git $ZINIT[HOME_DIR]/bin
     echo ">>> Done"
 fi
 
-source $ZPLG_HOME/bin/zplugin.zsh
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
+source $ZINIT[HOME_DIR]/bin/zinit.zsh
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Zplugin Plugin Definitions {{{2
-zplugin ice if'[[ $ZSH_THEME = powerlevel10k ]]'
-zplugin load romkatv/powerlevel10k
+# Zinit Plugin Definitions {{{2
+zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
+zinit load romkatv/powerlevel10k
 
-zplugin ice pick"async.zsh" src"pure.zsh" if'[[ $ZSH_THEME = pure ]]'
-zplugin light sindresorhus/pure
+zinit ice pick"async.zsh" src"pure.zsh" if'[[ $ZSH_THEME = pure ]]'
+zinit light sindresorhus/pure
 
-zplugin ice wait"0" blockf lucid
-zplugin light zsh-users/zsh-completions
+zinit ice wait"0" blockf lucid
+zinit light zsh-users/zsh-completions
 
-zplugin ice wait"0" atload"_zsh_autosuggest_start" lucid
-zplugin light zsh-users/zsh-autosuggestions
+zinit ice wait"0" atload"_zsh_autosuggest_start" lucid
+zinit light zsh-users/zsh-autosuggestions
 
-zplugin ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
-zplugin load junegunn/fzf
+zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
+zinit load junegunn/fzf
 
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2

@@ -281,7 +281,8 @@ function ll.git_branch() -- {{{2
         return string.gsub(vim.g.coc_git_status, "master", "")
     end
     local head = npcall(vim.fn.FugitiveHead)
-    return not not head and vars.glyphs.branch .. " " .. head or ""
+    -- return not not head and vars.glyphs.branch .. " " .. head or ""
+    return head ~= "" and vars.glyphs.branch .. " " .. head or ""
 end
 
 function ll.git_status() -- {{{2
@@ -394,7 +395,7 @@ function ll.init()
     local set_statusline_events =
         { -- events where `setlocal statusline` would be called
             -- "WinEnter",
-            -- "BufWinEnter",
+            "BufWinEnter",
             -- "ShellCmdPost",
             -- "BufWritePost",
             -- "FileChangedShellPost",

@@ -150,15 +150,6 @@ fi
 # Linux {{{2
 if [[ ${OS_NAME} = "Linux" ]]; then
 
-    # Source colors from file
-    if [[ -x /usr/bin/dircolors ]]; then
-        if [[ -r ~/.dircolors ]]; then
-            eval "$(dircolors -b ~/.dircolors)"
-        else
-            eval "$(dircolors -b)"
-        fi
-    fi
-
     # Colored man pages
     export MANROFFOPT='-c'
 

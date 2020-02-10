@@ -178,6 +178,11 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
+zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+    atpull'%atclone' pick"clrs.zsh" nocompile'!' \
+    atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
+zinit light trapd00r/LS_COLORS
+
 # THEME / APPEARANCE OPTIONS {{{1
 # Alien minimal {{{2
 if [[ $ZSH_THEME = "alien-minimal" ]]; then

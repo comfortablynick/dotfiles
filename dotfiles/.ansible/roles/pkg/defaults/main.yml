@@ -17,6 +17,16 @@ pacman_default_packages:
 aur_default_packages:
   - todotxt
 
+nodejs_default_pkgs:
+  - typescript-language-server
+  - bash-language-server
+  - clasp
+  - luafmt
+  - npm
+  - prettier
+  - tsserver
+  - yarn
+
 pip2_default_pkgs:
   - virtualenv
   - pip

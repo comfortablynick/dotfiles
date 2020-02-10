@@ -1,14 +1,14 @@
-#!/usr/bin/env zsh
-# vim: fdl=1:
+# vim:ft=zsh fdl=1:
 #            _
 #   ____ ___| |__  _ __ ___
 #  |_  // __| '_ \| '__/ __|
 #  _/ /_\__ \ | | | | | (__
 # (_)___|___/_| |_|_|  \___|
-
+#
+# Profile/debug {{{1
+# Exit if not interactive {{{2
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
-
-# PROFILE / DEBUG {{{1
+# variables {{{2
 export DEBUG_MODE=false
 export PROFILE=0
 export CURRENT_SHELL=zsh
@@ -30,7 +30,7 @@ if [[ $PROFILE -eq 1 ]]; then
     setopt XTRACE
 fi
 
-# ENVIRONMENT {{{1
+# Environment {{{1
 # OS Type {{{2
 case "$(uname -s)" in
     Linux*)     OS_NAME=Linux;;
@@ -90,7 +90,7 @@ autoload -Uz fh
 autoload -Uz cdp
 autoload -Uz mc
 
-# SHELL OPTS {{{1
+# Shell opts {{{1
 # General {{{2
 typeset -U path                                                 # Unique PATH entries only
 setopt auto_cd;                                                 # Perform cd if command matches dir
@@ -142,7 +142,7 @@ autoload -Uz fzy-edit
 zle -N fzy-edit
 bindkey '^E' fzy-edit
 
-# PLUGINS {{{1
+# Plugins {{{1
 # zinit Config {{{2
 if ! [[ -d $ZINIT[HOME_DIR] ]]; then
     mkdir $ZINIT[HOME_DIR]
@@ -183,7 +183,7 @@ zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
     atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
 zinit light trapd00r/LS_COLORS
 
-# THEME / APPEARANCE OPTIONS {{{1
+# Theme / appearance options {{{1
 # Alien minimal {{{2
 if [[ $ZSH_THEME = "alien-minimal" ]]; then
     export USE_NERD_FONT="$NERD_FONT"
@@ -237,7 +237,7 @@ export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
 
 
-# FUNCTIONS {{{1
+# Functions {{{1
 # cd :: cd with fuzzy find {{{2
 function cd() {
     if [[ $# -ne 0 ]]; then
@@ -262,7 +262,7 @@ chpwd() {
     # exa --group-directories-first
 }
 
-# SHELL STARTUP {{{1
+# Shell startup {{{1
 # Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
 

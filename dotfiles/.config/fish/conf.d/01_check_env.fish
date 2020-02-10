@@ -1,4 +1,6 @@
 # Check env.toml file for changes compared with previous checksum
+set -gx CURRENT_SHELL fish
+
 if status is-interactive
     set -l env_sha (string split ' ' ($HOME/bin/sha1 "$HOME/dotfiles/dotfiles/env.toml"))[1]
     if test "$env_sha" = "$env_toml_sha"

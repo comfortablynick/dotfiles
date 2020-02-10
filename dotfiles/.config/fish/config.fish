@@ -14,7 +14,7 @@
 #                       /J\JT\JJJJ)
 #                       (JJJ| \UUU)
 #                        (UU)
-# SHELL STARTUP {{{1
+# Startup {{{1
 # Non-interactive {{{2
 if not status --is-interactive
     exit 0
@@ -26,31 +26,9 @@ set_color $fish_color_autosuggestion
 set -l start_time (get_date)
 and echo -n 'Sourcing config.fish...  '
 
-# FUNCTIONS {{{1
-# ab :: wrap `abbr` so fish linter doesn't complain {{{2
-function ab -d "create global abbreviation"
-    set -l abbrev $argv[1]
-    set -l cmd $argv[2..-1]
-    abbr -g $abbrev $cmd
-end
 
-# var :: export env var if no univar exists {{{2
-function var -d "export environment variable if not defined universally"
-    set -l var_name $argv[1]
-    set -l var_value $argv[2..-1]
-    # Set global var if not set universally
-    if not set -qU $var_name
-        set -gx $var_name $var_value
-    end
-end
-
-# j :: alias for __fzf_autojump {{{2
-# function j -d "alias for __fzf_autojump"
-#     __fzf_autojump $argv
-# end
-
-# PACKAGES {{{1
-# Package manager setup {{{2
+# Packages {{{1
+# Fisher setup {{{2
 switch "$FISH_PKG_MGR"
     case "OMF"
         set -gx OMF_PATH "$XDG_DATA_HOME/omf"
@@ -70,8 +48,7 @@ switch "$FISH_PKG_MGR"
     case "*"
 end
 
-
-# ENVIRONMENT {{{1
+# Environment {{{1
 # Load from env file {{{2
 set -l env_file "$HOME/.config/fish/env.fish"
 set -q env_file_sourced
@@ -84,7 +61,7 @@ if test -f "$env_file"
     and set env_file_sourced 1
 end
 
-# THEMES {{{1
+# Themes {{{1
 # Fish git prompt {{{2
 # Settings {{{3
 set -g __fish_git_prompt_show_informative_status true
@@ -198,7 +175,7 @@ else
 end
 
 
-# KEYBINDINGS {{{1
+# Keybindings {{{1
 # vi-mode with custom keybindings {{{2
 set -g use_vi_mode yes
 
@@ -207,7 +184,7 @@ if test "$use_vi_mode" = 'yes'
     bind -M insert -m default kj force-repaint
 end
 
-# PRE SHELL LOAD {{{1
+# Pre-shell load {{{1
 # Vim/Mosh {{{2
 # Set vim compat if Mosh
 set -gx VIM_SSH_COMPAT 0
@@ -217,7 +194,7 @@ if test "$MOSH_CONNECTION" -eq 1
     set NERD_FONTS 0
 end
 
-# END CONFIG {{{1
+# End config {{{1
 # Print config.fish load time {{{2
 set -l end_time (get_date)
 set -l elapsed (math \($end_time - $start_time\))

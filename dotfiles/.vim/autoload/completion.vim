@@ -3,7 +3,7 @@
 " Description: Completion plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-07 12:16:15 CST
+" Last Change: 2020-02-10 13:06:31 CST
 " ====================================================
 
 " Coc.nvim {{{1
@@ -56,7 +56,7 @@ function! completion#coc_apply_maps() abort "{{{2
         nmap ]g <Plug>(coc-git-nextchunk)
         nmap gs <Plug>(coc-git-chunkinfo)
         nmap gc <Plug>(coc-git-commit)
-        nnoremap gu :CocCommand git.chunkUndo<CR>
+        nnoremap <Leader>gu :CocCommand git.chunkUndo<CR>
         nnoremap <Leader>gs :CocCommand git.chunkStage<CR>
         nnoremap <Leader>gf :CocCommand git.foldUnchanged<CR>
     endif

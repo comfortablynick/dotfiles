@@ -113,21 +113,18 @@ def get_shell_vars(  # {{{1
             },
             "env": {"format": "set {0} {1} {2} {3}", "default_args": "-Ux"},
             "path": {"format": "set {0} {1} {2} {3}", "default_args": "-U --path"},
-            "cmd": {"format": "{3}\n{2}", "default_args": ""},
         },
         "bash": {
             "abbr": {"format": "alias {1}={2} {3}", "default_args": ""},
             "alias": {"format": "alias {1}={2} {3}", "default_args": ""},
             "env": {"format": "export {1}={2} {3}", "default_args": ""},
             "path": {"format": "export PATH={2}:$PATH {3}", "default_args": ""},
-            "cmd": {"format": "{3}\n{2}", "default_args": ""},
         },
         "zsh": {
             "abbr": {"format": "alias {1}={2} {3}", "default_args": ""},
             "alias": {"format": "alias {1}={2} {3}", "default_args": ""},
             "env": {"format": "export {1}={2} {3}", "default_args": ""},
             "path": {"format": "export PATH={2}:$PATH {3}", "default_args": ""},
-            "cmd": {"format": "{3}\n{2}", "default_args": ""},
         },
     }
     all_vars = []
@@ -144,7 +141,7 @@ def get_shell_vars(  # {{{1
                 # Probably path array
                 v = " ".join(map(str, var["val"]))
             else:
-                v = var.get("val")
+                v = str(var.get("val"))
             if var.get("quote"):
                 v = repr(v)
             # Convert posix subshell `$()` to fish `()`
@@ -152,15 +149,6 @@ def get_shell_vars(  # {{{1
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
-
-            if var["var_type"] == "cmd":
-                pre = v
-                v = (
-                    run(v, shell=True, capture_output=True)
-                    .stdout.strip()
-                    .decode("utf-8")
-                )
-                LOG.debug("Cmd eval called on: %s; result: %s", pre, v)
 
             if var.get("eval"):
                 pre = v

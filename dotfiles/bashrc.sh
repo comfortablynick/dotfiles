@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+# vim:ft=sh fdl=1:
 #    _               _
 #   | |__   __ _ ___| |__  _ __ ___
 #   | '_ \ / _` / __| '_ \| '__/ __|
 #  _| |_) | (_| \__ \ | | | | | (__
 # (_)_.__/ \__,_|___/_| |_|_|  \___|
-
+#
 # Init {{{1
 # Return if non-interactive {{{2
 [[ $- != *i* ]] && return
@@ -22,7 +22,6 @@ MINGW*) OS_NAME=Windows ;;
 *) OS_NAME="UNKNOWN:$(uname -s)" ;;
 esac
 echo "Bash is logged into ${HOSTNAME} (${OS_NAME}) at ${START_TIME}"
-export CURRENT_SHELL=bash
 
 $DEBUG_MODE && echo "$(date +"%T.%3N"): Entering .bashrc"
 
@@ -38,6 +37,7 @@ shopt -s checkwinsize  # Update rows/cols if size changes
 shopt -s autocd        # Auto cd if entering dir name at prompt
 
 # Environment variables {{{2
+export CURRENT_SHELL=bash
 BASEDIR="${HOME}/dotfiles/dotfiles"    # Location of includes dir
 export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look her
 
@@ -301,5 +301,3 @@ else
 fi
 
 $DEBUG_MODE && echo "$(date +"%T.%3N"): Leaving .bashrc"
-
-# vim:fdl=1:

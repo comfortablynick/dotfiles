@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
-# Print $PATH with line breaks
+#!/bin/sh
 
-# pathlines="${PATH//:/$'\n'}"
-# echo "$pathlines"
-# echo "-----------------"
-# printf "\$PATH count: %d\n" "$(echo "$pathlines" | wc -l)"
+IFS=:
 
-echo "$PATH" | tr ":" "\n" | nl
+i=1
+for p in $PATH; do
+    printf "%2d  %s\n" $i "$p"
+    i=$((i + 1))
+done

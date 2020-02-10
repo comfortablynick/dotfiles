@@ -6,7 +6,6 @@
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
 let g:use_init_lua = 0
-
 " Plugin config handler {{{1
 " Autocmds {{{2
 augroup plugin_config_handler
@@ -64,7 +63,7 @@ if has('nvim') && get(g:, 'use_init_lua') == 1
     finish
 endif
 
-" Non-lua General Configuration {{{1
+" General configuration {{{1
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')
 
@@ -94,9 +93,7 @@ filetype plugin on                                              " Allow loading 
 syntax enable                                                   " Syntax highlighting on
 
 set encoding=utf-8                                              " Default to unicode
-scriptencoding utf-8
 set shell=sh                                                    " Use posix-compatible shell
-colorscheme default                                             " Default colors
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
 set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
@@ -104,7 +101,7 @@ set laststatus=2                                                " Always show st
 set showtabline=2                                               " Always show tabline
 set visualbell                                                  " Visual bell instead of audible
 set nowrap                                                      " Text wrapping mode
-set showmode                                                  " Show default mode text (e.g. -- INSERT -- below statusline)
+set showmode                                                    " Show default mode text (e.g. -- INSERT -- below statusline)
 set shortmess+=c                                                " Don't show 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
 set nocursorline                                                " Show line under cursor's line (check autocmds)
@@ -120,8 +117,6 @@ set nostartofline                                               " Don't move to 
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set virtualedit=onemore                                         " Allow cursor to extend past line
-set exrc                                                        " Load project local .vimrc
-set secure                                                      " Don't execute code in local .vimrcs
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
@@ -148,6 +143,7 @@ set incsearch                                                   " Move cursor to
 set magic                                                       " Magic escaping for regex
 " set gdefault                                                    " Global replacement by default
 
+" Grep {{{2
 " use ripgrep as grepprg
 if executable('rg')
     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs

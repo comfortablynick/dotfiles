@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-27 11:12:14 CST
+" Last Change: 2020-02-10 14:56:24 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -34,7 +34,7 @@ function! plugins#init() abort
 
     " Explorer/finder utils
     Pack 'liuchengxu/vista.vim'
-    Pack 'liuchengxu/vim-clap',         {'do': {-> clap#helper#build_all()}}
+    Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
@@ -67,9 +67,9 @@ function! plugins#init() abort
     Pack 'ziglang/zig.vim',             {'type': 'start'}
     Pack 'tbastos/vim-lua',             {'type': 'start'}
     Pack 'SidOfc/mkdx',                 {'type': 'start'}
+    Pack 'habamax/vim-asciidoctor',     {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding',
         \ {'type': 'start'}
-    " Pack 'gabrielelana/vim-markdown',   {'type': 'start'}
 
     " Git
     Pack 'airblade/vim-gitgutter'

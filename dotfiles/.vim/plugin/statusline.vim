@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-05 08:37:28 CST
+" Last Change: 2020-02-11 14:52:41 CST
 " ====================================================
 " let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')

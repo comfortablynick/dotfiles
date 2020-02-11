@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-05 13:42:09 CST
+" Last Change: 2020-02-11 12:53:42 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -33,7 +33,7 @@ let s:LinterOK = ''
 
 
 " Functions {{{1
-function! statusline#Mode() abort
+function! statusline#mode() abort
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
         \ 'n' :     ['NORMAL','NRM','N'],
@@ -97,40 +97,30 @@ function! statusline#AsyncJobStatus() abort "{{{2
     return l:status
 endfunction
 
-function! statusline#LineInfo() abort "{{{2
+function! statusline#line_info_full() abort "{{{2
     return s:is_not_file() ? '' :
         \ printf('%s %s %s %s :%s',
         \ s:line_percent(),
-        \ statusline#LinePos(),
+        \ statusline#line_pos(),
         \ s:line_no(),
         \ s:LineNoSymbol,
         \ s:col_no()
         \ )
 endfunction
 
-function! statusline#LinePos() abort "{{{2
-    let l:line_no_indicator_chars = ['⎺', '⎻', '─', '⎼', '⎽']
-    " Zero index line number so 1/3 = 0, 2/3 = 0.5, and 3/3 = 1
-    let l:current_line = line('.') - 1
-    let l:total_lines = line('$') - 1
-
-    if l:current_line == 0
-        let l:index = 0
-    elseif l:current_line == l:total_lines
-        let l:index = -1
-    else
-        let l:line_no_fraction = floor(l:current_line) / floor(l:total_lines)
-        let l:index = float2nr(l:line_no_fraction * len(l:line_no_indicator_chars))
-    endif
-
-    return l:line_no_indicator_chars[l:index]
+function! statusline#line_info() abort
+    let l:line = line('.')
+    let l:line_pct = l:line * 100 / line('$')
+    let l:col = virtcol('.')
+    return printf('%d,%d %3d%%', l:line, l:col, l:line_pct)
 endfunction
-function! statusline#FileType() abort "{{{2
+
+function! statusline#file_type() abort "{{{2
     let l:ftsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
-    let l:venv = statusline#VirtualEnvName()
+    let l:venv = statusline#venv_name()
     if winwidth(0) > s:MedWidth
         return &filetype.l:ftsymbol.l:venv
     elseif winwidth(0) > s:MinWidth
@@ -140,7 +130,7 @@ function! statusline#FileType() abort "{{{2
     return ''
 endfunction
 
-function! statusline#FileFormat() abort "{{{2
+function! statusline#file_format() abort "{{{2
     let ffsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileFormatSymbol') ?
         \ WebDevIconsGetFileFormatSymbol() :
@@ -208,7 +198,7 @@ function! s:is_special_file() abort "{{{2
     return -1
 endfunction
 
-function! statusline#FileName() abort "{{{2
+function! statusline#file_name() abort "{{{2
     if s:is_not_file() | return '' | endif
     let special = s:is_special_file()
     if special != -1 | return special | endif
@@ -224,7 +214,7 @@ function! statusline#FileName() abort "{{{2
             \ ww <= s:MaxWidth ? 3 :
             \ 999 " No truncation
         if chars < 999
-            if !empty(statusline#CocStatus()) | let chars -= 1 | endif
+            if !empty(statusline#coc_status()) | let chars -= 1 | endif
             let Shorten = { part -> part[0:chars - 1] }
             let parts = split(p, '/')
             let i = 1
@@ -249,7 +239,7 @@ function! statusline#FileName() abort "{{{2
         \ )
 endfunction
 
-function! statusline#FileSize() abort "{{{2
+function! statusline#file_size() abort "{{{2
     let div = 1024.0
     let num = getfsize(expand('%:p'))
     if num <= 0 | return '' | endif
@@ -266,19 +256,19 @@ function! statusline#FileSize() abort "{{{2
     return printf('%.1fY')
 endfunction
 
-function! statusline#FileEncoding() abort "{{{2
+function! statusline#file_encoding() abort "{{{2
     " Only return a value if != utf-8
     return &fileencoding !=? 'utf-8' ? &fileencoding : ''
 endfunction
 
-function! statusline#TabName() abort "{{{2
+function! statusline#tab_name() abort "{{{2
   let fname = @%
   return fname =~? '__Tagbar__' ? 'Tagbar' :
         \ fname =~? 'NERD_tree' ? 'NERDTree' :
-        \ statusline#FileName()
+        \ statusline#file_name()
 endfunction
 
-function! statusline#GitHunkSummary() abort "{{{2
+function! statusline#git_summary() abort "{{{2
     " Look for status in this order
     " 1. coc-git
     " 2. gitgutter
@@ -301,19 +291,20 @@ function! statusline#GitHunkSummary() abort "{{{2
         \ )
 endfunction
 
-function! statusline#GitBranch() abort "{{{2
+function! statusline#git_branch() abort "{{{2
+    let l:out = ''
     if exists('g:coc_git_status')
-        return g:coc_git_status
+        let l:out = g:coc_git_status
     elseif exists('*fugitive#head')
-        return s:BranchSymbol.' '.fugitive#head()
+        let l:out = s:BranchSymbol.' '.fugitive#head()
     endif
-    return ''
+    return substitute(l:out, 'master', '', '')
 endfunction
 
-function! statusline#GitStatus() abort "{{{2
+function! statusline#git_status() abort "{{{2
     if !s:is_not_file() && winwidth(0) > s:MinWidth
-        let branch = statusline#GitBranch()
-        let hunks = statusline#GitHunkSummary()
+        let branch = statusline#git_branch()
+        let hunks = statusline#git_summary()
         return branch !=# '' ? printf('%s%s%s',
             \ s:GitSymbol,
             \ branch,
@@ -323,14 +314,14 @@ function! statusline#GitStatus() abort "{{{2
     return ''
 endfunction
 
-function! statusline#VirtualEnvName() abort "{{{2
+function! statusline#venv_name() abort "{{{2
     if exists('g:did_coc_loaded') | return '' | endif
     return &filetype ==# 'python' && !empty($VIRTUAL_ENV)
         \ ? printf(' (%s)', split($VIRTUAL_ENV, '/')[-1])
         \ : ''
 endfunction
 
-function! statusline#CurrentTag() abort "{{{2
+function! statusline#current_tag() abort "{{{2
     if winwidth(0) < s:MaxWidth | return '' | endif
     let coc_func = get(b:, 'coc_current_function', '')
     if coc_func !=# '' | return coc_func | endif
@@ -340,7 +331,7 @@ function! statusline#CurrentTag() abort "{{{2
     return ''
 endfunction
 
-function! statusline#CocStatus() abort "{{{2
+function! statusline#coc_status() abort "{{{2
     if winwidth(0) > s:MinWidth && get(g:, 'did_coc_loaded', 0)
         return get(g:, 'coc_status', '')
     endif
@@ -371,14 +362,14 @@ function! s:coc_warn() abort " {{{2
   return trim(join(warnmsgs, ' ') . ' ')
 endfunction
 
-function! statusline#LinterErrors() abort " {{{2
+function! statusline#linter_errors() abort " {{{2
     let coc = s:coc_error()
     return empty(coc) ?
         \ lightline#ale#errors() :
         \ coc
 endfunction
 
-function! statusline#LinterWarnings() abort " {{{2
+function! statusline#linter_warnings() abort " {{{2
     let coc = s:coc_warn()
     return empty(coc) ?
         \ lightline#ale#warnings() :

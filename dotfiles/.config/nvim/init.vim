@@ -75,6 +75,7 @@ if has('nvim')
     let &shadafile =
         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
     let g:package_path = expand('$XDG_DATA_HOME/nvim/site/pack')
+    let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
@@ -178,7 +179,6 @@ silent! packadd! neoformat
 silent! packadd! vim-surround
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
-silent! packadd! vim-scriptease
 silent! packadd! vim-commentary
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
@@ -191,8 +191,8 @@ silent! packadd! vim-textobj-lua
 silent! packadd! nvim-luadev
 silent! packadd! clever-f.vim
 silent! packadd! vim-sneak
-" packadd! 'lightline.vim'
-" packadd! 'lightline-bufferline'
+" silent! packadd! 'lightline.vim'
+" silent! packadd! 'lightline-bufferline'
 
 " Lua tools {{{2
 if has('nvim')

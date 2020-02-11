@@ -222,6 +222,9 @@ function ll.file_size() -- {{{2
 end
 
 function ll.file_name() -- {{{2
+    if vim.bo.filetype == "qf" then
+        return string.format("%s %s", "[Quickfix List]", vim.fn.getqflist({title=1}).title or "")
+    end
     if ll.is_not_file() then return "" end
     local path = function()
         if WINWIDTH < vars.min_width or vim.bo.filetype == "help" then

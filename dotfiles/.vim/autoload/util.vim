@@ -53,3 +53,11 @@ function! util#redir(cmd) abort
     setlocal readonly noswapfile foldlevel=99
     call setline(1, lines)
 endfunction
+
+" Convert :scriptnames into qf format
+function! util#scriptnames() abort
+    return map(
+        \ map(util#capture('scriptnames'), { _, v -> split(v, "\\v:=\\s+")}),
+        \ {_, v -> {'text': v[0], 'filename': expand(v[1])}}
+        \ )
+endfunction

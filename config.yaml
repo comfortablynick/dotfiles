@@ -139,10 +139,6 @@ dotfiles:
     dst: ~/.bashrc
     link: link
     src: bashrc.sh
-  f_dircolors:
-    dst: ~/.dircolors
-    link: link
-    src: dircolors.sh
   f_gitconfig:
     dst: ~/.gitconfig
     link: link
@@ -220,7 +216,6 @@ profiles:
     dotfiles:
     - f_bashrc
     - f_bash_profile
-    - f_dircolors
     - f_gitconfig
     - f_tmux.conf
     - f_tmux.theme.conf

@@ -33,7 +33,7 @@ local vars = { -- {{{2
         linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
         linter_errors = vim.g.LL_nf ~= 1 and "✘" or "\u{f05e}",
         linter_ok = "",
-        lvimrc = [[ Ⓛ ]],
+        lvimrc = [[ Ⓛ  ]],
     },
 }
 
@@ -223,7 +223,8 @@ end
 
 function ll.file_name() -- {{{2
     if vim.bo.filetype == "qf" then
-        return string.format("%s %s", "[Quickfix List]", vim.fn.getqflist({title=1}).title or "")
+        return string.format("%s %s", "[Quickfix List]",
+                             vim.fn.getqflist({title = 1}).title or "")
     end
     if ll.is_not_file() then return "" end
     local path = function()
@@ -301,9 +302,19 @@ function ll.git_status() -- {{{2
 end
 
 function ll.coc_status() -- {{{2
-    if WINWIDTH > vars.min_width and vim.fn.exists("g:coc_status") == 1 then
+    if WINWIDTH < vars.min_width then return "" end
+    if vim.fn.exists("g:coc_status") == 1 then
         local st = vim.g.coc_status
         return st and st
+    end
+    return ""
+end
+
+function ll.job_status() -- {{{2
+    if WINWIDTH < vars.min_width then return "" end
+    if vim.fn.exists("g:asyncrun_status") == 1 then
+        local st = vim.g.asyncrun_status
+        if st ~= "" then return "Job: " .. st end
     end
     return ""
 end
@@ -382,9 +393,10 @@ function ll.statusline() -- {{{2
     local left = string.format("%%<%s%s%s%s%s", bufnr, git, fname, warnings,
                                errors)
 
+    local job_status = def("job_status")
     local coc = def("coc_status")
     local line = def("simple_line_info")
-    local right = string.format("%s%s", coc, line)
+    local right = string.format("%s%s%s", job_status, coc, line)
     return left .. "%=" .. right
 end
 

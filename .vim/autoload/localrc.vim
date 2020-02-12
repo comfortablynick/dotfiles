@@ -4,7 +4,7 @@
 " Author:      Nick Murphy
 " License:     MIT
 " Acknowledgments: Code from thinca <thinca+vim@gmail.com> (zlib License)
-" Last Change: 2020-01-24 12:16:32 CST
+" Last Change: 2020-02-12 17:07:45 CST
 " ====================================================
 if exists('g:loaded_autoload_localrc') | finish | endif
 let g:loaded_autoload_localrc = 1
@@ -66,14 +66,14 @@ function! s:match_files(path, fname) abort
         let files = split(globpath(path, '/.*', 1), "\n")
             \         + split(globpath(path, '/*' , 1), "\n")
         let pat = a:fname[1:]
-        call filter(map(files, 'fnamemodify(v:val, ":t")'), 'v:val =~# pat')
+        call filter(map(files, {_,v -> fnamemodify(v, ":t")}), {_,v -> v =~# pat})
 
     else
         let files = map(split(globpath(path, a:fname, 1), "\n"),
             \               'fnamemodify(v:val, ":t")')
     endif
 
-    return filter(map(files, 'a:path . "/" . v:val'), 'filereadable(v:val)')
+    return filter(map(files, {_,v -> a:path."/".v}), {_,v -> filereadable(v)})
 endfunction
 
 " - string only.

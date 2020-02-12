@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-11 20:58:21 CST
+" Last Change: 2020-02-12 16:40:29 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -113,9 +113,9 @@ function! s:col_no() abort "{{{2
     return printf('%3d', virtcol('.'))
 endfunction
 
-function! statusline#AsyncJobStatus() abort "{{{2
+function! statusline#job_status() abort "{{{2
     let l:status = get(g:, 'asyncrun_status', '')
-    return l:status
+    return !empty(l:status) ? 'Job: '.l:status : ''
 endfunction
 
 function! statusline#line_info_full() abort "{{{2

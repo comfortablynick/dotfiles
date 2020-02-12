@@ -2,7 +2,7 @@ if exists('g:loaded_autoload_plugins_asyncrun') | finish | endif
 let g:loaded_autoload_plugins_asyncrun = 1
 
 function! plugins#asyncrun#post() abort
-    let g:asyncrun_open = 10                                        " Show quickfix when executing command
+    let g:asyncrun_open = 0                                         " Show quickfix when executing command
     let g:asyncrun_bell = 0                                         " Ring bell when job finished
     let g:quickfix_run_scroll = 0                                   " Scroll when running code
     let g:asyncrun_raw_output = 0                                   " Don't process errors on output

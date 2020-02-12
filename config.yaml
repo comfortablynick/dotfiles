@@ -2,7 +2,7 @@ config:
   backup: true
   banner: false
   create: true
-  dotpath: dotfiles
+  dotpath: ~/dotfiles
   ignoreempty: false
   keepdot: true
   link_dotfile_default: nolink
@@ -95,10 +95,6 @@ dotfiles:
     dst: ~/.config/powerline
     link: link
     src: .config/powerline
-  d_profiles:
-    dst: ~/.conan/profiles
-    link: link
-    src: .conan/profiles
   d_shell:
     dst: ~/.config/shell
     link: link
@@ -232,7 +228,6 @@ profiles:
     - d_legit
     - d_nvim
     - d_powerline
-    - d_profiles
     - d_shell
     - d_topydo
     - d_tmux

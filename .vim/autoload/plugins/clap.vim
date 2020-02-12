@@ -17,9 +17,9 @@ function! plugins#clap#post() abort
     " `:Clap dot` to open some dotfiles quickly.
     let g:clap_provider_dot = {
         \ 'source': [
-        \     '~/dotfiles/dotfiles/.config/nvim/init.vim',
-        \     '~/dotfiles/dotfiles/bashrc.sh',
-        \     '~/dotfiles/dotfiles/tmux.conf',
+        \     '$DOTFILES/.config/nvim/init.vim',
+        \     '$DOTFILES/bashrc.sh',
+        \     '$DOTFILES/tmux.conf',
         \ ],
         \ 'sink': 'e',
         \ }
@@ -27,12 +27,6 @@ function! plugins#clap#post() abort
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
     nnoremap <silent> <Leader>h :Clap command_history<CR>
-
-    "Autocmds
-"     augroup autoload_plugins_clap
-"         autocmd!
-"         autocmd User ClapOnExit setlocal relativenumber
-"     augroup END
 endfunction
 
 " Clap providers

@@ -73,7 +73,7 @@ fpath=($XDG_CONFIG_HOME/zsh/completions
     $fpath)
 
 # Environment variables {{{2
-export DOTFILES="$HOME/dotfiles/dotfiles"                       # Dotfile dir
+export DOTFILES="$HOME/dotfiles"
 export VISUAL=nvim                                              # Set default visual editor
 export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting

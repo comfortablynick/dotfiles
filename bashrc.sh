@@ -39,7 +39,7 @@ shopt -s autocd        # Auto cd if entering dir name at prompt
 
 # Environment variables {{{2
 export CURRENT_SHELL=bash
-BASEDIR="${HOME}/dotfiles/dotfiles"    # Location of includes dir
+BASEDIR="${HOME}/dotfiles"             # Location of includes dir
 export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look her
 
 # Functions {{{1

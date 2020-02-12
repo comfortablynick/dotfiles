@@ -28,6 +28,8 @@ function! plugins#vista#post() abort
         \ || exists('g:loaded_lightline')
         \ || exists('g:loaded_eleline')
     let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
+
+    nnoremap <silent><Leader>v :Vista!!<CR>
 endfunction
 
 " Icons {{{

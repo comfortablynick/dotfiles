@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Parse env settings from TOML file for shells."""
-import argparse
+import argparse  # {{{1
 import hashlib
 import logging
 import os
@@ -18,14 +18,15 @@ try:
 except ModuleNotFoundError:
     from toml import loads as parse
 
-# globals {{{1
+# Globals {{{1
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
 RE_CMD = re.compile(r"\$\(")
 RE_AND = re.compile(r" && ")
+RE_SPACE = re.compile(r"\s")
 
-
-def get_file_hash(filepath: str) -> str:  # {{{1
+# Functions {{{1
+def get_file_hash(filepath: str) -> str:  # {{{2
     """Get sha hash of filepath.
 
     Hash can be compared to determine if changes were made to file.
@@ -61,7 +62,7 @@ def get_file_hash(filepath: str) -> str:  # {{{1
     return hash_sha.hexdigest()
 
 
-def get_env_objs(toml: dict) -> Iterator[dict]:  # {{{1
+def get_env_objs(toml: dict) -> Iterator[dict]:  # {{{2
     """Get dict of env objects from TOML data."""
     for k in toml.keys():
         for d in toml[k]:
@@ -69,14 +70,14 @@ def get_env_objs(toml: dict) -> Iterator[dict]:  # {{{1
             yield d
 
 
-def get_toml(file_path: str) -> dict:  # {{{1
+def get_toml(file_path: str) -> dict:  # {{{2
     """Return toml data from file."""
     with open(file_path, "r", encoding="utf-8") as f:
         toml = parse(f.read())
     return toml
 
 
-def write_shell_file(shell_vars: list, file: str) -> None:  # {{{1
+def write_shell_file(shell_vars: list, file: str) -> None:  # {{{2
     """Write settings file to disk, formatted for shell.
 
     Writes to stdout if no valid file is specified.
@@ -89,12 +90,12 @@ def write_shell_file(shell_vars: list, file: str) -> None:  # {{{1
     f.close()
 
 
-def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
+def is_shell_match(var_shell, target_shell) -> bool:  # {{{2
     """Return true if var is valid for target shell."""
     return bool(set(var_shell) & set(target_shell))
 
 
-def do_eval(v: str) -> str:  # {{{1
+def do_eval(v: str) -> str:  # {{{2
     """Do python eval, then shell eval."""
     pre = v
     try:
@@ -109,7 +110,7 @@ def do_eval(v: str) -> str:  # {{{1
     return out
 
 
-def get_shell_vars(  # {{{1
+def get_shell_vars(  # {{{2
     toml: dict, shell: str, print_comments: bool = False
 ) -> list:
     """Get shell script to create vars for given shell.
@@ -151,21 +152,29 @@ def get_shell_vars(  # {{{1
             var_def = var_defs[shell][var["var_type"]]
             k = var.get("key")
             a = var.get("args", var_def.get("default_args"))
+            eval = var.get("eval")
+            quote = var.get("quote")
 
             if isinstance(var["val"], list):
                 # Probably path array
                 v = " ".join(map(str, var["val"]))
             else:
                 v = str(var.get("val"))
-            if var.get("quote"):
-                v = repr(v)
+
+            # if var.get("quote") is not False or (RE_SPACE.search(v) and not eval):
+            #     v = repr(v)
+
+            if quote is not False and not eval:
+                if quote or RE_SPACE.search(v):
+                    v = repr(v)
+
             # Convert posix subshell `$()` to fish `()`
             # Convert posix `&&` to fish `; and`
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
 
-            if var.get("eval"):
+            if eval:
                 v = do_eval(v)
 
             if var["var_type"] == "path":
@@ -186,7 +195,7 @@ def get_shell_vars(  # {{{1
     return all_vars
 
 
-def process_args(args: list):  # {{{1
+def process_args(args: list):  # {{{2
     """Parse command line input."""
     parser = argparse.ArgumentParser(
         prog="parse_env", description="parse shell environment from TOML config file"
@@ -226,13 +235,13 @@ def process_args(args: list):  # {{{1
     return parser.parse_args(args)
 
 
-def main():  # {{{1
+def main():  # {{{2
     """Script entry point."""
     try:
         sys.argv[1]
         cli_args = sys.argv[1:]
     except IndexError:
-        cli_args = [os.path.expanduser("~/dotfiles/dotfiles/env.toml"), "-dd"]
+        cli_args = [os.path.expanduser("~/dotfiles/env.toml"), "-dd"]
     finally:
         args = process_args(cli_args)
 
@@ -262,6 +271,8 @@ def main():  # {{{1
         write_shell_file(shell_vars=shell_vars, file=None)
 
 
-# Run {{{1
+# Run {{{2
 if __name__ == "__main__":
     main()
+
+# vim:fdl=1:

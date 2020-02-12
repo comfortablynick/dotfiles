@@ -1,5 +1,5 @@
 # cdp :: cd with fzf preview
-function cdp() {
+cdp() {
     if [[ $# -ne 0 ]]; then
         builtin cd "$@"
         return

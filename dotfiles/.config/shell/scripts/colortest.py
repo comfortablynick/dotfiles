@@ -66,3 +66,16 @@ for i, (r, g, b) in enumerate(colored_palette + grayscale_palette, 16):
         print()
     else:
         print(" ", end="")
+
+s = "/\\/\\/\\/\\/\\"
+s = f"{s*8}"
+for i in range(77):
+    r = 255 - (i * 256 / 76)
+    g = i * 510 / 76
+    b = i * 255 / 76
+    if g > 255:
+        g = 510 - g
+    print(f"{esc}48;2;{r}{g}{b}m", end="")
+    print(f"{esc}38;2;{255-r}{255-g}{255-b}m", end="")
+    print(f"{s[i:i+1]}", end="")
+print()

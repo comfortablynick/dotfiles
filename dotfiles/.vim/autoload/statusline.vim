@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-11 12:53:42 CST
+" Last Change: 2020-02-11 20:58:21 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -33,6 +33,27 @@ let s:LinterOK = ''
 
 
 " Functions {{{1
+function! statusline#bufnr() abort
+    let bufnr = bufnr('%')
+    let nums = [
+        \ "\u24ea",
+        \ "\u2460",
+        \ "\u2461",
+        \ "\u2462",
+        \ "\u2463",
+        \ "\u2464",
+        \ "\u2465",
+        \ "\u2466",
+        \ "\u2467",
+        \ "\u2468",
+        \ "\u2469",
+        \ "\u2470",
+        \]
+    return len(nums) < bufnr ?
+        \ '['.bufnr.']' :
+        \ ' '.get(nums, bufnr('%'), bufnr('%')).' '
+endfunction
+
 function! statusline#mode() abort
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
@@ -349,6 +370,11 @@ function! s:coc_error() abort "{{{2
   endif
   return trim(join(errmsgs, ' ') . ' ')
 endfunction
+
+" function! s:ale_error() abort "{{{2
+"     if exists('*ale#statusline#Count')
+"
+" endfunction
 
 function! s:coc_warn() abort " {{{2
   let info = get(b:, 'coc_diagnostic_info', {})

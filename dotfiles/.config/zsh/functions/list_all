@@ -1,0 +1,7 @@
+list_all() {
+    emulate -L zsh
+    if [[ $LS_AFTER_CD -eq 1 ]] && [[ $PWD != $HOME ]]; then
+        eval "$LS_AFTER_CD_COMMAND"
+    fi
+}
+# vim:ft=zsh:

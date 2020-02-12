@@ -89,6 +89,11 @@ autoload -Uz remove_last_history_entry
 autoload -Uz fh
 autoload -Uz cdp
 autoload -Uz mc
+autoload -Uz cd
+
+# chpwd functions {{{3
+autoload -Uz list_all
+chpwd_functions+=("list_all")
 
 # Shell opts {{{1
 # General {{{2
@@ -159,29 +164,36 @@ source $ZINIT[HOME_DIR]/bin/zinit.zsh
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Zinit Plugin Definitions {{{2
+# powerlevel10k {{{2
 zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
 zinit load romkatv/powerlevel10k
 
+# Pure {{{2
 zinit ice pick"async.zsh" src"pure.zsh" if'[[ $ZSH_THEME = pure ]]'
 zinit light sindresorhus/pure
 
+# Completions {{{2
 zinit ice wait"0" blockf lucid
 zinit light zsh-users/zsh-completions
 
+# Autosuggestions {{{2
 zinit ice wait"0" atload"_zsh_autosuggest_start" lucid
 zinit light zsh-users/zsh-autosuggestions
 
+# Syntax {{{2
 zinit ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
 zinit light zdharma/fast-syntax-highlighting
 
+# FZF {{{2
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
+# LS_COLORS {{{2
+# Use my fork of trapd00r plugin
 zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
     atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
-zinit light trapd00r/LS_COLORS
+zinit light comfortablynick/LS_COLORS
 
 # Theme / appearance options {{{1
 # Alien minimal {{{2
@@ -235,32 +247,6 @@ export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
 export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
-
-
-# Functions {{{1
-# cd :: cd with fuzzy find {{{2
-function cd() {
-    if [[ $# -ne 0 ]]; then
-        builtin cd "$@"
-        return
-    fi
-    local fuzzy_finder="fzy"
-    #     local lsd=$(eval "command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-    # -o -type d -print 2> /dev/null | sort | cut -b3-")
-    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | $fuzzy_finder)
-    # local dir="$(printf '%s\n' "${lsd[@]}" | $fuzzy_finder)"
-    [[ ${#dir} -ne 0 ]] || return 0
-    builtin cd "$dir"
-}
-
-# chpwd :: execute on directory change {{{2
-chpwd() {
-    # List directory contents
-    # Ignore if LS_AFTER_CD is not set, or we are in HOME
-    { [[ $LS_AFTER_CD -ne 1 ]] || [[ $PWD = $HOME ]] } && return
-    ls --group-directories-first 2>/dev/null
-    # exa --group-directories-first
-}
 
 # Shell startup {{{1
 # Debug end {{{2

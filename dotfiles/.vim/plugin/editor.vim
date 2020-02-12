@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-07 12:47:59 CST
+" Last Change: 2020-02-11 18:06:03 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -41,8 +41,17 @@ cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
-inoreabbrev <expr>
-    \ fff syntax#is_comment_line() ? '{{{' : printf(&commentstring, '{{{')
+function! Comment() abort
+    let l:open = matchstr(&foldmarker, '^[^,]*')
+    if syntax#is_comment_line()
+        let l:out = l:open
+    else
+        let l:out = printf(&commentstring, l:open)
+    endif
+    return l:out."\<C-R>=editor#eatchar('\s')\<CR>"
+endfunction
+
+inoreabbrev <expr> fff Comment()
 
 " # Autocmds
 augroup plugin_editor

@@ -1,0 +1,12 @@
+# cd with fuzzy find
+cd() {
+    if [[ $# -ne 0 ]]; then
+        builtin cd "$@"
+        return
+    fi
+    local fuzzy_finder="fzy"
+    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | $fuzzy_finder)
+    [[ ${#dir} -ne 0 ]] || return 0
+    builtin cd "$dir"
+}
+# vim:ft=zsh:

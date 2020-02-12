@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-05 08:36:09 CST
+" Last Change: 2020-02-12 09:31:56 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -24,9 +24,10 @@ augroup END
 
 " Load packages that are safe to defer
 function! s:deferred_load() abort
-    packadd targets.vim
-    packadd ale
-    packadd tcomment_vim
+    silent! packadd targets.vim
+    silent! packadd ale
+    silent! packadd tcomment_vim
+    silent! packadd asyncrun.vim
 
     if $MOSH_CONNECTION != 1
         packadd vim-devicons
@@ -37,7 +38,5 @@ function! s:deferred_load() abort
     endif
 
     " Load local vimrc if env var
-    if exists('*localrc#load_from_env')
-        call localrc#load_from_env()
-    endif
+    call localrc#load_from_env()
 endfunction

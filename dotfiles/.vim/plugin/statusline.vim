@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-11 14:52:41 CST
+" Last Change: 2020-02-11 20:59:39 CST
 " ====================================================
 " let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
@@ -58,6 +58,27 @@ let s:sl  = {
     \ },
     \ }
 
+function! s:def(fn, hl) abort "{{{2
+    return printf('%%#%s#%%{%s()}%%* ', a:hl, a:fn)
+endfunction
+
+function! Statusline() abort "{{{2
+    let l:bufnr = s:def('statusline#bufnr', 'WarningMsg')
+    let l:git = '%{statusline#git_status()}'
+    let l:fname = '%{statusline#file_name()}'
+    let l:warnings = '%{statusline#linter_warnings()}'
+    let l:errors = '%{statusline#linter_errors()}'
+    return printf('%%<%s%s%s%s%s',
+        \ l:bufnr,
+        \ l:git,
+        \ l:fname,
+        \ l:warnings,
+        \ l:errors,
+        \ )
+endfunction
+
+let &statusline = Statusline()
+finish
 " General {{{1
 function! SL_bufnr() abort " {{{2
     let bufnr = bufnr('%')

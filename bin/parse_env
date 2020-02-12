@@ -161,9 +161,6 @@ def get_shell_vars(  # {{{2
             else:
                 v = str(var.get("val"))
 
-            # if var.get("quote") is not False or (RE_SPACE.search(v) and not eval):
-            #     v = repr(v)
-
             if quote is not False and not eval:
                 if quote or RE_SPACE.search(v):
                     v = repr(v)

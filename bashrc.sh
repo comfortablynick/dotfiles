@@ -44,27 +44,13 @@ export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look her
 
 # Functions {{{1
 # cd :: wrapper for ls on cd {{{2
-# each console has its own file to save PWD
-PrevDir=$(tty)
-PrevDir=/tmp/prev-dir${PrevDir////-}
-#don't ls when shell launched
-echo "$PWD" >"$PrevDir"
-LsAfterCd() {
-    [[ $(<"$PrevDir") == "$PWD" ]] || [[ $PWD == "$HOME" ]] && return 0
-
-    ls -A --group-directories-first --color=always
-
-    echo "$PWD" >"$PrevDir"
+cd() {
+    builtin cd "$@" && {
+        if [[ $PWD != "$HOME" ]] && [[ $LS_AFTER_CD -eq 1 ]]; then
+            ls -A --group-directories-first --color=always
+        fi
+    }
 }
-PROMPT_COMMAND=LsAfterCd
-
-# cd() {
-#     builtin cd "$@" && {
-#         if [[ $PWD != "$HOME" ]] || [[ $LS_AFTER_CD -eq 1 ]]; then
-#             ls -A --group-directories-first --color=always
-#         fi
-#     }
-# }
 
 # cf :: fuzzy cd {{{2
 cf() {

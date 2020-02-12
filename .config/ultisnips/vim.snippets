@@ -28,7 +28,7 @@ from pathlib import PurePath
 def file_relative_path(path):
 	"""Return path relative to .vim directory."""
 	fp = PurePath(path)
-	return fp.relative_to(os.path.expanduser("~/dotfiles/dotfiles/.vim"))
+	return fp.relative_to(os.path.expandvars("$DOTDIR/.vim"))
 endglobal
 
 # Author:   ${1:`!v g:snippets_author`} <${2:`!v g:snippets_author_email`}>

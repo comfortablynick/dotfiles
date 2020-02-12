@@ -59,7 +59,7 @@ function! quickfix#close_empty() abort
     endif
     for buffer in tabpagebuflist()
         if bufname(buffer) ==? ''
-            call quickfix#toggle()
+            cclose
             return
         endif
     endfor

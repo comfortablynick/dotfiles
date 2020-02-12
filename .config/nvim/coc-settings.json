@@ -29,6 +29,9 @@
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.formatOnSaveFiletypes": [],
 
+  // Snippets
+  "snippets.userSnippetsDirectory": "~/.config/ultisnips",
+
   // Rust
   "rust-analyzer.enableCargoWatchOnStartup": "enabled",
   // "rust-client.channel": "nightly",

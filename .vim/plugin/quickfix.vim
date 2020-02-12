@@ -3,7 +3,7 @@
 " Description: Commands for quickfix window
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-11 14:08:34 CST
+" Last Change: 2020-02-12 15:33:17 CST
 " ====================================================
 if exists('g:loaded_plugin_quickfix')
     \ || exists('g:no_load_plugins')

@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-12 16:40:29 CST
+" Last Change: 2020-02-13 14:58:09 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -33,25 +33,51 @@ let s:LinterOK = ''
 
 
 " Functions {{{1
+function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
+    let g:statusline_hg = get(g:, 'statusline_hg', [])
+    let bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
+    let fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
+    let opt = empty(a:opt) ? ['none', 'none'] : [a:opt, a:opt]
+    let mode = ['gui', 'cterm']
+    let cmd = 'hi '.a:group.' term='.opt[1]
+    for i in (range(0, len(mode)-1))
+        let cmd .= printf(' %sbg=%s %sfg=%s %s=%s',
+            \ mode[i], bg[i],
+            \ mode[i], fg[i],
+            \ mode[i], opt[i]
+            \ )
+    endfor
+    let g:statusline_hg += [cmd]
+    execute cmd
+endfunction
+
+function! statusline#get_highlight(src) abort
+    let hl = execute('highlight '.a:src)
+    let mregex = '\v(\w+)\=(\S+)'
+    let idx = 0
+    let arr = {}
+    while 1
+        let idx = match(hl, mregex, idx)
+        if idx == -1
+            break
+        endif
+        let m = matchlist(hl, mregex, idx)
+        let idx += len(m[0])
+        let arr[m[1]]=m[2]
+    endwhile
+    return arr
+endfunction
+
+function! statusline#extract(group, what, ...) abort
+    if a:0 == 1
+        return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
+    else
+        return synIDattr(synIDtrans(hlID(a:group)), a:what)
+    endif
+endfunction
+
 function! statusline#bufnr() abort
-    let bufnr = bufnr('%')
-    let nums = [
-        \ "\u24ea",
-        \ "\u2460",
-        \ "\u2461",
-        \ "\u2462",
-        \ "\u2463",
-        \ "\u2464",
-        \ "\u2465",
-        \ "\u2466",
-        \ "\u2467",
-        \ "\u2468",
-        \ "\u2469",
-        \ "\u2470",
-        \]
-    return len(nums) < bufnr ?
-        \ '['.bufnr.']' :
-        \ ' '.get(nums, bufnr('%'), bufnr('%')).' '
+    return '['.bufnr('%').']'
 endfunction
 
 function! statusline#mode() abort
@@ -224,40 +250,11 @@ function! statusline#file_name() abort "{{{2
     let special = s:is_special_file()
     if special != -1 | return special | endif
 
-    let f = @%
-    let s = expand('%:t')
-    let ww = winwidth(0)
-    if ww > s:MinWidth
-        " Get full path and truncate gracefully
-        let p = substitute(f, expand('~'), '~', '')
-        let s = p
-        let chars = ww <= s:MedWidth ? 2 :
-            \ ww <= s:MaxWidth ? 3 :
-            \ 999 " No truncation
-        if chars < 999
-            if !empty(statusline#coc_status()) | let chars -= 1 | endif
-            let Shorten = { part -> part[0:chars - 1] }
-            let parts = split(p, '/')
-            let i = 1
-            if len(parts) > 1
-                for part in parts
-                    if i == 1
-                        let s = Shorten(part, chars)
-                    elseif i == len(parts)
-                        let s = s.'/'.part
-                    else
-                        let s = s.'/'.Shorten(part, chars)
-                    endif
-                    let i += 1
-                endfor
-            endif
-        endif
+    let fname = fnamemodify(expand('%'), ':~:.')
+    if winwidth(0) < g:sl.width.min
+        let fname = pathshorten(fname)
     endif
-    return printf('%s%s%s',
-        \ s:read_only(),
-        \ s,
-        \ s:modified()
-        \ )
+    return fname
 endfunction
 
 function! statusline#file_size() abort "{{{2
@@ -282,7 +279,7 @@ function! statusline#file_encoding() abort "{{{2
     return &fileencoding !=? 'utf-8' ? &fileencoding : ''
 endfunction
 
-function! statusline#tab_name() abort "{{{2
+function! statusline#tab_name() abort "{{{3
   let fname = @%
   return fname =~? '__Tagbar__' ? 'Tagbar' :
         \ fname =~? 'NERD_tree' ? 'NERDTree' :
@@ -390,16 +387,18 @@ endfunction
 
 function! statusline#linter_errors() abort " {{{2
     let coc = s:coc_error()
-    return empty(coc) ?
-        \ lightline#ale#errors() :
-        \ coc
+    return coc
+    " return empty(coc) ?
+    "     \ lightline#ale#errors() :
+    "     \ coc
 endfunction
 
 function! statusline#linter_warnings() abort " {{{2
     let coc = s:coc_warn()
-    return empty(coc) ?
-        \ lightline#ale#warnings() :
-        \ coc
+    return coc
+    " return empty(coc) ?
+    "     \ lightline#ale#warnings() :
+    "     \ coc
 endfunction
 
 " vim:fdm=expr:

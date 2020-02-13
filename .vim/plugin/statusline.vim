@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-11 20:59:39 CST
+" Last Change: 2020-02-13 15:05:52 CST
 " ====================================================
 " let g:loaded_plugin_statusline = 1
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
@@ -14,15 +14,15 @@ if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
 endif
 let g:loaded_plugin_statusline = 1
 
-lua require'lightline'
-lua ll.init()
-finish
+" lua require'lightline'
+" lua ll.init()
+" finish
 
 " Variables {{{1
 " General
 let g:devicons = $MOSH_CONNECTION ? 0 : 1
-" s:sl {{{2
-let s:sl  = {
+" g:sl {{{2
+let g:sl  = {
     \ 'width': {
     \     'min': 90,
     \     'med': 140,
@@ -31,7 +31,7 @@ let s:sl  = {
     \ 'separator': '︱',
     \ 'symbol': {
     \     'git_branch': '',
-    \     'modified': '+',
+    \     'modified': '●',
     \     'warning_sign' : '•',
     \     'error_sign'   : '✘',
     \     'success_sign' : '✓',
@@ -59,25 +59,31 @@ let s:sl  = {
     \ }
 
 function! s:def(fn, hl) abort "{{{2
-    return printf('%%#%s#%%{%s()}%%* ', a:hl, a:fn)
+    return printf('%%#%s#%%{%s()}%%*', a:hl, a:fn)
 endfunction
 
-function! Statusline() abort "{{{2
-    let l:bufnr = s:def('statusline#bufnr', 'WarningMsg')
-    let l:git = '%{statusline#git_status()}'
-    let l:fname = '%{statusline#file_name()}'
-    let l:warnings = '%{statusline#linter_warnings()}'
-    let l:errors = '%{statusline#linter_errors()}'
-    return printf('%%<%s%s%s%s%s',
-        \ l:bufnr,
-        \ l:git,
-        \ l:fname,
-        \ l:warnings,
-        \ l:errors,
-        \ )
-endfunction
+" Statusline definition {{{1
+" let g:statusline_hi = statusline#get_highlight('StatusLine')
+"
+" highlight IsModified guibg=#5f8787 ctermbg=66 ctermfg=160 guifg=#f01d22 gui=bold cterm=bold
+" highlight User1 guibg=#5f8787 ctermbg=66 guifg=#1c1c1c ctermfg=234 gui=italic,bold cterm=italic,bold
 
-let &statusline = Statusline()
+" call statusline#set_highlight(
+"     \ 'IsModified',
+"     \ [get(g:statusline_hi, 'guifg'), get(g:statusline_hi, 'ctermfg')],
+"     \ ['Red', 'Red'],
+"     \ '',
+"     \ )
+
+set statusline+=%(\ %#WarningMsg#[%n]%*\ %)
+set statusline+=%{statusline#git_status()}
+set statusline+=%<
+" set statusline+=%1*%(\ %{&mod?statusline#file_name():''}%)%*
+" set statusline+=%(\ %{&mod?'':statusline#file_name()}%)
+" set statusline+=\ %#IsModified#%{&modified?g:sl.symbol.modified:''}%* " or +M for plus sign
+set statusline+=%(\ %{statusline#file_name()}\ %M%)
+" set statusline+=%(\ %{&modified?g:sl.symbol.modified:''}%)
+
 finish
 " General {{{1
 function! SL_bufnr() abort " {{{2
@@ -126,18 +132,18 @@ function! SL_filename() abort " {{{2
 endfunction
 
 function! SL_modified() abort " {{{2
-    return &modified ? s:sl.symbol.modified : ''
+    return &modified ? g:sl.symbol.modified : ''
 endfunction
 
 function! SL_format_and_encoding() abort " {{{2
-    let encoding = winwidth(0) < s:sl.width.min
+    let encoding = winwidth(0) < g:sl.width.min
         \ ? ''
         \ : strlen(&fileencoding)
         \ ? &fileencoding
         \ : &encoding
-    let format = winwidth(0) > s:sl.width.med
+    let format = winwidth(0) > g:sl.width.med
         \ ? &fileformat
-        \ : winwidth(0) < s:sl.width.min
+        \ : winwidth(0) < g:sl.width.min
         \ ? ''
         \ : &fileformat[0]
     return printf('%s[%s]', encoding, format)
@@ -198,7 +204,7 @@ function! SL_toggled() abort " {{{2
         let str = call(v, [])
         let sl .= empty(sl)
             \ ? str . ' '
-            \ : s:sl.separator . ' ' . str . ' '
+            \ : g:sl.separator . ' ' . str . ' '
     endfor
     return sl[:-2]
 endfunction
@@ -221,14 +227,14 @@ function! SL_diagnostic(mode) abort " {{{2
     let ale = SL_ale(a:mode)
     let errors = coc[0] + ale[0]
     let warnings = coc[1] + ale[1]
-    return s:sl_get_parsed_linting_str(errors, warnings, a:mode)
+    return g:sl_get_parsed_linting_str(errors, warnings, a:mode)
 endfunction
 
 " Plugin interfaces {{{1
 function! SL_fugitive() abort " {{{2
-    if winwidth(0) < s:sl.width.min | return '' | endif
+    if winwidth(0) < g:sl.width.min | return '' | endif
     if !exists('*FugitiveHead') | return '' | endif
-    let icon = s:sl.symbol.git_branch
+    let icon = g:sl.symbol.git_branch
     let head = FugitiveHead()
     return head !=# 'master' ? icon.' '.head : icon
 endfunction
@@ -236,7 +242,7 @@ endfunction
 function! SL_signify() abort " {{{2
     if exists('*sy#repo#get_stats')
         let h = sy#repo#get_stats()
-        return h !=# [-1, -1, -1] && winwidth(0) > s:sl.width.min && h !=# [0, 0, 0]
+        return h !=# [-1, -1, -1] && winwidth(0) > g:sl.width.min && h !=# [0, 0, 0]
             \ ? printf('+%d ~%d -%d', h[0], h[1], h[2])
             \ : ''
     else
@@ -307,23 +313,23 @@ endfunction
 
 function! s:set_sl_colors() abort " {{{2
     let statusline = GetHighlight('StatusLine')
-    call SL_hi('User1', s:sl.colors['main'], s:sl.colors['background'], 'bold')
-    call SL_hi('User2', s:sl.colors['backgroundLight'], s:sl.colors['text'], 'none')
+    call SL_hi('User1', g:sl.colors['main'], g:sl.colors['background'], 'bold')
+    call SL_hi('User2', g:sl.colors['backgroundLight'], g:sl.colors['text'], 'none')
     " call SL_hi('User2', statusline['ctermfg'], statusline)
-    call SL_hi('User3', s:sl.colors['backgroundLight'], s:sl.colors['textDark'], 'none')
-    call SL_hi('User4', s:sl.colors['main'], s:sl.colors['background'], 'none')
+    call SL_hi('User3', g:sl.colors['backgroundLight'], g:sl.colors['textDark'], 'none')
+    call SL_hi('User4', g:sl.colors['main'], g:sl.colors['background'], 'none')
 
     " Modified state
-    call SL_hi('User5', s:sl.colors['backgroundLight'], s:sl.colors['red'], 'bold')
+    call SL_hi('User5', g:sl.colors['backgroundLight'], g:sl.colors['red'], 'bold')
 
     " Success & error states
-    call SL_hi('User6', s:sl.colors['backgroundLight'], s:sl.colors['green'], 'bold')
-    call SL_hi('User7', s:sl.colors['backgroundLight'], s:sl.colors['orange'], 'bold')
+    call SL_hi('User6', g:sl.colors['backgroundLight'], g:sl.colors['green'], 'bold')
+    call SL_hi('User7', g:sl.colors['backgroundLight'], g:sl.colors['orange'], 'bold')
     " Inactive statusline
-    call SL_hi('User8', s:sl.colors['backgroundDark'], s:sl.colors['backgroundLight'], 'none')
+    call SL_hi('User8', g:sl.colors['backgroundDark'], g:sl.colors['backgroundLight'], 'none')
 endfunction
 
-function! s:set_colors() abort
+function! s:set_colors() abort "{{{2
     hi link User3 StatusLine
     hi link User8 StatusLineNC
 endfunction
@@ -337,7 +343,7 @@ function! s:toggle_sl_item(var, funcref) abort " {{{2
     endif
 endfunction
 
-function! SL_extract(group, what, ...) abort
+function! SL_extract(group, what, ...) abort "{{{2
     if a:0 == 1
         return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
     else
@@ -345,7 +351,7 @@ function! SL_extract(group, what, ...) abort
     endif
 endfunction
 
-function! GetHighlight(src) abort
+function! GetHighlight(src) abort "{{{2
     let hl = execute('highlight '.a:src)
     let mregex = '\v(\w+)\=(\S+)'
     let idx = 0
@@ -365,8 +371,8 @@ endfunction
 function! Get_SL(...) abort " {{{2
     let sl = ''
     " Custom functions
-    if has_key(s:sl.apply, &filetype)
-        let fun = get(s:sl.apply, &filetype)
+    if has_key(g:sl.apply, &filetype)
+        let fun = get(g:sl.apply, &filetype)
         let len_f = len(fun)
         if len_f == 1
             let sl = '%{'.fun[0].'}'
@@ -376,7 +382,7 @@ function! Get_SL(...) abort " {{{2
         else
             for i in range(0, len_f - 2)
                 if exists('*'.fun[i])
-                    let sl .= (i != 0 ? s:sl.separator.' ' : '') .
+                    let sl .= (i != 0 ? g:sl.separator.' ' : '') .
                         \ '%{'.fun[i].'}'
                 endif
             endfor
@@ -416,9 +422,9 @@ function! Get_SL(...) abort " {{{2
 
     " Git
     let sl .= '%( %{SL_git_hunks()} %)'
-    let sl .= '%(%{SL_fugitive()} '.s:sl.separator.'%)'
+    let sl .= '%(%{SL_fugitive()} '.g:sl.separator.'%)'
 
-    let sl .= '%( %{SL_spell()} '.s:sl.separator.'%)'
+    let sl .= '%( %{SL_spell()} '.g:sl.separator.'%)'
     let sl .= '%( %{SL_filetype()} %)'
 
     let sl .= '%4*'
@@ -434,7 +440,7 @@ function! Get_SL(...) abort " {{{2
     return sl
 endfunction
 
-function! s:sl_init() abort " {{{2
+function! g:sl_init() abort " {{{2
     set laststatus=2
     call s:set_sl_colors()
     " call s:set_colors()
@@ -451,7 +457,7 @@ function! s:apply_sl(...) abort " {{{2
     if &buftype ==# 'terminal'
         setlocal statusline&
         set ruler
-    elseif index(s:sl.ignore, &filetype) < 0
+    elseif index(g:sl.ignore, &filetype) < 0
         if !exists('a:1')
             let &statusline = Get_SL()
         else
@@ -462,18 +468,18 @@ function! s:apply_sl(...) abort " {{{2
     endif
 endfunction
 
-function! s:sl_get_parsed_linting_str(errors, warnings, mode) abort " {{{2
+function! g:sl_get_parsed_linting_str(errors, warnings, mode) abort " {{{2
     let errors_str = a:errors != 0 ?
-        \ printf('%s %s', s:sl.symbol.error_sign, a:errors)
+        \ printf('%s %s', g:sl.symbol.error_sign, a:errors)
         \ : ''
     let warnings_str = a:warnings != 0 ?
-        \ printf('%s %s', s:sl.symbol.warning_sign, a:warnings)
+        \ printf('%s %s', g:sl.symbol.warning_sign, a:warnings)
         \ : ''
     let def_str = errors_str.' '.warnings_str
 
     " Trim spaces
     let def_str = substitute(def_str, '^\s*\(.\{-}\)\s*$', '\1', '')
-    let success_str = s:sl.symbol.success_sign
+    let success_str = g:sl.symbol.success_sign
 
     if a:mode == 1
         return def_str
@@ -491,10 +497,10 @@ let s:args = [
     \       'hi_group', 'qf'
     \   ]
     \ ]
-command! -nargs=? -complete=custom,s:sl_complete_args SL
-    \ call s:sl_command(<f-args>)
+command! -nargs=? -complete=custom,g:sl_complete_args SL
+    \ call g:sl_command(<f-args>)
 
-function! s:sl_command(...) abort " {{{2
+function! g:sl_command(...) abort " {{{2
     let arg = exists('a:1') ? a:1 : 'clear'
 
     if arg ==# 'toggle'
@@ -520,7 +526,7 @@ function! s:sl_command(...) abort " {{{2
     endfor
 endfunction
 
-function! s:sl_complete_args(a, l, p) abort " {{{2
+function! g:sl_complete_args(a, l, p) abort " {{{2
     return join(s:args[0] + s:args[1], "\n")
 endfunction
 

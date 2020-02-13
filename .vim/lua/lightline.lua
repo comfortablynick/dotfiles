@@ -33,7 +33,9 @@ local vars = { -- {{{2
         linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
         linter_errors = vim.g.LL_nf ~= 1 and "✘" or "\u{f05e}",
         linter_ok = "",
-        lvimrc = [[ Ⓛ  ]],
+        lvimrc = [[Ⓛ ]],
+        -- lvimrc = "⚑",
+        -- lvimrc = "ʟʀc",
     },
 }
 
@@ -74,72 +76,72 @@ ll.mode_map = {
     t = {"TERMINAL", "TERM", "T"},
 }
 
-local lightline = { -- {{{2
-    tabline = {
-        left = {{"buffers"}},
-        right = {{"filesize"}},
-        -- preserve fold
-    },
-    active = {
-        left = {
-            {"mode", "paste"},
-            {"filename"},
-            {
-                "git_status",
-                "linter_checking",
-                "linter_errors",
-                "linter_warnings",
-            },
-        },
-        right = {
-            {"line_info"},
-            {"filetype", "fileencoding", "fileformat"},
-            {"coc_status"},
-            -- {"current_tag"},
-        },
-    },
-    inactive = {
-        left = {{"filename"}},
-        right = {{"line_info"}, {"filetype", "fileencoding", "fileformat"}},
-    },
-    component = {
-        mode = "%{v:lua.ll.vim_mode()}",
-        filename = "%<%{v:lua.ll.file_name()}",
-        git_status = "%{v:lua.ll.git_status()}",
-        filetype = "%{v:lua.ll.file_type()}",
-        fileencoding = "%{v:lua.ll.file_encoding()}",
-        fileformat = "%{v:lua.ll.file_format()}",
-        line_info = "%{v:lua.ll.line_info()}",
-        filesize = "%{v:lua.ll.file_size()}",
-        coc_status = "%{v:lua.ll.coc_status()}",
-        current_tag = "%{v:lua.ll.current_tag()}",
-    },
-    component_visible_condition = {
-        filetype = "v:lua.ll.file_type()",
-        fileencoding = "v:lua.ll.file_encoding()",
-        fileformat = "v:lua.ll.file_format()",
-        coc_status = "v:lua.ll.coc_status()",
-    },
-    component_expand = {
-        linter_checking = "lightline#ale#checking",
-        linter_warnings = "LL_LinterWarnings",
-        linter_errors = "LL_LinterErrors",
-        linter_ok = "lightline#ale#ok",
-        buffers = "lightline#bufferline#buffers",
-    },
-    component_type = {
-        readonly = "error",
-        linter_checking = "left",
-        linter_warnings = "warning",
-        linter_errors = "error",
-        linter_ok = "left",
-        buffers = "tabsel",
-        cocerror = "error",
-        cocwarn = "warn",
-    },
-    separator = {left = "", right = ""},
-    subseparator = {left = "|", right = "|"},
-}
+-- local lightline = { -- {{{2
+--     tabline = {
+--         left = {{"buffers"}},
+--         right = {{"filesize"}},
+--         -- preserve fold
+--     },
+--     active = {
+--         left = {
+--             {"mode", "paste"},
+--             {"filename"},
+--             {
+--                 "git_status",
+--                 "linter_checking",
+--                 "linter_errors",
+--                 "linter_warnings",
+--             },
+--         },
+--         right = {
+--             {"line_info"},
+--             {"filetype", "fileencoding", "fileformat"},
+--             {"coc_status"},
+--             -- {"current_tag"},
+--         },
+--     },
+--     inactive = {
+--         left = {{"filename"}},
+--         right = {{"line_info"}, {"filetype", "fileencoding", "fileformat"}},
+--     },
+--     component = {
+--         mode = "%{v:lua.ll.vim_mode()}",
+--         filename = "%<%{v:lua.ll.file_name()}",
+--         git_status = "%{v:lua.ll.git_status()}",
+--         filetype = "%{v:lua.ll.file_type()}",
+--         fileencoding = "%{v:lua.ll.file_encoding()}",
+--         fileformat = "%{v:lua.ll.file_format()}",
+--         line_info = "%{v:lua.ll.line_info()}",
+--         filesize = "%{v:lua.ll.file_size()}",
+--         coc_status = "%{v:lua.ll.coc_status()}",
+--         current_tag = "%{v:lua.ll.current_tag()}",
+--     },
+--     component_visible_condition = {
+--         filetype = "v:lua.ll.file_type()",
+--         fileencoding = "v:lua.ll.file_encoding()",
+--         fileformat = "v:lua.ll.file_format()",
+--         coc_status = "v:lua.ll.coc_status()",
+--     },
+--     component_expand = {
+--         linter_checking = "lightline#ale#checking",
+--         linter_warnings = "LL_LinterWarnings",
+--         linter_errors = "LL_LinterErrors",
+--         linter_ok = "lightline#ale#ok",
+--         buffers = "lightline#bufferline#buffers",
+--     },
+--     component_type = {
+--         readonly = "error",
+--         linter_checking = "left",
+--         linter_warnings = "warning",
+--         linter_errors = "error",
+--         linter_ok = "left",
+--         buffers = "tabsel",
+--         cocerror = "error",
+--         cocwarn = "warn",
+--     },
+--     separator = {left = "", right = ""},
+--     subseparator = {left = "|", right = "|"},
+-- }
 
 -- Component Functions {{{1
 function ll.is_not_file() -- {{{2
@@ -239,16 +241,17 @@ function ll.file_name() -- {{{2
         return not ll.is_not_file() and vim.bo.readonly and
                    vars.glyphs.read_only or ""
     end
-    local modified = function()
-        return
-            not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or
-                ""
-    end
-    local lvimrc = function()
-        local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
-        return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
-    end
-    return read_only() .. path() .. modified() .. lvimrc()
+    return read_only() .. path()
+end
+
+function ll.modified() -- {{{2
+    return not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or
+               ""
+end
+
+function ll.local_vimrc() -- {{{2
+    local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
+    return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
 end
 
 function ll.file_encoding() -- {{{2
@@ -371,7 +374,7 @@ end
 
 -- Statusline definition {{{1
 -- Set g:lightline {{{2
-vim.g.lightline = lightline
+-- vim.g.lightline = lightline
 
 -- Set manual statusline {{{1
 local function def(fn) -- {{{2
@@ -387,11 +390,13 @@ end
 function ll.statusline() -- {{{2
     local bufnr = define({fn = "bufnr", hl = "WarningMsg"})
     local fname = def("file_name")
+    local modified = def("modified")
+    local lvimrc = def("local_vimrc")
     local git = def("git_status")
     local warnings = def("linter_warnings")
     local errors = def("linter_errors")
-    local left = string.format("%%<%s%s%s%s%s", bufnr, git, fname, warnings,
-                               errors)
+    local left = string.format("%%<%s%s%s%s%s%s%s", bufnr, git, fname, modified,
+                               lvimrc, warnings, errors)
 
     local job_status = def("job_status")
     local coc = def("coc_status")

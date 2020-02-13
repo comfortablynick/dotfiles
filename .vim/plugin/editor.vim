@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-11 18:06:03 CST
+" Last Change: 2020-02-13 17:26:06 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -17,6 +17,8 @@ command! Dark  set background=dark
 " Lua async grep
 command! -nargs=+ -complete=dir -bar Grep
     \ lua require'tools'.async_grep(<q-args>)
+" Delete buffer without changing window layout
+command! -bang Bclose lua require'buffer'.kill(0, '<bang>')
 
 " Commonly mistyped commands
 command! WQ wq

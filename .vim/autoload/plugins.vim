@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-10 14:56:24 CST
+" Last Change: 2020-02-13 17:22:40 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 

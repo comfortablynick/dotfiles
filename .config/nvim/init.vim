@@ -87,7 +87,7 @@ endif
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
 set backup
-set backupdir=/tmp/neovim_backup//                              " Store backup files
+set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{2
 filetype plugin on                                              " Allow loading .vim files for different filetypes

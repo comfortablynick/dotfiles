@@ -5,3 +5,5 @@ Cargo.lock
 .cargo/
 .cache/
 .vscode*/
+.mypy_cache/
+node_modules/

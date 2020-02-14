@@ -3,24 +3,24 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-13 14:58:09 CST
+" Last Change: 2020-02-14 13:01:17 CST
 " ====================================================
 scriptencoding utf-8
 
 " Variables {{{1
 " Window widths {{{2
-let s:MinWidth = 90                                          " Width for using some expanded sections
-let s:MedWidth = 140                                         " Secondary width for some sections
-let s:MaxWidth = 200                                         " Largest width for some (unnecessary) sections
+let g:sl.width.min = 90                                          " Width for using some expanded sections
+let g:sl.width.med = 140                                         " Secondary width for some sections
+let g:sl.width.max = 200                                         " Largest width for some (unnecessary) sections
 
 " Symbols/glyphs {{{2
-let s:pl = get(g:, 'LL_pl', 0)
-let s:nf = get(g:, 'LL_nf', 0)
+" let s:pl = get(g:, 'LL_pl', 0)
+let s:nf = !$MOSH_CONNECTION
 let s:LineNoSymbol = ''                                     " Use  for line; alt: '␤'
 let s:GitSymbol = s:nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
 let s:BranchSymbol = ''                                    " Git branch symbol
 let s:LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
-let s:ROSymbol = s:pl ? ' ' : '--RO-- '                  " Read-only symbol
+let s:ROSymbol = ' '                                        " Read-only symbol
 let s:ModSymbol = ' [+]'                                     " File modified symbol
 let s:SimpleSep = $SUB ==# '|' ? 1 : 0                       " Use simple section separators instead of PL (no other effects)
 let s:FnSymbol = 'ƒ '                                        " Use for current function
@@ -30,7 +30,6 @@ let s:LinterChecking = s:nf ? "\uf110 " : '...'
 let s:LinterWarnings = s:nf ? "\uf071 " : '•'
 let s:LinterErrors = s:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
-
 
 " Functions {{{1
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
@@ -107,10 +106,10 @@ function! statusline#mode() abort
         \ 'packager':       'PACK',
         \ }
     let l:mode = get(l:mode_map, mode(), mode())
-    if winwidth(0) > s:MedWidth
+    if winwidth(0) > g:sl.width.med
         " No abbreviation
         let l:mode_out = l:mode[0]
-    elseif winwidth(0) > s:MinWidth
+    elseif winwidth(0) > g:sl.width.min
         " Medium abbreviation
         let l:mode_out = l:mode[1]
     else
@@ -163,16 +162,19 @@ function! statusline#line_info() abort
 endfunction
 
 function! statusline#file_type() abort "{{{2
+    if s:is_not_file() | return '' | endif
     let l:ftsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
         \ ''
-    let l:venv = statusline#venv_name()
-    if winwidth(0) > s:MedWidth
-        return &filetype.l:ftsymbol.l:venv
-    elseif winwidth(0) > s:MinWidth
-        let l:ext = expand('%:e')
-        return &filetype ==# 'help' ? 'help' : expand('%:e')
+    " Don't need venv if we have coc_status
+    let l:venv = exists('g:coc_status') ? '' : statusline#venv_name()
+    let l:out = ''
+    if winwidth(0) > g:sl.width.med
+        if empty(expand('%:e'))
+            let l:out .= &filetype
+        endif
+        return l:out.l:ftsymbol.l:venv
     endif
     return ''
 endfunction
@@ -185,7 +187,7 @@ function! statusline#file_format() abort "{{{2
     " No output if fileformat is unix (standard)
     return &fileformat !=? 'unix' ?
             \ s:is_not_file() ?
-            \ '' : winwidth(0) > s:MedWidth
+            \ '' : winwidth(0) > g:sl.width.med
             \ ? (&fileformat . ' ' . ffsymbol )
             \ : ''
         \ : ''
@@ -194,6 +196,7 @@ endfunction
 function! s:is_not_file() abort "{{{2
     " Return true if not treated as file
     let exclude = [
+        \ 'help',
         \ 'nerdtree',
         \ 'netrw',
         \ 'output',
@@ -220,8 +223,8 @@ function! s:modified() abort "{{{2
     return &filetype =~? 'help\|vimfiler' ? '' : &modified ? s:ModSymbol : &modifiable ? '' : '-'
 endfunction
 
-function! s:read_only() abort "{{{2
-    return &filetype !~? 'help' && &readonly ? s:ROSymbol : ''
+function! statusline#read_only() abort "{{{2
+    return !s:is_not_file() && &readonly ? g:sl.symbol.readonly : ''
 endfunction
 
 function! s:is_special_file() abort "{{{2
@@ -246,9 +249,9 @@ function! s:is_special_file() abort "{{{2
 endfunction
 
 function! statusline#file_name() abort "{{{2
-    if s:is_not_file() | return '' | endif
     let special = s:is_special_file()
     if special != -1 | return special | endif
+    if s:is_not_file() | return '' | endif
 
     let fname = fnamemodify(expand('%'), ':~:.')
     if winwidth(0) < g:sl.width.min
@@ -310,23 +313,22 @@ function! statusline#git_summary() abort "{{{2
 endfunction
 
 function! statusline#git_branch() abort "{{{2
-    let l:out = ''
     if exists('g:coc_git_status')
-        let l:out = g:coc_git_status
-    elseif exists('*fugitive#head')
-        let l:out = s:BranchSymbol.' '.fugitive#head()
+        return join(split(g:coc_git_status)[1:-1])
+    elseif exists('*FugitiveHead')
+        return FugitiveHead()
     endif
-    return substitute(l:out, 'master', '', '')
+    return ''
 endfunction
 
 function! statusline#git_status() abort "{{{2
-    if !s:is_not_file() && winwidth(0) > s:MinWidth
+    if !s:is_not_file() && winwidth(0) > g:sl.width.min
         let branch = statusline#git_branch()
         let hunks = statusline#git_summary()
-        return branch !=# '' ? printf('%s%s%s',
-            \ s:GitSymbol,
-            \ branch,
-            \ hunks !=# '' ? ' '.hunks : ''
+        return branch !=# '' ? printf('%s%s %s',
+            \ hunks !=# '' ? ' '.hunks : '',
+            \ ' '.substitute(branch, 'master', '', ''),
+            \ g:sl.symbol.branch
             \ ) : ''
     endif
     return ''
@@ -340,7 +342,7 @@ function! statusline#venv_name() abort "{{{2
 endfunction
 
 function! statusline#current_tag() abort "{{{2
-    if winwidth(0) < s:MaxWidth | return '' | endif
+    if winwidth(0) < g:sl.width.max | return '' | endif
     let coc_func = get(b:, 'coc_current_function', '')
     if coc_func !=# '' | return coc_func | endif
     if exists('*tagbar#currenttag')
@@ -350,55 +352,55 @@ function! statusline#current_tag() abort "{{{2
 endfunction
 
 function! statusline#coc_status() abort "{{{2
-    if winwidth(0) > s:MinWidth && get(g:, 'did_coc_loaded', 0)
-        return get(g:, 'coc_status', '')
+    if s:is_not_file() | return '' | endif
+    if winwidth(0) > g:sl.width.min && get(g:, 'did_coc_loaded', 0)
+        let l:coc = get(g:, 'coc_status')
+        if empty(l:coc)
+            return 'COC'
+        endif
+        return l:coc
     endif
     return ''
 endfunction
 
-function! s:coc_error() abort "{{{2
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if empty(info)
-    return ''
-  endif
-  let errmsgs = []
-  if get(info, 'error', 0)
-    call add(errmsgs, s:LinterErrors . info['error'])
-  endif
-  return trim(join(errmsgs, ' ') . ' ')
+function! s:ale_linted() abort
+  return get(g:, 'ale_enabled', 0) == 1
+    \ && getbufvar(bufnr(''), 'ale_linted', 0) > 0
+    \ && ale#engine#IsCheckingBuffer(bufnr('')) == 0
 endfunction
 
-" function! s:ale_error() abort "{{{2
-"     if exists('*ale#statusline#Count')
-"
-" endfunction
+function! s:coc_error_ct() abort "{{{2
+    let l:coc = get(b:, 'coc_diagnostic_info', {})
+    let l:ct = get(l:coc, 'error', 0)
+    return l:ct
+endfunction
 
-function! s:coc_warn() abort " {{{2
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if empty(info)
-    return ''
-  endif
-  let warnmsgs = []
-  if get(info, 'warning', 0)
-    call add(warnmsgs, s:LinterWarnings . info['warning'])
-  endif
-  return trim(join(warnmsgs, ' ') . ' ')
+function! s:ale_error_ct() abort "{{{2
+    if !s:ale_linted() | return 0 | endif
+    let l:counts = ale#statusline#Count(bufnr(''))
+    return l:counts.error + l:counts.style_error
+endfunction
+
+function! s:ale_warning_ct() abort "{{{2
+    if !s:ale_linted() | return 0 | endif
+    let l:counts = ale#statusline#Count(bufnr(''))
+    return l:counts.warning + l:counts.style_warning
+endfunction
+
+function! s:coc_warning_ct() abort " {{{2
+    let l:coc = get(b:, 'coc_diagnostic_info', {})
+    let l:ct = get(l:coc, 'warning', 0)
+    return l:ct
 endfunction
 
 function! statusline#linter_errors() abort " {{{2
-    let coc = s:coc_error()
-    return coc
-    " return empty(coc) ?
-    "     \ lightline#ale#errors() :
-    "     \ coc
+    let l:ct = s:coc_error_ct() + s:ale_error_ct()
+    return l:ct > 0 ? g:sl.symbol.error_sign.l:ct : ''
 endfunction
 
 function! statusline#linter_warnings() abort " {{{2
-    let coc = s:coc_warn()
-    return coc
-    " return empty(coc) ?
-    "     \ lightline#ale#warnings() :
-    "     \ coc
+    let l:ct = s:coc_warning_ct() + s:ale_warning_ct()
+    return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
 endfunction
 
 " vim:fdm=expr:

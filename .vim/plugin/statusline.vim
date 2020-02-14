@@ -6,22 +6,20 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-13 15:05:52 CST
+" Last Change: 2020-02-14 13:04:59 CST
 " ====================================================
-" let g:loaded_plugin_statusline = 1
-if exists('g:loaded_plugin_statusline') || exists('*lightline#update')
-    finish
-endif
+if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
 
+" Variables {{{1
+" Use lua {{{2
 " lua require'lightline'
 " lua ll.init()
 " finish
 
-" Variables {{{1
 " General
 let g:devicons = $MOSH_CONNECTION ? 0 : 1
-" g:sl {{{2
+" g:sl :: statusline variables {{{2
 let g:sl  = {
     \ 'width': {
     \     'min': 90,
@@ -30,8 +28,10 @@ let g:sl  = {
     \ },
     \ 'separator': '︱',
     \ 'symbol': {
-    \     'git_branch': '',
+    \     'buffer': '❖',
+    \     'branch': '',
     \     'modified': '●',
+    \     'readonly': '',
     \     'warning_sign' : '•',
     \     'error_sign'   : '✘',
     \     'success_sign' : '✓',
@@ -63,6 +63,7 @@ function! s:def(fn, hl) abort "{{{2
 endfunction
 
 " Statusline definition {{{1
+" Custom highlights {{{
 " let g:statusline_hi = statusline#get_highlight('StatusLine')
 "
 " highlight IsModified guibg=#5f8787 ctermbg=66 ctermfg=160 guifg=#f01d22 gui=bold cterm=bold
@@ -74,17 +75,23 @@ endfunction
 "     \ ['Red', 'Red'],
 "     \ '',
 "     \ )
+"}}}
 
-set statusline+=%(\ %#WarningMsg#[%n]%*\ %)
-set statusline+=%{statusline#git_status()}
+set statusline=%(\ %{g:sl.symbol.buffer}%n\ %)
 set statusline+=%<
-" set statusline+=%1*%(\ %{&mod?statusline#file_name():''}%)%*
-" set statusline+=%(\ %{&mod?'':statusline#file_name()}%)
-" set statusline+=\ %#IsModified#%{&modified?g:sl.symbol.modified:''}%* " or +M for plus sign
-set statusline+=%(\ %{statusline#file_name()}\ %M%)
-" set statusline+=%(\ %{&modified?g:sl.symbol.modified:''}%)
+
+" [Help] []
+set statusline+=%(\ %h%w%m%r%)
+
+set statusline+=%(\ %{statusline#file_name()}%)
+set statusline+=%(\ \ %{statusline#linter_errors()}\ %{statusline#linter_warnings()}%)
+set statusline+=%=
+set statusline+=%(\ %{statusline#coc_status()}%)
+set statusline+=%(\ %{statusline#git_status()}%)
+set statusline+=%(\ %l,%c\ %p%%\ %)
 
 finish
+" Old code below
 " General {{{1
 function! SL_bufnr() abort " {{{2
     let bufnr = bufnr('%')
@@ -234,7 +241,7 @@ endfunction
 function! SL_fugitive() abort " {{{2
     if winwidth(0) < g:sl.width.min | return '' | endif
     if !exists('*FugitiveHead') | return '' | endif
-    let icon = g:sl.symbol.git_branch
+    let icon = g:sl.symbol.branch
     let head = FugitiveHead()
     return head !=# 'master' ? icon.' '.head : icon
 endfunction

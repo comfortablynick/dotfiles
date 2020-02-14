@@ -3,7 +3,7 @@
 " Description: Autoclose windows if they are last ones open
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-07 17:54:23 CST
+" Last Change: 2020-02-14 13:07:01 CST
 " ====================================================
 if exists('g:loaded_plugin_autoclose') | finish | endif
 let g:loaded_plugin_autoclose = 1
@@ -26,7 +26,7 @@ let g:autoclose_filetypes = [
     \ ]
 
 " autoclose last open location/quickfix/help windows on a tab
-augroup plugin_autoclose
-    autocmd!
-    autocmd WinEnter * ++nested call autoclose#quit_if_only_window()
-augroup END
+" augroup plugin_autoclose
+"     autocmd!
+"     autocmd WinEnter * ++nested call autoclose#quit_if_only_window()
+" augroup END

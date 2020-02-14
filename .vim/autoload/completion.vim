@@ -3,7 +3,7 @@
 " Description: Completion plugin config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-10 13:06:31 CST
+" Last Change: 2020-02-14 09:06:46 CST
 " ====================================================
 
 " Coc.nvim {{{1
@@ -43,7 +43,7 @@ function! completion#coc_apply_maps() abort "{{{2
     nnoremap <silent> <Leader>d :CocList diagnostics<cr>
     noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
     noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
-    if empty(mapcheck('al', ' '))
+    if empty(maparg('if', 'x'))
         omap <buffer> if <Plug>(coc-funcobj-i)
         xmap <buffer> if <Plug>(coc-funcobj-i)
         omap <buffer> af <Plug>(coc-funcobj-a)

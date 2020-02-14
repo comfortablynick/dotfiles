@@ -75,7 +75,8 @@ if has('nvim')
     let &shadafile =
         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
     let g:package_path = expand('$XDG_DATA_HOME/nvim/site/pack')
-    let &termguicolors = !$MOSH_CONNECTION
+    " let &termguicolors = !$MOSH_CONNECTION
+    set termguicolors
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx

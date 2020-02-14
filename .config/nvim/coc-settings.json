@@ -32,13 +32,6 @@
   // Snippets
   "snippets.userSnippetsDirectory": "~/.config/ultisnips",
 
-  // Rust
-  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
-  // "rust-client.channel": "nightly",
-  // "rust.clippy_preference": "on",
-  // "rust.show_hover_context": true,
-  // "rust.all_targets": false,
-
   // Python
   "python.linting.enabled": true,
   "python.jediEnabled": false,

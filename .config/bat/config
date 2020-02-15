@@ -1,0 +1,13 @@
+# vim:ft=conf:
+
+--theme="zenburn"
+# --theme="1337"
+# --theme="TwoDark"
+
+--style="numbers,changes,header,grid"
+
+--italic-text=always
+
+--map-syntax justfile:make
+--map-syntax .ignore:.gitignore
+--map-syntax .MD:markdown

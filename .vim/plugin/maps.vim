@@ -3,7 +3,7 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-13 06:53:06 CST
+" Last Change: 2020-02-15 13:23:12 CST
 " ====================================================
 if exists('g:loaded_plugin_maps') | finish | endif
 let g:loaded_plugin_maps = 1
@@ -12,27 +12,15 @@ let g:loaded_plugin_maps = 1
 vnoremap <Tab>   <Cmd>normal! >gv<CR>
 vnoremap <S-Tab> <Cmd>normal! <gv<CR>
 
-" `U` to redo
+" Normal mode maps
 nnoremap U <C-r>
-
-" Insert mode <Esc> maps
-" `kj` :: escape
-inoremap kj <Esc>`^
-
-" `lkj` :: escape + save
-inoremap lkj <Esc>`^:w<CR>
-
-" `;lkj` :: escape + save + quit
-inoremap ;lkj <Esc>`^:wq<CR>
-
-" Search - CR turns off search highlighting
+nnoremap qqq :q!<CR>
 nnoremap <CR> :nohlsearch<CR><CR>
 
-" Easy navigation in insert mode
-inoremap <C-k> <Up>
-inoremap <C-j> <Down>
-inoremap <C-h> <Left>
-inoremap <C-l> <Right>
+" Insert mode <Esc> maps
+inoremap kj <Esc>`^
+inoremap lkj <Esc>`^:w<CR>
+inoremap ;lkj <Esc>`^:wq<CR>
 
 " `CTRL+{h,j,k,l}` to navigate in normal mode
 nnoremap <C-J> <C-W><C-J>

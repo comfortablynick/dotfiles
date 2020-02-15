@@ -75,8 +75,7 @@ if has('nvim')
     let &shadafile =
         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
     let g:package_path = expand('$XDG_DATA_HOME/nvim/site/pack')
-    " let &termguicolors = !$MOSH_CONNECTION
-    set termguicolors
+    let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
@@ -173,6 +172,10 @@ let g:loaded_2html_plugin = 1
 let g:loaded_zipPlugin = 1
 let g:loaded_matchit = 1
 
+" Disable providers {{{2
+let g:loaded_ruby_provider = 0
+let g:loaded_perl_provider = 0
+
 " Plugins {{{1
 " Load packages at startup {{{2
 silent! packadd! fzf.vim
@@ -192,6 +195,7 @@ silent! packadd! vim-textobj-lua
 silent! packadd! nvim-luadev
 silent! packadd! clever-f.vim
 silent! packadd! vim-sneak
+silent! packadd! vim-bbye
 " silent! packadd! 'lightline.vim'
 " silent! packadd! 'lightline-bufferline'
 

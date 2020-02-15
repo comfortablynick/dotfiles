@@ -3,14 +3,14 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-12 09:31:56 CST
+" Last Change: 2020-02-15 14:08:34 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
 
 let g:package_manager = 'vim-packager'
 
-let g:package_defer_time = 200
+let g:package_defer_time = 300
 
 " Call minpac or minpac wrappers
 command! -bang PackUpdate call plugins#init() | call pack#update({'force_hooks': <bang>0})
@@ -30,11 +30,16 @@ function! s:deferred_load() abort
     silent! packadd asyncrun.vim
 
     if $MOSH_CONNECTION != 1
-        packadd vim-devicons
+        silent! packadd vim-devicons
     endif
 
-    if index(g:completion_filetypes.coc, &filetype) < 0
-        packadd vim-gitgutter
+    if index(g:completion_filetypes.coc, &filetype) > -1
+        call completion#coc()
+    else
+        silent! packadd vim-gitgutter
+        if index(g:completion_filetypes.none, &filetype) < 0
+            silent! packadd vim-mucomplete
+        endif
     endif
 
     " Load local vimrc if env var

@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-14 13:01:17 CST
+" Last Change: 2020-02-14 18:54:07 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -144,7 +144,7 @@ function! statusline#job_status() abort "{{{2
 endfunction
 
 function! statusline#line_info_full() abort "{{{2
-    return s:is_not_file() ? '' :
+    return statusline#is_not_file() ? '' :
         \ printf('%s %s %s %s :%s',
         \ s:line_percent(),
         \ statusline#line_pos(),
@@ -162,7 +162,7 @@ function! statusline#line_info() abort
 endfunction
 
 function! statusline#file_type() abort "{{{2
-    if s:is_not_file() | return '' | endif
+    if statusline#is_not_file() | return '' | endif
     let l:ftsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileTypeSymbol') ?
         \ ' '.WebDevIconsGetFileTypeSymbol() :
@@ -186,14 +186,14 @@ function! statusline#file_format() abort "{{{2
         \ ''
     " No output if fileformat is unix (standard)
     return &fileformat !=? 'unix' ?
-            \ s:is_not_file() ?
+            \ statusline#is_not_file() ?
             \ '' : winwidth(0) > g:sl.width.med
             \ ? (&fileformat . ' ' . ffsymbol )
             \ : ''
         \ : ''
 endfunction
 
-function! s:is_not_file() abort "{{{2
+function! statusline#is_not_file() abort "{{{2
     " Return true if not treated as file
     let exclude = [
         \ 'help',
@@ -224,7 +224,7 @@ function! s:modified() abort "{{{2
 endfunction
 
 function! statusline#read_only() abort "{{{2
-    return !s:is_not_file() && &readonly ? g:sl.symbol.readonly : ''
+    return !statusline#is_not_file() && &readonly ? g:sl.symbol.readonly : ''
 endfunction
 
 function! s:is_special_file() abort "{{{2
@@ -251,7 +251,7 @@ endfunction
 function! statusline#file_name() abort "{{{2
     let special = s:is_special_file()
     if special != -1 | return special | endif
-    if s:is_not_file() | return '' | endif
+    if statusline#is_not_file() | return '' | endif
 
     let fname = fnamemodify(expand('%'), ':~:.')
     if winwidth(0) < g:sl.width.min
@@ -314,7 +314,7 @@ endfunction
 
 function! statusline#git_branch() abort "{{{2
     if exists('g:coc_git_status')
-        return join(split(g:coc_git_status)[1:-1])
+        return join(split(g:coc_git_status)[1:-1]).' '
     elseif exists('*FugitiveHead')
         return FugitiveHead()
     endif
@@ -322,11 +322,11 @@ function! statusline#git_branch() abort "{{{2
 endfunction
 
 function! statusline#git_status() abort "{{{2
-    if !s:is_not_file() && winwidth(0) > g:sl.width.min
+    if !statusline#is_not_file() && winwidth(0) > g:sl.width.min
         let branch = statusline#git_branch()
         let hunks = statusline#git_summary()
-        return branch !=# '' ? printf('%s%s %s',
-            \ hunks !=# '' ? ' '.hunks : '',
+        return branch !=# '' ? printf('%s%s%s',
+            \ hunks,
             \ ' '.substitute(branch, 'master', '', ''),
             \ g:sl.symbol.branch
             \ ) : ''
@@ -352,13 +352,10 @@ function! statusline#current_tag() abort "{{{2
 endfunction
 
 function! statusline#coc_status() abort "{{{2
-    if s:is_not_file() | return '' | endif
+    if statusline#is_not_file() | return '' | endif
     if winwidth(0) > g:sl.width.min && get(g:, 'did_coc_loaded', 0)
         let l:coc = get(g:, 'coc_status')
-        if empty(l:coc)
-            return 'COC'
-        endif
-        return l:coc
+        if !empty(l:coc) | return l:coc | endif
     endif
     return ''
 endfunction

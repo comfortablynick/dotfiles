@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-14 13:04:59 CST
+" Last Change: 2020-02-14 16:11:28 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -77,18 +77,18 @@ endfunction
 "     \ )
 "}}}
 
-set statusline=%(\ %{g:sl.symbol.buffer}%n\ %)
+set statusline=%(%{g:sl.symbol.buffer}%n\ %)
 set statusline+=%<
 
-" [Help] []
 set statusline+=%(\ %h%w%m%r%)
 
 set statusline+=%(\ %{statusline#file_name()}%)
 set statusline+=%(\ \ %{statusline#linter_errors()}\ %{statusline#linter_warnings()}%)
 set statusline+=%=
-set statusline+=%(\ %{statusline#coc_status()}%)
-set statusline+=%(\ %{statusline#git_status()}%)
-set statusline+=%(\ %l,%c\ %p%%\ %)
+set statusline+=%(\ %{statusline#coc_status()}\ \┊%)
+set statusline+=%(\ %{statusline#git_status()}\ \┊%)
+set statusline+=%(\ %l,%c%)\ %4(%p%%%)%(\ %)
+" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 finish
 " Old code below

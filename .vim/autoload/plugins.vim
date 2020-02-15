@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-13 17:22:40 CST
+" Last Change: 2020-02-15 13:12:36 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -18,6 +18,8 @@ function! plugins#init() abort
     Pack 'airblade/vim-rooter'
     Pack 'tpope/vim-projectionist'
     Pack 'tpope/vim-repeat'
+    Pack 'ptzz/lf.vim'
+    Pack 'moll/vim-bbye'
 
     " Editing behavior
     Pack 'tpope/vim-commentary'
@@ -86,6 +88,7 @@ function! plugins#init() abort
         \   'if': 'has("nvim")',
         \   'do': {-> 'yarn install --frozen-lockfile'},
         \ }
+    Pack 'lifepillar/vim-mucomplete'
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'

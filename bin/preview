@@ -1,4 +1,4 @@
 #!/bin/sh
 
 unset COLORTERM
-bat --color=always --style=plain "$1"
+bat --color=always --style=numbers "$1"

@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-14 18:54:07 CST
+" Last Change: 2020-02-17 13:20:25 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -186,10 +186,10 @@ function! statusline#file_format() abort "{{{2
         \ ''
     " No output if fileformat is unix (standard)
     return &fileformat !=? 'unix' ?
-            \ statusline#is_not_file() ?
-            \ '' : winwidth(0) > g:sl.width.med
-            \ ? (&fileformat . ' ' . ffsymbol )
-            \ : ''
+        \ statusline#is_not_file() ?
+        \ '' : winwidth(0) > g:sl.width.med
+        \ ? (&fileformat . ' ' . ffsymbol )
+        \ : ''
         \ : ''
 endfunction
 
@@ -219,12 +219,16 @@ function! statusline#is_not_file() abort "{{{2
     return 0
 endfunction
 
-function! s:modified() abort "{{{2
-    return &filetype =~? 'help\|vimfiler' ? '' : &modified ? s:ModSymbol : &modifiable ? '' : '-'
+function! statusline#modified() abort "{{{2
+    return &modified ? g:sl.symbol.modified : &modifiable ? '' : g:sl.symbol.unmodifiable
 endfunction
 
 function! statusline#read_only() abort "{{{2
     return !statusline#is_not_file() && &readonly ? g:sl.symbol.readonly : ''
+endfunction
+
+function! statusline#syntax_group() abort " {{{2
+    return synIDattr(synID(line('.'), col('.'), 1), 'name')
 endfunction
 
 function! s:is_special_file() abort "{{{2
@@ -283,8 +287,8 @@ function! statusline#file_encoding() abort "{{{2
 endfunction
 
 function! statusline#tab_name() abort "{{{3
-  let fname = @%
-  return fname =~? '__Tagbar__' ? 'Tagbar' :
+    let fname = @%
+    return fname =~? '__Tagbar__' ? 'Tagbar' :
         \ fname =~? 'NERD_tree' ? 'NERDTree' :
         \ statusline#file_name()
 endfunction
@@ -361,9 +365,9 @@ function! statusline#coc_status() abort "{{{2
 endfunction
 
 function! s:ale_linted() abort
-  return get(g:, 'ale_enabled', 0) == 1
-    \ && getbufvar(bufnr(''), 'ale_linted', 0) > 0
-    \ && ale#engine#IsCheckingBuffer(bufnr('')) == 0
+    return get(g:, 'ale_enabled', 0) == 1
+        \ && getbufvar(bufnr(''), 'ale_linted', 0) > 0
+        \ && ale#engine#IsCheckingBuffer(bufnr('')) == 0
 endfunction
 
 function! s:coc_error_ct() abort "{{{2
@@ -398,6 +402,68 @@ endfunction
 function! statusline#linter_warnings() abort " {{{2
     let l:ct = s:coc_warning_ct() + s:ale_warning_ct()
     return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
+endfunction
+
+function! statusline#toggled() abort " {{{2
+    if !exists('g:statusline_toggle')
+        return ''
+    endif
+    let sl = ''
+    for [k, v] in items(g:statusline_toggle)
+        let str = call(v, [])
+        let sl .= empty(sl)
+            \ ? str . ' '
+            \ : g:sl.separator.' '.str.' '
+    endfor
+    return sl[:-2]
+endfunction
+
+" Toggle {{{1
+" Args {{{2
+let s:args = [
+    \   ['toggle', 'clear'],
+    \   [
+    \       'syntax_group',
+    \   ]
+    \ ]
+
+function! s:toggle_sl_item(var, funcref) abort " {{{2
+    let g:statusline_toggle = get(g:, 'statusline_toggle', {})
+    if has_key(g:statusline_toggle, a:var)
+        call remove(g:statusline_toggle, a:var)
+    else
+        let g:statusline_toggle[a:var] = a:funcref
+    endif
+endfunction
+
+function! statusline#sl_command(...) abort " {{{2
+    let arg = exists('a:1') ? a:1 : 'clear'
+
+    if arg ==# 'toggle'
+        let &laststatus = (&laststatus != 0 ? 0 : 2)
+        let &showmode = (&laststatus == 0 ? 1 : 0)
+        return
+    elseif arg ==# 'clear'
+        unlet! g:statusline_toggle
+        return
+    endif
+
+    " Split args in case we have many
+    let args = split(arg, ' ')
+
+    " Check the 1st one only
+    if index(s:args[1], args[0], 0) == -1
+        return
+    endif
+
+    for a in args
+        let fun_ref = 'statusline#'.arg
+        call s:toggle_sl_item(arg, fun_ref)
+    endfor
+endfunction
+
+function! statusline#sl_complete_args(a, l, p) abort " {{{3
+    return join(s:args[0] + s:args[1], "\n")
 endfunction
 
 " vim:fdm=expr:

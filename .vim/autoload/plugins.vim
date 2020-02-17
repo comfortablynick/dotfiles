@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-15 13:12:36 CST
+" Last Change: 2020-02-17 14:47:03 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -35,6 +35,7 @@ function! plugins#init() abort
     Pack 'spacewander/vim-textobj-lua'
 
     " Explorer/finder utils
+    Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
     Pack 'junegunn/fzf.vim'
@@ -48,6 +49,7 @@ function! plugins#init() abort
     Pack 'mhinz/vim-lookup'
     Pack 'bfredl/nvim-luadev',          {'if': 'has("nvim")'}
     Pack 'tweekmonster/startuptime.vim',
+    Pack 'TravonteD/luajob'
 
     " Editor appearance
     Pack 'itchyny/lightline.vim'
@@ -63,7 +65,7 @@ function! plugins#init() abort
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}
     Pack 'bfrg/vim-cpp-modern',         {'type': 'start'}
-    Pack 'vim-jp/syntax-vim-ex',        {'type': 'start'}
+    Pack 'vim-jp/syntax-vim-ex'
     Pack 'pearofducks/ansible-vim',     {'type': 'start'}
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'ziglang/zig.vim',             {'type': 'start'}

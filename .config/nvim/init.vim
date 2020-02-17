@@ -183,7 +183,6 @@ silent! packadd! neoformat
 silent! packadd! vim-surround
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
-silent! packadd! vim-commentary
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
 silent! packadd! vim-tmux-navigator
@@ -196,6 +195,7 @@ silent! packadd! nvim-luadev
 silent! packadd! clever-f.vim
 silent! packadd! vim-sneak
 silent! packadd! vim-bbye
+silent! packadd! luajob
 " silent! packadd! 'lightline.vim'
 " silent! packadd! 'lightline-bufferline'
 

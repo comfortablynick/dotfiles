@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-14 16:11:28 CST
+" Last Change: 2020-02-17 13:19:47 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -17,8 +17,9 @@ let g:loaded_plugin_statusline = 1
 " lua ll.init()
 " finish
 
-" General
+" General {{{2
 let g:devicons = $MOSH_CONNECTION ? 0 : 1
+
 " g:sl :: statusline variables {{{2
 let g:sl  = {
     \ 'width': {
@@ -26,11 +27,12 @@ let g:sl  = {
     \     'med': 140,
     \     'max': 200,
     \ },
-    \ 'separator': '︱',
+    \ 'separator': '┊',
     \ 'symbol': {
     \     'buffer': '❖',
     \     'branch': '',
     \     'modified': '●',
+    \     'unmodifiable': '-',
     \     'readonly': '',
     \     'warning_sign' : '•',
     \     'error_sign'   : '✘',
@@ -62,6 +64,10 @@ function! s:def(fn, hl) abort "{{{2
     return printf('%%#%s#%%{%s()}%%*', a:hl, a:fn)
 endfunction
 
+" SL command {{{2
+command! -nargs=? -complete=custom,statusline#sl_complete_args SL
+    \ call statusline#sl_command(<f-args>)
+
 " Statusline definition {{{1
 " Custom highlights {{{
 " let g:statusline_hi = statusline#get_highlight('StatusLine')
@@ -77,16 +83,22 @@ endfunction
 "     \ )
 "}}}
 
-set statusline=%(%{g:sl.symbol.buffer}%n\ %)
+set statusline=
+set statusline+=%(\ %{&buflisted?g:sl.symbol.buffer.bufnr('%'):''}\ %)
 set statusline+=%<
-
-set statusline+=%(\ %h%w%m%r%)
-
+set statusline+=%(\ %h%w%)
 set statusline+=%(\ %{statusline#file_name()}%)
-set statusline+=%(\ \ %{statusline#linter_errors()}\ %{statusline#linter_warnings()}%)
+" set statusline+=%(\ %m%r%)
+set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
+set statusline+=%(\ %{statusline#modified()}%)
+set statusline+=%(\ \ %{statusline#linter_errors()}%)
+set statusline+=%(\ %{statusline#linter_warnings()}%)
+
 set statusline+=%=
-set statusline+=%(\ %{statusline#coc_status()}\ \┊%)
-set statusline+=%(\ %{statusline#git_status()}\ \┊%)
+set statusline+=%(\ %{statusline#toggled()}\ ┊%)
+set statusline+=%(\ %{statusline#job_status()}\ ┊%)
+set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
+set statusline+=%(\ %{statusline#git_status()}\ ┊%)
 set statusline+=%(\ %l,%c%)\ %4(%p%%%)%(\ %)
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 

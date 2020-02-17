@@ -6,4 +6,9 @@ function! plugins#tcomment#post() abort
     xmap <silent><Leader>c          <Plug>TComment_gc
     nmap <Leader>c<Space>           <Plug>TComment_gcc
     omap <silent><Leader>c          <Plug>TComment_gc
+
+    " Map any syntax regions tcomment doesn't get right
+    let g:tcomment#filetype#syntax_map_user = {
+        \ 'vimLuaRegion': 'lua',
+        \ }
 endfunction

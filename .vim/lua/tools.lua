@@ -85,8 +85,6 @@ function M.git_push() -- {{{1
             vim.g.cmd_results = results
             if results.stdout then print(results.stdout[1]) end
             if results.stderr then print(results.stderr[1]) end
-        vim.fn
-            .setqflist({}, "r", {title = "Git push", lines = results})
         end,
     })
     cmd:start()

@@ -199,6 +199,15 @@ silent! packadd! luajob
 " silent! packadd! 'lightline.vim'
 " silent! packadd! 'lightline-bufferline'
 
+lua << EOF
+vim.cmd('packadd nvim-lsp')
+local lsp = require'nvim_lsp'
+lsp.pyls.setup{}
+-- lsp.pyls_ms.setup{}
+-- lsp.rust_analyzer.setup{}
+-- lsp.vimls.setup{}
+EOF
+
 " Lua tools {{{2
 if has('nvim')
     lua require'helpers'

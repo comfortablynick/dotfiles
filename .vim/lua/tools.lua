@@ -1,7 +1,7 @@
 local vim = vim
 local a = vim.api
 local uv = vim.loop
-local job = require'luajob'
+local job = require"luajob"
 local M = {}
 
 function M.async_grep(term) -- {{{1
@@ -23,21 +23,20 @@ function M.async_grep(term) -- {{{1
         stdout:close()
         stderr:close()
         handle:close()
-        vim.fn.setqflist({}, "r", {title = "AsyncGrep Results", lines = results})
+        vim.fn
+            .setqflist({}, "r", {title = "AsyncGrep Results", lines = results})
         local result_ct = #results
         if result_ct > 0 then
             vim.cmd("cwindow " .. math.min(result_ct, 10))
         else
-            print "grep: no results found"
+            print"grep: no results found"
         end
     end
     local grepprg = vim.split(vim.o.grepprg, " ")
-    -- local grepprg = vim.split("rg --vimgrep --smart-case", " ")
-    handle = uv.spawn(
-                 table.remove(grepprg, 1),
-                 {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
-                 vim.schedule_wrap(onexit)
-             )
+    handle = uv.spawn(table.remove(grepprg, 1), {
+        args = {term, unpack(grepprg)},
+        stdio = {stdout, stderr},
+    }, vim.schedule_wrap(onexit))
     uv.read_start(stdout, onread)
     uv.read_start(stderr, onread)
 end
@@ -47,15 +46,50 @@ end
 -- TODO: figure out how to return stdout,stderr from these
 -- in simplest way possible
 function M.git_pull() -- {{{1
-    nvim.spawn(
-        "git", {args = {"pull"}}, function() print("Git pull complete") end
-    )
+    local cmd = job:new({
+        cmd = "git pull",
+        on_stdout = function(err, data)
+            if err then
+                print("error:", err)
+            elseif data then
+                local lines = vim.split(data, "\n")
+                print(lines[1])
+                vim.g.cmd_stdout = lines
+            end
+        end,
+        on_stderr = function(err, data)
+            if err then
+                print("error:", err)
+            elseif data then
+                local lines = vim.split(data, "\n")
+                print(lines[1])
+                vim.g.cmd_stderr = lines
+            end
+        end,
+    })
+    cmd:start()
 end
 
 function M.git_push() -- {{{1
-    nvim.spawn(
-        "git", {args = {"push"}}, function() print("Git push complete") end
-    )
+    local results = {}
+    local on_read = function(err, data, iotype)
+        assert(not err, err)
+        if not data then return end
+        results[iotype] = vim.split(data, "\n")
+    end
+    local cmd = job:new({
+        cmd = "git push",
+        on_stdout = function(err, data) on_read(err, data, "stdout") end,
+        on_stderr = function(err, data) on_read(err, data, "stderr") end,
+        on_exit = function()
+            vim.g.cmd_results = results
+            if results.stdout then print(results.stdout[1]) end
+            if results.stderr then print(results.stderr[1]) end
+        vim.fn
+            .setqflist({}, "r", {title = "Git push", lines = results})
+        end,
+    })
+    cmd:start()
 end
 
 -- Test lower level vim apis
@@ -111,25 +145,19 @@ function M.set_executable(file) -- {{{1
     end
     local orig_mode = stat.mode
     local orig_mode_oct = string.sub(string.format("%o", orig_mode), 4)
-    nvim.spawn(
-        "chmod", {args = {"u+x", file}}, function()
-            local new_mode = uv.fs_stat(file).mode
-            local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
-            local new_mode_str = get_perm_str(new_mode)
-            if orig_mode ~= new_mode then
-                printf(
-                    "Permissions changed: %s (%s) -> %s (%s)",
-                    get_perm_str(orig_mode), orig_mode_oct, new_mode_str,
-                    new_mode_oct
-                )
-            else
-                printf(
-                    "Permissions not changed: %s (%s)", new_mode_str,
-                    new_mode_oct
-                )
-            end
+    nvim.spawn("chmod", {args = {"u+x", file}}, function()
+        local new_mode = uv.fs_stat(file).mode
+        local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
+        local new_mode_str = get_perm_str(new_mode)
+        if orig_mode ~= new_mode then
+            printf("Permissions changed: %s (%s) -> %s (%s)",
+                   get_perm_str(orig_mode), orig_mode_oct, new_mode_str,
+                   new_mode_oct)
+        else
+            printf("Permissions not changed: %s (%s)", new_mode_str,
+                   new_mode_oct)
         end
-    )
+    end)
 end
 
 function M.get_history() -- {{{1
@@ -143,7 +171,26 @@ function M.get_history() -- {{{1
     return hist
 end
 
+function M.cmd() -- {{{1
+    local results = {}
+    local command = "env"
+    local on_read = function(err, data, iotype)
+        assert(not err, err)
+        if not data then return end
+        results[iotype] = vim.split(data, "\n")
+    end
+    local cmd = job:new({
+        cmd = command,
+        on_stdout = function(err, data) on_read(err, data, "stdout") end,
+        on_stderr = function(err, data) on_read(err, data, "stderr") end,
+        on_exit = function()
+            vim.g.cmd_results = results
+            require'window'.create_scratch(results.stdout)
+        end,
+        detach = false,
+    })
+    cmd:start()
+end
+
+-- Return module --{{{1
 return M
-
--- function M.ls() --{{{1
-

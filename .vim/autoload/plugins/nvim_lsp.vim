@@ -23,15 +23,6 @@ function! plugins#nvim_lsp#autocmds() abort
 endfunction
 
 function! plugins#nvim_lsp#init() abort
-    silent! packadd nvim-lsp
-
-lua << EOF
-local lsp = require'nvim_lsp'
-lsp.pyls_ms.setup{ log_level = 2 }
-lsp.pyls_ms.manager.try_add()
-lsp.rust_analyzer.setup{}
-EOF
-
     call plugins#nvim_lsp#maps()
     call plugins#nvim_lsp#autocmds()
 endfunction

@@ -3,37 +3,10 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-16 00:40:13 CST
+" Last Change: 2020-02-18 17:30:10 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
-
-" # Commands
-" Save if file has changed and reload vimrc
-command! S update | source $MYVIMRC
-" Easily change background
-command! Light set background=light
-command! Dark  set background=dark
-" Lua async grep
-command! -nargs=+ -complete=dir -bar Grep
-    \ lua require'tools'.async_grep(<q-args>)
-" Delete buffer without changing window layout
-" command! -bang Bclose lua require'buffer'.kill(0, '<bang>')
-command! -bang -complete=buffer -nargs=? Bclose
-    \ packadd vim-bbye | Bdelete<bang> <args>
-
-" Commonly mistyped commands
-command! WQ wq
-command! Wq wq
-command! Wqa wqa
-command! W w
-
-" Lazy load startuptime.vim plugin
-command! -nargs=* -complete=file StartupTime
-    \ packadd startuptime.vim | StartupTime <args>
-
-" Lazy load scriptease plugin
-command! Messages packadd vim-scriptease | Messages
 
 " # Maps
 " Format paragraph and restore cursor position
@@ -48,17 +21,7 @@ cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
-function! Comment() abort
-    let l:open = matchstr(&foldmarker, '^[^,]*')
-    if syntax#is_comment_line()
-        let l:out = l:open
-    else
-        let l:out = printf(&commentstring, l:open)
-    endif
-    return l:out."\<C-R>=editor#eatchar('\s')\<CR>"
-endfunction
-
-inoreabbrev <expr> fff Comment()
+inoreabbrev <expr> fff editor#foldmarker()
 
 " # Autocmds
 augroup plugin_editor

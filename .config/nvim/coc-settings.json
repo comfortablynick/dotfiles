@@ -42,6 +42,9 @@
   "python.linting.flake8Args": ["--max-line-length=100"],
   "python.formatting.provider": "black",
 
+  // Vim
+  "vimlsp.indexes.runtimepath": false,
+
   // Typescript
   "tsserver.reportStyleChecksAsWarnings": true,
   "tslint.autoFixOnSave": true,

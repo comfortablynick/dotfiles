@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-17 13:19:47 CST
+" Last Change: 2020-02-18 11:41:29 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -84,7 +84,7 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
 "}}}
 
 set statusline=
-set statusline+=%(\ %{&buflisted?g:sl.symbol.buffer.bufnr('%'):''}\ %)
+set statusline+=%(\ %{&buflisted?'['.bufnr('%').']':''}\ %)
 set statusline+=%<
 set statusline+=%(\ %h%w%)
 set statusline+=%(\ %{statusline#file_name()}%)

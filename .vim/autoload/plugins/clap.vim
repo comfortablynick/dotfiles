@@ -29,12 +29,17 @@ function! plugins#clap#post() abort
     nnoremap <silent> <Leader>h :Clap command_history<CR>
 endfunction
 
+function! s:clap_on_enter() abort
+  augroup ClapEnsureAllClosed
+    autocmd!
+    autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
+  augroup END
+endfunction
+
 augroup autoload_plugins_clap
     autocmd!
     " Set autocmd to close clap win if we leave
-    autocmd User ClapOnEnter
-        \ autocmd autoload_plugins_clap
-        \ BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
+    autocmd User ClapOnEnter call s:clap_on_enter()
 augroup END
 
 " Clap providers

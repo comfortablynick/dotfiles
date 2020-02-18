@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-16 15:00:23 CST
+" Last Change: 2020-02-18 17:24:14 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -26,35 +26,30 @@ let g:completion_filetypes = {
     \    'snippets',
     \    'toml',
     \    'mail',
-    \    'pro',
-    \    'ini',
-    \    'muttrc',
     \    'cmake',
-    \    'zig',
-    \    'zsh',
     \ ],
     \ 'nvim-lsp': [
     \    'python',
     \ ],
-    \ 'none': [
-    \    'txt',
+    \ 'mucomplete': [
+    \    'asciidoctor',
     \    'markdown',
+    \    'just',
+    \    'zig',
+    \    'zsh',
+    \    'muttrc',
+    \    'ini',
+    \    'mail',
+    \    'pro',
+    \ ],
+    \ 'none': [
+    \    'help',
     \    'nerdtree',
     \    'coc-explorer',
     \    'defx',
     \    'netrw',
     \ ]
     \ }
-
-function s:pyls() abort
-    packadd nvim-lsp
-lua << EOF
-    local lsp = require'nvim_lsp'
-    lsp["pyls_ms"].setup{ log_level = 2 }
-    lsp["pyls_ms"].manager.try_add()
-EOF
-    setlocal omnifunc=v:lua.vim.lsp.omnifunc
-endfunction
 
 augroup plugin_completion
     autocmd!

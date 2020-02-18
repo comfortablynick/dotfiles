@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-16 13:17:09 CST
+" Last Change: 2020-02-18 17:04:10 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -40,7 +40,7 @@ endfunction
 
 function! s:deferred_load_filetype() abort
     let l:comptype = completion#get_type(&filetype)
-    if empty(l:comptype) || l:comptype ==# 'nvim-lsp'
+    if l:comptype ==# 'mucomplete' || l:comptype ==# 'nvim-lsp'
         silent! packadd vim-mucomplete
     endif
     if l:comptype !=# 'coc'

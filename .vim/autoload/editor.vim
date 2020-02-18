@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-31 19:30:05 CST
+" Last Change: 2020-02-18 17:29:46 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -30,6 +30,17 @@ function! editor#eatchar(pat) abort
     let c = nr2char(getchar(0))
     return (c =~ a:pat) ? '' : c
 endfunc
+
+" Insert fold marker + comment string if not already in comment
+function! editor#foldmarker() abort
+    let l:open = matchstr(&foldmarker, '^[^,]*')
+    if syntax#is_comment_line()
+        let l:out = l:open
+    else
+        let l:out = printf(&commentstring, l:open)
+    endif
+    return l:out."\<C-R>=editor#eatchar('\s')\<CR>"
+endfunction
 
 " Close buffer if not modifiable; quit if last buf
 " Map this fn to q for desired filetypes

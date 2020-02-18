@@ -49,8 +49,7 @@ function! util#redir(cmd) abort
     endif
     vnew
     let w:scratch = 1
-    setlocal buftype=nofile bufhidden=wipe nobuflisted
-    setlocal readonly noswapfile foldlevel=99
+    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
     call setline(1, lines)
 endfunction
 

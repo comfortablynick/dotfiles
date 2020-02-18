@@ -29,6 +29,14 @@ function! plugins#clap#post() abort
     nnoremap <silent> <Leader>h :Clap command_history<CR>
 endfunction
 
+augroup autoload_plugins_clap
+    autocmd!
+    " Set autocmd to close clap win if we leave
+    autocmd User ClapOnEnter
+        \ autocmd autoload_plugins_clap
+        \ BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
+augroup END
+
 " Clap providers
 " Maps :: show defined maps for all modes
 let s:maps = {}

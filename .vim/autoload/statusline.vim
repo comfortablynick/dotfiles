@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-17 13:20:25 CST
+" Last Change: 2020-02-19 08:07:02 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -210,6 +210,7 @@ function! statusline#is_not_file() abort "{{{2
         \ 'qf',
         \ 'coc-explorer',
         \ 'output:///info',
+        \ 'nofile',
         \ ]
     if index(exclude, &filetype) > -1
         \ || index(exclude, expand('%:t')) > -1

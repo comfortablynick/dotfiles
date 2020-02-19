@@ -10,6 +10,15 @@
   "diagnostic.messageTarget": "float",
   "diagnostic.refreshAfterSave": true,
 
+  // diagnostic-languageserver
+  "diagnostic-languageserver.enable": true,
+  "diagnostic-languageserver.filetypes": {
+    "vim": "vint",
+    "email": "languagetool",
+    "markdown": [ "write-good", "markdownlint" ],
+    "sh": "shellcheck"
+  },
+
   // Suggestion options
   "suggest.echodocSupport": false,
   "suggest.triggerCompletionWait": 100,

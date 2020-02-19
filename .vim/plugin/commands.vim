@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-18 16:47:58 CST
+" Last Change: 2020-02-19 00:08:59 CST
 " ====================================================
 if exists('g:loaded_plugin_commands') | finish | endif
 let g:loaded_plugin_commands = 1
@@ -11,6 +11,8 @@ let g:loaded_plugin_commands = 1
 " Floating help window
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 command! -complete=help -nargs=? H Help <args>
+
+command! -complete=file -nargs=? Run lua require'tools'.async_run(<q-args>)
 
 " Save if file has changed and reload vimrc
 command! S update | source $MYVIMRC

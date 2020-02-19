@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-18 17:30:10 CST
+" Last Change: 2020-02-19 08:24:30 CST
 " ====================================================
 if exists('g:loaded_plugin_editor') | finish | endif
 let g:loaded_plugin_editor = 1
@@ -17,6 +17,7 @@ nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
 " # Abbreviations
+cnoreabbrev <expr> h editor#help_tab()
 cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')

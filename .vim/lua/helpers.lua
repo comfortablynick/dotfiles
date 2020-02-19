@@ -401,6 +401,15 @@ function string.basename(str) -- {{{2
     return name
 end
 
+function string.trim(str, chars) -- {{{2
+    local patternescape = function(s)
+        return s:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
+    end
+    if not chars then return str:match("^[%s]*(.-)[%s]*$") end
+    chars = patternescape(chars)
+    return str:match("^[" .. chars .. "]*(.-)[" .. chars .. "]*$")
+end
+
 local HANDLES = {}
 -- Spawn utils {{{1
 local function clean_handles() -- {{{2
@@ -425,6 +434,89 @@ function nvim.spawn(cmd, params, onexit) -- {{{2
     return handle, pid
 end
 
--- Return module
+-- Iterator utils {{{1
+-- Helper functions {{{2
+-- From: https://github.com/rxi/lume
+local identity = function(x) return x end
+
+local iteratee = function(x)
+    if x == nil then return identity end
+    if vim.is_callable(x) then return x end
+    if type(x) == "table" then
+        return function(z)
+            for k, v in pairs(x) do
+                if z[k] ~= v then return false end
+            end
+            return true
+        end
+    end
+    return function(z) return z[x] end
+end
+
+local getiter = function(x)
+    vim.validate{arg = {x, "table"}}
+    if vim.tbl_islist(x) then
+        return ipairs
+    else
+        return pairs
+    end
+end
+
+-- nvim.filter :: calls `fn` on each value in table `t` {{{2
+-- Returns new table where `fn` returned true.
+function nvim.filter(t, fn, retainkeys)
+    fn = iteratee(fn)
+    local iter = getiter(t)
+    local rtn = {}
+    if retainkeys then
+        for k, v in iter(t) do if fn(v) then rtn[k] = v end end
+    else
+        for _, v in iter(t) do if fn(v) then rtn[#rtn + 1] = v end end
+    end
+    return rtn
+end
+
+-- nvim.map :: applies `fn` to each value in table `t` {{{2
+-- Returns a new table with the resulting values.
+function nvim.map(t, fn)
+    fn = iteratee(fn)
+    local iter = getiter(t)
+    local rtn = {}
+    for k, v in iter(t) do rtn[k] = fn(v) end
+    return rtn
+end
+
+-- nvim.reduce :: applies `fn` cumulatively to values in table `t` {{{2
+-- Reduces array to a single value.
+function nvim.reduce(t, fn, first)
+    local started = first ~= nil
+    local acc = first
+    local iter = getiter(t)
+    for _, v in iter(t) do
+        if started then
+            acc = fn(acc, v)
+        else
+            acc = v
+            started = true
+        end
+    end
+    assert(started, "reduce of an empty table with no first value")
+    return acc
+end
+
+-- nvim.each :: calls `fn` on each value in table `t` {{{2
+-- If `fn` is a string, it is called as a method.
+-- Returns `t` unmodified.
+function nvim.each(t, fn, ...)
+    local iter = getiter(t)
+    if type(fn) == "string" then
+        for _, v in iter(t) do v[fn](v, ...) end
+    else
+        for _, v in iter(t) do fn(v, ...) end
+    end
+    return t
+end
+
+-- Return module {{{1
 return nvim
 -- vim:fdl=1:

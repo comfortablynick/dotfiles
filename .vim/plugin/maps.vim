@@ -3,14 +3,10 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-18 16:18:39 CST
+" Last Change: 2020-02-18 17:39:59 CST
 " ====================================================
 if exists('g:loaded_plugin_maps') | finish | endif
 let g:loaded_plugin_maps = 1
-
-" Execute line/selection
-nnoremap <silent><buffer> yxx     :keeppatterns          .g/^/exe getline('.')<CR>
-xnoremap <silent><buffer> <enter> :<C-U>keeppatterns '<,'>g/^/exe getline('.')<CR>
 
 " Indent/outdent
 vnoremap <Tab>   <Cmd>normal! >gv<CR>

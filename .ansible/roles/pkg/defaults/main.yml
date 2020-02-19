@@ -44,7 +44,7 @@ pipx_default_pkgs:
   - black
   - mypy
   - pydocstyle
-  - vim-vint
+  - git+https://github.com/vimjas/vint
   - cmake_format[yaml]
   - cmakelint
   - dirtools

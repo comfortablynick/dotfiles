@@ -3,7 +3,7 @@
 " Description: Commands for quickfix window
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-12 15:33:17 CST
+" Last Change: 2020-02-19 08:15:25 CST
 " ====================================================
 if exists('g:loaded_plugin_quickfix')
     \ || exists('g:no_load_plugins')
@@ -17,7 +17,6 @@ let g:quickfix_size = 12
 " Close qf after lint if empty
 augroup plugin_quickfix
     autocmd!
-    autocmd User ALELintPost call quickfix#close_empty()
     autocmd FileType qf wincmd J
 augroup end
 

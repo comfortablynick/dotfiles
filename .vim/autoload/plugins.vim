@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-17 14:47:03 CST
+" Last Change: 2020-02-19 12:23:35 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -11,15 +11,18 @@ function! plugins#init() abort
     " General
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'
-    Pack 'dense-analysis/ale'
-    Pack 'sbdchd/neoformat'
-    Pack 'skywind3000/asyncrun.vim'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
     Pack 'tpope/vim-projectionist'
     Pack 'tpope/vim-repeat'
-    Pack 'ptzz/lf.vim'
     Pack 'moll/vim-bbye'
+
+    " Linters/formatters/runners
+    Pack 'dense-analysis/ale'
+    Pack 'sbdchd/neoformat'
+    Pack 'skywind3000/asyncrun.vim'
+    Pack 'skywind3000/asynctasks.vim'
+    Pack 'tpope/vim-dispatch'
 
     " Editing behavior
     Pack 'tpope/vim-commentary'
@@ -35,6 +38,7 @@ function! plugins#init() abort
     Pack 'spacewander/vim-textobj-lua'
 
     " Explorer/finder utils
+    Pack 'ptzz/lf.vim'
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}

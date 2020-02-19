@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-18 11:41:29 CST
+" Last Change: 2020-02-18 23:56:27 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -84,13 +84,13 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
 "}}}
 
 set statusline=
-set statusline+=%(\ %{&buflisted?'['.bufnr('%').']':''}\ %)
+set statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
 set statusline+=%<
 set statusline+=%(\ %h%w%)
 set statusline+=%(\ %{statusline#file_name()}%)
-" set statusline+=%(\ %m%r%)
-set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
-set statusline+=%(\ %{statusline#modified()}%)
+set statusline+=%(\ %m%r%)
+" set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
+" set statusline+=%(\ %{statusline#modified()}%)
 set statusline+=%(\ \ %{statusline#linter_errors()}%)
 set statusline+=%(\ %{statusline#linter_warnings()}%)
 
@@ -99,7 +99,7 @@ set statusline+=%(\ %{statusline#toggled()}\ ┊%)
 set statusline+=%(\ %{statusline#job_status()}\ ┊%)
 set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
 set statusline+=%(\ %{statusline#git_status()}\ ┊%)
-set statusline+=%(\ %l,%c%)\ %4(%p%%%)%(\ %)
+set statusline+=%(\ %l,%c%)\ %4(%p%%%)
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 finish

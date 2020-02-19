@@ -169,25 +169,28 @@ function M.get_history() -- {{{1
     return hist
 end
 
-function M.cmd() -- {{{1
+function M.async_run(cmd) -- {{{1
     local results = {}
-    local command = "env"
-    local on_read = function(err, data, iotype)
+    local command = cmd
+    local on_read = function(err, data)
         assert(not err, err)
         if not data then return end
-        results[iotype] = vim.split(data, "\n")
+        for _, line in ipairs(vim.split(data, "\n")) do
+            if line then table.insert(results, line) end
+        end
     end
-    local cmd = job:new({
+    local asyncjob = job:new({
         cmd = command,
-        on_stdout = function(err, data) on_read(err, data, "stdout") end,
-        on_stderr = function(err, data) on_read(err, data, "stderr") end,
+        on_stdout = on_read,
+        on_stderr = on_read,
         on_exit = function()
             vim.g.cmd_results = results
-            require'window'.create_scratch(results.stdout)
+            require"window".create_scratch(results)
+            -- vim.fn.setqflist({}, 'r', {title = cmd, lines = results})
         end,
         detach = false,
     })
-    cmd:start()
+    asyncjob:start()
 end
 
 -- Return module --{{{1

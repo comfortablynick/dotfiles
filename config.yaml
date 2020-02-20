@@ -25,74 +25,10 @@ dotfiles:
     dst: ~/.config
     link: link_children
     src: .config
-  # d_bash:
-  #   dst: ~/.config/bash
-  #   link: link
-  #   src: .config/bash
-  # d_cmake:
-  #   dst: ~/.config/cmake
-  #   link: link
-  #   src: .config/cmake
-  # d_fish:
-  #   dst: ~/.config/fish
-  #   link: link
-  #   src: .config/fish
-  # d_git:
-  #   dst: ~/.config/git
-  #   link: link
-  #   src: .config/git
-  # d_htop:
-  #   dst: ~/.config/htop
-  #   link: link
-  #   src: .config/htop
-  # d_legit:
-  #   dst: ~/.config/legit
-  #   link: link
-  #   src: .config/legit
   d_mutt:
     dst: ~/.mutt
     link: link
     src: .mutt
-  # d_nvim_config:
-  #   dst: ~/.config/nvim
-  #   link: link
-  #   src: .config/nvim
-  # d_omf:
-  #   dst: ~/.config/omf
-  #   link: link
-  #   src: .config/omf
-  # d_powerline:
-  #   dst: ~/.config/powerline
-  #   link: link
-  #   src: .config/powerline
-  # d_shell:
-  #   dst: ~/.config/shell
-  #   link: link
-  #   src: .config/shell
-  # d_tmux:
-  #   dst: ~/.config/tmux
-  #   link: link
-  #   src: .config/tmux
-  # d_topydo:
-  #   dst: ~/.config/topydo
-  #   link: link
-  #   src: .config/topydo
-  # d_ultisnips:
-  #   dst: ~/.config/coc/ultisnips
-  #   link: link
-  #   src: .config/coc/ultisnips
-  # d_xonsh:
-  #   dst: ~/.config/xonsh
-  #   link: link
-  #   src: .config/xonsh
-  # d_yay:
-  #   dst: ~/.config/yay
-  #   link: link
-  #   src: .config/yay
-  # d_zsh:
-  #   dst: ~/.config/zsh
-  #   link: link
-  #   src: .config/zsh
   f_bash_profile:
     dst: ~/.bash_profile
     link: link
@@ -129,46 +65,14 @@ dotfiles:
     dst: ~/.zshrc
     link: link
     src: zshrc.zsh
-  # d_pacman:
-  #   src: .config/pacman
-  #   dst: ~/.config/pacman
-  #   link: link
-  # d_rustfmt:
-  #   src: .config/rustfmt
-  #   dst: ~/.config/rustfmt
-  #   link: link
   d_ansible:
     src: .ansible
     dst: ~/.ansible
     link: link
-  # d_pip:
-  #   src: .config/pip
-  #   dst: ~/.config/pip
-  #   link: link
-  # f_lua-format:
-  #   src: .config/.lua-format
-  #   dst: ~/.config/.lua-format
-  #   link: link
-  # f_kakrc:
-  #   src: .config/kak/kakrc
-  #   dst: ~/.config/kak/kakrc
-  #   link: link
   f_ignore:
     src: .ignore
     dst: ~/.ignore
     link: link
-  # d_ripgrep:
-  #   src: .config/ripgrep
-  #   dst: ~/.config/ripgrep
-  #   link: link
-  # d_ptpython:
-  #   src: .config/ptpython
-  #   dst: ~/.config/ptpython
-  #   link: link
-  # d_direnv:
-  #   src: .config/direnv
-  #   dst: ~/.config/direnv
-  #   link: link
   d_bin:
     src: bin
     dst: ~/bin

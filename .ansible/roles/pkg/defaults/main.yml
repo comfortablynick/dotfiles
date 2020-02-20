@@ -7,6 +7,7 @@ apt_default_packages:
   - curl
   - todotxt-cli
   - unzip
+  - python-setuptools
 
 pacman_default_packages:
   - pacman-contrib
@@ -30,6 +31,7 @@ nodejs_default_pkgs:
 pip2_default_pkgs:
   - virtualenv
   - pip
+  - setuptools
 
 pip3_default_pkgs:
   - pip

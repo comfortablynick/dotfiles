@@ -122,7 +122,7 @@ let g:mapleader = ','                                           " Keymap <Leader
 
 " Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion
-" set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
+set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{2
 set foldenable                                                  " Enable folds by default

@@ -178,6 +178,7 @@ let g:loaded_perl_provider = 0
 
 " Plugins {{{1
 " Load packages at startup {{{2
+silent! packadd! vim-smoothie
 silent! packadd! fzf.vim
 silent! packadd! neoformat
 silent! packadd! vim-surround

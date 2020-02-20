@@ -46,6 +46,13 @@ endfunction
 " Remap only if active for filetype
 function! plugins#coc#apply_maps() abort "{{{1
     if exists('b:coc_suggest_disable') | return | endif
+    " Capture any existing maps
+    let g:coc_existing_maps = map#save([
+        \ '<C-f>',
+        \ '<C-b>',
+        \ '<Tab>'
+        \ ], 'n', 1)
+
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gr <Plug>(coc-rename)
@@ -57,9 +64,12 @@ function! plugins#coc#apply_maps() abort "{{{1
     nmap <silent> <Leader>l :CocList<CR>
     nmap <silent> <Leader>f <Plug>(coc-diagnostic-next)
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
-    nnoremap <silent> <Leader>d :CocList diagnostics<cr>
-    noremap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "\<C-f>"
-    noremap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "\<C-b>"
+    nnoremap <silent> <Leader>d :CocList diagnostics<CR>
+
+    let l:cf = g:coc_existing_maps['<C-f>']['rhs']
+    let l:cb = g:coc_existing_maps['<C-b>']['rhs']
+    exe 'nmap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "'.l:cf.'"'
+    exe 'nmap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "'.l:cb.'"'
     if empty(maparg('if', 'x'))
         omap <buffer> if <Plug>(coc-funcobj-i)
         xmap <buffer> if <Plug>(coc-funcobj-i)

@@ -1,4 +1,5 @@
 .git
+.netrwhist
 zig-cache/
 Cargo.lock
 .rustup/

@@ -1,7 +1,7 @@
 local vim = vim
 local a = vim.api
 local uv = vim.loop
-local job = require"luajob"
+local luajob = require"luajob"
 local M = {}
 
 function M.async_grep(term) -- {{{1
@@ -47,7 +47,7 @@ end
 -- TODO: figure out how to return stdout,stderr from these
 -- in simplest way possible
 function M.git_pull() -- {{{1
-    local cmd = job:new({
+    local cmd = luajob:new({
         cmd = "git pull",
         on_stdout = function(err, data)
             if err then
@@ -72,10 +72,8 @@ function M.git_pull() -- {{{1
 end
 
 function M.git_branch() -- {{{1
-    local results = {}
-    local git_branch = job:new({
-        -- cmd = "git branch",
-        cmd = "git xxx",
+    local git_branch = luajob:new({
+        cmd = "git branch",
         on_stdout = function(err, data)
             if err then
                 print("error:", err)
@@ -83,18 +81,17 @@ function M.git_branch() -- {{{1
                 lines = vim.split(data, "\n")
                 for _, line in ipairs(lines) do
                     if line:find("*") then
-                        local match, _ = line:gsub("\n", "")
-                        table.insert(results, match)
+                        vim.api
+                            .nvim_set_var("git_branch", (line:gsub("\n", "")))
                     end
                 end
             end
         end,
         on_exit = function(code, signal)
-            if results[1] then vim.g.git_branch = results[1] end
-            print(vim.inspect(code), signal)
+            print("job exited", vim.inspect(code), signal)
         end,
     })
-    git_branch:start()
+    git_branch.start()
 end
 
 -- Test lower level vim apis
@@ -196,9 +193,9 @@ function M.async_run(cmd, bang) -- {{{1
             vim.api.nvim_err_writeln(string.format(
                                          "Cmd '%s' failed with exit code: %d",
                                          cmd, code))
-            vim.g.job_status = "Failed"
+            vim.g.luajob_status = "Failed"
         else
-            vim.g.job_status = "Success"
+            vim.g.luajob_status = "Success"
         end
         if #results > 0 then
             if bang == "!" then print(results[1]) end
@@ -210,7 +207,7 @@ function M.async_run(cmd, bang) -- {{{1
     handle = uv.spawn(table.remove(command, 1),
                       {args = command, stdio = {stdout, stderr}},
                       vim.schedule_wrap(onexit))
-    vim.g.job_status = "Running"
+    vim.g.luajob_status = "Running"
     uv.read_start(stdout, onread)
     uv.read_start(stderr, onread)
 end
@@ -225,21 +222,22 @@ function M.cmd(cmd) -- {{{1
             if line then table.insert(results, line) end
         end
     end
-    local asyncjob = job:new({
+    local asyncjob = luajob:new({
         cmd = command,
         on_stdout = on_read,
         on_stderr = on_read,
-        on_exit = function(code, signal)
-            print(vim.inspect({code, signal}))
-            vim.g.job_status = "Failed"
-            -- vim.g.job_results = results
-            vim.g.job_status = "Success"
-            require"window".create_scratch(results)
-            -- vim.fn.setqflist({}, 'r', {title = cmd, lines = results})
+        on_exit = function(code)
+            if code ~= 0 then
+                vim.g.job_status = "Failed"
+            else
+                vim.g.job_status = "Success"
+            end
+            vim.fn.setqflist({}, "r", {title = cmd, lines = results})
+            -- require"window".create_scratch(results)
         end,
         detach = false,
     })
-    asyncjob:start()
+    asyncjob.start()
     vim.g.job_status = "Running"
 end
 

@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 12:23:35 CST
+" Last Change: 2020-02-20 14:44:53 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -13,9 +13,9 @@ function! plugins#init() abort
     Pack 'mhinz/vim-startify'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
-    Pack 'tpope/vim-projectionist'
     Pack 'tpope/vim-repeat'
     Pack 'moll/vim-bbye'
+    Pack 'psliwka/vim-smoothie'
 
     " Linters/formatters/runners
     Pack 'dense-analysis/ale'
@@ -47,6 +47,7 @@ function! plugins#init() abort
     Pack 'mbbill/undotree'
     Pack 'preservim/nerdtree'
     Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
+    Pack 'tpope/vim-projectionist'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'

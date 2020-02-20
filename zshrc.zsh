@@ -128,6 +128,9 @@ setopt HIST_REDUCE_BLANKS                                       # Remove superfl
 setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
 
+# Zstyle {{{2
+# zstyle ':completion:*' menu yes select                          # Show immediate completion menu
+
 # Keymaps {{{2
 bindkey -v
 
@@ -184,11 +187,13 @@ zinit light zsh-users/zsh-autosuggestions
 zinit ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
 zinit light zdharma/fast-syntax-highlighting
 
-# FZF {{{2
+# fuzzy find {{{2
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
-# LS_COLORS {{{2
+zinit light Aloxaf/fzf-tab
+
+# dircolors {{{2
 # Use my fork of trapd00r plugin
 zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
     atpull'%atclone' pick"clrs.zsh" nocompile'!' \

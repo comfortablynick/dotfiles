@@ -19,7 +19,8 @@ function M.async_grep(term) -- {{{1
             if item ~= "" then table.insert(results, item) end
         end
     end
-    local onexit = function()
+    local onexit = function(code, signal)
+        p({code = code, signal = signal})
         stdout:close()
         stderr:close()
         handle:close()
@@ -70,24 +71,30 @@ function M.git_pull() -- {{{1
     cmd:start()
 end
 
-function M.git_push() -- {{{1
+function M.git_branch() -- {{{1
     local results = {}
-    local on_read = function(err, data, iotype)
-        assert(not err, err)
-        if not data then return end
-        results[iotype] = vim.split(data, "\n")
-    end
-    local cmd = job:new({
-        cmd = "git push",
-        on_stdout = function(err, data) on_read(err, data, "stdout") end,
-        on_stderr = function(err, data) on_read(err, data, "stderr") end,
-        on_exit = function()
-            vim.g.cmd_results = results
-            if results.stdout then print(results.stdout[1]) end
-            if results.stderr then print(results.stderr[1]) end
+    local git_branch = job:new({
+        -- cmd = "git branch",
+        cmd = "git xxx",
+        on_stdout = function(err, data)
+            if err then
+                print("error:", err)
+            elseif data then
+                lines = vim.split(data, "\n")
+                for _, line in ipairs(lines) do
+                    if line:find("*") then
+                        local match, _ = line:gsub("\n", "")
+                        table.insert(results, match)
+                    end
+                end
+            end
+        end,
+        on_exit = function(code, signal)
+            if results[1] then vim.g.git_branch = results[1] end
+            print(vim.inspect(code), signal)
         end,
     })
-    cmd:start()
+    git_branch:start()
 end
 
 -- Test lower level vim apis
@@ -169,7 +176,46 @@ function M.get_history() -- {{{1
     return hist
 end
 
-function M.async_run(cmd) -- {{{1
+function M.async_run(cmd, bang) -- {{{1
+    local stdout = uv.new_pipe(false)
+    local stderr = uv.new_pipe(false)
+    local command = vim.split(cmd, " ")
+    local results = {}
+    local onread = function(err, data)
+        assert(not err, err)
+        if not data then return end
+        for _, item in ipairs(vim.split(data, "\n")) do
+            if item ~= "" then table.insert(results, item) end
+        end
+    end
+    local onexit = function(code)
+        stdout:close()
+        stderr:close()
+        handle:close()
+        if code ~= 0 then
+            vim.api.nvim_err_writeln(string.format(
+                                         "Cmd '%s' failed with exit code: %d",
+                                         cmd, code))
+            vim.g.job_status = "Failed"
+        else
+            vim.g.job_status = "Success"
+        end
+        if #results > 0 then
+            if bang == "!" then print(results[1]) end
+            vim.fn.setqflist({}, "r",
+                             {title = "Command: " .. cmd, lines = results})
+            vim.cmd("copen " .. math.min(#results, 10))
+        end
+    end
+    handle = uv.spawn(table.remove(command, 1),
+                      {args = command, stdio = {stdout, stderr}},
+                      vim.schedule_wrap(onexit))
+    vim.g.job_status = "Running"
+    uv.read_start(stdout, onread)
+    uv.read_start(stderr, onread)
+end
+
+function M.cmd(cmd) -- {{{1
     local results = {}
     local command = cmd
     local on_read = function(err, data)
@@ -183,14 +229,18 @@ function M.async_run(cmd) -- {{{1
         cmd = command,
         on_stdout = on_read,
         on_stderr = on_read,
-        on_exit = function()
-            vim.g.cmd_results = results
+        on_exit = function(code, signal)
+            print(vim.inspect({code, signal}))
+            vim.g.job_status = "Failed"
+            -- vim.g.job_results = results
+            vim.g.job_status = "Success"
             require"window".create_scratch(results)
             -- vim.fn.setqflist({}, 'r', {title = cmd, lines = results})
         end,
         detach = false,
     })
     asyncjob:start()
+    vim.g.job_status = "Running"
 end
 
 -- Return module --{{{1

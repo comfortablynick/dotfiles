@@ -216,6 +216,8 @@ function M.async_run(cmd, bang) -- {{{1
     local results = {}
     local command = cmd
     local qf_size = vim.g.quickfix_size or 20
+    local unlet_timer = "autocmd CursorMoved,CursorMovedI * ++once " ..
+                            "call timer_start(5000, {-> execute('unlet g:job_status', '')})"
     local on_read = function(err, data)
         assert(not err, err)
         if not data then return end
@@ -241,10 +243,7 @@ function M.async_run(cmd, bang) -- {{{1
                 else
                     vim.cmd("copen " .. math.min(#results, qf_size))
                 end
-                -- nvim.timer_start(10000, function() vim.g.job_status = "" end)
-                nvim.timer_start(2500, function()
-                    vim.cmd[[autocmd CursorMoved,CursorMovedI * ++once unlet g:job_status]]
-                end)
+                vim.cmd(unlet_timer)
             end
             -- require"window".create_scratch(results)
         end,

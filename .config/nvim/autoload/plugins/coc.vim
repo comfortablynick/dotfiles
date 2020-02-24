@@ -39,8 +39,8 @@ endfunction
 
 " Helper function for <TAB> completion keymap
 function! s:check_back_space() abort "{{{1
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
+    let l:col = col('.') - 1
+    return !l:col || getline('.')[l:col - 1]  =~# '\s'
 endfunction
 
 " Remap only if active for filetype
@@ -51,9 +51,6 @@ function! plugins#coc#apply_maps() abort "{{{1
         \ '<C-f>',
         \ '<C-b>',
         \ ], 'n', 1)
-    " let g:coc_existing_imaps = map#save([
-    "     \ '<TAB>',
-    "     \ ], 'i', 1)
 
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
@@ -115,6 +112,10 @@ endfunction
 function! plugins#coc#abbrev() abort "{{{1
     cnoreabbrev es CocCommand snippets.editSnippets
     cnoreabbrev ci CocInfo
+endfunction
+
+function! plugins#coc#config() abort
+    
 endfunction
 
 function! plugins#coc#init() abort "{{{1

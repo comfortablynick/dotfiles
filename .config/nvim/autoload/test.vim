@@ -3,18 +3,18 @@
 " Description: Various test functions for viml
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-23 08:36:10 CST
+" Last Change: 2020-02-24 14:42:41 CST
 " ====================================================
 
 function! test#time(com, ...) abort
-    let time = 0.0
-    let iters = a:0 ? a:1 : 100
-    let t = reltime()
-    for i in range(iters + 1)
+    let l:time = 0.0
+    let l:iters = a:0 ? a:1 : 100
+    let l:t = reltime()
+    for l:i in range(l:iters + 1)
         execute a:com
-        echo i.' / '.iters
+        echo l:i.' / '.l:iters
         redraw
     endfor
-    let elapsed = reltimefloat(reltime(t))
-    echo printf('Elapsed time: %f sec Average: %f ms', elapsed, (elapsed/iters * 1000))
+    let l:elapsed = reltimefloat(reltime(l:t))
+    echo printf('Elapsed time: %f sec Average: %f ms', l:elapsed, (l:elapsed/l:iters * 1000))
 endfunction

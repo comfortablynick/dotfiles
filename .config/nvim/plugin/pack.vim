@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-24 12:53:26 CST
+" Last Change: 2020-02-24 14:24:46 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -13,14 +13,15 @@ let g:package_manager = 'vim-packager'
 let g:package_defer_time = 300
 
 " Call minpac or minpac wrappers
-command! -bang PackUpdate call plugins#init() | call pack#update({'force_hooks': <bang>0})
-command!       PackClean  call plugins#init() | call pack#clean()
-command!       PackStatus call plugins#init() | call pack#status()
+command!       PackInstall call plugins#init() | call pack#install()
+command! -bang PackUpdate  call plugins#init() | call pack#update({'force_hooks': <bang>0})
+command!       PackClean   call plugins#init() | call pack#clean()
+command!       PackStatus  call plugins#init() | call pack#status()
 
 augroup deferred_pack_load
     autocmd!
     autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })
-    autocmd FileType * ++once call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
+    autocmd FileType * call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
 augroup END
 
 " Load packages that are safe to defer
@@ -46,7 +47,7 @@ function! s:deferred_load_filetype() abort
     if l:comptype ==# 'mucomplete' || l:comptype ==# 'nvim-lsp'
         silent! packadd vim-mucomplete
     endif
-    if l:comptype !=# 'coc'
+    if l:comptype !=# 'coc' && !exists('g:did_coc_loaded')
         silent! packadd ale
         silent! packadd vim-gitgutter
     endif

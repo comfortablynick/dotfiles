@@ -3,7 +3,7 @@
 " Description: Run commands located in justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-10 21:00:56 CST
+" Last Change: 2020-02-24 15:27:55 CST
 " ====================================================
 if exists('g:loaded_plugin_runner_btro6nqr')
     \ || exists('g:no_load_plugins')
@@ -28,13 +28,9 @@ let g:runner_cmd_overrides = {
     \}
 
 function! s:run(cmd) abort
-    if &modified
-        write
-        if index(s:wait_before_run_fts, &filetype) >= 0
-            sleep 500m
-        endif
-    endif
-    call runner#run_cmd(a:cmd)
+    let l:time = index(s:wait_before_run_fts, &filetype) > -1 ? 500 : 0
+    if &l:modified | write | endif
+    call timer_start(l:time, {-> runner#run_cmd(a:cmd)})
 endfunction
 
 nmap <silent> <Leader>a <Plug>(VtrAttachToPane)

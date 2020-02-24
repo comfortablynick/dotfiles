@@ -3,7 +3,7 @@
 " Description: Handle packages and interface with package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-02-24 14:41:16 CST
 " ====================================================
 
 function! pack#init() abort
@@ -56,11 +56,11 @@ function! s:pack_add_all() abort
         echoerr "Variable g:packlist doesn't exist! Aborting."
         return
     endif
-    for [repo, opts] in items(g:packlist)
+    for [l:repo, l:opts] in items(g:packlist)
         if g:package_manager ==# 'minpac'
-            call minpac#add(repo, opts)
+            call minpac#add(l:repo, l:opts)
         elseif g:package_manager ==# 'vim-packager'
-            call packager#add(repo, opts)
+            call packager#add(l:repo, l:opts)
         endif
     endfor
 endfunction
@@ -85,13 +85,19 @@ function! pack#add(repo, ...) abort
         let g:packlist_rplugins = add(get(g:, 'packlist_rplugins', []), l:name)
     endif
     if has_key(l:opts, 'for')
-        let l:ft = type(l:opts.for) == type([]) ? join(l:opts.for, ',') : l:opts.for
+        let l:ft = type(l:opts.for) == v:t_list ? join(l:opts.for, ',') : l:opts.for
         execute printf('autocmd FileType %s packadd %s', l:ft, l:name)
     else
     let l:item = {}
     let l:item[a:repo] = l:opts
     let g:packlist = extend(get(g:, 'packlist', {}), l:item)
     end
+endfunction
+
+function! pack#install(...) abort
+    call s:pack_init()
+    call s:pack_add_all()
+    return call('packager#install', a:000)
 endfunction
 
 function! pack#update(...) abort

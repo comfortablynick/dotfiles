@@ -86,6 +86,7 @@ fi
 
 # Autoload functions {{{2
 autoload -Uz remove_last_history_entry
+autoload -Uz direnv
 autoload -Uz fh
 autoload -Uz cdp
 autoload -Uz mc
@@ -171,10 +172,6 @@ autoload -Uz _zinit
 zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
 zinit load romkatv/powerlevel10k
 
-# Pure {{{2
-zinit ice pick"async.zsh" src"pure.zsh" if'[[ $ZSH_THEME = pure ]]'
-zinit light sindresorhus/pure
-
 # Completions {{{2
 zinit ice wait"0" blockf lucid
 zinit light zsh-users/zsh-completions
@@ -191,25 +188,8 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
-# zinit ice pick"zsh/fzf-zsh-completion.sh" lucid \
-#     atload"bindkey '^I' fzf_completion"
-# zinit light lincheney/fzf-tab-completion
-
-zinit ice wait"1" lucid \
-    atload"export FZF_TAB_COMMAND=fzf"
+zinit ice wait"1" lucid
 zinit light Aloxaf/fzf-tab
-
-export FZF_TAB_OPTS=(
-    --ansi   # Enable ANSI color support, necessary for showing groups
-    --expect='$FZF_TAB_CONTINUOUS_TRIGGER' # For continuous completion
-    '--color=hl:$(( $#headers == 0 ? 108 : 255 ))'
-    --nth=2,3 --delimiter='\0'  # Don't search FZF_TAB_PREFIX
-    --layout=reverse --height=40%
-    --tiebreak=begin -m --bind=tab:down,ctrl-j:accept,change:top,ctrl-space:toggle --cycle
-    '--query=$query'   # $query will be expanded to query string at runtime.
-    '--header-lines=$#headers' # $#headers will be expanded to lines of headers at runtime
-)
-
 
 # dircolors {{{2
 # Use my fork of trapd00r plugin

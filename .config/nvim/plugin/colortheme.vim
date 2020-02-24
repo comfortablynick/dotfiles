@@ -3,7 +3,7 @@
 " Description: Color and theme settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-30 15:27:40 CST
+" Last Change: 2020-02-21 15:35:01 CST
 " ====================================================
 if exists('g:loaded_plugin_colortheme') | finish | endif
 let g:loaded_plugin_colortheme = 1
@@ -51,15 +51,6 @@ let g:PaperColor_Theme_Options = {
     \     }
     \   }
     \ }
-
-function! s:add_sneak_highlights() abort
-    highlight Sneak         ctermfg=red ctermbg=234 guifg=#ff0000 guibg=#1c1c1c
-endfunction
-
-augroup plugin_colortheme
-    autocmd!
-    autocmd ColorScheme * call s:add_sneak_highlights()
-augroup END
 
 " Assign colorscheme
 function! s:get_vim_color() abort

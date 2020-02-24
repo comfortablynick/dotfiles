@@ -1,19 +1,13 @@
-" vim: filetype=vifm :
-" Sample configuration file for vifm (last updated: 20 July, 2018)
-" You can edit this file by hand.
-" The " character at the beginning of a line comments out the line.
-" Blank lines are ignored.
-" The basic format for each item is shown with an example.
-
+" vim:ft=vifm:
+" Configuration file for vifm
+" Last updated: 2020-02-24 09:50:11 CST
 " ------------------------------------------------------------------------------
 
 " This is the actual command used to start vi.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-set vicmd=vim
-" set vicmd=elvis\ -G\ termcap
-" set vicmd=vile
+set vicmd=nvim
 
 " This makes vifm perform file operations on its own instead of relying on
 " standard utilities like `cp`.  While using `cp` and alike is a more universal
@@ -37,7 +31,7 @@ set history=100
 
 " Automatically resolve symbolic links on l or Enter.
 
-set nofollowlinks
+set followlinks
 
 " With this option turned on you can run partially entered commands with
 " unambiguous beginning using :! (e.g. :!Te instead of :!Terminal or :!Te<tab>).
@@ -55,7 +49,7 @@ set undolevels=100
 " If you installed the vim.txt help file set vimhelp.
 " If would rather use a plain text help file set novimhelp.
 
-set novimhelp
+set vimhelp
 
 " If you would like to run an executable file when you
 " press return on the file name set this.

@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-20 08:45:47 CST
+" Last Change: 2020-02-24 12:05:10 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -41,6 +41,7 @@ let g:completion_filetypes = {
     \    'mail',
     \    'pro',
     \    'toml',
+    \    'vifm',
     \ ],
     \ 'none': [
     \    'help',

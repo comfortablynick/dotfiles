@@ -434,6 +434,16 @@ function nvim.spawn(cmd, params, onexit) -- {{{2
     return handle, pid
 end
 
+function nvim.timer_start(timeout, callback) -- {{{2
+    local timer = vim.loop.new_timer()
+    timer:start(timeout, 0, vim.schedule_wrap(function()
+        timer:stop()
+        timer:close()
+        callback()
+    end))
+    return timer
+end
+
 -- Iterator utils {{{1
 -- Helper functions {{{2
 -- From: https://github.com/rxi/lume

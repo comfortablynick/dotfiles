@@ -17,7 +17,7 @@
 # Bookmarks:
 
 # TUI:
-ar
+al
 q0
 v2
 ov
@@ -26,42 +26,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/home/nick/go/pkg/mod/github.com/nomad-software
-	..
-0
-d/home/nick/go/pkg/mod/github.com
-	!burnt!sushi
-1
-d/home/nick/go/pkg/mod/github.com/!burnt!sushi
-	..
-0
-d/home/nick/go/pkg/mod/github.com
-	stretchr
-13
-d/home/nick/go/pkg/mod/github.com/stretchr
-	testify@v1.4.0
-1
-d/home/nick/go/pkg/mod/github.com/stretchr/testify@v1.4.0
-	suite
-6
-d/home/nick/go/pkg/mod/github.com/stretchr/testify@v1.4.0/suite
-	..
-0
-d/home/nick/go/pkg/mod/github.com/stretchr/testify@v1.4.0
-	..
-0
-d/home/nick/go/pkg/mod/github.com/stretchr
-	..
-0
-d/home/nick/go/pkg/mod/github.com
-	pkg
-11
-d/home/nick/go/pkg/mod/github.com/pkg
-	errors@v0.8.1
-1
-d/home/nick/go/pkg/mod/github.com/pkg/errors@v0.8.1
-	..
-0
 d/home/nick/go/pkg/mod/github.com/pkg
 	..
 0
@@ -326,6 +290,42 @@ d/home/nick/go/src/github.com/NYTimes/gziphandler
 d/home/nick/go/src/github.com
 	isacikgoz
 4
+d/home/nick/dotfiles/.config/nvim/autoload
+	airline
+1
+d/home/nick/dotfiles/.config/nvim/autoload/airline
+	..
+0
+d/home/nick/dotfiles/.config/nvim/autoload
+	file.vim
+9
+d/home/nick/.local/share/nvim/site/pack/packager/opt/vifm.vim/doc/plugin
+	..
+0
+d/home/nick/.local/share/nvim/site/pack/packager/opt/vifm.vim/doc
+	plugin
+2
+d/home/nick/.local/share/nvim/site/pack/packager/opt/vifm.vim
+	doc
+2
+d/home/nick/.local/share/nvim/site/pack/packager/opt
+	vifm.vim
+29
+d/home/nick/.local/share/nvim/site/pack/packager/opt/vifm.vim
+	doc
+2
+d/home/nick/.local/share/nvim/site/pack/packager/opt
+	vifm.vim
+29
+d/home/nick/.local/share/nvim/site/pack/packager
+	start
+2
+d/home/nick/.local/share/nvim/site/pack/packager/start
+	ansible-vim
+1
+d/home/nick/.local/share/nvim/site/pack/packager/start/ansible-vim
+	indent
+4
 d
 
 # Right window history (oldest to newest):
@@ -335,12 +335,48 @@ D/home/nick/dotfiles/dotfiles
 D/home/nick/dotfiles
 	README.md
 2
+D/home/nick
+	dotfiles
+3
+D/home/nick/dotfiles
+	config.yaml
+5
+D/home/nick
+	dotfiles
+3
+D/home/nick/dotfiles
+	env.toml
+6
+D/home/nick
+	dotfiles
+3
+D/home
+	nick
+2
+D/home/nick
+	bin
+2
+D/home/nick/bin
+	..
+0
+D/home/nick
+	node_modules
+7
+D/home/nick/node_modules
+	..
+0
+D/home/nick
+	node_modules
+7
 D
 
 # Command line history (oldest to newest):
+:h 
+:h
 :q
 
 # Search history (oldest to newest):
+/qq:q
 
 # Prompt history (oldest to newest):
 

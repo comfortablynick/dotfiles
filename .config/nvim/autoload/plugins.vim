@@ -3,10 +3,11 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-20 14:44:53 CST
+" Last Change: 2020-02-24 10:31:13 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
+let s = "yu"
 function! plugins#init() abort
     " General
     Pack 'chrisbra/Colorizer'
@@ -27,8 +28,10 @@ function! plugins#init() abort
     " Editing behavior
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
+    Pack 'machakann/vim-sandwich'
     Pack 'tomtom/tcomment_vim'
     Pack 'justinmk/vim-sneak'
+    Pack 'easymotion/vim-easymotion'
     Pack 'rhysd/clever-f.vim'
     Pack 'tommcdo/vim-lion'
     Pack 'wellle/targets.vim'
@@ -48,6 +51,7 @@ function! plugins#init() abort
     Pack 'preservim/nerdtree'
     Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
     Pack 'tpope/vim-projectionist'
+    Pack 'kyazdani42/nvim-tree.lua'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'

@@ -3,12 +3,13 @@
 " Description: Markdown ft settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-25 16:49:36 CST
+" Last Change: 2020-02-21 16:19:58 CST
 " ====================================================
 if exists('g:loaded_ftplugin_markdown') | finish | endif
 let g:loaded_ftplugin_markdown = 1
 
 setlocal tabstop=2
+setlocal spell
 
 " Mkdx plugin settings
 let g:mkdx#settings = {

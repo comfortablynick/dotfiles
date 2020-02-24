@@ -10,17 +10,7 @@ config:
   longkey: false
   showdiff: false
   workdir: ~/.config/dotdrop
-variables:
-    nvim_site: "{{@@ env['XDG_DATA_HOME'] @@}}/nvim/site"
 dotfiles:
-  d_nvim:
-    dst: "{{@@ nvim_site @@}}"
-    link: link_children
-    src: .vim
-  d_vim:
-    dst: ~/.vim
-    link: link_children
-    src: .vim
   d_config:
     dst: ~/.config
     link: link_children
@@ -45,18 +35,6 @@ dotfiles:
     dst: ~/.muttrc
     link: link
     src: muttrc
-  f_tmux.conf:
-    dst: ~/.tmux.conf
-    link: link
-    src: tmux.conf
-  f_tmux.theme.conf:
-    dst: ~/.tmux.theme.conf
-    link: link
-    src: tmux.theme.conf
-  f_vimrc:
-    dst: ~/.vimrc
-    link: link
-    src: vimrc.vim
   f_xonshrc:
     dst: ~/.xonshrc_orig
     link: link
@@ -77,44 +55,22 @@ dotfiles:
     src: bin
     dst: ~/bin
     link: link
+  f_vintrc.yaml:
+    src: vintrc.yaml
+    dst: ~/.vintrc.yaml
+    link: link
 profiles:
   core:
     dotfiles:
     - f_bashrc
     - f_bash_profile
     - f_gitconfig
-    - f_tmux.conf
-    - f_tmux.theme.conf
-    - f_vimrc
     - f_xonshrc
     - f_zshrc
-    - d_nvim
     - d_config
-    # - d_cmake
-    # - d_bash
-    # - d_fish
-    # - d_legit
-    # - d_nvim_config
-    # - d_powerline
-    # - d_shell
-    # - d_topydo
-    # - d_tmux
-    # - d_ultisnips
-    # - d_xonsh
-    # - d_zsh
-    # - d_git
-    # - d_yay
-    # - d_htop
-    # - d_pacman
-    # - d_rustfmt
-    # - d_pip
-    # - f_lua-format
-    # - f_kakrc
     - f_ignore
-    # - d_ripgrep
-    # - d_ptpython
-    # - d_direnv
     - d_bin
+    - f_vintrc.yaml
   io:
     include:
     - core
@@ -122,7 +78,6 @@ profiles:
     dotfiles:
     - d_mutt
     - f_muttrc
-    - d_vim
     include:
     - core
     - ansible
@@ -142,5 +97,3 @@ trans_read:
   gpg: gpg2 -d -o {1} -r nick {0}
 trans_write:
   gpg: gpg2 -e -o {1} -r nick {0}
-
-# vim:ts=2:

@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 12:24:06 CST
+" Last Change: 2020-02-24 12:53:26 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -20,15 +20,18 @@ command!       PackStatus call plugins#init() | call pack#status()
 augroup deferred_pack_load
     autocmd!
     autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })
-    autocmd FileType * call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
+    autocmd FileType * ++once call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
 augroup END
 
 " Load packages that are safe to defer
 function! s:deferred_load() abort
     silent! packadd targets.vim
     silent! packadd tcomment_vim
-    " silent! packadd asyncrun.vim
-    silent! packadd vim-dispatch
+    silent! packadd asyncrun.vim
+    " silent! packadd vim-dispatch
+    " silent! packadd vim-easymotion
+    silent! packadd clever-f.vim
+    silent! packadd vim-sneak
 
     if $MOSH_CONNECTION != 1
         silent! packadd vim-devicons

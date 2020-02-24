@@ -1,0 +1,19 @@
+cmdargs:
+  verbose: no
+  severity: style_problem
+  error-limit: 50
+  stat: no
+  color: no
+  json: no
+  env:
+    neovim: no
+  stdin_display_name: stdin
+
+policies:
+  # Experimental
+  ProhibitUnusedVariable:
+    enabled: no
+  ProhibitUsingUndeclaredVariable:
+    enabled: yes
+  ProhibitImplicitScopeVariable:
+    enabled: yes

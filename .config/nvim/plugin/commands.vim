@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-20 16:41:50 CST
+" Last Change: 2020-02-23 07:41:51 CST
 " ====================================================
 if exists('g:loaded_plugin_commands') | finish | endif
 let g:loaded_plugin_commands = 1
@@ -13,7 +13,8 @@ command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>
 command! -complete=help -nargs=? H Help <args>
 
 " Run a command asynchronously
-command! -complete=file -bang -nargs=? Run lua require'tools'.async_run(<q-args>, <bang>)
+command! -complete=file -bang -nargs=? Run lua require'tools'.async_run(<q-args>, '<bang>')
+command! -complete=file -bang -nargs=? Cmd lua require'tools'.run(<q-args>)
 
 " Pretty-print using vim.inspect
 command! -complete=var -nargs=1 PPrint echo v:lua.vim.inspect(<args>)
@@ -43,3 +44,24 @@ command! -nargs=* -complete=file StartupTime
 " Lazy load scriptease plugin
 command! -bar Messages
     \ packadd vim-scriptease | Messages
+
+" Usage:
+" 	:Redir hi .........show the full output of command ':hi' in a scratch window
+" 	:Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
+command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
+
+" Display :scriptnames in quickfix and optionally filter
+command! -nargs=* -bar -count=0 Scriptnames
+    \ call s:scriptnames(<f-args>) |
+    \ copen |
+    \ <count>
+
+function! s:scriptnames(...) abort
+    call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
+    if len(a:000) > 0
+        packadd cfilter
+        for arg in a:000
+            execute 'Cfilter '.arg
+        endfor
+    endif
+endfunction

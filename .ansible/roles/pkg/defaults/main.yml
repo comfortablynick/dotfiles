@@ -31,7 +31,6 @@ nodejs_default_pkgs:
 pip2_default_pkgs:
   - virtualenv
   - pip
-  - setuptools
 
 pip3_default_pkgs:
   - pip
@@ -56,12 +55,20 @@ pipx_default_pkgs:
   - dotdrop
   - topydo
   - speedtest-cli
+  - python-language-server
 
 pipx_inject_dependencies:
   - pkg: optimize-images
-    inject: pillow
+    inject:
+      - pillow
   - pkg: ptpython
-    inject: pynvim
+    inject:
+      - pynvim
+  - pkg: python-language-server
+    inject:
+      - pyls-mypy
+      - pyls-isort
+      - pyls-black
 
 asdf_bin: "{{ ansible_env.HOME }}/.asdf/bin/asdf"
 asdf_shims_path: "{{ ansible_env.HOME }}/.asdf/shims"

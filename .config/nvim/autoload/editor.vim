@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 08:52:12 CST
+" Last Change: 2020-02-24 11:48:24 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -15,20 +15,16 @@ endfunction
 
 " Expand cabbr if it's the only command
 function! editor#cabbr(lhs, rhs) abort
-    if getcmdtype() ==# ':' && getcmdline() == a:lhs
+    if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
         return a:rhs
     endif
     return a:lhs
 endfunction
 
-function! editor#iabbr(lhs, rhs) abort
-    return a:rhs
-endfunction
-
 " Eat space (from h: abbr)
 function! editor#eatchar(pat) abort
-    let c = nr2char(getchar(0))
-    return (c =~ a:pat) ? '' : c
+    let l:c = nr2char(getchar(0))
+    return (l:c =~ a:pat) ? '' : l:c
 endfunc
 
 " Insert fold marker + comment string if not already in comment
@@ -63,22 +59,22 @@ function! editor#help_tab() abort
         return 'h'
     endif
 
-    let helptabnr = 0
-    for i in range(tabpagenr('$'))
-        let tabnr = i + 1
-        for bufnr in tabpagebuflist(tabnr)
-            if getbufvar(bufnr, '&ft') ==# 'help'
-                let helptabnr = tabnr
+    let l:helptabnr = 0
+    for l:i in range(tabpagenr('$'))
+        let l:tabnr = l:i + 1
+        for l:bufnr in tabpagebuflist(l:tabnr)
+            if getbufvar(l:bufnr, '&ft') ==# 'help'
+                let l:helptabnr = l:tabnr
                 break
             endif
         endfor
     endfor
 
-    if helptabnr
-        if tabpagenr() == helptabnr
+    if l:helptabnr
+        if tabpagenr() == l:helptabnr
             return 'h'
         else
-            return 'tabnext '.helptabnr.' | h'
+            return 'tabnext '.l:helptabnr.' | h'
         endif
     else
         return 'tab h'

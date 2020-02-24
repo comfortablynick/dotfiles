@@ -1,5 +1,6 @@
 .git
 .netrwhist
+coc-settings.json
 zig-cache/
 Cargo.lock
 .rustup/
@@ -8,3 +9,4 @@ Cargo.lock
 .vscode*/
 .mypy_cache/
 node_modules/
+*/pipx/venvs/*

@@ -173,7 +173,8 @@ function M.get_history() -- {{{1
     return hist
 end
 
-function M.async_run(cmd, bang) -- {{{1
+function M.run(cmd) -- {{{1
+    -- Test run command using libuv api
     local stdout = uv.new_pipe(false)
     local stderr = uv.new_pipe(false)
     local command = vim.split(cmd, " ")
@@ -193,12 +194,11 @@ function M.async_run(cmd, bang) -- {{{1
             vim.api.nvim_err_writeln(string.format(
                                          "Cmd '%s' failed with exit code: %d",
                                          cmd, code))
-            vim.g.luajob_status = "Failed"
+            vim.g.job_status = "Failed"
         else
-            vim.g.luajob_status = "Success"
+            vim.g.job_status = "Success"
         end
         if #results > 0 then
-            if bang == "!" then print(results[1]) end
             vim.fn.setqflist({}, "r",
                              {title = "Command: " .. cmd, lines = results})
             vim.cmd("copen " .. math.min(#results, 10))
@@ -207,14 +207,15 @@ function M.async_run(cmd, bang) -- {{{1
     handle = uv.spawn(table.remove(command, 1),
                       {args = command, stdio = {stdout, stderr}},
                       vim.schedule_wrap(onexit))
-    vim.g.luajob_status = "Running"
+    vim.g.job_status = "Running"
     uv.read_start(stdout, onread)
     uv.read_start(stderr, onread)
 end
 
-function M.cmd(cmd) -- {{{1
+function M.async_run(cmd, bang) -- {{{1
     local results = {}
     local command = cmd
+    local qf_size = vim.g.quickfix_size or 20
     local on_read = function(err, data)
         assert(not err, err)
         if not data then return end
@@ -232,7 +233,19 @@ function M.cmd(cmd) -- {{{1
             else
                 vim.g.job_status = "Success"
             end
-            vim.fn.setqflist({}, "r", {title = cmd, lines = results})
+            if #results > 0 then
+                vim.fn.setqflist({}, "r",
+                                 {title = "Command: " .. cmd, lines = results})
+                if bang == "!" then
+                    print(results[1])
+                else
+                    vim.cmd("copen " .. math.min(#results, qf_size))
+                end
+                -- nvim.timer_start(10000, function() vim.g.job_status = "" end)
+                nvim.timer_start(2500, function()
+                    vim.cmd[[autocmd CursorMoved,CursorMovedI * ++once unlet g:job_status]]
+                end)
+            end
             -- require"window".create_scratch(results)
         end,
         detach = false,
@@ -241,5 +254,26 @@ function M.cmd(cmd) -- {{{1
     vim.g.job_status = "Running"
 end
 
+function M.lscolors() -- {{{1
+    -- Test parse $LS_COLORS
+    local lsc = {}
+    for _, item in ipairs(vim.split(vim.env.LS_COLORS, ":")) do
+        local pair = vim.split(item, "=")
+        local attrs = {}
+        attrs.seq = pair[2]
+        attrs.fg_color = string.match(pair[2] or "", "38;5;([0-9]+)")
+        attrs.bg_color = string.match(pair[2] or "", "48;5;([0-9]+)")
+        -- local elems = vim.split(pair[2] or "", ";")
+        -- if elems[1] == "38" then
+        --     attrs.type = "fg"
+        -- elseif elems[1] == "48" then
+        --     attrs.type = "bg"
+        -- end
+        -- if elems[2] == "5" then attrs["color256"] = elems[3] end
+        lsc[pair[1]] = attrs
+    end
+    -- return lsc
+    return lsc
+end
 -- Return module --{{{1
 return M

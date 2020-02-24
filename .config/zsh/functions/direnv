@@ -1,0 +1,8 @@
+direnv() {
+    if (( $+commands[direnv] )); then
+        command direnv "$@"
+    else
+        asdf exec direnv "$@"
+    fi
+}
+# vim:ft=zsh:

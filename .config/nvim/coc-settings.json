@@ -94,9 +94,11 @@
   },
 
   // Explorer
+  "explorer.icon.enableVimDevicons": true,
+  "explorer.icon.enableNerdfont": true,
   "explorer.quitOnOpen": true,
   "explorer.keyMappings": {
-    "s": "openInVsplit"
+    "s": "open:vsplit"
   },
   "explorer.file.showHiddenFiles": true
 }

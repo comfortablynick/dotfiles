@@ -177,11 +177,12 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 
 " Plugins {{{1
-" Load packages at startup {{{2
+ " Load packages at startup {{{2
 silent! packadd! vim-smoothie
 silent! packadd! fzf.vim
 silent! packadd! neoformat
-silent! packadd! vim-surround
+" silent! packadd! vim-surround
+silent! packadd! vim-sandwich
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
 silent! packadd! vim-clap
@@ -193,8 +194,6 @@ silent! packadd! vista.vim
 silent! packadd! vim-textobj-user
 silent! packadd! vim-textobj-lua
 silent! packadd! nvim-luadev
-silent! packadd! clever-f.vim
-silent! packadd! vim-sneak
 silent! packadd! vim-bbye
 silent! packadd! luajob
 " silent! packadd! 'lightline.vim'
@@ -213,4 +212,4 @@ EOF
 if has('nvim')
     lua require'helpers'
     " lua require'lightline'
-endif
+endif 

@@ -47,11 +47,13 @@ endfunction
 function! plugins#coc#apply_maps() abort "{{{1
     if exists('b:coc_suggest_disable') | return | endif
     " Capture any existing maps
-    let g:coc_existing_maps = map#save([
+    let l:coc_existing_maps = map#save([
         \ '<C-f>',
         \ '<C-b>',
-        \ '<Tab>'
         \ ], 'n', 1)
+    " let g:coc_existing_imaps = map#save([
+    "     \ '<TAB>',
+    "     \ ], 'i', 1)
 
     nnoremap <silent> gh :call CocAction('doHover')<CR>
     nmap <silent> gd <Plug>(coc-definition)
@@ -66,8 +68,8 @@ function! plugins#coc#apply_maps() abort "{{{1
     nmap <silent> <Leader>g <Plug>(coc-diagnostic-prev)
     nnoremap <silent> <Leader>d :CocList diagnostics<CR>
 
-    let l:cf = g:coc_existing_maps['<C-f>']['rhs']
-    let l:cb = g:coc_existing_maps['<C-b>']['rhs']
+    let l:cf = l:coc_existing_maps['<C-f>']['rhs']
+    let l:cb = l:coc_existing_maps['<C-b>']['rhs']
     exe 'nmap <expr><C-f> coc#util#has_float() ? coc#util#float_scroll(1) : "'.l:cf.'"'
     exe 'nmap <expr><C-b> coc#util#has_float() ? coc#util#float_scroll(0) : "'.l:cb.'"'
     if empty(maparg('if', 'x'))
@@ -90,7 +92,7 @@ function! plugins#coc#apply_maps() abort "{{{1
 
     set keywordprg=:silent!\ call\ CocActionAsync('doHover')
 
-    let g:tab_orig = maparg('<Tab>', 'n', 1)
+    let g:tab_orig = maparg('<Tab>', 'i', 1)
     " Use <TAB> to scroll completion results and jump through snippets
     inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :

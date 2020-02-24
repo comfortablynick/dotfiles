@@ -22,6 +22,6 @@
     - item not in pipx_installed.stdout
 
 - name: Inject pipx dependencies
-  command: "{{ pipx_path }} inject {{ item.pkg }} {{ item.inject }}"
+  command: "{{ pipx_path }} inject {{ item.pkg }} {{ item.inject|join(' ') }}"
   loop: "{{ pipx_inject_dependencies }}"
   changed_when: false # there seems to be no way to detect if this is a change or not

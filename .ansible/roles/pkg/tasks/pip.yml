@@ -23,6 +23,7 @@
     state: latest
   when: pip2.stat.exists is defined and pip2.stat.exists
   become: yes
+  ignore_errors: yes
 
 - name: Install/update python3 pip packages
   pip:

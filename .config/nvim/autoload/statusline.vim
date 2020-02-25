@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 16:27:47 CST
+" Last Change: 2020-02-25 11:04:44 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -34,37 +34,37 @@ let s:LinterOK = ''
 " Functions {{{1
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
     let g:statusline_hg = get(g:, 'statusline_hg', [])
-    let bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
-    let fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
-    let opt = empty(a:opt) ? ['none', 'none'] : [a:opt, a:opt]
-    let mode = ['gui', 'cterm']
-    let cmd = 'hi '.a:group.' term='.opt[1]
-    for i in (range(0, len(mode)-1))
-        let cmd .= printf(' %sbg=%s %sfg=%s %s=%s',
-            \ mode[i], bg[i],
-            \ mode[i], fg[i],
-            \ mode[i], opt[i]
+    let l:bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
+    let l:fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
+    let l:opt = empty(a:opt) ? ['none', 'none'] : [a:opt, a:opt]
+    let l:mode = ['gui', 'cterm']
+    let l:cmd = 'hi '.a:group.' term='.l:opt[1]
+    for l:i in (range(0, len(l:mode)-1))
+        let l:cmd .= printf(' %sbg=%s %sfg=%s %s=%s',
+            \ l:mode[l:i], l:bg[l:i],
+            \ l:mode[l:i], l:fg[l:i],
+            \ l:mode[l:i], l:opt[l:i]
             \ )
     endfor
-    let g:statusline_hg += [cmd]
-    execute cmd
+    let g:statusline_hg += [l:cmd]
+    execute l:cmd
 endfunction
 
 function! statusline#get_highlight(src) abort
-    let hl = execute('highlight '.a:src)
-    let mregex = '\v(\w+)\=(\S+)'
-    let idx = 0
-    let arr = {}
+    let l:hl = execute('highlight '.a:src)
+    let l:mregex = '\v(\w+)\=(\S+)'
+    let l:idx = 0
+    let l:arr = {}
     while 1
-        let idx = match(hl, mregex, idx)
-        if idx == -1
+        let l:idx = match(l:hl, l:mregex, l:idx)
+        if l:idx == -1
             break
         endif
-        let m = matchlist(hl, mregex, idx)
-        let idx += len(m[0])
-        let arr[m[1]]=m[2]
+        let l:m = matchlist(l:hl, l:mregex, l:idx)
+        let l:idx += len(l:m[0])
+        let l:arr[l:m[1]]=l:m[2]
     endwhile
-    return arr
+    return l:arr
 endfunction
 
 function! statusline#extract(group, what, ...) abort
@@ -124,13 +124,13 @@ function! s:line_percent() abort "{{{2
 endfunction
 
 function! s:line_no() abort "{{{2
-    let totlines = line('$')
-    let maxdigits = len(string(totlines))
+    let l:totlines = line('$')
+    let l:maxdigits = len(string(l:totlines))
     return printf('%*d/%*d',
-        \ maxdigits,
+        \ l:maxdigits,
         \ line('.'),
-        \ maxdigits,
-        \ totlines
+        \ l:maxdigits,
+        \ l:totlines
         \ )
 endfunction
 
@@ -183,7 +183,7 @@ function! statusline#file_type() abort "{{{2
 endfunction
 
 function! statusline#file_format() abort "{{{2
-    let ffsymbol = s:nf &&
+    let l:ffsymbol = s:nf &&
         \ exists('*WebDevIconsGetFileFormatSymbol') ?
         \ WebDevIconsGetFileFormatSymbol() :
         \ ''
@@ -191,14 +191,14 @@ function! statusline#file_format() abort "{{{2
     return &fileformat !=? 'unix' ?
         \ statusline#is_not_file() ?
         \ '' : winwidth(0) > g:sl.width.med
-        \ ? (&fileformat . ' ' . ffsymbol )
+        \ ? (&fileformat . ' ' . l:ffsymbol )
         \ : ''
         \ : ''
 endfunction
 
 function! statusline#is_not_file() abort "{{{2
     " Return true if not treated as file
-    let exclude = [
+    let l:exclude = [
         \ 'help',
         \ 'nerdtree',
         \ 'netrw',
@@ -215,9 +215,9 @@ function! statusline#is_not_file() abort "{{{2
         \ 'output:///info',
         \ 'nofile',
         \ ]
-    if index(exclude, &filetype) > -1
-        \ || index(exclude, expand('%:t')) > -1
-        \ || index(exclude, expand('%')) > -1
+    if index(l:exclude, &filetype) > -1
+        \ || index(l:exclude, expand('%:t')) > -1
+        \ || index(l:exclude, expand('%')) > -1
         return 1
     endif
     return 0
@@ -236,50 +236,50 @@ function! statusline#syntax_group() abort " {{{2
 endfunction
 
 function! s:is_special_file() abort "{{{2
-    let f = @%
-    let b = &buftype
-    if empty(f)
+    let l:f = @%
+    let l:b = &buftype
+    if empty(l:f)
         return '[No Name]'
-    elseif f =~? '__Tagbar__'
+    elseif l:f =~? '__Tagbar__'
         return ''
-    elseif f =~? '__Gundo\|NERD_tree'
+    elseif l:f =~? '__Gundo\|NERD_tree'
         return ''
-    elseif b ==? 'quickfix'
+    elseif l:b ==? 'quickfix'
         return '[Quickfix List]'
-    elseif b =~? '^\%(nofile\|acwrite\|terminal\)$'
-        return empty(f) ? '[Scratch]' : f
-    elseif b ==? 'help'
-        return fnamemodify(f, ':t')
-    elseif f ==# 'output:///info'
+    elseif l:b =~? '^\%(nofile\|acwrite\|terminal\)$'
+        return empty(l:f) ? '[Scratch]' : l:f
+    elseif l:b ==? 'help'
+        return fnamemodify(l:f, ':t')
+    elseif l:f ==# 'output:///info'
         return ''
     endif
     return -1
 endfunction
 
 function! statusline#file_name() abort "{{{2
-    let special = s:is_special_file()
-    if special != -1 | return special | endif
+    let l:special = s:is_special_file()
+    if l:special != -1 | return l:special | endif
     if statusline#is_not_file() | return '' | endif
 
-    let fname = fnamemodify(expand('%'), ':~:.')
+    let l:fname = fnamemodify(expand('%'), ':~:.')
     if winwidth(0) < g:sl.width.min
-        let fname = pathshorten(fname)
+        let l:fname = pathshorten(l:fname)
     endif
-    return fname
+    return l:fname
 endfunction
 
 function! statusline#file_size() abort "{{{2
-    let div = 1024.0
-    let num = getfsize(expand('%:p'))
-    if num <= 0 | return '' | endif
+    let l:div = 1024.0
+    let l:num = getfsize(expand('%:p'))
+    if l:num <= 0 | return '' | endif
     " Return bytes plain without decimal or unit
-    if num < div | return num | endif
-    let num /= div
-    for unit in ['k', 'M', 'G', 'T', 'P', 'E', 'Z']
-        if num < div
-            return printf('%.1f%s', num, unit)
+    if l:num < l:div | return l:num | endif
+    let l:num /= l:div
+    for l:unit in ['k', 'M', 'G', 'T', 'P', 'E', 'Z']
+        if l:num < l:div
+            return printf('%.1f%s', l:num, l:unit)
         endif
-        let num /= div
+        let l:num /= l:div
     endfor
     " This is quite a large file!
     return printf('%.1fY')
@@ -291,9 +291,9 @@ function! statusline#file_encoding() abort "{{{2
 endfunction
 
 function! statusline#tab_name() abort "{{{3
-    let fname = @%
-    return fname =~? '__Tagbar__' ? 'Tagbar' :
-        \ fname =~? 'NERD_tree' ? 'NERDTree' :
+    let l:fname = @%
+    return l:fname =~? '__Tagbar__' ? 'Tagbar' :
+        \ l:fname =~? 'NERD_tree' ? 'NERDTree' :
         \ statusline#file_name()
 endfunction
 
@@ -304,19 +304,19 @@ function! statusline#git_summary() abort "{{{2
     " 3. signify
     if exists('b:coc_git_status') | return trim(b:coc_git_status) | endif
     if exists('*GitGutterGetHunkSummary')
-        let githunks = GitGutterGetHunkSummary()
+        let l:githunks = GitGutterGetHunkSummary()
     elseif exists('*sy#repo#get_stats')
-        let githunks = sy#repo#get_stats()
+        let l:githunks = sy#repo#get_stats()
     else
         return ''
     endif
-    let added =     githunks[0] ? printf('+%d ', githunks[0])   : ''
-    let changed =   githunks[1] ? printf('~%d ', githunks[1])   : ''
-    let deleted =   githunks[2] ? printf('-%d ', githunks[2])   : ''
+    let l:added =     l:githunks[0] ? printf('+%d ', l:githunks[0])   : ''
+    let l:changed =   l:githunks[1] ? printf('~%d ', l:githunks[1])   : ''
+    let l:deleted =   l:githunks[2] ? printf('-%d ', l:githunks[2])   : ''
     return printf('%s%s%s',
-        \ added,
-        \ changed,
-        \ deleted,
+        \ l:added,
+        \ l:changed,
+        \ l:deleted,
         \ )
 endfunction
 
@@ -331,11 +331,11 @@ endfunction
 
 function! statusline#git_status() abort "{{{2
     if !statusline#is_not_file() && winwidth(0) > g:sl.width.min
-        let branch = statusline#git_branch()
-        let hunks = statusline#git_summary()
-        return branch !=# '' ? printf('%s%s%s',
-            \ hunks,
-            \ ' '.substitute(branch, 'master', '', ''),
+        let l:branch = statusline#git_branch()
+        let l:hunks = statusline#git_summary()
+        return l:branch !=# '' ? printf('%s%s%s',
+            \ l:hunks,
+            \ ' '.substitute(l:branch, 'master', '', ''),
             \ g:sl.symbol.branch
             \ ) : ''
     endif
@@ -351,8 +351,8 @@ endfunction
 
 function! statusline#current_tag() abort "{{{2
     if winwidth(0) < g:sl.width.max | return '' | endif
-    let coc_func = get(b:, 'coc_current_function', '')
-    if coc_func !=# '' | return coc_func | endif
+    let l:coc_func = get(b:, 'coc_current_function', '')
+    if l:coc_func !=# '' | return l:coc_func | endif
     if exists('*tagbar#currenttag')
         return tagbar#currenttag('%s', '', 'f')
     endif
@@ -412,14 +412,14 @@ function! statusline#toggled() abort " {{{2
     if !exists('g:statusline_toggle')
         return ''
     endif
-    let sl = ''
-    for [k, v] in items(g:statusline_toggle)
-        let str = call(v, [])
-        let sl .= empty(sl)
-            \ ? str . ' '
-            \ : g:sl.separator.' '.str.' '
+    let l:sl = ''
+    for [l:k, l:v] in items(g:statusline_toggle)
+        let l:str = call(l:v, [])
+        let l:sl .= empty(l:sl)
+            \ ? l:str . ' '
+            \ : g:sl.separator.' '.l:str.' '
     endfor
-    return sl[:-2]
+    return l:sl[:-2]
 endfunction
 
 " Toggle {{{1
@@ -441,28 +441,28 @@ function! s:toggle_sl_item(var, funcref) abort " {{{2
 endfunction
 
 function! statusline#sl_command(...) abort " {{{2
-    let arg = exists('a:1') ? a:1 : 'clear'
+    let l:arg = exists('a:1') ? a:1 : 'clear'
 
-    if arg ==# 'toggle'
+    if l:arg ==# 'toggle'
         let &laststatus = (&laststatus != 0 ? 0 : 2)
         let &showmode = (&laststatus == 0 ? 1 : 0)
         return
-    elseif arg ==# 'clear'
+    elseif l:arg ==# 'clear'
         unlet! g:statusline_toggle
         return
     endif
 
     " Split args in case we have many
-    let args = split(arg, ' ')
+    let l:args = split(l:arg, ' ')
 
     " Check the 1st one only
-    if index(s:args[1], args[0], 0) == -1
+    if index(s:args[1], l:args[0], 0) == -1
         return
     endif
 
-    for a in args
-        let fun_ref = 'statusline#'.arg
-        call s:toggle_sl_item(arg, fun_ref)
+    for l:a in l:args
+        let l:fun_ref = 'statusline#'.l:arg
+        call s:toggle_sl_item(l:arg, l:fun_ref)
     endfor
 endfunction
 

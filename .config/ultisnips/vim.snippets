@@ -44,15 +44,15 @@ $0
 endsnippet
 
 snippet scriptguard "script reinclusion guard" b
-if exists('${1:g:loaded_`!p
+let s:guard = '${1:g:loaded_`!p
 if not snip.c:
 	relpath = file_relative_path(os.path.splitext(path)[0])
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	snip.rv = relpath
 else:
-	snip.rv = snip.c`}') | finish | endif
-let $1 = 1$0
+	snip.rv = snip.c`}' | if exists(s:guard) | finish | endif
+let {s:guard} = 1$0
 endsnippet
 
 # Uses unique string so guards aren't duplicated easily

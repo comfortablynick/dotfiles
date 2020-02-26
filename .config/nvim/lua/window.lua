@@ -24,6 +24,44 @@ function M.get_usable_width(winnr) -- {{{1
     return width - numwidth - foldwidth - signwidth
 end
 
+--  get decoration column with (signs + folding + number)
+-- from: https://github.com/pwntester/dotfiles/blob/master/config/nvim/lua/util.lua
+function M.get_decoration_width(winnr) -- {{{1
+    local decoration_width = 0
+    local bufnr = api.nvim_win_get_buf(winnr or 0)
+    -- number width
+    -- Note: 'numberwidth' is only the minimal width, can be more if...
+    local max_number = 0
+    if api.nvim_win_get_option(0, "number") then
+        -- ...the buffer has many lines.
+        max_number = api.nvim_buf_line_count(bufnr)
+    elseif api.nvim_win_get_option(0, "relativenumber") then
+        -- ...the window width has more digits.
+        max_number = vim.fn.winheight(0)
+    end
+    if max_number > 0 then
+        local actual_number_width = string.len(max_number) + 1
+        local number_width = api.nvim_win_get_option(0, "numberwidth")
+        decoration_width = decoration_width +
+                               math.max(number_width, actual_number_width)
+    end
+    -- signs_
+    if vim.fn.has("signs") then
+        local signcolumn = api.nvim_win_get_option(0, "signcolumn")
+        local signcolumn_width = 2
+        if string.startswith(signcolumn, "yes") or
+            string.startswith(signcolumn, "auto") then
+            decoration_width = decoration_width + signcolumn_width
+        end
+    end
+    -- folding
+    if vim.fn.has("folding") then
+        local folding_width = api.nvim_win_get_option(0, "foldcolumn")
+        decoration_width = decoration_width + folding_width
+    end
+    return decoration_width
+end
+
 -- Adapted From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
 function M.new_centered_floating(w, h) -- {{{1
     local cols, lines = (function()
@@ -135,7 +173,6 @@ function M.floating_help(query) -- {{{1
     vim.bo.buftype = "help"
     vim.cmd("help " .. query)
 end
-
 
 function M.create_scratch(lines) -- {{{1
     for _, win in ipairs(api.nvim_list_wins()) do

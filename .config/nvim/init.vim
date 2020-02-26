@@ -14,12 +14,12 @@ augroup plugin_config_handler
     autocmd! SourcePost * call s:source_handler(expand('<afile>'), 'post')
 augroup END
 
-" Variables {{{2
 let g:plugin_config_files = map(
     \ split(globpath(&runtimepath, 'autoload/plugins/*'), '\n'),
     \ {_, val -> fnamemodify(val, ':t:r')}
     \ )
 
+" Debug Variables {{{2
 let g:plugins_sourced = []
 let g:plugins_skipped = []
 let g:plugins_called = []
@@ -28,34 +28,29 @@ let g:plugins_source_errors = []
 function! s:source_handler(sourced, type) abort "{{{2
     let l:file = substitute(fnamemodify(tolower(a:sourced), ':t:r'), '-', '_', 'g')
     if a:sourced =~# '^[plugin|autoload]'
-        if index(g:plugins_skipped, a:sourced) < 0
-            let g:plugins_skipped += [a:sourced]
-        endif
+        let g:plugins_skipped += [a:sourced]
         return
     endif
     if a:type ==# 'pre'
-        if index(g:plugins_sourced, a:sourced) < 0
-            let g:plugins_sourced += [a:sourced]
-        endif
-        if index(g:plugins_called, l:file) < 0
-            let g:plugins_called += [l:file]
-        endif
+        let g:plugins_sourced += [a:sourced]
+        let g:plugins_called += [l:file]
     endif
     if index(g:plugin_config_files, l:file) > -1
-        let l:funcname = printf('plugins#%s#%s()', l:file, a:type)
-        try
-            execute 'call' l:funcname
-        catch /E117:/
-            if index(g:plugins_source_errors, l:file) < 0
-                let g:plugins_source_errors += [v:exception]
-            endif
-        endtry
+    "     try
+    "         call plugins#{l:file}#{a:type}()
+    "     catch /^Vim\%((\a\+)\)\=:E117/
+    "         let g:plugins_source_errors += [v:exception]
+    " endtry
+    let l:fn = 'plugins#'.l:file.'#'.a:type
+    if !exists('*'.l:fn)
+        execute 'runtime autoload/plugins/'.l:file.'.vim'
     endif
-endfunction
-
-function! PluginsSkipped() abort "{{{2
-    let l:pl = map(g:plugins_skipped, {_, v -> {'filename': v}})
-    return l:pl
+    if exists('*'.l:fn)
+        call {l:fn}()
+    else
+        let g:plugins_source_errors += [l:fn]
+    endif
+endif
 endfunction
 
 if has('nvim') && get(g:, 'use_init_lua') == 1
@@ -187,11 +182,13 @@ command! -bar -bang -complete=packadd -nargs=* Packadd
     \ call s:packadd(<q-args>, <bang>0)
 
 " Load packages at startup {{{2
+" silent! packadd! 'lightline.vim'
+" silent! packadd! 'lightline-bufferline'
+" silent! packadd! vim-surround
+silent! packadd! vim-sandwich
 silent! packadd! vim-smoothie
 silent! packadd! fzf.vim
 silent! packadd! neoformat
-" silent! packadd! vim-surround
-silent! packadd! vim-sandwich
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
 silent! packadd! vim-clap
@@ -204,17 +201,7 @@ silent! packadd! vim-textobj-user
 silent! packadd! vim-textobj-lua
 silent! packadd! vim-bbye
 silent! packadd! luajob
-" silent! packadd! 'lightline.vim'
-" silent! packadd! 'lightline-bufferline'
-
-lua << EOF
-vim.cmd('packadd nvim-lsp')
-local lsp = require'nvim_lsp'
-lsp.pyls.setup{}
--- lsp.pyls_ms.setup{}
--- lsp.rust_analyzer.setup{}
--- lsp.vimls.setup{}
-EOF
+silent! packadd! nvim-lsp
 
 " Lua tools {{{2
 if has('nvim')

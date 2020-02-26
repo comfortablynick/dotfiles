@@ -1,5 +1,5 @@
-if exists('g:loaded_ftplugin_python_42efmoai') | finish | endif
-let g:loaded_ftplugin_python_42efmoai = 1
+let s:guard = 'g:loaded_ftplugin_python' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Settings for Python files
 
@@ -10,7 +10,7 @@ setlocal foldmethod=marker                  " Use 3x{ for folding
 setlocal formatprg=black\ --quiet\ -        " Use black for formatting
 
 " Other
-let python_highlight_all=1                  " Highlight all builtins
+let g:python_highlight_all=1                " Highlight all builtins
 let $PYTHONUNBUFFERED=1                     " Disable stdout buffering
 
 let g:semshi#mark_selected_nodes = 0

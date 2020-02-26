@@ -65,6 +65,7 @@ endfunction
 function! util#pformat(args) abort
     let l:pp = ''
 py3 <<EOF
+import vim
 from pprint import pformat
 args = pformat(vim.eval('a:args'))
 vim.command(f"let l:pp = {repr(args)}")

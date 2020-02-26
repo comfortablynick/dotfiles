@@ -1,4 +1,5 @@
 -- Utility functions, not necessarily integral to vim
+local vim = vim
 local M = {}
 
 function M.humanize_bytes(size)
@@ -25,8 +26,8 @@ function M.bench(iters, cb)
     local start_time = M.epoch_ms()
     iters = iters or 100
     for _ = 1, iters do cb() end
-    end_time = M.epoch_ms()
-    elapsed_time = end_time - start_time
+    local end_time = M.epoch_ms()
+    local elapsed_time = end_time - start_time
     p("time elapsed for %d runs: %d ms", iters, elapsed_time)
 end
 

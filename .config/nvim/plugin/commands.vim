@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 16:38:12 CST
+" Last Change: 2020-02-26 08:33:54 CST
 " ====================================================
 if exists('g:loaded_plugin_commands') | finish | endif
 let g:loaded_plugin_commands = 1
@@ -11,6 +11,9 @@ let g:loaded_plugin_commands = 1
 " Floating help window
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 command! -complete=help -nargs=? H Help <args>
+
+" Float terminal
+command! -complete=file -nargs=? FloatTerm lua require'window'.float_term(<q-args>, 50)
 
 " Run a command asynchronously
 command! -complete=file -bang -nargs=? Run lua require'tools'.async_run(<q-args>, '<bang>')

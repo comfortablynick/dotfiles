@@ -3,7 +3,7 @@
 " Description: Statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 15:19:28 CST
+" Last Change: 2020-02-25 19:09:45 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -250,8 +250,10 @@ function! s:is_special_file(bufnr) abort "{{{2
         return '[Tagbar]'
     elseif l:f =~? '__Gundo\|NERD_tree'
         return '[NERDTree]'
-    " elseif l:f =~? 'defx'
-    "     return '[DEFX]'
+        " elseif l:f =~? 'defx'
+        "     return '[DEFX]'
+    elseif l:f =~? 'startify'
+        return '[Startify]'
     elseif l:b ==? 'quickfix'
         return '[Quickfix List]'
     elseif l:b =~? '^\%(nofile\|acwrite\|terminal\)$'

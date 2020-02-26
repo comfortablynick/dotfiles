@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-25 17:15:59 CST
+" Last Change: 2020-02-26 08:57:14 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -150,8 +150,8 @@ endfunction
 
 augroup plugin_statusline
     autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * call s:refresh_status()
-    autocmd WinClosed * call s:refresh_status()
+    autocmd VimEnter,WinEnter,BufWinEnter,BufDelete * call s:refresh_status()
+    autocmd User ClapOnExit call s:refresh_status()
 augroup END
 
 " Old statusline code {{{1

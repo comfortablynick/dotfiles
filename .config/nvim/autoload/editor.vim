@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-24 11:48:24 CST
+" Last Change: 2020-02-25 21:39:24 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -48,7 +48,7 @@ function! editor#quick_close_buffer() abort
     if bufnr('$') == 1
         quit
     else
-        bdelete
+        bwipeout
     endif
 endfunction
 

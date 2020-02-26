@@ -3,7 +3,7 @@
 " Description: Handle project file explorer plugin settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-21 11:26:47 CST
+" Last Change: 2020-02-25 17:57:15 CST
 " ====================================================
 if exists('g:loaded_plugin_explorer')
     \ || exists('g:no_load_plugins')
@@ -19,10 +19,12 @@ command -nargs=0 LuaTreeToggle packadd nvim-tree.lua | LuaTreeToggle
 command -nargs=0 TagbarToggle call plugins#tagbar#toggle()
 command -nargs=0 RnvimrToggle packadd rnvimr | RnvimrToggle
 command -nargs=0 Lf packadd lf.vim | Lf
+command -nargs=0 DefxToggle call explorer#toggle('defx')
+command -nargs=0 NetrwToggle call explorer#toggle('netrw')
 
 " Maps
-nnoremap <silent> <Leader>n :call explorer#toggle_v_explorer()<CR>
-nnoremap <silent>    <C-E>  :call explorer#toggle_v_explorer()<CR>
+nnoremap <silent> <Leader>n :call explorer#toggle(g:use_explorer)<CR>
+nnoremap <silent>    <C-E>  :call explorer#toggle(g:use_explorer)<CR>
 
 augroup loaded_plugin_explorer
     autocmd!
@@ -30,6 +32,5 @@ augroup loaded_plugin_explorer
 augroup END
 
 function! s:netrw_set_maps() abort
-    nnoremap <buffer><silent><C-L> :TmuxNavigateRight<CR>
     " nmap <buffer><silent><nowait> <CR> <Plug>(NetrwLocalBrowseCheck)
 endfunction

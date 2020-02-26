@@ -3,7 +3,7 @@
 " Description: Handle packages and interface with package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-24 14:41:16 CST
+" Last Change: 2020-02-25 17:00:19 CST
 " ====================================================
 
 function! pack#init() abort

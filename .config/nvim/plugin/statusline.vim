@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-18 23:56:27 CST
+" Last Change: 2020-02-25 17:15:59 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -69,7 +69,7 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
     \ call statusline#sl_command(<f-args>)
 
 " Statusline definition {{{1
-" Custom highlights {{{
+" Custom highlights {{{2
 " let g:statusline_hi = statusline#get_highlight('StatusLine')
 "
 " highlight IsModified guibg=#5f8787 ctermbg=66 ctermfg=160 guifg=#f01d22 gui=bold cterm=bold
@@ -81,31 +81,83 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
 "     \ ['Red', 'Red'],
 "     \ '',
 "     \ )
-"}}}
 
-set statusline=
-set statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
-set statusline+=%<
-set statusline+=%(\ %h%w%)
-set statusline+=%(\ %{statusline#file_name()}%)
-set statusline+=%(\ %m%r%)
-" set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
-" set statusline+=%(\ %{statusline#modified()}%)
-set statusline+=%(\ \ %{statusline#linter_errors()}%)
-set statusline+=%(\ %{statusline#linter_warnings()}%)
 
-set statusline+=%=
-set statusline+=%(\ %{statusline#toggled()}\ ┊%)
-set statusline+=%(\ %{statusline#job_status()}\ ┊%)
-set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
-set statusline+=%(\ %{statusline#git_status()}\ ┊%)
-set statusline+=%(\ %l,%c%)\ %4(%p%%%)
-" set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+function! s:set_statusline() abort "{{{2
+    set statusline=
+    set ruler
+    return
+    if statusline#is_not_file() | return | endif
 
+    set statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
+    set statusline+=%<
+    set statusline+=%(\ %h%w%)
+    set statusline+=%(\ %{statusline#file_name()}%)
+    set statusline+=%(\ %m%r%)
+    " set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
+    " set statusline+=%(\ %{statusline#modified()}%)
+    set statusline+=%(\ \ %{statusline#linter_errors()}%)
+    set statusline+=%(\ %{statusline#linter_warnings()}%)
+
+    set statusline+=%=
+    set statusline+=%(\ %{statusline#toggled()}\ ┊%)
+    set statusline+=%(\ %{statusline#job_status()}\ ┊%)
+    set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
+    set statusline+=%(\ %{statusline#git_status()}\ ┊%)
+    set statusline+=%(\ %l,%c%)\ %4(%p%%%)
+    " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+endfunction
+
+
+function! Status(winnr) abort "{{{2
+    let l:active = a:winnr == winnr()
+    let l:bufnr = winbufnr(a:winnr)
+
+    " Utils to pad if not empty
+    let l:Lpad = {s->!empty(s) ? ' '.s : ''}
+    let l:Rpad = {s->!empty(s) ? s.' ' : ''}
+
+    let l:status = ''
+    if statusline#is_not_file(l:bufnr) || !l:active
+        return l:status
+    endif
+
+    let l:status .= l:Lpad(statusline#bufnr(l:bufnr))
+    let l:status .= '%<'
+    let l:status .= l:Lpad(statusline#file_name(l:bufnr))
+    " set statusline+=%(\ %h%w%)
+    " set statusline+=%(\ %{statusline#file_name()}%)
+    " set statusline+=%(\ %m%r%)
+    " set statusline+=%(\ \ %{statusline#linter_errors()}%)
+    " set statusline+=%(\ %{statusline#linter_warnings()}%)
+    "
+    " set statusline+=%=
+    " set statusline+=%(\ %{statusline#toggled()}\ ┊%)
+    " set statusline+=%(\ %{statusline#job_status()}\ ┊%)
+    " set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
+    " set statusline+=%(\ %{statusline#git_status()}\ ┊%)
+    " set statusline+=%(\ %l,%c%)\ %4(%p%%%)
+    return l:status
+endfunction
+
+" Refresh statusline {{{2
+function! s:refresh_status() abort
+    for l:win in range(1, winnr('$'))
+        " call setwinvar(l:win, '&statusline', '%!Status('. l:win .')')
+        call setwinvar(l:win, '&statusline', Status(l:win))
+    endfor
+endfunction
+
+augroup plugin_statusline
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * call s:refresh_status()
+    autocmd WinClosed * call s:refresh_status()
+augroup END
+
+" Old statusline code {{{1
 finish
-" Old code below
-" General {{{1
-function! SL_bufnr() abort " {{{2
+" General {{{2
+function! SL_bufnr() abort " {{{3
     let bufnr = bufnr('%')
     let nums = [
         \ "\u24ea",
@@ -126,7 +178,7 @@ function! SL_bufnr() abort " {{{2
         \ ' '.get(nums, bufnr('%'), bufnr('%')).' '
 endfunction
 
-function! SL_path() abort " {{{2
+function! SL_path() abort " {{{3
     if !empty(expand('%:t'))
         let fn = winwidth(0) <# 55
             \ ? '../'
@@ -139,22 +191,22 @@ function! SL_path() abort " {{{2
     return fn
 endfunction
 
-function! SL_previewwindow() abort " {{{2
+function! SL_previewwindow() abort " {{{3
     return &previewwindow ? '[Prev]' : ''
 endfunction
 
-function! SL_filename() abort " {{{2
+function! SL_filename() abort " {{{3
     let fn = !empty(expand('%:t'))
         \ ? expand('%:p:t')
         \ : '[No Name]'
     return fn . (&readonly ? ' ' : '')
 endfunction
 
-function! SL_modified() abort " {{{2
+function! SL_modified() abort " {{{3
     return &modified ? g:sl.symbol.modified : ''
 endfunction
 
-function! SL_format_and_encoding() abort " {{{2
+function! SL_format_and_encoding() abort " {{{3
     let encoding = winwidth(0) < g:sl.width.min
         \ ? ''
         \ : strlen(&fileencoding)
@@ -168,15 +220,15 @@ function! SL_format_and_encoding() abort " {{{2
     return printf('%s[%s]', encoding, format)
 endfunction
 
-function! SL_filetype() abort " {{{2
+function! SL_filetype() abort " {{{3
     return strlen(&filetype) ? &filetype : ''
 endfunction
 
-function! SL_hi_group() abort " {{{2
+function! SL_hi_group() abort " {{{3
     return '> ' . synIDattr(synID(line('.'), col('.'), 1), 'name') . ' <'
 endfunction
 
-function! SL_paste() abort " {{{2
+function! SL_paste() abort " {{{3
     if &paste
         return winwidth(0) <# 55 ? '[P]' : '[PASTE]'
     else
@@ -184,11 +236,11 @@ function! SL_paste() abort " {{{2
     endif
 endfunction
 
-function! SL_spell() abort " {{{2
+function! SL_spell() abort " {{{3
     return &spell ? &spelllang : ''
 endfunction
 
-function! SL_indentation() abort " {{{2
+function! SL_indentation() abort " {{{3
     return winwidth(0) <# 55
         \ ? ''
         \ : &expandtab
@@ -196,7 +248,7 @@ function! SL_indentation() abort " {{{2
         \ : 't:' . &shiftwidth
 endfunction
 
-function! SL_column_and_percent() abort " {{{2
+function! SL_column_and_percent() abort " {{{3
     " The percent part was inspired by vim-line-no-indicator plugin.
     let chars = ['꜒', '꜓', '꜔', '꜕', '꜖',]
     let [c_l, l_l] = [line('.'), line('$')]
@@ -205,7 +257,7 @@ function! SL_column_and_percent() abort " {{{2
     return winwidth(0) ># 55 ? printf('%s%2d', perc, col('.')) : ''
 endfunction
 
-function! SL_jobs() abort " {{{2
+function! SL_jobs() abort " {{{3
     let n_jobs = exists('g:jobs') ? len(g:jobs) : 0
     return winwidth(0) <# 55
         \ ? ''
@@ -214,7 +266,7 @@ function! SL_jobs() abort " {{{2
         \ : ''
 endfunction
 
-function! SL_toggled() abort " {{{2
+function! SL_toggled() abort " {{{3
     if !exists('g:SL_toggle')
         return ''
     endif
@@ -228,20 +280,20 @@ function! SL_toggled() abort " {{{2
     return sl[:-2]
 endfunction
 
-function! SL_terminal() abort " {{{2
+function! SL_terminal() abort " {{{3
     let term_buf_nr = get(g:, 'term_buf_nr', 0)
     return term_buf_nr && index(term_list(), term_buf_nr) != -1
         \ ? '' : ''
 endfunction
 
-function! SL_qf() abort " {{{2
+function! SL_qf() abort " {{{3
     return printf('[q:%d l:%d]',
         \ len(getqflist()),
         \ len(getloclist(bufnr('%')))
         \ )
 endfunction
 
-function! SL_diagnostic(mode) abort " {{{2
+function! SL_diagnostic(mode) abort " {{{3
     let coc = SL_coc_diagnostic(a:mode)
     let ale = SL_ale(a:mode)
     let errors = coc[0] + ale[0]
@@ -249,8 +301,8 @@ function! SL_diagnostic(mode) abort " {{{2
     return g:sl_get_parsed_linting_str(errors, warnings, a:mode)
 endfunction
 
-" Plugin interfaces {{{1
-function! SL_fugitive() abort " {{{2
+" Plugin interfaces {{{2
+function! SL_fugitive() abort " {{{3
     if winwidth(0) < g:sl.width.min | return '' | endif
     if !exists('*FugitiveHead') | return '' | endif
     let icon = g:sl.symbol.branch
@@ -258,7 +310,7 @@ function! SL_fugitive() abort " {{{2
     return head !=# 'master' ? icon.' '.head : icon
 endfunction
 
-function! SL_signify() abort " {{{2
+function! SL_signify() abort " {{{3
     if exists('*sy#repo#get_stats')
         let h = sy#repo#get_stats()
         return h !=# [-1, -1, -1] && winwidth(0) > g:sl.width.min && h !=# [0, 0, 0]
@@ -269,7 +321,7 @@ function! SL_signify() abort " {{{2
     endif
 endfunction
 
-function! SL_git_hunks() abort "{{{2
+function! SL_git_hunks() abort "{{{3
     " Look for status in this order
     " 1. coc-git, 2. gitgutter, 3. signify
     if exists('b:coc_git_status') | return trim(b:coc_git_status) | endif
@@ -286,7 +338,7 @@ function! SL_git_hunks() abort "{{{2
     return added.changed.deleted
 endfunction
 
-function! SL_ale(mode) abort " {{{2
+function! SL_ale(mode) abort " {{{3
     " a:mode: 1/0 = errors/ok
     if get(g:, 'ale_enabled', 0) == 0 | return [0, 0] | endif
     let counts = ale#statusline#Count(bufnr('%'))
@@ -295,7 +347,7 @@ function! SL_ale(mode) abort " {{{2
     return [errors, warnings]
 endfunction
 
-function! SL_coc_diagnostic(mode) abort " {{{2
+function! SL_coc_diagnostic(mode) abort " {{{3
     " a:mode: 1/0 = errors/ok
     if get(g:, 'coc_enabled', 0) == 0  || !exists('b:coc_diagnostic_info')
         return [0, 0]
@@ -306,14 +358,14 @@ function! SL_coc_diagnostic(mode) abort " {{{2
     return [errors, warnings]
 endfunction
 
-function! SL_coc_status() abort " {{{2
+function! SL_coc_status() abort " {{{3
     let status = get(g:, 'coc_status', '')
     return status
 endfunction
 
-" Helpers {{{1
+" Helpers {{{2
 let g:sl_hg = []
-function! SL_hi(group, bg, fg, opt) abort " {{{2
+function! SL_hi(group, bg, fg, opt) abort " {{{3
     let bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
     let fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
     let opt = empty(a:opt) ? ['none', 'none'] : [a:opt, a:opt]
@@ -330,7 +382,7 @@ function! SL_hi(group, bg, fg, opt) abort " {{{2
     execute cmd
 endfunction
 
-function! s:set_sl_colors() abort " {{{2
+function! s:set_sl_colors() abort " {{{3
     let statusline = GetHighlight('StatusLine')
     call SL_hi('User1', g:sl.colors['main'], g:sl.colors['background'], 'bold')
     call SL_hi('User2', g:sl.colors['backgroundLight'], g:sl.colors['text'], 'none')
@@ -348,12 +400,12 @@ function! s:set_sl_colors() abort " {{{2
     call SL_hi('User8', g:sl.colors['backgroundDark'], g:sl.colors['backgroundLight'], 'none')
 endfunction
 
-function! s:set_colors() abort "{{{2
+function! s:set_colors() abort "{{{3
     hi link User3 StatusLine
     hi link User8 StatusLineNC
 endfunction
 
-function! s:toggle_sl_item(var, funcref) abort " {{{2
+function! s:toggle_sl_item(var, funcref) abort " {{{3
     let g:SL_toggle = get(g:, 'SL_toggle', {})
     if has_key(g:SL_toggle, a:var)
         call remove(g:SL_toggle, a:var)
@@ -362,7 +414,7 @@ function! s:toggle_sl_item(var, funcref) abort " {{{2
     endif
 endfunction
 
-function! SL_extract(group, what, ...) abort "{{{2
+function! SL_extract(group, what, ...) abort "{{{3
     if a:0 == 1
         return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
     else
@@ -370,7 +422,7 @@ function! SL_extract(group, what, ...) abort "{{{2
     endif
 endfunction
 
-function! GetHighlight(src) abort "{{{2
+function! GetHighlight(src) abort "{{{3
     let hl = execute('highlight '.a:src)
     let mregex = '\v(\w+)\=(\S+)'
     let idx = 0
@@ -387,7 +439,7 @@ function! GetHighlight(src) abort "{{{2
     return arr
 endfunction
 
-function! Get_SL(...) abort " {{{2
+function! Get_SL(...) abort " {{{3
     let sl = ''
     " Custom functions
     if has_key(g:sl.apply, &filetype)
@@ -459,7 +511,7 @@ function! Get_SL(...) abort " {{{2
     return sl
 endfunction
 
-function! g:sl_init() abort " {{{2
+function! g:sl_init() abort " {{{3
     set laststatus=2
     call s:set_sl_colors()
     " call s:set_colors()
@@ -472,7 +524,7 @@ function! g:sl_init() abort " {{{2
     augroup END
 endfunction
 
-function! s:apply_sl(...) abort " {{{2
+function! s:apply_sl(...) abort " {{{3
     if &buftype ==# 'terminal'
         setlocal statusline&
         set ruler
@@ -487,7 +539,7 @@ function! s:apply_sl(...) abort " {{{2
     endif
 endfunction
 
-function! g:sl_get_parsed_linting_str(errors, warnings, mode) abort " {{{2
+function! g:sl_get_parsed_linting_str(errors, warnings, mode) abort " {{{3
     let errors_str = a:errors != 0 ?
         \ printf('%s %s', g:sl.symbol.error_sign, a:errors)
         \ : ''
@@ -507,8 +559,8 @@ function! g:sl_get_parsed_linting_str(errors, warnings, mode) abort " {{{2
     endif
 endfunction
 
-" Commands {{{1
-" SL {{{2
+" Commands {{{2
+" SL {{{3
 let s:args = [
     \   ['toggle', 'clear'],
     \   [
@@ -519,7 +571,7 @@ let s:args = [
 command! -nargs=? -complete=custom,g:sl_complete_args SL
     \ call g:sl_command(<f-args>)
 
-function! g:sl_command(...) abort " {{{2
+function! g:sl_command(...) abort " {{{3
     let arg = exists('a:1') ? a:1 : 'clear'
 
     if arg ==# 'toggle'
@@ -545,11 +597,11 @@ function! g:sl_command(...) abort " {{{2
     endfor
 endfunction
 
-function! g:sl_complete_args(a, l, p) abort " {{{2
+function! g:sl_complete_args(a, l, p) abort " {{{3
     return join(s:args[0] + s:args[1], "\n")
 endfunction
 
-" Initialize {{{2
+" Initialize {{{3
 call <SID>sl_init()
 
 " vim:fdl=1:

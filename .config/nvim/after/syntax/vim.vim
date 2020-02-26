@@ -3,7 +3,7 @@
 " Description: Vim syntax overrides
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-17 16:03:49 CST
+" Last Change: 2020-02-25 17:10:42 CST
 " ====================================================
 
 unlet! b:current_syntax
@@ -28,3 +28,5 @@ syn region vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*\z(.*\)$+ en
 syn region vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*$+ end=+\.$+		contains=@vimLuaScript
 syn cluster vimFuncBodyList	add=vimLuaRegion
 let b:current_syntax = 'vim'
+
+syntax keyword vimCommand contained Packadd

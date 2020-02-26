@@ -177,7 +177,16 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 
 " Plugins {{{1
- " Load packages at startup {{{2
+" Packadd command {{{2
+function! s:packadd(arg, bang) abort
+    execute 'silent! packadd '.a:arg
+    if a:bang | doautoall BufRead | endif
+endfunction
+
+command! -bar -bang -complete=packadd -nargs=* Packadd
+    \ call s:packadd(<q-args>, <bang>0)
+
+" Load packages at startup {{{2
 silent! packadd! vim-smoothie
 silent! packadd! fzf.vim
 silent! packadd! neoformat
@@ -193,7 +202,6 @@ silent! packadd! vim-startify
 silent! packadd! vista.vim
 silent! packadd! vim-textobj-user
 silent! packadd! vim-textobj-lua
-silent! packadd! nvim-luadev
 silent! packadd! vim-bbye
 silent! packadd! luajob
 " silent! packadd! 'lightline.vim'
@@ -212,4 +220,4 @@ EOF
 if has('nvim')
     lua require'helpers'
     " lua require'lightline'
-endif 
+endif

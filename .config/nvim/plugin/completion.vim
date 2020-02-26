@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-24 12:05:10 CST
+" Last Change: 2020-02-24 18:53:47 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -62,4 +62,5 @@ augroup plugin_completion
     autocmd User CocNvimInit ++once call plugins#coc#init()
     " Disable folding on floating windows (coc-git chunk diff)
     autocmd User CocOpenFloat if exists('w:float') | setl nofoldenable | endif
+    autocmd BufWinEnter * if exists('w:clap_search_hl_id') | setl nofoldenable | endif
 augroup END

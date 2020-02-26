@@ -10,9 +10,11 @@ function! plugins#clap#post() abort
     " is confusing with which mode is shown
     let g:clap#provider#map# = s:maps
     let g:clap#provider#scriptnames# = s:scriptnames
+    let g:clap#provider#quick_cmd# = s:quick_cmd
 
     let g:clap_provider_alias = {
         \ 'map': 'map',
+        \ 'scriptnames': 'scriptnames',
         \ }
 
     " `:Clap dot` to open some dotfiles quickly.
@@ -28,6 +30,7 @@ function! plugins#clap#post() abort
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
     nnoremap <silent> <Leader>h :Clap command_history<CR>
+    nnoremap <silent> <Leader>c :Clap quick_cmd<CR>
 endfunction
 
 function! s:clap_on_enter() abort
@@ -35,6 +38,14 @@ function! s:clap_on_enter() abort
         autocmd!
         autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
     augroup END
+    call s:clap_win_disable_fold()
+endfunction
+
+function! s:clap_win_disable_fold() abort
+    let l:clap = get(g:, 'clap')
+    if empty(l:clap) | return | endif
+    let l:winid = l:clap['display']['winid']
+    call nvim_win_set_option(l:winid, 'foldenable', v:false)
 endfunction
 
 augroup autoload_plugins_clap
@@ -54,6 +65,23 @@ endfunction
 function! s:maps.sink(...) abort
     return ''
 endfunction
+
+let s:quick_cmd_source = {
+    \ 'ALEInfo': 'ALE debugging info',
+    \ 'CocConfig': 'Coc configuration',
+    \ 'Scriptnames': 'Runtime scripts sourced',
+    \ }
+
+function! s:on_move() abort
+    let l:curline = g:clap.display.getcurline()
+    call g:clap.preview.show([s:quick_cmd_source[l:curline]])
+endfunction
+
+let s:quick_cmd = {
+    \ 'source': keys(s:quick_cmd_source),
+    \ 'on_move': function('s:on_move'),
+    \ 'sink': { selected -> execute(selected, '')}
+    \ }
 
 " Scriptnames
 let s:scriptnames = {}

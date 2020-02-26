@@ -60,3 +60,14 @@ function! util#scriptnames() abort
         \ {_, v -> {'text': v[0], 'filename': expand(v[1])}}
         \ )
 endfunction
+
+" Pretty format using python3 pprint
+function! util#pformat(args) abort
+    let l:pp = ''
+py3 <<EOF
+from pprint import pformat
+args = pformat(vim.eval('a:args'))
+vim.command(f"let l:pp = {repr(args)}")
+EOF
+return l:pp
+endfunction

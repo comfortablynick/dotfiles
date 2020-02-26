@@ -5,7 +5,8 @@
 
 fzf_find_edit() {
     file=$(
-        fzf-tmux --no-multi --preview-window 'right:70%' --preview 'bat --color=always --line-range :500 {}'
+        eval "$FZF_DEFAULT_COMMAND" | fzf-tmux --ansi --no-multi \
+            --preview-window 'right:70%' --preview 'bat --color=always --line-range :500 {}'
     )
     if [ -n "$file" ]; then
         ${VISUAL:-EDITOR:-vim} "$file"
@@ -19,7 +20,7 @@ fzf_grep_edit() {
     fi
     match=$(
         rg --color=always --line-number "$1" |
-            fzf-tmux --ansi --preview-window 'right:70%' --no-multi --delimiter : \
+            fzf-tmux --ansi --preview-window 'right:50%' --no-multi --delimiter : \
                 --preview "bat --color=always --line-range {2}: {1}"
     )
     file=$(echo "$match" | cut -d':' -f1)

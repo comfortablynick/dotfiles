@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-23 07:41:51 CST
+" Last Change: 2020-02-25 16:38:12 CST
 " ====================================================
 if exists('g:loaded_plugin_commands') | finish | endif
 let g:loaded_plugin_commands = 1
@@ -16,8 +16,11 @@ command! -complete=help -nargs=? H Help <args>
 command! -complete=file -bang -nargs=? Run lua require'tools'.async_run(<q-args>, '<bang>')
 command! -complete=file -bang -nargs=? Cmd lua require'tools'.run(<q-args>)
 
-" Pretty-print using vim.inspect
-command! -complete=var -nargs=1 PPrint echo v:lua.vim.inspect(<args>)
+" Pretty-printing
+" Using Lua vim.inspect()
+command! -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
+" Using python pformat (handles lists better)
+command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
 " Save if file has changed and reload vimrc
 command! S update | source $MYVIMRC

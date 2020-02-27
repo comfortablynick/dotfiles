@@ -1,15 +1,12 @@
 " ====================================================
 " Filename:    plugin/quickfix.vim
-" Description: Commands for quickfix window
+" Description: Quickfix/location list related config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-23 11:48:11 CST
+" Last Change: 2020-02-27 16:47:33 CST
 " ====================================================
-if exists('g:loaded_plugin_quickfix')
-    \ || exists('g:no_load_plugins')
-    finish
-endif
-let g:loaded_plugin_quickfix = 1
+let s:guard = 'g:loaded_plugin_quickfix' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Defaults
 let g:quickfix_size = 20
@@ -20,4 +17,5 @@ let g:quickfix_size = 20
 "     autocmd FileType qf wincmd J
 " augroup end
 
+" Toggle quickfix
 nnoremap <silent> <Leader>q :call quickfix#toggle()<CR>

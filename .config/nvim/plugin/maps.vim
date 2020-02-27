@@ -3,7 +3,7 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-18 17:39:59 CST
+" Last Change: 2020-02-27 16:19:56 CST
 " ====================================================
 if exists('g:loaded_plugin_maps') | finish | endif
 let g:loaded_plugin_maps = 1

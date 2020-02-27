@@ -3,10 +3,10 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 08:24:30 CST
+" Last Change: 2020-02-27 16:20:48 CST
 " ====================================================
-if exists('g:loaded_plugin_editor') | finish | endif
-let g:loaded_plugin_editor = 1
+let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " # Maps
 " Format paragraph and restore cursor position
@@ -17,12 +17,21 @@ nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
 " # Abbreviations
-cnoreabbrev <expr> h editor#help_tab()
+cnoreabbrev <expr> h <SID>help_tab()
 cnoreabbrev <expr> l editor#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
 inoreabbrev <expr> fff editor#foldmarker()
+
+" Call editor#help_tab() if ':h'
+function! s:help_tab() abort
+    if !(getcmdtype() == ':' && getcmdpos() <= 2)
+        return 'h'
+    endif
+    return editor#help_tab()
+endfunction
+
 
 " # Autocmds
 augroup plugin_editor
@@ -60,18 +69,18 @@ function! s:recall_cursor_position() abort "{{{1
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 
     " Options
-    let open_folds = 1
+    let l:open_folds = 1
 
     " Folds flicker and close anyway when using Coc
     if exists('g:did_coc_loaded')
-        let open_folds = 0
+        let l:open_folds = 0
     endif
-    let ignore_buftype = [
+    let l:ignore_buftype = [
         \ 'quickfix',
         \ 'nofile',
         \ 'help',
         \ ]
-    let ignore_filetype = [
+    let l:ignore_filetype = [
         \ 'gitcommit',
         \ 'gitrebase',
         \ 'svn',
@@ -79,8 +88,8 @@ function! s:recall_cursor_position() abort "{{{1
         \ ]
 
     " Check filetype and buftype against ignore lists
-    if index(ignore_buftype, &buftype) != -1 ||
-        \ index(ignore_filetype, &filetype) != -1
+    if index(l:ignore_buftype, &buftype) != -1 ||
+        \ index(l:ignore_filetype, &filetype) != -1
         return
     endif
 
@@ -110,9 +119,8 @@ function! s:recall_cursor_position() abort "{{{1
         endif
     endif
 
-    if foldclosed('.') != -1 && open_folds
+    if foldclosed('.') != -1 && l:open_folds
         " Cursor was inside a fold; open it
         execute 'normal! zv'
     endif
 endfunction
-" vim:fdm=expr:

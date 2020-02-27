@@ -3,11 +3,9 @@
 " Description: Quickfix window filetype settings/commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-28 15:15:14 CST
+" Last Change: 2020-02-27 16:21:45 CST
 " ====================================================
-if exists('g:loaded_ftplugin_quickfix') | finish | endif
-let g:loaded_ftplugin_quickfix = 1
+let s:guard = 'g:loaded_ftplugin_qf' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
-if !exists(':Cfilter')
-    silent! packadd cfilter
-endif
+if !exists(':Cfilter') | packadd cfilter | endif

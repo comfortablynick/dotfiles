@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-26 13:56:24 CST
+" Last Change: 2020-02-26 18:59:11 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -39,7 +39,7 @@ let g:completion_filetypes = {
     \    'muttrc',
     \    'ini',
     \    'mail',
-    \    'pro',
+    \    'chordpro',
     \    'toml',
     \    'vifm',
     \ ],

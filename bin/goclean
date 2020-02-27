@@ -1,16 +1,39 @@
 #!/bin/bash
 # Remove traces of something installed with `go get`
+set -e
+# set -u
+set -o pipefail
+
+unset NOOP
+
+err() {
+    printf "\e[1;31merror: %s\e[0m\n" "$@" >&2
+}
+
 goclean() {
     local pkg=$1
-    shift || { printf "\e[1;31merror: pkg required\e[0m\n" && usage; }
+    shift || { err "PACKAGE required" && usage; }
     local ost
     local cnt
+    local params=()
 
-    printf "Performing \`go clean\` for %s..." "$pkg"
+    params+=(-i)
+
+    if [[ $NOOP -eq 1 ]]; then
+        echo "info: displaying commands only due to -n"
+        params+=(-n)
+    fi
+
+    printf "Performing \`go clean\` for %s...\n" "$pkg"
     # Clean removes object files from package source directories (ignore error)
-    go clean -i "$pkg" &>/dev/null
+    go clean "${params[@]}" "$pkg"
 
-    printf "done\n"
+    echo "done with \`go clean\`"
+
+    if [[ $NOOP -eq 1 ]]; then
+        echo "run again without -n to also delete source directories"
+        return
+    fi
 
     # Set local variables
     [[ "$(uname -m)" == "x86_64" ]] &&
@@ -31,8 +54,18 @@ goclean() {
 }
 
 usage() {
-    echo "usage: goclean [pkg]"
-    return 1
+    printf "usage: %s [-n] PACKAGE\n%s\n%s\n" "$(basename "$0")" \
+        "options:" \
+        "   -n  Print commands from \`go clean\` only, but don't execute" \
+        >&2
+    exit 1
 }
 
+while getopts 'nh' c; do
+    case $c in
+    n) NOOP=1 ;;
+    h | ?) usage ;;
+    esac
+done
+shift "$((OPTIND - 1))"
 goclean "$@"

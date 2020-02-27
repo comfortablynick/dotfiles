@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 21:39:24 CST
+" Last Change: 2020-02-27 13:53:56 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -52,13 +52,9 @@ function! editor#quick_close_buffer() abort
     endif
 endfunction
 
-" Show help in tab if only 'h' is used
+" Show help in new or existing tab
 " From: https://github.com/airblade/vim-helptab
 function! editor#help_tab() abort
-    if !(getcmdtype() == ':' && getcmdpos() <= 2)
-        return 'h'
-    endif
-
     let l:helptabnr = 0
     for l:i in range(tabpagenr('$'))
         let l:tabnr = l:i + 1

@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-26 08:57:14 CST
+" Last Change: 2020-02-26 18:53:33 CST
 " ====================================================
 if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
 let g:loaded_plugin_statusline = 1
@@ -86,24 +86,24 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
 function! s:set_statusline() abort "{{{2
     set statusline=
     set ruler
-    return
-    if statusline#is_not_file() | return | endif
+    " return
+    if statusline#is_not_file(0) | return | endif
 
     set statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
     set statusline+=%<
     set statusline+=%(\ %h%w%)
-    set statusline+=%(\ %{statusline#file_name()}%)
+    set statusline+=%(\ %{statusline#file_name(bufnr('%'))}%)
     set statusline+=%(\ %m%r%)
     " set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
     " set statusline+=%(\ %{statusline#modified()}%)
-    set statusline+=%(\ \ %{statusline#linter_errors()}%)
-    set statusline+=%(\ %{statusline#linter_warnings()}%)
+    " set statusline+=%(\ \ %{statusline#linter_errors(0)}%)
+    " set statusline+=%(\ %{statusline#linter_warnings(0)}%)
 
     set statusline+=%=
     set statusline+=%(\ %{statusline#toggled()}\ ┊%)
     set statusline+=%(\ %{statusline#job_status()}\ ┊%)
-    set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
-    set statusline+=%(\ %{statusline#git_status()}\ ┊%)
+    " set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
+    " set statusline+=%(\ %{statusline#git_status()}\ ┊%)
     set statusline+=%(\ %l,%c%)\ %4(%p%%%)
     " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 endfunction
@@ -141,18 +141,19 @@ function! Status(winnr) abort "{{{2
 endfunction
 
 " Refresh statusline {{{2
-function! s:refresh_status() abort
-    for l:win in range(1, winnr('$'))
-        " call setwinvar(l:win, '&statusline', '%!Status('. l:win .')')
-        call setwinvar(l:win, '&statusline', Status(l:win))
-    endfor
-endfunction
-
-augroup plugin_statusline
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter,BufDelete * call s:refresh_status()
-    autocmd User ClapOnExit call s:refresh_status()
-augroup END
+" function! s:refresh_status() abort
+"     for l:win in range(1, winnr('$'))
+"         " call setwinvar(l:win, '&statusline', '%!Status('. l:win .')')
+"         call setwinvar(l:win, '&statusline', Status(l:win))
+"     endfor
+" endfunction
+"
+" augroup plugin_statusline
+"     autocmd!
+"     autocmd VimEnter,WinEnter,BufWinEnter,BufDelete * call s:refresh_status()
+"     autocmd User ClapOnExit call s:refresh_status()
+" augroup END
+call s:set_statusline()
 
 " Old statusline code {{{1
 finish

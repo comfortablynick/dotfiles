@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-26 08:33:54 CST
+" Last Change: 2020-02-27 16:18:08 CST
 " ====================================================
 if exists('g:loaded_plugin_commands') | finish | endif
 let g:loaded_plugin_commands = 1
@@ -58,16 +58,6 @@ command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
 
 " Display :scriptnames in quickfix and optionally filter
 command! -nargs=* -bar -count=0 Scriptnames
-    \ call s:scriptnames(<f-args>) |
+    \ call quickfix#scriptnames(<f-args>) |
     \ copen |
     \ <count>
-
-function! s:scriptnames(...) abort
-    call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
-    if len(a:000) > 0
-        packadd cfilter
-        for arg in a:000
-            execute 'Cfilter '.arg
-        endfor
-    endif
-endfunction

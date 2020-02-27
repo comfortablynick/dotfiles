@@ -1,7 +1,18 @@
 " Quickfix window functions
 " Toggle quickfix window
-if exists('g:loaded_autoload_quickfix') | finish | endif
-let g:loaded_autoload_quickfix = 1
+let s:guard = 'g:loaded_autoload_quickfix' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
+
+" Show :scriptnames in quickfix list and optionally filter
+function! quickfix#scriptnames(...) abort
+    call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
+    if len(a:000) > 0
+        if !exists(':Cfilter') | packadd cfilter | endif
+        for l:arg in a:000
+            execute 'Cfilter '.l:arg
+        endfor
+    endif
+endfunction
 
 " Originally from:
 " https://github.com/skywind3000/asyncrun.vim/blob/master/plugin/asyncrun.vim
@@ -48,7 +59,7 @@ endfunction
 
 function! quickfix#toggle() abort
     let l:qf_lines = len(getqflist())
-    let l:qf_size = min([max([1, qf_lines]), get(g:, 'quickfix_size', 12)])
+    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', 12)])
     call s:qf_toggle(l:qf_size)
 endfunction
 

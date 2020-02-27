@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 10:34:31 CST
+" Last Change: 2020-02-27 16:48:40 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -90,6 +90,7 @@ function! plugins#init() abort
     Pack 'junegunn/gv.vim'
 
     " Snippets
+    Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
 
     " Completion

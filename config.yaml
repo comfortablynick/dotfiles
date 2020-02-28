@@ -27,10 +27,6 @@ dotfiles:
     dst: ~/.bashrc
     link: link
     src: bashrc.sh
-  f_gitconfig:
-    dst: ~/.gitconfig
-    link: link
-    src: gitconfig
   f_muttrc:
     dst: ~/.muttrc
     link: link
@@ -64,7 +60,6 @@ profiles:
     dotfiles:
     - f_bashrc
     - f_bash_profile
-    - f_gitconfig
     - f_xonshrc
     - f_zshrc
     - d_config

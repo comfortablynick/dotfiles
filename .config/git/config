@@ -5,7 +5,6 @@
 	fzf = "!f() { /home/nick/src/git-fzf/git-fzf.sh $@ }; f"
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX
-    # pager = delta --dark
     untrackedCache = true
 [color]
 	ui = true

@@ -194,7 +194,6 @@ silent! packadd! vim-fugitive
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
 silent! packadd! vim-tmux-navigator
-silent! packadd! vim-lion
 silent! packadd! vim-startify
 silent! packadd! vista.vim
 silent! packadd! vim-textobj-user

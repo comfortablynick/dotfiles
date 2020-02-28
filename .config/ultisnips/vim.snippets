@@ -25,8 +25,9 @@
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 global !p
 from pathlib import PurePath
-def file_relative_path(path):
-	"""Return path relative to .vim directory."""
+def file_relative_path():
+	"""Return path of current file relative to .vim directory."""
+	path = vim.eval('expand("%:p:r")')
 	fp = PurePath(path)
 	return fp.relative_to(os.path.expandvars("$VDOTDIR"))
 endglobal
@@ -34,7 +35,7 @@ endglobal
 # Author:   ${1:`!v g:snippets_author`} <${2:`!v g:snippets_author_email`}>
 snippet doc "Script documetation" b
 " ====================================================
-" Filename:    `!p snip.rv = str(file_relative_path(path))`
+" Filename:    `!p snip.rv = str(file_relative_path())`
 " Description: ${1}
 " Author:      Nick Murphy
 " License:     MIT
@@ -44,14 +45,14 @@ $0
 endsnippet
 
 snippet scriptguard "script reinclusion guard" b
-let s:guard = '${1:g:loaded_`!p
+let s:guard = 'g:loaded_`!p
 if not snip.c:
-	relpath = file_relative_path(os.path.splitext(path)[0])
+	relpath = file_relative_path()
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	snip.rv = relpath
 else:
-	snip.rv = snip.c`}' | if exists(s:guard) | finish | endif
+	snip.rv = snip.c`' | if exists(s:guard) | finish | endif
 let {s:guard} = 1$0
 endsnippet
 
@@ -60,7 +61,7 @@ snippet rscriptguard "randomized script reinclusion guard" b
 if exists('${1:g:loaded_`!p
 if not snip.c:
 	import random, string
-	relpath = file_relative_path(os.path.splitext(path)[0])
+	relpath = file_relative_path()
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()
@@ -77,7 +78,7 @@ endsnippet
 
 snippet fua "autoload function" b
 function! `!p
-relpath = PurePath(file_relative_path(os.path.splitext(path)[0]))
+relpath = PurePath(file_relative_path())
 parts = relpath.parts
 snip.rv = '#'.join(parts[1:]) + '#'
 `${1:name}($2) abort

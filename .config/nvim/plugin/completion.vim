@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-26 18:59:11 CST
+" Last Change: 2020-02-28 08:04:51 CST
 " ====================================================
 if exists('g:loaded_plugin_completion') | finish | endif
 let g:loaded_plugin_completion = 1
@@ -20,14 +20,13 @@ let g:completion_filetypes = {
     \    'json',
     \    'bash',
     \    'sh',
-    \    'vim',
     \    'yaml',
-    \    'snippets',
     \    'mail',
     \    'cmake',
     \ ],
     \ 'nvim-lsp': [
     \    'python',
+    \    'vim',
     \    'lua',
     \ ],
     \ 'mucomplete': [
@@ -42,6 +41,7 @@ let g:completion_filetypes = {
     \    'chordpro',
     \    'toml',
     \    'vifm',
+    \    'snippets',
     \ ],
     \ 'none': [
     \    'help',

@@ -3,10 +3,10 @@
 " Description: Settings/overrides for help filetypes
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-19 08:28:48 CST
+" Last Change: 2020-02-28 08:01:24 CST
 " ====================================================
-if exists('g:loaded_after_ftplugin_help') | finish | endif
-let g:loaded_after_ftplugin_help = 1
+let s:guard = 'g:loaded_after_ftplugin_help' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Maps
 " Execute line/selection

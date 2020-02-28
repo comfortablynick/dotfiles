@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 17:03:31 CST
+" Last Change: 2020-02-28 14:44:19 CST
 " ====================================================
 if exists('g:loaded_plugin_pack') || exists('g:no_load_plugins') | finish | endif
 let g:loaded_plugin_pack = 1
@@ -50,7 +50,7 @@ function! s:deferred_load_filetype() abort
         silent! packadd ultisnips
     endif
     if l:comptype !=# 'coc' && !exists('g:did_coc_loaded')
-        " silent! packadd ale
+        silent! packadd ale
         silent! packadd vim-gitgutter
     endif
 endfunction

@@ -3,10 +3,10 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-28 08:04:51 CST
+" Last Change: 2020-02-28 17:26:19 CST
 " ====================================================
-if exists('g:loaded_plugin_completion') | finish | endif
-let g:loaded_plugin_completion = 1
+let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 let g:completion_filetypes = {
     \ 'coc': [
@@ -21,12 +21,10 @@ let g:completion_filetypes = {
     \    'bash',
     \    'sh',
     \    'yaml',
-    \    'mail',
-    \    'cmake',
+    \    'vim',
     \ ],
     \ 'nvim-lsp': [
     \    'python',
-    \    'vim',
     \    'lua',
     \ ],
     \ 'mucomplete': [
@@ -42,6 +40,8 @@ let g:completion_filetypes = {
     \    'toml',
     \    'vifm',
     \    'snippets',
+    \    'cmake',
+    \    'mail',
     \ ],
     \ 'none': [
     \    'help',
@@ -57,8 +57,8 @@ augroup plugin_completion
     autocmd FileType * if completion#get_type(&ft) ==# 'coc'
         \ | silent! packadd coc.nvim
         \ | elseif completion#get_type(&ft) ==# 'nvim-lsp'
-        \ | call plugins#nvim_lsp#init()
-        \ | endif
+            \ | call plugins#nvim_lsp#init()
+            \ | endif
     autocmd User CocNvimInit ++once call plugins#coc#init()
     " Disable folding on floating windows (coc-git chunk diff)
     autocmd User CocOpenFloat if exists('w:float') | setl nofoldenable | endif

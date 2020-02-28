@@ -1,8 +1,19 @@
 -- LSP configurations
-local vim = vim
 local api = vim.api
 local lsp = require"nvim_lsp"
+local util = require"util"
+local M = {}
 local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
+
+-- Customized rename function; defaults to name under cursor
+function M.rename(new_name)
+  local params = vim.lsp.util.make_position_params()
+  local cursor_word = vim.fn.expand("<cexpr>")
+  new_name = new_name or util.npcall(vim.fn.input, "New Name: ", cursor_word)
+  if not (new_name and #new_name > 0) then return end
+  params.newName = new_name
+  vim.lsp.buf_request(0, "textDocument/rename", params)
+end
 
 local diagnostics_qf_cb = function(err, method, result, client_id)
   -- Use default callback too
@@ -25,7 +36,7 @@ local on_attach_cb = function(client, bufnr)
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     [";s"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
     ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
-    ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
+    ["<F2>"] = "<Cmd>lua require'lsp'.rename()<CR>",
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
   }
@@ -40,11 +51,14 @@ local on_attach_cb = function(client, bufnr)
   -- vim.cmd[[autocmd CursorMoved <buffer> lua vim.lsp.util.buf_clear_references()]]
 end
 
-local function init()
+function M.init()
   local configs = {
     sumneko_lua = {
       settings = {
-        Lua = {runtime = {version = "LuaJIT"}, diagnostics = {enable = true}},
+        Lua = {
+          runtime = {version = "LuaJIT"},
+          diagnostics = {enable = true, globals = {"vim", "nvim"}},
+        },
       },
     },
     pyls = {},
@@ -62,4 +76,4 @@ local function init()
   end
 end
 
-return {init = init}
+return M

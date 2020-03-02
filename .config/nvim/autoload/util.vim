@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_util') | finish | endif
-let g:loaded_autoload_util = 1
+let s:guard = 'g:loaded_autoload_util' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! util#highlights() abort
     let l:hl = execute(':highlight')

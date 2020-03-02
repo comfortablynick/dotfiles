@@ -15,7 +15,7 @@ augroup plugin_config_handler
 augroup END
 
 let g:plugin_config_files = map(
-    \ split(globpath(&runtimepath, 'autoload/plugins/*'), '\n'),
+    \ globpath(&runtimepath, 'autoload/plugins/*.vim', 0, 1),
     \ {_, val -> fnamemodify(val, ':t:r')}
     \ )
 
@@ -23,34 +23,30 @@ let g:plugin_config_files = map(
 let g:plugins_sourced = []
 let g:plugins_skipped = []
 let g:plugins_called = []
-let g:plugins_source_errors = []
+let g:plugins_missing_fns = []
 
 function! s:source_handler(sourced, type) abort "{{{2
-    let l:file = substitute(fnamemodify(tolower(a:sourced), ':t:r'), '-', '_', 'g')
-    if a:sourced =~# '^[plugin|autoload]'
-        let g:plugins_skipped += [a:sourced]
-        return
-    endif
+    let l:file = fnamemodify(a:sourced, ':t:r')
+    " TODO: is this really needed, or does the below match take care of it?
+    " if l:full_path !~# 'pack/[^/]*/\(start\|opt\)/[^/]*/\(plugin\|autoload\)/'
+    "     let g:plugins_skipped += [l:full_path]
+    "     return
+    " endif
     if a:type ==# 'pre'
         let g:plugins_sourced += [a:sourced]
         let g:plugins_called += [l:file]
     endif
     if index(g:plugin_config_files, l:file) > -1
-    "     try
-    "         call plugins#{l:file}#{a:type}()
-    "     catch /^Vim\%((\a\+)\)\=:E117/
-    "         let g:plugins_source_errors += [v:exception]
-    " endtry
-    let l:fn = 'plugins#'.l:file.'#'.a:type
-    if !exists('*'.l:fn)
-        execute 'runtime autoload/plugins/'.l:file.'.vim'
+        let l:fn = 'plugins#'.l:file.'#'.a:type
+        if !exists('*'.l:fn)
+            execute 'runtime autoload/plugins/'.l:file.'.vim'
+        endif
+        if exists('*'.l:fn)
+            call {l:fn}()
+        else
+            let g:plugins_missing_fns += [l:fn]
+        endif
     endif
-    if exists('*'.l:fn)
-        call {l:fn}()
-    else
-        let g:plugins_source_errors += [l:fn]
-    endif
-endif
 endfunction
 
 if has('nvim') && get(g:, 'use_init_lua') == 1
@@ -207,3 +203,19 @@ if has('nvim')
     lua require'helpers'
     " lua require'lightline'
 endif
+
+" Functions {{{1
+" Guard() :: scriptguard utility {{{2
+" Scriptguard
+function! Guard(path, ...) abort
+  let l:loaded_var = 'g:loaded_' . substitute(a:path, '\W', '_', 'g')
+  if exists(l:loaded_var) | return 0 | endif
+  for l:expr in a:000
+    if !eval(l:expr)
+      echoerr a:path . ' requires: ' . l:expr
+      return 0
+    endif
+  endfor
+  let {l:loaded_var} = 1
+  return 1
+endfunction

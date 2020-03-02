@@ -53,6 +53,15 @@ sh_source() {
 
 alias .=sh_source
 
+_fzf_compgen_path() {
+    echo "$1"
+    fd -HL -t f --color=always "$1" 2>/dev/null # | sed 's@^\./@@'
+}
+
+_fzf_compgen_dir() {
+    fd -HL -t d --color=always "$1" 2>/dev/null
+}
+
 # Completion {{{2
 autoload -Uz compinit && compinit                               # Needed to autoload completions
 autoload -Uz bashcompinit && bashcompinit                       # Bash completions must be sourced
@@ -65,12 +74,12 @@ typeset -A ZINIT
 ZINIT[HOME_DIR]=${ZDOTDIR}/.zinit
 
 for shfile ($XDG_CONFIG_HOME/shell/conf.d/*.sh) sh_source $shfile
-for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
+    for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
 
-fpath=($XDG_CONFIG_HOME/zsh/completions
-    $XDG_CONFIG_HOME/zsh/functions
-    $XDG_CONFIG_HOME/shell/functions
-    $fpath)
+        fpath=($XDG_CONFIG_HOME/zsh/completions
+            $XDG_CONFIG_HOME/zsh/functions
+            $XDG_CONFIG_HOME/shell/functions
+            $fpath)
 
 # Environment variables {{{2
 export DOTFILES="$HOME/dotfiles"
@@ -195,8 +204,8 @@ zinit light Aloxaf/fzf-tab
 # Use my fork of trapd00r plugin
 zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
-    atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
-zinit light comfortablynick/LS_COLORS
+    atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}"'
+    zinit light comfortablynick/LS_COLORS
 
 # Theme / appearance options {{{1
 # Alien minimal {{{2

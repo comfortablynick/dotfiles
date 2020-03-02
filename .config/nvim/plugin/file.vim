@@ -3,10 +3,11 @@
 " Description: File-related commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-28 19:15:18 CST
+" Last Change: 2020-03-02 14:26:39 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_file' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
+" if !util#guard(expand('<sfile>')) | finish | endif
 
 command! -nargs=0 -complete=file SetExecutable call file#set_executable_bit()
 

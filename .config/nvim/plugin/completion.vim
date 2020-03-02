@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-01 17:00:28 CST
+" Last Change: 2020-03-02 14:21:33 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
 let {s:guard} = 1

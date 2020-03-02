@@ -63,6 +63,12 @@ function! quickfix#toggle() abort
     call s:qf_toggle(l:qf_size)
 endfunction
 
+function! quickfix#open() abort
+    let l:qf_lines = len(getqflist())
+    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', 12)])
+    execute 'copen '.l:qf_size
+endfunction
+
 " Close an empty quickfix window
 function! quickfix#close_empty() abort
     if len(getqflist())

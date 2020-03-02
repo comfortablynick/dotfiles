@@ -4,8 +4,8 @@ let g:loaded_autoload_util = 1
 function! util#highlights() abort
     let l:hl = execute(':highlight')
     let l:qf = []
-    for line in split(l:hl, '\n')
-        call add(l:qf, line)
+    for l:line in split(l:hl, '\n')
+        call add(l:qf, l:line)
     endfor
     return l:qf
 endfunction
@@ -14,43 +14,43 @@ endfunction
 function! util#capture(cmd) abort
     if a:cmd =~# '^!'
         " System command output
-        let cmd = a:cmd =~# ' %' ? substitute(a:cmd, ' %', ' ' . expand('%:p'), '') : a:cmd
-        let out = system(matchstr(cmd, '^!\zs.*'))
+        let l:cmd = a:cmd =~# ' %' ? substitute(a:cmd, ' %', ' ' . expand('%:p'), '') : a:cmd
+        let l:out = system(matchstr(l:cmd, '^!\zs.*'))
     else
         " Redirect of vim command
         if v:version < 800
             " Do it the old way
             try
-                redir => out
+                redir => l:out
                 execute 'silent!'.a:cmd
             finally
                 redir END
             endtry
         else
-            let out = execute(a:cmd)
+            let l:out = execute(a:cmd)
         endif
     endif
-    return split(out, '\n')
+    return split(l:out, '\n')
 endfunction
 
 " Redirect output of command to scratch buffer
 " Borrowed some from romainl:
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
 function! util#redir(cmd) abort
-    for win in range(1, winnr('$'))
-        if getwinvar(win, 'scratch')
-            execute win . 'windo close'
+    for l:win in range(1, winnr('$'))
+        if getwinvar(l:win, 'scratch')
+            execute l:win . 'windo close'
         endif
     endfor
     if type(a:cmd) == v:t_list
-        let lines = a:cmd
+        let l:lines = a:cmd
     else
-        let lines = util#capture(a:cmd)
+        let l:lines = util#capture(a:cmd)
     endif
     vnew
     let w:scratch = 1
     setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
-    call setline(1, lines)
+    call setline(1, l:lines)
 endfunction
 
 " Convert :scriptnames into qf format

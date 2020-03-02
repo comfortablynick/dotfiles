@@ -3,14 +3,10 @@
 " Description: Abbreviatins for doxygen funcs
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-08 12:46:02 CST
+" Last Change: 2020-02-28 19:14:26 CST
 " ====================================================
-
-if exists('g:loaded_doxygen_abbr_vim')
-    \ || exists('g:no_load_plugins')
-    finish
-endif
-let g:loaded_doxygen_abbr_vim = 1
+let s:guard = 'g:loaded_plugin_doxygen' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " insert doxygen function header
 iabbr _DFH <C-R>=doxygen#func_comment()<CR><ESC>XXi*<esc>?**\n*<CR>A

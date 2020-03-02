@@ -3,13 +3,10 @@
 " Description: Run commands located in justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-24 15:27:55 CST
+" Last Change: 2020-02-29 01:01:35 CST
 " ====================================================
-if exists('g:loaded_plugin_runner_btro6nqr')
-    \ || exists('g:no_load_plugins')
-    finish
-endif
-let g:loaded_plugin_runner_btro6nqr = 1
+let s:guard = 'g:loaded_plugin_runner' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
 let g:run_code_with = 'term'

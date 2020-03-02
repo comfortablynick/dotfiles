@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_tagbar') | finish | endif
-let g:loaded_autoload_plugins_tagbar = 1
+let s:guard = 'g:loaded_autoload_plugins_tagbar' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#tagbar#pre() abort
     let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
@@ -7,6 +7,7 @@ function! plugins#tagbar#pre() abort
     let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
     let g:tagbar_autopreview = 0                                    " Open preview window with selected tag details
     let g:tagbar_sort = 0                                           " Sort tags alphabetically vs. in file order
+    let g:tagbar_silent = 1
 
     " Filetypes
     let g:tagbar_type_typescript = {

@@ -3,13 +3,10 @@
 " Description: Handle project file explorer plugin settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 17:57:15 CST
+" Last Change: 2020-02-28 19:14:53 CST
 " ====================================================
-if exists('g:loaded_plugin_explorer')
-    \ || exists('g:no_load_plugins')
-    finish
-endif
-let g:loaded_plugin_explorer_eblucpym = 1
+let s:guard = 'g:loaded_plugin_explorer' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 let g:use_explorer = 'netrw'             " netrw/nerdtree/defx/coc-explorer (set from coc config)
 let g:use_explorer_coc = 'coc-explorer' " use with coc.nvim

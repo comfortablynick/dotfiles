@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-28 17:26:19 CST
+" Last Change: 2020-03-01 17:00:28 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -55,6 +55,7 @@ let g:completion_filetypes = {
 augroup plugin_completion
     autocmd!
     autocmd FileType * if completion#get_type(&ft) ==# 'coc'
+        \ | call plugins#coc#preconfig()
         \ | silent! packadd coc.nvim
         \ | elseif completion#get_type(&ft) ==# 'nvim-lsp'
             \ | call plugins#nvim_lsp#init()

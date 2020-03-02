@@ -62,7 +62,7 @@ function M.init()
       },
     },
     pyls = {},
-    vimls = {},
+    -- vimls = {},
   }
 
   -- Set global callbacks

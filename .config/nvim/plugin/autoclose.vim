@@ -3,10 +3,10 @@
 " Description: Autoclose windows if they are last ones open
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-14 13:07:01 CST
+" Last Change: 2020-02-28 18:52:38 CST
 " ====================================================
-if exists('g:loaded_plugin_autoclose') | finish | endif
-let g:loaded_plugin_autoclose = 1
+let s:guard = 'g:loaded_plugin_autoclose' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Autoclose vim if last window is not a file
 " Original script from: https://stackoverflow.com/a/39307414/10370751
@@ -25,6 +25,7 @@ let g:autoclose_filetypes = [
     \ 'defx',
     \ ]
 
+" TODO: find a way to do this without side effects
 " autoclose last open location/quickfix/help windows on a tab
 " augroup plugin_autoclose
 "     autocmd!

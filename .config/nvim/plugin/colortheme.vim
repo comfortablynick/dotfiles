@@ -3,10 +3,10 @@
 " Description: Color and theme settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-21 15:35:01 CST
+" Last Change: 2020-02-28 18:53:17 CST
 " ====================================================
-if exists('g:loaded_plugin_colortheme') | finish | endif
-let g:loaded_plugin_colortheme = 1
+let s:guard = 'g:loaded_plugin_colortheme' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " TMUX: make it work with termguicolors
 if &term =~# '^screen'

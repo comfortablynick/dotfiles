@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 16:20:48 CST
+" Last Change: 2020-02-28 19:10:18 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -18,9 +18,9 @@ nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
 " # Abbreviations
 cnoreabbrev <expr> h <SID>help_tab()
-cnoreabbrev <expr> l editor#cabbr('l', 'lua')
+cnoreabbrev <expr> l util#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
-    \ editor#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
+    \ util#cabbr('lp', 'lua p()<Left><C-R>=editor#eatchar(''\s'')<CR>')
 
 inoreabbrev <expr> fff editor#foldmarker()
 

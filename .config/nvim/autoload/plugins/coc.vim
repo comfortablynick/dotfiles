@@ -24,6 +24,17 @@ function! plugins#coc#pre() abort "{{{1
         \ ]
 endfunction
 
+function! plugins#coc#preconfig() abort "{{{1
+    " This has to be called explicitly before the plugin loads
+    if $MOSH_CONNECTION
+        let g:coc_user_config = {                      
+            \ 'explorer.icon.enableNerdfont': v:false,
+            \ 'explorer.icon.enableVimDevicons': v:false,
+            \}
+    endif
+endfunction
+
+
 function! plugins#coc#cmds() abort "{{{1
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif
     augroup coc_config_auto
@@ -112,10 +123,6 @@ endfunction
 function! plugins#coc#abbrev() abort "{{{1
     cnoreabbrev es CocCommand snippets.editSnippets
     cnoreabbrev ci CocInfo
-endfunction
-
-function! plugins#coc#config() abort
-    
 endfunction
 
 function! plugins#coc#init() abort "{{{1

@@ -3,10 +3,10 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 16:19:56 CST
+" Last Change: 2020-02-29 01:04:13 CST
 " ====================================================
-if exists('g:loaded_plugin_maps') | finish | endif
-let g:loaded_plugin_maps = 1
+let s:guard = 'g:loaded_plugin_maps' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Indent/outdent
 vnoremap <Tab>   <Cmd>normal! >gv<CR>
@@ -54,6 +54,8 @@ nnoremap <silent> th :tabprev<CR>
 nnoremap <silent> tl :tabnext<CR>
 nnoremap <silent> tn :tabnew<CR>
 
-" `b` + {h,l} to navigate buffers
-nnoremap <silent> bh :bprevious<CR>
-nnoremap <silent> bl :bnext<CR>
+" Ctrl + [n]ext/[p]revious buffer
+nnoremap <silent> <C-n> :bnext<CR>
+nnoremap <silent> <C-p> :bprevious<CR>
+
+noremap <silent> <F5> :UndotreeToggle<CR>

@@ -72,3 +72,18 @@ vim.command(f"let l:pp = {repr(args)}")
 EOF
 return l:pp
 endfunction
+
+" Expand cabbr if it's the only command
+function! util#cabbr(lhs, rhs) abort
+    if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
+        return a:rhs
+    endif
+    return a:lhs
+endfunction
+
+" Eat space (from h: abbr)
+function! util#eatchar(pat) abort
+    let l:c = nr2char(getchar(0))
+    return (l:c =~ a:pat) ? '' : l:c
+endfunc
+

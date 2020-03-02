@@ -27,7 +27,7 @@ function! plugins#vista#post() abort
     let g:vista_disable_statusline = exists('g:loaded_airline')
         \ || exists('g:loaded_lightline')
         \ || exists('g:loaded_eleline')
-    let g:vista_sidebar_width = winwidth(0) > 200 ? 50 : 30
+    let g:vista_sidebar_width = winwidth(0) > 200 ? 70 : 50
 
     nnoremap <silent><Leader>v :Vista!!<CR>
 endfunction

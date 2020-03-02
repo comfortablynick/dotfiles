@@ -6,10 +6,10 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-26 18:53:33 CST
+" Last Change: 2020-02-29 11:30:10 CST
 " ====================================================
-if exists('g:loaded_plugin_statusline') || exists('*lightline#update') | finish | endif
-let g:loaded_plugin_statusline = 1
+let s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Variables {{{1
 " Use lua {{{2
@@ -96,14 +96,14 @@ function! s:set_statusline() abort "{{{2
     set statusline+=%(\ %m%r%)
     " set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
     " set statusline+=%(\ %{statusline#modified()}%)
-    " set statusline+=%(\ \ %{statusline#linter_errors(0)}%)
-    " set statusline+=%(\ %{statusline#linter_warnings(0)}%)
+    set statusline+=%(\ \ %{statusline#linter_errors(bufnr('%'))}%)
+    set statusline+=%(\ %{statusline#linter_warnings(bufnr('%'))}%)
 
     set statusline+=%=
     set statusline+=%(\ %{statusline#toggled()}\ ┊%)
     set statusline+=%(\ %{statusline#job_status()}\ ┊%)
-    " set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
-    " set statusline+=%(\ %{statusline#git_status()}\ ┊%)
+    set statusline+=%(\ %{statusline#coc_status(bufnr('%'))}\ ┊%)
+    set statusline+=%(\ %{statusline#git_status(bufnr('%'))}\ ┊%)
     set statusline+=%(\ %l,%c%)\ %4(%p%%%)
     " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 endfunction

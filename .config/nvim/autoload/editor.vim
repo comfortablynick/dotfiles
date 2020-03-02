@@ -3,7 +3,7 @@
 " Description: General editor behavior functions
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 13:53:56 CST
+" Last Change: 2020-03-01 16:59:53 CST
 " ====================================================
 
 " Restore cursor position after motion
@@ -13,20 +13,6 @@ function! editor#restore_cursor_after(motion) abort
     call winrestview(l:wv)
 endfunction
 
-" Expand cabbr if it's the only command
-function! editor#cabbr(lhs, rhs) abort
-    if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
-        return a:rhs
-    endif
-    return a:lhs
-endfunction
-
-" Eat space (from h: abbr)
-function! editor#eatchar(pat) abort
-    let l:c = nr2char(getchar(0))
-    return (l:c =~ a:pat) ? '' : l:c
-endfunc
-
 " Insert fold marker + comment string if not already in comment
 function! editor#foldmarker() abort
     let l:open = matchstr(&foldmarker, '^[^,]*')
@@ -35,7 +21,7 @@ function! editor#foldmarker() abort
     else
         let l:out = printf(&commentstring, l:open)
     endif
-    return l:out."\<C-R>=editor#eatchar('\s')\<CR>"
+    return l:out."\<C-R>=util#eatchar('\s')\<CR>"
 endfunction
 
 " Close buffer if not modifiable; quit if last buf

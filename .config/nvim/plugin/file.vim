@@ -3,10 +3,10 @@
 " Description: File-related commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-07 17:53:40 CST
+" Last Change: 2020-02-28 19:15:18 CST
 " ====================================================
-if exists('g:loaded_plugin_file') | finish | endif
-let g:loaded_plugin_file = 1
+let s:guard = 'g:loaded_plugin_file' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 command! -nargs=0 -complete=file SetExecutable call file#set_executable_bit()
 

@@ -10,6 +10,7 @@ function! plugins#ultisnips#pre() abort
     "     \ mucomplete#ultisnips#expand_snippet("\<CR>")
     " imap <CR> <Plug>MyCR
 
+    cnoreabbrev <expr> es util#cabbr('es', 'UltiSnipsEdit')
     inoremap <plug>(TryUlti) <c-r>=TryUltiSnips()<cr>
     imap <expr> <silent> <plug>(TryMU) TryMUcomplete()
     imap <expr> <silent> <tab> "\<plug>(TryUlti)\<plug>(TryMU)"

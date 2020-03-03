@@ -5,7 +5,7 @@ cd() {
         return
     fi
     local fuzzy_finder="fzy"
-    local dir=$(eval "$FZF_CD_WITH_HIDDEN_COMMAND" | $fuzzy_finder)
+    local dir=$(fd -HL -t d | $fuzzy_finder)
     [[ ${#dir} -ne 0 ]] || return 0
     builtin cd "$dir"
 }

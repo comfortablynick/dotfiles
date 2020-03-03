@@ -1,9 +1,9 @@
 " ====================================================
 " Filename:    autoload/statusline.vim
-" Description: Statusline components
+" Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-25 19:09:45 CST
+" Last Change: 2020-03-03 11:16:58 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -31,7 +31,45 @@ let s:LinterWarnings = s:nf ? "\uf071 " : '•'
 let s:LinterErrors = s:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
 
-" Functions {{{1
+" Main {{{1
+function! statusline#get(winnr) abort "{{{2
+    let l:active = a:winnr == winnr()
+    let l:bufnr = winbufnr(a:winnr)
+    let l:default_status = '%<%f %h%m%r%'
+    let l:inactive_status = ' %n %<%f %h%m%r%'
+
+    if statusline#is_not_file(l:bufnr)
+        return l:default_status
+    elseif ! l:active
+        return l:inactive_status
+    endif
+
+    let l:sl = ''
+    let l:sl .= '%( %{&buflisted?"[".'.l:bufnr.'."]":""}%)'
+    let l:sl .= '%( %h%w%)'
+    let l:sl .= '%( %{statusline#file_name('.l:bufnr.')}%)'
+    let l:sl .= '%<'
+    let l:sl .= '%( %m%r%)'
+    let l:sl .= '%(  %{statusline#linter_errors('.l:bufnr.')}%)'
+    let l:sl .= '%( %{statusline#linter_warnings('.l:bufnr.')}%)'
+
+    let l:sl .= '%='
+    let l:sl .= '%( %{statusline#toggled()} ┊%)'
+    let l:sl .= '%( %{statusline#job_status()} ┊%)'
+    let l:sl .= '%( %{statusline#coc_status('.l:bufnr.')} ┊%)'
+    let l:sl .= '%( %{statusline#git_status('.l:bufnr.')} ┊%)'
+    let l:sl .= '%( %l,%c%) %4(%p%% %)'
+    return l:sl
+endfunction
+
+" Refresh statusline for all windows
+function! statusline#refresh() abort "{{{2
+    for l:win in range(1, winnr('$'))
+        call setwinvar(l:win, '&statusline', '%!statusline#get('.l:win.')')
+    endfor
+endfunction
+
+" Component functions {{{1
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
     let g:statusline_hg = get(g:, 'statusline_hg', [])
     let l:bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
@@ -316,7 +354,7 @@ function! statusline#git_summary(bufnr) abort "{{{2
     let l:bufvars = getbufvar(a:bufnr, '')
     if has_key(l:bufvars, 'coc_git_status')
         let l:coc_git_status = getbufvar(a:bufnr, 'coc_git_status')
-        return l:coc_git_status
+        return trim(l:coc_git_status)
     endif
     if exists('*gitgutter#hunk#summary')
         let l:githunks = gitgutter#hunk#summary(a:bufnr)

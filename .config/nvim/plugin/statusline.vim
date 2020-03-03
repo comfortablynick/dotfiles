@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-29 11:30:10 CST
+" Last Change: 2020-03-03 11:17:54 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -83,77 +83,40 @@ command! -nargs=? -complete=custom,statusline#sl_complete_args SL
 "     \ )
 
 
-function! s:set_statusline() abort "{{{2
-    set statusline=
-    set ruler
-    " return
-    if statusline#is_not_file(0) | return | endif
-
-    set statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
-    set statusline+=%<
-    set statusline+=%(\ %h%w%)
-    set statusline+=%(\ %{statusline#file_name(bufnr('%'))}%)
-    set statusline+=%(\ %m%r%)
-    " set statusline+=%(\ %{&readonly?g:sl.symbol.readonly:''}%)
-    " set statusline+=%(\ %{statusline#modified()}%)
-    set statusline+=%(\ \ %{statusline#linter_errors(bufnr('%'))}%)
-    set statusline+=%(\ %{statusline#linter_warnings(bufnr('%'))}%)
-
-    set statusline+=%=
-    set statusline+=%(\ %{statusline#toggled()}\ ┊%)
-    set statusline+=%(\ %{statusline#job_status()}\ ┊%)
-    set statusline+=%(\ %{statusline#coc_status(bufnr('%'))}\ ┊%)
-    set statusline+=%(\ %{statusline#git_status(bufnr('%'))}\ ┊%)
-    set statusline+=%(\ %l,%c%)\ %4(%p%%%)
-    " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-endfunction
-
-
-function! Status(winnr) abort "{{{2
-    let l:active = a:winnr == winnr()
-    let l:bufnr = winbufnr(a:winnr)
-
-    " Utils to pad if not empty
-    let l:Lpad = {s->!empty(s) ? ' '.s : ''}
-    let l:Rpad = {s->!empty(s) ? s.' ' : ''}
-
-    let l:status = ''
-    if statusline#is_not_file(l:bufnr) || !l:active
-        return l:status
+function! s:set_statusline(bufnr) abort "{{{2
+    if statusline#is_not_file(a:bufnr)
+        setl statusline&
+        return
     endif
+    setl statusline=
+    setl statusline+=%(%{&buflisted?'['.bufnr('%').']':''}\ %)
+    setl statusline+=%<
+    setl statusline+=%(\ %h%w%)
+    setl statusline+=%(\ %{statusline#file_name(bufnr('%'))}%)
+    setl statusline+=%(\ %m%r%)
+    setl statusline+=%(\ \ %{statusline#linter_errors(bufnr('%'))}%)
+    setl statusline+=%(\ %{statusline#linter_warnings(bufnr('%'))}%)
 
-    let l:status .= l:Lpad(statusline#bufnr(l:bufnr))
-    let l:status .= '%<'
-    let l:status .= l:Lpad(statusline#file_name(l:bufnr))
-    " set statusline+=%(\ %h%w%)
-    " set statusline+=%(\ %{statusline#file_name()}%)
-    " set statusline+=%(\ %m%r%)
-    " set statusline+=%(\ \ %{statusline#linter_errors()}%)
-    " set statusline+=%(\ %{statusline#linter_warnings()}%)
-    "
-    " set statusline+=%=
-    " set statusline+=%(\ %{statusline#toggled()}\ ┊%)
-    " set statusline+=%(\ %{statusline#job_status()}\ ┊%)
-    " set statusline+=%(\ %{statusline#coc_status()}\ ┊%)
-    " set statusline+=%(\ %{statusline#git_status()}\ ┊%)
-    " set statusline+=%(\ %l,%c%)\ %4(%p%%%)
-    return l:status
+    setl statusline+=%=
+    setl statusline+=%(\ %{statusline#toggled()}\ ┊%)
+    setl statusline+=%(\ %{statusline#job_status()}\ ┊%)
+    setl statusline+=%(\ %{statusline#coc_status(bufnr('%'))}\ ┊%)
+    setl statusline+=%(\ %{statusline#git_status(bufnr('%'))}\ ┊%)
+    setl statusline+=%(\ %l,%c%)\ %4(%p%%%)
 endfunction
 
-" Refresh statusline {{{2
-" function! s:refresh_status() abort
-"     for l:win in range(1, winnr('$'))
-"         " call setwinvar(l:win, '&statusline', '%!Status('. l:win .')')
-"         call setwinvar(l:win, '&statusline', Status(l:win))
-"     endfor
-" endfunction
-"
-" augroup plugin_statusline
-"     autocmd!
-"     autocmd VimEnter,WinEnter,BufWinEnter,BufDelete * call s:refresh_status()
-"     autocmd User ClapOnExit call s:refresh_status()
-" augroup END
-call s:set_statusline()
+augroup plugin_statusline
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * call statusline#refresh()
+    " autocmd User ClapOnExit call statusline#refresh()
+augroup END
+
+" The following lines must come after colorscheme declaration
+highlight User1 guifg=#ffffff  guibg=#660000
+highlight User2 guifg=#ffffff  guibg=#990033
+highlight User3 guifg=#ffffff  guibg=#666600
+highlight User4 guifg=#ffffff  guibg=#336633
+highlight User5 guifg=#ffffff  guibg=#336699
 
 " Old statusline code {{{1
 finish

@@ -15,65 +15,65 @@ vim.g.LL_nf = vim.g.LL_nf or 0
 local WINWIDTH = api.nvim_win_get_width(0)
 local FILENAME = api.nvim_buf_get_name(0)
 local vars = { -- {{{2
-    min_width = 90,
-    med_width = 140,
-    max_width = 200,
-    use_simple_sep = vim.env.SUB ~= "|" and 0 or 1,
-    use_pl_fonts = vim.g.LL_pl,
-    use_nerd_fonts = vim.g.LL_nf,
-    glyphs = {
-        line_no = "",
-        vcs = vim.g.LL_nf ~= 1 and "" or " ",
-        branch = "",
-        line = "☰",
-        read_only = " ",
-        modified = " ●",
-        func = "ƒ ",
-        linter_checking = vim.g.LL_nf ~= 1 and "..." or "\u{f110}",
-        linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
-        linter_errors = vim.g.LL_nf ~= 1 and "✘" or "\u{f05e}",
-        linter_ok = "",
-        lvimrc = [[Ⓛ ]],
-        -- lvimrc = "⚑",
-        -- lvimrc = "ʟʀc",
-    },
+  min_width = 90,
+  med_width = 140,
+  max_width = 200,
+  use_simple_sep = vim.env.SUB ~= "|" and 0 or 1,
+  use_pl_fonts = vim.g.LL_pl,
+  use_nerd_fonts = vim.g.LL_nf,
+  glyphs = {
+    line_no = "",
+    vcs = vim.g.LL_nf ~= 1 and "" or " ",
+    branch = "",
+    line = "☰",
+    read_only = " ",
+    modified = " ●",
+    func = "ƒ ",
+    linter_checking = vim.g.LL_nf ~= 1 and "..." or "\u{f110}",
+    linter_warnings = vim.g.LL_nf ~= 1 and "•" or "\u{f071}",
+    linter_errors = vim.g.LL_nf ~= 1 and "✘" or "\u{f05e}",
+    linter_ok = "",
+    lvimrc = [[Ⓛ ]],
+    -- lvimrc = "⚑",
+    -- lvimrc = "ʟʀc",
+  },
 }
 
 -- List of plugins/non-files for special handling
 -- Key: filetype
 -- Value: special mode (set to `false` to skip setting mode)
 local special_filetypes = { -- {{{2
-    nerdtree = "NERD",
-    netrw = "NETRW",
-    defx = "DEFX",
-    vista = "VISTA",
-    tagbar = "TAGS",
-    undotree = "UNDO",
-    qf = "",
-    ["coc-explorer"] = "EXPLORER",
-    ["output=///info"] = "COC-INFO",
-    vimfiler = "FILER",
-    minpac = "PACK",
-    packager = "PACK",
-    fugitive = "FUGITIVE",
-    startify = "STARTIFY",
+  nerdtree = "NERD",
+  netrw = "NETRW",
+  defx = "DEFX",
+  vista = "VISTA",
+  tagbar = "TAGS",
+  undotree = "UNDO",
+  qf = "",
+  ["coc-explorer"] = "EXPLORER",
+  ["output=///info"] = "COC-INFO",
+  vimfiler = "FILER",
+  minpac = "PACK",
+  packager = "PACK",
+  fugitive = "FUGITIVE",
+  startify = "STARTIFY",
 }
 
 ll.mode_map = {
-    n = {"NORMAL", "NRM", "N"},
-    niI = {"NORMAL·CMD", "NRM", "N"},
-    i = {"INSERT", "INS", "I"},
-    ic = {"INSERT", "INS", "I"},
-    ix = {"INSERT COMPL", "I·COMPL", "IC"},
-    R = {"REPLACE", "REP", "R"},
-    v = {"VISUAL", "VIS", "V"},
-    V = {"V·LINE", "V·LN", "V·L"},
-    ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
-    c = {"COMMAND", "CMD", "C"},
-    s = {"SELECT", "SEL", "S"},
-    S = {"S·LINE", "S·LN", "S·L"},
-    ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
-    t = {"TERMINAL", "TERM", "T"},
+  n = {"NORMAL", "NRM", "N"},
+  niI = {"NORMAL·CMD", "NRM", "N"},
+  i = {"INSERT", "INS", "I"},
+  ic = {"INSERT", "INS", "I"},
+  ix = {"INSERT COMPL", "I·COMPL", "IC"},
+  R = {"REPLACE", "REP", "R"},
+  v = {"VISUAL", "VIS", "V"},
+  V = {"V·LINE", "V·LN", "V·L"},
+  ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
+  c = {"COMMAND", "CMD", "C"},
+  s = {"SELECT", "SEL", "S"},
+  S = {"S·LINE", "S·LN", "S·L"},
+  ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
+  t = {"TERMINAL", "TERM", "T"},
 }
 
 -- local lightline = { -- {{{2
@@ -145,231 +145,228 @@ ll.mode_map = {
 
 -- Component Functions {{{1
 function ll.is_not_file() -- {{{2
-    return special_filetypes[vim.bo.filetype] ~= nil or vim.bo.filetype == ""
+  return special_filetypes[vim.bo.filetype] ~= nil or vim.bo.filetype == ""
 end
 
 function ll.line_info() -- {{{2
-    if ll.is_not_file() then return "" end
-    local line_ct = api.nvim_buf_line_count(0)
-    local pos = api.nvim_win_get_cursor(0)
-    local row = pos[1]
-    local col = pos[2] + 1
-    local row_pos = function()
-        local max_digits = string.len(tostring(line_ct))
-        return string.format("%" .. max_digits .. "d/%" .. max_digits .. "d",
-                             row, line_ct)
-    end
-    return string.format("%3d%% %s %s %s :%3d", row * 100 / line_ct,
-                         vars.glyphs.line, row_pos(), vars.glyphs.line_no, col)
+  if ll.is_not_file() then return "" end
+  local line_ct = api.nvim_buf_line_count(0)
+  local pos = api.nvim_win_get_cursor(0)
+  local row = pos[1]
+  local col = pos[2] + 1
+  local row_pos = function()
+    local max_digits = string.len(tostring(line_ct))
+    return string.format("%" .. max_digits .. "d/%" .. max_digits .. "d", row,
+                         line_ct)
+  end
+  return string.format("%3d%% %s %s %s :%3d", row * 100 / line_ct,
+                       vars.glyphs.line, row_pos(), vars.glyphs.line_no, col)
 end
 
 function ll.simple_line_info() -- {{{2
-    local line_ct = api.nvim_buf_line_count(0)
-    local pos = api.nvim_win_get_cursor(0)
-    local row = pos[1]
-    local col = pos[2] + 1
-    return string.format("%d,%d %3d%% ", row, col, row * 100 / line_ct)
+  local line_ct = api.nvim_buf_line_count(0)
+  local pos = api.nvim_win_get_cursor(0)
+  local row = pos[1]
+  local col = pos[2] + 1
+  return string.format("%d,%d %3d%% ", row, col, row * 100 / line_ct)
 end
 
 function ll.bufnr() -- {{{2
-    local buf = api.nvim_win_get_buf(0)
-    return "[" .. buf .. "]"
+  local buf = api.nvim_win_get_buf(0)
+  return "[" .. buf .. "]"
 end
 
 function ll.vim_mode() -- {{{2
-    local mode_key = api.nvim_get_mode().mode
-    local curr_mode = ll.mode_map[mode_key] or mode_key
-    local mode_out = function()
-        if WINWIDTH > vars.med_width then return curr_mode[1] end
-        if WINWIDTH > vars.min_width then return curr_mode[2] end
-        return curr_mode[3]
-    end
-    -- TODO: is filename ever going to match special_filetypes?
-    -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
-    -- return type(special_filetypes[vim.bo.filetype]) == "string" or mode_out()
-    return special_filetypes[vim.bo.filetype] or mode_out()
+  local mode_key = api.nvim_get_mode().mode
+  local curr_mode = ll.mode_map[mode_key] or mode_key
+  local mode_out = function()
+    if WINWIDTH > vars.med_width then return curr_mode[1] end
+    if WINWIDTH > vars.min_width then return curr_mode[2] end
+    return curr_mode[3]
+  end
+  -- TODO: is filename ever going to match special_filetypes?
+  -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
+  -- return type(special_filetypes[vim.bo.filetype]) == "string" or mode_out()
+  return special_filetypes[vim.bo.filetype] or mode_out()
 end
 
 function ll.file_type() -- {{{2
-    if ll.is_not_file() or WINWIDTH <= vars.med_width then return "" end
-    local ft_glyph = WINWIDTH > vars.med_width and
-                         npcall(function()
-            return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
-        end) or ""
-    local python_venv = function()
-        local venv = not vim.g.did_coc_loaded and
-                         (vim.bo.ft == "python" and
-                             string.basename(vim.env.VIRTUAL_ENV)) or ""
-        return venv ~= "" and string.format(" (%s)", venv) or ""
-    end
+  if ll.is_not_file() or WINWIDTH <= vars.med_width then return "" end
+  local ft_glyph = WINWIDTH > vars.med_width and
+                     npcall(function()
+      return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
+    end) or ""
+  local python_venv = function()
+    local venv = not vim.g.did_coc_loaded and
+                   (vim.bo.ft == "python" and
+                     string.basename(vim.env.VIRTUAL_ENV)) or ""
+    return venv ~= "" and string.format(" (%s)", venv) or ""
+  end
 
-    local venv = WINWIDTH > vars.med_width and python_venv() or ""
-    return vim.bo.filetype .. ft_glyph .. venv
+  local venv = WINWIDTH > vars.med_width and python_venv() or ""
+  return vim.bo.filetype .. ft_glyph .. venv
 end
 
 function ll.file_format() -- {{{2
-    local ff = vim.bo.fileformat
-    if ll.is_not_file() or ff == "unix" then return "" end
-    local ff_glyph = WINWIDTH > vars.med_width and
-                         npcall(function()
-            return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
-        end) or ""
-    return ff .. ff_glyph
+  local ff = vim.bo.fileformat
+  if ll.is_not_file() or ff == "unix" then return "" end
+  local ff_glyph = WINWIDTH > vars.med_width and
+                     npcall(function()
+      return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
+    end) or ""
+  return ff .. ff_glyph
 end
 
 function ll.file_size() -- {{{2
-    local stat = vim.loop.fs_stat(FILENAME)
-    local size = stat ~= nil and stat.size or 0
-    return size > 0 and util.humanize_bytes(size) or ""
+  local stat = vim.loop.fs_stat(FILENAME)
+  local size = stat ~= nil and stat.size or 0
+  return size > 0 and util.humanize_bytes(size) or ""
 end
 
 function ll.file_name() -- {{{2
-    if vim.bo.filetype == "qf" then
-        return string.format("%s %s", "[Quickfix List]",
-                             vim.fn.getqflist({title = 1}).title or "")
+  if vim.bo.filetype == "qf" then
+    return string.format("%s %s", "[Quickfix List]",
+                         vim.fn.getqflist({title = 1}).title or "")
+  end
+  if ll.is_not_file() then return "" end
+  local path = function()
+    if WINWIDTH < vars.min_width or vim.bo.filetype == "help" then
+      return vim.fn.expand("%:t")
     end
-    if ll.is_not_file() then return "" end
-    local path = function()
-        if WINWIDTH < vars.min_width or vim.bo.filetype == "help" then
-            return vim.fn.expand("%:t")
-        end
-        local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
-        if WINWIDTH < vars.max_width then return vim.fn.pathshorten(path) end
-        return path
-    end
-    local read_only = function()
-        return not ll.is_not_file() and vim.bo.readonly and
-                   vars.glyphs.read_only or ""
-    end
-    return read_only() .. path()
+    local path = string.gsub(vim.fn.expand("%"), vim.env.HOME, "~")
+    if WINWIDTH < vars.min_width then return vim.fn.pathshorten(path) end
+    return path
+  end
+  return path()
+end
+
+function ll.read_only() -- {{{2
+  return not ll.is_not_file() and vim.bo.readonly and vars.glyphs.read_only or
+           ""
 end
 
 function ll.modified() -- {{{2
-    return not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or
-               ""
+  return not ll.is_not_file() and vim.bo.modified and vars.glyphs.modified or ""
 end
 
 function ll.local_vimrc() -- {{{2
-    local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
-    return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
+  local lrc = npcall(api.nvim_buf_get_var, 0, "localrc_loaded")
+  return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
 end
 
 function ll.file_encoding() -- {{{2
-    return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
+  return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
 end
 
 function ll.tab_name() -- {{{2
-    return ll.is_not_file() and "" or ll.file_name()
+  return ll.is_not_file() and "" or ll.file_name()
 end
 
 function ll.git_summary() -- {{{2
-    -- Look for git hunk summary in this order:
-    -- 1. coc-git
-    -- 2. gitgutter
-    -- 3. signify
-    if exists("b:coc_git_status") == 1 then
-        return " " .. vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
-    end
-    local hunks = (function()
-        return npcall(vim.fn.GitGutterGetHunkSummary) or
-                   npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
-    end)()
-    local added = not not hunks[1] and hunks[1] ~= 0 and
-                      string.format("+%d ", hunks[1]) or ""
-    local changed = not not hunks[2] and hunks[2] ~= 0 and
-                        string.format("~%d ", hunks[2]) or ""
-    local deleted = not not hunks[3] and hunks[3] ~= 0 and
-                        string.format("-%d ", hunks[3]) or ""
-    return " " .. added .. changed .. deleted
+  -- Look for git hunk summary in this order:
+  -- 1. coc-git
+  -- 2. gitgutter
+  -- 3. signify
+  if exists("b:coc_git_status") == 1 then
+    return " " .. vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
+  end
+  local hunks = (function()
+    return npcall(vim.fn.GitGutterGetHunkSummary) or
+             npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
+  end)()
+  local added = not not hunks[1] and hunks[1] ~= 0 and
+                  string.format("+%d ", hunks[1]) or ""
+  local changed = not not hunks[2] and hunks[2] ~= 0 and
+                    string.format("~%d ", hunks[2]) or ""
+  local deleted = not not hunks[3] and hunks[3] ~= 0 and
+                    string.format("-%d ", hunks[3]) or ""
+  return " " .. added .. changed .. deleted
 end
 
 function ll.git_branch() -- {{{2
-    if vim.fn.exists("g:coc_git_status") == 1 then
-        return string.gsub(vim.g.coc_git_status, "master", "")
-    end
-    local head = npcall(vim.fn.FugitiveHead)
-    -- return not not head and vars.glyphs.branch .. " " .. head or ""
-    return head ~= "" and vars.glyphs.branch .. " " .. head or ""
+  if vim.fn.exists("g:coc_git_status") == 1 then
+    return string.gsub(vim.g.coc_git_status, "master", "")
+  end
+  local head = npcall(vim.fn.FugitiveHead)
+  -- return not not head and vars.glyphs.branch .. " " .. head or ""
+  return head ~= "" and vars.glyphs.branch .. " " .. head or ""
 end
 
 function ll.git_status() -- {{{2
-    if not ll.is_not_file() and WINWIDTH > vars.min_width then
-        local branch = ll.git_branch()
-        local hunks = ll.git_summary()
-        if branch ~= "" then
-            return string.format("%s%s%s", vars.glyphs.vcs,
-                                 branch:gsub("master", ""), hunks)
-        end
+  if not ll.is_not_file() and WINWIDTH > vars.min_width then
+    local branch = ll.git_branch()
+    local hunks = ll.git_summary()
+    if branch ~= "" then
+      return string.format("%s%s%s", vars.glyphs.vcs, branch:gsub("master", ""),
+                           hunks)
     end
-    return ""
+  end
+  return ""
 end
 
 function ll.coc_status() -- {{{2
-    if WINWIDTH < vars.min_width then return "" end
-    if vim.fn.exists("g:coc_status") == 1 then
-        local st = vim.g.coc_status
-        return st and st
-    end
-    return ""
+  if WINWIDTH < vars.min_width then return "" end
+  if vim.fn.exists("g:coc_status") == 1 then
+    local st = vim.g.coc_status
+    return st and st
+  end
+  return ""
 end
 
 function ll.job_status() -- {{{2
-    if WINWIDTH < vars.min_width then return "" end
-    if vim.fn.exists("g:asyncrun_status") == 1 then
-        local st = vim.g.asyncrun_status
-        if st ~= "" then return "Job: " .. st end
-    end
-    return ""
+  if WINWIDTH < vars.min_width then return "" end
+  if vim.fn.exists("g:asyncrun_status") == 1 then
+    local st = vim.g.asyncrun_status
+    if st ~= "" then return "Job: " .. st end
+  end
+  return ""
 end
 
 function ll.current_tag() -- {{{2
-    if WINWIDTH < vars.max_width then return "" end
-    local coc_tag = (function()
-        return vim.fn.exists("b:coc_current_function") == 1 and
-                   api.nvim_buf_get_var(0, "coc_current_function") or ""
-    end)()
-    local tagbar_tag = function()
-        if vim.fn.exists("g:loaded_tagbar") ~= 1 then
-            vim.cmd("packadd tagbar")
-        end
-        return vim.fn["tagbar#currenttag"]("%s", "", "f")
-    end
-    -- return coc_tag or tagbar_tag() or ""
-    return coc_tag ~= "" and coc_tag or tagbar_tag() or ""
+  if WINWIDTH < vars.max_width then return "" end
+  local coc_tag = (function()
+    return vim.fn.exists("b:coc_current_function") == 1 and
+             api.nvim_buf_get_var(0, "coc_current_function") or ""
+  end)()
+  local tagbar_tag = function()
+    if vim.fn.exists("g:loaded_tagbar") ~= 1 then vim.cmd("packadd tagbar") end
+    return vim.fn["tagbar#currenttag"]("%s", "", "f")
+  end
+  -- return coc_tag or tagbar_tag() or ""
+  return coc_tag ~= "" and coc_tag or tagbar_tag() or ""
 end
 
 function ll.linter_errors() -- {{{2
-    local coc_error_ct = function()
-        if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-        local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
-        return info.error
-    end
-    local ale_error_ct = function()
-        local counts = npcall(vim.fn["ale#statusline#Count"],
-                              api.nvim_win_get_buf(0))
-        return not not counts and counts.error + counts.style_error or 0
-    end
-    -- local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
-    local error_ct = coc_error_ct() + ale_error_ct()
-    return error_ct > 0 and
-               string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
+  local coc_error_ct = function()
+    if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
+    local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
+    return info.error
+  end
+  local ale_error_ct = function()
+    local counts = npcall(vim.fn["ale#statusline#Count"],
+                          api.nvim_win_get_buf(0))
+    return not not counts and counts.error + counts.style_error or 0
+  end
+  -- local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
+  local error_ct = coc_error_ct() + ale_error_ct()
+  return error_ct > 0 and
+           string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
 end
 
 function ll.linter_warnings() -- {{{2
-    local coc_warning_ct = function()
-        if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-        local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
-        return info.warning
-    end
-    local ale_warning_ct = function()
-        local counts = npcall(vim.fn["ale#statusline#Count"],
-                              api.nvim_win_get_buf(0))
-        return not not counts and counts.warning + counts.style_warning or 0
-    end
-    local warning_ct = coc_warning_ct() + ale_warning_ct()
-    return warning_ct > 0 and
-               string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or
-               ""
+  local coc_warning_ct = function()
+    if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
+    local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
+    return info.warning
+  end
+  local ale_warning_ct = function()
+    local counts = npcall(vim.fn["ale#statusline#Count"],
+                          api.nvim_win_get_buf(0))
+    return not not counts and counts.warning + counts.style_warning or 0
+  end
+  local warning_ct = coc_warning_ct() + ale_warning_ct()
+  return warning_ct > 0 and
+           string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or ""
 end
 
 -- Statusline definition {{{1
@@ -378,75 +375,68 @@ end
 
 -- Set manual statusline {{{1
 local function def(fn) -- {{{2
-    return string.format(" %%{v:lua.ll.%s()} ", fn)
+  return string.format(" %%{v:lua.ll.%s()} ", fn)
 end
 
 -- define statusline section
 -- params: fn, width, style
 local function define(args) -- {{{2
-    return string.format(" %%#%s#%%{v:lua.ll.%s()}%%* ", args.hl, args.fn)
+  return string.format(" %%#%s#%%{v:lua.ll.%s()}%%* ", args.hl, args.fn)
 end
 
 function ll.statusline() -- {{{2
-    local bufnr = define({fn = "bufnr", hl = "WarningMsg"})
-    local fname = def("file_name")
-    local modified = def("modified")
-    local lvimrc = def("local_vimrc")
-    local git = def("git_status")
-    local warnings = def("linter_warnings")
-    local errors = def("linter_errors")
-    local left = string.format("%%<%s%s%s%s%s%s%s", bufnr, git, fname, modified,
-                               lvimrc, warnings, errors)
+  local bufnr = define({fn = "bufnr", hl = "WarningMsg"})
+  local fname = def("file_name")
+  local ro = def("read_only")
+  local modified = def("modified")
+  local lvimrc = def("local_vimrc")
+  local git = def("git_status")
+  local warnings = def("linter_warnings")
+  local errors = def("linter_errors")
+  local left = string.format("%%<%s%s%s%s%s%s%s%s", bufnr, git, fname, ro, modified,
+                             lvimrc, warnings, errors)
 
-    local job_status = def("job_status")
-    local coc = def("coc_status")
-    local line = def("simple_line_info")
-    local right = string.format("%s%s%s", job_status, coc, line)
-    return left .. "%=" .. right
+  local job_status = def("job_status")
+  local coc = def("coc_status")
+  local line = def("simple_line_info")
+  local right = string.format("%s%s%s", job_status, coc, line)
+  return left .. "%=" .. right
 end
 
 function ll.set_statusline() -- {{{2
-    api.nvim_win_set_option(0, "statusline", ll.statusline())
+  api.nvim_win_set_option(0, "statusline", ll.statusline())
 end
 
 -- Statusline init {{{2
 function ll.init()
-    vim.g.statusline_set = 1
-    local set_statusline_events =
-        { -- events where `setlocal statusline` would be called
-            -- "WinEnter",
-            "BufWinEnter",
-            -- "ShellCmdPost",
-            -- "BufWritePost",
-            -- "FileChangedShellPost",
-            "ColorScheme",
-            -- "FileReadPre",
-            -- "FileWritePost",
-        }
-
-    local set_statusline_user_events = {
-        "GitGutter",
-        "Startified",
-        "CocNvimInit",
+  vim.g.statusline_set = 1
+  local set_statusline_events =
+    { -- events where `setlocal statusline` would be called
+      -- "WinEnter",
+      "BufWinEnter",
+      -- "ShellCmdPost",
+      -- "BufWritePost",
+      -- "FileChangedShellPost",
+      "ColorScheme",
+      -- "FileReadPre",
+      -- "FileWritePost",
     }
 
-    local set_statusline_command = "lua ll.set_statusline()"
-    local augroups = {
-        statusline = {
-            {
-                table.concat(set_statusline_events, ","),
-                "*",
-                set_statusline_command,
-            },
-            {
-                "User ",
-                table.concat(set_statusline_user_events, ","),
-                set_statusline_command,
-            },
-        },
-    }
+  local set_statusline_user_events = {"GitGutter", "Startified", "CocNvimInit"}
 
-    nvim.create_augroups(augroups)
+  local set_statusline_command = "lua ll.set_statusline()"
+  local augroups = {
+    statusline = {
+      {table.concat(set_statusline_events, ","), "*", set_statusline_command},
+      {
+        "User ",
+        table.concat(set_statusline_user_events, ","),
+        set_statusline_command,
+      },
+    },
+  }
+
+  nvim.create_augroups(augroups)
 end
 -- ll.init()
 -- Tests {{{1

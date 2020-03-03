@@ -3,7 +3,7 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-03 15:09:11 CST
+" Last Change: 2020-03-03 17:39:05 CST
 " ====================================================
 scriptencoding utf-8
 

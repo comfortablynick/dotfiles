@@ -57,7 +57,7 @@ function M.init()
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
-          diagnostics = {enable = true, globals = {"vim", "nvim"}},
+          diagnostics = {enable = true, globals = {"vim", "nvim", "sl"}},
         },
       },
     },

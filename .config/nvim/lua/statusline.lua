@@ -1,10 +1,13 @@
 local api = vim.api
+local uv = vim.loop
+local getbufvar = api.nvim_buf_get_var
+local getbufopt = api.nvim_buf_get_option
+local winbufnr = api.nvim_win_get_buf
+local winwidth = api.nvim_win_get_width
 local exists = vim.fn.exists
 local util = require"util"
 local npcall = util.npcall
 local nvim = require"helpers"
-local getbufvar = api.nvim_buf_get_var
-local getbufopt = api.nvim_buf_get_option
 sl = {}
 
 -- Local vars {{{1
@@ -14,16 +17,14 @@ vim.g.LL_pl = vim.g.LL_pl or 0
 vim.g.LL_nf = vim.g.LL_nf or 0
 
 -- Script globals {{{2
-local WINWIDTH = api.nvim_win_get_width(0)
-local FILENAME = api.nvim_buf_get_name(0)
 local vars = { -- {{{2
   min_width = 90,
   med_width = 140,
   max_width = 200,
-  use_simple_sep = vim.env.SUB ~= "|" and 0 or 1,
   use_pl_fonts = vim.g.LL_pl,
   use_nerd_fonts = vim.g.LL_nf,
   glyphs = {
+    sep = "┊",
     line_no = "",
     vcs = vim.g.LL_nf ~= 1 and "" or " ",
     branch = "",
@@ -78,9 +79,13 @@ sl.mode_map = {
   t = {"TERMINAL", "TERM", "T"},
 }
 
+-- Utility functions {{{1
+local lpad = function(s) return tostring(s) ~= "" and " " .. s or "" end
+local rpad = function(s) return tostring(s) ~= "" and s .. " " or "" end
+
 -- Component Functions {{{1
 function sl.is_not_file(bufnr) -- {{{2
-  local ft = api.nvim_buf_get_option(bufnr, "filetype")
+  local ft = getbufopt(bufnr, "filetype")
   return special_filetypes[ft] ~= nil or ft == ""
 end
 
@@ -99,78 +104,61 @@ function sl.line_info() -- {{{2
                        vars.glyphs.line, row_pos(), vars.glyphs.line_no, col)
 end
 
-function sl.simple_line_info() -- {{{2
-  local line_ct = api.nvim_buf_line_count(0)
-  local pos = api.nvim_win_get_cursor(0)
-  local row = pos[1]
-  local col = pos[2] + 1
-  return string.format("%d,%d %3d%% ", row, col, row * 100 / line_ct)
-end
-
-function sl.bufnr(bufnr) -- {{{2
-  local buflisted = api.nvim_buf_get_option(bufnr, "buflisted")
+function sl.bufnr(winid) -- {{{2
+  local bufnr = winbufnr(winid)
+  if winwidth(winid) < vars.min_width then return "" end
+  local buflisted = getbufopt(bufnr, "buflisted")
   return buflisted and "[" .. bufnr .. "]" or ""
 end
 
-function sl.vim_mode() -- {{{2
-  local mode_key = api.nvim_get_mode().mode
-  local curr_mode = sl.mode_map[mode_key] or mode_key
-  local mode_out = function()
-    if WINWIDTH > vars.med_width then return curr_mode[1] end
-    if WINWIDTH > vars.min_width then return curr_mode[2] end
-    return curr_mode[3]
-  end
-  -- TODO: is filename ever going to match special_filetypes?
-  -- viml: return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
-  -- return type(special_filetypes[vim.bo.filetype]) == "string" or mode_out()
-  return special_filetypes[vim.bo.filetype] or mode_out()
-end
-
-function sl.file_type() -- {{{2
-  if sl.is_not_file() or WINWIDTH <= vars.med_width then return "" end
-  local ft_glyph = WINWIDTH > vars.med_width and
+function sl.file_type(winid) -- {{{2
+  local winw = winwidth(winid)
+  if winw <= vars.med_width then return "" end
+  local bufnr = winbufnr(winid)
+  local ft_glyph = winw > vars.med_width and
                      npcall(function()
-      return " " .. vim.fn.WebDevIconsGetFileTypeSymbol()
+      return vim.fn.WebDevIconsGetFileTypeSymbol()
     end) or ""
-  local python_venv = function()
-    local venv = not vim.g.did_coc_loaded and
-                   (vim.bo.ft == "python" and
-                     string.basename(vim.env.VIRTUAL_ENV)) or ""
-    return venv ~= "" and string.format(" (%s)", venv) or ""
-  end
-
-  local venv = WINWIDTH > vars.med_width and python_venv() or ""
-  return vim.bo.filetype .. ft_glyph .. venv
+  return rpad(ft_glyph) .. getbufopt(bufnr, "filetype")
 end
 
-function sl.file_format() -- {{{2
-  local ff = vim.bo.fileformat
-  if sl.is_not_file() or ff == "unix" then return "" end
-  local ff_glyph = WINWIDTH > vars.med_width and
+function sl.python_venv(bufnr) -- {{{2
+  local venv = not vim.g.did_coc_loaded and
+                 (getbufopt(bufnr, "filetype") == "python" and
+                   string.basename(vim.env.VIRTUAL_ENV)) or ""
+  return venv ~= "" and "(" .. venv .. ")" or ""
+end
+
+function sl.file_format(winid) -- {{{2
+  local bufnr = winbufnr(winid)
+  local ff = getbufopt(bufnr, "fileformat")
+  if ff == "unix" then return "" end
+  local winw = winwidth(winid)
+  local ff_glyph = winw > vars.med_width and
                      npcall(function()
-      return " " .. vim.fn.WebDevIconsGetFileFormatSymbol()
+      return vim.fn.WebDevIconsGetFileFormatSymbol()
     end) or ""
-  return ff .. ff_glyph
+  return ff .. lpad(ff_glyph)
 end
 
-function sl.file_size() -- {{{2
-  local stat = vim.loop.fs_stat(FILENAME)
+function sl.file_size(bufnr) -- {{{2
+  local stat = uv.fs_stat(api.nvim_buf_get_name(bufnr))
   local size = stat ~= nil and stat.size or 0
   return size > 0 and util.humanize_bytes(size) or ""
 end
 
-function sl.file_name(bufnr) -- {{{2
+function sl.file_name(winid) -- {{{2
+  local bufnr = winbufnr(winid)
   local path = vim.fn.fnamemodify(api.nvim_buf_get_name(bufnr), ":~:.")
-  if WINWIDTH < vars.min_width then
+  if winwidth(winid) < vars.min_width then
     return vim.fn.pathshorten(path)
   else
     return path
   end
 end
 
-function sl.read_only() -- {{{2
-  return vim.api.nvim_buf_get_var() and vars.glyphs.read_only or
-           ""
+function sl.read_only(bufnr) -- {{{2
+  return getbufopt(bufnr, "readonly") and vars.glyphs.read_only or ""
 end
 
 function sl.modified() -- {{{2
@@ -178,7 +166,7 @@ function sl.modified() -- {{{2
 end
 
 function sl.local_vimrc(bufnr) -- {{{2
-  local lrc = npcall(api.nvim_buf_get_var, bufnr, "localrc_loaded")
+  local lrc = npcall(getbufvar, bufnr, "localrc_loaded")
   return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
 end
 
@@ -196,7 +184,7 @@ function sl.git_summary() -- {{{2
   -- 2. gitgutter
   -- 3. signify
   if exists("b:coc_git_status") == 1 then
-    return " " .. vim.trim(api.nvim_buf_get_var(0, "coc_git_status"))
+    return " " .. vim.trim(getbufvar(0, "coc_git_status"))
   end
   local hunks = (function()
     return npcall(vim.fn.GitGutterGetHunkSummary) or
@@ -220,8 +208,8 @@ function sl.git_branch() -- {{{2
   return head ~= "" and vars.glyphs.branch .. " " .. head or ""
 end
 
-function sl.git_status() -- {{{2
-  if not sl.is_not_file() and WINWIDTH > vars.min_width then
+function sl.git_status(winid) -- {{{2
+  if winwidth(winid) > vars.min_width then
     local branch = sl.git_branch()
     local hunks = sl.git_summary()
     if branch ~= "" then
@@ -232,8 +220,8 @@ function sl.git_status() -- {{{2
   return ""
 end
 
-function sl.coc_status() -- {{{2
-  if WINWIDTH < vars.min_width then return "" end
+function sl.coc_status(winid) -- {{{2
+  if winwidth(winid) < vars.min_width then return "" end
   if vim.fn.exists("g:coc_status") == 1 then
     local st = vim.g.coc_status
     return st and st
@@ -241,8 +229,8 @@ function sl.coc_status() -- {{{2
   return ""
 end
 
-function sl.job_status() -- {{{2
-  if WINWIDTH < vars.min_width then return "" end
+function sl.job_status(winid) -- {{{2
+  if winwidth(winid) < vars.min_width then return "" end
   if vim.fn.exists("g:asyncrun_status") == 1 then
     local st = vim.g.asyncrun_status
     if st ~= "" then return "Job: " .. st end
@@ -250,11 +238,12 @@ function sl.job_status() -- {{{2
   return ""
 end
 
-function sl.current_tag() -- {{{2
-  if WINWIDTH < vars.max_width then return "" end
+function sl.current_tag(winid) -- {{{2
+  if winwidth(winid) < vars.max_width then return "" end
+  local bufnr = winbufnr(winid)
   local coc_tag = (function()
     return vim.fn.exists("b:coc_current_function") == 1 and
-             api.nvim_buf_get_var(0, "coc_current_function") or ""
+             getbufvar(bufnr, "coc_current_function") or ""
   end)()
   local tagbar_tag = function()
     if vim.fn.exists("g:loaded_tagbar") ~= 1 then vim.cmd("packadd tagbar") end
@@ -264,15 +253,15 @@ function sl.current_tag() -- {{{2
   return coc_tag ~= "" and coc_tag or tagbar_tag() or ""
 end
 
-function sl.linter_errors() -- {{{2
+function sl.linter_errors(winid) -- {{{2
+  local bufnr = winbufnr(winid)
   local coc_error_ct = function()
     if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-    local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
+    local info = getbufvar(bufnr, "coc_diagnostic_info")
     return info.error
   end
   local ale_error_ct = function()
-    local counts = npcall(vim.fn["ale#statusline#Count"],
-                          api.nvim_win_get_buf(0))
+    local counts = npcall(vim.fn["ale#statusline#Count"], bufnr)
     return not not counts and counts.error + counts.style_error or 0
   end
   -- local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
@@ -281,15 +270,15 @@ function sl.linter_errors() -- {{{2
            string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
 end
 
-function sl.linter_warnings() -- {{{2
+function sl.linter_warnings(winid) -- {{{2
+  local bufnr = winbufnr(winid)
   local coc_warning_ct = function()
     if vim.fn.exists("b:coc_diagnostic_info") ~= 1 then return 0 end
-    local info = api.nvim_buf_get_var(0, "coc_diagnostic_info")
+    local info = getbufvar(bufnr, "coc_diagnostic_info")
     return info.warning
   end
   local ale_warning_ct = function()
-    local counts = npcall(vim.fn["ale#statusline#Count"],
-                          api.nvim_win_get_buf(0))
+    local counts = npcall(vim.fn["ale#statusline#Count"], bufnr)
     return not not counts and counts.warning + counts.style_warning or 0
   end
   local warning_ct = coc_warning_ct() + ale_warning_ct()
@@ -297,12 +286,10 @@ function sl.linter_warnings() -- {{{2
            string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or ""
 end
 
-
-
+-- Main functions {{{1
 function sl.statusline(winid) -- {{{2
-  local win = winid
   local bufnr = api.nvim_win_get_buf(winid)
-  local active = api.nvim_get_current_win() == win
+  local active = api.nvim_get_current_win() == winid
   local default_status = "%<%f %h%m%r%"
   local inactive_status = " %n %<%f %h%m%r%"
 
@@ -313,16 +300,22 @@ function sl.statusline(winid) -- {{{2
   end
 
   local left = {
-    "%( %{v:lua.sl.bufnr(" .. bufnr .. ")}%)",
+    "%( %{v:lua.sl.bufnr(" .. winid .. ")}%)",
     "%( %h%w%)",
-    "%( %{v:lua.sl.file_name(" .. bufnr .. ")}%)",
+    "%( %{v:lua.sl.file_name(" .. winid .. ")}%)",
     "%<",
     "%( %m%r%)",
-    "%(  %{statusline#linter_errors(" .. bufnr .. ")}%)",
-    "%( %{statusline#linter_warnings(" .. bufnr .. ")}%)",
-    "%( %{statusline#file_type(" .. win .. ")}%)",
+    "%(  %{v:lua.sl.file_type(" .. winid .. ")}%)",
+    -- TODO: add vim.lsp diagnostics
+    "%(  %{v:lua.sl.linter_errors(" .. winid .. ")} %{v:lua.sl.linter_warnings(" ..
+      winid .. ")}%)",
   }
-  return table.concat(left)
+  local right = {
+    "%( %{v:lua.sl.coc_status(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
+    "%( %{v:lua.sl.git_status("..winid..")} "..vars.glyphs.sep.."%)",
+    "%( %l,%c%) %4(%p%% %)",
+  }
+  return table.concat(left) .. "%=" .. table.concat(right)
 end
 
 function sl.set_statusline() -- {{{2
@@ -336,8 +329,7 @@ function sl.refresh() -- {{{2
   end
 end
 
--- Statusline init {{{2
-function sl.init()
+function sl.init() -- {{{2
   vim.g.statusline_set = 1
   local set_statusline_events =
     { -- events where `setlocal statusline` would be called
@@ -363,7 +355,6 @@ function sl.init()
 
   nvim.create_augroups(augroups)
 end
--- sl.init()
 -- Tests {{{1
 -- Benchmarks {{{2
 -- local runs = 1000

@@ -3,7 +3,7 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-03 11:16:58 CST
+" Last Change: 2020-03-03 15:09:11 CST
 " ====================================================
 scriptencoding utf-8
 
@@ -13,22 +13,10 @@ let g:sl.width.min = 90                                          " Width for usi
 let g:sl.width.med = 140                                         " Secondary width for some sections
 let g:sl.width.max = 200                                         " Largest width for some (unnecessary) sections
 
-" Symbols/glyphs {{{2
-" let s:pl = get(g:, 'LL_pl', 0)
-let s:nf = !$MOSH_CONNECTION
-let s:LineNoSymbol = ''                                     " Use  for line; alt: '␤'
-let s:GitSymbol = s:nf ? ' ' : ''                        " Use git symbol unless no nerd fonts
-let s:BranchSymbol = ''                                    " Git branch symbol
-let s:LineSymbol = '☰ '                                      " Is 'Ξ' ever needed?
-let s:ROSymbol = ' '                                        " Read-only symbol
-let s:ModSymbol = ' [+]'                                     " File modified symbol
-let s:SimpleSep = $SUB ==# '|' ? 1 : 0                       " Use simple section separators instead of PL (no other effects)
-let s:FnSymbol = 'ƒ '                                        " Use for current function
-
 " Linter indicators {{{2
-let s:LinterChecking = s:nf ? "\uf110 " : '...'
-let s:LinterWarnings = s:nf ? "\uf071 " : '•'
-let s:LinterErrors = s:nf ? "\uf05e " : '•'
+let s:LinterChecking = g:nf ? "\uf110 " : '...'
+let s:LinterWarnings = g:nf ? "\uf071 " : '•'
+let s:LinterErrors = g:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
 
 " Main {{{1
@@ -52,12 +40,13 @@ function! statusline#get(winnr) abort "{{{2
     let l:sl .= '%( %m%r%)'
     let l:sl .= '%(  %{statusline#linter_errors('.l:bufnr.')}%)'
     let l:sl .= '%( %{statusline#linter_warnings('.l:bufnr.')}%)'
+    let l:sl .= '%( %{statusline#file_type('.a:winnr.')}%)'
 
     let l:sl .= '%='
-    let l:sl .= '%( %{statusline#toggled()} ┊%)'
-    let l:sl .= '%( %{statusline#job_status()} ┊%)'
-    let l:sl .= '%( %{statusline#coc_status('.l:bufnr.')} ┊%)'
-    let l:sl .= '%( %{statusline#git_status('.l:bufnr.')} ┊%)'
+    let l:sl .= '%( %{statusline#toggled()} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#job_status()} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#coc_status('.l:bufnr.')} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#git_status('.l:bufnr.')} '.g:sl.sep.'%)'
     let l:sl .= '%( %l,%c%) %4(%p%% %)'
     return l:sl
 endfunction
@@ -69,7 +58,74 @@ function! statusline#refresh() abort "{{{2
     endfor
 endfunction
 
+" Toggling {{{1
+" Args {{{2
+let s:args = [
+    \   ['toggle', 'clear'],
+    \   [
+    \       'syntax_group',
+    \   ]
+    \ ]
+
+function! s:toggle_item(var, funcref) abort " {{{2
+    let g:statusline_toggle = get(g:, 'statusline_toggle', {})
+    if has_key(g:statusline_toggle, a:var)
+        call remove(g:statusline_toggle, a:var)
+    else
+        let g:statusline_toggle[a:var] = a:funcref
+    endif
+endfunction
+
+function! statusline#command(...) abort " {{{2
+    let l:arg = exists('a:1') ? a:1 : 'clear'
+
+    if l:arg ==# 'toggle'
+        let &laststatus = (&laststatus != 0 ? 0 : 2)
+        let &showmode = (&laststatus == 0 ? 1 : 0)
+        return
+    elseif l:arg ==# 'clear'
+        unlet! g:statusline_toggle
+        return
+    endif
+
+    " Split args in case we have many
+    let l:args = split(l:arg, ' ')
+
+    " Check the 1st one only
+    if index(s:args[1], l:args[0], 0) == -1
+        return
+    endif
+
+    for l:a in l:args
+        " let l:fun_ref = 'statusline#'.l:arg
+        let l:fun_ref = statusline#{l:arg}
+        call s:toggle_item(l:arg, l:fun_ref)
+    endfor
+endfunction
+
+function! statusline#complete_args(a, l, p) abort " {{{3
+    return join(s:args[0] + s:args[1], "\n")
+endfunction
+
 " Component functions {{{1
+" Pad with space if not empty
+function! s:lpad(expr) abort "{{{2
+    return !empty(a:expr) ? ' '.a:expr : ''
+endfunction
+
+" Pad with space if not empty
+function! s:rpad(expr) abort "{{{2
+    return !empty(a:expr) ? a:expr.' ' : ''
+endfunction
+
+" Safely call devicons
+function! s:dev_icon(type) abort "{{{2
+    if exists('*WebDevIconsGet'.a:type.'Symbol')
+        return WebDevIconsGet{a:type}Symbol()
+    endif
+    return ''
+endfunction
+
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
     let g:statusline_hg = get(g:, 'statusline_hg', [])
     let l:bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
@@ -190,7 +246,7 @@ function! statusline#line_info_full(bufnr) abort "{{{2
         \ s:line_percent(),
         \ statusline#line_pos(),
         \ s:line_no(),
-        \ s:LineNoSymbol,
+        \ g:sl.symbol.line_no,
         \ s:col_no()
         \ )
 endfunction
@@ -202,36 +258,28 @@ function! statusline#line_info() abort
     return printf('%d,%d %3d%%', l:line, l:col, l:line_pct)
 endfunction
 
-function! statusline#file_type(bufnr) abort "{{{2
-    if statusline#is_not_file(a:bufnr) | return '' | endif
-    let l:ftsymbol = s:nf &&
-        \ exists('*WebDevIconsGetFileTypeSymbol') ?
-        \ ' '.WebDevIconsGetFileTypeSymbol() :
-        \ ''
-    " Don't need venv if we have coc_status
-    let l:venv = exists('g:coc_status') ? '' : statusline#venv_name()
+function! statusline#file_type(winnr) abort "{{{2
+    let l:bufnr = winbufnr(a:winnr)
+    if statusline#is_not_file(l:bufnr) | return '' | endif
+    let l:ftsymbol = s:rpad(s:dev_icon('FileType'))
     let l:out = ''
-    if winwidth(0) > g:sl.width.med
-        if empty(expand('%:e'))
-            let l:out .= getbufvar(a:bufnr, '&filetype')
-        endif
-        return l:out.l:ftsymbol.l:venv
+    if winwidth(a:winnr) > g:sl.width.med
+        let l:out .= getbufvar(l:bufnr, '&filetype')
+        return l:ftsymbol.l:out
     endif
     return ''
 endfunction
 
-function! statusline#file_format(bufnr) abort "{{{2
-    let l:ff = getbufvar(a:bufnr, '&fileformat')
-    let l:ffsymbol = s:nf &&
-        \ exists('*WebDevIconsGetFileFormatSymbol') ?
-        \ WebDevIconsGetFileFormatSymbol() :
-        \ ''
+function! statusline#file_format(winnr) abort "{{{2
+    let l:bufnr = winbufnr(a:winnr)
+    let l:ff = getbufvar(l:bufnr, '&fileformat')
+    if l:ff ==# 'unix' || statusline#is_not_file(l:bufnr) 
+        return ''
+    endif
+    let l:ffsymbol = s:dev_icon('FileFormat')
     " No output if fileformat is unix (standard)
-    return l:ff !=? 'unix' ?
-        \ statusline#is_not_file(a:bufnr) ?
-        \ '' : winwidth(0) > g:sl.width.med
-        \ ? (l:ff . ' ' . l:ffsymbol )
-        \ : ''
+    return winwidth(a:winnr) > g:sl.width.med
+        \ ? (l:ff.s:lpad(l:ffsymbol))
         \ : ''
 endfunction
 
@@ -469,60 +517,13 @@ function! statusline#toggled() abort " {{{2
     endif
     let l:sl = ''
     for [l:k, l:v] in items(g:statusline_toggle)
-        let l:str = call(l:v, [])
+        " let l:str = call(l:v, [])
+        let l:str = l:v()
         let l:sl .= empty(l:sl)
             \ ? l:str . ' '
-            \ : g:sl.separator.' '.l:str.' '
+            \ : g:sl.sep.' '.l:str.' '
     endfor
     return l:sl[:-2]
-endfunction
-
-" Toggle {{{1
-" Args {{{2
-let s:args = [
-    \   ['toggle', 'clear'],
-    \   [
-    \       'syntax_group',
-    \   ]
-    \ ]
-
-function! s:toggle_sl_item(var, funcref) abort " {{{2
-    let g:statusline_toggle = get(g:, 'statusline_toggle', {})
-    if has_key(g:statusline_toggle, a:var)
-        call remove(g:statusline_toggle, a:var)
-    else
-        let g:statusline_toggle[a:var] = a:funcref
-    endif
-endfunction
-
-function! statusline#sl_command(...) abort " {{{2
-    let l:arg = exists('a:1') ? a:1 : 'clear'
-
-    if l:arg ==# 'toggle'
-        let &laststatus = (&laststatus != 0 ? 0 : 2)
-        let &showmode = (&laststatus == 0 ? 1 : 0)
-        return
-    elseif l:arg ==# 'clear'
-        unlet! g:statusline_toggle
-        return
-    endif
-
-    " Split args in case we have many
-    let l:args = split(l:arg, ' ')
-
-    " Check the 1st one only
-    if index(s:args[1], l:args[0], 0) == -1
-        return
-    endif
-
-    for l:a in l:args
-        let l:fun_ref = 'statusline#'.l:arg
-        call s:toggle_sl_item(l:arg, l:fun_ref)
-    endfor
-endfunction
-
-function! statusline#sl_complete_args(a, l, p) abort " {{{3
-    return join(s:args[0] + s:args[1], "\n")
 endfunction
 
 " vim:fdm=expr:

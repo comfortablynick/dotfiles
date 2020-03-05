@@ -10,6 +10,9 @@
   "diagnostic.messageTarget": "float",
   "diagnostic.refreshAfterSave": true,
 
+  // git
+  "git.branchCharacter": "",
+
   // diagnostic-languageserver
   "diagnostic-languageserver.enable": true,
   "diagnostic-languageserver.filetypes": {

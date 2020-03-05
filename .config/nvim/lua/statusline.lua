@@ -80,6 +80,7 @@ sl.mode_map = {
 }
 
 -- Utility functions {{{1
+-- lpad/rpad {{{2
 local lpad = function(s) return tostring(s) ~= "" and " " .. s or "" end
 local rpad = function(s) return tostring(s) ~= "" and s .. " " or "" end
 
@@ -161,8 +162,8 @@ function sl.read_only(bufnr) -- {{{2
   return getbufopt(bufnr, "readonly") and vars.glyphs.read_only or ""
 end
 
-function sl.modified() -- {{{2
-  return not sl.is_not_file() and vim.bo.modified and vars.glyphs.modified or ""
+function sl.modified(bufnr) -- {{{2
+  return getbufopt(bufnr, "modified") and vars.glyphs.modified or ""
 end
 
 function sl.local_vimrc(bufnr) -- {{{2
@@ -170,54 +171,47 @@ function sl.local_vimrc(bufnr) -- {{{2
   return lrc and lrc > 0 and vars.glyphs.lvimrc or ""
 end
 
-function sl.file_encoding() -- {{{2
-  return vim.bo.fileencoding ~= "utf-8" and vim.bo.fileencoding or ""
+function sl.file_encoding(bufnr) -- {{{2
+  local enc = getbufopt(bufnr, "fileencoding")
+  return enc ~= "utf-8" and enc or ""
 end
 
 function sl.tab_name() -- {{{2
   return sl.is_not_file() and "" or sl.file_name()
 end
 
-function sl.git_summary() -- {{{2
+function sl.git_summary(bufnr) -- {{{2
   -- Look for git hunk summary in this order:
   -- 1. coc-git
   -- 2. gitgutter
   -- 3. signify
   if exists("b:coc_git_status") == 1 then
-    return " " .. vim.trim(getbufvar(0, "coc_git_status"))
+    return getbufvar(bufnr, "coc_git_status")
   end
   local hunks = (function()
-    return npcall(vim.fn.GitGutterGetHunkSummary) or
+    return npcall(vim.fn["gitgutter#hunk#summary"], bufnr) or
              npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
   end)()
-  local added = not not hunks[1] and hunks[1] ~= 0 and
-                  string.format("+%d ", hunks[1]) or ""
-  local changed = not not hunks[2] and hunks[2] ~= 0 and
-                    string.format("~%d ", hunks[2]) or ""
-  local deleted = not not hunks[3] and hunks[3] ~= 0 and
-                    string.format("-%d ", hunks[3]) or ""
-  return " " .. added .. changed .. deleted
+  local added = hunks[1] and hunks[1] ~= 0 and "+" .. hunks[1] .. " " or ""
+  local changed = hunks[2] and hunks[2] ~= 0 and "~" .. hunks[2] .. " " or ""
+  local deleted = hunks[3] and hunks[3] ~= 0 and "-" .. hunks[3] .. " " or ""
+  return added .. changed .. deleted
 end
 
 function sl.git_branch() -- {{{2
   if vim.fn.exists("g:coc_git_status") == 1 then
-    return string.gsub(vim.g.coc_git_status, "master", "")
+    return vim.g.coc_git_status
   end
   local head = npcall(vim.fn.FugitiveHead)
-  -- return not not head and vars.glyphs.branch .. " " .. head or ""
-  return head ~= "" and vars.glyphs.branch .. " " .. head or ""
+  return head ~= "" and head or ""
 end
 
 function sl.git_status(winid) -- {{{2
   if winwidth(winid) > vars.min_width then
     local branch = sl.git_branch()
-    local hunks = sl.git_summary()
-    if branch ~= "" then
-      return string.format("%s%s%s", vars.glyphs.vcs, branch:gsub("master", ""),
-                           hunks)
-    end
+    local hunks = sl.git_summary(winbufnr(winid))
+    return branch ~= "" and hunks .. branch:gsub("master", "") .. vars.glyphs.branch or ""
   end
-  return ""
 end
 
 function sl.coc_status(winid) -- {{{2
@@ -305,14 +299,14 @@ function sl.statusline(winid) -- {{{2
     "%( %{v:lua.sl.file_name(" .. winid .. ")}%)",
     "%<",
     "%( %m%r%)",
-    "%(  %{v:lua.sl.file_type(" .. winid .. ")}%)",
     -- TODO: add vim.lsp diagnostics
     "%(  %{v:lua.sl.linter_errors(" .. winid .. ")} %{v:lua.sl.linter_warnings(" ..
       winid .. ")}%)",
   }
   local right = {
     "%( %{v:lua.sl.coc_status(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
-    "%( %{v:lua.sl.git_status("..winid..")} "..vars.glyphs.sep.."%)",
+    "%( %{v:lua.sl.git_status(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
+    "%( %{v:lua.sl.file_type(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
     "%( %l,%c%) %4(%p%% %)",
   }
   return table.concat(left) .. "%=" .. table.concat(right)

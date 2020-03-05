@@ -45,7 +45,7 @@ $0
 endsnippet
 
 snippet scriptguard "script reinclusion guard" b
-const s:guard = 'g:loaded_`!p
+constG s:guard = 'g:loaded_`!p
 if not snip.c:
 	relpath = file_relative_path()
 	relpath = '_'.join(os.path.split(relpath))
@@ -100,4 +100,9 @@ endsnippet
 
 snippet foldmark "fold marker"
 "{{{${1}
+endsnippet
+
+snippet cabbr "save command abbr"
+cnoreabbrev <expr> ${1:abbr}
+    \ util#cabbr('$1', '$2')
 endsnippet

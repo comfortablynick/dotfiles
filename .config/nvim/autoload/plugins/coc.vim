@@ -121,8 +121,12 @@ function! plugins#coc#apply_maps() abort "{{{1
 endfunction
 
 function! plugins#coc#abbrev() abort "{{{1
-    cnoreabbrev es CocCommand snippets.editSnippets
-    cnoreabbrev ci CocInfo
+    cnoreabbrev <expr> es
+        \ util#cabbr('es', 'CocCommand snippets.editSnippets')
+    cnoreabbrev <expr> ci
+        \ util#cabbr('ci', 'CocInfo')
+    cnoreabbrev <expr> cc
+        \ util#cabbr('cc', 'CocConfig')
 endfunction
 
 function! plugins#coc#init() abort "{{{1

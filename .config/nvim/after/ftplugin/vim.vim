@@ -3,7 +3,7 @@
 " Description: Vim script files
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-18 18:04:26 CST
+" Last Change: 2020-03-06 11:00:16 CST
 " ====================================================
 
 " Local vim editor settings
@@ -16,25 +16,27 @@ setlocal formatoptions-=r                                       " Don't insert c
 " Execute line/selection
 nnoremap <silent><buffer> yxx      <Cmd>execute getline('.')<CR>
 xnoremap <silent><buffer> <Enter> :<C-U>keeppatterns '<,'>g/^/exe getline('.')<CR>
+nnoremap <silent><buffer> <C-]> :call plugins#lazy_call('vim-lookup', 'lookup#lookup')<CR>
+nnoremap <silent><buffer> <C-t> :call plugins#lazy_call('vim-lookup', 'lookup#pop')<CR>
 
 " Folding
 setlocal foldmethod=marker                                      " Fold using markers
 setlocal foldexpr=VimFoldLevel()
 
 function! VimFoldLevel() abort
-    let marker = split(&foldmarker, ',')[0]
-    let line = getline(v:lnum)
+    let l:marker = split(&foldmarker, ',')[0]
+    let l:line = getline(v:lnum)
     " Functions
-    if line =~# '\v^\s*fun'
+    if l:line =~# '\v^\s*fun'
         return '>1'
     endif
     " Modeline (don't fold)
-    if line =~# '\v^\"\s*vim:'
+    if l:line =~# '\v^\"\s*vim:'
         return '0'
     endif
     " Markers
     " TODO: extract number for level
-    if line =~# '{{{\d*$'
+    if l:line =~# '{{{\d*$'
         return '>1'
     endif
     " let fdl = matchstr(line, '{{{')

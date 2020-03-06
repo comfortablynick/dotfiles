@@ -61,7 +61,7 @@ function M.init()
         },
       },
     },
-    pyls = {},
+    pyls_ms = {},
     -- vimls = {},
   }
 

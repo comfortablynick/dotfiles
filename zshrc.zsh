@@ -97,7 +97,7 @@ fi
 autoload -Uz remove_last_history_entry
 autoload -Uz direnv
 autoload -Uz fh
-autoload -Uz cdp
+autoload -Uz cf
 autoload -Uz mc
 autoload -Uz cd
 

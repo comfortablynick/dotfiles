@@ -3,7 +3,7 @@
 " Description: Interface with packages and package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-29 01:01:04 CST
+" Last Change: 2020-03-06 09:33:28 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_pack' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -29,9 +29,9 @@ function! s:deferred_load() abort
     silent! packadd targets.vim
     silent! packadd tcomment_vim
     silent! packadd asyncrun.vim
-    silent! packadd vim-vinegar
     " silent! packadd vim-dispatch
     " silent! packadd vim-easymotion
+    silent! packadd vim-unimpaired
     silent! packadd clever-f.vim
     silent! packadd vim-sneak
 

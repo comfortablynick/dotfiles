@@ -3,16 +3,12 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-29 01:04:13 CST
+" Last Change: 2020-03-05 11:04:51 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_maps' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-" Indent/outdent
-vnoremap <Tab>   <Cmd>normal! >gv<CR>
-vnoremap <S-Tab> <Cmd>normal! <gv<CR>
-
-" Normal mode maps
+" General {{{1
 nnoremap U <C-r>
 nnoremap qq :x<CR>
 nnoremap qqq :q!<CR>
@@ -23,6 +19,11 @@ inoremap kj <Esc>`^
 inoremap lkj <Esc>`^:w<CR>
 inoremap ;lkj <Esc>`^:x<CR>
 
+" Indent/outdent
+vnoremap <Tab>   <Cmd>normal! >gv<CR>
+vnoremap <S-Tab> <Cmd>normal! <gv<CR>
+
+" Window navigation {{{1
 " `CTRL+{h,j,k,l}` to navigate in normal mode
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -49,11 +50,16 @@ nnoremap d<C-k> <C-w>k<C-w>c
 nnoremap d<C-h> <C-w>h<C-w>c
 nnoremap d<C-l> <C-w>l<C-w>c
 
-" `t` + {h,l,n} to navigate tabs
+" Tab navigation {{{1
 nnoremap <silent> th :tabprev<CR>
 nnoremap <silent> tl :tabnext<CR>
 nnoremap <silent> tn :tabnew<CR>
 
+" Override vim-impaired tagstack mapping
+nnoremap <silent> [t :tabprevious<CR>
+nnoremap <silent> ]t :tabnext<CR>
+
+" Buffer navigation {{{1
 " Ctrl + [n]ext/[p]revious buffer
 nnoremap <silent> <C-n> :bnext<CR>
 nnoremap <silent> <C-p> :bprevious<CR>

@@ -223,6 +223,10 @@ function sl.coc_status(winid) -- {{{2
   return ""
 end
 
+function sl.lsp_status() -- {{{2
+  return vim.lsp.buf.server_ready() == true and "LSP" or ""
+end
+
 function sl.job_status(winid) -- {{{2
   if winwidth(winid) < vars.min_width then return "" end
   if vim.fn.exists("g:asyncrun_status") == 1 then
@@ -258,8 +262,8 @@ function sl.linter_errors(winid) -- {{{2
     local counts = npcall(vim.fn["ale#statusline#Count"], bufnr)
     return not not counts and counts.error + counts.style_error or 0
   end
-  -- local error_ct = coc_errors > 0 and coc_errors or ale_error_ct()
-  local error_ct = coc_error_ct() + ale_error_ct()
+  local lsp_error_ct = vim.lsp.util.buf_diagnostics_count("Error") or 0
+  local error_ct = coc_error_ct() + ale_error_ct() + lsp_error_ct
   return error_ct > 0 and
            string.format("%s %d", vars.glyphs.linter_errors, error_ct) or ""
 end
@@ -275,7 +279,8 @@ function sl.linter_warnings(winid) -- {{{2
     local counts = npcall(vim.fn["ale#statusline#Count"], bufnr)
     return not not counts and counts.warning + counts.style_warning or 0
   end
-  local warning_ct = coc_warning_ct() + ale_warning_ct()
+  local lsp_warning_ct = vim.lsp.util.buf_diagnostics_count("Warning") or 0
+  local warning_ct = coc_warning_ct() + ale_warning_ct() + lsp_warning_ct
   return warning_ct > 0 and
            string.format("%s %d", vars.glyphs.linter_warnings, warning_ct) or ""
 end
@@ -299,11 +304,11 @@ function sl.statusline(winid) -- {{{2
     "%( %{v:lua.sl.file_name(" .. winid .. ")}%)",
     "%<",
     "%( %m%r%)",
-    -- TODO: add vim.lsp diagnostics
     "%(  %{v:lua.sl.linter_errors(" .. winid .. ")} %{v:lua.sl.linter_warnings(" ..
       winid .. ")}%)",
   }
   local right = {
+    "%( %{v:lua.sl.lsp_status()} " .. vars.glyphs.sep .. "%)",
     "%( %{v:lua.sl.coc_status(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
     "%( %{v:lua.sl.git_status(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",
     "%( %{v:lua.sl.file_type(" .. winid .. ")} " .. vars.glyphs.sep .. "%)",

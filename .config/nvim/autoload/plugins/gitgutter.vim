@@ -6,8 +6,8 @@ function! plugins#gitgutter#pre() abort
 endfunction
 
 function! plugins#gitgutter#post() abort
-    command -count=1 GitNextHunk call plugins#gitgutter#next_hunk(<count>)
-    command -count=1 GitPrevHunk call plugins#gitgutter#prev_hunk(<count>)
+    command! -count=1 GitNextHunk call plugins#gitgutter#next_hunk(<count>)
+    command! -count=1 GitPrevHunk call plugins#gitgutter#prev_hunk(<count>)
 
     nnoremap <silent> ]g :GitNextHunk<CR>
     nnoremap <silent> [g :GitPrevHunk<CR>
@@ -18,10 +18,10 @@ endfunction
 
 " Wrap around buffer when navigating hunks
 function! plugins#gitgutter#prev_hunk(count) abort
-  for i in range(1, a:count)
-    let line = line('.')
+  for l:i in range(1, a:count)
+    let l:line = line('.')
     silent GitGutterPrevHunk
-    if line('.') == line
+    if line('.') == l:line
       normal! G
       silent GitGutterPrevHunk
     endif
@@ -29,10 +29,10 @@ function! plugins#gitgutter#prev_hunk(count) abort
 endfunction
 
 function! plugins#gitgutter#next_hunk(count) abort
-  for i in range(1, a:count)
-    let line = line('.')
+  for l:i in range(1, a:count)
+    let l:line = line('.')
     silent GitGutterNextHunk
-    if line('.') == line
+    if line('.') == l:line
       normal! 1G
       silent GitGutterNextHunk
     endif

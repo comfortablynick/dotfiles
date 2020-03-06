@@ -3,6 +3,7 @@
 coc-settings.json
 zig-cache/
 Cargo.lock
+.npm/
 .rustup/
 .cargo/
 .cache/

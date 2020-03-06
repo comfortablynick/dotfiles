@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 16:48:40 CST
+" Last Change: 2020-03-06 10:59:23 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -14,6 +14,7 @@ function! plugins#init() abort
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
     Pack 'tpope/vim-repeat'
+    Pack 'tpope/vim-eunuch'
     Pack 'moll/vim-bbye'
     Pack 'psliwka/vim-smoothie'
 
@@ -27,6 +28,7 @@ function! plugins#init() abort
     " Editing behavior
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
+    Pack 'tpope/vim-unimpaired'
     Pack 'machakann/vim-sandwich'
     Pack 'tomtom/tcomment_vim'
     Pack 'justinmk/vim-sneak'
@@ -50,8 +52,8 @@ function! plugins#init() abort
     Pack 'preservim/nerdtree'
     Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
     Pack 'tpope/vim-projectionist'
-    Pack 'tpope/vim-vinegar'
     Pack 'kyazdani42/nvim-tree.lua'
+    Pack 'justinmk/vim-dirvish'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'
@@ -105,4 +107,12 @@ function! plugins#init() abort
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'
     Pack 'comfortablynick/vim-tmux-runner'
+endfunction
+
+" Packadd if needed and call supplied function
+function! plugins#lazy_call(package, funcname, ...) abort
+    if !exists('*'.a:funcname)
+        execute 'packadd '.a:package
+    endif
+    return call(a:funcname, a:000)
 endfunction

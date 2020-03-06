@@ -8,6 +8,7 @@ import re
 import shutil
 import socket
 import sys
+from shutil import which
 from datetime import datetime
 from pprint import pformat
 from subprocess import run
@@ -154,6 +155,10 @@ def get_shell_vars(  # {{{2
             a = var.get("args", var_def.get("default_args"))
             eval = var.get("eval")
             quote = var.get("quote")
+            test = var.get("if")
+
+            if test is not None and not eval(test):
+                continue
 
             if isinstance(var["val"], list):
                 # Probably path array

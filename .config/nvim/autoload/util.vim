@@ -63,14 +63,12 @@ endfunction
 
 " Pretty format using python3 pprint
 function! util#pformat(args) abort
-    let l:pp = ''
-py3 <<EOF
+py3 <<END
 import vim
 from pprint import pformat
 args = pformat(vim.eval('a:args'))
-vim.command(f"let l:pp = {repr(args)}")
-EOF
-return l:pp
+END
+    return py3eval('args')
 endfunction
 
 " Expand cabbr if it's the only command

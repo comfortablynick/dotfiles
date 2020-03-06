@@ -178,15 +178,13 @@ command! -bar -bang -complete=packadd -nargs=* Packadd
     \ call s:packadd(<q-args>, <bang>0)
 
 " Load packages at startup {{{2
-" silent! packadd! 'lightline.vim'
-" silent! packadd! 'lightline-bufferline'
-" silent! packadd! vim-surround
 silent! packadd! vim-sandwich
 silent! packadd! vim-smoothie
 silent! packadd! fzf.vim
 silent! packadd! neoformat
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
+" silent! packadd! vim-eunuch
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
 silent! packadd! vim-tmux-navigator
@@ -197,11 +195,11 @@ silent! packadd! vim-textobj-lua
 silent! packadd! vim-bbye
 silent! packadd! luajob
 silent! packadd! nvim-lsp
+silent! packadd! vim-dirvish
 
 " Lua tools {{{2
 if has('nvim')
     lua require'helpers'
-    " lua require'lightline'
 endif
 
 " Functions {{{1

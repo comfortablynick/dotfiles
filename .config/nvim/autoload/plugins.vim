@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-06 10:59:23 CST
+" Last Change: 2020-03-06 11:49:09 CST
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -112,7 +112,7 @@ endfunction
 " Packadd if needed and call supplied function
 function! plugins#lazy_call(package, funcname, ...) abort
     if !exists('*'.a:funcname)
-        execute 'packadd '.a:package
+        execute 'packadd' a:package
     endif
     return call(a:funcname, a:000)
 endfunction

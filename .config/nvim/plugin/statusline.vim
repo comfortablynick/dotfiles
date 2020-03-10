@@ -6,7 +6,7 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-03 16:10:55 CST
+" Last Change: 2020-03-10 08:19:51 CDT
 " ====================================================
 const s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -56,7 +56,7 @@ let g:sl  = {
     \ }
 
 " Use lua {{{1
-lua require'statusline'
+" lua require'statusline'
 
 " SL command {{{1
 command! -nargs=? -complete=custom,statusline#complete_args SL
@@ -65,8 +65,7 @@ command! -nargs=? -complete=custom,statusline#complete_args SL
 " Autocommands {{{1
 augroup plugin_statusline
     autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * lua sl.refresh()
-    " autocmd User ClapOnExit call statusline#refresh()
+    autocmd VimEnter,WinEnter,BufWinEnter * call statusline#refresh()
 augroup END
 
 " Highlights {{{1

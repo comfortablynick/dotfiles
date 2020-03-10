@@ -22,7 +22,7 @@ function! util#capture(cmd) abort
             " Do it the old way
             try
                 redir => l:out
-                execute 'silent!'.a:cmd
+                execute 'silent!' a:cmd
             finally
                 redir END
             endtry
@@ -39,7 +39,7 @@ endfunction
 function! util#redir(cmd) abort
     for l:win in range(1, winnr('$'))
         if getwinvar(l:win, 'scratch')
-            execute l:win . 'windo close'
+            execute l:win 'windo close'
         endif
     endfor
     if type(a:cmd) == v:t_list

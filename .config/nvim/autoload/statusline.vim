@@ -3,15 +3,9 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-03 17:39:05 CST
+" Last Change: 2020-03-10 08:24:05 CDT
 " ====================================================
 scriptencoding utf-8
-
-" Variables {{{1
-" Window widths {{{2
-let g:sl.width.min = 90                                          " Width for using some expanded sections
-let g:sl.width.med = 140                                         " Secondary width for some sections
-let g:sl.width.max = 200                                         " Largest width for some (unnecessary) sections
 
 " Linter indicators {{{2
 let s:LinterChecking = g:nf ? "\uf110 " : '...'
@@ -20,13 +14,17 @@ let s:LinterErrors = g:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
 
 " Main {{{1
-function! statusline#get(winnr) abort "{{{2
-    let l:active = a:winnr == winnr()
-    let l:bufnr = winbufnr(a:winnr)
+function! statusline#get(...) abort "{{{2
+    let l:winnr = a:0 > 0 ? a:1 : winnr()
+    let l:active = l:winnr == winnr()
+    let l:bufnr = winbufnr(l:winnr)
     let l:default_status = '%<%f %h%m%r%'
     let l:inactive_status = ' %n %<%f %h%m%r%'
+    let l:special = s:is_special_file(l:bufnr)
 
-    if statusline#is_not_file(l:bufnr)
+    if l:special != -1
+        return ' '.l:special
+    elseif statusline#is_not_file(l:bufnr)
         return l:default_status
     elseif ! l:active
         return l:inactive_status
@@ -40,12 +38,13 @@ function! statusline#get(winnr) abort "{{{2
     let l:sl .= '%( %m%r%)'
     let l:sl .= '%(  %{statusline#linter_errors('.l:bufnr.')}%)'
     let l:sl .= '%( %{statusline#linter_warnings('.l:bufnr.')}%)'
-    let l:sl .= '%( %{statusline#file_type('.a:winnr.')}%)'
 
     let l:sl .= '%='
     let l:sl .= '%( %{statusline#toggled()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#job_status()} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#lsp_status()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#coc_status('.l:bufnr.')} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#file_type('.l:winnr.')} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#git_status('.l:bufnr.')} '.g:sl.sep.'%)'
     let l:sl .= '%( %l,%c%) %4(%p%% %)'
     return l:sl
@@ -64,42 +63,36 @@ let s:args = [
     \   ['toggle', 'clear'],
     \   [
     \       'syntax_group',
+    \       'git_status',
     \   ]
     \ ]
 
 function! s:toggle_item(var, funcref) abort " {{{2
-    let g:statusline_toggle = get(g:, 'statusline_toggle', {})
-    if has_key(g:statusline_toggle, a:var)
-        call remove(g:statusline_toggle, a:var)
+    let g:statusline_toggle = get(g:, 'statusline_toggle', [])
+    let l:idx = index(g:statusline_toggle, a:funcref)
+    if l:idx > -1
+        call remove(g:statusline_toggle, l:idx)
     else
-        let g:statusline_toggle[a:var] = a:funcref
+        call add(g:statusline_toggle, a:funcref)
     endif
 endfunction
 
 function! statusline#command(...) abort " {{{2
-    let l:arg = exists('a:1') ? a:1 : 'clear'
+    let l:arg = a:0 > 0 ? a:1 : 'clear'
 
     if l:arg ==# 'toggle'
-        let &laststatus = (&laststatus != 0 ? 0 : 2)
-        let &showmode = (&laststatus == 0 ? 1 : 0)
+        let &laststatus = &laststatus != 0 ? 0 : 2
         return
     elseif l:arg ==# 'clear'
         unlet! g:statusline_toggle
         return
     endif
 
-    " Split args in case we have many
-    let l:args = split(l:arg, ' ')
-
-    " Check the 1st one only
-    if index(s:args[1], l:args[0], 0) == -1
-        return
-    endif
-
-    for l:a in l:args
-        " let l:fun_ref = 'statusline#'.l:arg
-        let l:fun_ref = statusline#{l:arg}
-        call s:toggle_item(l:arg, l:fun_ref)
+    for l:a in a:000
+        " Check the 1st one only
+        if index(s:args[1], l:a) == -1 | continue | endif
+        let l:fun_ref = 'statusline#'.l:a
+        call s:toggle_item(l:a, l:fun_ref)
     endfor
 endfunction
 
@@ -108,12 +101,10 @@ function! statusline#complete_args(a, l, p) abort " {{{3
 endfunction
 
 " Component functions {{{1
-" Pad with space if not empty
 function! s:lpad(expr) abort "{{{2
     return !empty(a:expr) ? ' '.a:expr : ''
 endfunction
 
-" Pad with space if not empty
 function! s:rpad(expr) abort "{{{2
     return !empty(a:expr) ? a:expr.' ' : ''
 endfunction
@@ -124,6 +115,25 @@ function! s:dev_icon(type) abort "{{{2
         return WebDevIconsGet{a:type}Symbol()
     endif
     return ''
+endfunction
+
+function! s:is_special_file(bufnr) abort "{{{2
+    let l:f = getbufvar(a:bufnr, '&filetype')
+    let l:b = getbufvar(a:bufnr, '&buftype')
+    if l:f =~? '__Tagbar__'
+        return '[Tagbar]'
+    elseif l:f =~? '__Gundo\|NERD_tree'
+        return '[NERDTree]'
+        " elseif l:f =~? 'defx'
+        "     return '[DEFX]'
+    elseif l:f =~? 'startify'
+        return '[Startify]'
+    elseif l:b =~? '^\%(nofile\|acwrite\|terminal\)$'
+        return empty(l:f) ? '[Scratch]' : l:f
+    elseif l:f ==# 'output:///info'
+        return ''
+    endif
+    return -1
 endfunction
 
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
@@ -283,12 +293,14 @@ function! statusline#file_format(winnr) abort "{{{2
         \ : ''
 endfunction
 
-function! statusline#is_not_file(bufnr) abort "{{{2
+function! statusline#is_not_file(...) abort "{{{2
     " Return true if not treated as file
-    let l:bufname = bufname(a:bufnr)
-    let l:ft = getbufvar(a:bufnr, '&filetype')
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:bufname = bufname(l:bufnr)
+    let l:ft = getbufvar(l:bufnr, '&filetype')
     let l:exclude = [
         \ 'help',
+        \ 'startify',
         \ 'nerdtree',
         \ 'netrw',
         \ 'output',
@@ -313,60 +325,40 @@ function! statusline#is_not_file(bufnr) abort "{{{2
     return 0
 endfunction
 
-function! statusline#modified(bufnr) abort "{{{2
-    let l:mod = getbufvar(a:bufnr, '&modified')
+function! statusline#modified(...) abort "{{{2
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:mod = getbufvar(l:bufnr, '&modified')
     return l:mod ? g:sl.symbol.modified : &modifiable ? '' : g:sl.symbol.unmodifiable
 endfunction
 
-function! statusline#read_only(bufnr) abort "{{{2
-    let l:ro = getbufvar(a:bufnr, '&readonly')
-    return !statusline#is_not_file(a:bufnr) && l:ro ? g:sl.symbol.readonly : ''
+function! statusline#read_only(...) abort "{{{2
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:ro = getbufvar(l:bufnr, '&readonly')
+    return !statusline#is_not_file(l:bufnr) && l:ro ? g:sl.symbol.readonly : ''
 endfunction
 
 function! statusline#syntax_group() abort " {{{2
     return synIDattr(synID(line('.'), col('.'), 1), 'name')
 endfunction
 
-function! s:is_special_file(bufnr) abort "{{{2
-    let l:f = getbufvar(a:bufnr, '&filetype')
-    let l:b = getbufvar(a:bufnr, '&buftype')
-    if empty(l:f)
-        return '[No Name]'
-    elseif l:f =~? '__Tagbar__'
-        return '[Tagbar]'
-    elseif l:f =~? '__Gundo\|NERD_tree'
-        return '[NERDTree]'
-        " elseif l:f =~? 'defx'
-        "     return '[DEFX]'
-    elseif l:f =~? 'startify'
-        return '[Startify]'
-    elseif l:b ==? 'quickfix'
-        return '[Quickfix List]'
-    elseif l:b =~? '^\%(nofile\|acwrite\|terminal\)$'
-        return empty(l:f) ? '[Scratch]' : l:f
-    elseif l:b ==? 'help'
-        return fnamemodify(l:f, ':t')
-    elseif l:f ==# 'output:///info'
-        return ''
-    endif
-    return -1
-endfunction
 
-function! statusline#file_name(bufnr) abort "{{{2
-    let l:special = s:is_special_file(a:bufnr)
+function! statusline#file_name(...) abort "{{{2
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:special = s:is_special_file(l:bufnr)
     if l:special != -1 | return l:special | endif
-    if statusline#is_not_file(a:bufnr) | return '' | endif
+    if statusline#is_not_file(l:bufnr) | return '' | endif
 
-    let l:fname = fnamemodify(bufname(a:bufnr), ':~:.')
+    let l:fname = fnamemodify(bufname(l:bufnr), ':~:.')
     if winwidth(0) < g:sl.width.min
         let l:fname = pathshorten(l:fname)
     endif
     return l:fname
 endfunction
 
-function! statusline#file_size(bufnr) abort "{{{2
+function! statusline#file_size(...) abort "{{{2
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
     let l:div = 1024.0
-    let l:num = getfsize(bufname(a:bufnr))
+    let l:num = getfsize(bufname(l:bufnr))
     if l:num <= 0 | return '' | endif
     " Return bytes plain without decimal or unit
     if l:num < l:div | return l:num | endif
@@ -381,9 +373,10 @@ function! statusline#file_size(bufnr) abort "{{{2
     return printf('%.1fY')
 endfunction
 
-function! statusline#file_encoding(bufnr) abort "{{{2
+function! statusline#file_encoding(...) abort "{{{2
     " Only return a value if != utf-8
-    let l:enc = getbufvar(a:bufnr, '&fileencoding')
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:enc = getbufvar(l:bufnr, '&fileencoding')
     return l:enc !=? 'utf-8' ? l:enc : ''
 endfunction
 
@@ -394,18 +387,19 @@ function! statusline#tab_name(bufnr) abort "{{{3
         \ statusline#file_name(a:bufnr)
 endfunction
 
-function! statusline#git_summary(bufnr) abort "{{{2
+function! statusline#git_summary(...) abort "{{{2
     " Look for status in this order
     " 1. coc-git
     " 2. gitgutter
     " 3. signify
-    let l:bufvars = getbufvar(a:bufnr, '')
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    let l:bufvars = getbufvar(l:bufnr, '')
     if has_key(l:bufvars, 'coc_git_status')
-        let l:coc_git_status = getbufvar(a:bufnr, 'coc_git_status')
+        let l:coc_git_status = getbufvar(l:bufnr, 'coc_git_status')
         return trim(l:coc_git_status)
     endif
     if exists('*gitgutter#hunk#summary')
-        let l:githunks = gitgutter#hunk#summary(a:bufnr)
+        let l:githunks = gitgutter#hunk#summary(l:bufnr)
     elseif exists('*sy#repo#get_stats')
         let l:githunks = sy#repo#get_stats()
     else
@@ -430,10 +424,11 @@ function! statusline#git_branch() abort "{{{2
     return ''
 endfunction
 
-function! statusline#git_status(bufnr) abort "{{{2
-    if !statusline#is_not_file(a:bufnr) && winwidth(0) > g:sl.width.min
+function! statusline#git_status(...) abort "{{{2
+    let l:bufnr = a:0 > 0 ? a:1 : bufnr('%')
+    if !statusline#is_not_file(l:bufnr) && winwidth(0) > g:sl.width.min
         let l:branch = statusline#git_branch()
-        let l:hunks = statusline#git_summary(a:bufnr)
+        let l:hunks = statusline#git_summary(l:bufnr)
         return l:branch !=# '' ? printf('%s%s%s',
             \ l:hunks,
             \ ' '.substitute(l:branch, 'master', '', ''),
@@ -469,6 +464,10 @@ function! statusline#coc_status(bufnr) abort "{{{2
     return ''
 endfunction
 
+function! statusline#lsp_status() abort
+    return v:lua.vim.lsp.buf.server_ready() ? 'LSP' : ''
+endfunction
+
 function! s:ale_linted(bufnr) abort
     return get(g:, 'ale_enabled', 0) == 1
         \ && getbufvar(a:bufnr, 'ale_linted', 0) > 0
@@ -488,10 +487,18 @@ function! s:ale_error_ct(bufnr) abort "{{{2
     return l:counts.error + l:counts.style_error
 endfunction
 
+function! s:lsp_error_ct()
+    return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
+endfunction
+
 function! s:ale_warning_ct(bufnr) abort "{{{2
     if !s:ale_linted(a:bufnr) | return 0 | endif
     let l:counts = ale#statusline#Count(a:bufnr)
     return l:counts.warning + l:counts.style_warning
+endfunction
+
+function! s:lsp_warning_ct()
+    return v:lua.vim.lsp.util.buf_diagnostics_count('Warning')
 endfunction
 
 function! s:coc_warning_ct(bufnr) abort " {{{2
@@ -502,28 +509,23 @@ function! s:coc_warning_ct(bufnr) abort " {{{2
 endfunction
 
 function! statusline#linter_errors(bufnr) abort " {{{2
-    let l:ct = s:coc_error_ct(a:bufnr) + s:ale_error_ct(a:bufnr)
+    let l:ct = s:coc_error_ct(a:bufnr) + s:ale_error_ct(a:bufnr) + s:lsp_error_ct()
     return l:ct > 0 ? g:sl.symbol.error_sign.l:ct : ''
 endfunction
 
 function! statusline#linter_warnings(bufnr) abort " {{{2
-    let l:ct = s:coc_warning_ct(a:bufnr) + s:ale_warning_ct(a:bufnr)
+    let l:ct = s:coc_warning_ct(a:bufnr) + s:ale_warning_ct(a:bufnr) + s:lsp_warning_ct()
     return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
 endfunction
 
 function! statusline#toggled() abort " {{{2
-    if !exists('g:statusline_toggle')
-        return ''
-    endif
+    if !exists('g:statusline_toggle') | return '' | endif
     let l:sl = ''
-    for [l:k, l:v] in items(g:statusline_toggle)
-        " let l:str = call(l:v, [])
-        let l:str = l:v()
-        let l:sl .= empty(l:sl)
-            \ ? l:str . ' '
-            \ : g:sl.sep.' '.l:str.' '
+    for l:v in g:statusline_toggle
+        let l:str = call(l:v, [])
+        let l:sl .= empty(l:sl) ? l:str.' ' : g:sl.sep.' '.l:str.' '
     endfor
     return l:sl[:-2]
 endfunction
 
-" vim:fdm=expr:
+" vim:fdm=marker fdl=1:

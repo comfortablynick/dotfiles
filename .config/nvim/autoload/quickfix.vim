@@ -9,7 +9,7 @@ function! quickfix#scriptnames(...) abort
     if len(a:000) > 0
         if !exists(':Cfilter') | packadd cfilter | endif
         for l:arg in a:000
-            execute 'Cfilter '.l:arg
+            execute 'Cfilter' l:arg
         endfor
     endif
 endfunction
@@ -35,26 +35,26 @@ function! s:qf_toggle(size, ...)
     let s:quickfix_open = 0
     let l:winnr = winnr()
     noautocmd windo call s:window_check(0)
-    noautocmd silent! execute ''.l:winnr.'wincmd w'
+    noautocmd silent! execute l:winnr 'wincmd w'
     if l:mode == 0
         if s:quickfix_open != 0
             silent! cclose
         endif
     elseif l:mode == 1
         if s:quickfix_open == 0
-            execute 'botright copen '. ((a:size > 0)? a:size : ' ')
+            execute 'botright copen' a:size > 0 ? a:size : ''
             wincmd k
         endif
     elseif l:mode == 2
         if s:quickfix_open == 0
-            execute 'botright copen '. ((a:size > 0)? a:size : ' ')
+            execute 'botright copen' a:size > 0 ? a:size : ''
             wincmd k
         else
             silent! cclose
         endif
     endif
     noautocmd windo call s:window_check(1)
-    noautocmd silent! exec ''.l:winnr.'wincmd w'
+    noautocmd silent! execute l:winnr 'wincmd w'
 endfunction
 
 function! quickfix#toggle() abort
@@ -74,8 +74,8 @@ function! quickfix#close_empty() abort
     if len(getqflist())
         return
     endif
-    for buffer in tabpagebuflist()
-        if bufname(buffer) ==? ''
+    for l:buffer in tabpagebuflist()
+        if bufname(l:buffer) ==? ''
             cclose
             return
         endif
@@ -84,8 +84,8 @@ endfunction
 
 " Return 1 if quickfix window is open, else 0
 function! quickfix#is_open() abort
-    for buffer in tabpagebuflist()
-        if bufname(buffer) ==? ''
+    for l:buffer in tabpagebuflist()
+        if bufname(l:buffer) ==? ''
             return 1
         endif
     endfor

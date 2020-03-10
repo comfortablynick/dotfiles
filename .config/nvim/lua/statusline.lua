@@ -60,23 +60,7 @@ local special_filetypes = { -- {{{2
   packager = "PACK",
   fugitive = "FUGITIVE",
   startify = "STARTIFY",
-}
-
-sl.mode_map = {
-  n = {"NORMAL", "NRM", "N"},
-  niI = {"NORMAL·CMD", "NRM", "N"},
-  i = {"INSERT", "INS", "I"},
-  ic = {"INSERT", "INS", "I"},
-  ix = {"INSERT COMPL", "I·COMPL", "IC"},
-  R = {"REPLACE", "REP", "R"},
-  v = {"VISUAL", "VIS", "V"},
-  V = {"V·LINE", "V·LN", "V·L"},
-  ["\x16"] = {"V·BLOCK", "V·BL", "V·B"},
-  c = {"COMMAND", "CMD", "C"},
-  s = {"SELECT", "SEL", "S"},
-  S = {"S·LINE", "S·LN", "S·L"},
-  ["<C-s>"] = {"S·BLOCK", "S·BL", "S·B"},
-  t = {"TERMINAL", "TERM", "T"},
+  help = "HELP",
 }
 
 -- Utility functions {{{1
@@ -189,7 +173,8 @@ function sl.git_summary(bufnr) -- {{{2
     return getbufvar(bufnr, "coc_git_status")
   end
   local hunks = (function()
-    return npcall(vim.fn["gitgutter#hunk#summary"], bufnr) or
+    -- return npcall(vim.fn["gitgutter#hunk#summary"], bufnr) or
+    return npcall(vim.fn.GitGutterGetHunkSummary) or
              npcall(vim.fn["sy#repo#get_stats"]) or {0, 0, 0}
   end)()
   local added = hunks[1] and hunks[1] ~= 0 and "+" .. hunks[1] .. " " or ""
@@ -224,7 +209,7 @@ function sl.coc_status(winid) -- {{{2
 end
 
 function sl.lsp_status() -- {{{2
-  return vim.lsp.buf.server_ready() == true and "LSP" or ""
+  return vim.lsp.buf.server_ready() and "LSP" or ""
 end
 
 function sl.job_status(winid) -- {{{2

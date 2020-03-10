@@ -3,7 +3,7 @@
 " Description: Color and theme settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-28 18:53:17 CST
+" Last Change: 2020-03-06 11:51:32 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_colortheme' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -78,7 +78,7 @@ let g:vim_color_variant = substitute(
     \ '')
 
 if !empty(get(g:, 'vim_base_color'))
-    execute 'silent! colorscheme ' g:vim_base_color
+    execute 'silent! colorscheme' g:vim_base_color
 
     if !empty(get(g:, 'vim_color')) && !empty(get(g:, 'airline_themes'))
         let g:statusline_theme = get(g:airline_themes, g:vim_color, g:vim_base_color)

@@ -3,7 +3,7 @@
 " Description: Run code actions based on justfile
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-01-24 12:18:35 CST
+" Last Change: 2020-03-07 10:04:27 CST
 " ====================================================
 if exists('g:loaded_autoload_runner') | finish | endif
 let g:loaded_autoload_runner = 1
@@ -16,9 +16,9 @@ function! runner#run_cmd(cmd_type) abort
     let l:run_loc = runner#get_cmd_run_loc()
     if l:run_loc ==? 'term'
         let b:runner_term_scale = get(b:, 'runner_term_scale', 50)
-        " call luaeval('require"window".float_term(_A.cmd, _A.scale)',
-        "     \ {'cmd': l:cmd, 'scale': b:runner_term_scale})
-        call luaeval("require'window'.floating_terminal(_A)", l:cmd)
+        call luaeval('require"window".float_term(_A.cmd, _A.scale)',
+            \ {'cmd': l:cmd, 'scale': b:runner_term_scale})
+        " call luaeval("require'window'.float_term(_A)", l:cmd)
     elseif l:run_loc ==? 'AsyncRun'
         packadd asyncrun.vim
         execute 'AsyncRun '.l:cmd

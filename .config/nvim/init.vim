@@ -184,7 +184,7 @@ silent! packadd! fzf.vim
 silent! packadd! neoformat
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
-" silent! packadd! vim-eunuch
+silent! packadd! vim-eunuch
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
 silent! packadd! vim-tmux-navigator

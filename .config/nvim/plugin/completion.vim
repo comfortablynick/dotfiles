@@ -3,7 +3,7 @@
 " Description: Autocompletion plugin handling
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-02 14:21:33 CST
+" Last Change: 2020-03-11 16:12:54 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -22,10 +22,10 @@ let g:completion_filetypes = {
     \    'sh',
     \    'yaml',
     \    'vim',
+    \    'lua',
     \ ],
     \ 'nvim-lsp': [
     \    'python',
-    \    'lua',
     \ ],
     \ 'mucomplete': [
     \    'asciidoctor',

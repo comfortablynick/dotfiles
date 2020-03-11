@@ -76,11 +76,11 @@
       "filetypes": ["c", "c.doxygen", "cpp", "cuda", "objc", "objcpp"],
       "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "initializationOptions": {
-         "cache": {
-           "directory": "/tmp/ccls",
-           "retainInMemory": 1
-         }
-       }
+        "cache": {
+          "directory": "/tmp/ccls",
+          "retainInMemory": 1
+        }
+      }
     },
     "bash": {
       "command": "bash-language-server",
@@ -93,15 +93,32 @@
       "args": [],
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
+    },
+    "lua-language-server": {
+      "command": "lua-language-server",
+      "filetypes": ["lua"]
     }
   },
 
-  // Explorer
-  "explorer.icon.enableVimDevicons": true,
-  "explorer.icon.enableNerdfont": true,
-  "explorer.quitOnOpen": true,
-  "explorer.keyMappings": {
-    "s": "open:vsplit"
+  "Lua": {
+    "runtime": {
+      "version": "LuaJIT"
+    },
+    "diagnostics": {
+      "globals":
+      [
+        "vim",
+        "nvim"
+      ]
+    }
   },
-  "explorer.file.showHiddenFiles": true
+
+    // Explorer
+    "explorer.icon.enableVimDevicons": true,
+    "explorer.icon.enableNerdfont": true,
+    "explorer.quitOnOpen": true,
+    "explorer.keyMappings": {
+      "s": "open:vsplit"
+    },
+    "explorer.file.showHiddenFiles": true
 }

@@ -53,14 +53,14 @@ end
 
 function M.init()
   local configs = {
-    sumneko_lua = {
-      settings = {
-        Lua = {
-          runtime = {version = "LuaJIT"},
-          diagnostics = {enable = true, globals = {"vim", "nvim", "sl"}},
-        },
-      },
-    },
+    -- sumneko_lua = {
+    --   settings = {
+    --     Lua = {
+    --       runtime = {version = "LuaJIT"},
+    --       diagnostics = {enable = true, globals = {"vim", "nvim", "sl"}},
+    --     },
+    --   },
+    -- },
     pyls_ms = {},
     -- vimls = {},
   }

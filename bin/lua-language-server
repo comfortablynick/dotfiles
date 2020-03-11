@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Wrapper script to make lua-language-server easier to run
+
+cd "$HOME/src/lua-language-server/src/lua-language-server" || exit 1
+
+bin/Linux/lua-language-server -E -e LANG=en ./main.lua

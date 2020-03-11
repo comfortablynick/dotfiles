@@ -6,12 +6,13 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-10 08:19:51 CDT
+" Last Change: 2020-03-11 00:03:32 CDT
 " ====================================================
 const s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
 " Variables {{{1
+let g:default_statusline = '%<%f %h%m%r'
 let g:nf = !$MOSH_CONNECTION
 let g:sl  = {
     \ 'width': {
@@ -63,10 +64,12 @@ command! -nargs=? -complete=custom,statusline#complete_args SL
     \ call statusline#command(<f-args>)
 
 " Autocommands {{{1
-augroup plugin_statusline
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * call statusline#refresh()
-augroup END
+" augroup plugin_statusline
+"     autocmd!
+"     autocmd VimEnter,WinEnter,BufWinEnter * call statusline#refresh()
+" augroup END
+
+set statusline=%!statusline#get(winnr())
 
 " Highlights {{{1
 " The following lines must come after colorscheme declaration

@@ -8,6 +8,7 @@ function! plugins#defx#post() abort
 endfunction
 
 function! s:defx_set_buffer_maps() abort
+    setlocal statusline=%f
     nnoremap <silent><buffer><expr> <CR>
         \ defx#do_action('open')
     nnoremap <silent><buffer><expr> c

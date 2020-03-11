@@ -102,8 +102,7 @@ set showmatch                                                   " Show matching 
 set updatetime=300                                              " Update more often (helps GitGutter)
 set signcolumn=yes                                              " Always show; keep appearance consistent
 set scrolloff=10                                                " Lines before/after cursor during scroll
-set ttimeoutlen=10                                              " How long in ms to wait for key combinations (if used)
-set timeoutlen=200                                              " How long in ms to wait for key combinations (if used)
+set timeoutlen=400                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined

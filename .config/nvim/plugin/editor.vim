@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-03 13:31:54 CST
+" Last Change: 2020-03-11 12:39:03 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -100,17 +100,17 @@ function! s:recall_cursor_position() abort "{{{1
         return
     endtry
 
-    let lastpos = line("'\"")
-    let buffend = line('$')
-    let winend = line('w$')
-    let winstart = line('w0')
+    let l:lastpos = line("'\"")
+    let l:buffend = line('$')
+    let l:winend = line('w$')
+    let l:winstart = line('w0')
 
-    if lastpos > 0 && lastpos <= buffend
+    if l:lastpos > 0 && l:lastpos <= l:buffend
         " Last edit pos is set and is < no of lines in buffer
-        if winend == buffend
+        if l:winend == l:buffend
             " Last line in buffer is also last line visible
             execute 'normal! g`"'
-        elseif buffend - lastpos > ((winend - winstart) / 2) - 1
+        elseif l:buffend - l:lastpos > ((l:winend - l:winstart) / 2) - 1
             " Center cursor on screen if not at bottom
             execute 'normal! g`"zz'
         else

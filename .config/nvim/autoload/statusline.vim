@@ -3,7 +3,7 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-11 00:40:28 CDT
+" Last Change: 2020-03-11 13:42:34 CDT
 " ====================================================
 scriptencoding utf-8
 
@@ -33,7 +33,8 @@ function! statusline#get(winnr) abort "{{{2
     let l:sl .= '%( %{statusline#coc_status()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#file_type()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#git_status()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %l,%c%) %4(%p%%%)'
+    " let l:sl .= '%( %l,%c%) %4(%p%%%)'
+    let l:sl .= '%( %{statusline#line_info()}%)'
     return l:sl
 endfunction
 
@@ -82,7 +83,11 @@ endfunction
 
 " Component functions {{{1
 function! s:is_active() abort "{{{2
-    return !statusline#is_not_file() && g:actual_curbuf == bufnr('%')
+    return get(g:, 'actual_curbuf', bufnr('%')) == bufnr('%')
+endfunction
+
+function! s:is_active_file() abort "{{{2
+    return s:is_active() && !statusline#is_not_file()
 endfunction
 
 function! s:lpad(expr) abort "{{{2
@@ -99,25 +104,6 @@ function! s:dev_icon(type) abort "{{{2
         return WebDevIconsGet{a:type}Symbol()
     endif
     return ''
-endfunction
-
-function! s:is_special_file() abort "{{{2
-    let l:f = &filetype
-    let l:b = &buftype
-    if l:f =~? '__Tagbar__'
-        return '[Tagbar]'
-    elseif l:f =~? '__Gundo\|NERD_tree'
-        return '[NERDTree]'
-        " elseif l:f =~? 'defx'
-        "     return '[DEFX]'
-    elseif l:f =~? 'startify'
-        return '[Startify]'
-    elseif l:b =~? '^\%(nofile\|acwrite\|terminal\)$'
-        return empty(l:f) ? '[Scratch]' : l:f
-    elseif l:f ==# 'output:///info'
-        return ''
-    endif
-    return -1
 endfunction
 
 function! statusline#set_highlight(group, bg, fg, opt) abort " {{{2
@@ -222,20 +208,32 @@ function! s:col_no() abort "{{{2
     return printf('%3d', virtcol('.'))
 endfunction
 
-function! statusline#bufnr() abort
+function! statusline#line_info_full() abort "{{{2
+    return !s:is_active_file() ? '' :
+        \ printf('%s %s %s %s :%s',
+        \ s:line_percent(),
+        \ g:sl.symbol.lines,
+        \ s:line_no(),
+        \ g:sl.symbol.line_no,
+        \ s:col_no()
+        \ )
+endfunction
+
+function! statusline#line_info() abort "{{{2
+    if ! s:is_active_file() | return '' | endif
+    let l:line = line('.')
+    let l:line_pct = l:line * 100 / line('$')
+    let l:col = virtcol('.')
+    return printf('%d,%d %3d%%', l:line, l:col, l:line_pct)
+endfunction
+
+function! statusline#bufnr() abort "{{{2
     let l:bufnr = bufnr('')
-    if buflisted(l:bufnr)
-        if s:is_active()
-            return '['.l:bufnr.']'
-        else
-            return l:bufnr
-        endif
-    endif
-    return ''
+    return buflisted(l:bufnr) ? '['.l:bufnr.']' : ''
 endfunction
 
 function! statusline#job_status() abort "{{{2
-    if !s:is_active() | return '' | endif
+    if !s:is_active_file() | return '' | endif
     let l:status = get(g:, 'asyncrun_status')
     if empty(l:status)
         let l:status = get(g:, 'job_status')
@@ -243,26 +241,8 @@ function! statusline#job_status() abort "{{{2
     return !empty(l:status) ? 'Job: '.l:status : ''
 endfunction
 
-function! statusline#line_info_full(bufnr) abort "{{{2
-    return statusline#is_not_file(a:bufnr) ? '' :
-        \ printf('%s %s %s %s :%s',
-        \ s:line_percent(),
-        \ statusline#line_pos(),
-        \ s:line_no(),
-        \ g:sl.symbol.line_no,
-        \ s:col_no()
-        \ )
-endfunction
-
-function! statusline#line_info() abort
-    let l:line = line('.')
-    let l:line_pct = l:line * 100 / line('$')
-    let l:col = virtcol('.')
-    return printf('%d,%d %3d%%', l:line, l:col, l:line_pct)
-endfunction
-
 function! statusline#file_type() abort "{{{2
-    if !s:is_active() | return '' | endif
+    if !s:is_active_file() | return '' | endif
     let l:ftsymbol = s:rpad(s:dev_icon('FileType'))
     let l:out = ''
     if winwidth(0) > g:sl.width.med
@@ -273,9 +253,9 @@ function! statusline#file_type() abort "{{{2
 endfunction
 
 function! statusline#file_format() abort "{{{2
-    if !s:is_active() | return '' | endif
+    if !s:is_active_file() | return '' | endif
     let l:ff = &fileformat
-    if l:ff ==# 'unix' || statusline#is_not_file() 
+    if l:ff ==# 'unix' || statusline#is_not_file()
         return ''
     endif
     let l:ffsymbol = s:dev_icon('FileFormat')
@@ -328,11 +308,18 @@ function! statusline#syntax_group() abort " {{{2
     return synIDattr(synID(line('.'), col('.'), 1), 'name')
 endfunction
 
-
 function! statusline#file_name() abort "{{{2
-    let l:special = s:is_special_file()
-    if l:special != -1 | return l:special | endif
-    if &filetype ==# 'help' | return expand('%:t') | endif
+    let l:ft = &filetype
+    let l:bt = &buftype
+    if l:ft ==# 'help'
+        return expand('%:t')
+    elseif l:ft =~? 'startify'
+        return '[Startify]'
+    elseif l:ft ==# 'output:///info'
+        return ''
+    elseif l:bt =~? '^\%(nofile\|acwrite\|terminal\)$' && empty(l:ft)
+        return '[Scratch]'
+    endif
     let l:fname = expand('%:~:.')
     if winwidth(0) < g:sl.width.min
         let l:fname = pathshorten(l:fname)
@@ -403,8 +390,8 @@ function! statusline#git_branch() abort "{{{2
 endfunction
 
 function! statusline#git_status() abort "{{{2
-    if !s:is_active() || winwidth(0) < g:sl.width.min
-        return '' 
+    if !s:is_active_file() || winwidth(0) < g:sl.width.min
+        return ''
     endif
     let l:branch = statusline#git_branch()
     let l:hunks = statusline#git_summary()
@@ -415,9 +402,9 @@ function! statusline#git_status() abort "{{{2
         \ ) : ''
 endfunction
 
-function! statusline#venv_name(bufnr) abort "{{{2
+function! statusline#venv_name() abort "{{{2
     if exists('g:did_coc_loaded') | return '' | endif
-    return getbufvar(a:bufnr, '&filetype') ==# 'python' && !empty($VIRTUAL_ENV)
+    return &filetype ==# 'python' && !empty($VIRTUAL_ENV)
         \ ? printf(' (%s)', split($VIRTUAL_ENV, '/')[-1])
         \ : ''
 endfunction
@@ -433,9 +420,7 @@ function! statusline#current_tag() abort "{{{2
 endfunction
 
 function! statusline#coc_status() abort "{{{2
-    if !s:is_active()
-        return '' 
-    endif
+    if !s:is_active_file() | return '' | endif
     if winwidth(0) > g:sl.width.min && get(g:, 'did_coc_loaded', 0)
         let l:coc = get(g:, 'coc_status')
         if !empty(l:coc) | return l:coc | endif
@@ -444,8 +429,8 @@ function! statusline#coc_status() abort "{{{2
 endfunction
 
 function! statusline#lsp_status() abort
-    if !s:is_active()
-        return '' 
+    if !s:is_active_file()
+        return ''
     endif
     return v:lua.vim.lsp.buf.server_ready() ? 'LSP' : ''
 endfunction
@@ -464,17 +449,17 @@ endfunction
 
 function! s:ale_error_ct() abort "{{{2
     if !s:ale_linted() | return 0 | endif
-    let l:counts = ale#statusline#Count()
+    let l:counts = ale#statusline#Count(bufnr('%'))
     return l:counts.error + l:counts.style_error
 endfunction
 
-function! s:lsp_error_ct()
+function! s:lsp_error_ct() "{{{2
     return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
 endfunction
 
 function! s:ale_warning_ct() abort "{{{2
     if !s:ale_linted() | return 0 | endif
-    let l:counts = ale#statusline#Count()
+    let l:counts = ale#statusline#Count(bufnr('%'))
     return l:counts.warning + l:counts.style_warning
 endfunction
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 man-find() {
-    f=$(fd . ${MANPATH:-/usr/share/man}/man${1:-1} -t f -x echo {/.} | fzf-tmux) && man $f
+    # f=$(fd . ${MANPATH:-/usr/share/man}/man${1:-1} -t f -x echo {/.} | fzf-tmux) && man $f
+    man -k . | fzf-tmux --prompt='Man> ' | awk '{print $1}' | xargs -r man
 }
 
 man-find "$@"

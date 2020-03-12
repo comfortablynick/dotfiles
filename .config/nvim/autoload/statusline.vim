@@ -3,7 +3,7 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-11 13:42:34 CDT
+" Last Change: 2020-03-12 11:59:38 CDT
 " ====================================================
 scriptencoding utf-8
 
@@ -390,7 +390,9 @@ function! statusline#git_branch() abort "{{{2
 endfunction
 
 function! statusline#git_status() abort "{{{2
-    if !s:is_active_file() || winwidth(0) < g:sl.width.min
+    if !s:is_active_file()
+        \ || !filereadable(@%)
+        \ || winwidth(0) < g:sl.width.min
         return ''
     endif
     let l:branch = statusline#git_branch()

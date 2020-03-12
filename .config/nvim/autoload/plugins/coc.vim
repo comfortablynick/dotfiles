@@ -13,7 +13,6 @@ function! plugins#coc#pre() abort "{{{1
         \ 'coc-json',
         \ 'coc-fish',
         \ 'coc-rust-analyzer',
-        \ 'coc-lua',
         \ 'coc-python',
         \ 'coc-tsserver',
         \ 'coc-tabnine',

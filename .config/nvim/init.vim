@@ -179,6 +179,7 @@ command! -bar -bang -complete=packadd -nargs=* Packadd
 " Load packages at startup {{{2
 silent! packadd! vim-sandwich
 silent! packadd! vim-smoothie
+silent! packadd! fzf
 silent! packadd! fzf.vim
 silent! packadd! neoformat
 silent! packadd! vim-repeat

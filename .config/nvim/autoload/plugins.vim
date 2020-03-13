@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-06 11:49:09 CST
+" Last Change: 2020-03-13 09:38:45 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -46,6 +46,7 @@ function! plugins#init() abort
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
+    Pack 'junegunn/fzf',                {'do': ':packadd fzf \| :call fzf#install'}
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'

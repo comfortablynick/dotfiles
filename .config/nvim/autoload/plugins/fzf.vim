@@ -76,6 +76,13 @@ function! plugins#fzf#post() abort
     noremap  <silent> <C-r>      :History:<CR>
     nnoremap <silent> <Leader>gg :Rg<CR>
 
+    let s:mru = {}
+    let s:mru.source = luaeval('require("tools").mru_files()')
+    let s:mru.sink = 'edit'
+
+    command! -bang -nargs=* Mru
+        \ call fzf#run(fzf#wrap({'source': luaeval('require("tools").mru_files()'), 'sink': 'edit'}), <bang>0)
+
     augroup fzf_config
         autocmd!
         autocmd FileType fzf silent! tunmap <buffer> <Esc>

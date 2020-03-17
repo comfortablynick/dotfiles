@@ -26,7 +26,7 @@ let g:plugins_called = []
 let g:plugins_missing_fns = []
 
 function! s:source_handler(sourced, type) abort "{{{2
-    let l:file = fnamemodify(a:sourced, ':t:r')
+    let l:file = tolower(fnamemodify(a:sourced, ':t:r'))
     " TODO: is this really needed, or does the below match take care of it?
     " if l:full_path !~# 'pack/[^/]*/\(start\|opt\)/[^/]*/\(plugin\|autoload\)/'
     "     let g:plugins_skipped += [l:full_path]

@@ -120,6 +120,12 @@ let s:dot = {
     \ }
 let g:clap#provider#dot# = s:dot
 
+" MRU :: most recently used {{{2
+let s:mru = {}
+let s:mru.source = {-> luaeval('require"tools".mru_files()')}
+let s:mru.sink = 'edit'
+let g:clap#provider#mru# = s:mru
+
 " History (lua/Viml test) {{{2
 function! plugins#clap#history() abort
     let l:hist = filter(
@@ -132,6 +138,6 @@ endfunction
 
 " Much faster lua implementation
 function! plugins#clap#history_lua() abort
-    return luaeval('require("tools").get_history()')
+    return luaeval('require("tools").get_history_clap()')
 endfunction
 " vim:fdl=1:

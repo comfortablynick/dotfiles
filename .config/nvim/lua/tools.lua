@@ -3,6 +3,7 @@ local api = vim.api
 local uv = vim.loop
 local luajob = require"luajob"
 local util = require"util"
+local fn = require"fun"
 local M = {}
 
 function M.async_grep(term) -- {{{1
@@ -155,7 +156,7 @@ function M.set_executable(file) -- {{{1
   end)
 end
 
-function M.get_history() -- {{{1
+function M.get_history_clap() -- {{{1
   local hist_ct = vim.fn.histnr("cmd")
   local hist = {}
   for i = 1, hist_ct do
@@ -164,6 +165,28 @@ function M.get_history() -- {{{1
                                hist_ct - i, vim.fn.histget("cmd", -i)))
   end
   return hist
+end
+
+function M.get_history_fzf() -- {{{1
+  local hist_ct = vim.fn.histnr("cmd")
+  local hist = {}
+  -- for i = 1, hist_ct do
+  for i = hist_ct, 1, -1 do
+    hist[string.format("%" .. #tostring(hist_ct) .. "d", hist_ct - i)] =
+      vim.fn.histget("cmd", -i)
+  end
+  return hist
+end
+
+function M.get_history() -- {{{1
+  local results = {}
+  -- local hist = vim.gsplit(vim.fn.execute("history :"), "\n")
+  -- for h in hist do table.insert(results, h:gmatch("(%d+)%s*(.*)")) end
+  for k, v in string.gmatch(vim.fn.execute("history :"), "(%d+)%s*([^\n]+)\n") do
+    -- results[k] = vim.fn["syntax#ansi"](v, 'Number')
+    results[k] = "\x1b[38;5;205m" .. v .. "\x1b[m"
+  end
+  return results
 end
 
 function M.run(cmd) -- {{{1
@@ -336,15 +359,23 @@ function M.lscolors() -- {{{1
 end
 
 function M.mru_files(n) -- {{{1
-  local files = {}
-  for i, file in ipairs(vim.v.oldfiles) do
-    if util.path.exists(file) and not file:find(".git") then
-      file = file:gsub(vim.env.HOME, "~")
-      table.insert(files, file)
+  local exclude_patterns = {
+    "nvim/.*/doc/.*%.txt", -- nvim help files (approximately)
+    ".git", -- git dirs
+  }
+  local file_filter = function(file)
+    for _, pat in ipairs(exclude_patterns) do
+      if file:find(pat) ~= nil then return false end
     end
-    if i == (n or 999) then break end
+    return util.path.is_file(file)
   end
-  return files
+  local shorten_path = function(s) return s:gsub(uv.os_homedir(), "~") end
+  return fn.iter(vim.v.oldfiles):filter(file_filter):map(shorten_path):take_n(
+           n or 999):totable()
+end
+
+function M.markdown_headers() -- {{{1
+  local lines = api.nvim_buf_get_lines()
 end
 -- Return module --{{{1
 return M

@@ -8,7 +8,7 @@ function! plugins#mucomplete#pre() abort
 
     " Default chain presets
     let l:mu_default = ['path', 'ulti', 'omni', 'keyn',]
-    let l:mu_text_default = l:mu_default + ['dict', 'uspl']
+    let l:mu_text_default = l:mu_default "+ ['dict', 'uspl']
 
     let g:mucomplete#chains = {
         \ 'default': l:mu_default,
@@ -32,4 +32,8 @@ function! plugins#mucomplete#pre() abort
         \     'default': l:mu_default,
         \   },
         \ }
+endfunction
+
+function! plugins#mucomplete#post() abort
+    imap <expr> <down> mucomplete#extend_fwd("\<down>")
 endfunction

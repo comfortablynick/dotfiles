@@ -3,7 +3,7 @@
 " Description: General keymaps
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-05 11:04:51 CST
+" Last Change: 2020-03-16 18:39:45 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_maps' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -13,6 +13,7 @@ nnoremap U <C-r>
 nnoremap qq :x<CR>
 nnoremap qqq :q!<CR>
 nnoremap <CR> :nohlsearch<CR><CR>
+tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
 
 " Insert mode <Esc> maps
 inoremap kj <Esc>`^

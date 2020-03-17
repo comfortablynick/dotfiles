@@ -444,7 +444,7 @@ function nvim.timer_start(timeout, callback) -- {{{2
     return timer
 end
 
--- Iterator utils {{{1
+-- Iterator utils (luafun is probably faster) {{{1
 -- Helper functions {{{2
 -- From: https://github.com/rxi/lume
 local identity = function(x) return x end

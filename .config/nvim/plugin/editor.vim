@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-11 12:39:03 CDT
+" Last Change: 2020-03-16 18:17:21 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -32,7 +32,6 @@ function! s:help_tab() abort
     return editor#help_tab()
 endfunction
 
-
 " # Autocmds
 augroup plugin_editor
     autocmd!
@@ -46,7 +45,8 @@ augroup plugin_editor
 
     " Terminal starts in insert mode
     autocmd TermOpen * :startinsert
-    autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
+    " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
+    autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
 
     " Set cursorline depending on mode, if cursorline is enabled locally
     if &l:cursorline

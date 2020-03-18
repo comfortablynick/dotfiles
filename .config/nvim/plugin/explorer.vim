@@ -3,7 +3,7 @@
 " Description: Handle project file explorer plugin settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-06 11:03:23 CST
+" Last Change: 2020-03-17 20:40:46 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_explorer' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -16,7 +16,8 @@ command! -nargs=0 LuaTreeToggle packadd nvim-tree.lua | LuaTreeToggle
 command! -nargs=0 NERDTreeToggle packadd nerdtree | NERDTreeToggle
 command! -nargs=0 TagbarToggle call plugins#tagbar#toggle()
 command! -nargs=0 RnvimrToggle packadd rnvimr | RnvimrToggle
-command! -nargs=0 Lf packadd lf.vim | Lf
+command! -nargs=0 LfToggle packadd floatLf-nvim | LfToggle
+command! -nargs=0 LfToggleCurrentBuf packadd floatLf-nvim | LfToggleCurrentBuf
 command! -nargs=0 DefxToggle call explorer#toggle('defx')
 command! -nargs=0 NetrwToggle call explorer#toggle('netrw')
 

@@ -60,41 +60,8 @@ function M.get_decoration_width(winnr) -- {{{1
   return decoration_width
 end
 
--- Adapted From: https://gabrielpoca.com/2019-11-13-a-bit-more-lua-in-your-vim/
-function M.new_centered_floating(w, h) -- {{{1
-  local cols, lines = (function()
-    local ui = api.nvim_list_uis()[1]
-    return ui.width, ui.height
-  end)()
-  local width = w or math.min(cols - 4, math.min(100, cols - 20))
-  local height = h or math.min(lines - 4, math.max(20, lines - 10))
-  local top = ((lines - h) / 2) - 1
-  local left = (cols - w) / 2
-  local opts = {
-    relative = "editor",
-    row = top,
-    col = left,
-    width = width,
-    height = height,
-    style = "minimal",
-  }
-  -- get the editor's max width and height
-  -- local ed_width = api.nvim_win_get_width(0)
-  -- local ed_height = api.nvim_win_get_height(0)
-  -- if not height and not width then
-  --     -- window height is 3/4 of the max height, but not more than 30
-  --     height = math.min(math.ceil(ed_height * 0.75), 30)
-  --     width = math.ceil(ed_width * 0.75)
-  -- end
-  -- create a new, scratch buffer, for fzf
-  local buf = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_option(buf, "buftype", "nofile")
-  -- create a new floating window, centered in the editor
-  api.nvim_open_win(buf, true, opts)
-end
-
--- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
 function M.float_term(command, scale_pct) -- {{{1
+  -- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
   local width, height = (function()
     if scale_pct then
       local ed_width, ed_height = (function()
@@ -107,20 +74,56 @@ function M.float_term(command, scale_pct) -- {{{1
     end
     return nil, nil
   end)()
-  M.create_centered_floating(width, height, false)
+  M.create_centered_floating{width = width, height = height, border = false}
   api.nvim_call_function("termopen", {command})
 end
 
-function M.create_centered_floating(w, h, add_border_lines) -- {{{1
+function M.create_centered_floating(options) -- {{{1
+  -- options
+  -- =======
+  -- `width`, `height` Integer (absolute) or float (ratio of window size)
+  -- `border` Add border lines
+  -- `hl` Highlight to use with NormalFloat: (default is "Pmenu", based on fzf)
+  options = options or {}
+  vim.validate{options = {options, "table", true}}
+  vim.validate{
+    width = {
+      options.width,
+      function(v) return not v or v > 0 end,
+      "greater than 0",
+      true,
+    },
+    height = {
+      options.height,
+      function(v) return not v or v > 0 end,
+      "greater than 0",
+      true,
+    },
+    border = {options.border, "boolean", true},
+    hl = {options.hl, "string", true},
+  }
   local cols, lines = (function()
     local ui = api.nvim_list_uis()[1]
     return ui.width, ui.height
   end)()
-  local width = w or math.min(cols - 4, math.min(100, cols - 20))
-  local height = h or math.min(lines - 4, math.max(20, lines - 10))
+  local width = (function()
+    local usable_w = M.get_usable_width(0)
+    if not options.width or options.width < 1 then
+      options.width = math.min(math.floor((options.width or 0.6) * usable_w),
+                               usable_w)
+    end
+    return options.width
+  end)()
+  local height = (function()
+    if not options.height or options.height < 1 then
+      options.height = math.min(math.floor((options.height or 0.9) * lines),
+                                lines)
+    end
+    return options.height
+  end)()
   local top = ((lines - height) / 2) - 1
   local left = (cols - width) / 2
-  local opts = {
+  local win_opts = {
     relative = "editor",
     row = top,
     col = left,
@@ -131,7 +134,7 @@ function M.create_centered_floating(w, h, add_border_lines) -- {{{1
   -- Create border buffer, window
   local border_buf = api.nvim_create_buf(false, true)
   -- Add border lines
-  if add_border_lines then
+  if options.border then
     local border_top = "╭" .. string.rep("─", width - 2) .. "╮"
     local border_mid = "│" .. string.rep(" ", width - 2) .. "│"
     local border_bot = "╰" .. string.rep("─", width - 2) .. "╯"
@@ -142,17 +145,18 @@ function M.create_centered_floating(w, h, add_border_lines) -- {{{1
     table.insert(border_lines, border_bot)
     api.nvim_buf_set_lines(border_buf, 0, -1, true, border_lines)
   end
-  local border_win = api.nvim_open_win(border_buf, true, opts)
+  local border_win = api.nvim_open_win(border_buf, true, win_opts)
   -- Create text buffer, window
-  opts.row = opts.row + 1
-  opts.height = opts.height - 2
-  opts.col = opts.col + 2
-  opts.width = opts.width - 4
+  win_opts.row = win_opts.row + 1
+  win_opts.height = win_opts.height - 2
+  win_opts.col = win_opts.col + 2
+  win_opts.width = win_opts.width - 4
   local text_buf = api.nvim_create_buf(false, true)
-  local text_win = api.nvim_open_win(text_buf, true, opts)
+  local text_win = api.nvim_open_win(text_buf, true, win_opts)
   -- Set style
-  -- api.nvim_win_set_option(border_win, "winhl", "Normal:Floating")
-  -- api.nvim_win_set_option(text_win, "winhl", "Normal:Floating")
+  options.hl = options.hl or "Pmenu"
+  api.nvim_win_set_option(border_win, "winhl", "NormalFloat:"..options.hl)
+  api.nvim_win_set_option(text_win, "winhl", "NormalFloat:"..options.hl)
   -- Set autocmds
   vim.cmd"augroup lua_create_centered_floating"
   vim.cmd"autocmd!"
@@ -165,7 +169,7 @@ function M.create_centered_floating(w, h, add_border_lines) -- {{{1
 end
 
 function M.floating_help(query) -- {{{1
-  local buf = M.create_centered_floating(90, nil, false)
+  local buf = M.create_centered_floating{width = 90}
   api.nvim_set_current_buf(buf)
   vim.bo.filetype = "help"
   vim.bo.buftype = "help"

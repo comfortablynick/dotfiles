@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-12 16:25:14 CDT
+" Last Change: 2020-03-17 20:31:07 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_commands' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -45,7 +45,7 @@ cnoreabbrev <expr> R util#cabbr('R', 'Run')
 " Cmd :: test version of async command run {{{2
 command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
 
-" MRU :: most recently used files
+" MRU :: most recently used files {{{2
 command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
 
 " Grep :: async grep {{{2

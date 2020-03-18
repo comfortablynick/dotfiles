@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-13 09:38:45 CDT
+" Last Change: 2020-03-17 20:13:53 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -42,7 +42,6 @@ function! plugins#init() abort
     Pack 'spacewander/vim-textobj-lua'
 
     " Explorer/finder utils
-    Pack 'ptzz/lf.vim'
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
@@ -55,6 +54,7 @@ function! plugins#init() abort
     Pack 'tpope/vim-projectionist'
     Pack 'kyazdani42/nvim-tree.lua'
     Pack 'justinmk/vim-dirvish'
+    Pack 'haorenW1025/floatLf-nvim'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'

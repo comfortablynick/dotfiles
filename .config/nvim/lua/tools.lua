@@ -180,12 +180,12 @@ end
 
 function M.get_history() -- {{{1
   local results = {}
-  -- local hist = vim.gsplit(vim.fn.execute("history :"), "\n")
-  -- for h in hist do table.insert(results, h:gmatch("(%d+)%s*(.*)")) end
   for k, v in string.gmatch(vim.fn.execute("history :"), "(%d+)%s*([^\n]+)\n") do
-    -- results[k] = vim.fn["syntax#ansi"](v, 'Number')
     results[k] = "\x1b[38;5;205m" .. v .. "\x1b[m"
   end
+  -- Using iterators and luafun
+  -- fn.each(function(k, v) results[k] = "\x1b[38;5;205m" .. v .. "\x1b[m" end,
+  --         fn.dup(vim.fn.execute("history :"):gmatch("(%d+)%s*([^\n]+)\n")))
   return results
 end
 
@@ -364,10 +364,9 @@ function M.mru_files(n) -- {{{1
     ".git", -- git dirs
   }
   local file_filter = function(file)
-    for _, pat in ipairs(exclude_patterns) do
-      if file:find(pat) ~= nil then return false end
-    end
-    return util.path.is_file(file)
+    local is_excluded = function(s) return file:find(s) ~= nil end
+    return not fn.iter(exclude_patterns):any(is_excluded) and
+             util.path.is_file(file)
   end
   local shorten_path = function(s) return s:gsub(uv.os_homedir(), "~") end
   return fn.iter(vim.v.oldfiles):filter(file_filter):map(shorten_path):take_n(

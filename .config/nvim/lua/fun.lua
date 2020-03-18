@@ -1032,6 +1032,16 @@ methods.operator = operator
 exports.op = operator
 methods.op = operator
 
+local function dup_helper(n, var_1, ...)
+  if var_1 ~= nil then return var_1, select(n, var_1, ...), ... end
+end
+
+local function dup(n, f, s, var)
+  if type(n) ~= "number" then n, f, s, var = 1, n, f, s end
+  return function(s2, v) return dup_helper(n, f(s2, v)) end, s, var
+end
+exports.dup = dup
+
 --------------------------------------------------------------------------------
 -- module definitions
 --------------------------------------------------------------------------------

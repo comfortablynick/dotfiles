@@ -45,7 +45,7 @@ $0
 endsnippet
 
 snippet scriptguard "script reinclusion guard" b
-constG s:guard = 'g:loaded_`!p
+const s:guard = 'g:loaded_`!p
 if not snip.c:
 	relpath = file_relative_path()
 	relpath = '_'.join(os.path.split(relpath))

@@ -8,7 +8,7 @@
   "diagnostic.checkCurrentLine": true,
   "diagnostic.joinMessageLines": true,
   "diagnostic.messageTarget": "float",
-  "diagnostic.refreshAfterSave": true,
+  "diagnostic.refreshAfterSave": false,
 
   // git
   "git.branchCharacter": "",

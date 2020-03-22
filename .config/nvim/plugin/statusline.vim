@@ -6,9 +6,9 @@ scriptencoding utf-8
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-11 00:03:32 CDT
+" Last Change: 2020-03-20 12:02:17 CDT
 " ====================================================
-const s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
+let s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
 " Variables {{{1

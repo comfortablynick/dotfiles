@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-17 20:13:53 CDT
+" Last Change: 2020-03-19 11:39:29 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -101,7 +101,7 @@ function! plugins#init() abort
     Pack 'neoclide/coc.nvim',
         \ {
         \   'if': 'has("nvim")',
-        \   'do': {-> 'yarn install --frozen-lockfile'},
+        \   'do': 'yarn install --frozen-lockfile',
         \ }
     Pack 'lifepillar/vim-mucomplete'
 

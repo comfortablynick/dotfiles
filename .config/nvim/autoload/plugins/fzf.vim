@@ -54,15 +54,9 @@ function! s:fzf_commands() abort "{{{1
     " Rg with preview window
     "   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key
     "   :Rg! - Start fzf in fullscreen and display the preview window above
-    command! -bang -nargs=* Rg call
-        \ fzf#vim#grep(
-        \ 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-        \ <bang>0 ? fzf#vim#with_preview('up:60%')
-        \         : fzf#vim#with_preview('right:60%:hidden', '?'),
-        \ <bang>0
-        \ )
-
-    command! -nargs=* -bang RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
+    "   :RG[!] - Execute rg with every change in search term (no fuzzy filter)
+    command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
+    command! -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
 
     " Ag with preview window
     "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
@@ -86,29 +80,8 @@ function! s:fzf_commands() abort "{{{1
         \ 'sink': 'edit',
         \ 'options': '--prompt="MRU:> "',
         \ 'down': '~40%',
-        \ }), 'right:60%', '?'),
+        \ }), 'right:60%:hidden', '?'),
         \ <bang>0)
-
-    command! -nargs=* AG call fzf#run({
-        \ 'source': printf('ag --nogroup --column --color "%s"',
-        \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-        \ 'sink*': function('<SID>grep_handler'),
-        \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
-        \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
-        \            '--color hl:68,hl+:110 --prompt=Ag> ',
-        \ 'down': '50%',
-        \ })
-
-    command! -bang -nargs=* RGT call s:fzf_rg(<q-args>, <bang>0)
-    " command! -nargs=* RGT call fzf#run({
-    "     \ 'source': 'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>),
-    "     \ 'sink*': {val->s:grep_handler(val)},
-    "     \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
-    "     \            '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
-    "     \            '--color hl:68,hl+:110',
-    "     \ 'down': '50%',
-    "     \ })
-
 endfunction
 
 function! s:fzf_rg(query, fullscreen) abort "{{{1
@@ -122,8 +95,12 @@ function! s:fzf_rg(query, fullscreen) abort "{{{1
         \ '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
         \ '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
         \ '--color hl:68,hl+:110 --prompt="Rg> "'
-    let l:rg = fzf#vim#with_preview(fzf#wrap(l:rg, a:fullscreen), 'right:50%', '?')
-    let g:rg = copy(l:rg)
+    let l:rg = fzf#vim#with_preview(
+        \ fzf#wrap(l:rg, a:fullscreen),
+        \ a:fullscreen ? 'up:60%' : 'right:60%:hidden',
+        \ '?'
+        \ )
+    " let g:rg = copy(l:rg)
     call fzf#run(l:rg)
 endfunction
 
@@ -133,7 +110,12 @@ function! s:fzf_rg_passthrough(query, fullscreen) "{{{1
     let l:initial_command = printf(l:command_fmt, shellescape(a:query))
     let l:reload_command = printf(l:command_fmt, '{q}')
     let l:spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.l:reload_command]}
-    call fzf#vim#grep(l:initial_command, 1, fzf#vim#with_preview(l:spec, 'right:50%', '?'), a:fullscreen)
+    call fzf#vim#grep(
+        \ l:initial_command,
+        \ 1,
+        \ fzf#vim#with_preview(l:spec, a:fullscreen ? 'up:60%' : 'right:60%:hidden', '?'),
+        \ a:fullscreen
+        \ )
 endfunction
 
 function! s:grep_to_qf(line) abort "{{{1

@@ -6,6 +6,7 @@
 #       - in vscode remote session
 #       - `tmux` command not present
 export PATH="$HOME/.local/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/lib"
 {
     [ -n "$TMUX" ] ||
         [ -f "$HOME/.no_tmux_login" ] ||

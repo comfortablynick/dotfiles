@@ -89,7 +89,7 @@ export LANG=en_US.UTF-8                                         # Default term l
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
 export ZSH_THEME="powerlevel10k"                                # Prompt theme
 
-if [[ $MOSH_CONNECTION -eq 0 ]] && hash delta; then
+if [[ $MOSH_CONNECTION -eq 0 ]] & (( $+commands[delta] )); then
     export GIT_PAGER="delta --dark"
 fi
 

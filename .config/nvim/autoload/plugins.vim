@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-19 11:39:29 CDT
+" Last Change: 2020-03-23 15:16:26 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -50,7 +50,7 @@ function! plugins#init() abort
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'preservim/nerdtree'
-    Pack 'Shougo/defx.nvim',            {'if': 'has("nvim")'}
+    Pack 'Shougo/defx.nvim'
     Pack 'tpope/vim-projectionist'
     Pack 'kyazdani42/nvim-tree.lua'
     Pack 'justinmk/vim-dirvish'
@@ -59,8 +59,8 @@ function! plugins#init() abort
     " Vim Development
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
-    Pack 'bfredl/nvim-luadev',          {'if': 'has("nvim")'}
-    Pack 'tweekmonster/startuptime.vim',
+    Pack 'bfredl/nvim-luadev'
+    Pack 'tweekmonster/startuptime.vim'
     Pack 'TravonteD/luajob'
 
     " Editor appearance
@@ -72,7 +72,7 @@ function! plugins#init() abort
 
     " Syntax/filetype
     " Some must be loaded at start
-    Pack 'numirias/semshi',             {'if': 'has("nvim")'}
+    Pack 'numirias/semshi'
     Pack 'dag/vim-fish',                {'type': 'start'}
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}
@@ -97,12 +97,8 @@ function! plugins#init() abort
     Pack 'honza/vim-snippets'
 
     " Completion
-    Pack 'neovim/nvim-lsp',             {'if': 'has("nvim")'}
-    Pack 'neoclide/coc.nvim',
-        \ {
-        \   'if': 'has("nvim")',
-        \   'do': 'yarn install --frozen-lockfile',
-        \ }
+    Pack 'neovim/nvim-lsp'
+    Pack 'neoclide/coc.nvim',           {'do': 'yarn install --frozen-lockfile'}
     Pack 'lifepillar/vim-mucomplete'
 
     " Tmux

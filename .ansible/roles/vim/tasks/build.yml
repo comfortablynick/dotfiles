@@ -1,5 +1,12 @@
 ---
 # vim
+- name: Get python3 config dir
+  command:
+    argv:
+      - python3-config
+      - --configdir
+  register: python3_config_dir
+
 - name: Create temp build dir
   tempfile:
     state: directory
@@ -28,6 +35,7 @@
           --enable-netbeans
           --enable-perlinterp
           --enable-python3interp
+          --with-python3-config-dir={{ python3_config_dir.stdout }}
           --enable-rubyinterp
           --enable-luainterp
     - make -j{{ make_concurrency }}

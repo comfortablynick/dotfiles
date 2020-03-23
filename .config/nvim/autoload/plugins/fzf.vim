@@ -6,8 +6,8 @@ function! plugins#fzf#post() abort "{{{1
     let g:fzf_use_floating = 1
 
     if g:fzf_use_floating == 1
-        let g:fzf_layout = { 'window': 'lua require"window".create_centered_floating{width=0.9, height=0.6, border=true, hl="Comment"}' }
-        " let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+        " let g:fzf_layout = { 'window': 'lua require"window".create_centered_floating{width=0.9, height=0.6, border=true, hl="Comment"}' }
+        let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
     else
         let g:fzf_layout = { 'down': '~30%' } " bottom split
     endif
@@ -35,53 +35,6 @@ function! plugins#fzf#post() abort "{{{1
         autocmd!
         autocmd FileType fzf silent! tunmap <buffer> <Esc>
     augroup END
-
-    call s:fzf_maps()
-    call s:fzf_commands()
-endfunction
-
-function! s:fzf_maps() abort "{{{1
-    " Maps
-    noremap  <silent> <C-r>      :History:<CR>
-    nnoremap <silent> <Leader>gg :RG<CR>
-endfunction
-
-function! s:fzf_commands() abort "{{{1
-    " View maps in any mode
-    command! -bang -nargs=1 -complete=customlist,s:map_types_completion Map
-        \ call fzf#vim#maps(<q-args>, <bang>0)
-
-    " Rg with preview window
-    "   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key
-    "   :Rg! - Start fzf in fullscreen and display the preview window above
-    "   :RG[!] - Execute rg with every change in search term (no fuzzy filter)
-    command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
-    command! -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
-
-    " Ag with preview window
-    "   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-    "   :Ag! - Start fzf in fullscreen and display the preview window above
-    command! -bang -nargs=* Ag
-        \ call fzf#vim#ag(<q-args>,
-        \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-        \                         : fzf#vim#with_preview('right:60%:hidden', '?'),
-        \                 <bang>0)
-
-    " Files command with preview window
-    command! -bang -nargs=* -complete=dir Files
-        \ call fzf#vim#files(<q-args>,
-        \                    <bang>0 ? fzf#vim#with_preview('up:60%')
-        \                            : fzf#vim#with_preview('right:60%', '?'),
-        \                    <bang>0)
-
-    " Mru :: most recently used files
-    command! -bang -nargs=* Mru call fzf#run(fzf#vim#with_preview(fzf#wrap({
-        \ 'source': luaeval('require("tools").mru_files()'),
-        \ 'sink': 'edit',
-        \ 'options': '--prompt="MRU:> "',
-        \ 'down': '~40%',
-        \ }), 'right:60%:hidden', '?'),
-        \ <bang>0)
 endfunction
 
 function! s:fzf_rg(query, fullscreen) abort "{{{1
@@ -116,6 +69,20 @@ function! s:fzf_rg_passthrough(query, fullscreen) "{{{1
         \ fzf#vim#with_preview(l:spec, a:fullscreen ? 'up:60%' : 'right:60%:hidden', '?'),
         \ a:fullscreen
         \ )
+endfunction
+
+function! s:fzf_mru(fullscreen) abort "{{{1
+    let l:mru = {}
+    let l:mru['source'] = luaeval('require("tools").mru_files()')
+    let l:mru['sink'] = 'edit'
+    let l:mru['options'] = '--color hl:68,hl+:110 --prompt="MRU:> "'
+    
+    let l:mru = fzf#vim#with_preview(
+        \ fzf#wrap(l:mru, a:fullscreen),
+        \ a:fullscreen ? 'up:60%' : 'right:60%',
+        \ '?',
+        \ )
+    call fzf#run(l:mru)
 endfunction
 
 function! s:grep_to_qf(line) abort "{{{1
@@ -156,3 +123,39 @@ function! s:map_types_completion(a,l,p) abort "{{{1
         \ 't',
         \ ]
 endfunction
+
+" Commands {{{1
+" View maps in any mode
+command! -bang -nargs=1 -complete=customlist,s:map_types_completion Map
+    \ call fzf#vim#maps(<q-args>, <bang>0)
+
+" Rg with preview window
+"   :Rg - Start fzf with hidden preview window that can be enabled with `?` key
+"   :RG - Execute rg with every change in search term (no fuzzy filter)
+"     ! - Start fzf in fullscreen and display the preview window above
+command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
+command! -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
+
+" Ag with preview window
+"   :Ag  - Start fzf with hidden preview window that can be enabled with `?` key
+"   :Ag! - Start fzf in fullscreen and display the preview window above
+command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \ <bang>0 ? fzf#vim#with_preview('up:60%')
+    \ : fzf#vim#with_preview('right:60%:hidden', '?'),
+    \ <bang>0
+    \ )
+
+" Files command with preview window
+command! -bang -nargs=* -complete=dir Files
+    \ call fzf#vim#files(<q-args>,
+    \ <bang>0 ? fzf#vim#with_preview('up:60%')
+    \ : fzf#vim#with_preview('right:60%', '?'),
+    \ <bang>0)
+
+" Mru :: most recently used files
+command! -bang Mru call s:fzf_mru(<bang>0)
+
+" Maps {{{1
+noremap  <silent> <C-r>      :History:<CR>
+nnoremap <silent> <Leader>gg :RG<CR>

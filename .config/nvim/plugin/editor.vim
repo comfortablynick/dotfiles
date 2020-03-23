@@ -3,7 +3,7 @@
 " Description: Editor behavior settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-16 18:17:21 CDT
+" Last Change: 2020-03-23 14:08:15 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -43,10 +43,14 @@ augroup plugin_editor
     autocmd FileType netrw,help,fugitive,qf
         \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
 
-    " Terminal starts in insert mode
-    autocmd TermOpen * :startinsert
-    " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
-    autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
+    if has('nvim')
+        " Terminal starts in insert mode
+        autocmd TermOpen * :startinsert
+        " Toggle &(relative)number
+        autocmd TermOpen * setlocal nonumber norelativenumber
+        " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
+        autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
+    endif
 
     " Set cursorline depending on mode, if cursorline is enabled locally
     if &l:cursorline
@@ -54,8 +58,6 @@ augroup plugin_editor
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
 
-    " Toggle &(relative)number
-    autocmd TermOpen * setlocal nonumber norelativenumber
     " Toggle relativenumber depending on mode and focus
     autocmd FocusGained,WinEnter,BufEnter *
         \ if &l:number | setlocal relativenumber | endif

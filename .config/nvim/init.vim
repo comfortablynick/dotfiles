@@ -191,11 +191,19 @@ silent! packadd! vim-tmux-navigator
 silent! packadd! vim-startify
 silent! packadd! vista.vim
 silent! packadd! vim-textobj-user
-silent! packadd! vim-textobj-lua
 silent! packadd! vim-bbye
-silent! packadd! luajob
-silent! packadd! nvim-lsp
 silent! packadd! vim-dirvish
+
+" Requires nvim
+if has('nvim')
+    silent! packadd! luajob
+    silent! packadd! nvim-lsp
+endif
+
+" Requires python2
+if has('python')
+    silent! packadd! vim-textobj-lua
+endif
 
 " Lua tools {{{2
 if has('nvim')
@@ -206,14 +214,14 @@ endif
 " Guard() :: scriptguard utility {{{2
 " Scriptguard
 function! Guard(path, ...) abort
-  let l:loaded_var = 'g:loaded_' . substitute(a:path, '\W', '_', 'g')
-  if exists(l:loaded_var) | return 0 | endif
-  for l:expr in a:000
-    if !eval(l:expr)
-      echoerr a:path . ' requires: ' . l:expr
-      return 0
-    endif
-  endfor
-  let {l:loaded_var} = 1
-  return 1
+    let l:loaded_var = 'g:loaded_' . substitute(a:path, '\W', '_', 'g')
+    if exists(l:loaded_var) | return 0 | endif
+    for l:expr in a:000
+        if !eval(l:expr)
+            echoerr a:path . ' requires: ' . l:expr
+            return 0
+        endif
+    endfor
+    let {l:loaded_var} = 1
+    return 1
 endfunction

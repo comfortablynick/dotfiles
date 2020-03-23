@@ -3,7 +3,7 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-12 11:59:38 CDT
+" Last Change: 2020-03-23 14:10:45 CDT
 " ====================================================
 scriptencoding utf-8
 
@@ -431,7 +431,7 @@ function! statusline#coc_status() abort "{{{2
 endfunction
 
 function! statusline#lsp_status() abort
-    if !s:is_active_file()
+    if !s:is_active_file() || !has('nvim')
         return ''
     endif
     return v:lua.vim.lsp.buf.server_ready() ? 'LSP' : ''
@@ -456,7 +456,10 @@ function! s:ale_error_ct() abort "{{{2
 endfunction
 
 function! s:lsp_error_ct() "{{{2
-    return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
+    if has('nvim')
+        return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
+    endif
+    return 0
 endfunction
 
 function! s:ale_warning_ct() abort "{{{2
@@ -465,8 +468,11 @@ function! s:ale_warning_ct() abort "{{{2
     return l:counts.warning + l:counts.style_warning
 endfunction
 
-function! s:lsp_warning_ct()
-    return v:lua.vim.lsp.util.buf_diagnostics_count('Warning')
+function! s:lsp_warning_ct() "{{{2
+    if has('nvim')
+        return v:lua.vim.lsp.util.buf_diagnostics_count('Warning')
+    endif
+    return 0
 endfunction
 
 function! s:coc_warning_ct() abort " {{{2

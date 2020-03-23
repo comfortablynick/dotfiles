@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-17 20:31:07 CDT
+" Last Change: 2020-03-23 14:28:43 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_commands' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -73,8 +73,11 @@ command! -nargs=* -bar -count=0 Scriptnames
     \ <count>
 
 " Pretty-printing {{{2
-" Using Lua vim.inspect()
-command! -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
+" nvim: Using Lua vim.inspect()
+if has('nvim')
+    command! -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
+endif
+
 " Using python pformat (handles lists better)
 command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 

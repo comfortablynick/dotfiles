@@ -6,23 +6,40 @@
       - python3-config
       - --configdir
   register: python3_config_dir
+  changed_when: false
 
-- name: Create temp build dir
-  tempfile:
-    state: directory
-    suffix: _vim_build
-  register: build_dir
+# - name: Create temp build dir
+#   tempfile:
+#     state: directory
+#     suffix: _vim_build
+#   register: build_dir
 
-- name: Download vim
-  unarchive:
-    src: https://github.com/vim/vim/archive/v{{ vim_version }}.tar.gz
-    dest: "{{ build_dir.path }}"
-    remote_src: yes
+# - name: Download vim
+#   unarchive:
+#     src: https://github.com/vim/vim/archive/v{{ vim_version }}.tar.gz
+#     dest: "{{ build_dir.path }}"
+#     remote_src: yes
+
+- name: Clone vim master
+  git:
+    repo: https://github.com/vim/vim
+    dest: "{{ vim_source_dir }}"
+  register: vim_git_clone
+
+- name: Show message if git has changes
+  debug:
+    msg: Vim has upstream changes! Building...
+  when: vim_git_clone.changed
+
+- name: Show message if git does not have changes
+  debug:
+    msg: No upstream vim changes! Skipping build.
+  when: not vim_git_clone.changed
 
 - name: Build and install vim
   command: "{{ item }}"
   args:
-    chdir: "{{ build_dir.path }}/vim-{{ vim_version }}"
+    chdir: "{{ vim_source_dir }}"
   loop:
     - >
       ./configure \
@@ -40,3 +57,4 @@
           --enable-luainterp
     - make -j{{ make_concurrency }}
     - make install
+  when: vim_git_clone.changed

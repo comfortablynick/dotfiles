@@ -11,10 +11,6 @@
     vim_upgrade: True
 
 - debug:
-    msg: Vim needs to be upgraded!
-  when: vim_upgrade
-
-- debug:
     msg: Forcing vim build/install
   when: vim_force_build and not vim_upgrade
 

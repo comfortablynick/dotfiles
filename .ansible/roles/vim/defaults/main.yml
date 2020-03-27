@@ -7,9 +7,9 @@ make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
 #   - Debian
 
 # building from source
-vim_version: "8.2.0432"
+# vim_version: "8.2.0432"
 vim_force_build: False
-vim_source_dir: /tmp/src/vim
+vim_source_dir: "{{ ansible_facts.user_dir }}/src/vim"
 install_path: "{{ ansible_facts['user_dir'] }}/.local"
 
 Debian_vim_required_packages:

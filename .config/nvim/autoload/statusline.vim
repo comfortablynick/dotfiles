@@ -3,8 +3,9 @@
 " Description: Collection of functions for statusline components
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-23 14:10:45 CDT
 " ====================================================
+let s:guard = 'g:loaded_autoload_statusline' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 scriptencoding utf-8
 
 " Linter indicators {{{2
@@ -19,22 +20,22 @@ function! statusline#get(winnr) abort "{{{2
     " let l:inactive_status = ' %n %<%f %h%m%r%'
 
     let l:sl = ''
-    let l:sl .= '%(%{statusline#bufnr()} %)'
+    let l:sl .= '%(%1*%{statusline#bufnr()}%* %)'
+    let l:sl .= '%(%{statusline#bufnr_inactive()} %)'
     let l:sl .= '%(%{statusline#file_name()} %)'
     let l:sl .= '%<'
     let l:sl .= '%(%h%w%q%m%r %)'
-    let l:sl .= '%(  %{statusline#linter_errors()}%)'
-    let l:sl .= '%( %{statusline#linter_warnings()}%)'
+    let l:sl .= '%(  %4*%{statusline#linter_errors()}%*%)'
+    let l:sl .= '%( %5*%{statusline#linter_warnings()}%*%)'
 
     let l:sl .= '%='
     let l:sl .= '%( %{statusline#toggled()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#job_status()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#lsp_status()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#coc_status()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#file_type()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#git_status()} '.g:sl.sep.'%)'
-    " let l:sl .= '%( %l,%c%) %4(%p%%%)'
-    let l:sl .= '%( %{statusline#line_info()}%)'
+    let l:sl .= '%( %{statusline#coc_status()} %)'
+    let l:sl .= '%( %{statusline#file_type()} %)'
+    let l:sl .= '%(%3* %{statusline#git_status()} %*%)'
+    let l:sl .= '%(%2* %{statusline#line_info()}%*%)'
     return l:sl
 endfunction
 
@@ -228,6 +229,13 @@ function! statusline#line_info() abort "{{{2
 endfunction
 
 function! statusline#bufnr() abort "{{{2
+    if ! s:is_active() | return '' | endif
+    let l:bufnr = bufnr('')
+    return buflisted(l:bufnr) ? '['.l:bufnr.']' : ''
+endfunction
+
+function! statusline#bufnr_inactive() abort "{{{2
+    if s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
     return buflisted(l:bufnr) ? '['.l:bufnr.']' : ''
 endfunction
@@ -382,7 +390,8 @@ endfunction
 
 function! statusline#git_branch() abort "{{{2
     if exists('g:coc_git_status')
-        return join(split(g:coc_git_status)[1:-1]).' '
+        " TODO: needed on vim8; check to see if still needed
+        return substitute(g:coc_git_status, '', '', '')
     elseif exists('*FugitiveHead')
         return FugitiveHead()
     endif
@@ -395,13 +404,15 @@ function! statusline#git_status() abort "{{{2
         \ || winwidth(0) < g:sl.width.min
         return ''
     endif
-    let l:branch = statusline#git_branch()
-    let l:hunks = statusline#git_summary()
-    return l:branch !=# '' ? printf('%s%s%s',
+    " Assume master branch
+    let l:branch = substitute(statusline#git_branch(), 'master', '', '')
+    let l:hunks = s:rpad(statusline#git_summary())
+    return l:branch ==# '' ? '' :
+        \ printf('%s%s%s',
         \ l:hunks,
-        \ ' '.substitute(l:branch, 'master', '', ''),
+        \ l:branch,
         \ g:sl.symbol.branch
-        \ ) : ''
+        \ )
 endfunction
 
 function! statusline#venv_name() abort "{{{2
@@ -423,21 +434,20 @@ endfunction
 
 function! statusline#coc_status() abort "{{{2
     if !s:is_active_file() | return '' | endif
-    if winwidth(0) > g:sl.width.min && get(g:, 'did_coc_loaded', 0)
-        let l:coc = get(g:, 'coc_status')
-        if !empty(l:coc) | return l:coc | endif
+    if winwidth(0) > g:sl.width.min && exists('*coc#status')
+        return coc#status()
     endif
     return ''
 endfunction
 
-function! statusline#lsp_status() abort
+function! statusline#lsp_status() abort "{{{2
     if !s:is_active_file() || !has('nvim')
         return ''
     endif
     return v:lua.vim.lsp.buf.server_ready() ? 'LSP' : ''
 endfunction
 
-function! s:ale_linted() abort
+function! s:ale_linted() abort "{{{2
     return get(g:, 'ale_enabled', 0) == 1
         \ && get(b:, 'ale_linted', 0) > 0
         \ && ale#engine#IsCheckingBuffer(0) == 0

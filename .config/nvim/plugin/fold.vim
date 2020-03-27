@@ -1,9 +1,8 @@
 " ====================================================
 " Filename:    plugin/fold.vim
 " Description: Fold-related operations
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-28 19:19:57 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_fold' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -30,7 +29,8 @@ function! CustomFoldText(string) abort
     " remove foldmarker from line
     let g:pat  = '\%('. g:pat. '\)\?\s*'.split(&l:fmr, ',')[0].'\s*\d*'
     let l:line = substitute(l:line, g:pat, '', '')
-    let l:w = luaeval('require("window").get_usable_width()')
+    " Get actual width of window
+    let l:w = window#width()
     let l:fold_size = 1 + v:foldend - v:foldstart
     let l:fold_size_str = ' '.l:fold_size.' lines '
     let l:fold_level_str = '+'.v:folddashes

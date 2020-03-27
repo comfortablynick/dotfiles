@@ -25,9 +25,9 @@
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
 global !p
 from pathlib import PurePath
-def file_relative_path():
+def file_relative_path(remove_file_ext = False):
 	"""Return path of current file relative to .vim directory."""
-	path = vim.eval('expand("%:p:r")')
+	path = vim.eval(f'expand(\'%:p{":r" if remove_file_ext else ""}\')')
 	fp = PurePath(path)
 	return fp.relative_to(os.path.expandvars("$VDOTDIR"))
 endglobal
@@ -46,7 +46,7 @@ endsnippet
 snippet scriptguard "script reinclusion guard" b
 let s:guard = 'g:loaded_`!p
 if not snip.c:
-	relpath = file_relative_path()
+	relpath = file_relative_path(True)
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	snip.rv = relpath
@@ -60,7 +60,7 @@ snippet rscriptguard "randomized script reinclusion guard" b
 if exists('${1:g:loaded_`!p
 if not snip.c:
 	import random, string
-	relpath = file_relative_path()
+	relpath = file_relative_path(True)
 	relpath = '_'.join(os.path.split(relpath))
 	relpath = re.sub(r'[^A-Za-z0-9]+','_', relpath)
 	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8)).lower()

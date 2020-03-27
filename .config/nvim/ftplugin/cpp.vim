@@ -1,6 +1,3 @@
-if exists('g:loaded_ftplugin_cpp_gur8ndia') | finish | endif
-let g:loaded_ftplugin_cpp_gur8ndia = 1
-
 let b:load_doxygen_syntax = 1
 let g:quickfix_open = 24
 

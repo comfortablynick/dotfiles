@@ -1,8 +1,4 @@
 scriptencoding utf-8
-if exists('g:loaded_rust_after_syntax')
-    finish
-endif
-let g:loaded_rust_after_syntax = 1
 
 " Add additional rustTrait
 syntax keyword rustTrait        PathBuf

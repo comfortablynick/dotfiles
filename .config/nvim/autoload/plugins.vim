@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-23 15:16:26 CDT
+" Last Change: 2020-03-27 11:46:21 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -36,6 +36,7 @@ function! plugins#init() abort
     Pack 'rhysd/clever-f.vim'
     Pack 'tommcdo/vim-lion'
     Pack 'wellle/targets.vim'
+    Pack 'bfredl/nvim-miniyank'
 
     " Text objects
     Pack 'kana/vim-textobj-user'

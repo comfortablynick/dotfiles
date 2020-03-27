@@ -42,8 +42,8 @@ pip2_name: pip2
 pip3_name: pip3
 
 # Build from source
-neovim_source_dir: /tmp/src/neovim
+neovim_source_dir: "{{ ansible_env.HOME }}/src/neovim"
 neovim_cmake_build_type: RelWithDebInfo
-neovim_install_prefix: /usr
+neovim_install_prefix: "{{ ansible_env.HOME }}/.local"
 neovim_force_build: false # build even if no change in git upstream
 neovim_install_arm: false # build for rpi

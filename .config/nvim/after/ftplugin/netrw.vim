@@ -1,8 +1,3 @@
-if exists('g:loaded_after_ftplugin_netrw') | finish | endif
-let g:loaded_after_ftplugin_netrw = 1
-
-setlocal statusline=%f\ %r
-
 noremap <buffer><silent><C-L> :TmuxNavigateRight<CR>
 noremap <buffer> V :call <SID>open_to_right()<CR>
 noremap <buffer> H :call <SID>open_below()<CR>

@@ -1,6 +1,3 @@
-if exists('g:loaded_after_ftplugin_markdown') | finish | endif
-let g:loaded_after_ftplugin_markdown = 1
-
 function! s:indent(indent)
     if getline('.') =~# '\v^\s*%([-*+]|\d\.)\s*$'
         " Empty list

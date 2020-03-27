@@ -1,11 +1,3 @@
-" ====================================================
-" Filename:    after/syntax/vim.vim
-" Description: Vim syntax overrides
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2020-02-25 17:10:42 CST
-" ====================================================
-
 unlet! b:current_syntax
 syn cluster vimFuncBodyList	add=vimPythonRegion
 syntax include @vimPythonScript syntax/python.vim

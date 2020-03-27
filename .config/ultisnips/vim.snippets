@@ -10,8 +10,7 @@
 #
 #		b - Beginning of line.
 #		i - In-word expansion.
-#		w - Word boundary.
-#		r - Regular expression
+#		w - Word boundary.  r - Regular expression
 #		e - Custom context snippet
 #		A - Snippet will be triggered automatically, when condition matches.
 #
@@ -77,7 +76,7 @@ endsnippet
 
 snippet fua "autoload function" b
 function! `!p
-relpath = PurePath(file_relative_path())
+relpath = PurePath(file_relative_path(True))
 parts = relpath.parts
 snip.rv = '#'.join(parts[1:]) + '#'
 `${1:name}($2) abort

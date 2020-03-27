@@ -1,6 +1,3 @@
-if exists('g:loaded_after_ftplugin_rust') | finish | endif
-let g:loaded_after_ftplugin_rust = 1
-
 setlocal tabstop=4
 setlocal shiftwidth=0
 setlocal foldmethod=marker

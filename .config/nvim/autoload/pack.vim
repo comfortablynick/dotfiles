@@ -1,10 +1,11 @@
 " ====================================================
-" Filename:    autoload/pack.vim
-" Description: Handle packages and interface with package manager
-" Author:      Nick Murphy
+" Filename:    autoload/pack
+" Description: Shim interface to package managers for consistency
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-25 17:00:19 CST
 " ====================================================
+let s:guard = 'g:loaded_autoload_pack' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! pack#init() abort
     " Make Pack command available before packages are added
@@ -13,7 +14,7 @@ endfunction
 
 " Package manager wrapper functions
 function! s:pack_init() abort
-    let l:pack_dir = expand(has('nvim') ? '$XDG_DATA_HOME/nvim/site' : '$HOME/.vim')
+    let l:pack_dir = get(g:, 'package_path', expand(has('nvim') ? '$XDG_DATA_HOME/nvim/site' : '$HOME/.vim'))
     let g:package_manager = get(g:, 'package_manager', 'minpac')
     if g:package_manager ==# 'minpac'
         " Check if minpac already initialized
@@ -78,7 +79,7 @@ function! pack#add(repo, ...) abort
     let l:opts = extend(copy(get(a:000, 0, {})),
         \ {'type': 'opt'}, 'keep')
     let l:name = substitute(a:repo, '^.*/', '', '')
-    " Allow simple `if` conditions to adding the plugin
+    " Allow simple `if` (e.g., machine-specific) conditions to adding the plugin
     " Note: only evaluated during PackUpdate
     if has_key(l:opts, 'if') && !eval(l:opts.if) | return | endif
     if has_key(l:opts, 'rplugin') && eval(l:opts.rplugin)

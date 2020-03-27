@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_coc') | finish | endif
-let g:loaded_autoload_plugins_coc = 1
+let s:guard = 'g:loaded_autoload_plugins_coc' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#coc#pre() abort "{{{1
     " let g:coc_force_debug = 1
@@ -99,7 +99,6 @@ function! plugins#coc#apply_maps() abort "{{{1
 
     set keywordprg=:silent!\ call\ CocActionAsync('doHover')
 
-    let g:tab_orig = maparg('<Tab>', 'i', 1)
     " Use <TAB> to scroll completion results and jump through snippets
     inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>" :

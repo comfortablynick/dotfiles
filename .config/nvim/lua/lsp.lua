@@ -61,8 +61,16 @@ function M.init()
     --     },
     --   },
     -- },
-    pyls_ms = {},
     -- vimls = {},
+    -- yamlls = {
+    --   filetypes = {"yaml", "yaml.ansible"},
+    --   settings = {
+    --     yaml = {
+    --       schemas = {["http://json.schemastore.org/ansible-stable-2.9"] = "*"},
+    --     },
+    --   },
+    -- },
+    pyls_ms = {},
   }
 
   -- Set global callbacks

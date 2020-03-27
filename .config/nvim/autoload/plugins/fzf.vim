@@ -1,7 +1,8 @@
 let s:guard = 'g:loaded_autoload_plugins_fzf' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-function! plugins#fzf#post() abort "{{{1
+" Functions {{{1
+function! plugins#fzf#post() abort "{{{2
     " let g:fzf_use_floating = get(g:, 'fzf_use_floating', 0)
     let g:fzf_use_floating = 1
 
@@ -35,9 +36,12 @@ function! plugins#fzf#post() abort "{{{1
         autocmd!
         autocmd FileType fzf silent! tunmap <buffer> <Esc>
     augroup END
+
+    noremap  <silent> <C-r>      :History:<CR>
+    nnoremap <silent> <Leader>gg :RG<CR>
 endfunction
 
-function! s:fzf_rg(query, fullscreen) abort "{{{1
+function! s:fzf_rg(query, fullscreen) abort "{{{2
     let l:rg = {}
     let l:rg.source = printf(
         \ 'rg --column --line-number --no-heading --color=always --smart-case %s || true',
@@ -53,12 +57,11 @@ function! s:fzf_rg(query, fullscreen) abort "{{{1
         \ a:fullscreen ? 'up:60%' : 'right:60%:hidden',
         \ '?'
         \ )
-    " let g:rg = copy(l:rg)
     call fzf#run(l:rg)
 endfunction
 
 " Use `rg` to filter, passing through to fzf as a selector
-function! s:fzf_rg_passthrough(query, fullscreen) "{{{1
+function! s:fzf_rg_passthrough(query, fullscreen) "{{{2
     let l:command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
     let l:initial_command = printf(l:command_fmt, shellescape(a:query))
     let l:reload_command = printf(l:command_fmt, '{q}')
@@ -71,12 +74,12 @@ function! s:fzf_rg_passthrough(query, fullscreen) "{{{1
         \ )
 endfunction
 
-function! s:fzf_mru(fullscreen) abort "{{{1
+function! s:fzf_mru(fullscreen) abort "{{{2
     let l:mru = {}
     let l:mru['source'] = luaeval('require("tools").mru_files()')
     let l:mru['sink'] = 'edit'
     let l:mru['options'] = '--color hl:68,hl+:110 --prompt="MRU:> "'
-    
+
     let l:mru = fzf#vim#with_preview(
         \ fzf#wrap(l:mru, a:fullscreen),
         \ a:fullscreen ? 'up:60%' : 'right:60%',
@@ -85,13 +88,27 @@ function! s:fzf_mru(fullscreen) abort "{{{1
     call fzf#run(l:mru)
 endfunction
 
-function! s:grep_to_qf(line) abort "{{{1
+function! s:fzf_scriptnames(fullscreen) abort "{{{2
+    let l:spec = {}
+    let l:spec['source'] = split(execute('scriptnames'), '\n')
+    let l:spec['sink'] = {sel->execute('edit'..trim(split(sel, ' ')[-1]))}
+    let l:spec['options'] = '--color hl:68,hl+:110 --prompt="Scriptnames:> "'
+
+    let l:spec = fzf#vim#with_preview(
+        \ fzf#wrap(l:spec, a:fullscreen),
+        \ a:fullscreen ? 'up:60%' : 'right:60%',
+        \ '?',
+        \ )
+    call fzf#run(l:spec)
+endfunction
+
+function! s:grep_to_qf(line) abort "{{{2
     let l:parts = split(a:line, ':')
     return {'filename': l:parts[0], 'lnum': l:parts[1], 'col': l:parts[2],
         \ 'text': join(l:parts[3:], ':')}
 endfunction
 
-function! s:grep_handler(lines) abort "{{{1
+function! s:grep_handler(lines) abort "{{{2
     if len(a:lines) < 2 | return | endif
 
     let l:cmd = get({'ctrl-x': 'split',
@@ -111,7 +128,7 @@ function! s:grep_handler(lines) abort "{{{1
     endif
 endfunction
 
-function! s:map_types_completion(a,l,p) abort "{{{1
+function! s:map_types_completion(a,l,p) abort "{{{2
     return [
         \ 'n',
         \ 'i',
@@ -125,18 +142,18 @@ function! s:map_types_completion(a,l,p) abort "{{{1
 endfunction
 
 " Commands {{{1
-" View maps in any mode
+" Map :: View maps in any mode {{{2
 command! -bang -nargs=1 -complete=customlist,s:map_types_completion Map
     \ call fzf#vim#maps(<q-args>, <bang>0)
 
-" Rg with preview window
+" Rg :: grep with preview window {{{2
 "   :Rg - Start fzf with hidden preview window that can be enabled with `?` key
 "   :RG - Execute rg with every change in search term (no fuzzy filter)
 "     ! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
 command! -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
 
-" Ag with preview window
+" Ag :: grep with preview window {{{2
 "   :Ag  - Start fzf with hidden preview window that can be enabled with `?` key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Ag
@@ -146,16 +163,18 @@ command! -bang -nargs=* Ag
     \ <bang>0
     \ )
 
-" Files command with preview window
+" Files :: files list with preview window {{{2
 command! -bang -nargs=* -complete=dir Files
     \ call fzf#vim#files(<q-args>,
     \ <bang>0 ? fzf#vim#with_preview('up:60%')
     \ : fzf#vim#with_preview('right:60%', '?'),
     \ <bang>0)
 
-" Mru :: most recently used files
+" Mru :: most recently used files {{{2
 command! -bang Mru call s:fzf_mru(<bang>0)
 
-" Maps {{{1
-noremap  <silent> <C-r>      :History:<CR>
-nnoremap <silent> <Leader>gg :RG<CR>
+" Sourced :: fuzzy :scriptnames {{{2
+command! -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
+
+
+" vim:fdl=1:

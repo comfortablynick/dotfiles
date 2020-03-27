@@ -1,9 +1,8 @@
 " ====================================================
 " Filename:    plugin/completion.vim
 " Description: Autocompletion plugin handling
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-11 16:12:54 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -20,9 +19,10 @@ let g:completion_filetypes = {
     \    'json',
     \    'bash',
     \    'sh',
-    \    'yaml',
     \    'vim',
     \    'lua',
+    \    'yaml',
+    \    'yaml.ansible',
     \ ],
     \ 'nvim-lsp': [
     \    'python',

@@ -65,13 +65,26 @@ if has('nvim')
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
     let &shadafile =
         \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
-    let g:package_path = expand('$XDG_DATA_HOME/nvim/site/pack')
     let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
     set pyxversion=3                                            " Use Python3 for pyx
-    let g:python3_host_prog = '/usr/local/bin/python3.7'
-    let g:package_path = expand('$HOME/.vim/pack')
+    " let g:python3_host_prog = '/usr/local/bin/python3.7'
+    let g:python3_host_prog = 'python3'
+
+    " Cursor shape (set to match Neovim default)
+    "
+    " Number key
+    " --------------------------
+    " 1 - blinking block
+    " 2 - fixed block (default)
+    " 3 - blinking underscore
+    " 4 - fixed underscore
+    " 5 - blinking pipe bar
+    " 6 - fixed pipe bar
+    let &t_SI = "\<esc>[6 q"                                    " Insert mode
+    let &t_SR = "\<esc>[4 q"                                    " Replace mode
+    let &t_EI = "\<esc>[2 q"                                    " Normal mode
 endif
 
 " Files/Swap/Backup {{{2
@@ -108,6 +121,7 @@ set nostartofline                                               " Don't move to 
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set virtualedit=onemore                                         " Allow cursor to extend past line
+set wildmenu                                                    " Enabled by default in nvim
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
@@ -167,6 +181,9 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 
 " Plugins {{{1
+" Package management {{{2
+let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
+
 " Packadd command {{{2
 function! s:packadd(arg, bang) abort
     execute 'silent! packadd '.a:arg

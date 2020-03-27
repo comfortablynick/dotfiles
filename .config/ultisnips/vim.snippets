@@ -37,15 +37,14 @@ snippet doc "Script documetation" b
 " ====================================================
 " Filename:    `!p snip.rv = str(file_relative_path())`
 " Description: ${1}
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: `date -I`
 " ====================================================
 $0
 endsnippet
 
 snippet scriptguard "script reinclusion guard" b
-const s:guard = 'g:loaded_`!p
+let s:guard = 'g:loaded_`!p
 if not snip.c:
 	relpath = file_relative_path()
 	relpath = '_'.join(os.path.split(relpath))

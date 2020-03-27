@@ -3,16 +3,7 @@ let {s:guard} = 1
 
 " Functions {{{1
 function! plugins#fzf#post() abort "{{{2
-    " let g:fzf_use_floating = get(g:, 'fzf_use_floating', 0)
-    let g:fzf_use_floating = 1
-
-    if g:fzf_use_floating == 1
-        " let g:fzf_layout = { 'window': 'lua require"window".create_centered_floating{width=0.9, height=0.6, border=true, hl="Comment"}' }
-        let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-    else
-        let g:fzf_layout = { 'down': '~30%' } " bottom split
-    endif
-
+    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
     let g:fzf_colors = {
         \ 'fg':      ['fg', 'Normal'],
         \ 'bg':      ['bg', 'Clear'],
@@ -43,12 +34,12 @@ endfunction
 
 function! s:fzf_rg(query, fullscreen) abort "{{{2
     let l:rg = {}
-    let l:rg.source = printf(
+    let l:rg['source'] = printf(
         \ 'rg --column --line-number --no-heading --color=always --smart-case %s || true',
         \ shellescape(a:query)
         \ )
     let l:rg['sink*'] = {val->s:grep_handler(val)}
-    let l:rg.options = 
+    let l:rg['options'] = 
         \ '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
         \ '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
         \ '--color hl:68,hl+:110 --prompt="Rg> "'
@@ -175,6 +166,5 @@ command! -bang Mru call s:fzf_mru(<bang>0)
 
 " Sourced :: fuzzy :scriptnames {{{2
 command! -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
-
 
 " vim:fdl=1:

@@ -1,10 +1,11 @@
 " ====================================================
-" Filename:    autoload/syntax.vim
-" Description: Syntax related functions
-" Author:      Nick Murphy
+" Filename:    autoload/syntax
+" Description: Syntax helpers
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-16 15:26:45 CDT
 " ====================================================
+let s:guard = 'g:loaded_autoload_syntax' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Enable embedded syntax
 function! syntax#enable_code_snip(filetype,start,end,textSnipHl) abort
@@ -77,6 +78,43 @@ function! syntax#get_color(attr, ...) abort
         endif
     endfor
     return ''
+endfunction
+
+" Derive a  new syntax group  (`to`) from  an existing one  (`from`), overriding
+" some attributes (if supplied as optional arguments)
+" Example: call syntax#derive('Statusline', 'StatuslineNC', 'guibg=red', 'guifg=black')
+function! syntax#derive(from, to, ...) abort
+    " Why `filter(split(...))`? {{{
+    "
+    " The output of `:hi ExistingHG`  can contain noise in certain circumstances
+    " (e.g. `-V15/tmp/log`, `-D`, `$ sudo`...).
+    " }}}
+    let l:new_attributes = a:0 > 0 ? a:000 : ['']
+    let l:old_attributes = join(map(copy(l:new_attributes), {_,v -> substitute(v, '=\S*', '', '')}), '\|')
+    let l:original_definition = filter(split(execute('hi '..a:from), '\n'), {_,v -> v =~# '^'..a:from })[0]
+    " the `from` syntax group is linked to another group
+    if l:original_definition =~# ' links to \S\+$'
+        " Why the `while` loop? {{{
+        "
+        " Well, we don't know how many links there are; there may be more than one.
+        " That is, the  `from` syntax group could be linked  to `A`, which could
+        " be linked to `B`, ...
+        " }}}
+        let l:g = 0
+        while l:original_definition =~# ' links to \S\+$' && l:g < 9
+            let l:g += 1
+            let l:link = matchstr(l:original_definition, ' links to \zs\S\+$')
+            let l:original_definition = filter(split(execute('hi '..l:link), '\n'), {_,v -> v =~# '^'..l:link })[0]
+            let l:original_group = l:link
+        endwhile
+    else
+        let l:original_group = a:from
+    endif
+    let l:pat = '^'..l:original_group..'\|xxx\|\<\%('..l:old_attributes..'\)=\S*'
+    let l:Rep = {m -> m[0] is# l:original_group ? a:to : ''}
+    execute 'hi'
+        \ substitute(l:original_definition, l:pat, l:Rep, 'g')
+        \ join(l:new_attributes)
 endfunction
 
 " Borrowed from fzf.vim

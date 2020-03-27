@@ -1,17 +1,16 @@
-scriptencoding utf-8
 " ====================================================
 " Filename:    plugin/statusline.vim
 " Description: Custom statusline
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 "              (adapted from code from Kabbaj Amine
 "               - amine.kabb@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-20 12:02:17 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
+scriptencoding utf-8
 
-" Variables {{{1
+" Variables {{{
 let g:default_statusline = '%<%f %h%m%r'
 let g:nf = !$MOSH_CONNECTION
 let g:sl  = {
@@ -56,25 +55,30 @@ let g:sl  = {
     \ },
     \ }
 
-" Use lua {{{1
-" lua require'statusline'
+" }}}
 
-" SL command {{{1
+" Set statusline
+set statusline=%!statusline#get(winnr())
+
+" SL :: toggle statusline items
 command! -nargs=? -complete=custom,statusline#complete_args SL
     \ call statusline#command(<f-args>)
 
-" Autocommands {{{1
-" augroup plugin_statusline
-"     autocmd!
-"     autocmd VimEnter,WinEnter,BufWinEnter * call statusline#refresh()
-" augroup END
-
-set statusline=%!statusline#get(winnr())
-
-" Highlights {{{1
 " The following lines must come after colorscheme declaration
-highlight User1 guifg=#ffffff  guibg=#660000
-highlight User2 guifg=#ffffff  guibg=#990033
-highlight User3 guifg=#ffffff  guibg=#666600
-highlight User4 guifg=#ffffff  guibg=#336633
-highlight User5 guifg=#ffffff  guibg=#336699
+" Remove bold from StatusLine
+function! s:set_user_highlights() abort
+    call syntax#derive('StatusLine', 'StatusLine', 'cterm=reverse', 'gui=reverse')
+    call syntax#derive('WarningMsg', 'User1')
+    call syntax#derive('WildMenu', 'User2', 'cterm=NONE', 'gui=NONE')
+    call syntax#derive('Visual', 'User3')
+    " call syntax#derive('StatusLine', 'User4', 'ctermbg=9', 'guibg=#af005f', 'cterm=reverse', 'gui=reverse')
+    highlight link User4 ErrorMsg
+    highlight link User5 Question
+endfunction
+
+call s:set_user_highlights()
+
+augroup plugin_statusline
+    autocmd!
+    autocmd ColorScheme * call s:set_user_highlights()
+augroup END

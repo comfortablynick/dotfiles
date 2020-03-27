@@ -66,8 +66,9 @@
   "yaml.format.enable": true,
   "yaml.validate": false,
   "yaml.schemas": {
-    "http://json.schemastore.org/ansible-stable-2.5": "/*"
+    "http://json.schemastore.org/ansible-stable-2.9": "*"
   },
+  "yaml.trace.server": "verbose",
 
   // Server definitions
   "languageserver": {

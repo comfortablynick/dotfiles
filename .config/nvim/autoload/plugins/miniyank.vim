@@ -2,6 +2,8 @@ let s:guard = 'g:loaded_autoload_plugins_miniyank' | if exists(s:guard) | finish
 let {s:guard} = 1
 
 function! plugins#miniyank#post() abort
+    let g:miniyank_maxitems = 50
+
     " Replace built-in put with autoput
     map p <Plug>(miniyank-autoput)
     map P <Plug>(miniyank-autoPut)
@@ -40,3 +42,26 @@ if !empty('g:loaded_fzf')
     map <A-p> :YanksAfter<CR>
     map <A-P> :YanksBefore<CR>
 endif
+
+function! plugins#miniyank#complete_yanks(findstart, base) abort
+    if a:findstart
+        " locate the start of the word
+        let l:line = getline('.')
+        let l:start = col('.') - 1
+        while l:start > 0 && l:line[l:start - 1] =~# '\a'
+            let l:start -= 1
+        endwhile
+        return l:start
+    else
+        " find months matching with "a:base"
+        let l:src = map(miniyank#read(), {_,v -> trim(join(v[0], '\n'))})
+        let l:res = []
+        for l:m in l:src
+            if l:m =~? '^' . a:base
+                call add(l:res, l:m)
+            endif
+        endfor
+        return l:res
+    endif
+endfunction
+set completefunc=plugins#miniyank#complete_yanks

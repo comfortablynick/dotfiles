@@ -21,8 +21,6 @@ let g:completion_filetypes = {
     \    'sh',
     \    'vim',
     \    'lua',
-    \    'yaml',
-    \    'yaml.ansible',
     \ ],
     \ 'nvim-lsp': [
     \    'python',
@@ -42,6 +40,8 @@ let g:completion_filetypes = {
     \    'snippets',
     \    'cmake',
     \    'mail',
+    \    'yaml',
+    \    'yaml.ansible',
     \ ],
     \ 'none': [
     \    'help',

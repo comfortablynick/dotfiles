@@ -30,6 +30,7 @@ function! statusline#get(winnr) abort "{{{2
 
     let l:sl .= '%='
     let l:sl .= '%( %{statusline#toggled()} '.g:sl.sep.'%)'
+    let l:sl .= '%( %{statusline#mucomplete_method()} %)'
     let l:sl .= '%( %{statusline#job_status()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#lsp_status()} '.g:sl.sep.'%)'
     let l:sl .= '%( %{statusline#coc_status()} %)'
@@ -499,6 +500,15 @@ endfunction
 function! statusline#linter_warnings() abort " {{{2
     let l:ct = s:coc_warning_ct() + s:ale_warning_ct() + s:lsp_warning_ct()
     return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
+endfunction
+
+function! statusline#mucomplete_method() abort "{{{2
+    if !exists('g:mucomplete_current_method')
+        \ || !s:is_active_file()
+        \ || winwidth(0) < g:sl.width.med
+        return ''
+    endif
+    return '['.g:mucomplete_current_method.']'
 endfunction
 
 function! statusline#toggled() abort " {{{2

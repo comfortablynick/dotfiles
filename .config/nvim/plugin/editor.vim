@@ -1,14 +1,13 @@
 " ====================================================
 " Filename:    plugin/editor.vim
 " Description: Editor behavior settings
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-23 14:08:15 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-" # Maps
+" Maps {{{1
 " Format paragraph and restore cursor position
 nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
 " Format buffer and restore cursor position
@@ -16,23 +15,14 @@ nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
-" # Abbreviations
+" Abbreviations {{{1
 cnoreabbrev <expr> h <SID>help_tab()
-cnoreabbrev <expr> l util#cabbr('l', 'lua')
+cnoreabbrev <expr> l map#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
-    \ util#cabbr('lp', 'lua p()<Left><C-R>=util#eatchar(''\s'')<CR>')
+    \ util#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
+inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
-inoreabbrev <expr> fff editor#foldmarker()
-
-" Call editor#help_tab() if ':h'
-function! s:help_tab() abort
-    if !(getcmdtype() == ':' && getcmdpos() <= 2)
-        return 'h'
-    endif
-    return editor#help_tab()
-endfunction
-
-" # Autocmds
+" # Autocmds {{{1
 augroup plugin_editor
     autocmd!
     " Remember last place in file
@@ -65,8 +55,17 @@ augroup plugin_editor
         \ if &l:number | setlocal norelativenumber | endif
 augroup end
 
-" Restore cursor position and folding
-function! s:recall_cursor_position() abort "{{{1
+" Functions {{{1
+" s:help_tab() :: Call editor#help_tab() if ':h' {{{2
+function! s:help_tab() abort
+    if !(getcmdtype() == ':' && getcmdpos() <= 2)
+        return 'h'
+    endif
+    return editor#help_tab()
+endfunction
+
+" s:recall_cursor_position() :: Restore cursor position and folding {{{2
+function! s:recall_cursor_position() abort
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 
@@ -126,3 +125,5 @@ function! s:recall_cursor_position() abort "{{{1
         execute 'normal! zv'
     endif
 endfunction
+
+" vim:fdl=1:

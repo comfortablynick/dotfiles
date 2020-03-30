@@ -120,11 +120,11 @@ endfunction
 
 function! plugins#coc#abbrev() abort "{{{1
     cnoreabbrev <expr> es
-        \ util#cabbr('es', 'CocCommand snippets.editSnippets')
+        \ map#cabbr('es', 'CocCommand snippets.editSnippets')
     cnoreabbrev <expr> ci
-        \ util#cabbr('ci', 'CocInfo')
+        \ map#cabbr('ci', 'CocInfo')
     cnoreabbrev <expr> cc
-        \ util#cabbr('cc', 'CocConfig')
+        \ map#cabbr('cc', 'CocConfig')
 endfunction
 
 function! plugins#coc#init() abort "{{{1

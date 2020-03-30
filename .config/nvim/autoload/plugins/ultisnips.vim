@@ -21,7 +21,7 @@ function! plugins#ultisnips#pre() abort
     inoremap <C-s> <C-O>:Snippets<CR>
 
     cnoreabbrev <expr> es
-        \ util#cabbr('es', 'UltiSnipsEdit')
+        \ map#cabbr('es', 'UltiSnipsEdit')
 endfunction
 
 " It is also possible to expand snippets or complete text using only <tab>. That

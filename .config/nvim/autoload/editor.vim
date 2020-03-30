@@ -1,30 +1,26 @@
 " ====================================================
 " Filename:    autoload/editor.vim
-" Description: General editor behavior functions
-" Author:      Nick Murphy
+" Description: Editor behavior functions
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-01 16:59:53 CST
 " ====================================================
+let s:guard = 'g:loaded_autoload_editor' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
-" Restore cursor position after motion
+" editor#restore_cursor_after() :: Restore cursor position after motion {{{1
 function! editor#restore_cursor_after(motion) abort
     let l:wv = winsaveview()
     execute 'normal! '.a:motion
     call winrestview(l:wv)
 endfunction
 
-" Insert fold marker + comment string if not already in comment
+" editor#foldmarker() :: Return fold marker + comment string if not already in comment {{{1
 function! editor#foldmarker() abort
     let l:open = matchstr(&foldmarker, '^[^,]*')
-    if syntax#is_comment_line()
-        let l:out = l:open
-    else
-        let l:out = printf(&commentstring, l:open)
-    endif
-    return l:out."\<C-R>=util#eatchar('\s')\<CR>"
+    return syntax#is_comment_line() ? l:open : printf(&commentstring, l:open)
 endfunction
 
-" Close buffer if not modifiable; quit if last buf
+" editor#quick_close_buffer() :: Close buffer if not modifiable; quit if last buf {{{1
 " Map this fn to q for desired filetypes
 function! editor#quick_close_buffer() abort
     if &l:modifiable
@@ -38,7 +34,7 @@ function! editor#quick_close_buffer() abort
     endif
 endfunction
 
-" Show help in new or existing tab
+" editor#help_tab() :: Show help in new or existing tab {{{1
 " From: https://github.com/airblade/vim-helptab
 function! editor#help_tab() abort
     let l:helptabnr = 0

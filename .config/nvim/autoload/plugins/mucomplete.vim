@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_mucomplete') | finish | endif
-let g:loaded_autoload_plugins_mucomplete = 1
+let s:guard = 'g:loaded_autoload_plugins_mucomplete' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#mucomplete#pre() abort
     set completeopt+=menuone,noselect
@@ -9,6 +9,7 @@ function! plugins#mucomplete#pre() abort
     let g:mucomplete#wordlist = {
         \ 'chordpro': Chords(),
         \ }
+
     " Default chain presets
     let l:mu_default = ['list', 'path', 'ulti', 'omni', 'user', 'keyn',]
     let l:mu_text_default = l:mu_default "+ ['dict', 'uspl']

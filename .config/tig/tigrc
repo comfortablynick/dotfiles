@@ -1,0 +1,18 @@
+#====================
+# generic
+#====================
+
+# vim-like g binding, 'gp' for git grep
+bind generic g none
+bind generic gp view-grep
+bind generic gg move-first-line
+bind generic G move-last-line
+
+# push
+bind main p none # override default pager binding
+bind main pp ?git push
+
+# scroll easily
+# bind generic <C-H> scroll-left
+# bind generic <C-L> scroll-right
+# bind generic <Esc>l screen-redraw # replace original <C-L>

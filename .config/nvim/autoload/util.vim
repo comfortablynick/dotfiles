@@ -1,16 +1,13 @@
+" ====================================================
+" Filename:    autoload/util.vim
+" Description: Utility functions
+" Author:      Nick Murphy (comfortablynick@gmail.com)
+" License:     MIT
+" ====================================================
 let s:guard = 'g:loaded_autoload_util' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-function! util#highlights() abort
-    let l:hl = execute(':highlight')
-    let l:qf = []
-    for l:line in split(l:hl, '\n')
-        call add(l:qf, l:line)
-    endfor
-    return l:qf
-endfunction
-
-" Capture output of command and return as list
+" util#capture() :: Capture output of command and return as list {{{1
 function! util#capture(cmd) abort
     if a:cmd =~# '^!'
         " System command output
@@ -33,7 +30,7 @@ function! util#capture(cmd) abort
     return split(l:out, '\n')
 endfunction
 
-" Redirect output of command to scratch buffer
+" util#redir() :: Redirect output of command to scratch buffer {{{1
 " Borrowed some from romainl:
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
 function! util#redir(cmd) abort
@@ -53,7 +50,7 @@ function! util#redir(cmd) abort
     call setline(1, l:lines)
 endfunction
 
-" Convert :scriptnames into qf format
+" util#scriptnames() :: Convert :scriptnames into qf format {{{1
 function! util#scriptnames() abort
     return map(
         \ map(util#capture('scriptnames'), { _, v -> split(v, "\\v:=\\s+")}),
@@ -61,7 +58,7 @@ function! util#scriptnames() abort
         \ )
 endfunction
 
-" Pretty format using python3 pprint
+" util#pformat() :: Pretty format using python3 pprint {{{1
 function! util#pformat(args) abort
 py3 <<END
 import vim
@@ -70,18 +67,3 @@ args = pformat(vim.eval('a:args'))
 END
     return py3eval('args')
 endfunction
-
-" Expand cabbr if it's the only command
-function! util#cabbr(lhs, rhs) abort
-    if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
-        return a:rhs
-    endif
-    return a:lhs
-endfunction
-
-" Eat space (from h: abbr)
-function! util#eatchar(pat) abort
-    let l:c = nr2char(getchar(0))
-    return (l:c =~ a:pat) ? '' : l:c
-endfunc
-

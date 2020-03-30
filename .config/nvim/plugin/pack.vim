@@ -1,9 +1,8 @@
 " ====================================================
 " Filename:    plugin/pack.vim
 " Description: Interface with packages and package manager
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-27 13:04:44 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_pack' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -35,6 +34,7 @@ function! s:deferred_load() abort
     silent! packadd clever-f.vim
     silent! packadd vim-sneak
     silent! packadd nvim-miniyank
+    silent! packadd tig-explorer.vim
 
     if $MOSH_CONNECTION != 1
         silent! packadd vim-devicons

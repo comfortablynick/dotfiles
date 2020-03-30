@@ -3,7 +3,7 @@
 " Description: Load vim packages and fire up package manager
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-27 11:46:21 CDT
+" Last Change: 2020-03-30 10:50:03 CDT
 " ====================================================
 command! -nargs=+ Pack call pack#add(<args>)
 
@@ -92,6 +92,7 @@ function! plugins#init() abort
     Pack 'airblade/vim-gitgutter'
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
+    Pack 'iberianpig/tig-explorer.vim'
 
     " Snippets
     Pack 'SirVer/ultisnips'

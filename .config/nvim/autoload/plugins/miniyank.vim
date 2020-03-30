@@ -64,4 +64,4 @@ function! plugins#miniyank#complete_yanks(findstart, base) abort
         return l:res
     endif
 endfunction
-set completefunc=plugins#miniyank#complete_yanks
+" set completefunc=plugins#miniyank#complete_yanks

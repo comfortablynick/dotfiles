@@ -1,35 +1,35 @@
 " ====================================================
 " Filename:    autoload/map.vim
 " Description: Utilities to assist with mapping/unmapping
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-20 15:07:22 CST
 " ====================================================
-if exists('g:loaded_autoload_map') | finish | endif
-let g:loaded_autoload_map = 1
+let s:guard = 'g:loaded_autoload_map' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
+" map#save() :: Save all settings of a map for later restoring {{{1
 function! map#save(keys, mode, global) abort
     let l:mappings = {}
     if a:global
         for l:key in a:keys
-            let buf_local_map = maparg(l:key, a:mode, 0, 1)
+            let l:buf_local_map = maparg(l:key, a:mode, 0, 1)
             silent! execute a:mode.'unmap <buffer> '.l:key
-            let map_info        = maparg(l:key, a:mode, 0, 1)
-            let l:mappings[l:key] = !empty(map_info)
-                \ ? map_info : {
+            let l:map_info        = maparg(l:key, a:mode, 0, 1)
+            let l:mappings[l:key] = !empty(l:map_info)
+                \ ? l:map_info : {
                 \ 'unmapped' : 1,
                 \ 'buffer'   : 0,
                 \ 'lhs'      : l:key,
                 \ 'mode'     : a:mode,
                 \ }
-            call map#restore({l:key : buf_local_map})
+            call map#restore({l:key : l:buf_local_map})
         endfor
 
     else
         for l:key in a:keys
-            let map_info        = maparg(l:key, a:mode, 0, 1)
-            let l:mappings[l:key] = !empty(map_info)
-                \ ? map_info : {
+            let l:map_info        = maparg(l:key, a:mode, 0, 1)
+            let l:mappings[l:key] = !empty(l:map_info)
+                \ ? l:map_info : {
                 \ 'unmapped' : 1,
                 \ 'buffer'   : 1,
                 \ 'lhs'      : l:key,
@@ -40,6 +40,7 @@ function! map#save(keys, mode, global) abort
     return l:mappings
 endfunction
 
+" map#restore() :: Restore saved map {{{1
 function! map#restore(mappings) abort
     for l:mapping in values(a:mappings)
         if !has_key(l:mapping, 'unmapped') && !empty(l:mapping)
@@ -59,3 +60,18 @@ function! map#restore(mappings) abort
         endif
     endfor
 endfunction
+
+" map#cabbr() :: Safe expansion of command-line abbreviations {{{1
+function! map#cabbr(lhs, rhs) abort
+    if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
+        return a:rhs
+    endif
+    return a:lhs
+endfunction
+
+" map#eatchar() :: Eat character if it matches pattern {{{1
+" From :helpgrep Eatchar
+function! map#eatchar(pat) abort
+    let l:c = nr2char(getchar(0))
+    return (l:c =~ a:pat) ? '' : l:c
+endfunc

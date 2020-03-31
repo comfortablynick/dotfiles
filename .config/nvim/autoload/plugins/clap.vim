@@ -40,7 +40,7 @@ function! s:clap_win_disable_fold() abort
     let l:clap = get(g:, 'clap')
     if empty(l:clap) | return | endif
     let l:winid = l:clap['display']['winid']
-    call nvim_win_set_option(l:winid, 'foldenable', v:false)
+    call setwinvar(l:winid, '&foldenable', 0)
 endfunction
 
 augroup autoload_plugins_clap

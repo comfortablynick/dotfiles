@@ -16,23 +16,29 @@ nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
 " Abbreviations {{{1
-cnoreabbrev <expr> h <SID>help_tab()
+" Open help in new or existing tab
+cnoreabbrev <expr> h
+    \ map#cabbr('h', {-><SID>help_tab('help')})
+cnoreabbrev <expr> hg
+    \ map#cabbr('hg', {-><SID>help_tab('helpgrep')})
+" Lua
 cnoreabbrev <expr> l map#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
+" Fold marker
 inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
-" # Autocmds {{{1
+" Autocmds {{{1
+" augroup plugin_editor {{{2
 augroup plugin_editor
     autocmd!
-    " Remember last place in file
+    " Remember last place in file {{{2
     autocmd BufWinEnter * call s:recall_cursor_position()
-
-    " Close certain read-only filetypes with only 'q'
+    " Close certain read-only filetypes with only 'q' {{{2
     " Not likely to be using macros in these files
     autocmd FileType netrw,help,fugitive,qf
         \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
-
+    " Neovim terminal {{{2
     if has('nvim')
         " Terminal starts in insert mode
         autocmd TermOpen * :startinsert
@@ -41,14 +47,12 @@ augroup plugin_editor
         " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
         autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
     endif
-
-    " Set cursorline depending on mode, if cursorline is enabled locally
+    " Set cursorline depending on mode, if cursorline is enabled locally {{{2
     if &l:cursorline
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
-
-    " Toggle relativenumber depending on mode and focus
+    " Toggle relativenumber depending on mode and focus {{{2
     autocmd FocusGained,WinEnter,BufEnter *
         \ if &l:number | setlocal relativenumber | endif
     autocmd FocusLost,WinLeave,BufLeave *
@@ -56,12 +60,29 @@ augroup plugin_editor
 augroup end
 
 " Functions {{{1
-" s:help_tab() :: Call editor#help_tab() if ':h' {{{2
-function! s:help_tab() abort
-    if !(getcmdtype() == ':' && getcmdpos() <= 2)
-        return 'h'
+" s:help_tab() :: Show help in new or existing tab {{{2
+" Adapted from https://github.com/airblade/vim-helptab
+function! s:help_tab(cmd) abort
+    let l:helptabnr = 0
+    for l:i in range(tabpagenr('$'))
+        let l:tabnr = l:i + 1
+        for l:bufnr in tabpagebuflist(l:tabnr)
+            if getbufvar(l:bufnr, '&ft') ==# 'help'
+                let l:helptabnr = l:tabnr
+                break
+            endif
+        endfor
+    endfor
+
+    if l:helptabnr
+        if tabpagenr() == l:helptabnr
+            return a:cmd
+        else
+            return 'tabnext '.l:helptabnr.' | '.a:cmd
+        endif
+    else
+        return 'tab '.a:cmd
     endif
-    return editor#help_tab()
 endfunction
 
 " s:recall_cursor_position() :: Restore cursor position and folding {{{2

@@ -64,6 +64,9 @@ endfunction
 " map#cabbr() :: Safe expansion of command-line abbreviations {{{1
 function! map#cabbr(lhs, rhs) abort
     if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
+        if type(a:rhs) == v:t_func
+            return a:rhs()
+        endif
         return a:rhs
     endif
     return a:lhs

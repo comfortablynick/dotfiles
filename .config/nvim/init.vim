@@ -98,6 +98,7 @@ filetype plugin on                                              " Allow loading 
 syntax enable                                                   " Syntax highlighting on
 
 set encoding=utf-8                                              " Default to unicode
+scriptencoding utf-8                                            " Encoding used in sourced script
 set shell=sh                                                    " Use posix-compatible shell
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF

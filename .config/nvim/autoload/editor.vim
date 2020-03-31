@@ -33,28 +33,3 @@ function! editor#quick_close_buffer() abort
         bwipeout
     endif
 endfunction
-
-" editor#help_tab() :: Show help in new or existing tab {{{1
-" From: https://github.com/airblade/vim-helptab
-function! editor#help_tab() abort
-    let l:helptabnr = 0
-    for l:i in range(tabpagenr('$'))
-        let l:tabnr = l:i + 1
-        for l:bufnr in tabpagebuflist(l:tabnr)
-            if getbufvar(l:bufnr, '&ft') ==# 'help'
-                let l:helptabnr = l:tabnr
-                break
-            endif
-        endfor
-    endfor
-
-    if l:helptabnr
-        if tabpagenr() == l:helptabnr
-            return 'h'
-        else
-            return 'tabnext '.l:helptabnr.' | h'
-        endif
-    else
-        return 'tab h'
-    endif
-endfunction

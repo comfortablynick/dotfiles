@@ -34,6 +34,8 @@ function! s:deferred_load() abort
     silent! packadd clever-f.vim
     silent! packadd vim-sneak
     silent! packadd nvim-miniyank
+    silent! packadd vim-tmux-navigator
+    silent! packadd better-vim-tmux-resizer
     silent! packadd tig-explorer.vim
 
     if $MOSH_CONNECTION != 1

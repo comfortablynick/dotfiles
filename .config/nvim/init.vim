@@ -101,6 +101,7 @@ set encoding=utf-8                                              " Default to uni
 set shell=sh                                                    " Use posix-compatible shell
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
+set history=10000                                               " Use max history entries
 set synmaxcol=200                                               " Don't try to highlight if line > 200 chr
 set laststatus=2                                                " Always show statusline
 set showtabline=2                                               " Always show tabline

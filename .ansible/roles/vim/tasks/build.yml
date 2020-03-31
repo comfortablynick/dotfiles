@@ -24,12 +24,14 @@
   git:
     repo: https://github.com/vim/vim
     dest: "{{ vim_source_dir }}"
+    depth: 1
+    force: yes
   register: vim_git_clone
 
-- name: Show message if git has changes
-  debug:
-    msg: Vim has upstream changes! Building...
-  when: vim_git_clone.changed
+# - name: Show message if git has changes
+#   debug:
+#     msg: Vim has upstream changes! Building...
+#   when: vim_git_clone.changed
 
 - name: Show message if git does not have changes
   debug:

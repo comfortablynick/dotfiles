@@ -19,7 +19,7 @@ nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 cnoreabbrev <expr> h <SID>help_tab()
 cnoreabbrev <expr> l map#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
-    \ util#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
+    \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " # Autocmds {{{1

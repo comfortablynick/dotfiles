@@ -210,6 +210,14 @@ function! s:col_no() abort "{{{2
     return printf('%3d', virtcol('.'))
 endfunction
 
+function! statusline#unicode_number(num) abort "{{{2
+    if a:num > 0 && a:num <= 20
+        return nr2char(char2nr('① ') + (a:num - 1))
+    else
+        return a:num
+    endif
+endfunction
+
 function! statusline#line_info_full() abort "{{{2
     return !s:is_active_file() ? '' :
         \ printf('%s %s %s %s :%s',
@@ -232,7 +240,7 @@ endfunction
 function! statusline#bufnr() abort "{{{2
     if ! s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
-    return buflisted(l:bufnr) ? '['.l:bufnr.']' : ''
+    return buflisted(l:bufnr) ? '  '.statusline#unicode_number(l:bufnr).'  ' : ''
 endfunction
 
 function! statusline#bufnr_inactive() abort "{{{2

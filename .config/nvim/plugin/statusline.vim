@@ -68,7 +68,7 @@ command! -nargs=? -complete=custom,statusline#complete_args SL
 " Remove bold from StatusLine
 function! s:set_user_highlights() abort
     call syntax#derive('StatusLine', 'StatusLine', 'cterm=reverse', 'gui=reverse')
-    call syntax#derive('WarningMsg', 'User1')
+    call syntax#derive('IncSearch', 'User1')
     call syntax#derive('WildMenu', 'User2', 'cterm=NONE', 'gui=NONE')
     call syntax#derive('Visual', 'User3')
     " call syntax#derive('StatusLine', 'User4', 'ctermbg=9', 'guibg=#af005f', 'cterm=reverse', 'gui=reverse')

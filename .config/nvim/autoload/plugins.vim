@@ -1,10 +1,12 @@
 " ====================================================
 " Filename:    autoload/plugins.vim
-" Description: Load vim packages and fire up package manager
-" Author:      Nick Murphy
+" Description: Load vim plugins and package manager
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-30 10:50:03 CDT
 " ====================================================
+let s:guard = 'g:loaded_autoload_plugins' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
+
 command! -nargs=+ Pack call pack#add(<args>)
 
 function! plugins#init() abort
@@ -105,6 +107,7 @@ function! plugins#init() abort
 
     " Tmux
     Pack 'christoomey/vim-tmux-navigator'
+    Pack 'RyanMillerC/better-vim-tmux-resizer'
     Pack 'comfortablynick/vim-tmux-runner'
 endfunction
 

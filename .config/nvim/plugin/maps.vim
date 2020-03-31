@@ -1,9 +1,8 @@
 " ====================================================
 " Filename:    plugin/maps.vim
 " Description: General keymaps
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-16 18:39:45 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_maps' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -26,12 +25,13 @@ vnoremap <S-Tab> <Cmd>normal! <gv<CR>
 
 " Window navigation {{{1
 " `CTRL+{h,j,k,l}` to navigate in normal mode
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" `ALT+{h,j,k,l}` to navigate windows from any mode
+" `ALT+{h,j,k,l}` to navigate windows from other modes
+" Note: vim has trouble with Meta/Alt key
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
@@ -40,10 +40,6 @@ inoremap <A-h> <C-\><C-N><C-w>h
 inoremap <A-j> <C-\><C-N><C-w>j
 inoremap <A-k> <C-\><C-N><C-w>k
 inoremap <A-l> <C-\><C-N><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
 
 " Delete window to the left/below/above/to the right with d<C-h/j/k/l>.
 nnoremap d<C-j> <C-w>j<C-w>c

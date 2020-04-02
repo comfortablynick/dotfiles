@@ -58,6 +58,7 @@ function! plugins#init() abort
     Pack 'kyazdani42/nvim-tree.lua'
     Pack 'justinmk/vim-dirvish'
     Pack 'haorenW1025/floatLf-nvim'
+    Pack 'srstevenson/vim-picker'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'

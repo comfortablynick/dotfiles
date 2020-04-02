@@ -6,12 +6,13 @@ function! plugins#mucomplete#pre() abort
     set shortmess+=c
     let g:mucomplete#enable_auto_at_startup = 1
 
-    let g:mucomplete#wordlist = {
-        \ 'chordpro': Chords(),
-        \ }
+    " let g:mucomplete#wordlist = {
+    "     \ 'chordpro': Chords(),
+    "     \ }
 
     " Default chain presets
-    let l:mu_default = ['list', 'path', 'ulti', 'omni', 'user', 'keyn',]
+    " call mucomplete#add_user_mapping('chord', "\<C-R>=ChordComplete()\<CR>")
+    let l:mu_default = ['list', 'path', 'ulti', 'omni', 'user', 'keyn']
     let l:mu_text_default = l:mu_default "+ ['dict', 'uspl']
 
     let g:mucomplete#chains = {

@@ -7,13 +7,12 @@
 let s:guard = 'g:loaded_autoload_pack' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-function! pack#init() abort
-    " Make Pack command available before packages are added
-    command! -nargs=+ Pack call pack#add(<args>)
-endfunction
+augroup autoload_pack
+    autocmd!
+augroup END
 
 " Package manager wrapper functions
-function! s:pack_init() abort
+function! pack#init() abort "{{{1
     let l:pack_dir = get(g:, 'package_path', expand(has('nvim') ? '$XDG_DATA_HOME/nvim/site' : '$HOME/.vim'))
     let g:package_manager = get(g:, 'package_manager', 'minpac')
     if g:package_manager ==# 'minpac'
@@ -45,14 +44,14 @@ function! s:pack_init() abort
             echoerr "vim-packager doesn't exist! Check download location"
             return
         endif
-        call packager#init({'dir': l:pack_dir.'/pack/packager'})
+        call packager#init({'dir': l:pack_dir.'/pack/packager', 'jobs': 0})
         call pack#add('kristijanhusak/vim-packager')
     else
         echoerr 'Unrecognized package manager: '.g:package_manager
     endif
 endfunction
 
-function! s:pack_add_all() abort
+function! s:pack_add_all() abort "{{{1
     if !exists('g:packlist')
         echoerr "Variable g:packlist doesn't exist! Aborting."
         return
@@ -66,7 +65,7 @@ function! s:pack_add_all() abort
     endfor
 endfunction
 
-function! s:pack_update(...) abort
+function! s:pack_update(...) abort "{{{1
     if g:package_manager ==# 'minpac'
         return minpac#update('', {'do': 'call minpac#status()'})
     elseif g:package_manager ==# 'vim-packager'
@@ -74,47 +73,34 @@ function! s:pack_update(...) abort
     endif
 endfunction
 
-function! pack#add(repo, ...) abort
-    call s:pack_init()
+function! pack#add(repo, ...) abort "{{{1
     let l:opts = extend(copy(get(a:000, 0, {})),
         \ {'type': 'opt'}, 'keep')
     let l:name = substitute(a:repo, '^.*/', '', '')
     " Allow simple `if` (e.g., machine-specific) conditions to adding the plugin
     " Note: only evaluated during PackUpdate
     if has_key(l:opts, 'if') && !eval(l:opts.if) | return | endif
-    if has_key(l:opts, 'rplugin') && eval(l:opts.rplugin)
-        let g:packlist_rplugins = add(get(g:, 'packlist_rplugins', []), l:name)
-    endif
-    if has_key(l:opts, 'for')
-        let l:ft = type(l:opts.for) == v:t_list ? join(l:opts.for, ',') : l:opts.for
-        execute printf('autocmd FileType %s packadd %s', l:ft, l:name)
-    else
     let l:item = {}
     let l:item[a:repo] = l:opts
     let g:packlist = extend(get(g:, 'packlist', {}), l:item)
-    end
 endfunction
 
-function! pack#install(...) abort
-    call s:pack_init()
+function! pack#install(...) abort "{{{1
     call s:pack_add_all()
     return call('packager#install', a:000)
 endfunction
 
-function! pack#update(...) abort
-    call s:pack_init()
+function! pack#update(...) abort "{{{1
     call s:pack_add_all()
     return call('s:pack_update', a:000)
 endfunction
 
-function! pack#clean(...) abort
-    call s:pack_init()
+function! pack#clean(...) abort "{{{1
     call s:pack_add_all()
     return call('packager#clean', a:000)
 endfunction
 
-function! pack#status(...) abort
-    call s:pack_init()
+function! pack#status(...) abort "{{{1
     call s:pack_add_all()
     return call('packager#status', a:000)
 endfunction

@@ -21,16 +21,17 @@ function! plugins#coc#pre() abort "{{{1
         \ 'coc-yaml',
         \ 'coc-pairs',
         \ ]
-endfunction
 
-function! plugins#coc#preconfig() abort "{{{1
-    " This has to be called explicitly before the plugin loads
     if $MOSH_CONNECTION
         let g:coc_user_config = {                      
             \ 'explorer.icon.enableNerdfont': v:false,
             \ 'explorer.icon.enableVimDevicons': v:false,
             \}
     endif
+endfunction
+
+function! plugins#coc#preconfig() abort "{{{1
+    " This has to be called explicitly before the plugin loads
 endfunction
 
 

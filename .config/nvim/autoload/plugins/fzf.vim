@@ -82,7 +82,7 @@ endfunction
 function! s:fzf_scriptnames(fullscreen) abort "{{{2
     let l:spec = {}
     let l:spec['source'] = split(execute('scriptnames'), '\n')
-    let l:spec['sink'] = {sel->execute('edit'..trim(split(sel, ' ')[-1]))}
+    let l:spec['sink'] = {sel->execute('edit '..trim(split(sel, ' ')[-1]))}
     let l:spec['options'] = '--color hl:68,hl+:110 --prompt="Scriptnames:> "'
 
     let l:spec = fzf#vim#with_preview(

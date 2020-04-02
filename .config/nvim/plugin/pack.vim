@@ -48,10 +48,10 @@ endfunction
 
 function! s:deferred_load_filetype() abort
     let l:comptype = completion#get_type(&filetype)
-    if l:comptype ==# 'mucomplete' || l:comptype ==# 'nvim-lsp'
-        silent! packadd vim-mucomplete
-        silent! packadd ultisnips
-    endif
+    " if l:comptype ==# 'mucomplete' || l:comptype ==# 'nvim-lsp'
+    "     silent! packadd vim-mucomplete
+    "     silent! packadd ultisnips
+    " endif
     if l:comptype !=# 'coc' && !exists('g:did_coc_loaded')
         silent! packadd ale
         silent! packadd vim-gitgutter

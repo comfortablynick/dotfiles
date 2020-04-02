@@ -11,3 +11,4 @@ Cargo.lock
 .mypy_cache/
 node_modules/
 */pipx/venvs/*
+.vim/

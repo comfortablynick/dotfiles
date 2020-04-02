@@ -10,16 +10,15 @@ let g:use_init_lua = 0
 " Autocmds {{{2
 augroup plugin_config_handler
     autocmd!
-    autocmd! SourcePre * call s:source_handler(expand('<afile>'), 'pre')
-    autocmd! SourcePost * call s:source_handler(expand('<afile>'), 'post')
+    autocmd SourcePre * call s:source_handler(expand('<afile>'), 'pre')
+    autocmd SourcePost * call s:source_handler(expand('<afile>'), 'post')
 augroup END
 
+" Global Variables {{{2
 let g:plugin_config_files = map(
     \ globpath(&runtimepath, 'autoload/plugins/*.vim', 0, 1),
     \ {_, val -> fnamemodify(val, ':t:r')}
     \ )
-
-" Debug Variables {{{2
 let g:plugins_sourced = []
 let g:plugins_skipped = []
 let g:plugins_called = []
@@ -85,6 +84,8 @@ else
     let &t_SI = "\<esc>[6 q"                                    " Insert mode
     let &t_SR = "\<esc>[4 q"                                    " Replace mode
     let &t_EI = "\<esc>[2 q"                                    " Normal mode
+    filetype plugin on                                          " Allow loading .vim files for different filetypes
+    syntax enable                                               " Syntax highlighting on
 endif
 
 " Files/Swap/Backup {{{2
@@ -94,9 +95,6 @@ set backup
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{2
-filetype plugin on                                              " Allow loading .vim files for different filetypes
-syntax enable                                                   " Syntax highlighting on
-
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
 set shell=sh                                                    " Use posix-compatible shell

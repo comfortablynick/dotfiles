@@ -7,9 +7,12 @@
 let s:guard = 'g:loaded_autoload_plugins' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-command! -nargs=+ Pack call pack#add(<args>)
+let g:package_path = get(g:, 'package_path', expand(has('nvim') ? '$XDG_DATA_HOME/nvim/site' : '$HOME/.vim'))
 
 function! plugins#init() abort
+    call pack#init()
+    command! -nargs=+ Pack call pack#add(<args>)
+
     " General
     Pack 'chrisbra/Colorizer'
     Pack 'mhinz/vim-startify'

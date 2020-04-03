@@ -57,8 +57,6 @@ nnoremap <silent> [t :tabprevious<CR>
 nnoremap <silent> ]t :tabnext<CR>
 
 " Buffer navigation {{{1
-" Ctrl + [n]ext/[p]revious buffer
-nnoremap <silent> <C-n> :bnext<CR>
-nnoremap <silent> <C-p> :bprevious<CR>
-
-noremap <silent> <F5> :UndotreeToggle<CR>
+nnoremap <silent> <Tab> :bnext<CR>
+nnoremap <silent> <S-Tab> :bprevious<CR>
+nnoremap <silent> <Leader>w :bd<CR>

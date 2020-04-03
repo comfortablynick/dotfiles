@@ -51,7 +51,7 @@ function! plugins#init() abort
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
-    Pack 'junegunn/fzf',                {'do': ':packadd fzf \| :call fzf#install'}
+    Pack 'junegunn/fzf',                {'do': './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin'}
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
@@ -115,7 +115,7 @@ function! plugins#init() abort
     Pack 'comfortablynick/vim-tmux-runner'
 endfunction
 
-" Packadd if needed and call supplied function
+" packadd if needed and call supplied function
 function! plugins#lazy_call(package, funcname, ...) abort
     if !exists('*'.a:funcname)
         execute 'packadd' a:package

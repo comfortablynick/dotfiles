@@ -1,13 +1,13 @@
 " ====================================================
 " Filename:    plugin/runner.vim
 " Description: Run commands located in justfile
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-29 01:01:35 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_runner' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
+" TODO: replace with framework like asynctasks?
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
 let g:run_code_with = 'term'
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
@@ -34,6 +34,6 @@ nmap <silent> <Leader>a <Plug>(VtrAttachToPane)
 nmap <silent> <Leader>x <Plug>(VtrKillRunner)
 
 nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
-nnoremap <silent> <Leader>w :call <SID>run('install')<CR>
+nnoremap <silent> <Leader>i :call <SID>run('install')<CR>
 nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
 " nnoremap <silent> <Leader>c :call runner#run_cmd('test')<CR>

@@ -240,7 +240,8 @@ endfunction
 function! statusline#bufnr() abort "{{{2
     if ! s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
-    return buflisted(l:bufnr) ? '  '.statusline#unicode_number(l:bufnr).'  ' : ''
+    return buflisted(l:bufnr) ? '  '.l:bufnr.' ' : ''
+   " return buflisted(l:bufnr) ? '  '.statusline#unicode_number(l:bufnr).'  ' : ''
 endfunction
 
 function! statusline#bufnr_inactive() abort "{{{2

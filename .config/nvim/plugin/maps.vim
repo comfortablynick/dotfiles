@@ -59,4 +59,4 @@ nnoremap <silent> ]t :tabnext<CR>
 " Buffer navigation {{{1
 nnoremap <silent> <Tab> :bnext<CR>
 nnoremap <silent> <S-Tab> :bprevious<CR>
-nnoremap <silent> <Leader>w :bd<CR>
+nnoremap <silent> <Leader>q :bd<CR>

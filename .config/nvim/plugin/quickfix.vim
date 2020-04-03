@@ -3,7 +3,7 @@
 " Description: Quickfix/location list related config
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-27 16:47:33 CST
+" Last Change: 2020-04-03 16:17:03 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_quickfix' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -18,4 +18,4 @@ let g:quickfix_size = 20
 " augroup end
 
 " Toggle quickfix
-nnoremap <silent> <Leader>q :call quickfix#toggle()<CR>
+nnoremap <silent> Q :call quickfix#toggle()<CR>

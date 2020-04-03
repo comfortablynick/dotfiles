@@ -9,7 +9,7 @@ let {s:guard} = 1
 
 " Maps {{{1
 " Format paragraph and restore cursor position
-nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
+" nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
 " Format buffer and restore cursor position
 nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position

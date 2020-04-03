@@ -1,7 +1,8 @@
-if exists('g:loaded_autoload_plugins_clap') | finish | endif
-let g:loaded_autoload_plugins_clap = 1
+let s:guard = 'g:loaded_autoload_plugins_clap' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
-function! plugins#clap#post() abort
+" Clap setup {{{1
+function! plugins#clap#post() abort "{{{2
     " General settings
     let g:clap_multi_selection_warning_silent = 1
     let g:clap_enable_icon = $MOSH_CONNECTION == 0
@@ -13,11 +14,9 @@ function! plugins#clap#post() abort
 
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
-    nnoremap <silent> <Leader>h :Clap command_history<CR>
-    nnoremap <silent> <Leader>c :Clap quick_cmd<CR>
 endfunction
 
-function! s:clap_on_enter() abort
+function! s:clap_on_enter() abort "{{{2
     augroup ClapEnsureAllClosed
         autocmd!
         autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
@@ -29,20 +28,21 @@ function! s:clap_on_enter() abort
     endif
 endfunction
 
-function! s:clap_on_exit() abort
+function! s:clap_on_exit() abort "{{{2
     if exists('s:mucomplete_disabled')
         MUcompleteAutoOn
         unlet s:mucomplete_disabled
     endif
 endfunction
 
-function! s:clap_win_disable_fold() abort
+function! s:clap_win_disable_fold() abort "{{{2
     let l:clap = get(g:, 'clap')
     if empty(l:clap) | return | endif
     let l:winid = l:clap['display']['winid']
     call setwinvar(l:winid, '&foldenable', 0)
 endfunction
 
+" Autocommands {{{2
 augroup autoload_plugins_clap
     autocmd!
     " Set autocmd to close clap win if we leave

@@ -1,18 +1,19 @@
 " ====================================================
 " Filename:    autoload/autoclose.vim
 " Description: Autoclose windows if they are last ones open
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-04-03 10:56:29 CDT
 " ====================================================
+let s:guard = 'g:loaded_autoload_autoclose' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! autoclose#next_normal_window() abort
     for l:i in range(1, winnr('$'))
-        let buf = winbufnr(l:i)
+        let l:buf = winbufnr(l:i)
         " skip unlisted buffers
-        if !buflisted(buf) | continue | endif
+        if !buflisted(l:buf) | continue | endif
         " skip temporary buffers with buftype set
-        if getbufvar(buf, '&buftype') !=? '' | continue | endif
+        if getbufvar(l:buf, '&buftype') !=? '' | continue | endif
         " skip the preview window
         if getwinvar(l:i, '&previewwindow') | continue | endif
         " skip current window

@@ -4,23 +4,23 @@
   tempfile:
     state: directory
     suffix: _tmux_build
-  register: build_dir
+  register: temp_dir
 
 - name: Print temp dir
   debug:
-    var: build_dir
+    var: temp_dir
     verbosity: 1
 
 - name: Download libevent
   unarchive:
     src: https://github.com/libevent/libevent/releases/download/release-{{ libevent_version }}-stable/libevent-{{ libevent_version }}-stable.tar.gz
-    dest: "{{ build_dir.path }}"
+    dest: "{{ temp_dir.path }}"
     remote_src: yes
 
 - name: Build libevent
   command: "{{ item }}"
   args:
-    chdir: "{{ build_dir.path }}/libevent-{{ libevent_version }}-stable"
+    chdir: "{{ temp_dir.path }}/libevent-{{ libevent_version }}-stable"
   loop:
     - ./configure --prefix={{ install_path }}
     - make -j{{ make_concurrency }}
@@ -29,32 +29,47 @@
 - name: Download ncurses
   unarchive:
     src: https://ftp.gnu.org/pub/gnu/ncurses/ncurses-{{ ncurses_version }}.tar.gz
-    dest: "{{ build_dir.path }}"
+    dest: "{{ temp_dir.path }}"
     remote_src: yes
 
 - name: Build ncurses
   command: "{{ item }}"
   args:
-    chdir: "{{ build_dir.path }}/ncurses-{{ ncurses_version }}"
+    chdir: "{{ temp_dir.path }}/ncurses-{{ ncurses_version }}"
   loop:
     - ./configure --prefix={{ install_path }}
     - make -j{{ make_concurrency }}
     - make install
 
-- name: Download tmux
-  unarchive:
-    src: https://github.com/tmux/tmux/releases/download/{{ tmux_version }}/tmux-{{ tmux_release }}.tar.gz
-    dest: "{{ build_dir.path }}"
-    remote_src: yes
+# - name: Download tmux
+#   unarchive:
+#     src: https://github.com/tmux/tmux/releases/download/{{ tmux_version }}/tmux-{{ tmux_release }}.tar.gz
+#     dest: "{{ temp_dir.path }}"
+#     remote_src: yes
+
+- name: Clone tmux master
+  git:
+    repo: https://github.com/tmux/tmux
+    dest: "{{ tmux_source_dir }}"
+    depth: 1
+    force: yes
+  register: tmux_git_clone
+
+- name: Show message if git does not have changes
+  debug:
+    msg: No upstream tmux changes! Skipping build.
+  when: not tmux_git_clone.changed
 
 - name: Build and install tmux
   command: "{{ item }}"
   args:
-    chdir: "{{ build_dir.path }}/tmux-{{ tmux_release }}"
+    chdir: "{{ tmux_source_dir }}"
   loop:
+    - sh autogen.sh
     - >-
       ./configure --prefix={{ install_path }}
         CPPFLAGS="-I{{ install_path }}/include -I{{ install_path }}/include/ncurses"
         LDFLAGS="-L{{ install_path }}/lib"
     - make -j{{ make_concurrency }}
     - make install
+  when: tmux_git_clone.changed

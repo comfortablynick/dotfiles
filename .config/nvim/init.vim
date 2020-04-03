@@ -146,7 +146,6 @@ set ignorecase                                                  " Ignore case wh
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
 set magic                                                       " Magic escaping for regex
-" set gdefault                                                    " Global replacement by default
 
 " Grep {{{2
 " use ripgrep as grepprg
@@ -163,7 +162,6 @@ set undofile                                                    " Enable persist
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
-" let &winblend = $VIM_SSH_COMPAT ? 0 : 10                        " Transparency of floating windows (0=opaque, 100=transparent)
 
 " Line numbers {{{2
 set number                                                      " Show linenumbers
@@ -186,7 +184,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Packadd command {{{2
 function! s:packadd(arg, bang) abort
-    execute 'silent! packadd '.a:arg
+    execute 'silent! packadd'.a:arg
     if a:bang | doautoall BufRead | endif
 endfunction
 

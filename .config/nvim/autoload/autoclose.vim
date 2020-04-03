@@ -3,21 +3,21 @@
 " Description: Autoclose windows if they are last ones open
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2019-12-05
+" Last Change: 2020-04-03 10:56:29 CDT
 " ====================================================
 
 function! autoclose#next_normal_window() abort
-    for i in range(1, winnr('$'))
-        let buf = winbufnr(i)
+    for l:i in range(1, winnr('$'))
+        let buf = winbufnr(l:i)
         " skip unlisted buffers
         if !buflisted(buf) | continue | endif
         " skip temporary buffers with buftype set
         if getbufvar(buf, '&buftype') !=? '' | continue | endif
         " skip the preview window
-        if getwinvar(i, '&previewwindow') | continue | endif
+        if getwinvar(l:i, '&previewwindow') | continue | endif
         " skip current window
-        if i == winnr() | continue | endif
-        return i
+        if l:i == winnr() | continue | endif
+        return l:i
     endfor
     return -1
 endfunction

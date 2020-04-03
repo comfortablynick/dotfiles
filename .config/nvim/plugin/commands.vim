@@ -3,7 +3,7 @@
 " Description: General commands
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-23 14:28:43 CDT
+" Last Change: 2020-04-03 10:02:52 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_commands' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -22,6 +22,7 @@ command! -bang -complete=buffer -nargs=? Bclose
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle packadd undotree|UndotreeToggle|UndotreeFocus
+noremap <silent> <F5> :UndotreeToggle<CR>
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq

@@ -45,7 +45,7 @@ function! s:fzf_rg(query, fullscreen) abort "{{{2
         \ '--color hl:68,hl+:110 --prompt="Rg> "'
     let l:rg = fzf#vim#with_preview(
         \ fzf#wrap(l:rg, a:fullscreen),
-        \ a:fullscreen ? 'up:60%' : 'right:60%:hidden',
+        \ a:fullscreen ? 'up:60%' : 'right:60%',
         \ '?'
         \ )
     call fzf#run(l:rg)
@@ -60,7 +60,7 @@ function! s:fzf_rg_passthrough(query, fullscreen) "{{{2
     call fzf#vim#grep(
         \ l:initial_command,
         \ 1,
-        \ fzf#vim#with_preview(l:spec, a:fullscreen ? 'up:60%' : 'right:60%:hidden', '?'),
+        \ fzf#vim#with_preview(l:spec, a:fullscreen ? 'up:60%' : 'right:60%', '?'),
         \ a:fullscreen
         \ )
 endfunction

@@ -197,7 +197,7 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
-zinit ice wait"1" lucid
+zinit ice wait'1' lucid
 zinit light Aloxaf/fzf-tab
 
 # dircolors {{{2

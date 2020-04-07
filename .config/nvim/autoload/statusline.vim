@@ -61,7 +61,7 @@ function! s:toggle_item(var, funcref) abort " {{{2
 endfunction
 
 function! statusline#command(...) abort " {{{2
-    let l:arg = a:0 > 0 ? a:1 : 'clear'
+    let l:arg = a:0 > 0 ? a:1 : 'toggle'
 
     if l:arg ==# 'toggle'
         let &laststatus = &laststatus != 0 ? 0 : 2
@@ -73,9 +73,10 @@ function! statusline#command(...) abort " {{{2
 
     for l:a in a:000
         " Check the 1st one only
-        if index(s:args[1], l:a) == -1 | continue | endif
-        let l:fun_ref = 'statusline#'.l:a
-        call s:toggle_item(l:a, l:fun_ref)
+        if index(s:args[1], l:a) > -1
+            let l:fun_ref = 'statusline#'.l:a
+            call s:toggle_item(l:a, l:fun_ref)
+        endif
     endfor
 endfunction
 
@@ -414,14 +415,14 @@ function! statusline#git_status() abort "{{{2
         \ || winwidth(0) < g:sl.width.min
         return ''
     endif
-    " Assume master branch
-    let l:branch = substitute(statusline#git_branch(), 'master', '', '')
+    let l:branch = statusline#git_branch()
+    if empty(l:branch) | return '' | endif
     let l:hunks = s:rpad(statusline#git_summary())
-    return l:branch ==# '' ? '' :
-        \ printf('%s%s%s',
+    " Assume master branch
+    return printf('%s%s%s',
         \ l:hunks,
-        \ l:branch,
-        \ g:sl.symbol.branch
+        \ substitute(l:branch, 'master', '', ''),
+        \ g:sl.symbol.branch,
         \ )
 endfunction
 
@@ -524,7 +525,7 @@ function! statusline#toggled() abort " {{{2
     if !exists('g:statusline_toggle') | return '' | endif
     let l:sl = ''
     for l:v in g:statusline_toggle
-        let l:str = call(l:v, [])
+        let l:str = {l:v}()
         let l:sl .= empty(l:sl) ? l:str.' ' : g:sl.sep.' '.l:str.' '
     endfor
     return l:sl[:-2]

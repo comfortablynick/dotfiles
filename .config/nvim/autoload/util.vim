@@ -15,17 +15,7 @@ function! util#capture(cmd) abort
         let l:out = system(matchstr(l:cmd, '^!\zs.*'))
     else
         " Redirect of vim command
-        if v:version < 800
-            " Do it the old way
-            try
-                redir => l:out
-                execute 'silent!' a:cmd
-            finally
-                redir END
-            endtry
-        else
-            let l:out = execute(a:cmd)
-        endif
+        let l:out = execute(a:cmd)
     endif
     return split(l:out, '\n')
 endfunction

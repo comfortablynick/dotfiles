@@ -5,7 +5,7 @@ let {s:guard} = 1
 function! plugins#clap#post() abort "{{{2
     " General settings
     let g:clap_multi_selection_warning_silent = 1
-    let g:clap_enable_icon = $MOSH_CONNECTION == 0
+    let g:clap_enable_icon = !$MOSH_CONNECTION
 
     let g:clap_provider_alias = {
         \ 'map': 'map',

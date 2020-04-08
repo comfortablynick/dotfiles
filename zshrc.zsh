@@ -197,8 +197,22 @@ zinit light zdharma/fast-syntax-highlighting
 zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
 zinit load junegunn/fzf
 
-zinit ice wait'1' lucid
-zinit light Aloxaf/fzf-tab
+# Set this here to configure via zstyle
+# https://github.com/Aloxaf/fzf-tab/issues/73#issuecomment-610826492
+export FZF_TAB_COMMAND=(
+    fzf-tmux
+    --ansi   # Enable ANSI color support, necessary for showing groups
+    --expect='$continuous_trigger' # For continuous completion
+    '--color=hl:$(( $#headers == 0 ? 108 : 255 ))'
+    --nth=2,3 --delimiter='\x00'  # Don't search prefix
+    --layout=reverse --height=${FZF_TMUX_HEIGHT:=75%}
+    --tiebreak=begin -m --bind=tab:down,btab:up,change:top,ctrl-space:toggle --cycle
+    '--query=$query'   # $query will be expanded to query string at runtime.
+    '--header-lines=$#headers' # $#headers will be expanded to lines of headers at runtime
+)
+zinit ice wait'1' lucid \
+    atload'zstyle ":fzf-tab:*" command $FZF_TAB_COMMAND'
+    zinit light Aloxaf/fzf-tab
 
 # dircolors {{{2
 # Use my fork of trapd00r plugin

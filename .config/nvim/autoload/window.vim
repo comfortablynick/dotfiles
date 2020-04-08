@@ -19,3 +19,11 @@ function! window#width() abort
     endif
     return l:width - l:numwidth - l:foldwidth - l:signwidth
 endfunction
+
+" Create scratch window, optionally in vsplit
+function! window#create_scratch(vsplit) abort
+    let l:cmd = a:vsplit ? 'vnew' : 'enew'
+    execute l:cmd
+    let w:scratch = 1
+    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
+endfunction

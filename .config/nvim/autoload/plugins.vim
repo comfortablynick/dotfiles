@@ -7,11 +7,23 @@
 let s:guard = 'g:loaded_autoload_plugins' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-let g:package_path = get(g:, 'package_path', expand(has('nvim') ? '$XDG_DATA_HOME/nvim/site' : '$HOME/.vim'))
+let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 
 function! plugins#init() abort
-    call pack#init()
-    command! -nargs=+ Pack call pack#add(<args>)
+    " vim-packager init
+    let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
+    if !isdirectory(l:packager_path)
+        echo 'Downloading vim-packager'
+        call system('git clone https://github.com/kristijanhusak/vim-packager '.l:packager_path)
+    endif
+    packadd vim-packager
+    command! -nargs=+ Pack call packager#add(<args>)
+    call packager#init({
+        \ 'dir': g:package_path.'/pack/packager',
+        \ 'default_plugin_type': 'opt',
+        \ 'jobs': 0,
+        \ })
+    Pack 'kristijanhusak/vim-packager'
 
     " General
     Pack 'chrisbra/Colorizer'
@@ -28,7 +40,6 @@ function! plugins#init() abort
     Pack 'sbdchd/neoformat'
     Pack 'skywind3000/asyncrun.vim'
     Pack 'skywind3000/asynctasks.vim'
-    Pack 'tpope/vim-dispatch'
 
     " Editing behavior
     Pack 'tpope/vim-commentary'
@@ -51,7 +62,7 @@ function! plugins#init() abort
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
-    Pack 'junegunn/fzf',                {'do': './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin'}
+    Pack 'junegunn/fzf',                {'do': { p -> s:fzf_post(p) }}
     Pack 'junegunn/fzf.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
@@ -115,7 +126,16 @@ function! plugins#init() abort
     Pack 'comfortablynick/vim-tmux-runner'
 endfunction
 
+" Fzf update hook
+function! s:fzf_post(plugin) abort
+    execute 'AsyncRun cd' a:plugin['dir']
+        \ '&& ./install --bin'
+        \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
+        \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
+endfunction
+
 " packadd if needed and call supplied function
+" Safe to do with functions, but causes recursion if used with commands
 function! plugins#lazy_call(package, funcname, ...) abort
     if !exists('*'.a:funcname)
         execute 'packadd' a:package

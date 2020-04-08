@@ -12,10 +12,10 @@ let g:package_manager = 'vim-packager'
 let g:package_defer_time = 300
 
 " Call minpac or minpac wrappers
-command!       PackInstall call plugins#init() | call pack#install()
-command! -bang PackUpdate  call plugins#init() | call pack#update({'force_hooks': <bang>0})
-command!       PackClean   call plugins#init() | call pack#clean()
-command!       PackStatus  call plugins#init() | call pack#status()
+command!       PackInstall call plugins#init() | call packager#install()
+command! -bang PackUpdate  call plugins#init() | call packager#update({'force_hooks': '<bang>'})
+command!       PackClean   call plugins#init() | call packager#clean()
+command!       PackStatus  call plugins#init() | call packager#status()
 
 augroup deferred_pack_load
     autocmd!
@@ -27,9 +27,6 @@ augroup END
 function! s:deferred_load() abort
     silent! packadd targets.vim
     silent! packadd tcomment_vim
-    silent! packadd asyncrun.vim
-    " silent! packadd vim-dispatch
-    " silent! packadd vim-easymotion
     silent! packadd vim-unimpaired
     silent! packadd clever-f.vim
     silent! packadd vim-sneak
@@ -48,10 +45,6 @@ endfunction
 
 function! s:deferred_load_filetype() abort
     let l:comptype = completion#get_type(&filetype)
-    " if l:comptype ==# 'mucomplete' || l:comptype ==# 'nvim-lsp'
-    "     silent! packadd vim-mucomplete
-    "     silent! packadd ultisnips
-    " endif
     if l:comptype !=# 'coc' && !exists('g:did_coc_loaded')
         silent! packadd ale
         silent! packadd vim-gitgutter

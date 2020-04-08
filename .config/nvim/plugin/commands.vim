@@ -1,9 +1,8 @@
 " ====================================================
 " Filename:    plugin/commands.vim
 " Description: General commands
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-04-03 10:02:52 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_commands' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -21,36 +20,34 @@ command! -bang -complete=buffer -nargs=? Bclose
     \ packadd vim-bbye | Bdelete<bang> <args>
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
-command! UndotreeToggle packadd undotree|UndotreeToggle|UndotreeFocus
+command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
 noremap <silent> <F5> :UndotreeToggle<CR>
+
+" Scratch :: create scratch window; add ! to vsplit {{{2
+command! -bang Scratch call window#create_scratch(<bang>0)
+
+" [Async]Run :: run a command asynchronously {{{2
+cnoreabbrev <expr> R util#cabbr('R', 'Run')
+" Lazy load AsyncRun
+command! -bang -nargs=+ -range=0 -complete=file AsyncRun
+    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
+    \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
+
+command! -bang -nargs=+ -range=0 -complete=file Run
+    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
+    \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
+
+" Make :: run make asynchronously {{{2
+" Use AyncRun for Make
+command! -bang -nargs=* -complete=file Make
+    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
+    \ | AsyncRun -program=make @ <args>
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
 command! Wq wq
 command! Wqa wqa
 command! W w
-
-" Lua {{{1
-" [H]elp :: floating help window {{{2
-command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-cnoreabbrev <expr> H util#cabbr('H', 'Help')
-
-" [F]loat[T]erm :: floating terminal window {{{2
-command! -complete=file -nargs=+ FloatTerm lua require'window'.float_term(<q-args>, 50)
-cnoreabbrev <expr> FT util#cabbr('FT', 'FloatTerm')
-
-" Run :: run a command asynchronously {{{2
-command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
-cnoreabbrev <expr> R util#cabbr('R', 'Run')
-
-" Cmd :: test version of async command run {{{2
-command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
-
-" MRU :: most recently used files {{{2
-command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
-
-" Grep :: async grep {{{2
-command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
@@ -82,4 +79,23 @@ endif
 " Using python pformat (handles lists better)
 command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
+" Lua (nvim-only after this line) {{{1
+" [H]elp :: floating help window {{{2
+if !has('nvim') | finish | endif
+command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
+cnoreabbrev <expr> H util#cabbr('H', 'Help')
+
+" [F]loat[T]erm :: floating terminal window {{{2
+command! -complete=file -nargs=+ FloatTerm lua require'window'.float_term(<q-args>, 50)
+cnoreabbrev <expr> FT util#cabbr('FT', 'FloatTerm')
+
+" Cmd :: test version of lua async command run {{{2
+command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
+" command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
+
+" MRU :: most recently used files {{{2
+command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
+
+" Grep :: async grep {{{2
+command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)
 " vim:fdl=1:

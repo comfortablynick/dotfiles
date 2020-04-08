@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_asyncrun') | finish | endif
-let g:loaded_autoload_plugins_asyncrun = 1
+let s:guard = 'g:loaded_autoload_plugins_asyncrun' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#asyncrun#post() abort
     let g:asyncrun_open = 0                                         " Show quickfix when executing command
@@ -18,6 +18,4 @@ function! plugins#asyncrun#post() abort
         \ 'go.mod',
         \ ]
 
-    " Use AyncRun for Make
-    command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 endfunction

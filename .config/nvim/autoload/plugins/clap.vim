@@ -6,6 +6,7 @@ function! plugins#clap#post() abort "{{{2
     " General settings
     let g:clap_multi_selection_warning_silent = 1
     let g:clap_enable_icon = !$MOSH_CONNECTION
+    " let g:clap_use_pure_python = 1  " Set this if vim crashes when looking at files
 
     let g:clap_provider_alias = {
         \ 'map': 'map',

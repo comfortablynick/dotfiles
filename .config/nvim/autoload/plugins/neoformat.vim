@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_neoformat') | finish | endif
-let g:loaded_autoload_plugins_neoformat = 1
+let s:guard = 'g:loaded_autoload_plugins_neoformat' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#neoformat#post() abort
     noremap <silent> <F3> :Neoformat<CR>

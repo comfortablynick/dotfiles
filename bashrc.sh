@@ -68,6 +68,22 @@ cf() {
         fi
     fi
 }
+
+fh() {
+    local line
+    shopt -u nocaseglob nocasematch
+    line=$(
+    history |
+            sweep --reversed --nth=2.. --prompt='HISTORY' |
+            command grep '^ *[0-9]'
+    ) &&
+        if [[ $- =~ H ]]; then
+            sed 's/^ *\([0-9]*\)\** .*/!\1/' <<<"$line"
+        else
+            sed 's/^ *\([0-9]*\)\** *//' <<<"$line"
+        fi
+}
+
 # Includes {{{1
 # Source posix .sh config snippets {{{2
 if [[ -d ${BASEDIR}/.config/shell/conf.d ]]; then

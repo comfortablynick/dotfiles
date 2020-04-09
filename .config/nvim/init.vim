@@ -182,41 +182,32 @@ let g:loaded_perl_provider = 0
 " Package management {{{2
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
-" Packadd command {{{2
-function! s:packadd(arg, bang) abort
-    execute 'silent! packadd'.a:arg
-    if a:bang | doautoall BufRead | endif
-endfunction
-
-command! -bar -bang -complete=packadd -nargs=* Packadd
-    \ call s:packadd(<q-args>, <bang>0)
-
 " Load packages at startup {{{2
-silent! packadd! vim-sandwich
-silent! packadd! vim-smoothie
-silent! packadd! fzf
-silent! packadd! fzf.vim
-silent! packadd! neoformat
-silent! packadd! vim-repeat
-silent! packadd! vim-fugitive
-silent! packadd! vim-eunuch
-silent! packadd! vim-clap
-silent! packadd! vim-snippets
-silent! packadd! vim-startify
-silent! packadd! vista.vim
-silent! packadd! vim-textobj-user
-silent! packadd! vim-bbye
-silent! packadd! vim-dirvish
+packadd! vim-sandwich
+packadd! vim-smoothie
+packadd! fzf
+packadd! fzf.vim
+packadd! neoformat
+packadd! vim-repeat
+packadd! vim-fugitive
+packadd! vim-eunuch
+packadd! vim-clap
+packadd! vim-snippets
+packadd! vim-startify
+packadd! vista.vim
+packadd! vim-textobj-user
+packadd! vim-bbye
+packadd! vim-dirvish
 
 " Requires nvim
 if has('nvim')
-    silent! packadd! luajob
-    silent! packadd! nvim-lsp
+    packadd! luajob
+    packadd! nvim-lsp
 endif
 
 " Requires python2
 if has('python')
-    silent! packadd! vim-textobj-lua
+    packadd! vim-textobj-lua
 endif
 
 " Lua tools {{{2

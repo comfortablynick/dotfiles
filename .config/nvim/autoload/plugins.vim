@@ -95,7 +95,7 @@ function! plugins#init() abort
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}
     Pack 'bfrg/vim-cpp-modern',         {'type': 'start'}
-    Pack 'vim-jp/syntax-vim-ex'
+    Pack 'vim-jp/syntax-vim-ex',        {'type': 'start'}
     Pack 'pearofducks/ansible-vim',     {'type': 'start'}
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'ziglang/zig.vim',             {'type': 'start'}

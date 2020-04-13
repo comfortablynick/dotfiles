@@ -5,11 +5,11 @@
 
 fzf_find_edit() {
     file=$(
-        eval "$FZF_DEFAULT_COMMAND" | fzf-tmux --ansi --no-multi \
-            --preview-window 'right:70%' --preview 'bat --color=always --line-range :500 {}'
+        eval "$FZF_DEFAULT_COMMAND" | devicon-lookup -c | fzf-tmux --ansi --no-multi \
+            --preview-window 'right:70%' --preview 'bat --color=always --line-range :500 {2..}'
     )
     if [ -n "$file" ]; then
-        ${VISUAL:-EDITOR:-vim} "$file"
+        ${VISUAL:-EDITOR:-vim} "$(echo "$file" | cut -d ' ' -f 2)"
     fi
 }
 
@@ -18,12 +18,13 @@ fzf_grep_edit() {
         echo 'Error: search term was not provided.'
         return
     fi
+    # shellcheck disable=SC2016,SC2215
     match=$(
-        rg --color=always --line-number "$1" |
+        rg --color=always --line-number "$1" | devicon-lookup -c -p : |
             fzf-tmux --ansi --preview-window 'right:50%' --no-multi --delimiter : \
-                --preview "bat --color=always --line-range {2}: {1}"
+            --preview 'bat --color=always --line-range {2}: $(echo {1} | cut -d" " -f2)'
     )
-    file=$(echo "$match" | cut -d':' -f1)
+    file=$(echo "$match" | cut -d: -f1 | cut -d' ' -f2)
     if [ -n "$file" ]; then
         "${VISUAL:-EDITOR:-vim}" "$file" +"$(echo "$match" | cut -d':' -f2)"
     fi

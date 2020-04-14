@@ -5,21 +5,22 @@
   register: tmux_current_version
   changed_when: False
 
-- name: Set flag to true if upgrade needed
-  set_fact:
-    tmux_upgrade: "{{ tmux_current_version.stdout.split(' ')[1] is version(tmux_version, '<') }}"
-
-- debug:
-    msg: Tmux needs to be upgraded!
-  when: tmux_upgrade
-
-- debug:
-    msg: Forcing tmux build/install
-  when: tmux_force_build and not tmux_upgrade
+# - name: Set flag to true if upgrade needed
+#   set_fact:
+#     # throws error with tmux next versions, e.g., 3.2-next
+#     tmux_upgrade: "{{ tmux_current_version.stdout.split(' ')[1] is version(tmux_version, '<') }}"
+#
+# - debug:
+#     msg: Tmux needs to be upgraded!
+#   when: tmux_upgrade
+#
+# - debug:
+#     msg: Forcing tmux build/install
+#   when: tmux_force_build and not tmux_upgrade
 
 - name: Install tmux from source
   include_tasks: build.yml
-  when: tmux_upgrade or tmux_force_build
+  when: tmux_force_build
 
 # - name: Install tmux
 #   include_tasks: "{{ ansible_facts['os_family'] }}.yml"

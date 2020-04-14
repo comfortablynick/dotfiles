@@ -71,8 +71,8 @@ function! plugins#init() abort
     Pack 'tpope/vim-projectionist'
     Pack 'kyazdani42/nvim-tree.lua'
     Pack 'justinmk/vim-dirvish'
-    Pack 'haorenW1025/floatLf-nvim'
     Pack 'srstevenson/vim-picker'
+    Pack 'voldikss/vim-floaterm'
 
     " Vim Development
     Pack 'tpope/vim-scriptease'

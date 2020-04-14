@@ -336,7 +336,7 @@ function! statusline#file_name() abort "{{{2
         return '[Startify]'
     elseif l:ft ==# 'output:///info'
         return ''
-    elseif l:bt =~? '^\%(nofile\|acwrite\|terminal\)$' && empty(l:ft)
+    elseif l:bt =~? '^\%(nofile\|acwrite\)$' && empty(l:ft)
         return '[Scratch]'
     endif
     let l:fname = expand('%:~:.')

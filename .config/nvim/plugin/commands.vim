@@ -43,6 +43,10 @@ command! -bang -nargs=* -complete=file Make
     \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
     \ | AsyncRun -program=make @ <args>
 
+" GV :: git commit viewer {{{2
+command! -bang -nargs=* -range=0 GV
+    \ packadd gv.vim | GV<bang> <args>
+
 " Misc commonly mistyped commands {{{2
 command! WQ wq
 command! Wq wq

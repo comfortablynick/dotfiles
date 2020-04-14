@@ -26,15 +26,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/home/nick/go/pkg/mod/github.com/pkg
-	..
-0
-d/home/nick/go/pkg/mod/github.com
-	..
-0
-d/home/nick/go/pkg/mod
-	cache
-1
 d/home/nick/go/pkg/mod/cache
 	download
 1
@@ -326,6 +317,15 @@ d/home/nick/.local/share/nvim/site/pack/packager/start
 d/home/nick/.local/share/nvim/site/pack/packager/start/ansible-vim
 	indent
 4
+d/home/nick/dotfiles/.config/nvim/autoload
+	file.vim
+9
+d/home/nick/dotfiles/.config/nvim
+	autoload
+2
+d/home/nick/dotfiles/.config/nvim/autoload
+	file.vim
+9
 d
 
 # Right window history (oldest to newest):

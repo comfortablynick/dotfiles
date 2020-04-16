@@ -15,7 +15,6 @@ function! plugins#coc#pre() abort "{{{1
         \ 'coc-rust-analyzer',
         \ 'coc-python',
         \ 'coc-tsserver',
-        \ 'coc-tabnine',
         \ 'coc-vimlsp',
         \ 'coc-yank',
         \ 'coc-yaml',

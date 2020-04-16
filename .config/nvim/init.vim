@@ -67,7 +67,7 @@ if has('nvim')
     let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
-    set pyxversion=3                                            " Use Python3 for pyx
+    set pyxversion=3
     " let g:python3_host_prog = '/usr/local/bin/python3.7'
     let g:python3_host_prog = 'python3'
 
@@ -155,7 +155,7 @@ if executable('rg')
 endif
 
 " Undo {{{2
-set undodir=~/.vim/undo//                                       " Undo file directory
+set undodir=~/.vim/undo//
 set undofile                                                    " Enable persistent undo
 
 " Windows/Splits {{{2
@@ -198,6 +198,7 @@ packadd! vista.vim
 packadd! vim-textobj-user
 packadd! vim-bbye
 packadd! vim-dirvish
+packadd! vim-floaterm
 
 " Requires nvim
 if has('nvim')

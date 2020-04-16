@@ -8,19 +8,20 @@ let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
 " Maps {{{1
-" Format paragraph and restore cursor position
-" nnoremap <silent> Q :call editor#restore_cursor_after('gqap')<CR>
-" Format buffer and restore cursor position
+" Format buffer and restore cursor position {{{2
 nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
-" Indent buffer and restore cursor position
+" Indent buffer and restore cursor position {{{2
 nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
 
 " Abbreviations {{{1
-" Open help in new or existing tab
+" Open help[grep] in new or existing tab {{{2
 cnoreabbrev <expr> h
-    \ map#cabbr('h', {-><SID>help_tab('help')})
+    \ map#cabbr('h', {-><SID>tab_mod('help', 'help')})
 cnoreabbrev <expr> hg
-    \ map#cabbr('hg', {-><SID>help_tab('helpgrep')})
+    \ map#cabbr('hg', {-><SID>tab_mod('helpgrep', 'help')})
+" Open Man in new or existing tab {{{2
+cnoreabbrev <expr> man
+    \ map#cabbr('man', {-><SID>tab_mod('Man', 'man')})
 " Lua
 cnoreabbrev <expr> l map#cabbr('l', 'lua')
 cnoreabbrev <expr> lp
@@ -60,25 +61,25 @@ augroup plugin_editor
 augroup end
 
 " Functions {{{1
-" s:help_tab() :: Show help in new or existing tab {{{2
+" s:tab_mod() :: Show cmd in new or existing tab {{{2
+" Reuse open tab if filetype matches `ft`
 " Adapted from https://github.com/airblade/vim-helptab
-function! s:help_tab(cmd) abort
-    let l:helptabnr = 0
+function! s:tab_mod(cmd, ft) abort
+    let l:cmdtabnr = 0
     for l:i in range(tabpagenr('$'))
         let l:tabnr = l:i + 1
         for l:bufnr in tabpagebuflist(l:tabnr)
-            if getbufvar(l:bufnr, '&ft') ==# 'help'
-                let l:helptabnr = l:tabnr
+            if getbufvar(l:bufnr, '&ft') ==# a:ft
+                let l:cmdtabnr = l:tabnr
                 break
             endif
         endfor
     endfor
-
-    if l:helptabnr
-        if tabpagenr() == l:helptabnr
+    if l:cmdtabnr
+        if tabpagenr() == l:cmdtabnr
             return a:cmd
         else
-            return 'tabnext '.l:helptabnr.' | '.a:cmd
+            return 'tabnext '.l:cmdtabnr.' | '.a:cmd
         endif
     else
         return 'tab '.a:cmd

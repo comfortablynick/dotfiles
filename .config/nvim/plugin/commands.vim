@@ -30,12 +30,17 @@ command! -bang Scratch call window#create_scratch(<bang>0)
 cnoreabbrev <expr> R util#cabbr('R', 'Run')
 " Lazy load AsyncRun
 command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
+    \ packadd asyncrun.vim
     \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
 
 command! -bang -nargs=+ -range=0 -complete=file Run
-    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
+    \ packadd asyncrun.vim
     \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
+
+" AsyncTasks :: run defined tasks asynchronously {{{2
+command! -bang -nargs=* -range=0 AsyncTask
+    \ packadd asynctasks.vim
+    \ | call asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)
 
 " Make :: run make asynchronously {{{2
 " Use AyncRun for Make

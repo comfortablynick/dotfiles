@@ -18,8 +18,8 @@ command! -nargs=0 DefxToggle call explorer#toggle('defx')
 command! -nargs=0 NetrwToggle call explorer#toggle('netrw')
 
 " vim-floaterm wrappers
-command! -nargs=0 Lf packadd vim-floaterm | FloatermNew lf
-command! -nargs=0 Ranger packadd vim-floaterm | FloatermNew ranger
+command! -nargs=* Lf call plugins#floaterm#wrap('lf', <f-args>)
+command! -nargs=* Ranger call plugins#floaterm#wrap('ranger', <f-args>)
 
 if has('nvim')
     command! -nargs=0 LuaTreeToggle packadd nvim-tree.lua | LuaTreeToggle

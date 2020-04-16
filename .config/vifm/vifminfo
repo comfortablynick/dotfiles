@@ -26,12 +26,6 @@ l2
 r2
 
 # Left window history (oldest to newest):
-d/home/nick/go/pkg/mod/cache
-	download
-1
-d/home/nick/go/pkg/mod/cache/download
-	github.com
-1
 d/home/nick/go/pkg/mod/cache/download/github.com
 	mattn
 8
@@ -326,6 +320,12 @@ d/home/nick/dotfiles/.config/nvim
 d/home/nick/dotfiles/.config/nvim/autoload
 	file.vim
 9
+d/home/nick/git/shellenv/src
+	..
+0
+d/home/nick/git/shellenv
+	Cargo.toml
+4
 d
 
 # Right window history (oldest to newest):

@@ -135,10 +135,17 @@ function! s:fzf_post(plugin) abort
 endfunction
 
 " packadd if needed and call supplied function
-" Safe to do with functions, but causes recursion if used with commands
 function! plugins#lazy_call(package, funcname, ...) abort
     if !exists('*'.a:funcname)
         execute 'packadd' a:package
     endif
     return call(a:funcname, a:000)
+endfunction
+
+" packadd if needed and execute command + args
+function! plugins#lazy_exe(package, cmd, ...) abort
+    if exists(a:cmd =~? '^:' ? a:cmd : ':'.a:cmd) != 2
+        execute 'packadd' a:package
+    endif
+    execute a:cmd join(a:000)
 endfunction

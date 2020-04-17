@@ -29,6 +29,8 @@ function! window#create_scratch(vsplit) abort
     setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
 endfunction
 
+" Create popup/float terminal
+" With help from junegunn/fzf
 function! window#popterm(cmd) abort
     call s:popup({'width': 0.9, 'height': 0.6})
 

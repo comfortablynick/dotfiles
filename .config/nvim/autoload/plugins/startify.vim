@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_startify') | finish | endif
-let g:loaded_autoload_plugins_startify = 1
+let s:guard = 'g:loaded_autoload_plugins_startify' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#startify#pre() abort
     let g:startify_bookmarks = [

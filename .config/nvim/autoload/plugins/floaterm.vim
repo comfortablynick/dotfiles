@@ -2,30 +2,32 @@ let s:guard = 'g:loaded_autoload_plugins_floaterm' | if exists(s:guard) | finish
 let {s:guard} = 1
 
 function! plugins#floaterm#post() abort
-    " let g:floaterm_wintitle = v:false
+    let g:floaterm_wintitle = v:true
+    let g:floaterm_autoclose = v:true
 
     hi link Floaterm NormalFloat
     hi link FloatermBorder NormalFloat
 endfunction
 
-" Use floaterm for custom command and allow cmdline options
+" plugins#floaterm#wrap :: Use floaterm for custom command and allow cmdline options {{{1
 function! plugins#floaterm#wrap(cmd, ...) abort
     execute ':FloatermNew' join(a:000) a:cmd
 endfunction
 
+" Use floaterm for Async[Run|Tasks] {{{1
 function! s:runner_proc(opts)
-  let l:curr_bufnr = floaterm#curr()
-  if has_key(a:opts, 'silent') && a:opts.silent == 1
-    call floaterm#hide()
-  endif
-  let l:cmd = 'cd ' . shellescape(getcwd())
-  call floaterm#terminal#send(l:curr_bufnr, [l:cmd])
-  call floaterm#terminal#send(l:curr_bufnr, [a:opts.cmd])
-  stopinsert
-  if &filetype ==# 'floaterm' && g:floaterm_autoinsert
-    call floaterm#util#startinsert()
-  endif
+    let l:curr_bufnr = floaterm#curr()
+    if has_key(a:opts, 'silent') && a:opts.silent == 1
+        call floaterm#hide()
+    endif
+    let l:cmd = 'cd '.shellescape(getcwd())
+    call floaterm#terminal#send(l:curr_bufnr, [l:cmd])
+    call floaterm#terminal#send(l:curr_bufnr, [a:opts.cmd])
+    stopinsert
+    if &filetype ==# 'floaterm' && g:floaterm_autoinsert
+        call floaterm#util#startinsert()
+    endif
 endfunction
 
 let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
-let g:asyncrun_runner.floaterm = function('s:runner_proc')
+let g:asyncrun_runner['floaterm'] = function('s:runner_proc')

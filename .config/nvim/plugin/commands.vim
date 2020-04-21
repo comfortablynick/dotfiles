@@ -45,12 +45,14 @@ command! -bang -nargs=* -range=0 AsyncTask
 " Make :: run make asynchronously {{{2
 " Use AyncRun for Make
 command! -bang -nargs=* -complete=file Make
-    \ if !exists('*asyncrun#run') | packadd asyncrun.vim | endif
-    \ | AsyncRun -program=make @ <args>
+    \ call plugins#lazy_exe('asyncrun.vim', 'AsyncRun', '-program=make', '@', <args>)
 
 " GV :: git commit viewer {{{2
 command! -bang -nargs=* -range=0 GV
     \ packadd gv.vim | GV<bang> <args>
+
+" LazyGit :: tui for git {{{2
+command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
@@ -92,11 +94,11 @@ command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 " [H]elp :: floating help window {{{2
 if !has('nvim') | finish | endif
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-cnoreabbrev <expr> H util#cabbr('H', 'Help')
+cnoreabbrev <expr> H map#cabbr('H', 'Help')
 
 " [F]loat[T]erm :: floating terminal window {{{2
 command! -complete=file -nargs=+ FloatTerm lua require'window'.float_term(<q-args>, 50)
-cnoreabbrev <expr> FT util#cabbr('FT', 'FloatTerm')
+cnoreabbrev <expr> FT map#cabbr('FT', 'FloatTerm')
 
 " Cmd :: test version of lua async command run {{{2
 command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)

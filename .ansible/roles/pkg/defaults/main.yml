@@ -50,6 +50,7 @@ pipx_default_pkgs:
   - cmakelint
   - dirtools
   - optimize-images
+  - neovim-remote
   # system utils
   - ranger-fm
   - dotdrop

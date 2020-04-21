@@ -4,6 +4,8 @@ let {s:guard} = 1
 function! plugins#floaterm#post() abort
     let g:floaterm_wintitle = v:true
     let g:floaterm_autoclose = v:true
+    " let g:floaterm_width = 0.7
+    " let g:floaterm_height = 0.6
 
     hi link Floaterm NormalFloat
     hi link FloatermBorder NormalFloat

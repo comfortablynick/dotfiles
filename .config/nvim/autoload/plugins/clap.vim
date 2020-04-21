@@ -1,6 +1,8 @@
 let s:guard = 'g:loaded_autoload_plugins_clap' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
+let s:using_icons = v:false
+
 " Clap setup {{{1
 function! plugins#clap#post() abort "{{{2
     " General settings
@@ -24,14 +26,14 @@ function! s:clap_on_enter() abort "{{{2
     augroup END
     call s:clap_win_disable_fold()
     if exists('g:loaded_mucomplete')
-        MUcompleteAutoOff
+        silent! MUcompleteAutoOff
         let s:mucomplete_disabled = 1
     endif
 endfunction
 
 function! s:clap_on_exit() abort "{{{2
     if exists('s:mucomplete_disabled')
-        MUcompleteAutoOn
+        silent! MUcompleteAutoOn
         unlet s:mucomplete_disabled
     endif
 endfunction
@@ -51,6 +53,15 @@ augroup autoload_plugins_clap
     autocmd User ClapOnExit call s:clap_on_exit()
 augroup END
 
+" Clap utils {{{1
+function! s:clap_get_selected() abort "{{{2
+    let l:curline = g:clap.display.getcurline()
+    if g:clap_enable_icon && s:using_icons
+        let l:curline = l:curline[4:]
+    endif
+    return l:curline
+endfunction
+
 " Clap providers {{{1
 " Map :: show defined maps for all modes {{{2
 " Keep this for now; built-in `maps` provider
@@ -60,7 +71,7 @@ let s:map.source = {-> split(execute('map'), '\n')}
 let s:map.sink = {-> v:null}
 let g:clap#provider#map# = s:map
 
-" Help :: search help tags and open help tab {{{2
+" help :: search help tags and open help tab {{{2
 let s:help = {}
 
 function! s:help.source() abort
@@ -76,10 +87,10 @@ function! s:help.source() abort
 endfunction
 
 let s:help.on_enter = {-> g:clap.display.setbufvar('&ft', 'clap_help')}
-let s:help.sink = {v-> execute(editor#help_tab().' '.v)}
+let s:help.sink = {v-> execute(window#tab_mod('h', 'help').' '.v)}
 let g:clap#provider#help# = s:help
 
-" Cmd :: Frequently used commands {{{2
+" cmd :: Frequently used commands {{{2
 let s:cmds = {
     \ 'ALEInfo': 'ALE debugging info',
     \ 'CocConfig': 'Coc configuration',
@@ -90,13 +101,13 @@ let s:cmd.source = keys(s:cmds)
 
 function! s:cmd.on_move() abort
     let l:curline = g:clap.display.getcurline()
-    call g:clap.preview.show([s:cmd.source[l:curline]])
+    call g:clap.preview.show([s:cmds[l:curline]])
 endfunction
 
 let s:cmd.sink = {v-> execute(v, '')}
 let g:clap#provider#quick_cmd# = s:cmd
 
-" Scriptnames :: similar to :Scriptnames {{{2
+" scriptnames :: similar to :Scriptnames {{{2
 let s:scriptnames = {}
 function! s:scriptnames.source() abort
     let l:names = execute('scriptnames')
@@ -108,26 +119,46 @@ function! s:scriptnames.sink(selected) abort
     execute 'edit' trim(l:fname)
 endfunction
 
+function! s:scriptnames.on_move() abort
+    let l:curline = g:clap.display.getcurline()
+endfunction
+
 let g:clap#provider#scriptnames# = s:scriptnames
 
-" Dot :: open dotfiles quickly {{{2
-let s:dot = {
-    \ 'source': [
-    \     '$DOTFILES/.config/nvim/init.vim',
-    \     '$DOTFILES/bashrc.sh',
-    \     '$DOTFILES/.config/tmux/tmux.conf',
-    \ ],
-    \ 'sink': 'e',
-    \ }
+" dot :: open dotfiles quickly {{{2
+let s:dot = {}
+function! s:dot.source() abort
+    let s:using_icons = v:true
+    let l:dotfiles = [
+        \ '$DOTFILES/.config/nvim/init.vim',
+        \ '$DOTFILES/bashrc.sh',
+        \ '$DOTFILES/.config/tmux/tmux.conf',
+        \ ]
+    let l:fnames = map(l:dotfiles, {_,v->fnamemodify(expand(v), ':~')})
+    return map(l:fnames, {_,v->clap#icon#get(v).' '.v})
+endfunction
+
+function! s:dot.on_move() abort
+    let l:curline = s:clap_get_selected()
+    return clap#preview#file(l:curline)
+endfunction
+
+function! s:dot.sink(selected) abort
+    let l:fname = g:clap_enable_icon && s:using_icons ?
+        \ a:selected[4:] :
+        \ a:selected
+    execute 'edit' l:fname
+endfunction
+
 let g:clap#provider#dot# = s:dot
 
-" MRU :: most recently used {{{2
+" mru :: most recently used {{{2
 let s:mru = {}
 let s:mru.source = {-> luaeval('require"tools".mru_files()')}
 let s:mru.sink = 'edit'
 let g:clap#provider#mru# = s:mru
 
-" History (lua/Viml test) {{{2
+" history (lua/Viml test) {{{2
 function! plugins#clap#history() abort
     let l:hist = filter(
         \ map(range(1, histnr(':')), {v-> histget(':', - v)}),

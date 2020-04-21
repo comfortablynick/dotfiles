@@ -31,7 +31,7 @@ endfunction
 
 " Create popup/float terminal
 " With help from junegunn/fzf
-function! window#popterm(cmd) abort
+function! window#popterm(cmd) abort "{{{1
     call s:popup({'width': 0.9, 'height': 0.6})
 
     if has('nvim')
@@ -49,7 +49,7 @@ function! window#popterm(cmd) abort
 endfunction
 
 if has('nvim')
-    function s:create_popup(hl, opts) abort
+    function! s:create_popup(hl, opts) abort "{{{1 (nvim)
         let l:buf = nvim_create_buf(v:false, v:true)
         let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
         let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
@@ -62,7 +62,7 @@ if has('nvim')
         return l:buf
     endfunction
 else
-    function! s:create_popup(hl, opts) abort
+    function! s:create_popup(hl, opts) abort "{{{1 (vim)
         let l:is_frame = has_key(a:opts, 'border')
         let l:buf = l:is_frame ? '' : term_start(&shell, #{hidden: 1, term_finish: 'close'})
         let l:id = popup_create(l:buf, #{
@@ -84,7 +84,7 @@ else
     endfunction
 endif
 
-function! s:popup(opts) abort
+function! s:popup(opts) abort "{{{1
     " Support ambiwidth == 'double'
     let l:ambidouble = &ambiwidth ==# 'double' ? 2 : 1
 
@@ -143,10 +143,35 @@ function! s:popup(opts) abort
     endif
 endfunction
 
+" window#tab_mod() :: Show cmd in new or existing tab {{{1
+" Reuse open tab if filetype matches `ft`
+" Adapted from https://github.com/airblade/vim-helptab
+function! window#tab_mod(cmd, ft) abort
+    let l:cmdtabnr = 0
+    for l:i in range(tabpagenr('$'))
+        let l:tabnr = l:i + 1
+        for l:bufnr in tabpagebuflist(l:tabnr)
+            if getbufvar(l:bufnr, '&ft') ==# a:ft
+                let l:cmdtabnr = l:tabnr
+                break
+            endif
+        endfor
+    endfor
+    if l:cmdtabnr
+        if tabpagenr() == l:cmdtabnr
+            return a:cmd
+        else
+            return 'tabnext '.l:cmdtabnr.' | '.a:cmd
+        endif
+    else
+        return 'tab '.a:cmd
+    endif
+endfunction
+
 " Vim Only
 if !has('nvim')
     " Simple vim-only popup terminal
-    function! window#float_term(cmd, width, height) abort
+    function! window#float_term(cmd, width, height) abort "{{{1
         let l:width = float1nr(&columns * a:width)
         let l:height = float2nr(&lines * a:height)
         let l:bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close', 'cwd': getcwd()})

@@ -1,3 +1,18 @@
+# Don't let ripgrep vomit really long lines to my terminal
+--max-columns=150
+# --max-columns-preview
+
+# Add my 'web' type.
+--type-add
+web:*.{html,css,js}*
+
+# Using glob patterns to include/exclude files or folders
+--glob
+!git/*
+
+# Because who cares about case!?
+--smart-case
+
 # Make it look like ag
 --colors=line:fg:yellow
 --colors=line:style:bold

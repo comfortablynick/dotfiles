@@ -17,3 +17,4 @@ yarn.lock
 tags
 .config/direnv/allow/
 .config/nvim/spell
+vifminfo

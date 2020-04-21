@@ -1,13 +1,12 @@
 " vim:ft=vifm:
 " Configuration file for vifm
-" Last updated: 2020-02-24 09:50:11 CST
 " ------------------------------------------------------------------------------
 
 " This is the actual command used to start vi.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-set vicmd=nvim
+set vicmd=$EDITOR
 
 " This makes vifm perform file operations on its own instead of relying on
 " standard utilities like `cp`.  While using `cp` and alike is a more universal
@@ -365,6 +364,7 @@ filextype */
 " filetype * open
 " For Windows:
 " filetype * start, explorer
+fileviewer bat %c
 
 " ------------------------------------------------------------------------------
 
@@ -446,6 +446,7 @@ nnoremap <f8> :delete<cr>
 " Use ag (the silver searcher) instead of grep
 "
 " set grepprg='ag --line-numbers %i %a %s'
+set grepprg='rg %i %a %s'
 
 " Add additional place to look for executables
 "
@@ -463,3 +464,6 @@ nnoremap <f8> :delete<cr>
 "     vifm --server-name "$VIFM_SERVER_NAME" --remote +"cd '$PWD'"
 "
 " let $VIFM_SERVER_NAME = v:servername
+
+" Devicons
+source ~/.config/vifm/vifm_devicons/SETUP

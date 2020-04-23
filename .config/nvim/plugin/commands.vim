@@ -24,7 +24,7 @@ command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
 noremap <silent> <F5> :UndotreeToggle<CR>
 
 " Scratch :: create scratch window; add ! to vsplit {{{2
-command! -bang Scratch call window#create_scratch(<bang>0)
+command! -bang -bar Scratch call window#create_scratch(<bang>0)
 
 " [Async]Run :: run a command asynchronously {{{2
 cnoreabbrev <expr> R util#cabbr('R', 'Run')

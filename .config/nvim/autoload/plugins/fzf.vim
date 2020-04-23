@@ -28,7 +28,7 @@ function! plugins#fzf#post() abort "{{{2
         autocmd FileType fzf silent! tunmap <buffer> <Esc>
     augroup END
 
-    nnoremap <silent> <Leader>h  :History:<CR>
+    " nnoremap <silent> <Leader>h  :History:<CR>
     nnoremap <silent> <Leader>gg :RG<CR>
 endfunction
 
@@ -93,7 +93,6 @@ function! s:fzf_scriptnames(fullscreen) abort "{{{2
 endfunction
 
 function! s:fzf_asynctasks(fullscreen) abort "{{{2
-
     let l:list = plugins#lazy_call('asynctasks.vim', 'asynctasks#list', '')
     let l:source = []
     for l:item in l:list
@@ -214,7 +213,5 @@ command! -bang Mru call s:fzf_mru(<bang>0)
 " Sourced :: fuzzy :scriptnames {{{2
 command! -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
 
-" Tasks :: list AsyncTasks {{{2
-command! -bang -nargs=* Tasks call s:fzf_asynctasks(<bang>0)
 
 " vim:fdl=1:

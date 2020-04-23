@@ -1,9 +1,8 @@
 let s:guard = 'g:loaded_autoload_plugins_clap' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-let s:using_icons = v:false
-
 " Clap setup {{{1
+let s:using_icons = v:false
 function! plugins#clap#post() abort "{{{2
     " General settings
     let g:clap_multi_selection_warning_silent = 1
@@ -17,6 +16,7 @@ function! plugins#clap#post() abort "{{{2
 
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
+    nnoremap <silent> <Leader>h :Clap hist:<CR>
 endfunction
 
 function! s:clap_on_enter() abort "{{{2
@@ -60,6 +60,20 @@ function! s:clap_get_selected() abort "{{{2
         let l:curline = l:curline[4:]
     endif
     return l:curline
+endfunction
+
+" Standard file preview with icon support
+function! s:clap_file_preview() abort "{{{2
+    let l:curline = s:clap_get_selected()
+    return clap#preview#file(l:curline)
+endfunction
+
+" Standard file edit with icon support
+function! s:clap_file_edit(selected) abort "{{{2
+    let l:fname = g:clap_enable_icon && s:using_icons ?
+        \ a:selected[4:] :
+        \ a:selected
+    execute 'edit' l:fname
 endfunction
 
 " Clap providers {{{1
@@ -111,7 +125,7 @@ let g:clap#provider#quick_cmd# = s:cmd
 let s:scriptnames = {}
 function! s:scriptnames.source() abort
     let l:names = execute('scriptnames')
-    return split(l:names, '\n')
+    return map(split(l:names, '\n'), {_,v->join(split(v, ':'))})
 endfunction
 
 function! s:scriptnames.sink(selected) abort
@@ -121,9 +135,42 @@ endfunction
 
 function! s:scriptnames.on_move() abort
     let l:curline = g:clap.display.getcurline()
+    let l:fname = split(l:curline, ' ')[-1]
+    return clap#preview#file(l:fname)
 endfunction
+let s:scriptnames.syntax = 'clap_scriptnames'
 
 let g:clap#provider#scriptnames# = s:scriptnames
+
+" task :: asynctasks.vim list {{{2
+let s:task = {}
+function! s:task.source() abort
+    let l:list = plugins#lazy_call('asynctasks.vim', 'asynctasks#list', '')
+    let l:source = []
+    let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
+    for l:item in l:list
+        let l:source += [
+            \ printf('%-'.l:longest_name.'s %-10s : %s',
+            \ l:item['name'],
+            \ '<'.l:item['scope'].'>',
+            \ l:item['command'])
+            \ ]
+    endfor
+    return l:source
+endfunction
+
+function! s:task.sink(selected) abort
+    let l:name = split(a:selected, '<')[0]
+    let l:name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
+    if strlen(l:name)
+        execute 'AsyncTask' fnameescape(l:name)
+    endif
+endfunction
+let s:task.syntax = 'clap_task'
+
+let g:clap#provider#task# = s:task
+
+command! Task :Clap task
 
 " dot :: open dotfiles quickly {{{2
 let s:dot = {}
@@ -138,24 +185,21 @@ function! s:dot.source() abort
     return map(l:fnames, {_,v->clap#icon#get(v).' '.v})
 endfunction
 
-function! s:dot.on_move() abort
-    let l:curline = s:clap_get_selected()
-    return clap#preview#file(l:curline)
-endfunction
-
-function! s:dot.sink(selected) abort
-    let l:fname = g:clap_enable_icon && s:using_icons ?
-        \ a:selected[4:] :
-        \ a:selected
-    execute 'edit' l:fname
-endfunction
-
+let s:dot.on_move = {->s:clap_file_preview()}
+let s:dot.sink = {sel->s:clap_file_edit(sel)}
 let g:clap#provider#dot# = s:dot
 
 " mru :: most recently used {{{2
 let s:mru = {}
-let s:mru.source = {-> luaeval('require"tools".mru_files()')}
-let s:mru.sink = 'edit'
+
+function s:mru.source() abort
+    let s:using_icons = v:true
+    let l:files = luaeval('require"tools".mru_files()')
+    return map(l:files, {_,v->clap#icon#get(v).' '.v})
+endfunction
+
+let s:mru.on_move = {->s:clap_file_preview()}
+let s:mru.sink = {sel->s:clap_file_edit(sel)}
 let g:clap#provider#mru# = s:mru
 
 " history (lua/Viml test) {{{2

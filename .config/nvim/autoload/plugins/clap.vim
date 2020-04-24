@@ -150,7 +150,7 @@ function! s:task.source() abort
     let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
     for l:item in l:list
         let l:source += [
-            \ printf('%-'.l:longest_name.'s %-10s : %s',
+            \ printf('%-'.l:longest_name.'s %-10s :   %s',
             \ l:item['name'],
             \ '<'.l:item['scope'].'>',
             \ l:item['command'])

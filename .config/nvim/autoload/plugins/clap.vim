@@ -17,6 +17,8 @@ function! plugins#clap#post() abort "{{{2
     " Maps
     nnoremap <silent> <Leader>t :Clap tags<CR>
     nnoremap <silent> <Leader>h :Clap hist:<CR>
+
+    command! Filer :Clap filer
 endfunction
 
 function! s:clap_on_enter() abort "{{{2

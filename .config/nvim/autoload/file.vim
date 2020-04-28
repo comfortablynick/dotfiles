@@ -3,7 +3,7 @@
 " Description: File/folder operations
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-17 15:33:39 CST
+" Last Change: 2020-04-27 13:44:45 CDT
 " ====================================================
 
 " Get the root path based on git or parent folder
@@ -114,24 +114,24 @@ let g:timestamp_file_ignore = [
 " Last [Uu]pdate(d)
 function! file#update_timestamp() abort
     if index(g:timestamp_file_ignore, &filetype) > -1 | return | endif
-    let pat = '\(\(Last\)\?\s*\([Cc]hanged\?\|[Mm]odified\|[Uu]pdated\?\)\s*:\s*\).*'
-    let rep = '\1' . strftime(get(g:, 'timestamp_format', '%F %H:%M:%S %Z'))
-    call s:subst(1, 20, pat, rep)
+    let l:pat = '\(\(Last\)\?\s*\([Cc]hanged\?\|[Mm]odified\|[Uu]pdated\?\)\s*:\s*\).*'
+    let l:rep = '\1' . strftime(get(g:, 'timestamp_format', '%F %H:%M:%S %Z'))
+    call s:subst(1, 20, l:pat, l:rep)
 endfunction
 
 " subst( start, end, pat, rep): substitute on range start - end.
 " Taken from timestamp.vim
 function! s:subst(start, end, pat, rep) abort
-    let lineno = a:start
-    while lineno <= a:end
-	let curline = getline(lineno)
-	if match(curline, a:pat) != -1
-	    let newline = substitute(curline, a:pat, a:rep, '')
-	    if( newline != curline )
+    let l:lineno = a:start
+    while l:lineno <= a:end
+	let l:curline = getline(l:lineno)
+	if match(l:curline, a:pat) != -1
+	    let l:newline = substitute(l:curline, a:pat, a:rep, '')
+	    if( l:newline != l:curline )
 		" Only substitute if we made a change
-		keepjumps call setline(lineno, newline)
+		keepjumps call setline(l:lineno, l:newline)
 	    endif
 	endif
-	let lineno = lineno + 1
+	let l:lineno = l:lineno + 1
     endwhile
 endfunction

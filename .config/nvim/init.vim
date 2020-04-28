@@ -122,6 +122,9 @@ set conceallevel=1                                              " Enable conceal
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set virtualedit=onemore                                         " Allow cursor to extend past line
 set wildmenu                                                    " Enabled by default in nvim
+set list                                                        " Show extra characters
+set listchars+=nbsp:␣                                           " Non breaking space
+set listchars+=trail:·                                          " Show trailing spaces as dots
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
@@ -172,7 +175,6 @@ let g:loaded_gzip = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_2html_plugin = 1
 let g:loaded_zipPlugin = 1
-let g:loaded_matchit = 1
 
 " Disable providers {{{2
 let g:loaded_ruby_provider = 0
@@ -200,10 +202,13 @@ packadd! vim-bbye
 packadd! vim-dirvish
 packadd! vim-floaterm
 
-" Requires nvim
 if has('nvim')
+    " Nvim-only
     packadd! luajob
     packadd! nvim-lsp
+else
+    " Vim only
+    packadd! matchit " Nvim loads by default
 endif
 
 " Requires python2

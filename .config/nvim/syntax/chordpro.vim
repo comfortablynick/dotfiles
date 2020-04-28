@@ -1,16 +1,10 @@
-" Vim syntax file
-" Language:	ChordPro
-" Maintainer:	Niels Bo Andersen <niels@niboan.dk>
-" Last Change:	2003 May 20 
-
-" For version 5.x: Clear all syntax items
-" For version 6.x: Quit when a syntax file was already loaded
-if version < 600
-  syntax clear
-elseif exists("b:current_syntax")
-  finish
-endif
-
+" ====================================================
+" Filename:    syntax/chordpro.vim
+" Description: Syntax file for chordpro
+" Author:      Nick Murphy (comfortablynick@gmail.com) 
+" (Original by Niels Bo Andersen <niels@niboan.dk>)
+" License:     MIT
+" ====================================================
 syn case ignore
 
 syn keyword ProDirective start_of_chorus soc end_of_chorus eoc new_song ns contained
@@ -30,26 +24,11 @@ syn region ProChord matchgroup=ProBracket start=+\[+ end=+]+ keepend oneline
 syn match ProComment "#.*"
 
 " Define the default highlighting.
-" For version 5.7 and earlier: only when not done already
-" For version 5.8 and later: only when an item doesn't have highlighting yet
-if version >= 508 || !exists("did_chopro_syn_inits")
-  if version < 508
-    let did_chopro_syn_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
+hi def link ProDirective Statement
+hi def link ProDirWithOpt Statement
+hi def link ProChord Type
+hi def link ProTag Special
+hi def link ProComment Comment
+hi def link ProBracket Constant
 
-  HiLink ProDirective Statement
-  HiLink ProDirWithOpt Statement
-  HiLink ProChord Type
-  HiLink ProTag Special
-  HiLink ProComment Comment
-  HiLink ProBracket Constant
-
-  delcommand HiLink
-endif
-
-let b:current_syntax = "chordpro"
-
-" vim: ts=8
+let b:current_syntax = 'chordpro'

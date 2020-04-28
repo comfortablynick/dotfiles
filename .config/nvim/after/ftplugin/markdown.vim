@@ -24,3 +24,16 @@ inoremap <buffer> <script> <expr> <C-]>
     \ '<C-O>:call <SID>indent(1)<CR>'
 inoremap <buffer> <script> <expr> <C-[>
     \ '<C-O>:call <SID>indent(0)<CR>'
+
+function! s:jump_to_heading(direction, count)
+    let l:col = col('.')
+    silent execute a:direction ==# 'up' ? '?^#' : '/^#'
+    if a:count > 1
+        silent execute 'normal!' repeat('n', a:direction ==# 'up' && l:col != 1 ? a:count : a:count - 1)
+    endif
+    silent execute 'normal!' l:col '|'
+    unlet l:col
+endfunction
+
+nnoremap <buffer> <silent> ]] :<C-u>call <SID>jump_to_heading("down", v:count1)<CR>
+nnoremap <buffer> <silent> [[ :<C-u>call <SID>jump_to_heading("up", v:count1)<CR>

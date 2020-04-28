@@ -27,7 +27,7 @@ noremap <silent> <F5> :UndotreeToggle<CR>
 command! -bang -bar Scratch call window#create_scratch(<bang>0)
 
 " [Async]Run :: run a command asynchronously {{{2
-cnoreabbrev <expr> R util#cabbr('R', 'Run')
+cnoreabbrev <expr> R map#cabbr('R', 'Run')
 " Lazy load AsyncRun
 command! -bang -nargs=+ -range=0 -complete=file AsyncRun
     \ packadd asyncrun.vim
@@ -53,6 +53,18 @@ command! -bang -nargs=* -range=0 GV
 
 " LazyGit :: tui for git {{{2
 command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
+
+" Grep :: async grep {{{2
+command! -nargs=+ -complete=file_in_path -bar Grep
+    \ AsyncRun -strip -program=grep <args>
+
+cnoreabbrev <expr> grep map#cabbr('grep', 'Grep')
+
+command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
+
+function! s:grep(...) abort
+	return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
+endfunction
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
@@ -107,6 +119,6 @@ command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
 " MRU :: most recently used files {{{2
 command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
 
-" Grep :: async grep {{{2
-command! -nargs=+ -complete=dir -bar Grep lua require'tools'.async_grep(<q-args>)
+" Agrep :: async grep {{{2
+command! -nargs=+ -complete=file -bar Agrep lua require'tools'.async_grep(<q-args>)
 " vim:fdl=1:

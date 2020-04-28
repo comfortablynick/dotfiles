@@ -37,9 +37,10 @@
   "coc.preferences.hoverTarget": "float",
   "coc.preferences.previewAutoClose": true,
   "coc.preferences.formatOnType": false,
+  "coc.preferences.formatOnInsertLeave": true,
   "coc.preferences.messageLevel": "error",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
-  "coc.preferences.formatOnSaveFiletypes": [],
+  "coc.preferences.formatOnSaveFiletypes": ["rust"],
 
   // Snippets
   "snippets.userSnippetsDirectory": "~/.config/ultisnips",

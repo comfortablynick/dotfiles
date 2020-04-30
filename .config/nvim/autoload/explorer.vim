@@ -1,10 +1,11 @@
 " ====================================================
 " Filename:    autoload/explorer.vim
-" Description: File explorer functions/settings
-" Author:      Nick Murphy
+" Description: File explorer settings
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-25 18:07:32 CST
 " ====================================================
+let s:guard = 'g:loaded_autoload_explorer' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " function! s:netrw_run() abort
 "     if exists('t:expl_buf_num')

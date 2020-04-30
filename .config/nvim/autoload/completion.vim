@@ -1,18 +1,19 @@
 " ====================================================
 " Filename:    autoload/completion.vim
 " Description: Completion plugin config
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-16 10:36:46 CST
 " ====================================================
+let s:guard = 'g:loaded_autoload_completion' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Get completion type for a filetype, or empty string
 function! completion#get_type(ftype) abort
     let l:types = get(g:, 'completion_filetypes', {})
-    for key in keys(l:types)
-        for val in l:types[key]
-            if val ==? a:ftype
-                return key
+    for l:key in keys(l:types)
+        for l:val in l:types[l:key]
+            if l:val ==? a:ftype
+                return l:key
             endif
         endfor
     endfor

@@ -1,10 +1,11 @@
 " ====================================================
 " Filename:    autoload/test.vim
-" Description: Various test functions for viml
-" Author:      Nick Murphy
+" Description: Viml test functions
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-02-24 14:42:41 CST
 " ====================================================
+let s:guard = 'g:loaded_autoload_test' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! test#time(com, ...) abort
     let l:time = 0.0

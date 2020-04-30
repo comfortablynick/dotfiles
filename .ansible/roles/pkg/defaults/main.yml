@@ -40,23 +40,23 @@ pip3_default_pkgs:
 
 pipx_default_pkgs:
   # dev tools
-  - pipenv
-  - ptpython
   - black
-  - mypy
-  - pydocstyle
-  - git+https://github.com/vimjas/vint
   - cmake_format[yaml]
   - cmakelint
   - dirtools
-  - optimize-images
-  - neovim-remote
-  # system utils
-  - ranger-fm
   - dotdrop
-  - topydo
-  - speedtest-cli
+  - legit
+  - mypy
+  - neovim-remote
+  - optimize-images
+  - pipenv
+  - ptpython
+  - pydocstyle
   - python-language-server
+  - ranger-fm
+  - speedtest-cli
+  - topydo
+  - git+https://github.com/vimjas/vint
 
 pipx_inject_dependencies:
   - pkg: optimize-images

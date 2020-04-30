@@ -1,12 +1,11 @@
 " ====================================================
 " Filename:    autoload/runner.vim
 " Description: Run code actions based on justfile
-" Author:      Nick Murphy
+" Author:      Nick Murphy (comfortablynick@gmail.com)
 " License:     MIT
-" Last Change: 2020-03-07 10:04:27 CST
 " ====================================================
-if exists('g:loaded_autoload_runner') | finish | endif
-let g:loaded_autoload_runner = 1
+let s:guard = 'g:loaded_autoload_runner' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 " Build command based on file type and command type
 function! runner#run_cmd(cmd_type) abort

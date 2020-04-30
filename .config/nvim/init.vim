@@ -124,7 +124,8 @@ set virtualedit=onemore                                         " Allow cursor t
 set wildmenu                                                    " Enabled by default in nvim
 set list                                                        " Show extra characters
 set listchars+=nbsp:␣                                           " Non breaking space
-set listchars+=trail:·                                          " Show trailing spaces as dots
+set listchars+=trail:·                                          " Trailing space
+set listchars-=eol:$                                            " End of line marker
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2

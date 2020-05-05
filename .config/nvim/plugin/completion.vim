@@ -21,9 +21,9 @@ let g:completion_filetypes = {
     \    'sh',
     \    'vim',
     \    'lua',
+    \    'python',
     \ ],
     \ 'nvim-lsp': [
-    \    'python',
     \ ],
     \ 'mucomplete': [
     \    'asciidoctor',

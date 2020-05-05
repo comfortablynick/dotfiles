@@ -39,7 +39,7 @@ function! plugins#init() abort
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'skywind3000/asyncrun.vim'
-    Pack 'skywind3000/asynctasks.vim'
+    Pack 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
 
     " Editing behavior
     Pack 'tpope/vim-commentary'

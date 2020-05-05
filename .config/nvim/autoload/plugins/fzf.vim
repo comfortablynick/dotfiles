@@ -30,6 +30,7 @@ function! plugins#fzf#post() abort "{{{2
 
     " nnoremap <silent> <Leader>h  :History:<CR>
     nnoremap <silent> <Leader>gg :RG<CR>
+    nnoremap <silent> z= :call <SID>fzf_spell()<CR>
 endfunction
 
 function! s:fzf_rg(query, fullscreen) abort "{{{2
@@ -93,6 +94,14 @@ function! s:fzf_scriptnames(fullscreen) abort "{{{2
 endfunction
 
 function! s:fzf_asynctasks(fullscreen) abort "{{{2
+    function! s:sink(sel) abort
+        let g:sel = a:sel
+        echo a:sel
+        let l:name = split(a:sel, '<')[0]
+        let l:name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
+        echo l:name
+    endfunction
+
     let l:list = plugins#lazy_call('asynctasks.vim', 'asynctasks#list', '')
     let l:source = []
     for l:item in l:list
@@ -102,42 +111,23 @@ function! s:fzf_asynctasks(fullscreen) abort "{{{2
     let l:tasks = {}
     let l:tasks['source'] = l:source
     " let l:tasks['sink'] = {sel->execute('AsyncTask '..trim(fnameescape(split(sel, '<')[0])))}
-    let l:tasks['sink'] = function('s:fzf_sink')
+    let l:tasks['sink'] = function('s:sink')
     " let l:tasks['sink'] = {sel->execute('echo '..sel)}
     let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks:> "'
     call fzf#run(fzf#wrap(l:tasks, a:fullscreen))
 endfunction
 
-function! s:fzf_sink(sel) abort
-    let g:sel = a:sel
-    echo a:sel
-    let l:name = split(a:sel, '<')[0]
-    let l:name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
-    echo l:name
+function! s:fzf_spell() abort "{{{2
+    let l:spec = {}
+    let l:col = wincol()
+    let l:row = winline()
+    let l:spec['source'] = spellsuggest(expand('<cword>'))
+    let l:spec['sink'] = {word -> execute('normal! "_ciw'.word)}
+    let l:spec['tmux'] = '-p20%,30% -x'.l:col.' -y'.l:row
+    let l:spec['window'] = {'width': 0.4, 'height': 0.3}
+    " let l:spec['options'] = '--reverse'
+    return fzf#run(l:spec)
 endfunction
-
-" function! s:fzf_sink(what)
-"     let p1 = stridx(a:what, '<')
-"     if p1 >= 0
-"         let name = strpart(a:what, 0, p1)
-"         let name = substitute(name, '^\s*\(.\{-}\)\s*$', '\1', '')
-"         if name != ''
-"             exec "AsyncTask ". fnameescape(name)
-"         endif
-"     endif
-" endfunction
-"
-" function! s:fzf_task(fullscreen)
-"     let rows = plugins#lazy_call('asynctasks.vim', 'asynctasks#source', &columns * 48 / 100)
-"     let source = []
-"     for row in rows
-"         let name = row[0]
-"         let source += [name . '  ' . row[1] . '  : ' . row[2]]
-"     endfor
-"     let opts = { 'source': source, 'sink': function('s:fzf_sink'),
-"         \ 'options': '+m --nth 1 --inline-info --tac' }
-"     call fzf#run(fzf#wrap(opts))
-" endfunction
 
 function! s:grep_to_qf(line) abort "{{{2
     let l:parts = split(a:line, ':')
@@ -212,6 +202,5 @@ command! -bang Mru call s:fzf_mru(<bang>0)
 
 " Sourced :: fuzzy :scriptnames {{{2
 command! -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
-
 
 " vim:fdl=1:

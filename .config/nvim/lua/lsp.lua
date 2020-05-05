@@ -70,7 +70,7 @@ function M.init()
     --     },
     --   },
     -- },
-    pyls_ms = {},
+    -- pyls_ms = {},
   }
 
   -- Set global callbacks

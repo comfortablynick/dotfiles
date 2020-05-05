@@ -9,7 +9,7 @@ BACKUPPATH=/tmp/backups
 DROPBOXPATH=/wp-backup
 
 #path to WordPress installation folders
-SITESTORE=/srv/http
+SITESTORE=/var/www/html
 
 #date prefix
 DATEFORM=$(date +"%Y-%m-%d")

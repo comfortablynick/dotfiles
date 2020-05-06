@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -z "$(command -v fzf)" ] || [ ! -d "$HOME/.fzf" ]; then
     return
 fi

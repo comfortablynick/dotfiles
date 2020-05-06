@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # TMUX Initialization
 # Abort if
 #       - not interactive

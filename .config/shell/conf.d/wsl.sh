@@ -1,5 +1,6 @@
-# WSL (Windows Subsystem for Linux) Fixes
+#!/bin/sh
 
+# WSL (Windows Subsystem for Linux) Fixes
 if [ -f /proc/version ] && grep -q "Microsoft" /proc/version; then
     # Fix umask value if WSL didn't set it properly.
     # https://github.com/Microsoft/WSL/issues/352

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Check env.toml checksum for changes
 # Python must have tomlkit installed
 env_file="$HOME/.env_toml_sha_$CURRENT_SHELL"

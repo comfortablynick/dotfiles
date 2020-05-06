@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # In order to bypass asdf shims. We *only* add the `ASDF_DIR/bin`
 # directory to PATH, since we still want to use `asdf` but not its shims.
 if [ -d "$HOME/.asdf" ]; then

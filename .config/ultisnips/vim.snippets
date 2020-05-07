@@ -86,11 +86,11 @@ endsnippet
 snippet filetype_detect "filetype detection boilerplate" b
 " vint: -ProhibitAutocmdWithNoGroup
 
-autocmd BufRead,BufNewFile *.${1:file_ext} call s:set_$1_filetype()
+autocmd BufRead,BufNewFile ${1:filename_pattern} call s:set_filetype()
 
-function! s:set_$1_filetype() abort
-    if &filetype !=# '$1'
-        set filetype=$1
+function! s:set_filetype() abort
+    if &filetype !=# '${2:filetype}'
+        set filetype=$2
     endif
 endfunction
 endsnippet

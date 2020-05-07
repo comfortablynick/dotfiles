@@ -21,8 +21,6 @@ function! plugins#neoformat#post() abort
     let g:neoformat_typescript_prettier = {
         \ 'exe': 'prettier',
         \ 'args': [
-        \   '--tab-width 4',
-        \   '--trailing-comma es5',
         \   '--stdin',
         \   '--stdin-filepath',
         \   '"%:p"',

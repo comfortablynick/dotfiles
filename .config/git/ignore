@@ -24,3 +24,6 @@ Thumbs.db
 # General
 log/
 *.log
+
+# Clasp
+.clasprc.json

@@ -2,6 +2,7 @@ let s:guard = 'g:loaded_autoload_plugins_floaterm' | if exists(s:guard) | finish
 let {s:guard} = 1
 
 function! plugins#floaterm#post() abort
+    let g:floaterm_shell = $SHELL
     let g:floaterm_wintitle = v:true
     let g:floaterm_autoclose = v:true
     " let g:floaterm_width = 0.7

@@ -182,6 +182,7 @@ set -g use_vi_mode yes
 if test "$use_vi_mode" = 'yes'
     set -g fish_key_bindings fish_vi_key_bindings
     bind -M insert -m default kj force-repaint
+    bind -M insert \cE edit
 end
 
 # Pre-shell load {{{1

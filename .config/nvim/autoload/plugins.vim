@@ -118,6 +118,7 @@ function! plugins#init() abort
     " Completion
     Pack 'neovim/nvim-lsp'
     Pack 'neoclide/coc.nvim',           {'do': 'yarn install --frozen-lockfile'}
+    " Pack 'neoclide/coc.nvim',           {'branch': 'release'}
     Pack 'lifepillar/vim-mucomplete'
 
     " Tmux

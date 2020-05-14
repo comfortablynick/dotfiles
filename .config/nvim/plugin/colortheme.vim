@@ -3,7 +3,7 @@
 " Description: Color and theme settings
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-03-23 14:51:04 CDT
+" Last Change: 2020-05-08 13:29:15 CDT
 " ====================================================
 let s:guard = 'g:loaded_plugin_colortheme' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
@@ -12,6 +12,10 @@ let {s:guard} = 1
 if &term =~# '^screen'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
+
+if has('nvim')
+    highlight default link TextYank IncSearch
 endif
 
 " Map colorscheme -> statusline theme

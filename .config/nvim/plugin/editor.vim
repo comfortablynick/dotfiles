@@ -47,6 +47,8 @@ augroup plugin_editor
         autocmd TermOpen * setlocal nonumber norelativenumber
         " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
         autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
+        " Neovim yank highlight {{{2
+        autocmd TextYankPost * lua require'buffer'.hlyank(vim.v.event)
     endif
     " Set cursorline depending on mode, if cursorline is enabled locally {{{2
     if &l:cursorline

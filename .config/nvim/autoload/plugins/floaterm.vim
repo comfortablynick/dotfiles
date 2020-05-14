@@ -12,6 +12,9 @@ function! plugins#floaterm#post() abort
     hi link FloatermBorder NormalFloat
 endfunction
 
+nnoremap <silent> <F7> :FloatermToggle<CR>
+tnoremap <silent> <F7> <C-\><C-n>:FloatermToggle<CR>
+
 " plugins#floaterm#wrap :: Use floaterm for custom command and allow cmdline options {{{1
 function! plugins#floaterm#wrap(cmd, ...) abort
     execute ':FloatermNew' join(a:000) a:cmd

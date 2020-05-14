@@ -72,6 +72,13 @@ function! map#cabbr(lhs, rhs) abort
     return a:lhs
 endfunction
 
+" map#set_cabbr() :: Create safe cnoreabbrev {{{1
+function! map#set_cabbr(from, to) abort
+    execute 'cnoreabbrev <expr>' a:from
+        \ '((getcmdtype() ==# ":" && getcmdline() ==# "'.a:from.'")'
+        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+endfunction
+
 " map#eatchar() :: Eat character if it matches pattern {{{1
 " From :helpgrep Eatchar
 function! map#eatchar(pat) abort

@@ -16,7 +16,6 @@ function! plugins#coc#pre() abort "{{{1
         \ 'coc-python',
         \ 'coc-tsserver',
         \ 'coc-vimlsp',
-        \ 'coc-yank',
         \ 'coc-yaml',
         \ 'coc-pairs',
         \ ]
@@ -119,12 +118,9 @@ function! plugins#coc#apply_maps() abort "{{{1
 endfunction
 
 function! plugins#coc#abbrev() abort "{{{1
-    cnoreabbrev <expr> es
-        \ map#cabbr('es', 'CocCommand snippets.editSnippets')
-    cnoreabbrev <expr> ci
-        \ map#cabbr('ci', 'CocInfo')
-    cnoreabbrev <expr> cc
-        \ map#cabbr('cc', 'CocConfig')
+    call map#set_cabbr('es', 'CocCommand snippets.editSnippets')
+    call map#set_cabbr('ci', 'CocInfo')
+    call map#set_cabbr('cc', 'CocConfig')
 endfunction
 
 function! plugins#coc#init() abort "{{{1

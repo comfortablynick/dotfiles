@@ -10,6 +10,7 @@ function! plugins#neoformat#post() abort
     let g:neoformat_basic_format_align = 1   " Enable basic formatting
     let g:neoformat_basic_format_retab = 1   " Enable tab -> spaces
     let g:neoformat_basic_format_trim = 1    " Trim trailing whitespace
+    let g:neoformat_only_msg_on_error = 1    " Quieter
 
     " Filetype-specific formatters
     let g:neoformat_enabled_python = [

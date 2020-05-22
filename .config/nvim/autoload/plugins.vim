@@ -38,6 +38,7 @@ function! plugins#init() abort
     " Linters/formatters/runners
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
+    Pack 'psf/black', {'branch': 'stable'}
     Pack 'skywind3000/asyncrun.vim'
     Pack 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
 
@@ -90,7 +91,8 @@ function! plugins#init() abort
 
     " Syntax/filetype
     " Some must be loaded at start
-    Pack 'numirias/semshi'
+    " Pack 'numirias/semshi',             {'type': 'start', 'do': ':UpdateRemotePlugins'}
+    Pack 'vim-python/python-syntax',    {'type': 'start'}
     Pack 'dag/vim-fish',                {'type': 'start'}
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
     Pack 'cespare/vim-toml',            {'type': 'start'}

@@ -1,29 +1,30 @@
 [user]
-	email = comfortablynick@gmail.com
-	name = Nick Murphy
+    email = comfortablynick@gmail.com
+    name = Nick Murphy
 [alias]
-	fzf = "!f() { /home/nick/src/git-fzf/git-fzf.sh $@ }; f"
+    fzf = "!f() { /home/nick/src/git-fzf/git-fzf.sh $@ }; f"
 [core]
-	pager = diff-so-fancy | less --tabs=4 -RFX
+    # pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = delta --plus-color="#012800" --minus-color="#340001" --theme='Monokai Extended'
     untrackedCache = true
 [color]
-	ui = true
+    ui = true
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
 [color "diff"]
-	meta = yellow
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
 
 [merge]
-        tool = vimdiff
-        conflictstyle = diff3
+    tool = vimdiff
+    conflictstyle = diff3
 
 [mergetool]
         prompt = false

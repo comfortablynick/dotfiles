@@ -41,6 +41,7 @@ function! plugins#init() abort
     Pack 'psf/black', {'branch': 'stable'}
     Pack 'skywind3000/asyncrun.vim'
     Pack 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
+    Pack 'kkoomen/vim-doge'
 
     " Editing behavior
     Pack 'tpope/vim-commentary'

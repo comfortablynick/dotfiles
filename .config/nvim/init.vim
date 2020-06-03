@@ -1,4 +1,4 @@
-" vim:fdl=1:
+" vim:fdm=marker:fdl=1:
 "  _       _ _         _
 " (_)_ __ (_) |___   _(_)_ __ ___
 " | | '_ \| | __\ \ / / | '_ ` _ \
@@ -122,6 +122,7 @@ set conceallevel=1                                              " Enable conceal
 set concealcursor=                                              " Don't conceal when cursor goes to line
 set virtualedit=onemore                                         " Allow cursor to extend past line
 set wildmenu                                                    " Enabled by default in nvim
+set wildignore+=__pycache__                                     " Ignore in glob patterns
 set list                                                        " Show extra characters
 set listchars+=nbsp:␣                                           " Non breaking space
 set listchars+=trail:·                                          " Trailing space
@@ -202,6 +203,7 @@ packadd! vim-textobj-user
 packadd! vim-bbye
 packadd! vim-dirvish
 packadd! vim-floaterm
+packadd! vim-doge
 
 if has('nvim')
     " Nvim-only

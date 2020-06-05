@@ -38,6 +38,7 @@ local function kill(target_buf, should_force)
   api.nvim_command(table.concat({command, target_buf}, " "))
 end
 
+-- Built into nvim as of 5/2020
 local function hlyank(event, timeout)
   if event.operator ~= "y" or event.regtype == "" then return end
   local timeout = timeout or 500

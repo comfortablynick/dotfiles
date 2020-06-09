@@ -25,6 +25,7 @@ if !has_key(b:doge_patterns, 'numpy_untyped')
     let b:doge_patterns['numpy_untyped'] = b:doge_patterns['numpy']
     let b:doge_patterns['numpy_untyped'][0]['parameters']['format'][0] = 
         \ '{name}'
-    call remove(b:doge_patterns['numpy_untyped'][0]['template'], 0)
-    let b:doge_patterns['numpy_untyped'][0]['template'][0] = '"""'..b:doge_patterns['numpy_untyped'][0]['template'][0]
+    call remove(b:doge_patterns['numpy_untyped'][0]['template'], 0, 2)
+    let b:doge_patterns['numpy_untyped'][0]['template'][0] = '"""'..
+        \ b:doge_patterns['numpy_untyped'][0]['template'][0]
 endif

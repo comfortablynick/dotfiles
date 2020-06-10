@@ -11,3 +11,4 @@
 --map-syntax justfile:make
 --map-syntax .ignore:.gitignore
 --map-syntax .MD:markdown
+--map-syntax .tasks:INI

@@ -66,6 +66,7 @@ function! plugins#init() abort
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
     Pack 'junegunn/fzf',                {'do': { p -> s:fzf_post(p) }}
     Pack 'junegunn/fzf.vim'
+    Pack 'laher/fuzzymenu.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'preservim/nerdtree'

@@ -8,7 +8,14 @@ let $PYTHONUNBUFFERED=1
 
 " Don't overwrite command if already defined
 silent! command Black packadd black | :Black
-nnoremap <buffer><silent><F3> :Black<CR>
+nnoremap <buffer><silent><F3> :call <SID>format_python()<CR>
+
+function! s:format_python() abort
+    Black
+    if g:coc_enabled == 1
+        call CocAction('runCommand', 'editor.action.organizeImport')
+    endif
+endfunction
 
 " Preserve existing doge settings.
 let b:doge_patterns = get(b:, 'doge_patterns', {})

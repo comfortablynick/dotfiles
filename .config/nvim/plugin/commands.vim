@@ -63,8 +63,13 @@ cnoreabbrev <expr> grep map#cabbr('grep', 'Grep')
 command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
 function! s:grep(...) abort
-	return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
+    return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
 endfunction
+
+" Fzm :: lazy load fuzzymenu.vim {{{2
+command! -bang -nargs=0 Fzm
+    \ call plugins#lazy_call('fuzzymenu.vim', 'fuzzymenu#Run', {'fullscreen': <bang>0})
+nnoremap <C-P> :Fzm<CR>
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
@@ -121,4 +126,4 @@ command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_file
 
 " Agrep :: async grep {{{2
 command! -nargs=+ -complete=file -bar Agrep lua require'tools'.async_grep(<q-args>)
-" vim:fdl=1:
+" vim:fdl=99:

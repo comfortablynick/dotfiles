@@ -1,0 +1,14 @@
+# List all files, long format, colorized, permissions in octal
+function lo() {
+    ls -lah --color=always "$@" | awk '
+    {
+      k=0;
+      for (i=0;i<=8;i++)
+        k+=((substr($1,i+2,1)~/[rwx]/) *2^(8-i));
+      if (k)
+        printf("%s ",$1);
+        printf("%0o ",k);
+      printf("%3s %5s %5s %s %5s %5s %6s %s %s %s\n", $2, $3, $4, $6, $7, $8, $5, $9,$10, $11);
+    }'
+}
+# vim:ft=zsh:

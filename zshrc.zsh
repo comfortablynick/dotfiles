@@ -100,6 +100,7 @@ autoload -Uz fh
 autoload -Uz cf
 autoload -Uz mc
 autoload -Uz cd
+autoload -Uz lo
 
 # chpwd functions {{{3
 autoload -Uz list_all

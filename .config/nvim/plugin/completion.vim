@@ -37,6 +37,7 @@ let g:completion_filetypes = {
     \    'chordpro',
     \    'toml',
     \    'vifm',
+    \    'ps1',
     \    'snippets',
     \    'cmake',
     \    'mail',

@@ -93,7 +93,6 @@ function! plugins#init() abort
 
     " Syntax/filetype
     " Some must be loaded at start
-    " Pack 'numirias/semshi',             {'type': 'start', 'do': ':UpdateRemotePlugins'}
     Pack 'vim-python/python-syntax',    {'type': 'start'}
     Pack 'dag/vim-fish',                {'type': 'start'}
     Pack 'HerringtonDarkholme/yats',    {'type': 'start'}
@@ -106,6 +105,7 @@ function! plugins#init() abort
     Pack 'tbastos/vim-lua',             {'type': 'start'}
     Pack 'SidOfc/mkdx',                 {'type': 'start'}
     Pack 'habamax/vim-asciidoctor',     {'type': 'start'}
+    Pack 'PProvost/vim-ps1.git',        {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding',
         \ {'type': 'start'}
 

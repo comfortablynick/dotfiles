@@ -10,7 +10,6 @@
   "diagnostic.refreshAfterSave": false,
   "diagnostic.refreshOnInsertMode": true,
   "diagnostic.virtualText": true,
-  "diagnostic.locationlist": true,
   "diagnostic.enableMessage": "always",
   "diagnostic.virtualTextCurrentLineOnly": false,
 

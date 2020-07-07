@@ -11,6 +11,7 @@ let {s:guard} = 1
 nnoremap U <C-r>
 nnoremap qq :x<CR>
 nnoremap qqq :q!<CR>
+nnoremap QQ ZQ
 nnoremap <CR> :nohlsearch<CR><CR>
 tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
 

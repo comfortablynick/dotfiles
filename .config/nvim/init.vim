@@ -187,28 +187,28 @@ let g:loaded_perl_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-packadd! vim-sandwich
-packadd! vim-smoothie
-packadd! fzf
-packadd! fzf.vim
-packadd! neoformat
-packadd! vim-repeat
-packadd! vim-fugitive
-packadd! vim-eunuch
-packadd! vim-clap
-packadd! vim-snippets
-packadd! vim-startify
-packadd! vista.vim
-packadd! vim-textobj-user
-packadd! vim-bbye
-packadd! vim-dirvish
-packadd! vim-floaterm
-packadd! vim-doge
+silent! packadd! vim-sandwich
+silent! packadd! vim-smoothie
+silent! packadd! fzf
+silent! packadd! fzf.vim
+silent! packadd! neoformat
+silent! packadd! vim-repeat
+silent! packadd! vim-fugitive
+silent! packadd! vim-eunuch
+silent! packadd! vim-clap
+silent! packadd! vim-snippets
+silent! packadd! vim-startify
+silent! packadd! vista.vim
+silent! packadd! vim-textobj-user
+silent! packadd! vim-bbye
+silent! packadd! vim-dirvish
+silent! packadd! vim-floaterm
+silent! packadd! vim-doge
 
 if has('nvim')
     " Nvim-only
-    packadd! luajob
-    packadd! nvim-lsp
+    silent! packadd! luajob
+    silent! packadd! nvim-lsp
 else
     " Vim only
     packadd! matchit " Nvim loads by default

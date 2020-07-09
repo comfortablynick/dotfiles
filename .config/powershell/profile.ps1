@@ -1,5 +1,6 @@
 Import-Module posh-git
 Import-Module oh-my-posh
+# Import-Module posh-direnv
 Set-Theme Paradox
 
 # $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"

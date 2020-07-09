@@ -45,6 +45,8 @@
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.formatOnSaveFiletypes": ["rust"],
 
+  "rust-analyzer.rustfmt.extraArgs": ["+nightly"],
+
   // Snippets
   "snippets.userSnippetsDirectory": "~/.config/ultisnips",
 

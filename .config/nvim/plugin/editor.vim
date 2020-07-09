@@ -48,7 +48,7 @@ augroup plugin_editor
         " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
         autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
         " Neovim yank highlight {{{2
-        autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank("IncSearch", 1000)
+        autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=500}
     endif
     " Set cursorline depending on mode, if cursorline is enabled locally {{{2
     if &l:cursorline

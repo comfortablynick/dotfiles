@@ -26,6 +26,7 @@ RE_CMD = re.compile(r"\$\(")
 RE_AND = re.compile(r" && ")
 RE_SPACE = re.compile(r"\s")
 
+
 # Functions {{{1
 def get_file_hash(filepath: str) -> str:  # {{{2
     """Get sha hash of filepath.
@@ -98,16 +99,25 @@ def is_shell_match(var_shell, target_shell) -> bool:  # {{{2
 
 def do_eval(v: str) -> str:  # {{{2
     """Do python eval, then shell eval."""
-    pre = v
     try:
-        out = eval(v)
-        eval_type = "Python"
+        out = do_python_eval(v)
     except (SyntaxError, NameError):
         # Not python syntax; let the shell eval it
-        out = run(v, shell=True, capture_output=True).stdout.strip().decode("utf-8")
-        eval_type = "Shell"
-    finally:
-        LOG.debug("%s eval called on: %s; result: %s", eval_type, pre, out)
+        out = do_shell_eval(v)
+    return out
+
+
+def do_python_eval(v: str) -> str:  # {{{2
+    """Do python eval."""
+    out = eval(v)
+    LOG.debug("Python eval called on: %s; result: %s", v, out)
+    return out
+
+
+def do_shell_eval(v: str) -> str:  # {{{2
+    """Do shell eval."""
+    out = run(v, shell=True, capture_output=True).stdout.strip().decode("utf-8")
+    LOG.debug("Shell eval called on: %s; result: %s", v, out)
     return out
 
 
@@ -154,6 +164,7 @@ def get_shell_vars(  # {{{2
             k = var.get("key")
             a = var.get("args", var_def.get("default_args"))
             eval = var.get("eval")
+            # shell_eval = var.get("shell_eval")
             quote = var.get("quote")
             test = var.get("if")
 
@@ -277,4 +288,4 @@ def main():  # {{{2
 if __name__ == "__main__":
     main()
 
-# vim:fdl=1:
+# vim:fdl=99:

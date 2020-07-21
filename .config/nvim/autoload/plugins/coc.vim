@@ -18,10 +18,11 @@ function! plugins#coc#pre() abort "{{{1
         \ 'coc-vimlsp',
         \ 'coc-yaml',
         \ 'coc-pairs',
+        \ 'coc-actions',
         \ ]
 
     if $MOSH_CONNECTION
-        let g:coc_user_config = {                      
+        let g:coc_user_config = {
             \ 'explorer.icon.enableNerdfont': v:false,
             \ 'explorer.icon.enableVimDevicons': v:false,
             \}

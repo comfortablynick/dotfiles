@@ -45,10 +45,12 @@
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.formatOnSaveFiletypes": ["rust"],
 
-  "rust-analyzer.rustfmt.extraArgs": ["+nightly"],
-
   // Snippets
   "snippets.userSnippetsDirectory": "~/.config/ultisnips",
+
+  // Rust
+  "rust-analyzer.rustfmt.extraArgs": ["+nightly"],
+  "rust-analyzer.inlayHints.chainingHints": true,
 
   // Python
   "python.linting.enabled": true,

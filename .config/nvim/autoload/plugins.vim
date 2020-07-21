@@ -106,6 +106,7 @@ function! plugins#init() abort
     Pack 'SidOfc/mkdx',                 {'type': 'start'}
     Pack 'habamax/vim-asciidoctor',     {'type': 'start'}
     Pack 'PProvost/vim-ps1.git',        {'type': 'start'}
+    Pack 'kevinoid/vim-jsonc',          {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding',
         \ {'type': 'start'}
 
@@ -121,8 +122,7 @@ function! plugins#init() abort
 
     " Completion
     Pack 'neovim/nvim-lsp'
-    Pack 'neoclide/coc.nvim',           {'do': 'yarn install --frozen-lockfile'}
-    " Pack 'neoclide/coc.nvim',           {'branch': 'release'}
+    Pack 'neoclide/coc.nvim',           {'do': {-> coc#util#install()}}
     Pack 'lifepillar/vim-mucomplete'
 
     " Tmux

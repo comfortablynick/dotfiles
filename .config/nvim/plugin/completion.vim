@@ -17,6 +17,7 @@ let g:completion_filetypes = {
     \    'typescript',
     \    'javascript',
     \    'json',
+    \    'jsonc',
     \    'bash',
     \    'sh',
     \    'vim',

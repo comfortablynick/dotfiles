@@ -30,7 +30,7 @@ function! s:run(cmd) abort
     call timer_start(l:time, {-> runner#run_cmd(a:cmd)})
 endfunction
 
-nmap <silent> <Leader>a <Plug>(VtrAttachToPane)
+nmap <silent> <Leader>z <Plug>(VtrAttachToPane)
 nmap <silent> <Leader>x <Plug>(VtrKillRunner)
 
 nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>

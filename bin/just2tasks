@@ -33,7 +33,12 @@ for cmd in collected:
     output.append(block)
 
 try:
-    with open(sys.argv[1], "w") as f:
-        f.write("\n".join(output))
+    if (file := sys.argv[1]) != "justfile":
+        with open(file, "w") as f:
+            f.write("\n".join(output))
+        print(f"Wrote {len(output)} commands from justfile to {file}")
+    else:
+        print("'justfile' may overwrite the source file! Aborting.", file=sys.stderr)
+        sys.exit(1)
 except IndexError:
     print(*output, sep="\n")

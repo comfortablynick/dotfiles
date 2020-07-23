@@ -97,6 +97,11 @@ function! plugins#coc#apply_maps() abort "{{{1
         nnoremap <Leader>gf :CocCommand git.foldUnchanged<CR>
     endif
 
+    if index(g:coc_global_extensions, 'coc-actions') > -1
+        xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open' visualmode()<CR>
+        nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>coc_actions_open_from_selection<CR>g@
+    endif
+
     set keywordprg=:silent!\ call\ CocActionAsync('doHover')
 
     " Use <TAB> to scroll completion results and jump through snippets
@@ -116,6 +121,10 @@ function! plugins#coc#apply_maps() abort "{{{1
 
     " Use `:Fold` to fold current buffer
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
+endfunction
+
+function! s:coc_actions_open_from_selection(type) abort "{{{1
+    execute 'CocCommand actions.open' a:type
 endfunction
 
 function! plugins#coc#abbrev() abort "{{{1

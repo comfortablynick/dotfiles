@@ -76,6 +76,7 @@ function M.float_term(command, scale_pct) -- {{{1
   end)()
   M.create_centered_floating{width = width, height = height, border = false}
   api.nvim_call_function("termopen", {command})
+  vim.cmd"startinsert"
 end
 
 function M.create_centered_floating(options) -- {{{1

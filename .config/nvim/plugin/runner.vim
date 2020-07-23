@@ -9,7 +9,7 @@ let {s:guard} = 1
 
 " TODO: replace with framework like asynctasks?
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
-let g:run_code_with = 'term'
+let g:run_cmd_in = 'vtr'
 let g:VtrStripLeadingWhitespace = 0                             " Useful for Python to avoid messing up whitespace
 let g:VtrClearEmptyLines = 0                                    " Disable clearing if blank lines are relevant
 let g:VtrAppendNewline = 1                                      " Add newline to multiline send

@@ -215,9 +215,9 @@ else
 endif
 
 " Requires python2
-if has('python')
-    packadd! vim-textobj-lua
-endif
+" if has('python')
+"     silent! packadd! vim-textobj-lua
+" endif
 
 " Lua tools {{{2
 if has('nvim')

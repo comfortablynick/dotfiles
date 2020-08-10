@@ -25,6 +25,35 @@
     "sh": "shellcheck"
   },
 
+  "diagnostic-languageserver.linters": {
+    // Override shellcheck to use file instead of stdin
+    // Not ideal, but I don't want to have to use a directive to specify shell
+    "shellcheck": {
+      "command": "shellcheck",
+      "debounce": 100,
+      "args": [
+        "--format",
+        "json",
+        "%filepath"
+      ],
+      "sourceName": "shellcheck",
+      "parseJson": {
+        "line": "line",
+        "column": "column",
+        "endLine": "endLine",
+        "endColumn": "endColumn",
+        "message": "${message} [${code}]",
+        "security": "level"
+      },
+      "securities": {
+        "error": "error",
+        "warning": "warn",
+        "info": "info",
+        "style": "hint"
+      }
+    }
+  },
+
   // Suggestion options
   "suggest.echodocSupport": false,
   "suggest.triggerCompletionWait": 100,

@@ -57,8 +57,8 @@ function! plugins#init() abort
     Pack 'bfredl/nvim-miniyank'
 
     " Text objects
-    Pack 'kana/vim-textobj-user'
-    Pack 'spacewander/vim-textobj-lua'
+    " Pack 'kana/vim-textobj-user'
+    " Pack 'spacewander/vim-textobj-lua'
 
     " Explorer/finder utils
     Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
@@ -93,9 +93,6 @@ function! plugins#init() abort
 
     " Syntax/filetype
     " Some must be loaded at start
-    " Pack 'vim-python/python-syntax',    {'type': 'start'}
-    " Pack 'bfrg/vim-cpp-modern',         {'type': 'start'}
-    " Pack 'vim-jp/syntax-vim-ex',        {'type': 'start'}
     Pack 'sheerun/vim-polyglot',        {'type': 'start'}
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'SidOfc/mkdx',                 {'type': 'start'}

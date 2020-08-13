@@ -36,4 +36,5 @@ nmap <silent> <Leader>x <Plug>(VtrKillRunner)
 nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
 nnoremap <silent> <Leader>i :call <SID>run('install')<CR>
 nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
+nnoremap <silent> <Leader><Leader>b :call runner#run_cmd('bench')<CR>
 " nnoremap <silent> <Leader>c :call runner#run_cmd('test')<CR>

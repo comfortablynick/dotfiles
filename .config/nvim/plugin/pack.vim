@@ -26,7 +26,7 @@ augroup END
 " Load packages that are safe to defer
 function! s:deferred_load() abort
     packadd targets.vim
-    packadd tcomment_vim
+    packadd vim-commentary
     packadd vim-unimpaired
     packadd clever-f.vim
     packadd vim-sneak

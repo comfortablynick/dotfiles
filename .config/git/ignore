@@ -27,3 +27,6 @@ log/
 
 # Clasp
 .clasprc.json
+
+# Task
+.task/

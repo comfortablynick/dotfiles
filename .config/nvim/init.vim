@@ -113,7 +113,8 @@ set nocursorline                                                " Show line unde
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=300                                              " Update more often (helps GitGutter)
-set signcolumn=yes                                              " Always show; keep appearance consistent
+" set signcolumn=yes                                              " Always show; keep appearance consistent
+let &signcolumn = has('patch-8.1.1564') ? 'number' : 'yes'      " Use number column for signs if patch is applied
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set timeoutlen=400                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)

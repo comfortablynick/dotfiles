@@ -11,7 +11,7 @@
   changed_when: false
 
 - name: Install pipx packages
-  command: "{{ pipx_path }} install {{ item }}"
+  command: "{{ pipx_path }} install {{ item.name }}"
   loop: "{{ pipx_default_pkgs }}"
   register: pipx
   changed_when: "'--force' not in pipx.stdout"
@@ -19,9 +19,10 @@
     - PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
   when:
     - pipx_installed.stdout is defined
-    - item not in pipx_installed.stdout
+    - item.name not in pipx_installed.stdout
 
 - name: Inject pipx dependencies
-  command: "{{ pipx_path }} inject {{ item.pkg }} {{ item.inject|join(' ') }}"
-  loop: "{{ pipx_inject_dependencies }}"
+  command: "{{ pipx_path }} inject {{ item.name }} {{ item.inject|join(' ') }}"
+  loop: "{{ pipx_default_pkgs }}"
+  when: item.inject is defined
   changed_when: false # there seems to be no way to detect if this is a change or not

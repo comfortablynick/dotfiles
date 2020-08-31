@@ -125,4 +125,4 @@ function! s:recall_cursor_position() abort
     endif
 endfunction
 
-" vim:fdl=99:
+" vim:fdl=1 noml:

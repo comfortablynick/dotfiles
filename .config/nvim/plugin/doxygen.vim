@@ -3,7 +3,6 @@
 " Description: Abbreviatins for doxygen funcs
 " Author:      Nick Murphy
 " License:     MIT
-" Last Change: 2020-02-28 19:14:26 CST
 " ====================================================
 let s:guard = 'g:loaded_plugin_doxygen' | if exists(s:guard) | finish | endif
 let {s:guard} = 1

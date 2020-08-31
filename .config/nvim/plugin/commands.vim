@@ -28,6 +28,8 @@ command! -bang -bar Scratch call window#create_scratch(<bang>0)
 
 " [Async]Run :: run a command asynchronously {{{2
 cnoreabbrev <expr> R map#cabbr('R', 'Run')
+cnoreabbrev <expr> grep map#cabbr('grep', 'Grep')
+
 " Lazy load AsyncRun
 command! -bang -nargs=+ -range=0 -complete=file AsyncRun
     \ packadd asyncrun.vim
@@ -37,15 +39,18 @@ command! -bang -nargs=+ -range=0 -complete=file Run
     \ packadd asyncrun.vim
     \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
 
+" Use AyncRun for Make
+command! -bang -nargs=* -complete=file Make
+    \ AsyncRun -program=make @ <args>
+
+" Async grep
+command! -nargs=+ -complete=file_in_path -bar Grep
+    \ AsyncRun -strip -program=grep <args>
+
 " AsyncTasks :: run defined tasks asynchronously {{{2
 command! -bang -nargs=* -range=0 AsyncTask
     \ packadd asynctasks.vim
     \ | call asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)
-
-" Make :: run make asynchronously {{{2
-" Use AyncRun for Make
-command! -bang -nargs=* -complete=file Make
-    \ call plugins#lazy_exe('asyncrun.vim', 'AsyncRun', '-program=make', '@', <args>)
 
 " GV :: git commit viewer {{{2
 command! -bang -nargs=* -range=0 GV
@@ -54,12 +59,7 @@ command! -bang -nargs=* -range=0 GV
 " LazyGit :: tui for git {{{2
 command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
 
-" Grep :: async grep {{{2
-command! -nargs=+ -complete=file_in_path -bar Grep
-    \ AsyncRun -strip -program=grep <args>
-
-cnoreabbrev <expr> grep map#cabbr('grep', 'Grep')
-
+" LGrep :: location list grep {{{2
 command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
 function! s:grep(...) abort
@@ -88,8 +88,8 @@ command! -bar Messages
 
 " Redir :: send output of <expr> to scratch window {{{2
 " Usage:
-" 	:Redir hi .........show the full output of command ':hi' in a scratch window
-" 	:Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
+"   :Redir hi .........show the full output of command ':hi' in a scratch window
+"   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
 command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
 
 " Scriptnames :: display :scriptnames in quickfix and optionally filter {{{2
@@ -126,4 +126,4 @@ command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_file
 
 " Agrep :: async grep {{{2
 command! -nargs=+ -complete=file -bar Agrep lua require'tools'.async_grep(<q-args>)
-" vim:fdl=99:
+" vim:fdl=1 noml:

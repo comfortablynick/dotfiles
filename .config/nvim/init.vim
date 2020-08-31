@@ -1,4 +1,4 @@
-" vim:fdm=marker:fdl=1:
+" vim:fdm=marker fdl=1 noml:
 "  _       _ _         _
 " (_)_ __ (_) |___   _(_)_ __ ___
 " | | '_ \| | __\ \ / / | '_ ` _ \

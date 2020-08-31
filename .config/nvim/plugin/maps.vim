@@ -62,10 +62,4 @@ nnoremap <silent> <Tab> :bnext<CR>
 nnoremap <silent> <S-Tab> :bprevious<CR>
 nnoremap <silent> <Leader>q :bd<CR>
 
-" Fzy {{{1
-" Use fd/find to select file and edit {{{2
-let g:findprg = executable('fd') ? 'fd -t f -HL' : 'find . -type f -L'
-nnoremap <silent> <Leader>e
-    \ :call fzy#command(g:findprg, ':e')<CR>
-
-" vim:fdl=1:
+" vim:fdl=1 noml:

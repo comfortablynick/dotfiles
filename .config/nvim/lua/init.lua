@@ -435,4 +435,4 @@ load_packages()
 require"lightline"
 
 return init
--- vim:fdm=marker fdl=1:
+-- vim:fdm=marker fdl=1 noml:

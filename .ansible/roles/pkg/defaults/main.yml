@@ -37,6 +37,8 @@ pip3_default_pkgs:
   - pipx
   - ruamel.yaml
   - tomlkit
+  # pynvim for rnvimr plugin
+  - pynvim
 
 pipx_default_pkgs:
   # dev tools

@@ -7,25 +7,6 @@
 let s:guard = 'g:loaded_autoload_explorer' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-" function! s:netrw_run() abort
-"     if exists('t:expl_buf_num')
-"         " TODO: throws error if called from non-netrw buffer
-"         let l:expl_win_num = bufwinnr(t:expl_buf_num)
-"         let l:cur_win_nr = winnr()
-"         if l:expl_win_num != -1
-"             while l:expl_win_num != l:cur_win_nr
-"                 exec 'wincmd w'
-"                 let l:cur_win_nr = winnr()
-"             endwhile
-"             close
-"         endif
-"         unlet t:expl_buf_num
-"     else
-"         Lexplore
-"         let t:expl_buf_num = bufnr('%')
-"     endif
-" endfunction
-
 " Allow for netrw to be toggled
 function! s:toggle_netrw() abort
     if get(g:, 'NetrwIsOpen', 0)
@@ -46,13 +27,13 @@ endfunction
 " Toggles explorer buffer
 function! explorer#toggle(explorer) abort
     if a:explorer ==# 'nerdtree'
-        if !exists(':NERDTreeToggle') | packadd nerdtree | endif
-        exe 'NERDTreeToggle'
+        NERDTreeToggle
     elseif a:explorer ==# 'coc-explorer'
-        exe 'CocCommand explorer --toggle'
+        CocCommand explorer --toggle
     elseif a:explorer ==# 'defx'
-        if !exists('*defx#do_action') | packadd defx.nvim | endif
-        exe 'Defx -toggle -split=vertical -winwidth=30 -direction=topleft'
+        DefxToggle
+    elseif a:explorer ==# 'rnvimr'
+        RnvimrToggle
     else
         call s:toggle_netrw()
     endif

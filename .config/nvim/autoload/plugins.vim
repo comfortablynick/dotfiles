@@ -56,12 +56,8 @@ function! plugins#init() abort
     Pack 'wellle/targets.vim'
     Pack 'bfredl/nvim-miniyank'
 
-    " Text objects
-    " Pack 'kana/vim-textobj-user'
-    " Pack 'spacewander/vim-textobj-lua'
-
     " Explorer/finder utils
-    Pack 'kevinhwang91/rnvimr',         {'do': 'make sync'}
+    Pack 'kevinhwang91/rnvimr',         {'do': 'pip3 install -U pynvim'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
     Pack 'junegunn/fzf',                {'do': { p -> s:fzf_post(p) }}
@@ -130,18 +126,24 @@ function! s:fzf_post(plugin) abort
         \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
 endfunction
 
-" packadd if needed and call supplied function
+" packadd and call supplied function
 function! plugins#lazy_call(package, funcname, ...) abort
-    if !exists('*'.a:funcname)
-        execute 'packadd' a:package
-    endif
+    execute 'packadd' a:package
     return call(a:funcname, a:000)
 endfunction
 
-" packadd if needed and execute command + args
+" packadd and execute command + args
 function! plugins#lazy_exe(package, cmd, ...) abort
-    if exists(a:cmd =~? '^:' ? a:cmd : ':'.a:cmd) != 2
-        execute 'packadd' a:package
+    if !plugins#exists(a:package)
+        echohl WarningMsg
+        echo 'Package' a:package 'does not exist!'
+        echohl None
+        return
     endif
-    execute a:cmd join(a:000)
+    execute 'packadd' a:package '|' a:cmd join(a:000)
+endfunction
+
+" check if plugin in &packpath (`plugin` can be a glob pattern)
+function! plugins#exists(plugin) abort
+    return !empty(globpath(&packpath, 'pack/*/*/'.a:plugin))
 endfunction

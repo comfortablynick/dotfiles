@@ -138,18 +138,18 @@
     }
   },
 
-  "Lua": {
-    "runtime": {
-      "version": "LuaJIT"
-    },
-    "diagnostics": {
-      "globals":
-      [
-        "vim",
-        "nvim"
-      ]
-    }
-  },
+  // "Lua": {
+  //   "runtime": {
+  //     "version": "LuaJIT"
+  //   },
+  //   "diagnostics": {
+  //     "globals":
+  //     [
+  //       "vim",
+  //       "nvim"
+  //     ]
+  //   }
+  // },
 
     // Explorer
     "explorer.icon.enableVimDevicons": true,

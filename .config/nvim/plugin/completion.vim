@@ -21,10 +21,10 @@ let g:completion_filetypes = {
     \    'bash',
     \    'sh',
     \    'vim',
-    \    'lua',
     \    'python',
     \ ],
     \ 'nvim-lsp': [
+    \    'lua',
     \ ],
     \ 'mucomplete': [
     \    'asciidoctor',
@@ -54,17 +54,34 @@ let g:completion_filetypes = {
     \ ]
     \ }
 
+" Get completion type for a filetype, or empty string
+function! s:get_completion_type(ftype) abort
+    let l:types = get(g:, 'completion_filetypes', {})
+    for l:key in keys(l:types)
+        for l:val in l:types[l:key]
+            if l:val ==? a:ftype
+                return l:key
+            endif
+        endfor
+    endfor
+    return ''
+endfunction
+
 let g:completion_handler_fts = []
+
 function! s:completion_handler(ft) abort
-    let l:comptype = completion#get_type(a:ft)
-    let g:completion_handler_fts += [{'ft': a:ft, 'comptype': l:comptype}]
-    if l:comptype ==# 'coc'
+    let g:completion_type = s:get_completion_type(a:ft)
+    let g:completion_handler_fts += [{'ft': a:ft, 'comptype': g:completion_type}]
+    if g:completion_type ==# 'coc'
         packadd coc.nvim
-    elseif l:comptype ==# 'nvim-lsp'
-        call plugins#nvim_lsp#init()
-        packadd vim-mucomplete
-        packadd ultisnips
-    elseif l:comptype ==# 'mucomplete'
+    elseif g:completion_type ==# 'nvim-lsp'
+        packadd vim-gitgutter
+        packadd completion-nvim
+        lua require"lsp".init()
+        " packadd vim-mucomplete
+        " packadd ultisnips
+    elseif g:completion_type ==# 'mucomplete'
+        packadd vim-gitgutter
         packadd vim-mucomplete
         packadd ultisnips
     endif

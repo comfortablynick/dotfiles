@@ -26,8 +26,8 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
+  require"completion".on_attach()
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
-  api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
     [";d"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
@@ -45,6 +45,10 @@ local on_attach_cb = function(client, bufnr)
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
 
+  vim.cmd[[augroup lsp_lua_on_attach]]
+  vim.cmd[[autocmd CompleteDone * if pumvisible() == 0 | pclose | endif]]
+  vim.cmd[[augroup END]]
+
   -- Not sure what these are supposed to do
   -- vim.cmd[[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
   -- vim.cmd[[autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()]]
@@ -53,14 +57,14 @@ end
 
 function M.init()
   local configs = {
-    -- sumneko_lua = {
-    --   settings = {
-    --     Lua = {
-    --       runtime = {version = "LuaJIT"},
-    --       diagnostics = {enable = true, globals = {"vim", "nvim", "sl"}},
-    --     },
-    --   },
-    -- },
+    sumneko_lua = {
+      settings = {
+        Lua = {
+          runtime = {version = "LuaJIT"},
+          diagnostics = {enable = true, globals = {"vim", "nvim", "sl", "p"}},
+        },
+      },
+    },
     -- vimls = {},
     -- yamlls = {
     --   filetypes = {"yaml", "yaml.ansible"},

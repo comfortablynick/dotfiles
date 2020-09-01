@@ -20,7 +20,7 @@ command!       PackStatus  call plugins#init() | call packager#status()
 augroup deferred_pack_load
     autocmd!
     autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })
-    autocmd FileType * call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
+    " autocmd FileType * call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
 augroup END
 
 " Load packages that are safe to defer
@@ -44,9 +44,7 @@ function! s:deferred_load() abort
 endfunction
 
 function! s:deferred_load_filetype() abort
-    let l:comptype = completion#get_type(&filetype)
-    if l:comptype !=# 'coc' && !exists('g:did_coc_loaded')
-        packadd ale
+    if !exists('g:did_coc_loaded')
         packadd vim-gitgutter
     endif
 endfunction

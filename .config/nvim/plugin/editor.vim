@@ -60,6 +60,10 @@ augroup plugin_editor
         \ if &l:number | setlocal relativenumber | endif
     autocmd FocusLost,WinLeave,BufLeave *
         \ if &l:number | setlocal norelativenumber | endif
+    " Execute `direnv allow` after editing .envrc
+    if executable('direnv')
+        autocmd BufWritePost .envrc silent !direnv allow %
+    endif
 augroup end
 
 " Functions {{{1

@@ -47,6 +47,7 @@ local on_attach_cb = function(client, bufnr)
 
   vim.cmd[[augroup lsp_lua_on_attach]]
   vim.cmd[[autocmd CompleteDone * if pumvisible() == 0 | pclose | endif]]
+  -- vim.cmd[[autocmd TextChanged * call gitgutter#process_buffer(bufnr(''), 0)]]
   vim.cmd[[augroup END]]
 
   -- Not sure what these are supposed to do
@@ -65,7 +66,7 @@ function M.init()
         },
       },
     },
-    -- vimls = {},
+    vimls = {},
     -- yamlls = {
     --   filetypes = {"yaml", "yaml.ansible"},
     --   settings = {

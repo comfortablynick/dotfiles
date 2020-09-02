@@ -20,11 +20,11 @@ let g:completion_filetypes = {
     \    'jsonc',
     \    'bash',
     \    'sh',
-    \    'vim',
     \    'python',
     \ ],
     \ 'nvim-lsp': [
     \    'lua',
+    \    'vim',
     \ ],
     \ 'mucomplete': [
     \    'asciidoctor',
@@ -75,13 +75,10 @@ function! s:completion_handler(ft) abort
     if g:completion_type ==# 'coc'
         packadd coc.nvim
     elseif g:completion_type ==# 'nvim-lsp'
-        packadd vim-gitgutter
+        " packadd vim-gitgutter
         packadd completion-nvim
-        lua require"lsp".init()
-        " packadd vim-mucomplete
-        " packadd ultisnips
     elseif g:completion_type ==# 'mucomplete'
-        packadd vim-gitgutter
+        " packadd vim-gitgutter
         packadd vim-mucomplete
         packadd ultisnips
     endif
@@ -94,5 +91,4 @@ augroup plugin_completion
     " Disable folding on floating windows (coc-git chunk diff)
     autocmd User CocOpenFloat if exists('w:float') | setl nofoldenable | endif
     autocmd BufWinEnter * if exists('w:clap_search_hl_id') | setl nofoldenable | endif
-    " autocmd FileType chordpro ++nested packadd vim-mucomplete
 augroup END

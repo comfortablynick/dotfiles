@@ -5,16 +5,14 @@ function! plugins#gitgutter#pre() abort
     let g:gitgutter_map_keys = 0
 endfunction
 
-function! plugins#gitgutter#post() abort
-    command! -count=1 GitNextHunk call plugins#gitgutter#next_hunk(<count>)
-    command! -count=1 GitPrevHunk call plugins#gitgutter#prev_hunk(<count>)
+command! -count=1 GitNextHunk call plugins#gitgutter#next_hunk(<count>)
+command! -count=1 GitPrevHunk call plugins#gitgutter#prev_hunk(<count>)
 
-    nnoremap <silent> ]g :GitNextHunk<CR>
-    nnoremap <silent> [g :GitPrevHunk<CR>
-    nmap ghs <Plug>(GitGutterStageHunk)
-    nmap ghu <Plug>(GitGutterUndoHunk)
-    nmap gs <Plug>(GitGutterPreviewHunk)
-endfunction
+nnoremap <silent> ]g :GitNextHunk<CR>
+nnoremap <silent> [g :GitPrevHunk<CR>
+nmap <Leader>gs <Plug>(GitGutterStageHunk)
+nmap <Leader>gu <Plug>(GitGutterUndoHunk)
+nmap gs <Plug>(GitGutterPreviewHunk)
 
 " Wrap around buffer when navigating hunks
 function! plugins#gitgutter#prev_hunk(count) abort

@@ -205,11 +205,14 @@ silent! packadd! vim-bbye
 silent! packadd! vim-dirvish
 silent! packadd! vim-floaterm
 silent! packadd! vim-doge
+silent! packadd! vim-signify
 
+" Nvim/vim specific packages {{{3
 if has('nvim')
     " Nvim-only
     silent! packadd! luajob
     silent! packadd! nvim-lsp
+    silent! packadd! FixCursorHold.nvim
 else
     " Vim only
     packadd! matchit " Nvim loads by default
@@ -223,6 +226,7 @@ endif
 " Lua tools {{{2
 if has('nvim')
     lua require'helpers'
+    lua require'lsp'.init()
 endif
 
 " Functions {{{1

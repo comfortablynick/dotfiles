@@ -143,10 +143,9 @@ function! s:popup(opts) abort "{{{1
     endif
 endfunction
 
-" window#tab_mod() :: Show cmd in new or existing tab {{{1
-" Reuse open tab if filetype matches `ft`
-" Adapted from https://github.com/airblade/vim-helptab
-function! window#tab_mod(cmd, ft) abort
+function! window#tab_mod(cmd, ft) abort " Show cmd in new or existing tab {{{1
+    " Reuse open tab if filetype matches `ft`
+    " Adapted from https://github.com/airblade/vim-helptab
     let l:cmdtabnr = 0
     for l:i in range(tabpagenr('$'))
         let l:tabnr = l:i + 1
@@ -170,8 +169,7 @@ endfunction
 
 " Vim Only
 if !has('nvim')
-    " Simple vim-only popup terminal
-    function! window#float_term(cmd, width, height) abort "{{{1
+    function! window#float_term(cmd, width, height) abort " Simple vim-only popup terminal {{{1
         let l:width = float1nr(&columns * a:width)
         let l:height = float2nr(&lines * a:height)
         let l:bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close', 'cwd': getcwd()})

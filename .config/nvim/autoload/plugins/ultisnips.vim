@@ -8,18 +8,18 @@ function! plugins#ultisnips#pre() abort
     let g:UltiSnipsJumpBackwardTrigger = '<C-left>'
     let g:UltiSnipsSnippetDirectories = ['~/.config/ultisnips']
 
-    " Define <Plug> mappings
-    inoremap <expr> <Plug>(MyCR)
-        \ mucomplete#ultisnips#expand_snippet("\<cr>")
-    inoremap <Plug>(TryUlti) <C-R>=<SID>try_ultisnips()<CR>
-    imap <expr> <Plug>(TryMU) <SID>try_mucomplete()
+    " " Define <Plug> mappings
+    " inoremap <expr> <Plug>(MyCR)
+    "     \ mucomplete#ultisnips#expand_snippet("\<cr>")
+    " inoremap <Plug>(TryUlti) <C-R>=<SID>try_ultisnips()<CR>
+    " imap <expr> <Plug>(TryMU) <SID>try_mucomplete()
 
-    " Try to expand snippet, then try completion
-    imap <expr> <silent> <Tab>
-        \ "\<Plug>(TryUlti)\<Plug>(TryMU)"
-    imap <silent> <CR> <Plug>(MyCR)
-    " Map tab in select mode to allow tabbing from selected default value
-    snoremap <silent> <Tab> <C-O>:call UltiSnips#ExpandSnippetOrJump()<CR>
+    " " Try to expand snippet, then try completion
+    " imap <expr> <silent> <Tab>
+    "     \ "\<Plug>(TryUlti)\<Plug>(TryMU)"
+    " imap <silent> <CR> <Plug>(MyCR)
+    " " Map tab in select mode to allow tabbing from selected default value
+    " snoremap <silent> <Tab> <C-O>:call UltiSnips#ExpandSnippetOrJump()<CR>
 
     " Use fzf for listing snippets
     inoremap <C-s> <C-O>:Snippets<CR>

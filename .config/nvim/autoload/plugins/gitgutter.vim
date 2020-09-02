@@ -8,8 +8,8 @@ endfunction
 command! -count=1 GitNextHunk call plugins#gitgutter#next_hunk(<count>)
 command! -count=1 GitPrevHunk call plugins#gitgutter#prev_hunk(<count>)
 
-nnoremap <silent> ]g :GitNextHunk<CR>
-nnoremap <silent> [g :GitPrevHunk<CR>
+nnoremap <silent> ]c :GitNextHunk<CR>
+nnoremap <silent> [c :GitPrevHunk<CR>
 nmap <Leader>gs <Plug>(GitGutterStageHunk)
 nmap <Leader>gu <Plug>(GitGutterUndoHunk)
 nmap gs <Plug>(GitGutterPreviewHunk)

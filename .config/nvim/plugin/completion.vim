@@ -75,10 +75,12 @@ function! s:completion_handler(ft) abort
     if g:completion_type ==# 'coc'
         packadd coc.nvim
     elseif g:completion_type ==# 'nvim-lsp'
-        " packadd vim-gitgutter
+        packadd vim-gitgutter
         packadd completion-nvim
+        packadd completion-buffers
+        packadd ultisnips
     elseif g:completion_type ==# 'mucomplete'
-        " packadd vim-gitgutter
+        packadd vim-gitgutter
         packadd vim-mucomplete
         packadd ultisnips
     endif

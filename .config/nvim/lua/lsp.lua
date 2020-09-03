@@ -26,7 +26,16 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
-  require"completion".on_attach()
+  local complete_chain = {
+    default = {
+      {complete_items = {"lsp", "snippet"}},
+      {complete_items = {"path"}, triggered_only = {"/"}},
+      {complete_items = {"buffers"}},
+    },
+    string = {{complete_items = {"path"}, triggered_only = {"/"}}},
+    comment = {{complete_items = {"path"}, triggered_only = {"/"}}},
+  }
+  require"completion".on_attach{chain_complete_list = complete_chain}
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
@@ -47,7 +56,6 @@ local on_attach_cb = function(client, bufnr)
 
   vim.cmd[[augroup lsp_lua_on_attach]]
   vim.cmd[[autocmd CompleteDone * if pumvisible() == 0 | pclose | endif]]
-  -- vim.cmd[[autocmd TextChanged * call gitgutter#process_buffer(bufnr(''), 0)]]
   vim.cmd[[augroup END]]
 
   -- Not sure what these are supposed to do

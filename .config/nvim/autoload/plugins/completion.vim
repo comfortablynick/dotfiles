@@ -13,3 +13,20 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 let g:completion_enable_snippet = 'UltiSnips'
+let g:completion_enable_auto_paren = 1
+let g:completion_auto_change_source = 1
+
+" TODO: delete this if lua config is working
+" let s:lsp_chain_config = {
+"     \ 'default': [
+"     \     {'complete_items': ['lsp', 'snippet']},
+"     \     {'complete_items': ['buffers']},
+"     \     {'complete_items': ['path']},
+"     \     {'mode': '<c-p>'},
+"     \     {'mode': '<c-n>'},
+"     \     {'mode': 'file'},
+"     \   ]
+"     \ }
+" let g:completion_chain_complete_list = {
+"     \ 'default': s:lsp_chain_config,
+"     \ }

@@ -26,7 +26,7 @@ let g:completion_filetypes = {
     \    'lua',
     \    'vim',
     \ ],
-    \ 'mucomplete': [
+    \ 'complete-nvim': [
     \    'asciidoctor',
     \    'markdown',
     \    'just',
@@ -82,6 +82,11 @@ function! s:completion_handler(ft) abort
     elseif g:completion_type ==# 'mucomplete'
         packadd vim-gitgutter
         packadd vim-mucomplete
+        packadd ultisnips
+    elseif g:completion_type ==# 'complete-nvim'
+        packadd vim-gitgutter
+        packadd completion-nvim
+        packadd completion-buffers
         packadd ultisnips
     endif
 endfunction

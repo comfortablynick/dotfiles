@@ -20,7 +20,12 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
   def_diagnostics_cb(err, method, result, client_id)
   -- Add to quickfix
   if result and result.diagnostics then
-    for _, v in ipairs(result.diagnostics) do v.uri = v.uri or result.uri end
+    for _, v in ipairs(result.diagnostics) do
+      v.bufnr = client_id
+      v.lnum = v.range.start.line + 1
+      v.col = v.range.start.character + 1
+      v.text = v.message
+    end
     vim.lsp.util.set_qflist(result.diagnostics)
   end
 end

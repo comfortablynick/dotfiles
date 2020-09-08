@@ -12,7 +12,7 @@ set completeopt=menuone,noinsert,noselect
 
 set shortmess+=c
 
-let g:completion_enable_snippet = 'UltiSnips'
+let g:completion_enable_snippet = 'snippets.nvim'
 let g:completion_enable_auto_paren = 1
 let g:completion_auto_change_source = 1
 

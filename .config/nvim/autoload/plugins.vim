@@ -108,6 +108,7 @@ function! plugins#init() abort
     " Snippets
     Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
+    Pack 'norcalli/snippets.nvim'
 
     " Completion
     Pack 'neovim/nvim-lsp'

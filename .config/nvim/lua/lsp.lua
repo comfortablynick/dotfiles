@@ -41,6 +41,7 @@ local on_attach_cb = function(client, bufnr)
     comment = {{complete_items = {"path"}, triggered_only = {"/"}}},
   }
   require"completion".on_attach{chain_complete_list = complete_chain}
+  require"snip"
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {

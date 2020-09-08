@@ -78,7 +78,8 @@ function! s:completion_handler(ft) abort
         packadd vim-gitgutter
         packadd completion-nvim
         packadd completion-buffers
-        packadd ultisnips
+        " packadd ultisnips
+        packadd snippets.nvim
     elseif g:completion_type ==# 'mucomplete'
         packadd vim-gitgutter
         packadd vim-mucomplete

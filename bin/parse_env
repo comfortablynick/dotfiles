@@ -168,7 +168,7 @@ def get_shell_vars(  # {{{2
             quote = var.get("quote")
             test = var.get("if")
 
-            if test is not None and not eval(test):
+            if test is not None and not do_eval(test):
                 continue
 
             if isinstance(var["val"], list):

@@ -205,7 +205,6 @@ silent! packadd! vim-bbye
 silent! packadd! vim-dirvish
 silent! packadd! vim-floaterm
 silent! packadd! vim-doge
-" silent! packadd! vim-signify
 
 " Nvim/vim specific packages {{{3
 if has('nvim')

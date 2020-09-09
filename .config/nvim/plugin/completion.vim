@@ -88,7 +88,8 @@ function! s:completion_handler(ft) abort
         packadd vim-gitgutter
         packadd completion-nvim
         packadd completion-buffers
-        packadd ultisnips
+        " packadd ultisnips
+        packadd snippets.nvim
     endif
 endfunction
 

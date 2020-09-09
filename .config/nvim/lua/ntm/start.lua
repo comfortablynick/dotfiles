@@ -1,6 +1,7 @@
 -- Simple alternative to vim-startify
--- Initiall from:
+-- Initially from:
 -- https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/lua/start.lua
+local uv = vim.loop
 local counter = 25
 local total_paths = 25
 local offset = 5
@@ -24,7 +25,7 @@ local path_skip_list = {
   vim.regex("/.git/"),
   vim.regex("fugitiveblame$"),
   vim.regex(vim.fn.escape(vim.fn.fnamemodify(
-                            vim.fn.resolve(os.getenv("VIMRUNTIME")), ":p"), "\\") ..
+                            vim.fn.resolve(vim.env.VIMRUNTIME), ":p"), "\\") ..
               "doc/.*\\.txt"),
 }
 
@@ -60,14 +61,14 @@ end
 
 local function current_dir_files()
   if use_vcs_root then
-    local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h")
+    local path = vim.fn.fnamemodify(uv.cwd(), ":p:h")
     local root = vim.fn.finddir(".git", path .. ";")
     if root ~= "" then
       vim.cmd("lcd " .. vim.fn.fnameescape(vim.fn.fnamemodify(root, ":h")))
     end
   end
 
-  local dir = vim.fn.expand(vim.fn.getcwd())
+  local dir = vim.fn.expand(uv.cwd())
   return filter_oldfiles(dir, ":~:.")
 end
 
@@ -80,7 +81,7 @@ local commands = {
   {key = "q", disp = "Quit", cmd = "q!"},
 }
 
-local cur_dir = relativize(vim.fn.expand(vim.fn.getcwd()))
+local cur_dir = relativize(uv.cwd())
 cur_dir = (cur_dir ~= "") and cur_dir or "~"
 
 local sections = {

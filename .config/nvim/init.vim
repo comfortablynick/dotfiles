@@ -198,7 +198,7 @@ silent! packadd! vim-fugitive
 silent! packadd! vim-eunuch
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
-silent! packadd! vim-startify
+" silent! packadd! vim-startify
 silent! packadd! vista.vim
 silent! packadd! vim-textobj-user
 silent! packadd! vim-bbye
@@ -226,6 +226,11 @@ endif
 if has('nvim')
     lua require'helpers'
     lua require'lsp'.init()
+
+    augroup start_screen
+        autocmd!
+        autocmd VimEnter * ++once lua require'ntm/start'.start()
+    augroup END
 endif
 
 " Functions {{{1

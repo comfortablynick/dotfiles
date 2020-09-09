@@ -107,7 +107,7 @@ endif
 " Using python pformat (handles lists better)
 command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
-" Lua (nvim-only after this line) {{{1
+" nvim-only after this line {{{1
 " [H]elp :: floating help window {{{2
 if !has('nvim') | finish | endif
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)

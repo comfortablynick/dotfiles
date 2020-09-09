@@ -27,7 +27,6 @@ function! plugins#init() abort
 
     " General
     Pack 'chrisbra/Colorizer'
-    Pack 'mhinz/vim-startify'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
     Pack 'tpope/vim-repeat'

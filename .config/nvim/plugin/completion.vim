@@ -88,8 +88,10 @@ function! s:completion_handler(ft) abort
         packadd vim-gitgutter
         packadd completion-nvim
         packadd completion-buffers
-        " packadd ultisnips
         packadd snippets.nvim
+        lua require'completion'.on_attach()
+        lua require'ntm/snippets'
+        packadd ultisnips
     endif
 endfunction
 

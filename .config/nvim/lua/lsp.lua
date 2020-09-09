@@ -31,14 +31,18 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
+  local text_complete = {
+    {complete_items = {"buffers"}},
+    {complete_items = {"path"}, triggered_only = {"/"}},
+  }
   local complete_chain = {
     default = {
       {complete_items = {"lsp", "snippet"}},
-      {complete_items = {"path"}, triggered_only = {"/"}},
       {complete_items = {"buffers"}},
+      {complete_items = {"path"}, triggered_only = {"/"}},
     },
-    string = {{complete_items = {"path"}, triggered_only = {"/"}}},
-    comment = {{complete_items = {"path"}, triggered_only = {"/"}}},
+    string = text_complete,
+    comment = text_complete,
   }
   require"completion".on_attach{chain_complete_list = complete_chain}
   require"ntm/snippets"

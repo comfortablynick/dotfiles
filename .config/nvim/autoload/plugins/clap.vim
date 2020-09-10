@@ -3,23 +3,22 @@ let {s:guard} = 1
 
 " Clap setup {{{1
 let s:using_icons = v:false
-function! plugins#clap#post() abort "{{{2
-    " General settings
-    let g:clap_multi_selection_warning_silent = 1
-    let g:clap_enable_icon = !$MOSH_CONNECTION
-    " let g:clap_use_pure_python = 1  " Set this if vim crashes when looking at files
 
-    let g:clap_provider_alias = {
-        \ 'map': 'map',
-        \ 'scriptnames': 'scriptnames',
-        \ }
+" General settings
+let g:clap_multi_selection_warning_silent = 1
+let g:clap_enable_icon = !$MOSH_CONNECTION
+" let g:clap_use_pure_python = 1  " Set this if vim crashes when looking at files
 
-    " Maps
-    nnoremap <silent> <Leader>t :Clap tags<CR>
-    nnoremap <silent> <Leader>h :Clap hist:<CR>
+let g:clap_provider_alias = {
+    \ 'map': 'map',
+    \ 'scriptnames': 'scriptnames',
+    \ }
 
-    command! Filer :Clap filer
-endfunction
+" Maps
+nnoremap <silent> <Leader>t :Clap tags<CR>
+nnoremap <silent> <Leader>h :Clap hist:<CR>
+
+command! Filer :Clap filer
 
 function! s:clap_on_enter() abort "{{{2
     augroup ClapEnsureAllClosed

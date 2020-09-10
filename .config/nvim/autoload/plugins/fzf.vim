@@ -1,38 +1,42 @@
 let s:guard = 'g:loaded_autoload_plugins_fzf' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-" Functions {{{1
-function! plugins#fzf#post() abort "{{{2
+if exists('$TMUX')
+    " See `man fzf-tmux` for available options
+    let g:fzf_layout = { 'tmux': '-p90%,60%' }
+else
     let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-    let g:fzf_colors = {
-        \ 'fg':      ['fg', 'Normal'],
-        \ 'bg':      ['bg', 'Clear'],
-        \ 'hl':      ['fg', 'Comment'],
-        \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-        \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-        \ 'hl+':     ['fg', 'Statement'],
-        \ 'info':    ['fg', 'PreProc'],
-        \ 'prompt':  ['fg', 'Conditional'],
-        \ 'pointer': ['fg', 'Exception'],
-        \ 'marker':  ['fg', 'Keyword'],
-        \ 'spinner': ['fg', 'Label'],
-        \ 'header':  ['fg', 'Comment']
-        \ }
+endif
 
-    if has('nvim') || has('gui_running')
-        let $FZF_DEFAULT_OPTS .= ' --inline-info'
-    endif
+let g:fzf_colors = {
+    \ 'fg':      ['fg', 'Normal'],
+    \ 'bg':      ['bg', 'Clear'],
+    \ 'hl':      ['fg', 'Comment'],
+    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+    \ 'hl+':     ['fg', 'Statement'],
+    \ 'info':    ['fg', 'PreProc'],
+    \ 'prompt':  ['fg', 'Conditional'],
+    \ 'pointer': ['fg', 'Exception'],
+    \ 'marker':  ['fg', 'Keyword'],
+    \ 'spinner': ['fg', 'Label'],
+    \ 'header':  ['fg', 'Comment']
+    \ }
 
-    augroup fzf_config
-        autocmd!
-        autocmd FileType fzf silent! tunmap <buffer> <Esc>
-    augroup END
+if has('nvim') || has('gui_running')
+    let $FZF_DEFAULT_OPTS .= ' --inline-info'
+endif
 
-    " nnoremap <silent> <Leader>h  :History:<CR>
-    nnoremap <silent> <Leader>gg :RG<CR>
-    nnoremap <silent> z= :call <SID>fzf_spell()<CR>
-endfunction
+augroup fzf_config
+    autocmd!
+    autocmd FileType fzf silent! tunmap <buffer> <Esc>
+augroup END
 
+" nnoremap <silent> <Leader>h  :History:<CR>
+nnoremap <silent> <Leader>gg :RG<CR>
+nnoremap <silent> z= :call <SID>fzf_spell()<CR>
+
+" Functions {{{1
 function! s:fzf_rg(query, fullscreen) abort "{{{2
     let l:rg = {}
     let l:rg['source'] = printf(

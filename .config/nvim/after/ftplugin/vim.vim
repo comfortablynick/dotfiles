@@ -6,9 +6,10 @@ setlocal foldexpr=VimFoldLevel()
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
 " Maps
-" Execute line/selection
-nnoremap <silent><buffer> yxx      <Cmd>execute getline('.')<CR>
-xnoremap <silent><buffer> <Enter> :<C-U>keeppatterns '<,'>g/^/exe getline('.')<CR>
+" Execute visual selection
+vnoremap <silent><buffer> <Enter> "xy:@x<CR>
+" Execute line
+nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
 nnoremap <silent><buffer> <C-]> :call plugins#lazy_call('vim-lookup', 'lookup#lookup')<CR>
 nnoremap <silent><buffer> <C-t> :call plugins#lazy_call('vim-lookup', 'lookup#pop')<CR>
 

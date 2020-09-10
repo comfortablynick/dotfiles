@@ -39,6 +39,4 @@ function! plugins#mucomplete#pre() abort
         \ }
 endfunction
 
-function! plugins#mucomplete#post() abort
-    imap <expr> <down> mucomplete#extend_fwd("\<down>")
-endfunction
+imap <expr> <down> mucomplete#extend_fwd("\<down>")

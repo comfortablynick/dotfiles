@@ -1,5 +1,5 @@
-if exists('g:loaded_autoload_plugins_sandwich') | finish | endif
-let g:loaded_autoload_plugins_sandwich = 1
+let s:guard = 'g:loaded_autoload_plugins_sandwich' | if exists(s:guard) | finish | endif
+let {s:guard} = 1
 
 function! plugins#sandwich#pre() abort
     " Use vim-surround keybindings

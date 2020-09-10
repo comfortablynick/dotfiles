@@ -37,7 +37,7 @@ local on_attach_cb = function(client, bufnr)
   }
   local complete_chain = {
     default = {
-      {complete_items = {"lsp", "snippet"}},
+      {complete_items = {"lsp", "snippet", "UltiSnips"}},
       {complete_items = {"buffers"}},
       {complete_items = {"path"}, triggered_only = {"/"}},
     },

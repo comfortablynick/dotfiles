@@ -1,21 +1,19 @@
 let s:guard = 'g:loaded_autoload_plugins_miniyank' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-function! plugins#miniyank#post() abort
-    let g:miniyank_maxitems = 50
+let g:miniyank_maxitems = 50
 
-    " Replace built-in put with autoput
-    map p <Plug>(miniyank-autoput)
-    map P <Plug>(miniyank-autoPut)
+" Replace built-in put with autoput
+map p <Plug>(miniyank-autoput)
+map P <Plug>(miniyank-autoPut)
 
-    " Put most recent item in shared history
-    map <Leader>p <Plug>(miniyank-startput)
-    map <Leader>P <Plug>(miniyank-startPut)
+" Put most recent item in shared history
+map <Leader>p <Plug>(miniyank-startput)
+map <Leader>P <Plug>(miniyank-startPut)
 
-    map <Leader>y <Plug>(miniyank-cycle)
-    map <Leader>Y <Plug>(miniyank-cycleback)
-    map <Leader>Y <Plug>(miniyank-cycleback)
-endfunction
+map <Leader>y <Plug>(miniyank-cycle)
+map <Leader>Y <Plug>(miniyank-cycleback)
+map <Leader>Y <Plug>(miniyank-cycleback)
 
 " Adapted from https://github.com/bfredl/nvim-miniyank/issues/19#issue-347454437
 function! s:fzf_miniyank(put_before, fullscreen) abort

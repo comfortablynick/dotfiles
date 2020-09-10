@@ -1,16 +1,14 @@
 let s:guard = 'g:loaded_autoload_plugins_floaterm' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-function! plugins#floaterm#post() abort
-    let g:floaterm_shell = $SHELL
-    let g:floaterm_wintitle = v:true
-    let g:floaterm_autoclose = v:true
-    " let g:floaterm_width = 0.7
-    " let g:floaterm_height = 0.6
+let g:floaterm_shell = $SHELL
+let g:floaterm_wintitle = v:true
+let g:floaterm_autoclose = v:true
+" let g:floaterm_width = 0.7
+" let g:floaterm_height = 0.6
 
-    hi link Floaterm NormalFloat
-    hi link FloatermBorder NormalFloat
-endfunction
+hi link Floaterm NormalFloat
+hi link FloatermBorder NormalFloat
 
 nnoremap <silent> <F7> :FloatermToggle<CR>
 tnoremap <silent> <F7> <C-\><C-n>:FloatermToggle<CR>

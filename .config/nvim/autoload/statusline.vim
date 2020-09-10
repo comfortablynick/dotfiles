@@ -455,7 +455,7 @@ function! statusline#lsp_status() abort "{{{2
     if !s:is_active_file() || !has('nvim')
         return ''
     endif
-    return v:lua.vim.lsp.buf.server_ready() ? 'LSP' : ''
+    return luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))') ? 'LSP': ''
 endfunction
 
 function! s:ale_linted() abort "{{{2

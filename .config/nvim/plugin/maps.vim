@@ -12,7 +12,8 @@ nnoremap U <C-r>
 nnoremap qq :x<CR>
 nnoremap qqq :q!<CR>
 nnoremap QQ ZQ
-nnoremap <CR> :nohlsearch<CR><CR>
+" Clears hlsearch after doing a search, otherwise <CR>
+nnoremap <expr> <CR> {-> v:hlsearch ? ":nohlsearch\<CR>" : "\<CR>"}()
 tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
 
 " Insert mode <Esc> maps {{{2
@@ -47,11 +48,6 @@ nnoremap d<C-j> <C-w>j<C-w>c
 nnoremap d<C-k> <C-w>k<C-w>c
 nnoremap d<C-h> <C-w>h<C-w>c
 nnoremap d<C-l> <C-w>l<C-w>c
-
-" Tab navigation {{{1
-nnoremap <silent> th :tabprev<CR>
-nnoremap <silent> tl :tabnext<CR>
-nnoremap <silent> tn :tabnew<CR>
 
 " Override vim-impaired tagstack mapping {{{2
 nnoremap <silent> [t :tabprevious<CR>

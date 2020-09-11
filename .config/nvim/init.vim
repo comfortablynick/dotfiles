@@ -109,6 +109,7 @@ set nowrap                                                      " Text wrapping 
 set showmode                                                    " Show default mode text (e.g. -- INSERT -- below statusline)
 set shortmess+=c                                                " Don't show 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
+set keywordprg=:Help                                            " Default to floating help window for keywordprg rather than :Man
 set nocursorline                                                " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
@@ -198,7 +199,6 @@ silent! packadd! vim-fugitive
 silent! packadd! vim-eunuch
 silent! packadd! vim-clap
 silent! packadd! vim-snippets
-" silent! packadd! vim-startify
 silent! packadd! vista.vim
 silent! packadd! vim-textobj-user
 silent! packadd! vim-bbye

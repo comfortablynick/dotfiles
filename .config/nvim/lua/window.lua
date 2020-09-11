@@ -156,8 +156,8 @@ function M.create_centered_floating(options) -- {{{1
   local text_win = api.nvim_open_win(text_buf, true, win_opts)
   -- Set style
   options.hl = options.hl or "Pmenu"
-  api.nvim_win_set_option(border_win, "winhl", "NormalFloat:"..options.hl)
-  api.nvim_win_set_option(text_win, "winhl", "NormalFloat:"..options.hl)
+  api.nvim_win_set_option(border_win, "winhl", "NormalFloat:" .. options.hl)
+  api.nvim_win_set_option(text_win, "winhl", "NormalFloat:" .. options.hl)
   -- Set autocmds
   vim.cmd"augroup lua_create_centered_floating"
   vim.cmd"autocmd!"
@@ -170,11 +170,14 @@ function M.create_centered_floating(options) -- {{{1
 end
 
 function M.floating_help(query) -- {{{1
-  local buf = M.create_centered_floating{width = 90}
+  local buf = M.create_centered_floating{width = 90, border = true}
   api.nvim_set_current_buf(buf)
   vim.bo.filetype = "help"
   vim.bo.buftype = "help"
   vim.cmd("help " .. query)
+  api.nvim_buf_set_keymap(buf, "n", "<C-c>",
+                          ":call editor#quick_close_buffer()<CR>",
+                          {silent = true, noremap = true})
 end
 
 function M.create_scratch(lines) -- {{{1

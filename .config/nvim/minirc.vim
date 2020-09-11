@@ -12,7 +12,3 @@ let &packpath=&runtimepath
 
 filetype plugin indent on
 syntax enable
-
-function! Test() abort
-    return
-endfunction

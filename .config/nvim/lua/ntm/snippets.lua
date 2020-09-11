@@ -13,6 +13,8 @@ snippets.snippets = {
 for ${1:i}, ${2:v} in ipairs(${3:t}) do
   $0
 end]],
+    use = [[use"${1}"]],
+    useopt = [[use{"${1}", opt = true}]],
   },
   vim = {
     scriptguard = [[let s:guard = 'g:loaded_${=vim.fn.expand("%:p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")}' | if exists(s:guard) | finish | endif

@@ -87,7 +87,7 @@ cur_dir = (cur_dir ~= "") and cur_dir or "~"
 
 local sections = {
   {title = "Commands", show = commands},
-  {title = "Recent Files in %s" .. cur_dir, show = current_dir_files()},
+  {title = "Recent Files in " .. cur_dir, show = current_dir_files()},
   {title = "Recent Files", show = recent_files()},
 }
 

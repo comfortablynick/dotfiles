@@ -1,4 +1,7 @@
-local snippets = require"snippets"
+local snippets_exists, snippets = pcall(require, "snippets")
+
+if not snippets_exists then return end
+
 local U = require"snippets.utils"
 local indent = U.match_indentation
 local comment = U.force_comment

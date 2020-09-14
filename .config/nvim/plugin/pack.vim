@@ -17,6 +17,12 @@ command! -bang PackUpdate  call plugins#init() | call packager#update({'force_ho
 command!       PackClean   call plugins#init() | call packager#clean()
 command!       PackStatus  call plugins#init() | call packager#status()
 
+command! PackerInstall packadd packer.nvim | lua require('plugins').install()
+command! PackerUpdate packadd packer.nvim | lua require('plugins').update()
+command! PackerSync packadd packer.nvim | lua require('plugins').sync()
+command! PackerClean packadd packer.nvim | lua require('plugins').clean()
+command! PackerCompile packadd packer.nvim | lua require('plugins').compile()
+
 augroup deferred_pack_load
     autocmd!
     autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })

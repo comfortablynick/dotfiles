@@ -90,7 +90,7 @@ function! s:completion_handler(ft) abort
         packadd completion-buffers
         packadd snippets.nvim
         lua require'completion'.on_attach()
-        lua require'ntm/snippets'
+        " lua require'ntm/snippets'
         packadd ultisnips
     endif
 endfunction

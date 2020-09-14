@@ -6,6 +6,8 @@
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
 let g:use_init_lua = 0
+" set packpath-=~/.local/share/nvim/site
+" set packpath+=~/vim-test/
 " Plugin config handler {{{1
 " Autocmds {{{2
 augroup plugin_config_handler
@@ -22,29 +24,16 @@ let g:plugin_config_files = map(
 let g:plugins_sourced = []
 let g:plugins_skipped = []
 let g:plugins_called = []
-let g:plugins_missing_fns = []
 
 function! s:source_handler(sourced, type) abort "{{{2
     let l:file = tolower(fnamemodify(a:sourced, ':t:r'))
-    " TODO: is this really needed, or does the below match take care of it?
-    " if l:full_path !~# 'pack/[^/]*/\(start\|opt\)/[^/]*/\(plugin\|autoload\)/'
-    "     let g:plugins_skipped += [l:full_path]
-    "     return
-    " endif
     if a:type ==# 'pre'
         let g:plugins_sourced += [a:sourced]
         let g:plugins_called += [l:file]
     endif
     if index(g:plugin_config_files, l:file) > -1
         let l:fn = 'plugins#'.l:file.'#'.a:type
-        if !exists('*'.l:fn)
-            execute 'runtime autoload/plugins/'.l:file.'.vim'
-        endif
-        if exists('*'.l:fn)
-            call {l:fn}()
-        else
-            let g:plugins_missing_fns += [l:fn]
-        endif
+        silent! call {l:fn}()
     endif
 endfunction
 
@@ -179,21 +168,31 @@ let g:loaded_gzip = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_2html_plugin = 1
 let g:loaded_zipPlugin = 1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_html_plugin = 1
+let g:loaded_rrhelper = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_tutor_mode_plugin = 1
+let g:loaded_vimballPlugin = 1
 
 " Disable providers {{{2
 let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
+let g:loaded_python_provider = 0
 
 " Plugins {{{1
 " Package management {{{2
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
+" Filetype
+silent! packadd! vim-toml
+silent! packadd! syntax-vim-ex
+
 silent! packadd! vim-sandwich
 silent! packadd! vim-smoothie
 silent! packadd! fzf
 silent! packadd! fzf.vim
-silent! packadd! neoformat
 silent! packadd! vim-repeat
 silent! packadd! vim-fugitive
 silent! packadd! vim-eunuch
@@ -204,7 +203,7 @@ silent! packadd! vim-textobj-user
 silent! packadd! vim-bbye
 silent! packadd! vim-dirvish
 silent! packadd! vim-floaterm
-silent! packadd! vim-doge
+" silent! packadd! vim-doge
 
 " Nvim/vim specific packages {{{3
 if has('nvim')
@@ -212,39 +211,19 @@ if has('nvim')
     silent! packadd! luajob
     silent! packadd! nvim-lsp
     silent! packadd! FixCursorHold.nvim
-else
-    " Vim only
-    packadd! matchit " Nvim loads by default
-endif
 
-" Requires python2
-" if has('python')
-"     silent! packadd! vim-textobj-lua
-" endif
-
-" Lua tools {{{2
-if has('nvim')
     lua require'helpers'
-    lua require'lsp'.init()
+
+    if !empty(globpath(&rtp, '*/nvim_lsp.vim'))
+        lua require'lsp'.init()
+    endif
 
     augroup start_screen
         autocmd!
         autocmd VimEnter * ++once lua require'ntm/start'.start()
     augroup END
+else
+    " Vim only
+    packadd! matchit " Nvim loads by default
 endif
 
-" Functions {{{1
-" Guard() :: scriptguard utility {{{2
-" Scriptguard
-function! Guard(path, ...) abort
-    let l:loaded_var = 'g:loaded_' . substitute(a:path, '\W', '_', 'g')
-    if exists(l:loaded_var) | return 0 | endif
-    for l:expr in a:000
-        if !eval(l:expr)
-            echoerr a:path . ' requires: ' . l:expr
-            return 0
-        endif
-    endfor
-    let {l:loaded_var} = 1
-    return 1
-endfunction

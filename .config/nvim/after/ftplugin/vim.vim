@@ -10,8 +10,8 @@ let g:vim_indent_cont = &tabstop                                " Indent \ newli
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 " Execute line
 nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
-nnoremap <silent><buffer> <C-]> :call plugins#lazy_call('vim-lookup', 'lookup#lookup')<CR>
-nnoremap <silent><buffer> <C-t> :call plugins#lazy_call('vim-lookup', 'lookup#pop')<CR>
+nnoremap <silent><buffer> <C-]> :call plugins#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
+nnoremap <silent><buffer> <C-t> :call plugins#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
 function! VimFoldLevel() abort
     let l:marker = split(&foldmarker, ',')[0]

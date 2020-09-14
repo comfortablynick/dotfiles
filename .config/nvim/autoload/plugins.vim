@@ -88,8 +88,8 @@ function! plugins#init() abort
     Pack 'ryanoasis/vim-devicons'
 
     " Syntax/filetype
-    " Some must be loaded at start
-    Pack 'sheerun/vim-polyglot',        {'type': 'start'}
+    Pack 'cespare/vim-toml'
+    Pack 'vim-jp/syntax-vim-ex'
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'SidOfc/mkdx',                 {'type': 'start'}
     Pack 'habamax/vim-asciidoctor',     {'type': 'start'}
@@ -130,21 +130,54 @@ function! s:fzf_post(plugin) abort
         \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
 endfunction
 
-" packadd and call supplied function
-function! plugins#lazy_call(package, funcname, ...) abort
-    execute 'packadd' a:package
-    return call(a:funcname, a:000)
-endfunction
-
-" packadd and execute command + args
-function! plugins#lazy_exe(package, cmd, ...) abort
+" Lazy-load a package on a command or funcref
+" Inspired by:
+" https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/autoload/util.vim
+function! plugins#lazy_run(cmd, package, ...) abort
     if !plugins#exists(a:package)
         echohl WarningMsg
-        echo 'Package' a:package 'does not exist!'
+        echo 'Package' a:package 'not found in packpath!'
         echohl None
         return
     endif
-    execute 'packadd' a:package '|' a:cmd join(a:000)
+    let l:args = get(a:, 1, {})
+    let l:delete = get(l:args, 'delete', [])
+    if type(l:delete) != v:t_list
+        let l:delete = [l:delete]
+    endif
+    for l:old_cmd in l:delete
+        execute 'delcommand' l:old_cmd
+    endfor
+
+    let l:packages = a:package
+    if type(l:packages) != v:t_list
+        let l:packages = [l:packages]
+    endif
+    for l:package in l:packages
+        execute 'packadd' l:package
+    endfor
+
+    let l:config = get(l:args, 'config', [])
+    if type(l:config) != v:t_list
+        let l:config = [l:config]
+    endif
+    for l:config_cmd in l:config
+        execute l:config_cmd
+    endfor
+    let l:start = get(l:args, 'start', 0)
+    let l:end = get(l:args, 'end', 0)
+    let l:bang = get(l:args, 'bang', '')
+    let l:args = get(l:args, 'args', '')
+    if type(a:cmd) == v:t_func
+        return a:cmd()
+    endif
+    execute printf(
+        \ '%s%s%s %s',
+        \ (l:start == l:end ? '' : (l:start . ',' . l:end)),
+        \ a:cmd,
+        \ l:bang,
+        \ l:args
+        \ )
 endfunction
 
 " check if plugin in &packpath (`plugin` can be a glob pattern)

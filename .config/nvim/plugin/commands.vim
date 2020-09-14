@@ -68,7 +68,7 @@ endfunction
 
 " Fzm :: lazy load fuzzymenu.vim {{{2
 command! -bang -nargs=0 Fzm
-    \ call plugins#lazy_call('fuzzymenu.vim', 'fuzzymenu#Run', {'fullscreen': <bang>0})
+    \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
 nnoremap <C-P> :Fzm<CR>
 
 " Misc commonly mistyped commands {{{2
@@ -79,12 +79,10 @@ command! W w
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
-command! -nargs=* -complete=file StartupTime
-    \ packadd startuptime.vim | StartupTime <args>
+command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
-command! -bar Messages
-    \ packadd vim-scriptease | Messages
+command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
 
 " Redir :: send output of <expr> to scratch window {{{2
 " Usage:

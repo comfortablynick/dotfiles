@@ -37,8 +37,78 @@ local function init()
   use{"wbthomason/packer.nvim", opt = true}
   use{"NLKNguyen/papercolor-theme", opt = true}
 
+  -- Editing behavior {{{2
+  use{"tpope/vim-commentary", opt = true}
+  use{"tpope/vim-unimpaired", opt = true}
+  use{"machakann/vim-sandwich", opt = true}
+  use{"justinmk/vim-sneak", opt = true}
+  use{"rhysd/clever-f.vim", opt = true}
+  use{"wellle/targets.vim", opt = true}
+  use{"bfredl/nvim-miniyank", opt = true}
+  use{"antoinemadec/FixCursorHold.nvim", opt = true}
+
+  -- Explorer/finder utils {{{2
+  use{"majutsushi/tagbar", cmd = "TagbarToggle"}
+  use{"mbbill/undotree", cmd = "UndotreeToggle"}
+  use{"preservim/nerdtree", cmd = "NERDTreeToggle"}
+  use{"Shougo/defx.nvim", cmd = "Defx"}
+  use{"tpope/vim-projectionist", opt = true}
+  use{"kyazdani42/nvim-tree.lua", cmd = "LuaTreeToggle"}
+  use{"justinmk/vim-dirvish", opt = true}
+  use{"srstevenson/vim-picker", opt = true}
+  use{"voldikss/vim-floaterm", opt = true}
+  use{
+    "junegunn/fzf.vim",
+    cmd = {
+      "Files",
+      "Rg",
+      "History",
+      "Commands",
+      "Help",
+      "Lines",
+      "Buffers",
+      "Commits",
+      "Tags",
+      "BTags",
+      "Map",
+      "Maps",
+      "RG",
+    },
+  }
+
+  -- Completion {{{2
+  use{"neovim/nvim-lsp", opt = true}
+  use{
+    "nvim-lua/completion-nvim",
+    opt = true,
+    after = "nvim-lsp",
+    requires = {{"norcalli/snippets.nvim", opt = true, after = "nvim-lsp"}},
+  }
+  use{"steelsojka/completion-buffers", opt = true, after = "nvim-lsp"}
+
+  -- Vim Development {{{2
+  use{"tweekmonster/startuptime.vim", cmd = "StartupTime"}
+  use{"tpope/vim-scriptease", opt = true}
+  use{"mhinz/vim-lookup", opt = true}
+  use{"bfredl/nvim-luadev", opt = true}
+
+  -- Tmux {{{2
+  use{"christoomey/vim-tmux-navigator", opt = true}
+  use{"RyanMillerC/better-vim-tmux-resizer", opt = true}
+  use{"comfortablynick/vim-tmux-runner", opt = true}
+
   -- Runners/Linters/Formatters {{{2
-  use{"psf/black", branch = "stable", opt = true}
+  use{"dense-analysis/ale", opt = true}
+  use{
+    "sbdchd/neoformat",
+    cmd = "Neoformat",
+    setup = [[vim.api.nvim_set_keymap("", "<F3>", ":Neoformat<CR>", {silent = true})]],
+    config = [[
+    vim.g.neoformat_test_var = 1
+    vim.g.neoformat_test2 = 1
+    ]],
+  }
+  use{"psf/black", branch = "stable", ft = "python"}
   use{"skywind3000/asyncrun.vim", opt = true}
   use{
     "skywind3000/asynctasks.vim",

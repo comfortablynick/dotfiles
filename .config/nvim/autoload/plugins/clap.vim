@@ -146,7 +146,7 @@ let g:clap#provider#scriptnames# = s:scriptnames
 " task :: asynctasks.vim list {{{2
 let s:task = {}
 function! s:task.source() abort
-    let l:list = plugins#lazy_call('asynctasks.vim', 'asynctasks#list', '')
+    let l:list = plugins#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
     let l:source = []
     let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
     for l:item in l:list

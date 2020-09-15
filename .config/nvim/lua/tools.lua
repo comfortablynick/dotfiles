@@ -34,9 +34,9 @@ function M.async_grep(term) -- {{{1
     end
   end
   local grepprg = vim.split(vim.o.grepprg, " ")
-  handle = uv.spawn(table.remove(grepprg, 1),
-                    {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
-                    vim.schedule_wrap(onexit))
+  uv.spawn(table.remove(grepprg, 1),
+           {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
+           vim.schedule_wrap(onexit))
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)
 end
@@ -227,7 +227,7 @@ function M.run(cmd) -- {{{1
     local timer = uv.new_timer()
     timer:start(10000, 0, vim.schedule_wrap(
                   function()
-        vim.cmd("unlet g:job_status")
+        vim.cmd[[if exists('g:job_status') | unlet g:job_status | endif]]
         timer:stop()
         timer:close()
       end))
@@ -300,8 +300,8 @@ function M.async_run(cmd, bang) -- {{{1
   local results = {}
   local command = cmd
   local qf_size = vim.g.quickfix_size or 20
-  local unlet_timer = "autocmd CursorMoved,CursorMovedI * ++once " ..
-                        "call timer_start(5000, {-> execute('unlet g:job_status', '')})"
+  local unlet_timer = [[autocmd CursorMoved,CursorMovedI * ++once ]] ..
+                        [[call timer_start(5000, {-> execute('if exists("g:job_status") | unlet g:job_status | endif', '')})]]
   local on_read = function(err, data)
     assert(not err, err)
     if not data then return end

@@ -80,19 +80,19 @@ function M.init()
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
-          diagnostics = {enable = true, globals = {"vim", "nvim", "sl", "p"}},
+          diagnostics = {enable = true, globals = {"vim", "nvim", "sl", "p", "printf"}},
         },
       },
     },
     vimls = {},
-    -- yamlls = {
-    --   filetypes = {"yaml", "yaml.ansible"},
-    --   settings = {
-    --     yaml = {
-    --       schemas = {["http://json.schemastore.org/ansible-stable-2.9"] = "*"},
-    --     },
-    --   },
-    -- },
+    yamlls = {
+      filetypes = {"yaml", "yaml.ansible"},
+      settings = {
+        yaml = {
+          schemas = {["http://json.schemastore.org/ansible-stable-2.9"] = "*"},
+        },
+      },
+    },
     -- pyls_ms = {},
   }
 

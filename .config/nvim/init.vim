@@ -6,8 +6,13 @@
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
 let g:use_init_lua = 0
-" set packpath-=~/.local/share/nvim/site
-" set packpath+=~/vim-test/
+let g:use_packer = 0
+
+if g:use_packer
+    set packpath-=~/.local/share/nvim/site
+    set packpath+=~/vim-test/
+endif
+
 " Plugin config handler {{{1
 " Autocmds {{{2
 augroup plugin_config_handler
@@ -189,21 +194,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 silent! packadd! vim-toml
 silent! packadd! syntax-vim-ex
 
-silent! packadd! vim-sandwich
-silent! packadd! vim-smoothie
-silent! packadd! fzf
-silent! packadd! fzf.vim
-silent! packadd! vim-repeat
-silent! packadd! vim-fugitive
-silent! packadd! vim-eunuch
-silent! packadd! vim-clap
-silent! packadd! vim-snippets
-silent! packadd! vista.vim
-silent! packadd! vim-textobj-user
-silent! packadd! vim-bbye
 silent! packadd! vim-dirvish
-silent! packadd! vim-floaterm
-" silent! packadd! vim-doge
 
 " Nvim/vim specific packages {{{3
 if has('nvim')

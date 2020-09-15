@@ -11,26 +11,29 @@ let g:package_manager = 'vim-packager'
 
 let g:package_defer_time = 300
 
-" Call minpac or minpac wrappers
-command!       PackInstall call plugins#init() | call packager#install()
-command! -bang PackUpdate  call plugins#init() | call packager#update({'force_hooks': '<bang>'})
-command!       PackClean   call plugins#init() | call packager#clean()
-command!       PackStatus  call plugins#init() | call packager#status()
+" Package management
+if g:use_packer
+    command! PackerInstall packadd packer.nvim | lua require('plugins').install()
+    command! PackerUpdate packadd packer.nvim | lua require('plugins').update()
+    command! PackerSync packadd packer.nvim | lua require('plugins').sync()
+    command! PackerClean packadd packer.nvim | lua require('plugins').clean()
+    command! PackerCompile packadd packer.nvim | lua require('plugins').compile()
+else
+    command!       PackInstall call plugins#init() | call packager#install()
+    command! -bang PackUpdate  call plugins#init() | call packager#update({'force_hooks': '<bang>'})
+    command!       PackClean   call plugins#init() | call packager#clean()
+    command!       PackStatus  call plugins#init() | call packager#status()
+endif
 
-command! PackerInstall packadd packer.nvim | lua require('plugins').install()
-command! PackerUpdate packadd packer.nvim | lua require('plugins').update()
-command! PackerSync packadd packer.nvim | lua require('plugins').sync()
-command! PackerClean packadd packer.nvim | lua require('plugins').clean()
-command! PackerCompile packadd packer.nvim | lua require('plugins').compile()
-
-augroup deferred_pack_load
+augroup plugin_pack
     autocmd!
     autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })
-    " autocmd FileType * call timer_start(g:package_defer_time, { -> s:deferred_load_filetype() })
 augroup END
 
 " Load packages that are safe to defer
 function! s:deferred_load() abort
+    packadd fzf
+    packadd fzf.vim
     packadd targets.vim
     packadd vim-commentary
     packadd vim-unimpaired
@@ -40,17 +43,23 @@ function! s:deferred_load() abort
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
     packadd tig-explorer.vim
+    packadd vim-sandwich
+    packadd vim-smoothie
+    packadd vim-repeat
+    packadd vim-eunuch
+    packadd vim-clap
+    packadd vim-snippets
+    packadd vista.vim
+    packadd vim-bbye
+    packadd vim-floaterm
 
     if $MOSH_CONNECTION != 1
         packadd vim-devicons
     endif
 
+    packadd vim-fugitive
+    call FugitiveDetect(expand('%:p'))
+
     " Load local vimrc if env var
     call localrc#load_from_env()
-endfunction
-
-function! s:deferred_load_filetype() abort
-    if !exists('g:did_coc_loaded')
-        packadd vim-gitgutter
-    endif
 endfunction

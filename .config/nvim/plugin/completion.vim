@@ -25,6 +25,8 @@ let g:completion_filetypes = {
     \ 'nvim-lsp': [
     \    'lua',
     \    'vim',
+    \    'yaml',
+    \    'yaml.ansible',
     \ ],
     \ 'complete-nvim': [
     \    'asciidoctor',
@@ -42,8 +44,6 @@ let g:completion_filetypes = {
     \    'snippets',
     \    'cmake',
     \    'mail',
-    \    'yaml',
-    \    'yaml.ansible',
     \ ],
     \ 'none': [
     \    'help',
@@ -91,7 +91,7 @@ function! s:completion_handler(ft) abort
         packadd snippets.nvim
         lua require'completion'.on_attach()
         " lua require'ntm/snippets'
-        packadd ultisnips
+        " packadd ultisnips
     endif
 endfunction
 

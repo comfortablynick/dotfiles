@@ -22,8 +22,8 @@ end]],
   vim = {
     scriptguard = [[let s:guard = 'g:loaded_${=vim.fn.expand("%:p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")}' | if exists(s:guard) | finish | endif
 let {s:guard} = 1]],
-    func = [[function! ${1|vim.trim(S.v)}(${2}) abort
-  $0
+    func = indent[[function! ${1|vim.trim(S.v)}(${2}) abort
+    $0
 endfunction]],
   },
   toml = {

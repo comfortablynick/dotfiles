@@ -22,7 +22,12 @@ end
 
 local packer = nil
 local function init()
-  local options = {package_root = pack_dir, plugin_package = "test"}
+  local options = {
+    package_root = pack_dir,
+    plugin_package = "test",
+    disable_commands = true,
+    opt_default = true,
+  }
   if packer == nil then
     packer = require"packer"
     packer.init(options)
@@ -34,29 +39,29 @@ local function init()
   -- Plugins {{{1
   -- General {{{2
   -- Packer can manage itself as an optional plugin
-  use{"wbthomason/packer.nvim", opt = true}
-  use{"NLKNguyen/papercolor-theme", opt = true}
+  use{"wbthomason/packer.nvim"}
+  use{"NLKNguyen/papercolor-theme"}
 
   -- Editing behavior {{{2
-  use{"tpope/vim-commentary", opt = true}
-  use{"tpope/vim-unimpaired", opt = true}
-  use{"machakann/vim-sandwich", opt = true}
-  use{"justinmk/vim-sneak", opt = true}
-  use{"rhysd/clever-f.vim", opt = true}
-  use{"wellle/targets.vim", opt = true}
-  use{"bfredl/nvim-miniyank", opt = true}
-  use{"antoinemadec/FixCursorHold.nvim", opt = true}
+  use{"tpope/vim-commentary"}
+  use{"tpope/vim-unimpaired"}
+  use{"machakann/vim-sandwich"}
+  use{"justinmk/vim-sneak"}
+  use{"rhysd/clever-f.vim"}
+  use{"wellle/targets.vim"}
+  use{"bfredl/nvim-miniyank"}
+  use{"antoinemadec/FixCursorHold.nvim"}
 
   -- Explorer/finder utils {{{2
   use{"majutsushi/tagbar", cmd = "TagbarToggle"}
   use{"mbbill/undotree", cmd = "UndotreeToggle"}
   use{"preservim/nerdtree", cmd = "NERDTreeToggle"}
   use{"Shougo/defx.nvim", cmd = "Defx"}
-  use{"tpope/vim-projectionist", opt = true}
+  use{"tpope/vim-projectionist"}
   use{"kyazdani42/nvim-tree.lua", cmd = "LuaTreeToggle"}
-  use{"justinmk/vim-dirvish", opt = true}
-  use{"srstevenson/vim-picker", opt = true}
-  use{"voldikss/vim-floaterm", opt = true}
+  use{"justinmk/vim-dirvish"}
+  use{"srstevenson/vim-picker"}
+  use{"voldikss/vim-floaterm"}
   use{
     "junegunn/fzf.vim",
     cmd = {
@@ -77,28 +82,27 @@ local function init()
   }
 
   -- Completion {{{2
-  use{"neovim/nvim-lsp", opt = true}
+  use{"neovim/nvim-lsp"}
   use{
     "nvim-lua/completion-nvim",
-    opt = true,
     after = "nvim-lsp",
-    requires = {{"norcalli/snippets.nvim", opt = true, after = "nvim-lsp"}},
+    requires = {{"norcalli/snippets.nvim", after = "nvim-lsp"}},
   }
-  use{"steelsojka/completion-buffers", opt = true, after = "nvim-lsp"}
+  use{"steelsojka/completion-buffers", after = "nvim-lsp"}
 
   -- Vim Development {{{2
   use{"tweekmonster/startuptime.vim", cmd = "StartupTime"}
-  use{"tpope/vim-scriptease", opt = true}
-  use{"mhinz/vim-lookup", opt = true}
-  use{"bfredl/nvim-luadev", opt = true}
+  use{"tpope/vim-scriptease"}
+  use{"mhinz/vim-lookup"}
+  use{"bfredl/nvim-luadev"}
 
   -- Tmux {{{2
-  use{"christoomey/vim-tmux-navigator", opt = true}
-  use{"RyanMillerC/better-vim-tmux-resizer", opt = true}
-  use{"comfortablynick/vim-tmux-runner", opt = true}
+  use{"christoomey/vim-tmux-navigator"}
+  use{"RyanMillerC/better-vim-tmux-resizer"}
+  use{"comfortablynick/vim-tmux-runner"}
 
   -- Runners/Linters/Formatters {{{2
-  use{"dense-analysis/ale", opt = true}
+  use{"dense-analysis/ale"}
   use{
     "sbdchd/neoformat",
     cmd = "Neoformat",
@@ -109,10 +113,9 @@ local function init()
     ]],
   }
   use{"psf/black", branch = "stable", ft = "python"}
-  use{"skywind3000/asyncrun.vim", opt = true}
+  use{"skywind3000/asyncrun.vim"}
   use{
     "skywind3000/asynctasks.vim",
-    opt = true,
     run = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
   }
 end

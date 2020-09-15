@@ -1,8 +1,8 @@
-local vim = vim
 local api = vim.api
 local uv = vim.loop
 local luajob = require"luajob"
 local util = require"util"
+local npcall = util.npcall
 local fn = require"fun"
 local M = {}
 
@@ -77,10 +77,10 @@ function M.git_branch() -- {{{1
       if err then
         print("error:", err)
       elseif data then
-        lines = vim.split(data, "\n")
+        local lines = vim.split(data, "\n")
         for _, line in ipairs(lines) do
           if line:find("*") then
-            vim.api.nvim_set_var("git_branch", (line:gsub("\n", "")))
+            api.nvim_set_var("git_branch", (line:gsub("\n", "")))
           end
         end
       end
@@ -214,8 +214,8 @@ function M.run(cmd) -- {{{1
     stderr:close()
     handle:close()
     if code ~= 0 then
-      vim.api.nvim_err_writeln(string.format(
-                                 "Cmd '%s' failed with exit code: %d", cmd, code))
+      api.nvim_err_writeln(string.format("Cmd '%s' failed with exit code: %d",
+                                         cmd, code))
       vim.g.job_status = "Failed"
     else
       vim.g.job_status = "Success"
@@ -232,9 +232,7 @@ function M.run(cmd) -- {{{1
         timer:close()
       end))
   end
-
   handle = uv.spawn(options.cmd, options, vim.schedule_wrap(onexit))
-
   vim.g.job_status = "Running"
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)
@@ -328,7 +326,6 @@ function M.async_run(cmd, bang) -- {{{1
         end
         vim.cmd(unlet_timer)
       end
-      -- require"window".create_scratch(results)
     end,
     detach = false,
   })
@@ -373,8 +370,56 @@ function M.mru_files(n) -- {{{1
            n or 999):totable()
 end
 
-function M.markdown_headers() -- {{{1
-  local lines = api.nvim_buf_get_lines()
+function M.make() -- {{{1
+  local makeprg = npcall(api.nvim_buf_get_option, 0, "makeprg") or vim.o.makeprg
+  local efm = npcall(api.nvim_buf_get_option, 0, "errorformat") or
+                vim.o.errorformat
+  local stdout = vim.loop.new_pipe(false)
+  local stderr = vim.loop.new_pipe(false)
+  local expanded_cmd = vim.fn.expandcmd(makeprg)
+  local args = vim.split(expanded_cmd, " ")
+  local cmd = table.remove(args, 1)
+  local options = {}
+  local handle
+
+  options.stdio = {stdout, stderr}
+  options.args = args
+
+  local function has_non_whitespace(str) return str:match("[^%s]") end
+
+  local onread = function(err, data)
+    assert(not err, err)
+    if not data then return end
+    local lines = vim.split(data, "\n")
+    vim.fn.setqflist({}, "a", {
+      title = expanded_cmd,
+      lines = vim.tbl_filter(has_non_whitespace, lines),
+      efm = efm,
+    })
+  end
+
+  local onexit = function()
+    stdout:read_stop()
+    stdout:close()
+    stderr:read_stop()
+    stderr:close()
+    handle:close()
+    -- if code ~= 0 then
+    --   api.nvim_err_writeln(string.format("Cmd '%s' failed with exit code: %d",
+    --                                      cmd, code))
+    -- end
+  end
+
+  if vim.fn.getqflist({title = ""}).title == expanded_cmd then
+    vim.fn.setqflist({}, "r")
+  else
+    vim.fn.setqflist({}, " ")
+  end
+
+  handle = uv.spawn(cmd, options, onexit)
+  stderr:read_start(vim.schedule_wrap(onread))
+  stdout:read_start(vim.schedule_wrap(onread))
 end
+
 -- Return module --{{{1
 return M

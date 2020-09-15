@@ -89,6 +89,7 @@ function! plugins#init() abort
 
     " Syntax/filetype
     Pack 'cespare/vim-toml'
+    Pack 'tbastos/vim-lua'
     Pack 'vim-jp/syntax-vim-ex'
     Pack 'freitass/todo.txt-vim',       {'type': 'start'}
     Pack 'SidOfc/mkdx',                 {'type': 'start'}

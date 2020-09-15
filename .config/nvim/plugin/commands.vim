@@ -75,6 +75,9 @@ nnoremap <C-P> :Fzm<CR>
 command! -nargs=0 Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
 noremap <silent> <F3> :Neoformat<CR>
 
+" Rooter :: Find project root {{{2
+command! -nargs=0 Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
+
 " Misc commonly mistyped commands {{{2
 command! WQ wq
 command! Wq wq
@@ -126,6 +129,10 @@ command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
 " MRU :: most recently used files {{{2
 command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
 
-" Agrep :: async grep {{{2
-command! -nargs=+ -complete=file -bar Agrep lua require'tools'.async_grep(<q-args>)
+" Grep :: async grep {{{2
+command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
+
+" Make :: async make {{{2
+command! -nargs=0 -complete=file Make lua require'tools'.make()
+
 " vim:fdl=1 noml:

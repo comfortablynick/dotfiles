@@ -16,8 +16,8 @@ nnoremap <silent> <expr> <plug>(gitgutter-hunk-prev)
 
 nmap <silent> ]c <Plug>(gitgutter-hunk-next)
 nmap <silent> [c <Plug>(gitgutter-hunk-prev)
-nmap <Leader> gs <Plug>(GitGutterStageHunk)
-nmap <Leader> gu <Plug>(GitGutterUndoHunk)
+nmap <Leader>gs <Plug>(GitGutterStageHunk)
+nmap <Leader>gu <Plug>(GitGutterUndoHunk)
 nmap          gs <Plug>(GitGutterPreviewHunk)
 
 " Wrap around buffer when navigating hunks

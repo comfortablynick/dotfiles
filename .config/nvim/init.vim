@@ -1,19 +1,19 @@
-" vim:fdm=marker fdl=1 noml:
 "  _       _ _         _
 " (_)_ __ (_) |___   _(_)_ __ ___
 " | | '_ \| | __\ \ / / | '_ ` _ \
 " | | | | | | |_ \ V /| | | | | | |
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
+" Plugin config handler {{{1
 let g:use_init_lua = 0
-let g:use_packer = 0
 
-if g:use_packer
+" Packer {{{2
+let g:use_packer = 0
+if has('nvim') && g:use_packer
     set packpath-=~/.local/share/nvim/site
     set packpath+=~/vim-test/
 endif
 
-" Plugin config handler {{{1
 " Autocmds {{{2
 augroup plugin_config_handler
     autocmd!
@@ -46,7 +46,6 @@ if has('nvim') && get(g:, 'use_init_lua') == 1
     lua require 'init'
     finish
 endif
-
 " General configuration {{{1
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')
@@ -57,12 +56,11 @@ if has('nvim')
     let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
     let &shadafile =
-        \ expand('$XDG_DATA_HOME/nvim/shada/main.shada')        " Location of nvim replacement for viminfofile
+        \ stdpath('data').'/shada/main.shada'                   " Location of nvim replacement for viminfofile
     let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
     set pyxversion=3
-    " let g:python3_host_prog = '/usr/local/bin/python3.7'
     let g:python3_host_prog = 'python3'
 
     " Cursor shape (set to match Neovim default)
@@ -108,7 +106,6 @@ set nocursorline                                                " Show line unde
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=300                                              " Update more often (helps GitGutter)
-" set signcolumn=yes                                              " Always show; keep appearance consistent
 let &signcolumn = has('patch-8.1.1564') ? 'number' : 'yes'      " Use number column for signs if patch is applied
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set timeoutlen=400                                              " How long in ms to wait for key combinations (if used)
@@ -190,10 +187,12 @@ let g:loaded_python_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-" Filetype
+" Packages that use ftplugin,ftdetect,syntax should be loaded here
+" Most others can be deferred till after startup
+" see plugin/pack.vim
 silent! packadd! vim-toml
+silent! packadd! vim-lua
 silent! packadd! syntax-vim-ex
-
 silent! packadd! vim-dirvish
 
 " Nvim/vim specific packages {{{3
@@ -204,17 +203,9 @@ if has('nvim')
     silent! packadd! FixCursorHold.nvim
 
     lua require'helpers'
-
-    if !empty(globpath(&rtp, '*/nvim_lsp.vim'))
-        lua require'lsp'.init()
-    endif
-
-    augroup start_screen
-        autocmd!
-        autocmd VimEnter * ++once lua require'ntm/start'.start()
-    augroup END
+    lua require'lsp'.init()
 else
     " Vim only
     packadd! matchit " Nvim loads by default
 endif
-
+" vim:fdm=marker fdl=1:

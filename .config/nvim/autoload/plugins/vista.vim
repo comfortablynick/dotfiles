@@ -31,4 +31,4 @@ let g:vista_disable_statusline = exists('g:loaded_airline')
     \ || exists('g:loaded_eleline')
 let g:vista_sidebar_width = winwidth(0) > 200 ? 60 : 50
 
-nnoremap <silent><Leader>v :Vista!!<CR>
+nnoremap <silent><Leader>V :Vista!!<CR>

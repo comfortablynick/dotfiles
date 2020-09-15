@@ -1,9 +1,9 @@
 -- LSP configurations
-local api = vim.api
-local lsp = require"nvim_lsp"
-local util = require"util"
 local M = {}
+local api = vim.api
 local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
+local util = require"util"
+local lsp = util.npcall(require, "nvim_lsp")
 
 -- Customized rename function; defaults to name under cursor
 function M.rename(new_name)
@@ -44,7 +44,8 @@ local on_attach_cb = function(client, bufnr)
     string = text_complete,
     comment = text_complete,
   }
-  require"completion".on_attach{chain_complete_list = complete_chain}
+  local completion = util.npcall(require, "completion")
+  if completion then completion.on_attach{chain_complete_list = complete_chain} end
   require"ntm/snippets"
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
@@ -75,12 +76,17 @@ local on_attach_cb = function(client, bufnr)
 end
 
 function M.init()
+  -- Safely return without error if nvim_lsp isn't installed
+  if not lsp then return end
   local configs = {
     sumneko_lua = {
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
-          diagnostics = {enable = true, globals = {"vim", "nvim", "sl", "p", "printf"}},
+          diagnostics = {
+            enable = true,
+            globals = {"vim", "nvim", "sl", "p", "printf"},
+          },
         },
       },
     },

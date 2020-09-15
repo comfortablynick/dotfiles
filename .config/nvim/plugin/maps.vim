@@ -58,4 +58,8 @@ nnoremap <silent> <Tab> :bnext<CR>
 nnoremap <silent> <S-Tab> :bprevious<CR>
 nnoremap <silent> <Leader>q :bd<CR>
 
+" Command line {{{1
+" %% -> cwd
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+
 " vim:fdl=1 noml:

@@ -12,7 +12,7 @@ let g:package_manager = 'vim-packager'
 let g:package_defer_time = 300
 
 " Package management
-if g:use_packer
+if get(g:, 'use_packer', 0)
     command! PackerInstall packadd packer.nvim | lua require('plugins').install()
     command! PackerUpdate packadd packer.nvim | lua require('plugins').update()
     command! PackerSync packadd packer.nvim | lua require('plugins').sync()
@@ -52,6 +52,7 @@ function! s:deferred_load() abort
     packadd vista.vim
     packadd vim-bbye
     packadd vim-floaterm
+    packadd vim-picker
 
     if $MOSH_CONNECTION != 1
         packadd vim-devicons

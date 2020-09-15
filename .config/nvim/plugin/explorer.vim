@@ -23,11 +23,13 @@ command! -nargs=* Lf call plugins#floaterm#wrap('lf', <f-args>)
 command! -nargs=* Ranger call plugins#floaterm#wrap('ranger', <f-args>)
 
 if has('nvim')
-    command! -nargs=0 LuaTreeToggle call plugins#lazy_run('LuaTreeToggle', 'nvim-tree.lua') 
+    command! -nargs=0 LuaTreeToggle
+        \ call plugins#lazy_run(
+        \ 'LuaTreeToggle',
+        \ 'nvim-tree.lua',
+        \ {'config': 'lua require"tree".on_enter()'}) 
 endif
 
 " Maps
-nnoremap <silent> <Leader>e
-    \ :call plugins#lazy_run('PickerEdit', 'vim-picker')<CR>
 nnoremap <silent>    <C-E>  :call explorer#toggle(g:use_explorer)<CR>
 nnoremap <silent> <Leader>n :call explorer#toggle(g:use_explorer)<CR>

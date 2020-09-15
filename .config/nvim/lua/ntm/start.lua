@@ -75,26 +75,24 @@ end
 
 local function recent_files() return filter_oldfiles("", ":p:~") end
 
-local commands = {
-  {key = "u", disp = "Update plugins", cmd = "PackUpdate"},
-  {key = "c", disp = "Clean plugins", cmd = "PackClean"},
-  {key = "t", disp = "Time startup", cmd = "StartupTime"},
-  {key = "q", disp = "Quit", cmd = "q!"},
-}
-
 local cur_dir = relativize(uv.cwd())
 cur_dir = (cur_dir ~= "") and cur_dir or "~"
-
-local sections = {
-  {title = "Commands", show = commands},
-  {title = "Recent Files in " .. cur_dir, show = current_dir_files()},
-  {title = "Recent Files", show = recent_files()},
-}
 
 local boundaries = {}
 local keybindings = {}
 
 local function make_sections()
+  local commands = {
+    {key = "u", disp = "Update plugins", cmd = "PackUpdate"},
+    {key = "c", disp = "Clean plugins", cmd = "PackClean"},
+    {key = "t", disp = "Time startup", cmd = "StartupTime"},
+    {key = "q", disp = "Quit", cmd = "q!"},
+  }
+  local sections = {
+    {title = "Commands", show = commands},
+    {title = "Recent Files in " .. cur_dir, show = current_dir_files()},
+    {title = "Recent Files", show = recent_files()},
+  }
   boundaries = {}
   keybindings = {}
   local linenr = 0

@@ -124,14 +124,14 @@ endfunction
 function! s:subst(start, end, pat, rep) abort
     let l:lineno = a:start
     while l:lineno <= a:end
-	let l:curline = getline(l:lineno)
-	if match(l:curline, a:pat) != -1
-	    let l:newline = substitute(l:curline, a:pat, a:rep, '')
-	    if( l:newline != l:curline )
-		" Only substitute if we made a change
-		keepjumps call setline(l:lineno, l:newline)
-	    endif
-	endif
-	let l:lineno = l:lineno + 1
+        let l:curline = getline(l:lineno)
+        if match(l:curline, a:pat) != -1
+            let l:newline = substitute(l:curline, a:pat, a:rep, '')
+            if l:newline != l:curline
+                " Only substitute if we made a change
+                keepjumps call setline(l:lineno, l:newline)
+            endif
+        endif
+        let l:lineno = l:lineno + 1
     endwhile
 endfunction

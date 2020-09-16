@@ -79,6 +79,18 @@ function M.init()
   -- Safely return without error if nvim_lsp isn't installed
   if not lsp then return end
   local configs = {
+    bashls = {},
+    cmake = {},
+    ccls = {},
+    -- diagnosticls = {
+    --   filetypes = {"vim", "sh", "python"},
+    --   initializationOptions = {
+    --     filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
+    --   },
+    -- },
+    gopls = {},
+    pyls_ms = {},
+    rust_analyzer = {},
     sumneko_lua = {
       settings = {
         Lua = {
@@ -90,6 +102,7 @@ function M.init()
         },
       },
     },
+    tsserver = {},
     vimls = {},
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
@@ -99,7 +112,6 @@ function M.init()
         },
       },
     },
-    -- pyls_ms = {},
   }
 
   -- Set global callbacks

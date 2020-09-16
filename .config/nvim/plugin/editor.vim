@@ -19,14 +19,20 @@ cnoreabbrev <expr> h
     \ map#cabbr('h', {->window#tab_mod('help', 'help')})
 cnoreabbrev <expr> hg
     \ map#cabbr('hg', {->window#tab_mod('helpgrep', 'help')})
+
+" Open help in vert split {{{2
+call map#set_cabbr('vh', 'vert help')
+
 " Open Man in new or existing tab {{{2
 cnoreabbrev <expr> man
     \ map#cabbr('man', {->window#tab_mod('Man', 'man')})
-" Lua
-cnoreabbrev <expr> l map#cabbr('l', 'lua')
+
+" Lua {{{2
+call map#set_cabbr('l', 'lua')
 cnoreabbrev <expr> lp
     \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
-" Fold marker
+
+" Fold marker {{{2
 inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Autocmds {{{1

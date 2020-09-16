@@ -134,6 +134,11 @@ endfunction
 " Lazy-load a package on a command or funcref
 " Inspired by:
 " https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/autoload/util.vim
+" Optional options dict:
+" `start` Range start
+" `end` Range end
+" `bang` <bang> from command
+" `args` <q-args> from command
 function! plugins#lazy_run(cmd, package, ...) abort
     if !plugins#exists(a:package)
         echohl WarningMsg

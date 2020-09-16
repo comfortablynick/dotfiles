@@ -7,13 +7,13 @@ local fn = require"fun"
 local M = {}
 
 function M.async_grep(term) -- {{{1
-  if not term then
-    api.nvim_err_writeln("async grep: Search term missing")
-    return
-  end
+  assert(term, "async grep: search term missing")
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
+  local grep = vim.o.grepprg
   local results = {}
+  local handle
+
   local onread = function(err, data)
     assert(not err, err)
     if not data then return end
@@ -24,8 +24,11 @@ function M.async_grep(term) -- {{{1
   local onexit = function()
     stdout:close()
     stderr:close()
-    -- handle:close()
-    vim.fn.setqflist({}, "r", {title = "AsyncGrep Results", lines = results})
+    handle:close()
+    vim.fn.setqflist({}, "r", {
+      title = "[AsyncGrep] " .. grep .. " " .. term,
+      lines = results,
+    })
     local result_ct = #results
     if result_ct > 0 then
       vim.cmd("cwindow " .. math.min(result_ct, 10))
@@ -33,10 +36,10 @@ function M.async_grep(term) -- {{{1
       print"grep: no results found"
     end
   end
-  local grepprg = vim.split(vim.o.grepprg, " ")
-  uv.spawn(table.remove(grepprg, 1),
-           {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
-           vim.schedule_wrap(onexit))
+  local grepprg = vim.split(grep, " ")
+  handle = uv.spawn(table.remove(grepprg, 1),
+                    {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
+                    vim.schedule_wrap(onexit))
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)
 end
@@ -194,20 +197,22 @@ function M.run(cmd) -- {{{1
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local args = vim.split(cmd, " ")
-  local results = {}
+  local bin = table.remove(args, 1)
   local options = {}
   local handle
+  local result_ct = 0
 
   options.stdio = {stdout, stderr}
-  options.cmd = table.remove(args, 1)
   options.args = args
+
+  local has_non_whitespace = function(str) return str:match("[^%s]") end
 
   local onread = function(err, data)
     assert(not err, err)
     if not data then return end
-    for _, item in ipairs(vim.split(data, "\n")) do
-      if item ~= "" then table.insert(results, item) end
-    end
+    local lines = vim.tbl_filter(has_non_whitespace, vim.split(data, "\n"))
+    result_ct = result_ct + #lines
+    vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = lines})
   end
   local onexit = function(code)
     stdout:close()
@@ -220,10 +225,7 @@ function M.run(cmd) -- {{{1
     else
       vim.g.job_status = "Success"
     end
-    if #results > 0 then
-      vim.fn.setqflist({}, "r", {title = "Command: " .. cmd, lines = results})
-      vim.cmd("copen " .. math.min(#results, 10))
-    end
+    if result_ct > 0 then vim.cmd("cwindow " .. math.min(result_ct, 10)) end
     local timer = uv.new_timer()
     timer:start(10000, 0, vim.schedule_wrap(
                   function()
@@ -232,10 +234,19 @@ function M.run(cmd) -- {{{1
         timer:close()
       end))
   end
-  handle = uv.spawn(options.cmd, options, vim.schedule_wrap(onexit))
-  vim.g.job_status = "Running"
-  uv.read_start(stdout, onread)
-  uv.read_start(stderr, onread)
+
+  -- Clear quickfix
+  if vim.fn.getqflist({title = ""}).title == bin then
+    vim.fn.setqflist({}, "r")
+  else
+    vim.fn.setqflist({}, " ")
+  end
+
+  -- Start process
+  handle = uv.spawn(bin, options, vim.schedule_wrap(onexit))
+  -- vim.g.job_status = "Running"
+  uv.read_start(stdout, vim.schedule_wrap(onread))
+  uv.read_start(stderr, vim.schedule_wrap(onread))
 end
 
 function M.sh(script, cwd) -- {{{1

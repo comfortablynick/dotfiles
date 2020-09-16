@@ -9,9 +9,12 @@ let {s:guard} = 1
 
 let g:completion_filetypes = {
     \ 'coc': [
-    \    'c',
-    \    'cpp',
     \    'fish',
+    \ ],
+    \ "nvim-lsp": [
+    \    'c',
+    \    'cmake',
+    \    'cpp',
     \    'go',
     \    'rust',
     \    'typescript',
@@ -21,8 +24,6 @@ let g:completion_filetypes = {
     \    'bash',
     \    'sh',
     \    'python',
-    \ ],
-    \ 'nvim-lsp': [
     \    'lua',
     \    'vim',
     \    'yaml',
@@ -42,7 +43,6 @@ let g:completion_filetypes = {
     \    'vifm',
     \    'ps1',
     \    'snippets',
-    \    'cmake',
     \    'mail',
     \ ],
     \ 'none': [

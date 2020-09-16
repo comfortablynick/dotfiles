@@ -27,17 +27,15 @@ noremap <silent> <F5> :UndotreeToggle<CR>
 command! -bang -bar Scratch call window#create_scratch(<bang>0)
 
 " [Async]Run :: run a command asynchronously {{{2
-cnoreabbrev <expr> R map#cabbr('R', 'Run')
-cnoreabbrev <expr> grep map#cabbr('grep', 'Grep')
+call map#set_cabbr('R', 'AsyncRun')
+call map#set_cabbr('grep', 'Grep')
 
 " Lazy load AsyncRun
 command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-    \ packadd asyncrun.vim
-    \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
-
-command! -bang -nargs=+ -range=0 -complete=file Run
-    \ packadd asyncrun.vim
-    \ | call asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)
+    \ call plugins#lazy_run(
+    \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
+    \   'asyncrun.vim'
+    \ )
 
 " Use AyncRun for Make
 command! -bang -nargs=* -complete=file Make
@@ -116,11 +114,11 @@ command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 " [H]elp :: floating help window {{{2
 if !has('nvim') | finish | endif
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-cnoreabbrev <expr> H map#cabbr('H', 'Help')
+call map#set_cabbr('H', 'Help')
 
 " [F]loat[T]erm :: floating terminal window {{{2
 command! -complete=file -nargs=+ FloatTerm lua require'window'.float_term(<q-args>, 50)
-cnoreabbrev <expr> FT map#cabbr('FT', 'FloatTerm')
+call map#set_cabbr('FT', 'FloatTerm')
 
 " Cmd :: test version of lua async command run {{{2
 command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)

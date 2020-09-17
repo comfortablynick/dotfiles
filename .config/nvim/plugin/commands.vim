@@ -116,9 +116,8 @@ if !has('nvim') | finish | endif
 command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 call map#set_cabbr('H', 'Help')
 
-" [F]loat[T]erm :: floating terminal window {{{2
-command! -complete=file -nargs=+ FloatTerm lua require'window'.float_term(<q-args>, 50)
-call map#set_cabbr('FT', 'FloatTerm')
+" LspDisable :: stop active lsp clients {{{2
+" command! Lsp
 
 " Cmd :: test version of lua async command run {{{2
 command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
@@ -131,6 +130,6 @@ command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_file
 command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
 
 " Make :: async make {{{2
-command! -nargs=0 -complete=file Make lua require'tools'.make()
+" command! -nargs=0 -complete=file Make lua require'tools'.make()
 
 " vim:fdl=1 noml:

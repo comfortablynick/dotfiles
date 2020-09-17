@@ -9,7 +9,6 @@ let {s:guard} = 1
 
 let g:completion_filetypes = {
     \ 'coc': [
-    \    'fish',
     \ ],
     \ "nvim-lsp": [
     \    'c',
@@ -30,6 +29,7 @@ let g:completion_filetypes = {
     \    'yaml.ansible',
     \ ],
     \ 'complete-nvim': [
+    \    'fish',
     \    'asciidoctor',
     \    'markdown',
     \    'just',
@@ -80,6 +80,7 @@ function! s:completion_handler(ft) abort
         packadd completion-buffers
         " packadd ultisnips
         packadd snippets.nvim
+        lua require'config.completion'.init()
     elseif g:completion_type ==# 'mucomplete'
         packadd vim-gitgutter
         packadd vim-mucomplete
@@ -89,9 +90,7 @@ function! s:completion_handler(ft) abort
         packadd completion-nvim
         packadd completion-buffers
         packadd snippets.nvim
-        lua require'completion'.on_attach()
-        " lua require'ntm/snippets'
-        " packadd ultisnips
+        lua require'config.completion'.init()
     endif
 endfunction
 

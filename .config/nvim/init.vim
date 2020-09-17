@@ -37,8 +37,12 @@ function! s:source_handler(sourced, type) abort "{{{2
         let g:plugins_called += [l:file]
     endif
     if index(g:plugin_config_files, l:file) > -1
-        let l:fn = 'plugins#'.l:file.'#'.a:type
-        silent! call {l:fn}()
+        let l:fn = printf('plugins#%s#%s', l:file, a:type)
+        try
+            call {l:fn}()
+        catch /^Vim\%((\a\+)\)\=:E117/
+            " fn doesn't exist; do nothing
+        endtry
     endif
 endfunction
 
@@ -191,6 +195,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 " Most others can be deferred till after startup
 " see plugin/pack.vim
 silent! packadd! vim-toml
+silent! packadd! vim-fish
 silent! packadd! vim-lua
 silent! packadd! syntax-vim-ex
 silent! packadd! vim-dirvish
@@ -203,7 +208,7 @@ if has('nvim')
     silent! packadd! FixCursorHold.nvim
 
     lua require'helpers'
-    lua require'lsp'.init()
+    lua require'config.lsp'.init()
 else
     " Vim only
     packadd! matchit " Nvim loads by default

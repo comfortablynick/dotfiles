@@ -31,22 +31,6 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
-  local text_complete = {
-    {complete_items = {"buffers"}},
-    {complete_items = {"path"}, triggered_only = {"/"}},
-  }
-  local complete_chain = {
-    default = {
-      {complete_items = {"lsp", "snippet", "UltiSnips"}},
-      {complete_items = {"buffers"}},
-      {complete_items = {"path"}, triggered_only = {"/"}},
-    },
-    string = text_complete,
-    comment = text_complete,
-  }
-  local completion = util.npcall(require, "completion")
-  if completion then completion.on_attach{chain_complete_list = complete_chain} end
-  require"ntm/snippets"
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
@@ -56,7 +40,7 @@ local on_attach_cb = function(client, bufnr)
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     [";s"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
     ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
-    ["<F2>"] = "<Cmd>lua require'lsp'.rename()<CR>",
+    ["<F2>"] = "<Cmd>lua require'config.lsp'.rename()<CR>",
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
   }
@@ -68,11 +52,6 @@ local on_attach_cb = function(client, bufnr)
   vim.cmd[[augroup lsp_lua_on_attach]]
   vim.cmd[[autocmd CompleteDone * if pumvisible() == 0 | pclose | endif]]
   vim.cmd[[augroup END]]
-
-  -- Not sure what these are supposed to do
-  -- vim.cmd[[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
-  -- vim.cmd[[autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()]]
-  -- vim.cmd[[autocmd CursorMoved <buffer> lua vim.lsp.util.buf_clear_references()]]
 end
 
 function M.init()

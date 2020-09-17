@@ -214,25 +214,23 @@ function M.run(cmd) -- {{{1
     result_ct = result_ct + #lines
     vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = lines})
   end
-  local onexit = function(code)
+  local onexit = function()
     stdout:close()
     stderr:close()
     handle:close()
-    if code ~= 0 then
-      api.nvim_err_writeln(string.format("Cmd '%s' failed with exit code: %d",
-                                         cmd, code))
-      vim.g.job_status = "Failed"
-    else
-      vim.g.job_status = "Success"
-    end
+    -- if code ~= 0 then
+    --   vim.g.job_status = "Failed"
+    -- else
+    --   vim.g.job_status = "Success"
+    -- end
     if result_ct > 0 then vim.cmd("cwindow " .. math.min(result_ct, 10)) end
-    local timer = uv.new_timer()
-    timer:start(10000, 0, vim.schedule_wrap(
-                  function()
-        vim.cmd[[if exists('g:job_status') | unlet g:job_status | endif]]
-        timer:stop()
-        timer:close()
-      end))
+    -- local timer = uv.new_timer()
+    -- timer:start(10000, 0, vim.schedule_wrap(
+    --               function()
+    --     vim.cmd[[if exists('g:job_status') | unlet g:job_status | endif]]
+    --     timer:stop()
+    --     timer:close()
+      -- end))
   end
 
   -- Clear quickfix

@@ -192,57 +192,100 @@ function M.get_history() -- {{{1
   return results
 end
 
+function M.r(cmd) -- {{{1
+  local args = vim.split(cmd, " ")
+  local bin = table.remove(args, 1)
+  local on_read = function(err, data)
+    assert(not err, err)
+    vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = data})
+  end
+  local on_close = function()
+    local results = #vim.fn.getqflist()
+    if results > 0 then vim.cmd("copen" .. math.min(results, 20)) end
+  end
+  vim.fn.setqflist({}, " ", {title = "Command: " .. cmd})
+  M.spawn(bin, {args = args}, vim.schedule_wrap(on_read),
+          vim.schedule_wrap(on_close))
+end
+
+function M.spawn(cmd, opts, read_cb, cb) -- {{{1
+  local stdin = uv.new_pipe(false)
+  local stdout = uv.new_pipe(false)
+  local stderr = uv.new_pipe(false)
+  local args = {stdio = {stdin, stdout, stderr}, args = opts.args or {}}
+  local process, pid = nil, nil
+
+  local has_non_whitespace = function(str) return str:match("[^%s]") end
+
+  process, pid = uv.spawn(cmd, args, function(code)
+    local handles = {stdin, stdout, stderr, process}
+    for _, handle in ipairs(handles) do uv.close(handle) end
+    cb(code)
+  end)
+  assert(process, pid)
+
+  local on_read = function(err, data)
+    if not data then return end
+    local lines = vim.split(vim.trim(data), "\n")
+    read_cb(err, lines)
+  end
+
+  for _, io in ipairs{stdout, stderr} do uv.read_start(io, on_read) end
+
+  if opts.stream then
+    uv.write(stdin, opts.stream, function(err)
+      assert(not err, err)
+      uv.shutdown(stdin, function(err) assert(not err, err) end)
+    end)
+  end
+end
+
 function M.run(cmd) -- {{{1
   -- Test run command using libuv api
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local args = vim.split(cmd, " ")
   local bin = table.remove(args, 1)
-  local options = {}
   local handle
-  local result_ct = 0
-
-  options.stdio = {stdout, stderr}
+  local options = {}
+  options.stdio = {nil, stdout, stderr}
   options.args = args
-
-  local has_non_whitespace = function(str) return str:match("[^%s]") end
 
   local onread = function(err, data)
     assert(not err, err)
     if not data then return end
-    local lines = vim.tbl_filter(has_non_whitespace, vim.split(data, "\n"))
-    result_ct = result_ct + #lines
+    local lines = vim.split(vim.trim(data), "\n")
     vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = lines})
   end
-  local onexit = function()
+  local onexit = function(code)
     stdout:close()
     stderr:close()
     handle:close()
-    -- if code ~= 0 then
-    --   vim.g.job_status = "Failed"
-    -- else
-    --   vim.g.job_status = "Success"
-    -- end
-    if result_ct > 0 then vim.cmd("cwindow " .. math.min(result_ct, 10)) end
-    -- local timer = uv.new_timer()
-    -- timer:start(10000, 0, vim.schedule_wrap(
-    --               function()
-    --     vim.cmd[[if exists('g:job_status') | unlet g:job_status | endif]]
-    --     timer:stop()
-    --     timer:close()
-      -- end))
+    if code ~= 0 then
+      vim.g.job_status = "Failed"
+    else
+      vim.g.job_status = "Success"
+    end
+    local results = #vim.fn.getqflist()
+    if results > 0 then vim.cmd("copen" .. math.min(results, 20)) end
+    local timer = uv.new_timer()
+    timer:start(10000, 0, vim.schedule_wrap(
+                  function()
+
+        vim.cmd("autocmd CursorMoved,CursorMovedI * ++once " ..
+                  "if exists('g:job_status') | unlet g:job_status | endif")
+        timer:stop()
+        timer:close()
+      end))
   end
 
   -- Clear quickfix
-  if vim.fn.getqflist({title = ""}).title == bin then
-    vim.fn.setqflist({}, "r")
-  else
-    vim.fn.setqflist({}, " ")
-  end
+  vim.fn.setqflist({},
+                   vim.fn.getqflist({title = ""}).title == bin and "r" or " ")
 
   -- Start process
   handle = uv.spawn(bin, options, vim.schedule_wrap(onexit))
-  -- vim.g.job_status = "Running"
+  vim.g.job_status = "Running"
   uv.read_start(stdout, vim.schedule_wrap(onread))
   uv.read_start(stderr, vim.schedule_wrap(onread))
 end

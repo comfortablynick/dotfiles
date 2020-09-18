@@ -7,7 +7,8 @@ let g:python_highlight_all=1
 let $PYTHONUNBUFFERED=1
 
 " Don't overwrite command if already defined
-silent! command Black packadd black | :Black
+silent! command Black call plugins#lazy_run('Black', 'black')
+
 nnoremap <buffer><silent><F3> :call <SID>format_python()<CR>
 
 function! s:format_python() abort

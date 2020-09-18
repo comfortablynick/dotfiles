@@ -197,6 +197,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 silent! packadd! vim-toml
 silent! packadd! vim-fish
 silent! packadd! vim-lua
+silent! packadd! vim-doge
 silent! packadd! syntax-vim-ex
 silent! packadd! vim-dirvish
 

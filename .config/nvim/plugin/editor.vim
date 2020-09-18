@@ -45,10 +45,12 @@ augroup plugin_editor
     " Not likely to be using macros in these files
     autocmd FileType netrw,help,fugitive,qf
         \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
+    " Open cmdline window in insert {{{2
+    autocmd CmdwinEnter * startinsert
     " Neovim terminal {{{2
     if has('nvim')
         " Terminal starts in insert mode
-        autocmd TermOpen * :startinsert
+        autocmd TermOpen * startinsert
         " Toggle &(relative)number
         autocmd TermOpen * setlocal nonumber norelativenumber
         " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>

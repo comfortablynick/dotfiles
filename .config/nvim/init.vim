@@ -121,6 +121,7 @@ set virtualedit=onemore                                         " Allow cursor t
 set wildmenu                                                    " Enabled by default in nvim
 set wildignore+=__pycache__                                     " Ignore in glob patterns
 set list                                                        " Show extra characters
+set listchars=                                                  " Reset listchars
 set listchars+=nbsp:␣                                           " Non breaking space
 set listchars+=trail:·                                          " Trailing space
 set listchars-=eol:$                                            " End of line marker

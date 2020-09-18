@@ -48,10 +48,6 @@ local on_attach_cb = function(client, bufnr)
   for lhs, rhs in pairs(nmaps) do
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
-
-  vim.cmd[[augroup lsp_lua_on_attach]]
-  vim.cmd[[autocmd CompleteDone * if pumvisible() == 0 | pclose | endif]]
-  vim.cmd[[augroup END]]
 end
 
 function M.init()

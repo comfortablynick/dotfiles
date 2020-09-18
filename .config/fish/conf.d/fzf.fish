@@ -1,5 +1,5 @@
 # Set up the default, mnemonic key bindings unless the user has chosen to customize them
-if not set --query fzf_fish_custom_keybindings; and status --is-interactive
+if not set --query fzf_fish_custom_keybindings
     # \cf is Ctrl+f
     bind \cf '__fzf_search_current_dir'
     bind \cr '__fzf_search_history'
@@ -9,13 +9,13 @@ if not set --query fzf_fish_custom_keybindings; and status --is-interactive
     bind \e\cs '__fzf_search_git_status'
 
     # set up the same key bindings for insert mode if using fish_vi_key_bindings
-    # if [ "$fish_key_bindings" = 'fish_vi_key_bindings' ]
+    if [ $fish_key_bindings = 'fish_vi_key_bindings' ]
         bind --mode insert \cf '__fzf_search_current_dir'
         bind --mode insert \cr '__fzf_search_history'
         bind --mode insert \cv '__fzf_search_shell_variables'
         bind --mode insert \e\cl '__fzf_search_git_log'
         bind --mode insert \e\cs '__fzf_search_git_status'
-    # end
+    end
 end
 
 # If FZF_DEFAULT_OPTS is not set, then set some sane defaults. This also affects fzf outside of this plugin.

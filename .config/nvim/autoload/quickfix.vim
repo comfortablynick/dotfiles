@@ -3,6 +3,8 @@
 let s:guard = 'g:loaded_autoload_quickfix' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
+let s:quickfix_size = 20
+
 " Show :scriptnames in quickfix list and optionally filter
 function! quickfix#scriptnames(...) abort
     call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
@@ -59,14 +61,15 @@ endfunction
 
 function! quickfix#toggle() abort
     let l:qf_lines = len(getqflist())
-    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', 12)])
+    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
     call s:qf_toggle(l:qf_size)
 endfunction
 
 function! quickfix#open() abort
     let l:qf_lines = len(getqflist())
-    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', 12)])
-    execute 'copen '.l:qf_size
+    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
+    execute 'copen' l:qf_size
+    wincmd k
 endfunction
 
 " Close an empty quickfix window

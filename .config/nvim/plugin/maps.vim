@@ -58,6 +58,9 @@ nnoremap <silent> <Tab> :bnext<CR>
 nnoremap <silent> <S-Tab> :bprevious<CR>
 nnoremap <silent> <Leader>q :bd<CR>
 
+" Quickfix
+nnoremap <silent> cq :call quickfix#toggle()<CR>
+
 " Command line {{{1
 " %% -> cwd
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>

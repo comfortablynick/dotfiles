@@ -63,16 +63,20 @@ augroup plugin_editor
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
-    " Toggle relativenumber depending on mode and focus {{{2
-    autocmd FocusGained,WinEnter,BufEnter *
-        \ if &l:number | setlocal relativenumber | endif
-    autocmd FocusLost,WinLeave,BufLeave *
-        \ if &l:number | setlocal norelativenumber | endif
     " Execute `direnv allow` after editing .envrc
     if executable('direnv')
         autocmd BufWritePost .envrc silent !direnv allow %
     endif
 augroup end
+
+augroup number_toggle
+    autocmd!
+    " Toggle relativenumber depending on mode and focus {{{2
+    autocmd FocusGained,WinEnter,BufEnter,InsertLeave *
+        \ if &l:number && empty(&buftype) | setlocal relativenumber | endif
+    autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
+        \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
+augroup END
 
 " Functions {{{1
 " s:recall_cursor_position() :: Restore cursor position and folding {{{2

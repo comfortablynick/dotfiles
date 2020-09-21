@@ -74,23 +74,26 @@ function! s:completion_handler(ft) abort
     let g:completion_handler_fts += [{'ft': a:ft, 'comptype': g:completion_type}]
     if g:completion_type ==# 'coc'
         packadd coc.nvim
-    elseif g:completion_type ==# 'nvim-lsp'
-        packadd vim-gitgutter
-        packadd completion-nvim
-        packadd completion-buffers
-        " packadd ultisnips
-        packadd snippets.nvim
-        lua require'config.completion'.init()
     elseif g:completion_type ==# 'mucomplete'
         packadd vim-gitgutter
         packadd vim-mucomplete
         packadd ultisnips
-    elseif g:completion_type ==# 'complete-nvim'
-        packadd vim-gitgutter
-        packadd completion-nvim
-        packadd completion-buffers
-        packadd snippets.nvim
-        lua require'config.completion'.init()
+    endif
+    if has('nvim')
+        if g:completion_type ==# 'nvim-lsp'
+            packadd vim-gitgutter
+            packadd completion-nvim
+            packadd completion-buffers
+            " packadd ultisnips
+            packadd snippets.nvim
+            lua require'config.completion'.init()
+        elseif g:completion_type ==# 'complete-nvim'
+            packadd vim-gitgutter
+            packadd completion-nvim
+            packadd completion-buffers
+            packadd snippets.nvim
+            lua require'config.completion'.init()
+        endif
     endif
 endfunction
 

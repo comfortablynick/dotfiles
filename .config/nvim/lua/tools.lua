@@ -208,19 +208,17 @@ function M.r(cmd) -- {{{1
           vim.schedule_wrap(on_close))
 end
 
-function M.spawn(cmd, opts, read_cb, cb) -- {{{1
+function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local args = {stdio = {stdin, stdout, stderr}, args = opts.args or {}}
   local process, pid = nil, nil
 
-  local has_non_whitespace = function(str) return str:match("[^%s]") end
-
   process, pid = uv.spawn(cmd, args, function(code)
     local handles = {stdin, stdout, stderr, process}
     for _, handle in ipairs(handles) do uv.close(handle) end
-    cb(code)
+    exit_cb(code)
   end)
   assert(process, pid)
 
@@ -268,15 +266,11 @@ function M.run(cmd) -- {{{1
     end
     local results = #vim.fn.getqflist()
     if results > 0 then vim.cmd("copen" .. math.min(results, 20)) end
-    local timer = uv.new_timer()
-    timer:start(10000, 0, vim.schedule_wrap(
-                  function()
+    vim.defer_fn(function()
 
-        vim.cmd("autocmd CursorMoved,CursorMovedI * ++once " ..
-                  "if exists('g:job_status') | unlet g:job_status | endif")
-        timer:stop()
-        timer:close()
-      end))
+      vim.cmd("autocmd CursorMoved,CursorMovedI * ++once " ..
+                "if exists('g:job_status') | unlet g:job_status | endif")
+    end, 10000)
   end
 
   -- Clear quickfix
@@ -351,7 +345,8 @@ function M.async_run(cmd, bang) -- {{{1
   local command = cmd
   local qf_size = vim.g.quickfix_size or 20
   local unlet_timer = [[autocmd CursorMoved,CursorMovedI * ++once ]] ..
-                        [[call timer_start(5000, {-> execute('if exists("g:job_status") | unlet g:job_status | endif', '')})]]
+                      [[lua vim.defer_fn(function() pcall(function() vim.g.job_status = nil end) end, 10000)]]
+                        -- [[call timer_start(5000, {-> execute('if exists("g:job_status") | unlet g:job_status | endif', '')})]]
   local on_read = function(err, data)
     assert(not err, err)
     if not data then return end
@@ -374,9 +369,10 @@ function M.async_run(cmd, bang) -- {{{1
         if bang == "!" then
           print(results[1])
         else
-          vim.cmd("copen " .. math.min(#results, qf_size))
+          vim.cmd("copen " .. math.min(#results, qf_size) .. " | wincmd k")
         end
-        vim.cmd(unlet_timer)
+        -- vim.cmd(unlet_timer)
+        vim.defer_fn(function() pcall(function() vim.g.job_status = nil end) end, 10000)
       end
     end,
     detach = false,

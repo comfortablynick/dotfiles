@@ -70,6 +70,7 @@ function M.init()
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
+          completion = {keywordSnippet = "Disable"},
           diagnostics = {
             enable = true,
             globals = {"vim", "nvim", "sl", "p", "printf"},

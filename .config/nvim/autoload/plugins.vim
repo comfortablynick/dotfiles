@@ -7,10 +7,11 @@
 let s:guard = 'g:loaded_autoload_plugins' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
+" Plugin definitions {{{1
+" Vim-Packager init {{{2
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 
 function! plugins#init() abort
-    " vim-packager init
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
         echo 'Downloading vim-packager'
@@ -25,7 +26,7 @@ function! plugins#init() abort
         \ })
     Pack 'kristijanhusak/vim-packager'
 
-    " General
+    " General {{{2
     Pack 'chrisbra/Colorizer'
     Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
@@ -34,7 +35,7 @@ function! plugins#init() abort
     Pack 'moll/vim-bbye'
     Pack 'psliwka/vim-smoothie'
 
-    " Linters/formatters/runners
+    " Linters/formatters/runners {{{2
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
     Pack 'psf/black', {'branch': 'stable'}
@@ -42,7 +43,7 @@ function! plugins#init() abort
     Pack 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
     Pack 'kkoomen/vim-doge'
 
-    " Editing behavior
+    " Editing behavior {{{2
     Pack 'tpope/vim-commentary'
     Pack 'tpope/vim-surround'
     Pack 'tpope/vim-unimpaired'
@@ -56,7 +57,7 @@ function! plugins#init() abort
     Pack 'bfredl/nvim-miniyank'
     Pack 'antoinemadec/FixCursorHold.nvim'
 
-    " Explorer/finder utils
+    " Explorer/finder utils {{{2
     Pack 'kevinhwang91/rnvimr',         {'do': 'pip3 install -U pynvim'}
     Pack 'liuchengxu/vista.vim'
     Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
@@ -73,59 +74,59 @@ function! plugins#init() abort
     Pack 'srstevenson/vim-picker'
     Pack 'voldikss/vim-floaterm'
 
-    " Vim Development
+    " Vim Development {{{2
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
     Pack 'bfredl/nvim-luadev'
     Pack 'tweekmonster/startuptime.vim'
     Pack 'TravonteD/luajob'
 
-    " Editor appearance
+    " Editor appearance {{{2
     Pack 'itchyny/lightline.vim'
     Pack 'mengelbrecht/lightline-bufferline'
     Pack 'NLKNguyen/papercolor-theme'
     Pack 'gruvbox-community/gruvbox'
     Pack 'ryanoasis/vim-devicons'
 
-    " Syntax/filetype
-    Pack 'cespare/vim-toml'
-    Pack 'tbastos/vim-lua'
-    Pack 'blankname/vim-fish'
-    Pack 'vim-jp/syntax-vim-ex'
-    Pack 'freitass/todo.txt-vim',       {'type': 'start'}
-    Pack 'SidOfc/mkdx',                 {'type': 'start'}
-    Pack 'habamax/vim-asciidoctor',     {'type': 'start'}
-    Pack 'kevinoid/vim-jsonc',          {'type': 'start'}
-    Pack 'masukomi/vim-markdown-folding',
-        \ {'type': 'start'}
+    " Syntax/filetype {{{2
+    Pack 'cespare/vim-toml',              {'type': 'start'}
+    Pack 'tbastos/vim-lua',               {'type': 'start'}
+    Pack 'blankname/vim-fish',            {'type': 'start'}
+    Pack 'vim-jp/syntax-vim-ex',          {'type': 'start'}
+    Pack 'freitass/todo.txt-vim',         {'type': 'start'}
+    Pack 'SidOfc/mkdx',                   {'type': 'start'}
+    Pack 'habamax/vim-asciidoctor',       {'type': 'start'}
+    Pack 'kevinoid/vim-jsonc',            {'type': 'start'}
+    Pack 'masukomi/vim-markdown-folding', {'type': 'start'}
 
-    " Git
+    " Git {{{2
     Pack 'airblade/vim-gitgutter'
     Pack 'mhinz/vim-signify'
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
     Pack 'iberianpig/tig-explorer.vim'
 
-    " Snippets
+    " Snippets {{{2
     Pack 'SirVer/ultisnips'
     Pack 'honza/vim-snippets'
     Pack 'norcalli/snippets.nvim'
 
-    " Completion
-    Pack 'neovim/nvim-lsp'
+    " Language server/completion {{{2
+    Pack 'neovim/nvim-lspconfig'
+    Pack 'nvim-lua/lsp-status.nvim'
     Pack 'nvim-lua/completion-nvim'
     Pack 'steelsojka/completion-buffers'
     Pack 'neoclide/coc.nvim',           {'do': {-> coc#util#install()}}
     Pack 'lifepillar/vim-mucomplete'
 
-    " Tmux
+    " Tmux {{{2
     Pack 'christoomey/vim-tmux-navigator'
     Pack 'RyanMillerC/better-vim-tmux-resizer'
     Pack 'comfortablynick/vim-tmux-runner'
 endfunction
 
-" Fzf update hook
-function! s:fzf_post(plugin) abort
+" Helper functions {{{1
+function! s:fzf_post(plugin) abort " Fzf update hook {{{2
     execute 'AsyncRun cd' a:plugin['dir']
         \ '&& ./install --bin'
         \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
@@ -140,7 +141,7 @@ endfunction
 " `end` Range end
 " `bang` <bang> from command
 " `args` <q-args> from command
-function! plugins#lazy_run(cmd, package, ...) abort
+function! plugins#lazy_run(cmd, package, ...) abort "{{{2
     if !plugins#exists(a:package)
         echohl WarningMsg
         echo 'Package' a:package 'not found in packpath!'
@@ -188,6 +189,8 @@ function! plugins#lazy_run(cmd, package, ...) abort
 endfunction
 
 " check if plugin in &packpath (`plugin` can be a glob pattern)
-function! plugins#exists(plugin) abort
+function! plugins#exists(plugin) abort "{{{2
     return !empty(globpath(&packpath, 'pack/*/*/'.a:plugin))
 endfunction
+
+" vim:fdl=1:

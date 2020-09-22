@@ -1,8 +1,38 @@
 --- Neovim Helpers
 --- Customized from: https://github.com/norcalli/nvim_utils/blob/master/lua/nvim_utils.lua
-local vim = vim
 local api = vim.api
 nvim = {}
+
+-- Global functions {{{1
+function printf(msg, ...) -- {{{2
+    -- C-style printf
+    print(msg ~= nil and string.format(msg, ...) or nil)
+end
+
+function p(val, ...) -- {{{2
+    -- Debug print helper
+    -- If `val` is not a simple type, run it through inspect() first
+    -- Else treat as printf
+    local wrapper = function(s, ...)
+        if type(val) == ("string" or "number") then
+            print(string.format(s, ...))
+        else
+            print(vim.inspect(s))
+        end
+    end
+    -- Just print if there's an error (bad format str, etc.)
+    if not pcall(wrapper, val, ...) then print(val, ...) end
+end
+
+function npcall(fn, ...) --{{{2
+  local ok_or_nil = function(status, ...)
+    if not status then return end
+    return ...
+  end
+  return ok_or_nil(pcall(fn, ...))
+end
+
+-- luacheck: ignore string
 -- Buffer {{{1
 function nvim.mark_or_index(buf, input) -- {{{2
     -- An enhanced version of nvim_buf_get_mark which also accepts:
@@ -207,7 +237,7 @@ function nvim.text_operator(fn) -- {{{2
     api.nvim_feedkeys("g@", "ni", false)
 end
 
-function nvim_text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
+function nvim.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
     return nvim.text_operator(function(visualmode)
         nvim.buf_transform_region_lines(nil, "[", "]",
                                         forced_visual_mode or visualmode,
@@ -229,7 +259,7 @@ function nvim.visual_mode() -- {{{2
 end
 
 function nvim.transform_cword(fn) -- {{{2
-    nvim_text_operator_transform_selection(
+    nvim.text_operator_transform_selection(
         function(lines) return {fn(lines[1])} end)
     api.nvim_feedkeys("iw", "ni", false)
 end
@@ -366,27 +396,6 @@ function nvim.define_text_object(mapping, function_name) -- {{{2
                         (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
-function printf(msg, ...) -- {{{2
-    -- C-style printf
-    print(msg ~= nil and string.format(msg, ...) or nil)
-end
-
-function p(val, ...) -- {{{2
-    -- Debug print helper
-    -- If `val` is not a simple type, run it through inspect() first
-    -- Else treat as printf
-    local wrapper = function(s, ...)
-        if type(val) == ("string" or "number") then
-            print(string.format(s, ...))
-        else
-            print(vim.inspect(s))
-        end
-    end
-    -- Just print if there's an error (bad format str, etc.)
-    if not pcall(wrapper, val, ...) then print(val, ...) end
-end
-
--- luacheck: ignore string
 -- Strings {{{1
 function string.startswith(s, n) -- {{{2
     return s:sub(1, #n) == n

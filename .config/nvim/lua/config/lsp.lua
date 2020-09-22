@@ -73,7 +73,7 @@ function M.init()
           completion = {keywordSnippet = "Disable"},
           diagnostics = {
             enable = true,
-            globals = {"vim", "nvim", "sl", "p", "printf"},
+            globals = {"vim", "nvim", "sl", "p", "printf", "npcall"},
           },
         },
       },

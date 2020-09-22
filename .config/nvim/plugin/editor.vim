@@ -36,7 +36,6 @@ cnoreabbrev <expr> lp
 inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Autocmds {{{1
-" augroup plugin_editor {{{2
 augroup plugin_editor
     autocmd!
     " Remember last place in file {{{2
@@ -45,8 +44,6 @@ augroup plugin_editor
     " Not likely to be using macros in these files
     autocmd FileType netrw,help,fugitive,qf
         \ nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
-    " Open cmdline window in insert {{{2
-    autocmd CmdwinEnter * startinsert
     " Neovim terminal {{{2
     if has('nvim')
         " Terminal starts in insert mode
@@ -64,9 +61,7 @@ augroup plugin_editor
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
     " Execute `direnv allow` after editing .envrc
-    if executable('direnv')
-        autocmd BufWritePost .envrc silent !direnv allow %
-    endif
+    autocmd BufWritePost .envrc if executable('direnv') | silent !direnv allow % | endif
 augroup end
 
 augroup number_toggle
@@ -76,11 +71,18 @@ augroup number_toggle
         \ if &l:number && empty(&buftype) | setlocal relativenumber | endif
     autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
         \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
+    " Easier exit from cmdwin {{{2
+    autocmd CmdwinEnter * call s:cmdwin_enter()
 augroup END
 
 " Functions {{{1
-" s:recall_cursor_position() :: Restore cursor position and folding {{{2
-function! s:recall_cursor_position() abort
+function! s:cmdwin_enter() abort "{{{2
+    nnoremap <buffer> <Leader>q <C-c><C-c>
+    nnoremap <buffer> <Esc> <C-c><C-c>
+    setlocal norelativenumber
+endfunction
+
+function! s:recall_cursor_position() abort "{{{2
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 

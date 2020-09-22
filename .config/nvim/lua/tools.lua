@@ -6,6 +6,15 @@ local npcall = util.npcall
 local fn = require"fun"
 local M = {}
 
+local qf_open = function(max_size) -- {{{1
+  if not max_size then max_size = 0 end
+  local vim_qf_size = vim.g.quickfix_size or 20
+  local items = #vim.fn.getqflist()
+  if items < 1 then return end
+  local qf_size = math.min(items, (max_size > 0) and max_size or vim_qf_size)
+  vim.cmd(("copen %d | wincmd k"):format(qf_size))
+end
+
 function M.async_grep(term) -- {{{1
   assert(term, "async grep: search term missing")
   local stdout = uv.new_pipe(false)
@@ -199,10 +208,7 @@ function M.r(cmd) -- {{{1
     assert(not err, err)
     vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = data})
   end
-  local on_close = function()
-    local results = #vim.fn.getqflist()
-    if results > 0 then vim.cmd("copen" .. math.min(results, 20)) end
-  end
+  local on_close = qf_open
   vim.fn.setqflist({}, " ", {title = "Command: " .. cmd})
   M.spawn(bin, {args = args}, vim.schedule_wrap(on_read),
           vim.schedule_wrap(on_close))
@@ -344,9 +350,6 @@ function M.async_run(cmd, bang) -- {{{1
   local results = {}
   local command = cmd
   local qf_size = vim.g.quickfix_size or 20
-  local unlet_timer = [[autocmd CursorMoved,CursorMovedI * ++once ]] ..
-                      [[lua vim.defer_fn(function() pcall(function() vim.g.job_status = nil end) end, 10000)]]
-                        -- [[call timer_start(5000, {-> execute('if exists("g:job_status") | unlet g:job_status | endif', '')})]]
   local on_read = function(err, data)
     assert(not err, err)
     if not data then return end
@@ -369,10 +372,11 @@ function M.async_run(cmd, bang) -- {{{1
         if bang == "!" then
           print(results[1])
         else
-          vim.cmd("copen " .. math.min(#results, qf_size) .. " | wincmd k")
+          qf_open(qf_size)
         end
-        -- vim.cmd(unlet_timer)
-        vim.defer_fn(function() pcall(function() vim.g.job_status = nil end) end, 10000)
+        vim.defer_fn(function()
+          if vim.g.job_status then vim.g.job_status = nil end
+        end, 10000)
       end
     end,
     detach = false,

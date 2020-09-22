@@ -95,10 +95,6 @@ function! s:set_filetype() abort
 endfunction
 endsnippet
 
-snippet foldmark "fold marker"
-"{{{${1}
-endsnippet
-
 snippet cabbr "save command abbr"
 cnoreabbrev <expr> ${1:abbr}
     \ util#cabbr('$1', '$2')

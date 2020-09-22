@@ -5,8 +5,6 @@
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
 " Plugin config handler {{{1
-let g:use_init_lua = 0
-
 " Packer {{{2
 let g:use_packer = 0
 if has('nvim') && g:use_packer
@@ -46,7 +44,7 @@ function! s:source_handler(sourced, type) abort "{{{2
     endif
 endfunction
 
-if has('nvim') && get(g:, 'use_init_lua') == 1
+if has('nvim') && get(g:, 'use_init_lua', 0) == 1
     lua require 'init'
     finish
 endif
@@ -121,10 +119,7 @@ set virtualedit=onemore                                         " Allow cursor t
 set wildmenu                                                    " Enabled by default in nvim
 set wildignore+=__pycache__                                     " Ignore in glob patterns
 set list                                                        " Show extra characters
-set listchars=                                                  " Reset listchars
-set listchars+=nbsp:␣                                           " Non breaking space
-set listchars+=trail:·                                          " Trailing space
-set listchars-=eol:$                                            " End of line marker
+set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
@@ -162,6 +157,7 @@ set undodir=~/.vim/undo//
 set undofile                                                    " Enable persistent undo
 
 " Windows/Splits {{{2
+set cmdwinheight=10                                             " Height of cmdwin (`q:` or <C-f> in cmdline)
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
@@ -192,21 +188,14 @@ let g:loaded_python_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-" Packages that use ftplugin,ftdetect,syntax should be loaded here
-" Most others can be deferred till after startup
-" see plugin/pack.vim
-silent! packadd! vim-toml
-silent! packadd! vim-fish
-silent! packadd! vim-lua
 silent! packadd! vim-doge
-silent! packadd! syntax-vim-ex
 silent! packadd! vim-dirvish
 
 " Nvim/vim specific packages {{{3
 if has('nvim')
     " Nvim-only
     silent! packadd! luajob
-    silent! packadd! nvim-lsp
+    silent! packadd! nvim-lspconfig
     silent! packadd! FixCursorHold.nvim
 
     lua require'helpers'
@@ -215,4 +204,4 @@ else
     " Vim only
     packadd! matchit " Nvim loads by default
 endif
-" vim:fdm=marker fdl=1:
+" vim:fdl=1:

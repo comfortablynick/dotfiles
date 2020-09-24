@@ -15,21 +15,29 @@
       Before  {{ mosh_git_clone.before }}
       After   {{ mosh_git_clone.after }}
 
-- name: Show message if git does not have changes
-  debug:
+- name: Install/update mosh and dependencies
+  block:
+  - name: Install dependencies
+    apt:
+      name: "{{ Debian_required_packages }}"
+      state: present
+    become: yes
+    when: ansible_facts['os_family'] == 'Debian'
+
+  - name: Build and install mosh
+    command: "{{ item }}"
+    args:
+      chdir: "{{ mosh_source_dir }}"
+    loop:
+      - sh autogen.sh
+      - >-
+        ./configure --prefix={{ install_path }}
+          CPPFLAGS="-I{{ install_path }}/include -I{{ install_path }}/include/ncurses"
+          LDFLAGS="-L{{ install_path }}/lib"
+      - make -j{{ make_concurrency }}
+      - make install
+  when: mosh_git_clone.before != mosh_git_clone.after
+
+- debug:
     msg: No upstream mosh changes! Skipping build.
   when: mosh_git_clone.before == mosh_git_clone.after
-
-- name: Build and install mosh
-  command: "{{ item }}"
-  args:
-    chdir: "{{ mosh_source_dir }}"
-  loop:
-    - sh autogen.sh
-    - >-
-      ./configure --prefix={{ install_path }}
-        CPPFLAGS="-I{{ install_path }}/include -I{{ install_path }}/include/ncurses"
-        LDFLAGS="-L{{ install_path }}/lib"
-    - make -j{{ make_concurrency }}
-    - make install
-  when: mosh_git_clone.before != mosh_git_clone.after

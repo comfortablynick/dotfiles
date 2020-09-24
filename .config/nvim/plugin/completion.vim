@@ -74,10 +74,12 @@ function! s:completion_handler(ft) abort
     let g:completion_handler_fts += [{'ft': a:ft, 'comptype': g:completion_type}]
     if g:completion_type ==# 'coc'
         packadd coc.nvim
+        return
     elseif g:completion_type ==# 'mucomplete'
         packadd vim-gitgutter
         packadd vim-mucomplete
         packadd ultisnips
+        return
     endif
     if has('nvim')
         if g:completion_type ==# 'nvim-lsp'
@@ -94,6 +96,10 @@ function! s:completion_handler(ft) abort
             packadd snippets.nvim
             lua require'config.completion'.init()
         endif
+    else
+        " Vim only
+        " TODO: use mucomplete on everything in vim?
+        packadd vim-gitgutter
     endif
 endfunction
 

@@ -78,6 +78,11 @@ else
     let &t_SI = "\<esc>[6 q"                                    " Insert mode
     let &t_SR = "\<esc>[4 q"                                    " Replace mode
     let &t_EI = "\<esc>[2 q"                                    " Normal mode
+
+    " set Vim-specific sequences for RGB colors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
     filetype plugin on                                          " Allow loading .vim files for different filetypes
     syntax enable                                               " Syntax highlighting on
 endif

@@ -39,7 +39,6 @@ function! s:deferred_load() abort
     packadd vim-unimpaired
     packadd clever-f.vim
     packadd vim-sneak
-    packadd nvim-miniyank
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
     packadd tig-explorer.vim
@@ -53,6 +52,11 @@ function! s:deferred_load() abort
     packadd vim-bbye
     packadd vim-floaterm
     packadd vim-picker
+
+    if has('nvim')
+        " Seems to have issue on vim
+        packadd nvim-miniyank
+    endif
 
     if $MOSH_CONNECTION != 1
         packadd vim-devicons

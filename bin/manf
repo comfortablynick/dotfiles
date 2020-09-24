@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+man-find() {
+    local manpager
+    # use custom manpager if available
+    [[ -n $(command -v vman 2>/dev/null) ]] && manpager=vman || manpager=man
+    man -k . | eval $(__fzfcmd) -q "$@" | awk '{print $1}' | xargs -r $manpager
+}
+
+man-find "$@"

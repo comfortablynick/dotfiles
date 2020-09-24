@@ -1,6 +1,6 @@
-# Defined in /var/folders/gb/x1313fbd2klb5mss86_gsd1m0000gn/T//fish.vxtwQz/man.fish @ line 2
+# Defined in /tmp/fish.JAlgrf/man.fish @ line 2
 function man --description 'Format and display manual pages'
-	set -q man_blink; and set -l blink (set_color $man_blink); or set -l blink (set_color -o red)
+    set -q man_blink; and set -l blink (set_color $man_blink); or set -l blink (set_color -o red)
     set -q man_bold; and set -l bold (set_color $man_bold); or set -l bold (set_color -o 5fafd7)
     set -q man_standout; and set -l standout (set_color $man_standout); or set -l standout (set_color 949494)
     set -q man_underline; and set -l underline (set_color $man_underline); or set -l underline (set_color -u afafd7)
@@ -18,23 +18,17 @@ function man --description 'Format and display manual pages'
 
     set -lx GROFF_NO_SGR yes # fedora
 
-    set -lx MANPATH (string join : $MANPATH)
+    set -lx MANPATH $MANPATH
     if test -z "$MANPATH"
         type -q manpath
         and set MANPATH (command manpath)
     end
 
-    # Check data dir for Fish 2.x compatibility
-    set -l fish_data_dir
-    if set -q __fish_data_dir
-        set fish_data_dir $__fish_data_dir
-    else
-        set fish_data_dir $__fish_datadir
-    end
+    set -l fish_manpath $__fish_data_dir/man
 
-    set -l fish_manpath (dirname $fish_data_dir)/fish/man
-    if test -d "$fish_manpath" -a -n "$MANPATH"
-        set MANPATH "$fish_manpath":$MANPATH
+    # Include fish man pages if not already on MANPATH
+    if test -d "$fish_manpath" -a -n "$MANPATH"; and not contains $fish_manpath $MANPATH
+        set -p MANPATH $fish_manpath
     end
     command man $argv
 end

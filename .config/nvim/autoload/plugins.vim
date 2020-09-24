@@ -96,7 +96,6 @@ function! plugins#init() abort
     Pack 'freitass/todo.txt-vim',         {'type': 'start'}
     Pack 'SidOfc/mkdx',                   {'type': 'start'}
     Pack 'habamax/vim-asciidoctor',       {'type': 'start'}
-    Pack 'kevinoid/vim-jsonc',            {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding', {'type': 'start'}
 
     " Git {{{2

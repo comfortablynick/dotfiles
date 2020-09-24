@@ -1,6 +1,6 @@
-# Defined in /tmp/fish.okgsI6/funcerase.fish @ line 2
+# Defined in /tmp/fish.nTnr9j/funcerase.fish @ line 2
 function funcerase --description 'erase function from shell and delete file in user functions dir'
-	set -l name $argv[1]
+    set -l name (string replace .fish '' $argv[1])
 
     if functions -q $name
         functions -e $name

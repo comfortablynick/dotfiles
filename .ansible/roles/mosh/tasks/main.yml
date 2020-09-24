@@ -1,2 +1,35 @@
 ---
 # tasks file for mosh
+
+- name: Clone mosh master
+  git:
+    repo: https://github.com/mobile-shell/mosh
+    dest: "{{ mosh_source_dir }}"
+    depth: 1
+    force: yes
+  register: mosh_git_clone
+
+- name: Show commit hashes before/after pull
+  debug:
+    msg: |
+      Before  {{ mosh_git_clone.before }}
+      After   {{ mosh_git_clone.after }}
+
+- name: Show message if git does not have changes
+  debug:
+    msg: No upstream mosh changes! Skipping build.
+  when: mosh_git_clone.before == mosh_git_clone.after
+
+- name: Build and install mosh
+  command: "{{ item }}"
+  args:
+    chdir: "{{ mosh_source_dir }}"
+  loop:
+    - sh autogen.sh
+    - >-
+      ./configure --prefix={{ install_path }}
+        CPPFLAGS="-I{{ install_path }}/include -I{{ install_path }}/include/ncurses"
+        LDFLAGS="-L{{ install_path }}/lib"
+    - make -j{{ make_concurrency }}
+    - make install
+  when: mosh_git_clone.before != mosh_git_clone.after

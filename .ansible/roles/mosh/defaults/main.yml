@@ -1,2 +1,23 @@
 ---
 # defaults file for mosh
+make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
+mosh_source_dir: "{{ ansible_facts.user_dir }}/src/mosh"
+install_path: "{{ ansible_facts['user_dir'] }}/.local"
+
+Arch_required_packages:
+  - git
+  - protobuf
+
+Debian_required_packages:
+  - git
+  - debhelper
+  - autotools-dev
+  - protobuf-compiler
+  - libprotobuf-dev
+  - dh-autoreconf
+  - pkg-config
+  - libutempter-dev
+  - zlib1g-dev
+  - libncurses5-dev
+  - libssl-dev
+  - locales

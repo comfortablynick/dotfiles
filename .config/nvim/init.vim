@@ -59,7 +59,7 @@ if has('nvim')
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
     let &shadafile =
         \ stdpath('data').'/shada/main.shada'                   " Location of nvim replacement for viminfofile
-    let &termguicolors = !$MOSH_CONNECTION
+    " let &termguicolors = !$MOSH_CONNECTION
 else
     " Vim Only
     set pyxversion=3

@@ -91,6 +91,7 @@ set backupdir=~/.vim/backup//                                   " Store backup f
 " General {{{2
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
+set termguicolors                                               " Use true color
 set shell=sh                                                    " Use posix-compatible shell
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF

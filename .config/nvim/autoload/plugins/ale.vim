@@ -15,6 +15,7 @@ let g:ale_list_window_size = 5                                  " Show # of line
 let g:ale_open_list = 0                                         " Show quickfix list
 let g:ale_set_loclist = 0                                       " Show location list
 let g:ale_set_quickfix = 1                                      " Show quickfix list with errors
+let g:ale_set_balloons = 1
 let g:ale_fix_on_save = 1                                       " Apply fixes when saving
 let g:ale_echo_msg_error_str = 'E'                              " Error string prefix
 let g:ale_echo_msg_warning_str = 'W'                            " Warning string prefix

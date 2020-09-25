@@ -174,17 +174,24 @@ function! plugins#lazy_run(cmd, package, ...) abort "{{{2
     let l:start = get(l:args, 'start', 0)
     let l:end = get(l:args, 'end', 0)
     let l:bang = get(l:args, 'bang', '')
-    let l:args = get(l:args, 'args', '')
+    let l:extra_args = get(l:args, 'args', '')
     if type(a:cmd) == v:t_func
         return a:cmd()
     endif
-    execute printf(
+    " Build command
+    let l:final_cmd = printf(
         \ '%s%s%s %s',
         \ (l:start == l:end ? '' : (l:start . ',' . l:end)),
         \ a:cmd,
         \ l:bang,
-        \ l:args
+        \ l:extra_args
         \ )
+    if get(l:args, 'debug', 0)
+        " Debug print
+        echo l:final_cmd
+        return
+    endif
+    execute l:final_cmd
 endfunction
 
 " check if plugin in &packpath (`plugin` can be a glob pattern)

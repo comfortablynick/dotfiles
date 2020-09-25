@@ -17,7 +17,8 @@ command! Dark  set background=dark
 
 " Bclose :: delete buffer without changing window layout {{{2
 command! -bang -complete=buffer -nargs=? Bclose
-    \ packadd vim-bbye | Bdelete<bang> <args>
+    \ call plugins#lazy_run('Bdelete', 'vim-bbye',
+    \ {'bang': '<bang>', 'args': '<args>'})
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
@@ -47,12 +48,15 @@ command! -nargs=+ -complete=file_in_path -bar Grep
 
 " AsyncTasks :: run defined tasks asynchronously {{{2
 command! -bang -nargs=* -range=0 AsyncTask
-    \ packadd asynctasks.vim
-    \ | call asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)
+    \ call plugins#lazy_run(
+    \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+    \ 'asynctasks.vim'
+    \ )
 
 " GV :: git commit viewer {{{2
 command! -bang -nargs=* -range=0 GV
-    \ packadd gv.vim | GV<bang> <args>
+    \ call plugins#lazy_run('GV', 'gv.vim',
+    \   {'bang': '<bang>', 'args': '<args>'})
 
 " LazyGit :: tui for git {{{2
 command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
@@ -98,7 +102,7 @@ command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
 " Scriptnames :: display :scriptnames in quickfix and optionally filter {{{2
 command! -nargs=* -bar -count=0 Scriptnames
     \ call quickfix#scriptnames(<f-args>) |
-    \ call quickfix#open() |
+    \ copen 20 |
     \ <count>
 
 " Pretty-printing {{{2
@@ -132,4 +136,4 @@ command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args
 " Make :: async make {{{2
 " command! -nargs=0 -complete=file Make lua require'tools'.make()
 
-" vim:fdl=1 noml:
+" vim:fdl=1:

@@ -5,6 +5,7 @@
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
 " Plugin config handler {{{1
+" let g:packpath_pre = map(globpath(&rtp, 'pack/*/*/*/plugin/*.vim', 0, 1), {_, val -> fnamemodify(val, ':t:r')})
 " Packer {{{2
 let g:use_packer = 0
 if has('nvim') && g:use_packer
@@ -12,12 +13,27 @@ if has('nvim') && g:use_packer
     set packpath+=~/vim-test/
 endif
 
+let g:globpath = []
 " Autocmds {{{2
 augroup plugin_config_handler
     autocmd!
-    autocmd SourcePre * call s:source_handler(expand('<afile>'), 'pre')
-    autocmd SourcePost * call s:source_handler(expand('<afile>'), 'post')
+    autocmd SourcePre  */pack/*/*/plugin/*.vim call s:source_handler(expand('<afile>'), 1)
+    autocmd SourcePost */pack/*/*/plugin/*.vim call s:source_handler(expand('<afile>'), 0)
 augroup END
+
+" Commands {{{2
+command! -nargs=+ -complete=packadd Packadd call s:packadd_handler(<f-args>)
+
+function! s:packadd_handler(...) abort
+    let l:save_ei = &eventignore
+    set eventignore+=SourcePre,SourcePost
+    for l:pack in a:000
+        call s:source_handler(l:pack, 1)
+        execute 'silent! packadd' l:pack
+        call s:source_handler(l:pack, 0)
+    endfor
+    let &eventignore = l:save_ei
+endfunction
 
 " Global Variables {{{2
 let g:plugin_config_files = map(
@@ -25,23 +41,29 @@ let g:plugin_config_files = map(
     \ {_, val -> fnamemodify(val, ':t:r')}
     \ )
 let g:plugins_sourced = []
-let g:plugins_skipped = []
 let g:plugins_called = []
+let g:plugins_pre_called = []
+let g:plugins_post_called = []
 
-function! s:source_handler(sourced, type) abort "{{{2
+function! s:source_handler(sourced, pre) abort "{{{2
+    let l:type = a:pre == 1 ? 'pre' : 'post'
     let l:file = tolower(fnamemodify(a:sourced, ':t:r'))
-    if a:type ==# 'pre'
+    " Return if we don't have file in autoload/plugins/{l:file}.vim
+    " or if function has been called previously
+    if index(g:plugin_config_files, l:file) < 0
+        \ || index(g:plugins_{l:type}_called, l:file) > -1
+        return
+    endif
+    let g:plugins_{l:type}_called += [l:file]
+    if l:type ==# 'pre'
         let g:plugins_sourced += [a:sourced]
         let g:plugins_called += [l:file]
     endif
-    if index(g:plugin_config_files, l:file) > -1
-        let l:fn = printf('plugins#%s#%s', l:file, a:type)
-        try
-            call {l:fn}()
-        catch /^Vim\%((\a\+)\)\=:E117/
-            " fn doesn't exist; do nothing
-        endtry
-    endif
+    try
+        call plugins#{l:file}#{l:type}()
+    catch /^Vim\%((\a\+)\)\=:E117/
+        " fn doesn't exist; do nothing
+    endtry
 endfunction
 
 if has('nvim') && get(g:, 'use_init_lua', 0) == 1

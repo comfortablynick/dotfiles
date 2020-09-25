@@ -14,11 +14,11 @@ syn cluster vimFuncBodyList	add=vimLuaRegion
 syntax include @vimLuaScript syntax/lua.vim
 try
     syntax include @vimLuaScript after/syntax/lua.vim
-catch
+catch /^Vim\%((\a\+)\)\=:E484/
 endtry
 syn region vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*\z(.*\)$+ end=+^\z1$+	contains=@vimLuaScript
 syn region vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*$+ end=+\.$+		contains=@vimLuaScript
 syn cluster vimFuncBodyList	add=vimLuaRegion
 let b:current_syntax = 'vim'
 
-syntax keyword vimCommand contained Pack
+syntax keyword vimCommand contained Pack[add]

@@ -92,6 +92,8 @@ if functions -q __bobthefish_colors
     end
 
     set -g theme_display_date yes
+    set -g theme_date_format "+%a %b %d %I:%M:%S %p"
+    set -g theme_date_timezone America/Chicago
 
     # Are the fancy fonts needed?
     set -g theme_powerline_fonts yes
@@ -102,7 +104,7 @@ if functions -q __bobthefish_colors
     end
 
     # Git
-    set -g theme_display_git_master_branch yes
+    set -g theme_display_git_master_branch no
     set -g theme_display_git_ahead_verbose yes
     set -g theme_display_git_dirty_verbose yes
     set -g theme_display_git_dirty yes
@@ -112,8 +114,8 @@ if functions -q __bobthefish_colors
     set -g theme_avoid_ambiguous_glyphs yes
     set -g fish_prompt_pwd_dir_length 1 # Abbreviate PWD in prompt
     set -g theme_project_dir_length 1 # Abbreviate relative path to proj root
-    set -g theme_display_cmd_duration 0 # Threshold for showing command dur in ms
-    set -g theme_date_format "+%a %b %d %I:%M:%S %p"
+    set -g theme_display_cmd_duration yes # Threshold for showing command dur in ms
+    set -g theme_show_exit_status yes # Show code instead of just !
 
     # Tmux shows user/host
     # Only display if $SSH and no $TMUX

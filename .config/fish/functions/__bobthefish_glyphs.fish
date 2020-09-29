@@ -9,17 +9,20 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   # Additional glyphs
   set -x detached_glyph          \u27A6
   set -x tag_glyph               \u2302
-  set -x nonzero_exit_glyph      '✖ '
+  set -x nonzero_exit_glyph      '! '
+  set -x private_glyph           \uE0A2 ' '
   set -x superuser_glyph         '$ '
-  set -x bg_job_glyph            '%⚒ '
+  set -x bg_job_glyph            '% '
   set -x hg_glyph                \u263F
 
   # Python glyphs
   set -x superscript_glyph       \u00B9 \u00B2 \u00B3
+  set -x virtualenv_glyph        \u25F0
   set -x pypy_glyph              \u1D56
 
   set -x ruby_glyph              ''
   set -x go_glyph                ''
+  set -x nix_glyph               ''
 
   # Desk glyphs
   set -x desk_glyph              \u25F2
@@ -48,7 +51,8 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   # Disable Powerline fonts (unless we're using nerd fonts instead)
   if [ "$theme_powerline_fonts" = "no" -a "$theme_nerd_fonts" != "yes" ]
-    set branch_glyph            \uE0A0 #  # \u2387 is ugly and may not be needed
+    set private_glyph           \u29B8 ' '
+    set branch_glyph            \u2387
     set right_black_arrow_glyph ''
     set right_arrow_glyph       ''
     set left_black_arrow_glyph  ''
@@ -56,11 +60,15 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   end
 
   # Use prettier Nerd Fonts glyphs
-  if [ "$NERD_FONTS" = 1 ] || [ "$theme_nerd_fonts" = "yes" ]
+  if [ "$theme_nerd_fonts" = "yes" ]
+    set private_glyph    \uF023 ' ' # nf-fa-lock
+
+    set branch_glyph     \uF418
     set detached_glyph   \uF417
     set tag_glyph        \uF412
 
-    set virtualenv_glyph \uE73C ''
+    set nix_glyph        \uF313 ' ' # nf-linux-nixos
+    set virtualenv_glyph \uE73C ' '
     set ruby_glyph       \uE791 ' '
     set go_glyph         \uE626 ' '
     set node_glyph       \uE718 ' '
@@ -73,7 +81,11 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
     set git_dirty_glyph      \uF448 '' # nf-oct-pencil
     set git_staged_glyph     \uF0C7 '' # nf-fa-save
     set git_stashed_glyph    \uF0C6 '' # nf-fa-paperclip
-    set git_untracked_glyph  \uF141 '' # nf-fa-ellipsis_h
+    set git_untracked_glyph  \uF128 '' # nf-fa-question
+    # set git_untracked_glyph  \uF141 '' # nf-fa-ellipsis_h
+
+    set git_ahead_glyph      \uF47B # nf-oct-chevron_up
+    set git_behind_glyph     \uF47C # nf-oct-chevron_down
 
     set git_plus_glyph       \uF0DE # fa-sort-asc
     set git_minus_glyph      \uF0DD # fa-sort-desc
@@ -82,6 +94,6 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
 
   # Avoid ambiguous glyphs
   if [ "$theme_avoid_ambiguous_glyphs" = "yes" ]
-    set git_untracked_glyph '…'
+    set git_untracked_glyph '...'
   end
 end

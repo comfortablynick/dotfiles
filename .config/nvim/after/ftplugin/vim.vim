@@ -1,12 +1,9 @@
 setlocal tabstop=4                                              " Treat spaces as tab
-setlocal formatoptions-=o                                       " Don't insert comment marker automatically on O, o
-setlocal formatoptions-=r                                       " Don't insert comment marker automatically on <Enter>
+setlocal formatoptions-=ro                                      " Don't insert comment marker automatically on O, o, <Enter>
 setlocal foldexpr=VimFoldLevel()
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
 " Maps
-" Packadd ale
-
 " Execute visual selection
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 " Execute line

@@ -143,4 +143,4 @@ function! s:recall_cursor_position() abort "{{{2
     endif
 endfunction
 
-" vim:fdl=1 noml:
+" vim:fdl=1:

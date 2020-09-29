@@ -1,3 +1,7 @@
+if not status is-interactive
+    exit
+end
+
 set -Ux MOSH_CONNECTION 0
 set -l tmux_current_session
 set -l pid

@@ -18,6 +18,15 @@ snips._global = { -- {{{1
   date = [[${=os.date("%F")}]],
 }
 
+snips.fish = { --{{{1
+  int = [[if not status is-interactive
+    exit
+end]],
+  sta = [[if status is-interactive
+    $0
+end]],
+}
+
 snips.lua = { -- {{{1
   req = [[local ${2:${1|S.v:match"([^.()]+)[()]*$"}} = require '$1']],
   func = [[function${1|vim.trim(S.v):gsub("^%S"," %0")}(${2|vim.trim(S.v)})$0 end]],

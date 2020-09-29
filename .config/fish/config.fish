@@ -26,39 +26,24 @@ set_color $fish_color_autosuggestion
 set -l start_time (get_date)
 and echo -n 'Sourcing config.fish...  '
 
-
 # Packages {{{1
 # Fisher setup {{{2
-switch "$FISH_PKG_MGR"
-    case "OMF"
-        set -gx OMF_PATH "$XDG_DATA_HOME/omf"
-        # Install OMF if needed
-        if not functions -q omf
-            echo "OMF set as pkg manager but not installed. Installing now... "
-            curl -L https://get.oh-my.fish | fish
-        end
-    case "Fisher"
-        # Fisher
-        if not functions -q fisher
-            echo "Installing fisher for the first time..." >&2
-            set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
-            curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-            fish -c fisher
-        end
-    case "*"
+if not functions -q fisher
+    echo "Downloading fisher..." >&2
+    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
+    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
 end
 
 # Environment {{{1
 # Load from env file {{{2
-set -l env_file "$HOME/.config/fish/env.fish"
+set -l env_file $HOME/.config/fish/env.fish
 set -q env_file_sourced
 or set -U env_file_sourced 0
 
-if test -f "$env_file"
-    and test $env_file_sourced -eq 0
+if test -f "$env_file"; and test $env_file_sourced -eq 0
     echo "Reading env from $env_file..."
-    source "$env_file"
-    and set env_file_sourced 1
+    source $env_file; and set env_file_sourced 1
 end
 
 # Themes {{{1
@@ -172,18 +157,6 @@ else
         starship init fish --print-full-init | source
         set fish_greeting
     end
-end
-
-
-
-# Pre-shell load {{{1
-# Vim/Mosh {{{2
-# Set vim compat if Mosh
-set -gx VIM_SSH_COMPAT 0
-set -gx NERD_FONTS 1
-if test "$MOSH_CONNECTION" -eq 1
-    set VIM_SSH_COMPAT 1
-    set NERD_FONTS 0
 end
 
 # End config {{{1

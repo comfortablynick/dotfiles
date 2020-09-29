@@ -20,6 +20,7 @@ function M.async_grep(term) -- {{{1
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local grep = vim.o.grepprg
+  local search = vim.fn.expand(term)
   local results = {}
   local handle
 
@@ -35,7 +36,7 @@ function M.async_grep(term) -- {{{1
     stderr:close()
     handle:close()
     vim.fn.setqflist({}, "r", {
-      title = "[AsyncGrep] " .. grep .. " " .. term,
+      title = "[AsyncGrep] " .. grep .. " " .. search,
       lines = results,
     })
     local result_ct = #results
@@ -47,7 +48,7 @@ function M.async_grep(term) -- {{{1
   end
   local grepprg = vim.split(grep, " ")
   handle = uv.spawn(table.remove(grepprg, 1),
-                    {args = {term, unpack(grepprg)}, stdio = {stdout, stderr}},
+                    {args = {search, unpack(grepprg)}, stdio = {nil, stdout, stderr}},
                     vim.schedule_wrap(onexit))
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)

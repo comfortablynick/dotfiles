@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.sYZLb6/fish_user_key_bindings.fish @ line 2
+# Defined in /tmp/fish.e8hNg5/fish_user_key_bindings.fish @ line 2
 function fish_user_key_bindings
     fish_vi_key_bindings
 

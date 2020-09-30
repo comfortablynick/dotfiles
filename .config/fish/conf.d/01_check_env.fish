@@ -2,7 +2,7 @@
 set -gx CURRENT_SHELL fish
 set -l dotdir $HOME/dotfiles
 
-if status is-interactive
+if status is-interactive; and test -d "$dotdir"
     set -l env_sha (string split ' ' ($HOME/bin/sha1 "$dotdir/env.toml"))[1]
     if test "$env_sha" = "$env_toml_sha"
         exit 0 # No changes; we're good!

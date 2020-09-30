@@ -1,10 +1,10 @@
 # Start tmux session for interactive shells
 if status is-interactive
-    # Detect whether we're in mosh or not
     set -Ux MOSH_CONNECTION 0
-    if pgrep -x mosh-server >/dev/null
-        set MOSH_CONNECTION 1
-    end
+    # Detect whether we're in mosh or not
+    # if pgrep -x mosh-server >/dev/null
+    #     set MOSH_CONNECTION 1
+    # end
     set -gx SEP ''
     set -gx SUB '|'
     set -gx RSEP ''

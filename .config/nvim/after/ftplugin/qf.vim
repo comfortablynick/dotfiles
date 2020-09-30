@@ -10,3 +10,6 @@ augroup after_ftplugin_qf
     " autocmd QuickFixCmdPost [^l]* if get(g:, 'qf_auto_open', 1) | cwindow | endif
     autocmd QuickFixCmdPost * cwindow
 augroup END
+
+nnoremap <silent> <buffer> <Left> :call quickfix#older()<CR>
+nnoremap <silent> <buffer> <Right> :call quickfix#newer()<CR>

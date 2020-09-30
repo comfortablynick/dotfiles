@@ -24,8 +24,9 @@ command! -bang -complete=buffer -nargs=? Bclose
 command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
 noremap <silent> <F5> :UndotreeToggle<CR>
 
-" Scratch :: create scratch window; add ! to vsplit {{{2
-command! -bang -bar Scratch call window#create_scratch(<bang>0)
+" Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
+command! Scratchify setlocal nobuflisted buftype=nofile bufhidden=delete noswapfile
+command! Scratch <mods> new +Scratchify
 
 " [Async]Run :: run a command asynchronously {{{2
 call map#set_cabbr('R', 'AsyncRun')

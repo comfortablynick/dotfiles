@@ -60,7 +60,7 @@ augroup plugin_editor
         autocmd WinEnter,InsertLeave * set cursorline
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
-    " Execute `direnv allow` after editing .envrc
+    " Execute `direnv allow` after editing .envrc {{{2
     autocmd BufWritePost .envrc if executable('direnv') | silent !direnv allow % | endif
 augroup end
 

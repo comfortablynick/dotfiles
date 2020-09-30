@@ -435,7 +435,7 @@ function M.make() -- {{{1
   local options = {}
   local handle
 
-  options.stdio = {stdout, stderr}
+  options.stdio = {nil, stdout, stderr}
   options.args = args
 
   local function has_non_whitespace(str) return str:match("[^%s]") end

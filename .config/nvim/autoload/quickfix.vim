@@ -130,7 +130,7 @@ function! s:isFirst()
 endfunction
 
 function! s:isLast()
-    return s:getProperty("nr") == s:getProperty('nr', '$')
+    return s:getProperty("nr") == s:getProperty("nr", '$')
 endfunction
 
 function! s:history(goNewer)
@@ -174,4 +174,26 @@ endfunction
 
 function! quickfix#newer()
     call s:history(1)
+endfunction
+
+function quickfix#move(direction, prefix)
+    if a:direction ==# 'up'
+        try
+            execute a:prefix . "previous"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "last"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+    else
+        try
+            execute a:prefix . "next"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "first"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+    endif
+
+    if &foldopen =~ 'quickfix' && foldclosed(line('.')) != -1
+        normal! zv
+    endif
 endfunction

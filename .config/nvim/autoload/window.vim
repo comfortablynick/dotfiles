@@ -4,7 +4,7 @@ scriptencoding utf-8
 
 " Get usable width of window
 " Adapted from https://stackoverflow.com/a/52921337/10370751
-function! window#width() abort
+function! window#width() abort "{{{1
     let l:width = winwidth(0)
     let l:numberwidth = max([&numberwidth, strlen(line('$')) + 1])
     let l:numwidth = (&number || &relativenumber) ? l:numberwidth : 0
@@ -22,12 +22,33 @@ function! window#width() abort
 endfunction
 
 " Create scratch window, optionally in vsplit
-function! window#create_scratch(vsplit) abort
-    let l:cmd = a:vsplit ? 'vnew' : 'enew'
-    execute l:cmd
-    let w:scratch = 1
-    setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
+function! window#open_scratch(mods, cmd) abort
+    if a:cmd is# ''
+        let l:output = ''
+    elseif a:cmd[0] == "@"
+        if strlen(a:cmd) is# 2
+            let l:output = getreg(a:cmd[1], 1, v:true)
+        else
+            throw 'Invalid register'
+        endif
+    elseif a:cmd[0] is# '!'
+        let l:cmd = a:cmd =~' %' ? substitute(a:cmd, ' %', ' ' . expand('%:p'), '') : a:cmd
+        let l:output = systemlist(matchstr(l:cmd, '^!\zs.*'))
+    else
+        let l:output = split(execute(a:cmd), "\n")
+    endif
+
+    execute a:mods . ' new'
+    Scratchify
+    call setline(1, l:output)
 endfunction
+
+" function! window#create_scratch(vsplit) abort "{{{1
+"     let l:cmd = a:vsplit ? 'vnew' : 'enew'
+"     execute l:cmd
+"     let w:scratch = 1
+"     setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile foldlevel=99
+" endfunction
 
 " Create popup/float terminal
 " With help from junegunn/fzf
@@ -193,4 +214,3 @@ if !has('nvim')
         return l:winid
     endfunction
 endif
-

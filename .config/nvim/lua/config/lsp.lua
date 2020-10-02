@@ -3,7 +3,9 @@ local M = {}
 local api = vim.api
 local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
 local util = require"util"
-local lsp = util.npcall(require, "nvim_lsp")
+local lsp = npcall(require, "nvim_lsp")
+vim.cmd [[packadd diagnostic-nvim]]
+local diag = npcall(require, "diagnostic")
 
 -- Customized rename function; defaults to name under cursor
 function M.rename(new_name)
@@ -31,6 +33,7 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
+  if diag then diag.on_attach() end
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
@@ -62,6 +65,9 @@ function M.init()
     --   initializationOptions = {
     --     filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
     --   },
+    -- },
+    -- efm = {
+    --   filetypes = {"vim", "sh", "python"},
     -- },
     gopls = {},
     pyls_ms = {},

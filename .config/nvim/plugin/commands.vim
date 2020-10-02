@@ -25,8 +25,8 @@ command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
 noremap <silent> <F5> :UndotreeToggle<CR>
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
-command! Scratchify setlocal nobuflisted buftype=nofile bufhidden=delete noswapfile
-command! Scratch <mods> new +Scratchify
+command! Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
+command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
 
 " [Async]Run :: run a command asynchronously {{{2
 call map#set_cabbr('R', 'AsyncRun')

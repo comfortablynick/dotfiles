@@ -114,6 +114,7 @@ function! plugins#init() abort
     Pack 'neovim/nvim-lspconfig'
     Pack 'nvim-lua/lsp-status.nvim'
     Pack 'nvim-lua/completion-nvim'
+    Pack 'nvim-lua/diagnostic-nvim'
     Pack 'steelsojka/completion-buffers'
     Pack 'neoclide/coc.nvim',           {'do': {-> coc#util#install()}}
     Pack 'lifepillar/vim-mucomplete'

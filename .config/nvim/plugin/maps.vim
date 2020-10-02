@@ -60,6 +60,8 @@ nnoremap <silent> <Leader>q :bd<CR>
 
 " Quickfix
 nnoremap <silent> cq :call quickfix#toggle()<CR>
+nnoremap <silent> [q :cabove<CR>
+nnoremap <silent> ]q :cbelow<CR>
 
 " Command line {{{1
 " %% -> cwd

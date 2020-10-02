@@ -6,7 +6,7 @@ scriptencoding utf-8
 " Main options
 let g:ale_close_preview_on_insert = 1                           " Close preview window in INSERT mode
 let g:ale_cursor_detail = 0                                     " Open preview window when focusing on error
-let g:ale_echo_cursor = 1                                       " Either this or ale_cursor_detail need to be set to 1
+let g:ale_echo_cursor = 0                                       " Either this or ale_cursor_detail need to be set to 1
 let g:ale_cache_executable_check_failures = 1                   " Have to restart vim if adding new providers
 let g:ale_lint_on_text_changed = 'never'                        " Don't lint while typing (too distracting)
 let g:ale_lint_on_insert_leave = 1                              " Lint after leaving insert

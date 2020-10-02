@@ -1,6 +1,7 @@
 setlocal tabstop=4                                              " Treat spaces as tab
 setlocal formatoptions-=ro                                      " Don't insert comment marker automatically on O, o, <Enter>
 setlocal foldexpr=VimFoldLevel()
+setlocal makeprg=vint\ %
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
 " Maps

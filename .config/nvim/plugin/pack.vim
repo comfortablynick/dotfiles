@@ -53,6 +53,7 @@ function! s:deferred_load() abort
     packadd vim-floaterm
     packadd vim-picker
     packadd vim-devicons
+    packadd vim-lion
 
     if has('nvim')
         " Seems to have issue on vim

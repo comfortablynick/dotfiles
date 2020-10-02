@@ -119,6 +119,9 @@ function! plugins#init() abort
     Pack 'neoclide/coc.nvim',           {'do': {-> coc#util#install()}}
     Pack 'lifepillar/vim-mucomplete'
 
+    " Training {{{2
+    Pack 'tjdevries/train.nvim'
+
     " Tmux {{{2
     Pack 'christoomey/vim-tmux-navigator'
     Pack 'RyanMillerC/better-vim-tmux-resizer'

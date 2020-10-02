@@ -2,20 +2,11 @@
 local M = {}
 local api = vim.api
 local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
-local util = require"util"
 local lsp = npcall(require, "nvim_lsp")
-vim.cmd [[packadd diagnostic-nvim]]
-local diag = npcall(require, "diagnostic")
 
--- Customized rename function; defaults to name under cursor
-function M.rename(new_name)
-  local params = vim.lsp.util.make_position_params()
-  local cursor_word = vim.fn.expand("<cexpr>")
-  new_name = new_name or util.npcall(vim.fn.input, "New Name: ", cursor_word)
-  if not (new_name and #new_name > 0) then return end
-  params.newName = new_name
-  vim.lsp.buf_request(0, "textDocument/rename", params)
-end
+-- TODO: create lua `packadd` command that will combine the below steps
+vim.cmd[[packadd diagnostic-nvim]]
+local diag = npcall(require, "diagnostic")
 
 local diagnostics_qf_cb = function(err, method, result, client_id)
   -- Use default callback too
@@ -42,10 +33,11 @@ local on_attach_cb = function(client, bufnr)
     ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     [";s"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
+    [";a"] = "<Cmd>lua vim.lsp.buf.code_action()<CR>",
     ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
-    ["<F2>"] = "<Cmd>lua require'config.lsp'.rename()<CR>",
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
+    ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
   }
 
   for lhs, rhs in pairs(nmaps) do
@@ -60,12 +52,27 @@ function M.init()
     bashls = {},
     cmake = {},
     ccls = {},
-    -- diagnosticls = {
-    --   filetypes = {"vim", "sh", "python"},
-    --   initializationOptions = {
-    --     filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
-    --   },
-    -- },
+    diagnosticls = {
+      filetypes = {"lua", "vim", "sh", "python"},
+      init_options = {
+        filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
+        linters = {
+          vint = {
+            command = "vint",
+            debounce = 100,
+            args = {"--enable-neovim", "-"},
+            offsetLine = 0,
+            offsetColumn = 0,
+            sourceName = "vint",
+            formatLines = 1,
+            formatPattern = {
+              "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+              {line = 1, column = 2, message = 3},
+            },
+          },
+        },
+      },
+    },
     -- efm = {
     --   filetypes = {"vim", "sh", "python"},
     -- },
@@ -81,11 +88,30 @@ function M.init()
             enable = true,
             globals = {"vim", "nvim", "sl", "p", "printf", "npcall"},
           },
+          workspace = {
+            library = (function()
+              -- Load the `lua` files from nvim into the runtime
+              -- From https://github.com/tjdevries/nlua.nvim/blob/master/lua/nlua/lsp/nvim.lua
+              local result = {};
+              for _, path in pairs(api.nvim_list_runtime_paths()) do
+                local lua_path = path .. "/lua/";
+                if vim.fn.isdirectory(lua_path) then
+                  result[lua_path] = true
+                end
+              end
+              result[vim.fn.expand("$VIMRUNTIME/lua")] = true
+              -- Extra files in the source code only?
+              result[vim.fn.expand("$HOME/src/neovim/src/nvim/lua")] = true
+              return result;
+            end)(),
+            maxPreload = 1000,
+            preloadFileSize = 1000,
+          },
         },
       },
     },
     tsserver = {},
-    vimls = {},
+    vimls = {initializationOptions = {diagnostic = {enable = true}}},
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
       settings = {

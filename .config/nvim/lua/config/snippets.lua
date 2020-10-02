@@ -43,11 +43,11 @@ snips.vim = { -- {{{1
     autocmd!
     autocmd $0
 augroup END]],
-  func = indent[[function! ${1|vim.trim(S.v)}($2) abort
+  func = indent[[function ${1|vim.trim(S.v)}($2) abort
     $0
 endfunction]],
   -- Do string formatting so function name shows upon snippet insertion using default inserter
-  fua = indent(format([[function! %s#${1|vim.trim(S.v)}($2) abort
+  fua = indent(format([[function %s#${1|vim.trim(S.v)}($2) abort
     $0
 endfunction]], nvim_relative_name():gsub("autoload_", ""):gsub("_", "#"))),
   ftdetect = [[" vint: -ProhibitAutocmdWithNoGroup

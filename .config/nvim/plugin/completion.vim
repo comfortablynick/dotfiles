@@ -64,7 +64,7 @@ function! s:get_completion_type(ftype) abort
             endif
         endfor
     endfor
-    return ''
+    return ""
 endfunction
 
 let g:completion_handler_fts = []

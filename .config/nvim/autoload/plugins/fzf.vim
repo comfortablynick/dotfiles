@@ -1,13 +1,19 @@
 let s:guard = 'g:loaded_autoload_plugins_fzf' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
-if exists('$TMUX')
+" FZF Config {{{1
+" Layout {{{2
+let g:fzf_prefer_tmux = 0
+
+if exists('$TMUX') && g:fzf_prefer_tmux
     " See `man fzf-tmux` for available options
-    let g:fzf_layout = { 'tmux': '-p90%,60%' }
+    let g:fzf_layout = {'tmux': '-p90%,60%'}
 else
-    let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+    " let g:fzf_layout = {'window': {'width': 0.9, 'height': 0.6}}
+    let g:fzf_layout = {'down': '40%'}
 endif
 
+" Colors {{{2
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Clear'],
@@ -23,16 +29,12 @@ let g:fzf_colors = {
     \ 'header':  ['fg', 'Comment']
     \ }
 
-if has('nvim') || has('gui_running')
-    let $FZF_DEFAULT_OPTS .= ' --inline-info'
-endif
-
-augroup fzf_config
+augroup fzf_config "{{{2
     autocmd!
     autocmd FileType fzf silent! tunmap <buffer> <Esc>
 augroup END
 
-" nnoremap <silent> <Leader>h  :History:<CR>
+" Maps {{{2
 nnoremap <silent> <Leader>gg :RG<CR>
 nnoremap <silent> z= :call <SID>fzf_spell()<CR>
 

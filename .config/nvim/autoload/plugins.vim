@@ -79,6 +79,7 @@ function! plugins#init() abort
     Pack 'mhinz/vim-lookup'
     Pack 'bfredl/nvim-luadev'
     Pack 'tweekmonster/startuptime.vim'
+    Pack 'dstein64/vim-startuptime'
     Pack 'TravonteD/luajob'
 
     " Editor appearance {{{2
@@ -151,16 +152,23 @@ function! plugins#lazy_run(cmd, package, ...) abort "{{{2
         echohl None
         return
     endif
-    let l:args = get(a:, 1, {})
-    let l:delete = get(l:args, 'delete', [])
-    if type(l:delete) != v:t_list
-        let l:delete = [l:delete]
+    let l:packages   = a:package
+    let l:args       = get(a:, 1, {})
+    let l:before     = get(l:args, 'before', [])
+    let l:after      = get(l:args, 'after', [])
+    let l:start      = get(l:args, 'start', 0)
+    let l:end        = get(l:args, 'end',   0)
+    let l:bang       = get(l:args, 'bang',  '')
+    let l:extra_args = get(l:args, 'args',  '')
+    " Exec before command(s)
+    if type(l:before) != v:t_list
+        let l:before = [l:before]
     endif
-    for l:old_cmd in l:delete
-        execute 'delcommand' l:old_cmd
+    for l:before_cmd in l:before
+        execute l:before_cmd
     endfor
 
-    let l:packages = a:package
+    " Source packages
     if type(l:packages) != v:t_list
         let l:packages = [l:packages]
     endif
@@ -168,17 +176,13 @@ function! plugins#lazy_run(cmd, package, ...) abort "{{{2
         execute 'packadd' l:package
     endfor
 
-    let l:config = get(l:args, 'config', [])
-    if type(l:config) != v:t_list
-        let l:config = [l:config]
+    " Exec after command(s)
+    if type(l:after) != v:t_list
+        let l:after = [l:after]
     endif
-    for l:config_cmd in l:config
-        execute l:config_cmd
+    for l:after_cmd in l:after
+        execute l:after_cmd
     endfor
-    let l:start = get(l:args, 'start', 0)
-    let l:end = get(l:args, 'end', 0)
-    let l:bang = get(l:args, 'bang', '')
-    let l:extra_args = get(l:args, 'args', '')
     if type(a:cmd) == v:t_func
         return a:cmd()
     endif

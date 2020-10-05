@@ -9,7 +9,7 @@ let {s:guard} = 1
 
 " General {{{1
 " S :: save if file has changed and reload vimrc {{{2
-command! S update | source $MYVIMRC
+command! S update | silent! unlet {s:guard} | source $MYVIMRC
 
 " Light/Dark :: easily change background {{{2
 command! Light set background=light
@@ -90,6 +90,12 @@ command! W w
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
 command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
+command! -nargs=* -complete=file Startup
+    \ call plugins#lazy_run(
+    \   'StartupTime',
+    \   'vim-startuptime',
+    \   {'before': 'silent! delcommand StartupTime'}
+    \ )
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
 command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')

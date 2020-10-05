@@ -27,7 +27,7 @@ if has('nvim')
         \ call plugins#lazy_run(
         \ 'LuaTreeToggle',
         \ 'nvim-tree.lua',
-        \ {'config': 'lua require"tree".on_enter()'}) 
+        \ {'after': 'lua require"tree".on_enter()'}) 
 endif
 
 " Maps

@@ -8,7 +8,7 @@ let s:guard = 'g:loaded_autoload_util' | if exists(s:guard) | finish | endif
 let {s:guard} = 1
 
 " util#capture() :: Capture output of command and return as list {{{1
-function! util#capture(cmd) abort
+function util#capture(cmd)
     if a:cmd =~# '^!'
         " System command output
         let l:cmd = a:cmd =~# ' %' ? substitute(a:cmd, ' %', ' ' . expand('%:p'), '') : a:cmd
@@ -23,7 +23,7 @@ endfunction
 " util#redir() :: Redirect output of command to scratch buffer {{{1
 " Borrowed some from romainl:
 " https://gist.github.com/romainl/eae0a260ab9c135390c30cd370c20cd7
-function! util#redir(cmd) abort
+function util#redir(cmd)
     for l:win in range(1, winnr('$'))
         if getwinvar(l:win, 'scratch')
             execute l:win 'windo close'
@@ -41,7 +41,7 @@ function! util#redir(cmd) abort
 endfunction
 
 " util#scriptnames() :: Convert :scriptnames into qf format {{{1
-function! util#scriptnames() abort
+function util#scriptnames()
     return map(
         \ map(util#capture('scriptnames'), { _, v -> split(v, "\\v:=\\s+")}),
         \ {_, v -> {'text': v[0], 'filename': expand(v[1])}}
@@ -49,7 +49,7 @@ function! util#scriptnames() abort
 endfunction
 
 " util#pformat() :: Pretty format using python3 pprint {{{1
-function! util#pformat(args) abort
+function util#pformat(args)
 py3 <<END
 import vim
 from pprint import pformat

@@ -180,19 +180,17 @@ function M.floating_help(query) -- {{{1
                           {silent = true, noremap = true})
 end
 
-function M.create_scratch(lines) -- {{{1
+function M.create_scratch(lines, mods) -- {{{1
   for _, win in ipairs(api.nvim_list_wins()) do
     if pcall(api.nvim_win_get_var, win, "scratch") then api.nvim_win_close(win, 0) end
   end
-  vim.cmd"new"
+  vim.cmd((mods or "").." new")
   vim.w.scratch = 1
   local buf = api.nvim_create_buf(0, 1)
   api.nvim_win_set_buf(0, buf)
-  -- vim.wo.foldlevel = 99
   api.nvim_buf_set_keymap(buf, "n", "q", "<Cmd>bdelete!<CR>",
                           {noremap = true, silent = true})
   api.nvim_buf_set_lines(buf, 0, -1, 0, lines or {})
 end
 
--- Return module --{{{1
 return M

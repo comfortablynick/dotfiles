@@ -5,7 +5,7 @@ local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
 local lsp = npcall(require, "nvim_lsp")
 
 -- TODO: create lua `packadd` command that will combine the below steps
-vim.cmd[[packadd diagnostic-nvim]]
+vim.cmd[[silent! packadd diagnostic-nvim]]
 local diag = npcall(require, "diagnostic")
 
 local diagnostics_qf_cb = function(err, method, result, client_id)
@@ -24,7 +24,9 @@ local diagnostics_qf_cb = function(err, method, result, client_id)
 end
 
 local on_attach_cb = function(client, bufnr)
+  -- TODO: create lua `packadd` command that will combine the below steps
   if diag then diag.on_attach() end
+
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {

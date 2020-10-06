@@ -1,14 +1,24 @@
 local api = vim.api
 local M = {}
 
+local no_diagnostics_msg =
+  "echohl WarningMsg | echo 'No diagnostics found' | echohl None"
+
+local function get_cursor(winnr)
+  local cursor = api.nvim_win_get_cursor(winnr or 0)
+  local row = cursor[1]
+  local col = cursor[2] + 1 -- api has 0 index for col
+  return row, col
+end
+
 function M.get_next_loc()
-  M.location = api.nvim_call_function("getloclist", {0})
+  M.location = vim.fn.getloclist(0)
   if #M.location <= 0 then return -1 end
 
-  local cur_row, cur_col = unpack(api.nvim_win_get_cursor(0))
+  local cur_row, cur_col = get_cursor()
 
   for i, v in ipairs(M.location) do
-    if v.lnum > cur_row or (v.lnum == cur_row and v.col > cur_col + 2) then
+    if v.lnum > cur_row or (v.lnum == cur_row and v.col > cur_col + 1) then
       return i
     end
   end
@@ -16,17 +26,15 @@ function M.get_next_loc()
 end
 
 function M.get_prev_loc()
-  M.location = api.nvim_call_function("getloclist", {0})
+  M.location = vim.fn.getloclist(0)
   if #M.location == 0 then return -1 end
 
-  local cur_row = api.nvim_call_function("line", {"."})
-  local cur_col = api.nvim_call_function("col", {"."})
+  local cur_row, cur_col = get_cursor()
 
   for i, v in ipairs(M.location) do
-    local is_next = v["lnum"] > cur_row or
-                      (v["lnum"] == cur_row and v["col"] > cur_col)
-    local is_prev = v["lnum"] == cur_row and cur_col > v["col"]
-    local same_pos = v["lnum"] == cur_row and v["col"] == cur_col
+    local is_next = v.lnum > cur_row or (v.lnum == cur_row and v.col > cur_col)
+    local is_prev = v.lnum == cur_row and cur_col > v.col
+    local same_pos = v.lnum == cur_row and v.col == cur_col
     if is_next or same_pos then
       return i - 1
     elseif is_prev then
@@ -38,7 +46,7 @@ end
 
 local function jumpToLocation(i)
   if i >= 1 and i <= #M.location then
-    api.nvim_command("silent! ll" .. i)
+    vim.cmd("silent! ll" .. i)
     M.openLineDiagnostics()
   end
 end
@@ -50,8 +58,7 @@ function M.jumpNextLocation()
   if i >= 1 then
     jumpToLocation(i)
   else
-    api.nvim_command(
-      "echohl WarningMsg | echo 'no next diagnostic' | echohl None")
+    vim.cmd("echohl WarningMsg | echo 'no next diagnostic' | echohl None")
   end
 end
 
@@ -60,8 +67,7 @@ function M.jumpPrevLocation()
   if i >= 1 then
     jumpToLocation(i)
   else
-    api.nvim_command(
-      "echohl WarningMsg | echo 'no prev diagnostic' | echohl None")
+    vim.cmd("echohl WarningMsg | echo 'no prev diagnostic' | echohl None")
   end
 end
 
@@ -72,8 +78,7 @@ function M.jumpNextLocationCycle()
   elseif M.get_prev_loc() >= 0 then
     jumpToLocation(1)
   else
-    return api.nvim_command(
-             "echohl WarningMsg | echo 'No diagnostics found' | echohl None")
+    return vim.cmd(no_diagnostics_msg)
   end
 end
 
@@ -84,48 +89,35 @@ function M.jumpPrevLocationCycle()
   elseif M.get_next_loc() >= 0 then
     jumpToLocation(#M.location)
   else
-    return api.nvim_command(
-             "echohl WarningMsg | echo 'No diagnostics found' | echohl None")
+    return vim.cmd(no_diagnostics_msg)
   end
 end
 
 function M.jumpFirstLocation()
-  M.location = api.nvim_call_function("getloclist", {0})
+  M.location = vim.fn.getloclist(0)
   jumpToLocation(1)
-  if #M.location == 0 then
-    return api.nvim_command(
-             "echohl WarningMsg | echo 'No diagnostics found' | echohl None")
-  end
+  if #M.location == 0 then return vim.cmd(no_diagnostics_msg) end
 end
 
 function M.jumpLastLocation()
-  M.location = api.nvim_call_function("getloclist", {0})
+  M.location = vim.fn.getloclist(0)
   jumpToLocation(#M.location)
-  if #M.location == 0 then
-    return api.nvim_command(
-             "echohl WarningMsg | echo 'No diagnostics found' | echohl None")
-  end
+  if #M.location == 0 then return vim.cmd(no_diagnostics_msg) end
 end
 
 -- Open line diagnostics when jump
 -- Don't do anything if diagnostic_auto_popup_while_jump == 0
 -- NOTE need to delay a certain amount of time to show correctly
 function M.openLineDiagnostics()
-  if api.nvim_get_var("diagnostic_auto_popup_while_jump") == 1 then
-    local timer = vim.loop.new_timer()
-    timer:start(100, 0, vim.schedule_wrap(
-                  function()
-        vim.lsp.util.show_line_diagnostics()
-        timer:stop()
-        timer:close()
-      end))
+  if vim.g.diagnostic_auto_popup_while_jump == 1 then
+    vim.defer_fn(function() vim.lsp.util.show_line_diagnostics() end, 100)
   end
 end
 
 -- Open location window and jump back to current window
 function M.openDiagnostics()
-  api.nvim_command("lopen")
-  api.nvim_command("wincmd p")
+  vim.cmd[[lopen]]
+  vim.cmd[[wincmd p]]
 end
 
 return M

@@ -56,6 +56,7 @@ local on_attach_cb = function(client, bufnr)
 end
 
 require'nvim_lsp'.sumneko_lua.setup{on_attach = on_attach_cb}
+require'nvim_lsp'.vimls.setup{on_attach = on_attach_cb}
 require'nvim_lsp'.diagnosticls.setup{
       on_attach = on_attach_cb,
       filetypes = {"lua", "vim", "sh", "python"},

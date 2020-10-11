@@ -28,7 +28,6 @@ function! plugins#init() abort
 
     " General {{{2
     Pack 'chrisbra/Colorizer'
-    Pack 'vhdirk/vim-cmake'
     Pack 'airblade/vim-rooter'
     Pack 'tpope/vim-repeat'
     Pack 'tpope/vim-eunuch'
@@ -38,7 +37,7 @@ function! plugins#init() abort
     " Linters/formatters/runners {{{2
     Pack 'dense-analysis/ale'
     Pack 'sbdchd/neoformat'
-    Pack 'psf/black', {'branch': 'stable'}
+    Pack 'psf/black',                  {'branch': 'stable'}
     Pack 'skywind3000/asyncrun.vim'
     Pack 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
     Pack 'kkoomen/vim-doge'
@@ -58,17 +57,16 @@ function! plugins#init() abort
     Pack 'antoinemadec/FixCursorHold.nvim'
 
     " Explorer/finder utils {{{2
-    Pack 'kevinhwang91/rnvimr',         {'do': 'pip3 install -U pynvim'}
+    Pack 'kevinhwang91/rnvimr', {'do': 'pip3 install -U pynvim'}
     Pack 'liuchengxu/vista.vim'
-    Pack 'liuchengxu/vim-clap',         {'do': ':Clap install-binary!'}
-    Pack 'junegunn/fzf',                {'do': { p -> s:fzf_post(p) }}
+    Pack 'liuchengxu/vim-clap', {'do': ':Clap install-binary!'}
+    Pack 'junegunn/fzf',        {'do': { p -> s:fzf_post(p) }}
     Pack 'junegunn/fzf.vim'
     Pack 'laher/fuzzymenu.vim'
     Pack 'majutsushi/tagbar'
     Pack 'mbbill/undotree'
     Pack 'preservim/nerdtree'
     Pack 'Shougo/defx.nvim'
-    Pack 'tpope/vim-projectionist'
     Pack 'kyazdani42/nvim-tree.lua'
     Pack 'justinmk/vim-dirvish'
     Pack 'srstevenson/vim-picker'
@@ -90,6 +88,7 @@ function! plugins#init() abort
     Pack 'ryanoasis/vim-devicons'
 
     " Syntax/filetype {{{2
+    Pack 'vhdirk/vim-cmake'
     Pack 'cespare/vim-toml',              {'type': 'start'}
     Pack 'tbastos/vim-lua',               {'type': 'start'}
     Pack 'blankname/vim-fish',            {'type': 'start'}
@@ -105,6 +104,7 @@ function! plugins#init() abort
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
     Pack 'iberianpig/tig-explorer.vim'
+    Pack 'TimUntersberger/neogit'           " Experimental
 
     " Snippets {{{2
     Pack 'SirVer/ultisnips'
@@ -117,8 +117,8 @@ function! plugins#init() abort
     Pack 'nvim-lua/completion-nvim'
     Pack 'nvim-lua/diagnostic-nvim'
     Pack 'steelsojka/completion-buffers'
-    Pack 'neoclide/coc.nvim',           {'do': {-> coc#util#install()}}
     Pack 'lifepillar/vim-mucomplete'
+    Pack 'neoclide/coc.nvim', {'do': {-> coc#util#install()}}
 
     " Training {{{2
     Pack 'tjdevries/train.nvim'
@@ -130,14 +130,15 @@ function! plugins#init() abort
 endfunction
 
 " Helper functions {{{1
-function! s:fzf_post(plugin) abort " Fzf update hook {{{2
+" fzf_post :: fzf update hook {{{2
+function! s:fzf_post(plugin) abort
     execute 'AsyncRun cd' a:plugin['dir']
         \ '&& ./install --bin'
         \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
         \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
 endfunction
 
-" Lazy-load a package on a command or funcref
+" plugins#lazy_run :: Lazy-load a package on a command or funcref {{{2
 " Inspired by:
 " https://github.com/wbthomason/dotfiles/blob/linux/neovim/.config/nvim/autoload/util.vim
 " Optional options dict:
@@ -145,7 +146,7 @@ endfunction
 " `end` Range end
 " `bang` <bang> from command
 " `args` <q-args> from command
-function! plugins#lazy_run(cmd, package, ...) abort "{{{2
+function plugins#lazy_run(cmd, package, ...)
     if !plugins#exists(a:package)
         echohl WarningMsg
         echo 'Package' a:package 'not found in packpath!'
@@ -202,8 +203,9 @@ function! plugins#lazy_run(cmd, package, ...) abort "{{{2
     execute l:final_cmd
 endfunction
 
-" check if plugin in &packpath (`plugin` can be a glob pattern)
-function! plugins#exists(plugin) abort "{{{2
+" plugins#exists :: check if plugin exists in &packpath {{{2
+" `plugin` Plugin name or glob pattern
+function plugins#exists(plugin)
     return !empty(globpath(&packpath, 'pack/*/*/'.a:plugin))
 endfunction
 

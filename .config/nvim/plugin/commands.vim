@@ -87,6 +87,8 @@ command! Wq wq
 command! Wqa wqa
 command! W w
 
+call map#set_cabbr('ehco', 'echo')
+
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
 command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
@@ -135,7 +137,7 @@ command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
 " command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
 
 " MRU :: most recently used files {{{2
-command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>))
+command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>, <mods>))
 
 " Grep :: async grep {{{2
 command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)

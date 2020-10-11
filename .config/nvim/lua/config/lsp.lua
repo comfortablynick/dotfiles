@@ -1,27 +1,27 @@
 -- LSP configurations
 local M = {}
 local api = vim.api
-local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
 local lsp = npcall(require, "nvim_lsp")
 
 -- TODO: create lua `packadd` command that will combine the below steps
 vim.cmd[[silent! packadd diagnostic-nvim]]
 local diag = npcall(require, "diagnostic")
 
-local diagnostics_qf_cb = function(err, method, result, client_id)
-  -- Use default callback too
-  def_diagnostics_cb(err, method, result, client_id)
-  -- Add to quickfix
-  if result and result.diagnostics then
-    for _, v in ipairs(result.diagnostics) do
-      v.bufnr = client_id
-      v.lnum = v.range.start.line + 1
-      v.col = v.range.start.character + 1
-      v.text = v.message
-    end
-    vim.lsp.util.set_qflist(result.diagnostics)
-  end
-end
+-- local diagnostics_qf_cb = function(err, method, result, client_id)
+--   -- Use default callback too
+--   local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
+--   def_diagnostics_cb(err, method, result, client_id)
+--   -- Add to quickfix
+--   if result and result.diagnostics then
+--     for _, v in ipairs(result.diagnostics) do
+--       v.bufnr = client_id
+--       v.lnum = v.range.start.line + 1
+--       v.col = v.range.start.character + 1
+--       v.text = v.message
+--     end
+--     vim.lsp.util.set_qflist(result.diagnostics)
+--   end
+-- end
 
 local on_attach_cb = function(client, bufnr)
   -- TODO: create lua `packadd` command that will combine the below steps
@@ -75,9 +75,6 @@ function M.init()
         },
       },
     },
-    -- efm = {
-    --   filetypes = {"vim", "sh", "python"},
-    -- },
     gopls = {},
     pyls_ms = {},
     rust_analyzer = {},
@@ -126,7 +123,7 @@ function M.init()
 
   -- Set global callbacks
   -- Can also be set locally for each server
-  vim.lsp.callbacks["textDocument/publishDiagnostics"] = diagnostics_qf_cb
+  -- vim.lsp.callbacks["textDocument/publishDiagnostics"] = diagnostics_qf_cb
 
   -- Set local configs
   for server, cfg in pairs(configs) do

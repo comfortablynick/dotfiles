@@ -35,7 +35,8 @@ function! s:deferred_load() abort
     packadd fzf
     packadd fzf.vim
     packadd targets.vim
-    packadd vim-commentary
+    " packadd vim-commentary
+    packadd tcomment_vim
     packadd vim-unimpaired
     packadd clever-f.vim
     packadd vim-sneak

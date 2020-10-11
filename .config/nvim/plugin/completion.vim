@@ -38,12 +38,14 @@ let g:completion_filetypes = {
     \    'muttrc',
     \    'ini',
     \    'mail',
-    \    'chordpro',
     \    'toml',
     \    'vifm',
     \    'ps1',
     \    'snippets',
     \    'mail',
+    \ ],
+    \ 'mucomplete': [
+    \    'chordpro',
     \ ],
     \ 'none': [
     \    'help',

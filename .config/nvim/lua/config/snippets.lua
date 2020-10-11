@@ -60,6 +60,7 @@ function! s:set_filetype() abort
         set filetype=$2
     endif
 endfunction]],
+  modeline = comment[[vim:fdl=${=tostring(vim.wo.fdl)}:]],
   scriptguard = [[let s:guard = 'g:loaded_${=nvim_relative_name()}' | if exists(s:guard) | finish | endif
 let {s:guard} = 1]],
 }

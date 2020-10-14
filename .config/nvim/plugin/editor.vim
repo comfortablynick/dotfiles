@@ -79,7 +79,7 @@ augroup END
 function! s:cmdwin_enter() abort "{{{2
     nnoremap <buffer> <Leader>q <C-c><C-c>
     nnoremap <buffer> <Esc> <C-c><C-c>
-    setlocal norelativenumber
+    setlocal norelativenumber nonumber
 endfunction
 
 function! s:recall_cursor_position() abort "{{{2

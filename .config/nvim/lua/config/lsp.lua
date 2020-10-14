@@ -54,27 +54,28 @@ function M.init()
     bashls = {},
     cmake = {},
     ccls = {},
-    diagnosticls = {
-      filetypes = {"lua", "vim", "sh", "python"},
-      init_options = {
-        filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
-        linters = {
-          vint = {
-            command = "vint",
-            debounce = 100,
-            args = {"--enable-neovim", "-"},
-            offsetLine = 0,
-            offsetColumn = 0,
-            sourceName = "vint",
-            formatLines = 1,
-            formatPattern = {
-              "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-              {line = 1, column = 2, message = 3},
-            },
-          },
-        },
-      },
-    },
+    -- TODO: wait until PR is merged to only send requests to supported features
+    -- diagnosticls = {
+    --   filetypes = {"lua", "vim", "sh", "python"},
+    --   init_options = {
+    --     filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
+    --     linters = {
+    --       vint = {
+    --         command = "vint",
+    --         debounce = 100,
+    --         args = {"--enable-neovim", "-"},
+    --         offsetLine = 0,
+    --         offsetColumn = 0,
+    --         sourceName = "vint",
+    --         formatLines = 1,
+    --         formatPattern = {
+    --           "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+    --           {line = 1, column = 2, message = 3},
+    --         },
+    --       },
+    --     },
+    --   },
+    -- },
     gopls = {},
     pyls_ms = {},
     rust_analyzer = {},

@@ -14,9 +14,9 @@ let g:package_defer_time = 300
 " Package management
 if get(g:, 'use_packer', 0)
     command! PackerInstall packadd packer.nvim | lua require('plugins').install()
-    command! PackerUpdate packadd packer.nvim | lua require('plugins').update()
-    command! PackerSync packadd packer.nvim | lua require('plugins').sync()
-    command! PackerClean packadd packer.nvim | lua require('plugins').clean()
+    command! PackerUpdate  packadd packer.nvim | lua require('plugins').update()
+    command! PackerSync    packadd packer.nvim | lua require('plugins').sync()
+    command! PackerClean   packadd packer.nvim | lua require('plugins').clean()
     command! PackerCompile packadd packer.nvim | lua require('plugins').compile()
 else
     command!       PackInstall call plugins#init() | call packager#install()
@@ -35,6 +35,7 @@ function! s:deferred_load() abort
     packadd fzf
     packadd fzf.vim
     packadd targets.vim
+    packadd vim-exchange
     " packadd vim-commentary
     packadd tcomment_vim
     packadd vim-unimpaired
@@ -59,6 +60,7 @@ function! s:deferred_load() abort
     if has('nvim')
         " Seems to have issue on vim
         packadd nvim-miniyank
+        packadd plenary.nvim
     endif
 
     packadd vim-fugitive

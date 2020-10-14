@@ -2,8 +2,8 @@ local api = vim.api
 local uv = vim.loop
 local luajob = require"luajob"
 local util = require"util"
-local npcall = util.npcall
 local fn = require"fun"
+local Job = require"plenary.job"
 local M = {}
 
 local qf_open = function(max_size) -- {{{1
@@ -47,9 +47,10 @@ function M.async_grep(term) -- {{{1
     end
   end
   local grepprg = vim.split(grep, " ")
-  handle = uv.spawn(table.remove(grepprg, 1),
-                    {args = {search, unpack(grepprg)}, stdio = {nil, stdout, stderr}},
-                    vim.schedule_wrap(onexit))
+  handle = uv.spawn(table.remove(grepprg, 1), {
+    args = {search, unpack(grepprg)},
+    stdio = {nil, stdout, stderr},
+  }, vim.schedule_wrap(onexit))
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)
 end
@@ -245,6 +246,27 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   end
 end
 
+function M.arun(cmd) -- {{{1
+  local args = vim.split(cmd, " ")
+  local bin = table.remove(args, 1)
+  local on_read = function(err, data)
+    assert(not err, err)
+    vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = data})
+  end
+  -- M.spawn(bin, {args = args}, vim.schedule_wrap(on_read),
+  --         vim.schedule_wrap(on_close))
+  local job = Job:new{
+    command = bin,
+    args = args,
+    on_stdout = vim.schedule_wrap(on_read),
+    on_stderr = vim.schedule_wrap(on_read),
+    on_exit = vim.schedule_wrap(qf_open),
+  }
+  job:start()
+  job:shutdown()
+  -- return job:stderr_result()
+end
+
 function M.run(cmd) -- {{{1
   -- Test run command using libuv api
   local stdout = uv.new_pipe(false)
@@ -291,30 +313,27 @@ function M.run(cmd) -- {{{1
   uv.read_start(stderr, vim.schedule_wrap(onread))
 end
 
-function M.sh(script, cwd) -- {{{1
-  vim.cmd("new")
-  local winnr = api.nvim_get_current_win()
-  local bufnr = api.nvim_get_current_buf()
+function M.sh(cmd, mods, cwd) -- {{{1
+  require"window".create_scratch({}, mods or "")
+  local args = vim.split(cmd, " ")
+  local bin = table.remove(args, 1)
   local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
-  local options = {}
+  local options = {args = args, stdio = {stdin, stdout, stderr}}
 
-  options.stdio = {stdin, stdout, stderr}
+  local winnr = api.nvim_get_current_win()
+  local bufnr = api.nvim_get_current_buf()
 
   if cwd then
-    assert(cwd and util.path.is_dir(cwd), "sh: Invalid directory")
+    assert(cwd and util.path.is_dir(cwd), "error: Invalid directory: " .. cwd)
     options.cwd = cwd
   end
 
   -- luacheck: no unused
   local handle
-  handle = uv.spawn("sh", options, function()
-    stdin:close()
-    stdout:close()
-    stderr:close()
-    handle:close()
-    -- vim.schedule(function() vim.cmd("silent bwipeout! " .. bufnr) end)
+  handle = uv.spawn(bin, options, function()
+    for _, io in ipairs(options.stdio) do io:close() end
   end)
 
   -- If the buffer closes, then kill our process.
@@ -325,24 +344,24 @@ function M.sh(script, cwd) -- {{{1
   })
 
   local output_buf = ""
-  local function update_chunk(err, chunk)
-    assert(not err, err)
-    if chunk then
-      output_buf = output_buf .. chunk
-      local lines = vim.split(output_buf, "\n", true)
-      api.nvim_buf_set_option(bufnr, "modifiable", true)
-      api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-      api.nvim_buf_set_option(bufnr, "modifiable", false)
-      api.nvim_buf_set_option(bufnr, "modified", false)
-      if api.nvim_win_is_valid(winnr) then
-        api.nvim_win_set_cursor(winnr, {#lines, 0})
+  local update_chunk = vim.schedule_wrap(
+                         function(err, chunk)
+      assert(not err, err)
+      if chunk then
+        output_buf = output_buf .. chunk
+        local lines = vim.split(output_buf, "\n", true)
+        api.nvim_buf_set_option(bufnr, "modifiable", true)
+        api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+        api.nvim_buf_set_option(bufnr, "modifiable", false)
+        api.nvim_buf_set_option(bufnr, "modified", false)
+        if api.nvim_win_is_valid(winnr) then
+          api.nvim_win_set_cursor(winnr, {#lines, 0})
+        end
       end
-    end
-  end
-  update_chunk = vim.schedule_wrap(update_chunk)
+    end)
   stdout:read_start(update_chunk)
   stderr:read_start(update_chunk)
-  stdin:write(script)
+  stdin:write(cmd)
   stdin:write("\n")
   stdin:shutdown()
 end
@@ -384,28 +403,6 @@ function M.async_run(cmd, bang) -- {{{1
   })
   asyncjob.start()
   vim.g.job_status = "Running"
-end
-
-function M.lscolors() -- {{{1
-  -- Test parse $LS_COLORS
-  local lsc = {}
-  for _, item in ipairs(vim.split(vim.env.LS_COLORS, ":")) do
-    local pair = vim.split(item, "=")
-    local attrs = {}
-    attrs.seq = pair[2]
-    attrs.fg_color = string.match(pair[2] or "", "38;5;([0-9]+)")
-    attrs.bg_color = string.match(pair[2] or "", "48;5;([0-9]+)")
-    -- local elems = vim.split(pair[2] or "", ";")
-    -- if elems[1] == "38" then
-    --     attrs.type = "fg"
-    -- elseif elems[1] == "48" then
-    --     attrs.type = "bg"
-    -- end
-    -- if elems[2] == "5" then attrs["color256"] = elems[3] end
-    lsc[pair[1]] = attrs
-  end
-  -- return lsc
-  return lsc
 end
 
 function M.mru_files(n) -- {{{1
@@ -457,10 +454,6 @@ function M.make() -- {{{1
     stderr:read_stop()
     stderr:close()
     handle:close()
-    -- if code ~= 0 then
-    --   api.nvim_err_writeln(string.format("Cmd '%s' failed with exit code: %d",
-    --                                      cmd, code))
-    -- end
   end
 
   if vim.fn.getqflist({title = ""}).title == expanded_cmd then

@@ -186,8 +186,11 @@ function M.create_scratch(lines, mods) -- {{{1
   end
   vim.cmd((mods or "").." new")
   vim.w.scratch = 1
-  local buf = api.nvim_create_buf(0, 1)
-  api.nvim_win_set_buf(0, buf)
+  local buf = api.nvim_win_get_buf(0)
+  vim.bo.buflisted = false
+  vim.bo.swapfile = false
+  vim.bo.buftype = "nofile"
+  vim.bo.bufhidden = "delete"
   api.nvim_buf_set_keymap(buf, "n", "q", "<Cmd>bdelete!<CR>",
                           {noremap = true, silent = true})
   api.nvim_buf_set_lines(buf, 0, -1, 0, lines or {})

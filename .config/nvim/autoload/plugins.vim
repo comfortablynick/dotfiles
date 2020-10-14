@@ -53,6 +53,7 @@ function! plugins#init() abort
     Pack 'rhysd/clever-f.vim'
     Pack 'tommcdo/vim-lion'
     Pack 'wellle/targets.vim'
+    Pack 'tommcdo/vim-exchange'
     Pack 'bfredl/nvim-miniyank'
     Pack 'antoinemadec/FixCursorHold.nvim'
 
@@ -75,10 +76,8 @@ function! plugins#init() abort
     " Vim Development {{{2
     Pack 'tpope/vim-scriptease'
     Pack 'mhinz/vim-lookup'
-    Pack 'bfredl/nvim-luadev'
     Pack 'tweekmonster/startuptime.vim'
     Pack 'dstein64/vim-startuptime'
-    Pack 'TravonteD/luajob'
 
     " Editor appearance {{{2
     Pack 'itchyny/lightline.vim'
@@ -104,7 +103,7 @@ function! plugins#init() abort
     Pack 'tpope/vim-fugitive'
     Pack 'junegunn/gv.vim'
     Pack 'iberianpig/tig-explorer.vim'
-    Pack 'TimUntersberger/neogit'           " Experimental
+    Pack 'TimUntersberger/neogit'
 
     " Snippets {{{2
     Pack 'SirVer/ultisnips'
@@ -119,6 +118,11 @@ function! plugins#init() abort
     Pack 'steelsojka/completion-buffers'
     Pack 'lifepillar/vim-mucomplete'
     Pack 'neoclide/coc.nvim', {'do': {-> coc#util#install()}}
+
+    " Lua/nvim {{{2
+    Pack 'bfredl/nvim-luadev'
+    Pack 'TravonteD/luajob'
+    Pack 'nvim-lua/plenary.nvim'
 
     " Training {{{2
     Pack 'tjdevries/train.nvim'

@@ -1,6 +1,5 @@
 local api = vim.api
 local uv = vim.loop
-local luajob = require"luajob"
 local util = require"util"
 local fn = require"fun"
 local Job = require"plenary.job"
@@ -53,57 +52,6 @@ function M.async_grep(term) -- {{{1
   }, vim.schedule_wrap(onexit))
   uv.read_start(stdout, onread)
   uv.read_start(stderr, onread)
-end
-
--- GIT
-
--- TODO: figure out how to return stdout,stderr from these
--- in simplest way possible
-function M.git_pull() -- {{{1
-  local cmd = luajob:new({
-    cmd = "git pull",
-    on_stdout = function(err, data)
-      if err then
-        print("error:", err)
-      elseif data then
-        local lines = vim.split(data, "\n")
-        print(lines[1])
-        vim.g.cmd_stdout = lines
-      end
-    end,
-    on_stderr = function(err, data)
-      if err then
-        print("error:", err)
-      elseif data then
-        local lines = vim.split(data, "\n")
-        print(lines[1])
-        vim.g.cmd_stderr = lines
-      end
-    end,
-  })
-  cmd:start()
-end
-
-function M.git_branch() -- {{{1
-  local git_branch = luajob:new({
-    cmd = "git branch",
-    on_stdout = function(err, data)
-      if err then
-        print("error:", err)
-      elseif data then
-        local lines = vim.split(data, "\n")
-        for _, line in ipairs(lines) do
-          if line:find("*") then
-            api.nvim_set_var("git_branch", (line:gsub("\n", "")))
-          end
-        end
-      end
-    end,
-    on_exit = function(code, signal)
-      print("job exited", vim.inspect(code), signal)
-    end,
-  })
-  git_branch.start()
 end
 
 -- Test lower level vim apis
@@ -259,8 +207,8 @@ function M.arun(cmd) -- {{{1
     command = bin,
     args = args,
     on_stdout = vim.schedule_wrap(on_read),
-    on_stderr = vim.schedule_wrap(on_read),
-    on_exit = vim.schedule_wrap(qf_open),
+    -- on_stderr = vim.schedule_wrap(on_read),
+    -- on_exit = vim.schedule_wrap(qf_open),
   }
   job:start()
   job:shutdown()
@@ -325,6 +273,9 @@ function M.sh(cmd, mods, cwd) -- {{{1
   local winnr = api.nvim_get_current_win()
   local bufnr = api.nvim_get_current_buf()
 
+  -- Return to previous window
+  vim.cmd[[wincmd p]]
+
   if cwd then
     assert(cwd and util.path.is_dir(cwd), "error: Invalid directory: " .. cwd)
     options.cwd = cwd
@@ -368,40 +319,32 @@ end
 
 function M.async_run(cmd, bang) -- {{{1
   local results = {}
-  local command = cmd
+  local args = vim.split(cmd, " ")
+  local command = table.remove(args, 1)
   local qf_size = vim.g.quickfix_size or 20
-  local on_read = function(err, data)
+  local on_read = function(err, lines)
     assert(not err, err)
-    if not data then return end
-    for _, line in ipairs(vim.split(data, "\n")) do
-      if line then table.insert(results, line) end
+    nvim.tbl_merge(results, lines)
+  end
+  local on_exit = function(code)
+    if code ~= 0 then
+      vim.g.job_status = "Failed"
+    else
+      vim.g.job_status = "Success"
+    end
+    if #results > 0 then
+      vim.fn.setqflist({}, "r", {title = "Command: " .. cmd, lines = results})
+      if bang == "!" then
+        print(results[1])
+      else
+        qf_open(qf_size)
+      end
+      vim.defer_fn(function()
+        if vim.g.job_status then vim.g.job_status = nil end
+      end, 10000)
     end
   end
-  local asyncjob = luajob:new({
-    cmd = command,
-    on_stdout = on_read,
-    on_stderr = on_read,
-    on_exit = function(code)
-      if code ~= 0 then
-        vim.g.job_status = "Failed"
-      else
-        vim.g.job_status = "Success"
-      end
-      if #results > 0 then
-        vim.fn.setqflist({}, "r", {title = "Command: " .. cmd, lines = results})
-        if bang == "!" then
-          print(results[1])
-        else
-          qf_open(qf_size)
-        end
-        vim.defer_fn(function()
-          if vim.g.job_status then vim.g.job_status = nil end
-        end, 10000)
-      end
-    end,
-    detach = false,
-  })
-  asyncjob.start()
+  M.spawn(command, {args = args}, on_read, vim.schedule_wrap(on_exit))
   vim.g.job_status = "Running"
 end
 

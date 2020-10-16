@@ -36,9 +36,7 @@ function M.async_grep(term) -- {{{1
     if result_ct > 0 then
       vim.cmd("cwindow " .. math.min(result_ct, 20))
     else
-      vim.cmd[[echohl WarningMsg]]
-      vim.cmd[[echo "grep: no results found"]]
-      vim.cmd[[echohl None]]
+      nvim.warn"grep: no results found"
     end
   end
 
@@ -97,7 +95,7 @@ function M.set_executable(file) -- {{{1
   end
   local orig_mode = stat.mode
   local orig_mode_oct = string.sub(string.format("%o", orig_mode), 4)
-  nvim.spawn("chmod", {args = {"u+x", file}}, function()
+  M.spawn("chmod", {args = {"u+x", file}}, nil, function()
     local new_mode = uv.fs_stat(file).mode
     local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
     local new_mode_str = get_perm_str(new_mode)
@@ -316,7 +314,7 @@ function M.async_run(cmd, bang) -- {{{1
   local qf_size = vim.g.quickfix_size or 20
   local on_read = function(err, lines)
     assert(not err, err)
-    nvim.tbl_merge(results, lines)
+    vim.list_extend(results, lines)
   end
   local on_exit = function(code)
     if code ~= 0 then

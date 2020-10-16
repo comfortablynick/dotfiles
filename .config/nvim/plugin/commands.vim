@@ -143,6 +143,6 @@ command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_file
 command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
 
 " Make :: async make {{{2
-" command! -nargs=0 -complete=file Make lua require'tools'.make()
+command! -nargs=0 -complete=file Make lua require'tools'.make()
 
 " vim:fdl=1:

@@ -47,8 +47,8 @@ function M.get_decoration_width(winnr) -- {{{1
   if vim.fn.has("signs") then
     local signcolumn = api.nvim_win_get_option(0, "signcolumn")
     local signcolumn_width = 2
-    if string.startswith(signcolumn, "yes") or
-      string.startswith(signcolumn, "auto") then
+    if vim.startswith(signcolumn, "yes") or
+      vim.startswith(signcolumn, "auto") then
       decoration_width = decoration_width + signcolumn_width
     end
   end

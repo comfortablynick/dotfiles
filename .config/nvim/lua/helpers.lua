@@ -388,19 +388,12 @@ function nvim.define_text_object(mapping, function_name) -- {{{2
 end
 
 -- Strings {{{1
-function string.startswith(s, n) -- {{{2
-  return s:sub(1, #n) == n
-end
-
-function string.endswith(self, str) -- {{{2
-  return self:sub(-(#str)) == str
-end
-
 function string.basename(str) -- {{{2
   local name = string.gsub(str, "(.*/)(.*)", "%2")
   return name
 end
 
+-- TODO: is this different from `vim.trim()`?
 function string.trim(str, chars) -- {{{2
   local patternescape = function(s)
     return s:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
@@ -410,39 +403,12 @@ function string.trim(str, chars) -- {{{2
   return str:match("^[" .. chars .. "]*(.-)[" .. chars .. "]*$")
 end
 
-local HANDLES = {}
--- Spawn utils {{{1
-local function clean_handles() -- {{{2
-  local n = 1
-  while n <= #HANDLES do
-    if HANDLES[n]:is_closing() then
-      table.remove(HANDLES, n)
-    else
-      n = n + 1
-    end
-  end
-end
-
-function nvim.spawn(cmd, params, onexit) -- {{{2
-  local handle, pid
-  handle, pid = vim.loop.spawn(cmd, params, function(code, signal)
-    if type(onexit) == "function" then onexit(code, signal) end
-    handle:close()
-    clean_handles()
-  end)
-  table.insert(HANDLES, handle)
-  return handle, pid
-end
-
-function nvim.timer_start(timeout, callback) -- {{{2
-  local timer = vim.loop.new_timer()
-  timer:start(timeout, 0, vim.schedule_wrap(
-                function()
-      timer:stop()
-      timer:close()
-      callback()
-    end))
-  return timer
+-- Echo {{{1
+function nvim.warn(text) -- {{{2
+  vim.validate{text = {text, "string"}}
+  vim.cmd"echohl WarningMsg"
+  vim.cmd("echo "..string.format("%q", text))
+  vim.cmd"echohl None"
 end
 
 -- Iterator utils (luafun is probably faster) {{{1
@@ -486,21 +452,6 @@ function nvim.tbl_foreach(t, fn, ...)
     for _, v in iter(t) do fn(v, ...) end
   end
   return t
-end
-
--- nvim.tbl_merge :: combine two tables {{{2
-function nvim.tbl_merge(a, b)
-  vim.validate{arg1 = {a, "table"}, arg2 = {b, "table"}}
-  if type(a) == "table" and type(b) == "table" then
-    for k, v in pairs(b) do
-      if type(v) == "table" and type(a[k] or false) == "table" then
-        nvim.tbl_merge(a[k], v)
-      else
-        a[k] = v
-      end
-    end
-  end
-  return a
 end
 
 -- Return module {{{1

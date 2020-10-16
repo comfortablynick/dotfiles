@@ -30,7 +30,7 @@ command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <
 
 " [Async]Run :: run a command asynchronously {{{2
 call map#set_cabbr('R', 'AsyncRun')
-call map#set_cabbr('grep', 'Grep')
+call map#set_cabbr('grep', 'silent grep!')
 
 " Lazy load AsyncRun
 command! -bang -nargs=+ -range=0 -complete=file AsyncRun

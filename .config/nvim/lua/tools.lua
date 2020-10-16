@@ -15,46 +15,38 @@ local qf_open = function(max_size) -- {{{1
 end
 
 function M.async_grep(term) -- {{{1
-  assert(term, "async grep: search term missing")
-  local stdout = uv.new_pipe(false)
-  local stderr = uv.new_pipe(false)
+  vim.validate{term = {term, "string"}}
   local grep = vim.o.grepprg
-  local search = vim.fn.expand(term)
-  local results = {}
-  local handle
+  local grep_args = vim.split(grep, " ")
+  local grep_prg = table.remove(grep_args, 1)
+  table.insert(grep_args, vim.fn.expand(term))
+  local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
+                                           table.concat(grep_args, " "))
 
-  local onread = function(err, data)
+  local on_read = function(err, data)
     assert(not err, err)
-    if not data then return end
-    for _, item in ipairs(vim.split(data, "\n")) do
-      if item ~= "" then table.insert(results, item) end
-    end
-  end
-  local onexit = function()
-    stdout:close()
-    stderr:close()
-    handle:close()
-    vim.fn.setqflist({}, "r", {
-      title = "[AsyncGrep] " .. grep .. " " .. search,
-      lines = results,
+    vim.fn.setqflist({}, "a", {
+      title = qf_title,
+      lines = data,
     })
-    local result_ct = #results
+  end
+
+  local on_exit = function()
+    local result_ct = #vim.fn.getqflist()
     if result_ct > 0 then
-      vim.cmd("cwindow " .. math.min(result_ct, 10))
+      vim.cmd("cwindow " .. math.min(result_ct, 20))
     else
-      print"grep: no results found"
+      vim.cmd[[echohl WarningMsg]]
+      vim.cmd[[echo "grep: no results found"]]
+      vim.cmd[[echohl None]]
     end
   end
-  local grepprg = vim.split(grep, " ")
-  handle = uv.spawn(table.remove(grepprg, 1), {
-    args = {search, unpack(grepprg)},
-    stdio = {nil, stdout, stderr},
-  }, vim.schedule_wrap(onexit))
-  uv.read_start(stdout, onread)
-  uv.read_start(stderr, onread)
+
+  vim.fn.setqflist({}, " ", {title = qf_title})
+  M.spawn(grep_prg, {args = grep_args}, vim.schedule_wrap(on_read),
+          vim.schedule_wrap(on_exit))
 end
 
--- Test lower level vim apis
 function M.scandir(path) -- {{{1
   local d = uv.fs_scandir(vim.fn.expand(path))
   local out = {}
@@ -174,14 +166,14 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   process, pid = uv.spawn(cmd, args, function(code)
     local handles = {stdin, stdout, stderr, process}
     for _, handle in ipairs(handles) do uv.close(handle) end
-    exit_cb(code)
+    if exit_cb ~= nil then exit_cb(code) end
   end)
   assert(process, pid)
 
   local on_read = function(err, data)
     if not data then return end
     local lines = vim.split(vim.trim(data), "\n")
-    read_cb(err, lines)
+    if read_cb ~= nil then read_cb(err, lines) end
   end
 
   for _, io in ipairs{stdout, stderr} do uv.read_start(io, on_read) end

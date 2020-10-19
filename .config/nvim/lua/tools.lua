@@ -21,14 +21,11 @@ function M.async_grep(term) -- {{{1
   local grep_prg = table.remove(grep_args, 1)
   table.insert(grep_args, vim.fn.expand(term))
   local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
-                                           table.concat(grep_args, " "))
+                                                table.concat(grep_args, " "))
 
   local on_read = function(err, data)
     assert(not err, err)
-    vim.fn.setqflist({}, "a", {
-      title = qf_title,
-      lines = data,
-    })
+    vim.fn.setqflist({}, "a", {title = qf_title, lines = data})
   end
 
   local on_exit = function()
@@ -357,20 +354,17 @@ function M.make() -- {{{1
   local makeprg = npcall(api.nvim_buf_get_option, 0, "makeprg") or vim.o.makeprg
   local efm = npcall(api.nvim_buf_get_option, 0, "errorformat") or
                 vim.o.errorformat
-  local stdout = vim.loop.new_pipe(false)
-  local stderr = vim.loop.new_pipe(false)
+  local stdout = uv.new_pipe(false)
+  local stderr = uv.new_pipe(false)
   local expanded_cmd = vim.fn.expandcmd(makeprg)
   local args = vim.split(expanded_cmd, " ")
   local cmd = table.remove(args, 1)
-  local options = {}
+  local options = {stdio = {nil, stdout, stderr}, args = args}
   local handle
-
-  options.stdio = {nil, stdout, stderr}
-  options.args = args
 
   local function has_non_whitespace(str) return str:match("[^%s]") end
 
-  local onread = function(err, data)
+  local on_read = function(err, data)
     assert(not err, err)
     if not data then return end
     local lines = vim.split(data, "\n")
@@ -381,11 +375,11 @@ function M.make() -- {{{1
     })
   end
 
-  local onexit = function()
-    stdout:read_stop()
-    stdout:close()
-    stderr:read_stop()
-    stderr:close()
+  local on_exit = function()
+    for _, io in ipairs{stdout, stderr} do
+      io:read_stop()
+      io:close()
+    end
     handle:close()
   end
 
@@ -395,9 +389,10 @@ function M.make() -- {{{1
     vim.fn.setqflist({}, " ")
   end
 
-  handle = uv.spawn(cmd, options, onexit)
-  stderr:read_start(vim.schedule_wrap(onread))
-  stdout:read_start(vim.schedule_wrap(onread))
+  handle = uv.spawn(cmd, options, on_exit)
+  for _, io in ipairs{stdout, stderr} do
+    io:read_start(vim.schedule_wrap(on_read))
+  end
 end
 
 -- Return module --{{{1

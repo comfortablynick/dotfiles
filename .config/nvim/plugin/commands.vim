@@ -123,26 +123,30 @@ endif
 " Using python pformat (handles lists better)
 command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
-" nvim-only after this line {{{1
+" nvim-only {{{1
 " [H]elp :: floating help window {{{2
-if !has('nvim') | finish | endif
-command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-call map#set_cabbr('H', 'Help')
+if has('nvim')
+    command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
+    call map#set_cabbr('H', 'Help')
 
-" LspDisable :: stop active lsp clients {{{2
-" command! Lsp
+    " LspDisable :: stop active lsp clients {{{2
+    " command! Lsp
 
-" Cmd :: test version of lua async command run {{{2
-command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
-" command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
+    " Cmd :: test version of lua async command run {{{2
+    command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
 
-" MRU :: most recently used files {{{2
-command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>, <mods>))
+    " Run :: lua version of AsyncRun {{{2
+    command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
 
-" Grep :: async grep {{{2
-command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
+    " MRU :: most recently used files {{{2
+    command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>, <mods>))
 
-" Make :: async make {{{2
-command! -nargs=0 -complete=file Make lua require'tools'.make()
+    " Grep :: async grep {{{2
+    command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
+
+    " Make :: async make {{{2
+    command! -nargs=0 -complete=file Make lua require'tools'.make()
+
+endif
 
 " vim:fdl=1:

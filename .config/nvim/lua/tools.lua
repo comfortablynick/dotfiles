@@ -156,13 +156,19 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local args = {stdio = {stdin, stdout, stderr}, args = opts.args or {}}
-  local process, pid = nil, nil
+  local process, pid
 
-  process, pid = uv.spawn(cmd, args, function(code)
-    local handles = {stdin, stdout, stderr, process}
-    for _, handle in ipairs(handles) do uv.close(handle) end
+  local on_exit = function(code)
+    local handles = {stdin, stdout, stderr}
+    for _, handle in ipairs(handles) do
+      handle:read_stop()
+      handle:close()
+    end
+    process:close()
     if exit_cb ~= nil then exit_cb(code) end
-  end)
+  end
+
+  process, pid = uv.spawn(cmd, args, on_exit)
   assert(process, pid)
 
   local on_read = function(err, data)
@@ -174,9 +180,9 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   for _, io in ipairs{stdout, stderr} do uv.read_start(io, on_read) end
 
   if opts.stream then
-    uv.write(stdin, opts.stream, function(err)
+    stdin:write(opts.stream, function(err)
       assert(not err, err)
-      uv.shutdown(stdin, function(err) assert(not err, err) end)
+      stdin:shutdown(function(err) assert(not err, err) end)
     end)
   end
 end
@@ -213,27 +219,26 @@ function M.run(cmd) -- {{{1
   options.stdio = {nil, stdout, stderr}
   options.args = args
 
-  local onread = function(err, data)
+  local on_read = function(err, data)
     assert(not err, err)
     if not data then return end
     local lines = vim.split(vim.trim(data), "\n")
     vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = lines})
   end
-  local onexit = function(code)
-    stdout:close()
-    stderr:close()
+  local on_exit = function(code)
+    for _, io in ipairs{stdout, stderr} do
+      io:read_stop()
+      io:close()
+    end
     handle:close()
     if code ~= 0 then
       vim.g.job_status = "Failed"
     else
       vim.g.job_status = "Success"
     end
-    local results = #vim.fn.getqflist()
-    if results > 0 then vim.cmd("copen" .. math.min(results, 20)) end
+    qf_open()
     vim.defer_fn(function()
-
-      vim.cmd("autocmd CursorMoved,CursorMovedI * ++once " ..
-                "if exists('g:job_status') | unlet g:job_status | endif")
+      vim.cmd("autocmd CursorMoved,CursorMovedI * ++once unlet! g:job_status")
     end, 10000)
   end
 
@@ -242,10 +247,11 @@ function M.run(cmd) -- {{{1
                    vim.fn.getqflist({title = ""}).title == bin and "r" or " ")
 
   -- Start process
-  handle = uv.spawn(bin, options, vim.schedule_wrap(onexit))
+  handle = uv.spawn(bin, options, vim.schedule_wrap(on_exit))
   vim.g.job_status = "Running"
-  uv.read_start(stdout, vim.schedule_wrap(onread))
-  uv.read_start(stderr, vim.schedule_wrap(onread))
+  for _, io in ipairs{stdout, stderr} do
+    io:read_start(vim.schedule_wrap(on_read))
+  end
 end
 
 function M.sh(cmd, mods, cwd) -- {{{1
@@ -308,10 +314,9 @@ function M.async_run(cmd, bang) -- {{{1
   local results = {}
   local args = vim.split(cmd, " ")
   local command = table.remove(args, 1)
-  local qf_size = vim.g.quickfix_size or 20
   local on_read = function(err, lines)
     assert(not err, err)
-    vim.list_extend(results, lines)
+    vim.fn.setqflist({}, "a", {title = cmd, lines = lines})
   end
   local on_exit = function(code)
     if code ~= 0 then
@@ -319,19 +324,22 @@ function M.async_run(cmd, bang) -- {{{1
     else
       vim.g.job_status = "Success"
     end
-    if #results > 0 then
-      vim.fn.setqflist({}, "r", {title = "Command: " .. cmd, lines = results})
-      if bang == "!" then
-        print(results[1])
-      else
-        qf_open(qf_size)
-      end
-      vim.defer_fn(function()
-        if vim.g.job_status then vim.g.job_status = nil end
-      end, 10000)
+    if bang == "!" then
+      print(results[1])
+    else
+      qf_open()
     end
+    vim.defer_fn(function()
+      if vim.g.job_status then vim.g.job_status = nil end
+    end, 10000)
   end
-  M.spawn(command, {args = args}, on_read, vim.schedule_wrap(on_exit))
+  M.spawn(command, {args = args}, vim.schedule_wrap(on_read),
+          vim.schedule_wrap(on_exit))
+  if vim.fn.getqflist({title = ""}).title == cmd then
+    vim.fn.setqflist({}, "r")
+  else
+    vim.fn.setqflist({}, " ")
+  end
   vim.g.job_status = "Running"
 end
 
@@ -375,12 +383,20 @@ function M.make() -- {{{1
     })
   end
 
-  local on_exit = function()
+  local on_exit = function(code)
     for _, io in ipairs{stdout, stderr} do
       io:read_stop()
       io:close()
     end
     handle:close()
+    if code ~= 0 then
+      vim.g.job_status = "Failed"
+    else
+      vim.g.job_status = "Success"
+    end
+    vim.defer_fn(function()
+      vim.cmd("autocmd CursorMoved,CursorMovedI * ++once unlet! g:job_status")
+    end, 10000)
   end
 
   if vim.fn.getqflist({title = ""}).title == expanded_cmd then
@@ -389,7 +405,8 @@ function M.make() -- {{{1
     vim.fn.setqflist({}, " ")
   end
 
-  handle = uv.spawn(cmd, options, on_exit)
+  handle = uv.spawn(cmd, options, vim.schedule_wrap(on_exit))
+  vim.g.job_status = "Running"
   for _, io in ipairs{stdout, stderr} do
     io:read_start(vim.schedule_wrap(on_read))
   end

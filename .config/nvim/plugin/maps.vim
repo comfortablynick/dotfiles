@@ -14,9 +14,25 @@ nnoremap qqq :q!<CR>
 nnoremap QQ ZQ
 nnoremap Y y$
 
+" Run the last command
+nnoremap <leader><leader>c :<up>
+
 " Clears hlsearch after doing a search, otherwise <CR>
 nnoremap <expr> <CR> {-> v:hlsearch ? ":nohlsearch\<CR>" : "\<CR>"}()
 tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
+
+" Enhanced up/down movement {j,k} {{{2
+" For long, wrapped lines
+nnoremap k gk
+" For long, wrapped lines
+nnoremap j gj
+
+" For moving quickly up and down
+" https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/plugin/keymaps.vim
+" Goes to the first line above/below that isn't whitespace
+" Thanks to: http://vi.stackexchange.com/a/213
+nnoremap gj :let _=&lazyredraw<CR>:set lazyredraw<CR>/\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
+nnoremap gk :let _=&lazyredraw<CR>:set lazyredraw<CR>?\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 
 " Insert mode <Esc> maps {{{2
 inoremap kj <Esc>`^

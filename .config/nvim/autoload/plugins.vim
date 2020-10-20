@@ -136,7 +136,7 @@ endfunction
 " Helper functions {{{1
 " fzf_post :: fzf update hook {{{2
 function! s:fzf_post(plugin) abort
-    execute 'AsyncRun cd' a:plugin['dir']
+    execute 'Run cd' a:plugin['dir']
         \ '&& ./install --bin'
         \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
         \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'

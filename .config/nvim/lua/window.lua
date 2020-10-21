@@ -186,6 +186,8 @@ function M.create_scratch(lines, mods) -- {{{1
   end
   vim.cmd((mods or "").." new")
   vim.w.scratch = 1
+  vim.wo.list = false
+  vim.wo.relativenumber = false
   local buf = api.nvim_win_get_buf(0)
   vim.bo.buflisted = false
   vim.bo.swapfile = false

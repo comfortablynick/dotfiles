@@ -156,11 +156,10 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
   local args = {stdio = {stdin, stdout, stderr}, args = opts.args or {}}
-  local process, pid
+  local process
 
   local on_exit = function(code)
-    local handles = {stdin, stdout, stderr}
-    for _, handle in ipairs(handles) do
+    for _, handle in ipairs{stdout, stderr} do
       handle:read_stop()
       handle:close()
     end
@@ -168,8 +167,7 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
     if exit_cb ~= nil then exit_cb(code) end
   end
 
-  process, pid = uv.spawn(cmd, args, on_exit)
-  assert(process, pid)
+  process = uv.spawn(cmd, args, on_exit)
 
   local on_read = function(err, data)
     if not data then return end
@@ -177,7 +175,7 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
     if read_cb ~= nil then read_cb(err, lines) end
   end
 
-  for _, io in ipairs{stdout, stderr} do uv.read_start(io, on_read) end
+  for _, io in ipairs{stdout, stderr} do io:read_start(on_read) end
 
   if opts.stream then
     stdin:write(opts.stream, function(err)
@@ -254,31 +252,85 @@ function M.run(cmd) -- {{{1
   end
 end
 
-function M.sh(cmd, mods, cwd) -- {{{1
-  require"window".create_scratch({}, mods or "")
-  local args = vim.split(cmd, " ")
+-- function M.sh() :: Spawn a new job and put output to scratch window {{{1
+-- @param o table
+-- @field o.cmd string            : Command to run (will be split into args)
+-- @field o.cwd string            : Current working directory (will be expanded by vim)
+-- @field o.mods string           : Mods for scratch window
+-- @field o.close_on_success bool : Close scratch window if command returns 0
+function M.sh(o)
+  require"window".create_scratch({}, o.mods or "20")
+  vim.wo.number = false
+  local args = vim.split(o.cmd, " ")
   local bin = table.remove(args, 1)
-  local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
-  local options = {args = args, stdio = {stdin, stdout, stderr}}
+  local options = {args = args, stdio = {nil, stdout, stderr}}
+  local handle, lines
+  local output_buf = ""
 
   local winnr = api.nvim_get_current_win()
   local bufnr = api.nvim_get_current_buf()
-
   -- Return to previous window
   vim.cmd[[wincmd p]]
 
-  if cwd then
-    assert(cwd and util.path.is_dir(cwd), "error: Invalid directory: " .. cwd)
-    options.cwd = cwd
+  if o.cwd ~= nil then
+    options.cwd = vim.fn.expand(o.cwd)
+    assert(util.path.is_dir(options.cwd),
+           "error: Invalid directory: " .. options.cwd)
   end
 
-  -- luacheck: no unused
-  local handle
-  handle = uv.spawn(bin, options, function()
-    for _, io in ipairs(options.stdio) do io:close() end
-  end)
+  local update_chunk = function(err, chunk)
+    assert(not err, err)
+    if chunk then
+      output_buf = output_buf .. chunk
+      lines = vim.split(output_buf, "\n", true)
+      for i, line in ipairs(lines) do
+        -- Scrub ANSI color codes
+        lines[i] = line:gsub("\27%[[0-9;mK]+", "")
+      end
+      api.nvim_buf_set_option(bufnr, "modifiable", true)
+      api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+      api.nvim_buf_set_option(bufnr, "modifiable", false)
+      api.nvim_buf_set_option(bufnr, "modified", false)
+      if api.nvim_win_is_valid(winnr) then
+        api.nvim_win_set_cursor(winnr, {#lines, 0})
+      end
+    end
+  end
+
+  local close_buf = function() vim.cmd("silent bwipeout! " .. bufnr) end
+
+  local on_exit = function(code, signal)
+    for _, io in ipairs{stdout, stderr} do
+      io:read_stop()
+      io:close()
+    end
+    handle:close()
+    vim.cmd[[au CursorMoved,CursorMovedI * ++once lua vim.defer_fn(function() nvim.unlet("job_status") end, 3000)]]
+    if code == 0 and signal == 0 then
+      vim.g.job_status = "Success"
+      if o.close_on_success then
+        vim.schedule(close_buf)
+        return
+      end
+    else
+      vim.g.job_status = "Failed"
+    end
+    -- Trim buffer if needed
+    local trimmed_buf = vim.trim(output_buf)
+    if trimmed_buf ~= output_buf then
+      output_buf = ""
+      update_chunk(nil, trimmed_buf)
+    end
+    update_chunk(nil, string.format(
+                   "\n\n[Process exited with code %d / signal %d]", code, signal))
+    -- Reduce scratch buffer size if possible
+    if api.nvim_win_get_height(winnr) > #lines then
+      api.nvim_win_set_height(winnr, #lines)
+    end
+  end
+  handle = uv.spawn(bin, options, vim.schedule_wrap(on_exit))
 
   -- If the buffer closes, then kill our process.
   api.nvim_buf_attach(bufnr, false, {
@@ -287,27 +339,9 @@ function M.sh(cmd, mods, cwd) -- {{{1
     end,
   })
 
-  local output_buf = ""
-  local update_chunk = vim.schedule_wrap(
-                         function(err, chunk)
-      assert(not err, err)
-      if chunk then
-        output_buf = output_buf .. chunk
-        local lines = vim.split(output_buf, "\n", true)
-        api.nvim_buf_set_option(bufnr, "modifiable", true)
-        api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-        api.nvim_buf_set_option(bufnr, "modifiable", false)
-        api.nvim_buf_set_option(bufnr, "modified", false)
-        if api.nvim_win_is_valid(winnr) then
-          api.nvim_win_set_cursor(winnr, {#lines, 0})
-        end
-      end
-    end)
-  stdout:read_start(update_chunk)
-  stderr:read_start(update_chunk)
-  stdin:write(cmd)
-  stdin:write("\n")
-  stdin:shutdown()
+  for _, io in ipairs{stdout, stderr} do
+    io:read_start(vim.schedule_wrap(update_chunk))
+  end
 end
 
 function M.async_run(cmd, bang) -- {{{1

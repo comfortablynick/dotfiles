@@ -149,7 +149,6 @@ set wildignore+=__pycache__                                     " Ignore in glob
 set list                                                        " Show extra characters
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title
-" set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:~:.:h\")})%)%(\ %a%)
 let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2

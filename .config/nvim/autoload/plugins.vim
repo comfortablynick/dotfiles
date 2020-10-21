@@ -136,10 +136,15 @@ endfunction
 " Helper functions {{{1
 " fzf_post :: fzf update hook {{{2
 function! s:fzf_post(plugin) abort
-    execute 'Run cd' a:plugin['dir']
-        \ '&& ./install --bin'
-        \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
-        \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
+    " execute 'Run cd' a:plugin['dir']
+    "     \ '&& ./install --bin'
+    "     \ '&& ln -sf $(pwd)/bin/* ~/.local/bin'
+    "     \ '&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
+    let l:cmd = './install --bin'
+        \ ..' && ln -sf $(pwd)/bin/* ~/.local/bin'
+        \ ..' && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
+    " call Sh('./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1', a:plugin['dir'])
+    call v:lua.require('tools').sh({'cmd': l:cmd, 'cwd': a:plugin['dir']})
 endfunction
 
 " plugins#lazy_run :: Lazy-load a package on a command or funcref {{{2

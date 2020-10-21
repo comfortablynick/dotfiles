@@ -411,6 +411,12 @@ function nvim.warn(text) -- {{{2
   vim.cmd"echohl None"
 end
 
+-- Misc {{{1
+-- nvim.unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`)
+function nvim.unlet(var_name, var_scope)
+  pcall(function() vim[var_scope or "g"][var_name] = nil end)
+end
+
 -- Iterator utils (luafun is probably faster) {{{1
 -- Helper functions {{{2
 -- From: https://github.com/rxi/lume

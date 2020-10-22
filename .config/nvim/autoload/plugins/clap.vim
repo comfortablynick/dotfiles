@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_clap' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Clap setup {{{1
 let s:using_icons = v:false
 

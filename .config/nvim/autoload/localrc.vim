@@ -1,14 +1,4 @@
-" ====================================================
-" Filename:    autoload/localrc.vim
-" Description: Load project vimrc
-" Author:      Nick Murphy
-" License:     MIT
 " Acknowledgments: Code from thinca <thinca+vim@gmail.com> (zlib License)
-" Last Change: 2020-02-12 17:07:45 CST
-" ====================================================
-if exists('g:loaded_autoload_localrc') | finish | endif
-let g:loaded_autoload_localrc = 1
-
 let b:localrc_loaded = 0
 let b:localrc_files = []
 
@@ -19,75 +9,75 @@ function! localrc#load_from_env() abort
 endfunction
 
 function! localrc#load(fnames, ...) abort
-    for file in localrc#search(a:fnames,
+    for l:file in localrc#search(a:fnames,
         \ 1 <= a:0 ? a:1 : expand('%:p:h'),
         \ 2 <= a:0 ? a:2 : -1)
-        if index(b:localrc_files, file) < 0
+        if index(b:localrc_files, l:file) < 0
             source `=file`
             let b:localrc_loaded += 1
-            let b:localrc_files += [file]
+            let b:localrc_files += [l:file]
         endif
     endfor
 endfunction
 
 function! localrc#search(fnames, ...) abort
-    let path = 1 <= a:0 ? a:1 : expand('%:p:h')
-    if empty(a:fnames) || !isdirectory(path)
+    let l:path = 1 <= a:0 ? a:1 : expand('%:p:h')
+    if empty(a:fnames) || !isdirectory(l:path)
         return []
     endif
 
-    let depth = 2 <= a:0 ? a:2 : -1
-    let targets = []
-    let dir = fnamemodify(path, ':p:h')
-    let updir = ''
-    while depth != 0 && dir !=# updir
-        let targets = s:match_files(dir, a:fnames) + targets
-        let updir = dir
-        let dir = fnamemodify(dir, ':h')
-        if (has('win32') || has('win64')) && dir =~? '^\\\\[^\\]\+$'
+    let l:depth = 2 <= a:0 ? a:2 : -1
+    let l:targets = []
+    let l:dir = fnamemodify(l:path, ':p:h')
+    let l:updir = ''
+    while l:depth != 0 && l:dir !=# l:updir
+        let l:targets = s:match_files(l:dir, a:fnames) + l:targets
+        let l:updir = l:dir
+        let l:dir = fnamemodify(l:dir, ':h')
+        if (has('win32') || has('win64')) && l:dir =~? '^\\\\[^\\]\+$'
             break
         endif
-        let depth -= 1
+        let l:depth -= 1
     endwhile
-    return targets
+    return l:targets
 endfunction
 
 function! s:match_files(path, fname) abort
     if type(a:fname) == type([])
-        let files = []
-        for f in a:fname
-            let files += s:match_files(a:path, f)
+        let l:files = []
+        for l:f in a:fname
+            let l:files += s:match_files(a:path, l:f)
         endfor
-        return s:uniq(files)
+        return s:uniq(l:files)
     endif
 
-    let path = escape(a:path, '*?[,')
+    let l:path = escape(a:path, '*?[,')
     if a:fname[0] ==# '/'
-        let files = split(globpath(path, '/.*', 1), "\n")
-            \         + split(globpath(path, '/*' , 1), "\n")
-        let pat = a:fname[1:]
-        call filter(map(files, {_,v -> fnamemodify(v, ":t")}), {_,v -> v =~# pat})
+        let l:files = split(globpath(l:path, '/.*', 1), "\n")
+            \         + split(globpath(l:path, '/*' , 1), "\n")
+        let l:pat = a:fname[1:]
+        call filter(map(l:files, {_,v -> fnamemodify(v, ':t')}), {_,v -> v =~# l:pat})
 
     else
-        let files = map(split(globpath(path, a:fname, 1), "\n"),
+        let l:files = map(split(globpath(l:path, a:fname, 1), "\n"),
             \               'fnamemodify(v:val, ":t")')
     endif
 
-    return filter(map(files, {_,v -> a:path."/".v}), {_,v -> filereadable(v)})
+    return filter(map(l:files, {_,v -> a:path..'/'..v}), {_,v -> filereadable(v)})
 endfunction
 
 " - string only.
 " - can not treat a empty string.
 function! s:uniq(list) abort
-    let i = 0
-    let len = len(a:list)
-    let seen = {}
-    while i < len
-        if has_key(seen, a:list[i])
-            call remove(a:list, i)
+    let l:i = 0
+    let l:len = len(a:list)
+    let l:seen = {}
+    while l:i < l:len
+        if has_key(l:seen, a:list[l:i])
+            call remove(a:list, l:i)
         else
-            let seen[a:list[i]] = 1
-            let i += 1
+            let l:seen[a:list[l:i]] = 1
+            let l:i += 1
         endif
     endwhile
     return a:list

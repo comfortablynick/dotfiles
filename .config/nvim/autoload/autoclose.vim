@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/autoclose.vim
-" Description: Autoclose windows if they are last ones open
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_autoclose' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! autoclose#next_normal_window() abort
     for l:i in range(1, winnr('$'))
         let l:buf = winbufnr(l:i)

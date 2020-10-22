@@ -1,8 +1,5 @@
 " Quickfix window functions
 " Toggle quickfix window
-let s:guard = 'g:loaded_autoload_quickfix' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let s:quickfix_size = 20
 
 " Show :scriptnames in quickfix list and optionally filter

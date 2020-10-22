@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_fzy' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " fzy#command() :: Pipe command into fzy and execute vim command with choice
 function! fzy#command(choice_command, vim_command)
     let l:file = tempname()

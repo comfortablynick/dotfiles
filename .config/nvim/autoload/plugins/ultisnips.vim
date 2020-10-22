@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_ultisnips' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#ultisnips#pre() abort
     " Remap UltiSnips triggers so they don't interfere with mucomplete
     let g:UltiSnipsExpandTrigger = '<C-s>'

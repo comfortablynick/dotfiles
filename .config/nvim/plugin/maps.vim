@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/maps.vim
-" Description: General keymaps
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_maps' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " General {{{1
 nnoremap U <C-r>
 nnoremap qq :x<CR>

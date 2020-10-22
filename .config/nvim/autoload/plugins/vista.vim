@@ -1,5 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_vista' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
 scriptencoding utf-8
 
 function! s:vista_fzf_preview_width(basewidth) abort

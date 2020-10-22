@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_sneak' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#sneak#pre() abort
     let g:sneak#label = 1
 

@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_floaterm_wrapper_fzy' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! floaterm#wrapper#fzy#(...) abort
     let s:fzy_temp = tempname()
     let l:cmd = 'fd -t f -HL | fzy -l 30 -p "'

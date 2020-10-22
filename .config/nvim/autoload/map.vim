@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/map.vim
-" Description: Utilities to assist with mapping/unmapping
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_map' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " map#save() :: Save all settings of a map for later restoring {{{1
 function! map#save(keys, mode, global) abort
     let l:mappings = {}

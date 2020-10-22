@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_netrw' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:netrw_set_opts = 1
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4

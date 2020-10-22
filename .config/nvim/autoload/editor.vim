@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/editor.vim
-" Description: Editor behavior functions
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_editor' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " editor#restore_cursor_after() :: Restore cursor position after motion {{{1
 function! editor#restore_cursor_after(motion) abort
     let l:wv = winsaveview()

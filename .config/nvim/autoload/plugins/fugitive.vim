@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_fugitive' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 nnoremap <silent><Leader>gc :Git commit<CR>
 nnoremap <silent><Leader>gp :Git push<CR>
 nnoremap <silent><Leader>gd :Gvdiffsplit!<CR>

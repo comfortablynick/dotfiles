@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_neoformat' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Global Settings
 let g:neoformat_try_formatprg = 1        " Use formatprg if defined
 let g:neoformat_run_all_formatters = 1   " By default, stops after first formatter succeeds

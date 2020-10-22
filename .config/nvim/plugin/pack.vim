@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/pack.vim
-" Description: Interface with packages and package manager
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_pack' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:package_manager = 'vim-packager'
 
 let g:package_defer_time = 300

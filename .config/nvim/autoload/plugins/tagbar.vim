@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_tagbar' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#tagbar#pre() abort
     let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
     let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened

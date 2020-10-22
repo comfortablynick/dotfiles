@@ -1,11 +1,3 @@
-" ====================================================
-" Filename:    autoload/statusline.vim
-" Description: Collection of functions for statusline components
-" Author:      Nick Murphy
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_statusline' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
 scriptencoding utf-8
 
 " Linter indicators {{{2

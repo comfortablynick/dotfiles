@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_easymotion' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#easymotion#pre() abort
     " <Leader>f{char} to move to {char}
     map  f <Plug>(easymotion-bd-f)

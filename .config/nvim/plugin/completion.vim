@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/completion.vim
-" Description: Autocompletion plugin handling
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_completion' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:completion_filetypes = {
     \ 'coc': [
     \ ],

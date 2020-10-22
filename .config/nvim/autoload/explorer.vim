@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/explorer.vim
-" Description: File explorer settings
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_explorer' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Allow for netrw to be toggled
 function! s:toggle_netrw() abort
     if get(g:, 'NetrwIsOpen', 0)

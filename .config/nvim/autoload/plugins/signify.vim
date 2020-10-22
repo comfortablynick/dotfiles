@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_signify' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! s:signify_hunk_next(count) abort
   let oldpos = getcurpos()
   call sy#jump#next_hunk(a:count)

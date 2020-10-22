@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_gitgutter' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#gitgutter#pre() abort
     let g:gitgutter_map_keys = 0
     highlight link GitGutterAdd    DiffAdd

@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_coc' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#coc#pre() abort "{{{1
     " let g:coc_force_debug = 1
     let g:coc_filetype_map = {

@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_asyncrun' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:asyncrun_open = 0                                         " Show quickfix when executing command
 let g:asyncrun_bell = 0                                         " Ring bell when job finished
 let g:quickfix_run_scroll = 0                                   " Scroll when running code

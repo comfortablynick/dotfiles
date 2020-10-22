@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/fold.vim
-" Description: Fold-related operations
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_fold' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 nnoremap <silent><Space> :silent! exe 'normal! za'<CR>
 nnoremap <silent>za zA
 

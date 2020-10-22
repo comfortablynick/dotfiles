@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_mucomplete' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#mucomplete#pre() abort
     set completeopt+=menuone,noselect
     set shortmess+=c

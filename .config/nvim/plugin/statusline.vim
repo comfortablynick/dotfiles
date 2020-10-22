@@ -1,13 +1,3 @@
-" ====================================================
-" Filename:    plugin/statusline.vim
-" Description: Custom statusline
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-"              (adapted from code from Kabbaj Amine
-"               - amine.kabb@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_statusline' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
 scriptencoding utf-8
 
 " Variables {{{

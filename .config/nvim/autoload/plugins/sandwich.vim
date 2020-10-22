@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_sandwich' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 function! plugins#sandwich#pre() abort
     " Use vim-surround keybindings
     " See https://github.com/machakann/vim-sandwich/blob/master/macros/sandwich/keymap/surround.vim

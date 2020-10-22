@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/runner.vim
-" Description: Run commands located in justfile
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_runner' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " TODO: replace with framework like asynctasks?
 let g:use_term = 0                                              " Use term instead of Vtr/AsyncRun
 let g:run_cmd_in = 'vtr'

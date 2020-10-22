@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/util.vim
-" Description: Utility functions
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_util' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " util#capture() :: Capture output of command and return as list {{{1
 function util#capture(cmd)
     if a:cmd =~# '^!'

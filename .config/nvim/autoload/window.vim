@@ -1,5 +1,3 @@
-let s:guard = 'g:loaded_autoload_window' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
 scriptencoding utf-8
 
 " Get usable width of window

@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/plugins.vim
-" Description: Load vim plugins and package manager
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_plugins' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Plugin definitions {{{1
 " Vim-Packager init {{{2
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
@@ -83,7 +74,7 @@ function! plugins#init() abort
     Pack 'itchyny/lightline.vim'
     Pack 'mengelbrecht/lightline-bufferline'
     Pack 'NLKNguyen/papercolor-theme'
-    Pack 'gruvbox-community/gruvbox'
+    Pack 'lifepillar/vim-gruvbox8'
     Pack 'ryanoasis/vim-devicons'
 
     " Syntax/filetype {{{2

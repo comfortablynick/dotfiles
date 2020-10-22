@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_defx' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 augroup autoload_plugins_defx
     autocmd!
     autocmd FileType defx call s:defx_set_buffer_maps()

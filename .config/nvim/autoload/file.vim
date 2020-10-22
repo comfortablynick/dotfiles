@@ -1,11 +1,3 @@
-" ====================================================
-" Filename:    autoload/file.vim
-" Description: File/folder operations
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2020-04-27 13:44:45 CDT
-" ====================================================
-
 " Get the root path based on git or parent folder
 function! file#get_project_root() abort
     " Check if this has already been defined

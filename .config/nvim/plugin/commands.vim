@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/commands.vim
-" Description: General commands
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_commands' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " General {{{1
 " S :: save if file has changed and reload vimrc {{{2
 command! S update | silent! unlet {s:guard} | source $MYVIMRC

@@ -1,13 +1,3 @@
-" ====================================================
-" Filename:    plugin/autoclose.vim
-" Description: Autoclose windows if they are last ones open
-" Author:      Nick Murphy
-" License:     MIT
-" Last Change: 2020-02-28 18:52:38 CST
-" ====================================================
-let s:guard = 'g:loaded_plugin_autoclose' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Autoclose vim if last window is not a file
 " Original script from: https://stackoverflow.com/a/39307414/10370751
 let g:autoclose_buftypes = [

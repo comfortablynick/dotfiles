@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_floaterm' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:floaterm_shell = $SHELL
 let g:floaterm_wintitle = v:true
 let g:floaterm_autoclose = v:true

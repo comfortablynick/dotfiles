@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    autoload/syntax
-" Description: Syntax helpers
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_autoload_syntax' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Enable embedded syntax
 function! syntax#enable_code_snip(filetype,start,end,textSnipHl) abort
     let l:ft=toupper(a:filetype)

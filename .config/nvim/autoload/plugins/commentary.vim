@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_commentary' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 xmap <Leader>c          <Plug>Commentary
 nmap <Leader>c          <Plug>Commentary
 omap <Leader>c          <Plug>Commentary

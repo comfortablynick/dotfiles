@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_ale' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 scriptencoding utf-8
 
 " Main options

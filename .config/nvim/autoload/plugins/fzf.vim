@@ -1,6 +1,3 @@
-let s:guard = 'g:loaded_autoload_plugins_fzf' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " FZF Config {{{1
 " Layout {{{2
 let g:fzf_prefer_tmux = 0

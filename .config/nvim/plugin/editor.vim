@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/editor.vim
-" Description: Editor behavior settings
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_editor' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 " Maps {{{1
 " Format buffer and restore cursor position {{{2
 nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>

@@ -1,12 +1,3 @@
-" ====================================================
-" Filename:    plugin/explorer.vim
-" Description: Project file explorers
-" Author:      Nick Murphy (comfortablynick@gmail.com)
-" License:     MIT
-" ====================================================
-let s:guard = 'g:loaded_plugin_explorer' | if exists(s:guard) | finish | endif
-let {s:guard} = 1
-
 let g:use_explorer = 'rnvimr'
 let g:use_explorer_coc = 'rnvimr'
 

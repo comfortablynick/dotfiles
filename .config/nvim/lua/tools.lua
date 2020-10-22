@@ -2,7 +2,7 @@ local api = vim.api
 local uv = vim.loop
 local util = require"util"
 local fn = require"fun"
-local Job = require"plenary.job"
+-- local Job = require"plenary.job"
 local M = {}
 
 local qf_open = function(max_size) -- {{{1
@@ -185,87 +185,20 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   end
 end
 
-function M.arun(cmd) -- {{{1
-  local args = vim.split(cmd, " ")
-  local bin = table.remove(args, 1)
-  local on_read = function(err, data)
-    assert(not err, err)
-    vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = data})
-  end
-  -- M.spawn(bin, {args = args}, vim.schedule_wrap(on_read),
-  --         vim.schedule_wrap(on_close))
-  local job = Job:new{
-    command = bin,
-    args = args,
-    on_stdout = vim.schedule_wrap(on_read),
-    -- on_stderr = vim.schedule_wrap(on_read),
-    -- on_exit = vim.schedule_wrap(qf_open),
-  }
-  job:start()
-  job:shutdown()
-  -- return job:stderr_result()
-end
-
-function M.run(cmd) -- {{{1
-  -- Test run command using libuv api
-  local stdout = uv.new_pipe(false)
-  local stderr = uv.new_pipe(false)
-  local args = vim.split(cmd, " ")
-  local bin = table.remove(args, 1)
-  local handle
-  local options = {}
-  options.stdio = {nil, stdout, stderr}
-  options.args = args
-
-  local on_read = function(err, data)
-    assert(not err, err)
-    if not data then return end
-    local lines = vim.split(vim.trim(data), "\n")
-    vim.fn.setqflist({}, "a", {title = "Command: " .. cmd, lines = lines})
-  end
-  local on_exit = function(code)
-    for _, io in ipairs{stdout, stderr} do
-      io:read_stop()
-      io:close()
-    end
-    handle:close()
-    if code ~= 0 then
-      vim.g.job_status = "Failed"
-    else
-      vim.g.job_status = "Success"
-    end
-    qf_open()
-    vim.defer_fn(function()
-      vim.cmd("autocmd CursorMoved,CursorMovedI * ++once unlet! g:job_status")
-    end, 10000)
-  end
-
-  -- Clear quickfix
-  vim.fn.setqflist({},
-                   vim.fn.getqflist({title = ""}).title == bin and "r" or " ")
-
-  -- Start process
-  handle = uv.spawn(bin, options, vim.schedule_wrap(on_exit))
-  vim.g.job_status = "Running"
-  for _, io in ipairs{stdout, stderr} do
-    io:read_start(vim.schedule_wrap(on_read))
-  end
-end
 
 -- function M.sh() :: Spawn a new job and put output to scratch window {{{1
 -- @param o table
 -- @field o.cmd string            : Command to run (will be split into args)
 -- @field o.cwd string            : Current working directory (will be expanded by vim)
 -- @field o.mods string           : Mods for scratch window
--- @field o.close_on_success bool : Close scratch window if command returns 0
+-- @field o.autoclose bool : Close scratch window if command returns 0
 function M.sh(o)
   require"window".create_scratch({}, o.mods or "20")
   vim.wo.number = false
-  local args = vim.split(o.cmd, " ")
-  local bin = table.remove(args, 1)
+  local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
-  local options = {args = args, stdio = {nil, stdout, stderr}}
+  local options = {stdio = {stdin, stdout, stderr}}
   local handle, lines
   local output_buf = ""
 
@@ -302,15 +235,15 @@ function M.sh(o)
   local close_buf = function() vim.cmd("silent bwipeout! " .. bufnr) end
 
   local on_exit = function(code, signal)
-    for _, io in ipairs{stdout, stderr} do
+    for _, io in ipairs{stdin, stdout, stderr} do
       io:read_stop()
       io:close()
     end
     handle:close()
-    vim.cmd[[au CursorMoved,CursorMovedI * ++once lua vim.defer_fn(function() nvim.unlet("job_status") end, 3000)]]
+    vim.cmd[[au CursorMoved,CursorMovedI * ++once lua vim.defer_fn(function() nvim.unlet("job_status") end, 10000)]]
     if code == 0 and signal == 0 then
       vim.g.job_status = "Success"
-      if o.close_on_success then
+      if o.autoclose then
         vim.schedule(close_buf)
         return
       end
@@ -330,7 +263,7 @@ function M.sh(o)
       api.nvim_win_set_height(winnr, #lines)
     end
   end
-  handle = uv.spawn(bin, options, vim.schedule_wrap(on_exit))
+  handle = uv.spawn(vim.o.shell, options, vim.schedule_wrap(on_exit))
 
   -- If the buffer closes, then kill our process.
   api.nvim_buf_attach(bufnr, false, {
@@ -342,6 +275,68 @@ function M.sh(o)
   for _, io in ipairs{stdout, stderr} do
     io:read_start(vim.schedule_wrap(update_chunk))
   end
+  stdin:write(o.cmd)
+  stdin:write("\n")
+  stdin:shutdown()
+end
+
+-- function M.term_run() :: Execute script in terminal buffer {{{1
+-- @param o table
+-- @field o.cmd string     : Command to run
+-- @field o.cwd string     : Current working directory (will be expanded by vim)
+-- @field o.mods string    : Mods for scratch window
+-- @field o.autoclose bool : Close scratch window if command returns 0
+-- @field o.raw table      : Raw arguments from vim command <q-args>
+function M.term_run(o)
+  local options = {}
+  if o.cwd then
+    o.cwd = vim.fn.expand(o.cwd)
+    assert(o.cwd and util.path.is_dir(o.cwd), "sh: Invalid directory")
+    options.cwd = o.cwd
+  end
+  -- switching to insert mode makes the buffer scroll as new output is added
+  -- and makes it easy and intuitive to cancel the operation with Ctrl-C
+  vim.cmd((o.mods or "20") .. "new | startinsert")
+  local bufnr = api.nvim_get_current_buf()
+  local on_exit = function(_, code)
+    if code == 0 then
+      vim.g.job_status = "Success"
+      if o.autoclose == nil or o.autoclose == "1" or
+        o.autoclose == true then
+        vim.cmd("silent bwipeout! " .. bufnr)
+      end
+    else
+      vim.g.job_status = "Failed"
+    end
+    vim.defer_fn(function()
+      vim.cmd[[autocmd CursorMoved,CursorMovedI * ++once unlet! g:job_status]]
+    end, 10000)
+  end
+  options.on_exit = on_exit
+  vim.fn.termopen({"sh", "-c", o.cmd}, options)
+  -- TODO: adjust size of terminal down if lines < window
+  vim.g.job_status = "Running"
+end
+
+local parse_raw_args = function(...) --{{{1
+  -- TODO: differentiate between shell command params and vim command args, e.g. `--`
+  local parsed = {cmd = {}}
+  for _, arg in ipairs{...} do
+    local k, v = arg:match("-([^&=%s]+)=([^&=%s]+)")
+    if k ~= nil then
+      parsed[k] = v
+    else
+      table.insert(parsed.cmd, arg)
+    end
+  end
+  parsed.cmd = table.concat(parsed.cmd, " ")
+  return parsed
+end
+
+-- function M.term_run_cmd() :: Parse command and args into M.term_run() {{{1
+function M.term_run_cmd(...)
+  local parsed = parse_raw_args(...)
+  M.term_run(parsed)
 end
 
 function M.async_run(cmd, bang) -- {{{1

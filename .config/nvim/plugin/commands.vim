@@ -132,8 +132,11 @@ if has('nvim')
     " LspDisable :: stop active lsp clients {{{2
     " command! Lsp
 
-    " Cmd :: test version of lua async command run {{{2
-    command! -complete=file -bang -nargs=+ Cmd lua require'tools'.run(<q-args>)
+    " Term :: Run async command in terminal buffer {{{2
+    command! -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
+
+    " Sh :: Run async command in shell and output to scratch buffer {{{2
+    command! -complete=file -nargs=+ Sh call v:lua.require('tools').sh({'cmd': <q-args>})
 
     " Run :: lua version of AsyncRun {{{2
     command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')

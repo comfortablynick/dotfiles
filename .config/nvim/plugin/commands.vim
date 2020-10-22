@@ -1,6 +1,6 @@
 " General {{{1
-" S :: save if file has changed and reload vimrc {{{2
-command! S update | silent! unlet {s:guard} | source $MYVIMRC
+" S :: save if file has changed and re-source (vim development) {{{2
+command! S update | source %
 
 " Light/Dark :: easily change background {{{2
 command! Light set background=light

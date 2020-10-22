@@ -26,3 +26,5 @@ cargo_items:
     binary: cargo-outdated
   - name: ripgrep
     binary: rg
+  - name: fastmod
+    binary: fastmod

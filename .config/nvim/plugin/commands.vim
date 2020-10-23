@@ -127,20 +127,19 @@ if has('nvim')
     command! -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
 
     " Sh :: Run async command in shell and output to scratch buffer {{{2
-    command! -complete=file -nargs=+ Sh call v:lua.require('tools').sh({'cmd': <q-args>})
+    command! -complete=file -nargs=+ Sh lua require'tools'.sh{cmd = <q-args>}
 
     " Run :: lua version of AsyncRun {{{2
     command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
 
     " MRU :: most recently used files {{{2
-    command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>, <mods>))
+    command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>), '<mods>')
 
     " Grep :: async grep {{{2
     command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
 
     " Make :: async make {{{2
     command! -nargs=0 -complete=file Make lua require'tools'.make()
-
 endif
 
 " vim:fdl=1:

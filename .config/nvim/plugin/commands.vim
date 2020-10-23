@@ -19,40 +19,6 @@ noremap <silent> <F5> :UndotreeToggle<CR>
 command! Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
 command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
 
-" [Async]Run :: run a command asynchronously {{{2
-call map#set_cabbr('R', 'AsyncRun')
-call map#set_cabbr('grep', 'silent grep!')
-
-" Lazy load AsyncRun
-command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-    \ call plugins#lazy_run(
-    \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
-    \   'asyncrun.vim'
-    \ )
-
-" Use AyncRun for Make
-command! -bang -nargs=* -complete=file Make
-    \ AsyncRun -program=make @ <args>
-
-" Async grep
-command! -nargs=+ -complete=file_in_path -bar Grep
-    \ AsyncRun -strip -program=grep <args>
-
-" AsyncTasks :: run defined tasks asynchronously {{{2
-command! -bang -nargs=* -range=0 AsyncTask
-    \ call plugins#lazy_run(
-    \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-    \ 'asynctasks.vim'
-    \ )
-
-" GV :: git commit viewer {{{2
-command! -bang -nargs=* -range=0 GV
-    \ call plugins#lazy_run('GV', 'gv.vim',
-    \   {'bang': '<bang>', 'args': '<args>'})
-
-" LazyGit :: tui for git {{{2
-command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
-
 " LGrep :: location list grep {{{2
 command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
@@ -79,6 +45,44 @@ command! Wqa wqa
 command! W w
 
 call map#set_cabbr('ehco', 'echo')
+
+" Misc command abbreviations {{{2
+call map#set_cabbr('grep', 'silent grep!')
+
+" AsyncRun/AsyncTasks {{{1
+" AsyncRun :: lazy load plugin {{{2
+command! -bang -nargs=+ -range=0 -complete=file AsyncRun
+    \ call plugins#lazy_run(
+    \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
+    \   'asyncrun.vim'
+    \ )
+call map#set_cabbr('R', 'AsyncRun')
+
+" Make :: async make {{{2
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+
+" Grep :: async grep {{{2
+command! -nargs=+ -complete=file_in_path -bar Grep
+    \ AsyncRun -strip -program=grep <args>
+
+" AsyncTask :: lazy load plugin {{{2
+command! -bang -nargs=* -range=0 AsyncTask
+    \ call plugins#lazy_run(
+    \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+    \ 'asynctasks.vim'
+    \ )
+
+" Git {{{1
+" GV :: git commit viewer {{{2
+command -bang -nargs=* -range=0 GV
+    \ call plugins#lazy_run('GV', 'gv.vim',
+    \   {'bang': '<bang>', 'args': '<args>'})
+
+" Gpush :: custom git push
+command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
+
+" LazyGit :: tui for git {{{2
+command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2

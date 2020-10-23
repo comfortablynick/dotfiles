@@ -282,11 +282,10 @@ end
 
 -- function M.term_run() :: Execute script in terminal buffer {{{1
 -- @param o table
--- @field o.cmd string     : Command to run
+-- @field o.cmd string     : Command to run (passed to &shell)
 -- @field o.cwd string     : Current working directory (will be expanded by vim)
 -- @field o.mods string    : Mods for scratch window
--- @field o.autoclose bool : Close scratch window if command returns 0
--- @field o.raw table      : Raw arguments from vim command <q-args>
+-- @field o.autoclose bool : Close scratch window if command returns 0 (default true)
 function M.term_run(o)
   local options = {}
   if o.cwd then
@@ -298,6 +297,7 @@ function M.term_run(o)
   -- and makes it easy and intuitive to cancel the operation with Ctrl-C
   vim.cmd((o.mods or "20") .. "new | startinsert")
   local bufnr = api.nvim_get_current_buf()
+  local shell = vim.o.shell or "sh"
   local on_exit = function(_, code)
     if code == 0 then
       vim.g.job_status = "Success"
@@ -313,7 +313,7 @@ function M.term_run(o)
     end, 10000)
   end
   options.on_exit = on_exit
-  vim.fn.termopen({"sh", "-c", o.cmd}, options)
+  vim.fn.termopen({shell, "-c", o.cmd}, options)
   -- TODO: adjust size of terminal down if lines < window
   vim.g.job_status = "Running"
 end

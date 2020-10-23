@@ -1,4 +1,4 @@
-function! plugins#easymotion#pre() abort
+function plugins#easymotion#pre()
     " <Leader>f{char} to move to {char}
     map  f <Plug>(easymotion-bd-f)
     nmap f <Plug>(easymotion-overwin-f)

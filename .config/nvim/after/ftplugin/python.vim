@@ -11,7 +11,7 @@ silent! command Black call plugins#lazy_run('Black', 'black')
 
 nnoremap <buffer><silent><F3> :call <SID>format_python()<CR>
 
-function! s:format_python() abort
+function s:format_python()
     Black
     if g:coc_enabled == 1
         call CocAction('runCommand', 'editor.action.organizeImport')

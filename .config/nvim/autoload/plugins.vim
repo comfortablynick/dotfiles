@@ -2,7 +2,7 @@
 " Vim-Packager init {{{2
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 
-function! plugins#init() abort
+function plugins#init()
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
         echo 'Downloading vim-packager'
@@ -126,7 +126,7 @@ endfunction
 
 " Helper functions {{{1
 " fzf_post :: fzf update hook {{{2
-function! s:fzf_post(plugin) abort
+function s:fzf_post(plugin)
     let l:cmd = './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
     let l:args = '-cwd='..a:plugin['dir']
     execute 'Term' l:args l:cmd

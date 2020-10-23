@@ -35,7 +35,7 @@ if !exists('g:DoxyVoidParamString')
 endif
 
 " returns the text for a function comment
-function! doxygen#func_comment() abort
+function doxygen#func_comment()
     return ''.
         \ "/**\n".
         \ "@brief\n".
@@ -47,7 +47,7 @@ function! doxygen#func_comment() abort
 endfunction
 
 " returns the text part for the parameter list
-function! doxygen#param_list()
+function doxygen#param_list()
     normal mz
     normal /(
     normal "ay%
@@ -67,7 +67,7 @@ endfunction
 " parameters
 " This function is not a C syntax scanner, but only tries to do its best
 " with regular expressions.
-function! s:scan_param(pl)
+function s:scan_param(pl)
     let p = a:pl
     "echo "p1:<" . p . ">"
     if p =~# '^( *\(void\)\= *)$' || p =~# '^( *)$'
@@ -99,7 +99,7 @@ endfunction
 
 " returns the returntype of a function
 " This function is not fail save!
-function! s:scan_ret()
+function s:scan_ret()
     normal mz
     normal /(B
     let c = col('.')
@@ -116,7 +116,7 @@ function! s:scan_ret()
 endfunction
 
 " returns the text for a function comment
-function! doxygen#file_comment()
+function doxygen#file_comment()
     return '' .
         \ "/*!\n" .
         \ "\\file " . expand('%:p:t') . "\n" .

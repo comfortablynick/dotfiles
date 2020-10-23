@@ -1,5 +1,5 @@
 " Get the root path based on git or parent folder
-function! file#get_project_root() abort
+function file#get_project_root()
     " Check if this has already been defined
     if exists('b:project_root_dir')
         return b:project_root_dir
@@ -20,20 +20,20 @@ function! file#get_project_root() abort
 endfunction
 
 " Get just the name of the folder
-function! file#get_root_folder_name() abort
+function file#get_root_folder_name()
     let l:root = file#get_project_root()
     return matchstr(l:root, '[^\/\\]*$')
 endfunction
 
 " Set vim cwd to project root dir
 " (git project root or directory of current file if not git project)
-function! file#set_project_root() abort
+function file#set_project_root()
     let l:root_dir = file#get_project_root()
     lcd `=l:root_dir`
 endfunction
 
 " Add shebang for new file
-function! file#set_shebang() abort
+function file#set_shebang()
     python3 << EOP
 import vim
 shebang = {
@@ -59,12 +59,12 @@ EOP
 endfunction
 
 " Get path of current file
-function! file#get_path() abort
+function file#get_path()
     return expand('%:p')
 endfunction
 
 " Set file as executable by user
-function! file#set_executable_bit() abort
+function file#set_executable_bit()
     python3 << EOP
 import os
 import stat
@@ -88,7 +88,7 @@ EOP
 endfunction
 
 " Set shebang and executable bit
-function! file#set_executable() abort
+function file#set_executable()
     call file#set_executable_bit()
     call file#set_shebang()
 endfunction
@@ -104,7 +104,7 @@ let g:timestamp_file_ignore = [
 " Last [Mm]odified
 " Modified
 " Last [Uu]pdate(d)
-function! file#update_timestamp() abort
+function file#update_timestamp()
     if index(g:timestamp_file_ignore, &filetype) > -1 | return | endif
     let l:pat = '\(\(Last\)\?\s*\([Cc]hanged\?\|[Mm]odified\|[Uu]pdated\?\)\s*:\s*\).*'
     let l:rep = '\1' . strftime(get(g:, 'timestamp_format', '%F %H:%M:%S %Z'))
@@ -113,7 +113,7 @@ endfunction
 
 " subst( start, end, pat, rep): substitute on range start - end.
 " Taken from timestamp.vim
-function! s:subst(start, end, pat, rep) abort
+function s:subst(start, end, pat, rep)
     let l:lineno = a:start
     while l:lineno <= a:end
         let l:curline = getline(l:lineno)

@@ -1,4 +1,4 @@
-function! plugins#gitgutter#pre() abort
+function plugins#gitgutter#pre()
     let g:gitgutter_map_keys = 0
     highlight link GitGutterAdd    DiffAdd
     highlight link GitGutterChange DiffChange
@@ -18,7 +18,7 @@ nmap <Leader>gu <Plug>(GitGutterUndoHunk)
 nmap          gs <Plug>(GitGutterPreviewHunk)
 
 " Wrap around buffer when navigating hunks
-function! s:gitgutter_hunk_prev(count) abort
+function s:gitgutter_hunk_prev(count)
     for l:i in range(1, a:count)
         let l:line = line('.')
         silent GitGutterPrevHunk
@@ -29,7 +29,7 @@ function! s:gitgutter_hunk_prev(count) abort
     endfor
 endfunction
 
-function! s:gitgutter_hunk_next(count) abort
+function s:gitgutter_hunk_next(count)
     for l:i in range(1, a:count)
         let l:line = line('.')
         silent GitGutterNextHunk

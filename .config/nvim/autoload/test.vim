@@ -1,4 +1,4 @@
-function! test#time(com, ...) abort
+function test#time(com, ...)
     let l:time = 0.0
     let l:iters = a:0 ? a:1 : 100
     let l:t = reltime()

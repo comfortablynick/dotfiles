@@ -1,4 +1,4 @@
-function! plugins#sandwich#pre() abort
+function plugins#sandwich#pre()
     " Use vim-surround keybindings
     " See https://github.com/machakann/vim-sandwich/blob/master/macros/sandwich/keymap/surround.vim
     let g:sandwich_no_default_key_mappings = 1

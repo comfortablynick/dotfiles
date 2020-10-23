@@ -1,5 +1,5 @@
 " Build command based on file type and command type
-function! runner#run_cmd(cmd_type) abort
+function runner#run_cmd(cmd_type)
     let l:cmds = get(g:, 'runner_cmd_overrides', {})
     let l:cmd = get(l:cmds, &filetype, 'just '.a:cmd_type)
     let l:cmd = substitute(l:cmd, '{file}', expand('%'), 'g')
@@ -21,14 +21,14 @@ function! runner#run_cmd(cmd_type) abort
 endfunction
 
 " Send cmd output to integrated terminal buffer
-function! runner#run_in_term(cmd) abort
+function runner#run_in_term(cmd)
     let s:mod = winwidth(0) > 150 ? 'vsplit' : 'split'
     execute s:mod . '|term ' . a:cmd
     return
 endfunction
 
 " Determine default command output
-function! runner#get_cmd_run_loc() abort
+function runner#get_cmd_run_loc()
     if !exists('b:run_cmd_in')
         if exists('g:run_cmd_in')
             let b:run_cmd_in = g:run_cmd_in

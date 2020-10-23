@@ -1,4 +1,4 @@
-function! s:indent(indent)
+function s:indent(indent)
     if getline('.') =~# '\v^\s*%([-*+]|\d\.)\s*$'
         " Empty list
         if a:indent
@@ -25,7 +25,7 @@ inoremap <buffer> <script> <expr> <C-]>
 inoremap <buffer> <script> <expr> <C-[>
     \ '<C-O>:call <SID>indent(0)<CR>'
 
-function! s:jump_to_heading(direction, count)
+function s:jump_to_heading(direction, count)
     let l:col = col('.')
     silent execute a:direction ==# 'up' ? '?^#' : '/^#'
     if a:count > 1

@@ -17,7 +17,7 @@ nnoremap <silent> <Leader>h :Clap hist:<CR>
 
 command! Filer :Clap filer
 
-function! s:clap_on_enter() abort "{{{2
+function s:clap_on_enter() "{{{2
     augroup ClapEnsureAllClosed
         autocmd!
         autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
@@ -29,14 +29,14 @@ function! s:clap_on_enter() abort "{{{2
     endif
 endfunction
 
-function! s:clap_on_exit() abort "{{{2
+function s:clap_on_exit() "{{{2
     if exists('s:mucomplete_disabled')
         silent! MUcompleteAutoOn
         unlet s:mucomplete_disabled
     endif
 endfunction
 
-function! s:clap_win_disable_fold() abort "{{{2
+function s:clap_win_disable_fold() "{{{2
     let l:clap = get(g:, 'clap')
     if empty(l:clap) | return | endif
     let l:winid = l:clap['display']['winid']
@@ -52,7 +52,7 @@ augroup autoload_plugins_clap
 augroup END
 
 " Clap utils {{{1
-function! s:clap_get_selected() abort "{{{2
+function s:clap_get_selected() "{{{2
     let l:curline = g:clap.display.getcurline()
     if g:clap_enable_icon && s:using_icons
         let l:curline = l:curline[4:]
@@ -61,13 +61,13 @@ function! s:clap_get_selected() abort "{{{2
 endfunction
 
 " Standard file preview with icon support
-function! s:clap_file_preview() abort "{{{2
+function s:clap_file_preview() "{{{2
     let l:curline = s:clap_get_selected()
     return clap#preview#file(l:curline)
 endfunction
 
 " Standard file edit with icon support
-function! s:clap_file_edit(selected) abort "{{{2
+function s:clap_file_edit(selected) "{{{2
     let l:fname = g:clap_enable_icon && s:using_icons ?
         \ a:selected[4:] :
         \ a:selected
@@ -86,7 +86,7 @@ let g:clap#provider#map# = s:map
 " help :: search help tags and open help tab {{{2
 let s:help = {}
 
-function! s:help.source() abort
+function s:help.source()
     let l:lst = []
     for l:rtp in split(&runtimepath, ',')
         let l:path = glob(l:rtp.'/'.'doc/tags')
@@ -111,7 +111,7 @@ let s:cmds = {
 let s:cmd = {}
 let s:cmd.source = keys(s:cmds)
 
-function! s:cmd.on_move() abort
+function s:cmd.on_move()
     let l:curline = g:clap.display.getcurline()
     call g:clap.preview.show([s:cmds[l:curline]])
 endfunction
@@ -121,17 +121,17 @@ let g:clap#provider#quick_cmd# = s:cmd
 
 " scriptnames :: similar to :Scriptnames {{{2
 let s:scriptnames = {}
-function! s:scriptnames.source() abort
+function s:scriptnames.source()
     let l:names = execute('scriptnames')
     return map(split(l:names, '\n'), {_,v->join(split(v, ':'))})
 endfunction
 
-function! s:scriptnames.sink(selected) abort
+function s:scriptnames.sink(selected)
     let l:fname = split(a:selected, ' ')[-1]
     execute 'edit' trim(l:fname)
 endfunction
 
-function! s:scriptnames.on_move() abort
+function s:scriptnames.on_move()
     let l:curline = g:clap.display.getcurline()
     let l:fname = split(l:curline, ' ')[-1]
     return clap#preview#file(l:fname)
@@ -142,7 +142,7 @@ let g:clap#provider#scriptnames# = s:scriptnames
 
 " task :: asynctasks.vim list {{{2
 let s:task = {}
-function! s:task.source() abort
+function s:task.source()
     let l:list = plugins#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
     let l:source = []
     let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
@@ -157,7 +157,7 @@ function! s:task.source() abort
     return l:source
 endfunction
 
-function! s:task.sink(selected) abort
+function s:task.sink(selected)
     let l:name = split(a:selected, '<')[0]
     let l:name = substitute(l:name, '^\s*\(.\{-}\)\s*$', '\1', '')
     if strlen(l:name)
@@ -172,7 +172,7 @@ command! Task :Clap task
 
 " dot :: open dotfiles quickly {{{2
 let s:dot = {}
-function! s:dot.source() abort
+function s:dot.source()
     let s:using_icons = v:true
     let l:dotfiles = [
         \ '$DOTFILES/.config/nvim/init.vim',
@@ -190,7 +190,7 @@ let g:clap#provider#dot# = s:dot
 " mru :: most recently used {{{2
 let s:mru = {}
 
-function s:mru.source() abort
+function s:mru.source()
     let s:using_icons = v:true
     let l:files = luaeval('require"tools".mru_files()')
     return map(l:files, {_,v->clap#icon#get(v).' '.v})
@@ -201,7 +201,7 @@ let s:mru.sink = {sel->s:clap_file_edit(sel)}
 let g:clap#provider#mru# = s:mru
 
 " history (lua/Viml test) {{{2
-function! plugins#clap#history() abort
+function plugins#clap#history()
     let l:hist = filter(
         \ map(range(1, histnr(':')), {v-> histget(':', - v)}),
         \ {v-> !empty(v)}
@@ -211,7 +211,7 @@ function! plugins#clap#history() abort
 endfunction
 
 " Much faster lua implementation
-function! plugins#clap#history_lua() abort
+function plugins#clap#history_lua()
     return luaeval('require("tools").get_history_clap()')
 endfunction
 " vim:fdl=1:

@@ -22,7 +22,7 @@ augroup plugin_pack
 augroup END
 
 " Load packages that are safe to defer
-function! s:deferred_load() abort
+function s:deferred_load()
     packadd fzf
     packadd fzf.vim
     packadd targets.vim
@@ -47,6 +47,7 @@ function! s:deferred_load() abort
     packadd vim-picker
     packadd vim-devicons
     packadd vim-lion
+    packadd vim-alias
 
     if has('nvim')
         " Seems to have issue on vim

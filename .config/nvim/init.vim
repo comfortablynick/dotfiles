@@ -24,7 +24,7 @@ augroup END
 " Commands {{{2
 command! -nargs=+ -complete=packadd Packadd call s:packadd_handler(<f-args>)
 
-function! s:packadd_handler(...) abort
+function s:packadd_handler(...)
     let l:save_ei = &eventignore
     set eventignore+=SourcePre,SourcePost
     for l:pack in a:000
@@ -34,6 +34,9 @@ function! s:packadd_handler(...) abort
     endfor
     let &eventignore = l:save_ei
 endfunction
+
+" Alias :: set command abbreviation
+command -nargs=+ Alias call map#set_cabbr(<f-args>)
 
 " Global Variables {{{2
 let g:plugin_config_files = map(
@@ -45,7 +48,7 @@ let g:plugins_called = []
 let g:plugins_pre_called = []
 let g:plugins_post_called = []
 
-function! s:source_handler(sourced, pre) abort "{{{2
+function s:source_handler(sourced, pre) "{{{2
     let l:type = a:pre == 1 ? 'pre' : 'post'
     let l:file = tolower(fnamemodify(a:sourced, ':t:r'))
     " Return if we don't have file in autoload/plugins/{l:file}.vim
@@ -149,7 +152,6 @@ set wildignore+=__pycache__                                     " Ignore in glob
 set list                                                        " Show extra characters
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title
-let g:mapleader = ','                                           " Keymap <Leader> key
 
 " Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion

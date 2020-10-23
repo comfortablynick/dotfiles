@@ -5,8 +5,34 @@ nnoremap qqq :q!<CR>
 nnoremap QQ ZQ
 nnoremap Y y$
 
+" Leader {{{2
+let g:mapleader = ','
+
+nnoremap : ;
+xnoremap : ;
+onoremap : ;
+
+nnoremap ; :
+xnoremap ; :
+onoremap ; :
+
+nnoremap g: g;
+nnoremap g; <Nop>
+
+nnoremap @; @:
+nnoremap @: <Nop>
+
+" NOTE: Causes lag when 'q' is hit; for example when
+" - stopping to record a macro or
+" - exiting a buffer by a custom mapping to 'q'.
+nnoremap q; q:
+xnoremap q; q:
+
+nnoremap q: <Nop>
+xnoremap q: <Nop>
+
 " Run the last command
-nnoremap <leader><leader>c :<up>
+nnoremap <Leader><Leader>c :<Up>
 
 " Clears hlsearch after doing a search, otherwise <CR>
 nnoremap <expr> <CR> {-> v:hlsearch ? ":nohlsearch\<CR>" : "\<CR>"}()
@@ -26,8 +52,8 @@ nnoremap gj :let _=&lazyredraw<CR>:set lazyredraw<CR>/\%<C-R>=virtcol(".")<CR>v\
 nnoremap gk :let _=&lazyredraw<CR>:set lazyredraw<CR>?\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 
 " Insert mode <Esc> maps {{{2
-inoremap kj <Esc>`^
-inoremap lkj <Esc>`^:w<CR>
+inoremap kj   <Esc>`^
+inoremap lkj  <Esc>`^:w<CR>
 inoremap ;lkj <Esc>`^:x<CR>
 
 " Indent/outdent {{{2
@@ -63,9 +89,9 @@ nnoremap <silent> [t :tabprevious<CR>
 nnoremap <silent> ]t :tabnext<CR>
 
 " Buffer navigation {{{1
-nnoremap <silent> <Tab> :bnext<CR>
-nnoremap <silent> <S-Tab> :bprevious<CR>
-nnoremap <silent> <Leader>q :bd<CR>
+nnoremap <silent> <Tab>      :bnext<CR>
+nnoremap <silent> <S-Tab>    :bprevious<CR>
+nnoremap <silent> <Leader>q  :bd<CR>
 nnoremap <silent> <Leader>xx :BufOnly<CR>
 
 " Quickfix

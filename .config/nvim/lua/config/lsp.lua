@@ -30,12 +30,12 @@ local on_attach_cb = function(client, bufnr)
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
-    [";d"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
+    ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
     ["gd"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
     ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
-    [";s"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
-    [";a"] = "<Cmd>lua vim.lsp.buf.code_action()<CR>",
+    ["gS"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
+    ["ga"] = "<Cmd>lua vim.lsp.buf.code_action()<CR>",
     ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",

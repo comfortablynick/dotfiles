@@ -15,7 +15,7 @@ let g:mkdx#settings = {
 " vim-markdown-folding settings
 let g:markdown_fold_override_foldtext = 0
 
-function! MarkdownFoldLevel() abort
+function MarkdownFoldLevel()
     " WIP: only increases fold level, never decreases
     let l:currline = getline(v:lnum)
     if l:currline =~# '^## .*$'     | return '>1' | endif

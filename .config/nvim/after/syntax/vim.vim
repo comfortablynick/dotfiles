@@ -22,3 +22,4 @@ syn cluster vimFuncBodyList	add=vimLuaRegion
 let b:current_syntax = 'vim'
 
 syntax keyword vimCommand contained Pack[add]
+syntax keyword vimCommand contained Alias

@@ -48,7 +48,7 @@ let g:completion_filetypes = {
     \ }
 
 " Get completion type for a filetype, or empty string
-function! s:get_completion_type(ftype) abort
+function s:get_completion_type(ftype)
     let l:types = get(g:, 'completion_filetypes', {})
     for l:key in keys(l:types)
         for l:val in l:types[l:key]
@@ -62,7 +62,7 @@ endfunction
 
 let g:completion_handler_fts = []
 
-function! s:completion_handler(ft) abort
+function s:completion_handler(ft)
     let g:completion_type = s:get_completion_type(a:ft)
     let g:completion_handler_fts += [{'ft': a:ft, 'comptype': g:completion_type}]
     if g:completion_type ==# 'coc'

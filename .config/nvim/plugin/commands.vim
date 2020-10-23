@@ -22,7 +22,7 @@ command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <
 " LGrep :: location list grep {{{2
 command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
-function! s:grep(...) abort
+function s:grep(...)
     return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
 endfunction
 
@@ -44,10 +44,10 @@ command! Wq wq
 command! Wqa wqa
 command! W w
 
-call map#set_cabbr('ehco', 'echo')
+Alias ehco echo
 
 " Misc command abbreviations {{{2
-call map#set_cabbr('grep', 'silent grep!')
+Alias grep silent\ grep!
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2
@@ -56,7 +56,7 @@ command! -bang -nargs=+ -range=0 -complete=file AsyncRun
     \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
     \   'asyncrun.vim'
     \ )
-call map#set_cabbr('R', 'AsyncRun')
+Alias R AsyncRun
 
 " Make :: async make {{{2
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
@@ -123,7 +123,7 @@ command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 " [H]elp :: floating help window {{{2
 if has('nvim')
     command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-    call map#set_cabbr('H', 'Help')
+    Alias H Help
 
     " LspDisable :: stop active lsp clients {{{2
     " command! Lsp

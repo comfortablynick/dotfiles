@@ -3,7 +3,7 @@
 let s:quickfix_size = 20
 
 " Show :scriptnames in quickfix list and optionally filter
-function! quickfix#scriptnames(...) abort
+function quickfix#scriptnames(...)
     call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
     if len(a:000) > 0
         if !exists(':Cfilter') | packadd cfilter | endif
@@ -15,9 +15,9 @@ endfunction
 
 " Originally from:
 " https://github.com/skywind3000/asyncrun.vim/blob/master/plugin/asyncrun.vim
-function! s:qf_toggle(size, ...)
+function s:qf_toggle(size, ...)
     let l:mode = (a:0 == 0)? 2 : (a:1)
-    function! s:window_check(mode)
+    function s:window_check(mode)
         if &l:buftype ==# 'quickfix'
             let s:quickfix_open = 1
             return
@@ -56,13 +56,13 @@ function! s:qf_toggle(size, ...)
     noautocmd silent! execute l:winnr 'wincmd w'
 endfunction
 
-function! quickfix#toggle() abort
+function quickfix#toggle()
     let l:qf_lines = len(getqflist())
     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
     call s:qf_toggle(l:qf_size)
 endfunction
 
-function! quickfix#open() abort
+function quickfix#open()
     let l:qf_lines = len(getqflist())
     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
     execute 'copen' l:qf_size
@@ -70,7 +70,7 @@ function! quickfix#open() abort
 endfunction
 
 " Close an empty quickfix window
-function! quickfix#close_empty() abort
+function quickfix#close_empty()
     if len(getqflist())
         return
     endif
@@ -83,7 +83,7 @@ function! quickfix#close_empty() abort
 endfunction
 
 " Return 1 if quickfix window is open, else 0
-function! quickfix#is_open() abort
+function quickfix#is_open()
     for l:buffer in tabpagebuflist()
         if bufname(l:buffer) ==? ''
             return 1
@@ -94,7 +94,7 @@ endfunction
 
 " Close quickfix on quit
 " (Use autoclose script instead)
-function! quickfix#autoclose() abort
+function quickfix#autoclose()
     if &filetype ==? 'qf'
         " if this window is last on screen quit without warning
         if winnr('$') < 2
@@ -103,18 +103,18 @@ function! quickfix#autoclose() abort
     endif
 endfunction
 
-function! s:isLocation()
+function s:isLocation()
     " Get dictionary of properties of the current window
     let wininfo = filter(getwininfo(), {i,v -> v.winnr == winnr()})[0]
     return wininfo.loclist
 endfunction
 
-function! s:length()
+function s:length()
     " Get the size of the current quickfix/location list
     return len(s:isLocation() ? getloclist(0) : getqflist())
 endfunction
 
-function! s:getProperty(key, ...)
+function s:getProperty(key, ...)
     " getqflist() and getloclist() expect a dictionary argument
     " If a 2nd argument has been passed in, use it as the value, else 0
     let l:what = {a:key : a:0 ? a:1 : 0}
@@ -122,15 +122,15 @@ function! s:getProperty(key, ...)
     return get(l:listdict, a:key)
 endfunction
 
-function! s:isFirst()
+function s:isFirst()
     return s:getProperty('nr') <= 1
 endfunction
 
-function! s:isLast()
+function s:isLast()
     return s:getProperty("nr") == s:getProperty("nr", '$')
 endfunction
 
-function! s:history(goNewer)
+function s:history(goNewer)
     " Build the command: one of colder/cnewer/lolder/lnewer
     let l:cmd = (s:isLocation() ? 'l' : 'c') . (a:goNewer ? 'newer' : 'older')
 
@@ -165,11 +165,11 @@ function! s:history(goNewer)
     echohl None
 endfunction
 
-function! quickfix#older()
+function quickfix#older()
     call s:history(0)
 endfunction
 
-function! quickfix#newer()
+function quickfix#newer()
     call s:history(1)
 endfunction
 

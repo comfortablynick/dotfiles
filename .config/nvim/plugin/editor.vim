@@ -12,14 +12,14 @@ cnoreabbrev <expr> hg
     \ map#cabbr('hg', {->window#tab_mod('helpgrep', 'help')})
 
 " Open help in vert split {{{2
-call map#set_cabbr('vh', 'vert help')
+Alias vh vert\ help
 
 " Open Man in new or existing tab {{{2
 cnoreabbrev <expr> man
     \ map#cabbr('man', {->window#tab_mod('Man', 'man')})
 
 " Lua {{{2
-call map#set_cabbr('l', 'lua')
+Alias l lua
 cnoreabbrev <expr> lp
     \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
@@ -67,13 +67,13 @@ augroup number_toggle
 augroup END
 
 " Functions {{{1
-function! s:cmdwin_enter() abort "{{{2
+function s:cmdwin_enter() "{{{2
     nnoremap <buffer> <Leader>q <C-c><C-c>
     nnoremap <buffer> <Esc> <C-c><C-c>
     setlocal norelativenumber number
 endfunction
 
-function! s:recall_cursor_position() abort "{{{2
+function s:recall_cursor_position() "{{{2
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 

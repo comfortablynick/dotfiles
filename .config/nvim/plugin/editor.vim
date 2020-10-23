@@ -27,9 +27,9 @@ cnoreabbrev <expr> lp
 inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Autocmds {{{1
+" Remember last place in file {{{2
 augroup plugin_editor
     autocmd!
-    " Remember last place in file {{{2
     autocmd BufWinEnter * call s:recall_cursor_position()
     " Close certain read-only filetypes with only 'q' {{{2
     " Not likely to be using macros in these files
@@ -70,7 +70,7 @@ augroup END
 function! s:cmdwin_enter() abort "{{{2
     nnoremap <buffer> <Leader>q <C-c><C-c>
     nnoremap <buffer> <Esc> <C-c><C-c>
-    setlocal norelativenumber nonumber
+    setlocal norelativenumber number
 endfunction
 
 function! s:recall_cursor_position() abort "{{{2

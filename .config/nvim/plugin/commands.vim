@@ -144,6 +144,9 @@ if has('nvim')
 
     " Make :: async make {{{2
     command! -nargs=0 -complete=file Make lua require'tools'.make()
+
+    " BufOnly :: keep only current buffer {{{2
+    command BufOnly lua require'buffer'.only()
 endif
 
 " vim:fdl=1:

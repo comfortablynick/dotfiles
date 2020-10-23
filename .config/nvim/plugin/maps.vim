@@ -66,6 +66,7 @@ nnoremap <silent> ]t :tabnext<CR>
 nnoremap <silent> <Tab> :bnext<CR>
 nnoremap <silent> <S-Tab> :bprevious<CR>
 nnoremap <silent> <Leader>q :bd<CR>
+nnoremap <silent> <Leader>xx :BufOnly<CR>
 
 " Quickfix
 nnoremap <silent> cq :call quickfix#toggle()<CR>

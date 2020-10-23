@@ -8,28 +8,25 @@ nnoremap Y y$
 " Leader {{{2
 let g:mapleader = ','
 
-nnoremap : ;
-xnoremap : ;
-onoremap : ;
+" nnoremap : ;
+" xnoremap : ;
+" onoremap : ;
 
 nnoremap ; :
 xnoremap ; :
 onoremap ; :
 
 nnoremap g: g;
-nnoremap g; <Nop>
-
 nnoremap @; @:
-nnoremap @: <Nop>
 
-" NOTE: Causes lag when 'q' is hit; for example when
-" - stopping to record a macro or
-" - exiting a buffer by a custom mapping to 'q'.
+" nnoremap g; <Nop>
+" nnoremap @: <Nop>
+
 nnoremap q; q:
 xnoremap q; q:
 
-nnoremap q: <Nop>
-xnoremap q: <Nop>
+" nnoremap q: <Nop>
+" xnoremap q: <Nop>
 
 " Run the last command
 nnoremap <Leader><Leader>c :<Up>

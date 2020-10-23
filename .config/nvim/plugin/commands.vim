@@ -78,8 +78,9 @@ command -bang -nargs=* -range=0 GV
     \ call plugins#lazy_run('GV', 'gv.vim',
     \   {'bang': '<bang>', 'args': '<args>'})
 
-" Gpush :: custom git push
+" Gpush :: custom git push {{{2
 command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
+nnoremap <silent><Leader>gp :Gpush<CR>
 
 " LazyGit :: tui for git {{{2
 command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)

@@ -1,5 +1,3 @@
-nnoremap <silent><Leader>gc :Git commit<CR>
-nnoremap <silent><Leader>gp :Git push<CR>
 nnoremap <silent><Leader>gd :Gvdiffsplit!<CR>
 " TODO: use only in &diff
 nnoremap <silent><Leader>gh :diffget //2<CR>

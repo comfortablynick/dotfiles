@@ -22,7 +22,7 @@ command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <
 " LGrep :: location list grep {{{2
 command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
-function s:grep(...)
+function! s:grep(...)
     return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
 endfunction
 
@@ -51,11 +51,11 @@ Alias grep silent\ grep!
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2
-command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-    \ call plugins#lazy_run(
-    \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
-    \   'asyncrun.vim'
-    \ )
+" command! -bang -nargs=+ -range=0 -complete=file AsyncRun
+"     \ call plugins#lazy_run(
+"     \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
+"     \   'asyncrun.vim'
+"     \ )
 Alias R AsyncRun
 
 " Make :: async make {{{2
@@ -66,11 +66,11 @@ command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
 
 " AsyncTask :: lazy load plugin {{{2
-command! -bang -nargs=* -range=0 AsyncTask
-    \ call plugins#lazy_run(
-    \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-    \ 'asynctasks.vim'
-    \ )
+" command! -bang -nargs=* -range=0 AsyncTask
+"     \ call plugins#lazy_run(
+"     \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+"     \ 'asynctasks.vim'
+"     \ )
 
 " Git {{{1
 " GV :: git commit viewer {{{2
@@ -109,6 +109,24 @@ command! -nargs=* -bar -count=0 Scriptnames
     \ call quickfix#scriptnames(<f-args>) |
     \ copen 20 |
     \ <count>
+
+" WhichKey[Visual] :: display key maps {{{2
+command -nargs=1 WhichKey
+    \ call plugins#lazy_run(
+    \   'WhichKey',
+    \   'vim-which-key',
+    \   {'args': <q-args>, 'bang': '<bang>'}
+    \ )
+
+command -nargs=1 WhichKeyVisual
+    \ call plugins#lazy_run(
+    \   'WhichKeyVisual',
+    \   'vim-which-key',
+    \   {'args': <q-args>, 'bang': '<bang>'}
+    \ )
+
+" Map WhichKey to g:mapleader
+execute 'nnoremap <silent> <Leader> :<c-u>WhichKey "'..get(g:, 'mapleader', ',')..'"<CR>'
 
 " Pretty-printing {{{2
 " nvim: Using Lua vim.inspect()

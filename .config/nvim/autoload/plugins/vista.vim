@@ -1,6 +1,6 @@
 scriptencoding utf-8
 
-function s:vista_fzf_preview_width(basewidth)
+function! s:vista_fzf_preview_width(basewidth)
     let l:winwidth = winwidth(0)
     let l:pwidth = a:basewidth
     if l:winwidth < 225

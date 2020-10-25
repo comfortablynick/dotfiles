@@ -6,7 +6,7 @@
 " Last Modified: 20 Sep 2017
 " -----------------------------------------------------------------------------
 
-function s:getGruvColor(group)
+function! s:getGruvColor(group)
   let guiColor = synIDattr(hlID(a:group), "fg", "gui") 
   let termColor = synIDattr(hlID(a:group), "fg", "cterm") 
   return [ guiColor, termColor ]

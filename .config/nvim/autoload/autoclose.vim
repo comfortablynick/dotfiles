@@ -1,4 +1,4 @@
-function autoclose#next_normal_window()
+function! autoclose#next_normal_window()
     for l:i in range(1, winnr('$'))
         let l:buf = winbufnr(l:i)
         " skip unlisted buffers
@@ -14,7 +14,7 @@ function autoclose#next_normal_window()
     return -1
 endfunction
 
-function autoclose#quit_if_only_window()
+function! autoclose#quit_if_only_window()
     let l:buftype = getbufvar(winbufnr(winnr()), '&buftype')
     let l:filetype = getbufvar(winbufnr(winnr()), '&filetype')
     if index(get(g:, 'autoclose_buftypes', []), l:buftype) < 0

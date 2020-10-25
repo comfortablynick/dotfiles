@@ -22,7 +22,7 @@ augroup plugin_pack
 augroup END
 
 " Load packages that are safe to defer
-function s:deferred_load()
+function! s:deferred_load()
     packadd fzf
     packadd fzf.vim
     packadd targets.vim
@@ -34,7 +34,7 @@ function s:deferred_load()
     packadd vim-sneak
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
-    packadd tig-explorer.vim
+    " packadd tig-explorer.vim
     packadd vim-sandwich
     packadd vim-smoothie
     packadd vim-repeat
@@ -47,7 +47,6 @@ function s:deferred_load()
     packadd vim-picker
     packadd vim-devicons
     packadd vim-lion
-    packadd vim-alias
 
     if has('nvim')
         " Seems to have issue on vim
@@ -61,3 +60,39 @@ function s:deferred_load()
     " Load local vimrc if env var
     call localrc#load_from_env()
 endfunction
+
+" Plugins {{{1
+" Packager setup {{{2
+let g:packager_path = expand('$XDG_DATA_HOME/nvim/site')..'/pack/packager-test'
+call plugpackager#begin({
+    \ 'dir': g:packager_path,
+    \ 'default_plugin_type': 'opt',
+    \ 'jobs': 0,
+    \ })
+
+" Plug 'comfortablynick/plugpackager.vim'
+Plug 'iberianpig/tig-explorer.vim', {'on': ['Tig', 'TigStatus']}
+" General {{{2
+Plug 'chrisbra/Colorizer'
+Plug 'airblade/vim-rooter'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-eunuch'
+Plug 'moll/vim-bbye'
+Plug 'psliwka/vim-smoothie'
+
+" Linters/formatters/runners {{{2
+Plug 'dense-analysis/ale'
+Plug 'sbdchd/neoformat'
+Plug 'psf/black',                  {'branch': 'stable'}
+Plug 'skywind3000/asyncrun.vim',   {'on': ['AsyncRun']}
+Plug 'skywind3000/asynctasks.vim',
+    \ {
+    \   'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin',
+    \   'on': ['AsyncTask'],
+    \ }
+Plug 'kkoomen/vim-doge'
+
+" Initialize plugins {{{2
+call plugpackager#end()
+
+" vim:fdl=1:

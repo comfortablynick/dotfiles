@@ -2,13 +2,13 @@
 let b:localrc_loaded = 0
 let b:localrc_files = []
 
-function localrc#load_from_env()
+function! localrc#load_from_env()
     if !empty('$LOCAL_VIMRC') && get(b:, 'localrc_loaded', 0) == 0
         call localrc#load('$LOCAL_VIMRC')
     endif
 endfunction
 
-function localrc#load(fnames, ...)
+function! localrc#load(fnames, ...)
     for l:file in localrc#search(a:fnames,
         \ 1 <= a:0 ? a:1 : expand('%:p:h'),
         \ 2 <= a:0 ? a:2 : -1)
@@ -20,7 +20,7 @@ function localrc#load(fnames, ...)
     endfor
 endfunction
 
-function localrc#search(fnames, ...)
+function! localrc#search(fnames, ...)
     let l:path = 1 <= a:0 ? a:1 : expand('%:p:h')
     if empty(a:fnames) || !isdirectory(l:path)
         return []
@@ -42,7 +42,7 @@ function localrc#search(fnames, ...)
     return l:targets
 endfunction
 
-function s:match_files(path, fname)
+function! s:match_files(path, fname)
     if type(a:fname) == type([])
         let l:files = []
         for l:f in a:fname
@@ -68,7 +68,7 @@ endfunction
 
 " - string only.
 " - can not treat a empty string.
-function s:uniq(list)
+function! s:uniq(list)
     let l:i = 0
     let l:len = len(a:list)
     let l:seen = {}

@@ -13,8 +13,8 @@ map <Leader>Y <Plug>(miniyank-cycleback)
 map <Leader>Y <Plug>(miniyank-cycleback)
 
 " Adapted from https://github.com/bfredl/nvim-miniyank/issues/19#issue-347454437
-function s:fzf_miniyank(put_before, fullscreen)
-    function Sink(opt, line)
+function! s:fzf_miniyank(put_before, fullscreen)
+    function! Sink(opt, line)
         let l:key = substitute(a:line, ' .*', '', '')
         if empty(a:line) | return | endif
         let l:yanks = miniyank#read()[l:key]
@@ -38,7 +38,7 @@ if !empty('g:loaded_fzf')
     map <A-P> :YanksBefore<CR>
 endif
 
-function plugins#miniyank#complete_yanks(findstart, base)
+function! plugins#miniyank#complete_yanks(findstart, base)
     if a:findstart
         " locate the start of the word
         let l:line = getline('.')

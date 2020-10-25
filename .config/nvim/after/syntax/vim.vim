@@ -21,5 +21,4 @@ syn region vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*$+ end=+\.$+
 syn cluster vimFuncBodyList	add=vimLuaRegion
 let b:current_syntax = 'vim'
 
-syntax keyword vimCommand contained Pack[add]
-syntax keyword vimCommand contained Alias
+syntax keyword vimCommand contained Pack[add] Alias Plug

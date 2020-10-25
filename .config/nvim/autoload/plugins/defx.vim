@@ -3,7 +3,7 @@ augroup autoload_plugins_defx
     autocmd FileType defx call s:defx_set_buffer_maps()
 augroup END
 
-function s:defx_set_buffer_maps()
+function! s:defx_set_buffer_maps()
     setlocal statusline=%f
     nnoremap <silent><buffer><expr> <CR>
         \ defx#do_action('open')

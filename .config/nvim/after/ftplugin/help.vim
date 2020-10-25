@@ -3,7 +3,7 @@ nnoremap <silent><buffer> yxx     :execute trim(getline('.'))<CR>
 " Execute visual selection
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 
-function s:show_toc()
+function! s:show_toc()
     let bufname = bufname('%')
     let info = getloclist(0, {'winid': 1})
     if !empty(info) && getwinvar(info.winid, 'qf_toc') ==# bufname

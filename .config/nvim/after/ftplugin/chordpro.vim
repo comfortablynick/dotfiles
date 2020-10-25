@@ -1,6 +1,6 @@
 scriptencoding utf-8
 
-function Chords()
+function! Chords()
     python3 << EOF
 import vim
 import re
@@ -13,7 +13,7 @@ EOF
     return py3eval('matches')
 endfunction
 
-function CompleteChords(findstart, base)
+function! CompleteChords(findstart, base)
     if a:findstart
         " locate the start of the word
         let l:line = getline('.')
@@ -43,7 +43,7 @@ inoremap <buffer> <expr> <C-m>
     \ pumvisible() ?  "\<C-n>" : "\<C-m>"
 
 " Complete function for addresses; we match the name & address
-function ChordComplete()
+function! ChordComplete()
     " The data. In this example it's static, but you could read it from a file,
     " get it from a command, etc.
     let l:data = Chords()

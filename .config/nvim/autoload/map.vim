@@ -1,5 +1,5 @@
 " map#save() :: Save all settings of a map for later restoring {{{1
-function map#save(keys, mode, global)
+function! map#save(keys, mode, global)
     let l:mappings = {}
     if a:global
         for l:key in a:keys
@@ -32,7 +32,7 @@ function map#save(keys, mode, global)
 endfunction
 
 " map#restore() :: Restore saved map {{{1
-function map#restore(mappings)
+function! map#restore(mappings)
     for l:mapping in values(a:mappings)
         if !has_key(l:mapping, 'unmapped') && !empty(l:mapping)
             execute l:mapping.mode
@@ -53,7 +53,7 @@ function map#restore(mappings)
 endfunction
 
 " map#cabbr() :: Safe expansion of command-line abbreviations {{{1
-function map#cabbr(lhs, rhs)
+function! map#cabbr(lhs, rhs)
     if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
         if type(a:rhs) == v:t_func
             return a:rhs()
@@ -64,7 +64,7 @@ function map#cabbr(lhs, rhs)
 endfunction
 
 " map#set_cabbr() :: Create safe cnoreabbrev {{{1
-function map#set_cabbr(from, to)
+function! map#set_cabbr(from, to)
     execute 'cnoreabbrev <expr>' a:from
         \ '((getcmdtype() ==# ":" && getcmdline() ==# "'.a:from.'")'
         \ .'? ("'.a:to.'") : ("'.a:from.'"))'
@@ -72,7 +72,7 @@ endfunction
 
 " map#eatchar() :: Eat character if it matches pattern {{{1
 " From :helpgrep Eatchar
-function map#eatchar(pat)
+function! map#eatchar(pat)
     let l:c = nr2char(getchar(0))
     return (l:c =~ a:pat) ? '' : l:c
 endfunc

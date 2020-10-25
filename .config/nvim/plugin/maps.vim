@@ -5,9 +5,6 @@ nnoremap qqq :q!<CR>
 nnoremap QQ ZQ
 nnoremap Y y$
 
-" Leader {{{2
-let g:mapleader = ','
-
 " nnoremap : ;
 " xnoremap : ;
 " onoremap : ;

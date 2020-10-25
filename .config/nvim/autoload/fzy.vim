@@ -1,5 +1,5 @@
 " fzy#command() :: Pipe command into fzy and execute vim command with choice
-function fzy#command(choice_command, vim_command)
+function! fzy#command(choice_command, vim_command)
     let l:file = tempname()
     let l:winid = win_getid()
     let l:cmd = a:choice_command.' | fzy > '.l:file
@@ -14,7 +14,7 @@ function fzy#command(choice_command, vim_command)
     startinsert
 endfunction
 
-function s:completed(winid, filename, action, ...)
+function! s:completed(winid, filename, action, ...)
     bdelete!
     call win_gotoid(a:winid)
     if filereadable(a:filename)

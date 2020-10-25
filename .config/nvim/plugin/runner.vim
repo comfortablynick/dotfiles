@@ -15,7 +15,7 @@ let g:runner_cmd_overrides = {
     \ 'lua': 'just runfile {file}',
     \}
 
-function s:run(cmd)
+function! s:run(cmd)
     let l:time = index(s:wait_before_run_fts, &filetype) > -1 ? 500 : 0
     if &l:modified | write | endif
     call timer_start(l:time, {-> runner#run_cmd(a:cmd)})

@@ -224,7 +224,7 @@ end
 -- VimL glue function for nvim_text_operator
 -- Calls the lua function whose name is g:lua_fn_name and forwards its arguments
 vim.cmd[[
-function! LuaExprCallback(...) abort
+function LuaExprCallback(...)
 	return luaeval(g:lua_expr, a:000)
 endfunction
 ]]

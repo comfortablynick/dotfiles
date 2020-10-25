@@ -1,5 +1,5 @@
 " Allow for netrw to be toggled
-function s:toggle_netrw()
+function! s:toggle_netrw()
     if get(g:, 'NetrwIsOpen', 0)
         let l:i = bufnr('$')
         while (l:i >= 1)
@@ -16,7 +16,7 @@ function s:toggle_netrw()
 endfunction
 
 " Toggles explorer buffer
-function explorer#toggle(explorer)
+function! explorer#toggle(explorer)
     if a:explorer ==# 'nerdtree'
         NERDTreeToggle
     elseif a:explorer ==# 'coc-explorer'

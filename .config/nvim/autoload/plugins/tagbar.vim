@@ -1,4 +1,4 @@
-function plugins#tagbar#pre()
+function! plugins#tagbar#pre()
     let g:tagbar_autoclose = 1                                      " Autoclose tagbar after selecting tag
     let g:tagbar_autofocus = 1                                      " Move focus to tagbar when opened
     let g:tagbar_compact = 1                                        " Eliminate help msg, blank lines
@@ -22,7 +22,7 @@ function plugins#tagbar#pre()
         \ }
 endfunction
 
-function plugins#tagbar#toggle()
+function! plugins#tagbar#toggle()
     silent! packadd tagbar
     TagbarToggle
 endfunction

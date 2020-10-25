@@ -1,6 +1,6 @@
 " coc.nvim source for chordpro
 " See https://github.com/neoclide/coc.nvim/wiki/Create-custom-source
-function coc#source#chords#init()
+function! coc#source#chords#init()
     return {
         \ 'filetypes': ['chordpro'],
         \ 'priority': 9,
@@ -9,7 +9,7 @@ function coc#source#chords#init()
         \}
 endfunction
 
-function coc#source#chords#complete(opt, cb)
+function! coc#source#chords#complete(opt, cb)
     let l:items = ['[A]', '[Am]', '[G7/A]']
     call a:cb(l:items)
 endfunction

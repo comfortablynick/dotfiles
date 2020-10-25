@@ -2,7 +2,7 @@
 " Vim-Packager init {{{2
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 
-function plugins#init()
+function! plugins#init()
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
         echo 'Downloading vim-packager'
@@ -115,8 +115,9 @@ function plugins#init()
     Pack 'TravonteD/luajob'
     Pack 'nvim-lua/plenary.nvim'
 
-    " Training {{{2
+    " Training/Vim help {{{2
     Pack 'tjdevries/train.nvim'
+    Pack 'liuchengxu/vim-which-key'
 
     " Tmux {{{2
     Pack 'christoomey/vim-tmux-navigator'
@@ -126,7 +127,7 @@ endfunction
 
 " Helper functions {{{1
 " fzf_post :: fzf update hook {{{2
-function s:fzf_post(plugin)
+function! s:fzf_post(plugin)
     let l:cmd = './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
     let l:args = '-cwd='..a:plugin['dir']
     execute 'Term' l:args l:cmd
@@ -140,7 +141,7 @@ endfunction
 " `end` Range end
 " `bang` <bang> from command
 " `args` <q-args> from command
-function plugins#lazy_run(cmd, package, ...)
+function! plugins#lazy_run(cmd, package, ...)
     if !plugins#exists(a:package)
         echohl WarningMsg
         echo 'Package' a:package 'not found in packpath!'
@@ -199,7 +200,7 @@ endfunction
 
 " plugins#exists :: check if plugin exists in &packpath {{{2
 " `plugin` Plugin name or glob pattern
-function plugins#exists(plugin)
+function! plugins#exists(plugin)
     return !empty(globpath(&packpath, 'pack/*/*/'.a:plugin))
 endfunction
 

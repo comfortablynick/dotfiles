@@ -69,7 +69,7 @@ let g:ale_cmake_cmakelint_options           = '--config=$HOME/.config/cmake/cmak
 nmap <silent><buffer> <Leader>f <Plug>(ale_next_wrap)
 nmap <silent><buffer> <Leader>g <Plug>(ale_previous_wrap)
 
-function s:set_hi()
+function! s:set_hi()
     highlight ALEError       ctermfg=Red guifg=#ff5f87
     highlight ALEWarning     ctermfg=178 guifg=#d78f00
     highlight ALEInfo        ctermfg=178 guifg=#d78f00

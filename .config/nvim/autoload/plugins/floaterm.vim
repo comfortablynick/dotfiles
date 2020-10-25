@@ -11,12 +11,12 @@ nnoremap <silent> <F7> :FloatermToggle<CR>
 tnoremap <silent> <F7> <C-\><C-n>:FloatermToggle<CR>
 
 " plugins#floaterm#wrap :: Use floaterm for custom command and allow cmdline options {{{1
-function plugins#floaterm#wrap(cmd, ...)
+function! plugins#floaterm#wrap(cmd, ...)
     execute ':FloatermNew' join(a:000) a:cmd
 endfunction
 
 " Use floaterm for Async[Run|Tasks] {{{1
-function s:runner_proc(opts)
+function! s:runner_proc(opts)
     let l:curr_bufnr = floaterm#curr()
     if has_key(a:opts, 'silent') && a:opts.silent == 1
         call floaterm#hide()

@@ -7,7 +7,7 @@ let s:LinterErrors = g:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
 
 " Main {{{1
-function statusline#get(winnr) "{{{2
+function! statusline#get(winnr) "{{{2
     " let l:default_status = '%<%f %h%m%r%'
     " let l:inactive_status = ' %n %<%f %h%m%r%'
 
@@ -42,7 +42,7 @@ let s:args = [
     \   ]
     \ ]
 
-function s:toggle_item(var, funcref) " {{{2
+function! s:toggle_item(var, funcref) " {{{2
     let g:statusline_toggle = get(g:, 'statusline_toggle', [])
     let l:idx = index(g:statusline_toggle, a:funcref)
     if l:idx > -1
@@ -52,7 +52,7 @@ function s:toggle_item(var, funcref) " {{{2
     endif
 endfunction
 
-function statusline#command(...) " {{{2
+function! statusline#command(...) " {{{2
     let l:arg = a:0 > 0 ? a:1 : 'toggle'
 
     if l:arg ==# 'toggle'
@@ -72,36 +72,36 @@ function statusline#command(...) " {{{2
     endfor
 endfunction
 
-function statusline#complete_args(a, l, p) " {{{3
+function! statusline#complete_args(a, l, p) " {{{3
     return join(s:args[0] + s:args[1], "\n")
 endfunction
 
 " Component functions {{{1
-function s:is_active() "{{{2
+function! s:is_active() "{{{2
     return get(g:, 'actual_curbuf', bufnr('%')) == bufnr('%')
 endfunction
 
-function s:is_active_file() "{{{2
+function! s:is_active_file() "{{{2
     return s:is_active() && !statusline#is_not_file()
 endfunction
 
-function s:lpad(expr) "{{{2
+function! s:lpad(expr) "{{{2
     return !empty(a:expr) ? ' '.a:expr : ''
 endfunction
 
-function s:rpad(expr) "{{{2
+function! s:rpad(expr) "{{{2
     return !empty(a:expr) ? a:expr.' ' : ''
 endfunction
 
 " Safely call devicons
-function s:dev_icon(type) "{{{2
+function! s:dev_icon(type) "{{{2
     if exists('*WebDevIconsGet'.a:type.'Symbol')
         return WebDevIconsGet{a:type}Symbol()
     endif
     return ''
 endfunction
 
-function statusline#set_highlight(group, bg, fg, opt) " {{{2
+function! statusline#set_highlight(group, bg, fg, opt) " {{{2
     let g:statusline_hg = get(g:, 'statusline_hg', [])
     let l:bg = type(a:bg) == v:t_string ? ['none', 'none' ] : a:bg
     let l:fg = type(a:fg) == v:t_string ? ['none', 'none'] : a:fg
@@ -119,7 +119,7 @@ function statusline#set_highlight(group, bg, fg, opt) " {{{2
     execute l:cmd
 endfunction
 
-function statusline#get_highlight(src)
+function! statusline#get_highlight(src)
     let l:hl = execute('highlight '.a:src)
     let l:mregex = '\v(\w+)\=(\S+)'
     let l:idx = 0
@@ -136,7 +136,7 @@ function statusline#get_highlight(src)
     return l:arr
 endfunction
 
-function statusline#extract(group, what, ...)
+function! statusline#extract(group, what, ...)
     if a:0 == 1
         return synIDattr(synIDtrans(hlID(a:group)), a:what, a:1)
     else
@@ -144,7 +144,7 @@ function statusline#extract(group, what, ...)
     endif
 endfunction
 
-function statusline#mode()
+function! statusline#mode()
     " l:mode_map (0 = full size, 1 = medium abbr, 2 = short abbr)
     let l:mode_map = {
         \ 'n' :     ['NORMAL','NRM','N'],
@@ -184,11 +184,11 @@ function statusline#mode()
     return get(l:special_modes, &filetype, get(l:special_modes, @%, l:mode_out))
 endfunction
 
-function s:line_percent() "{{{2
+function! s:line_percent() "{{{2
     return printf('%3d%%', line('.') * 100 / line('$'))
 endfunction
 
-function s:line_no() "{{{2
+function! s:line_no() "{{{2
     let l:totlines = line('$')
     let l:maxdigits = len(string(l:totlines))
     return printf('%*d/%*d',
@@ -199,11 +199,11 @@ function s:line_no() "{{{2
         \ )
 endfunction
 
-function s:col_no() "{{{2
+function! s:col_no() "{{{2
     return printf('%3d', virtcol('.'))
 endfunction
 
-function statusline#unicode_number(num) "{{{2
+function! statusline#unicode_number(num) "{{{2
     if a:num > 0 && a:num <= 20
         return nr2char(char2nr('① ') + (a:num - 1))
     else
@@ -211,7 +211,7 @@ function statusline#unicode_number(num) "{{{2
     endif
 endfunction
 
-function statusline#line_info_full() "{{{2
+function! statusline#line_info_full() "{{{2
     return !s:is_active_file() ? '' :
         \ printf('%s %s %s %s :%s',
         \ s:line_percent(),
@@ -222,7 +222,7 @@ function statusline#line_info_full() "{{{2
         \ )
 endfunction
 
-function statusline#line_info() "{{{2
+function! statusline#line_info() "{{{2
     if ! s:is_active_file() | return '' | endif
     let l:line = line('.')
     let l:line_pct = l:line * 100 / line('$')
@@ -230,20 +230,20 @@ function statusline#line_info() "{{{2
     return printf('%d,%d %3d%%', l:line, l:col, l:line_pct)
 endfunction
 
-function statusline#bufnr() "{{{2
+function! statusline#bufnr() "{{{2
     if ! s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
     return buflisted(l:bufnr) ? '  '.l:bufnr.' ' : ''
    " return buflisted(l:bufnr) ? '  '.statusline#unicode_number(l:bufnr).'  ' : ''
 endfunction
 
-function statusline#bufnr_inactive() "{{{2
+function! statusline#bufnr_inactive() "{{{2
     if s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
     return buflisted(l:bufnr) ? '['.l:bufnr.']' : ''
 endfunction
 
-function statusline#job_status() "{{{2
+function! statusline#job_status() "{{{2
     if !s:is_active_file() | return '' | endif
     let l:status = get(g:, 'asyncrun_status')
     if empty(l:status)
@@ -252,7 +252,7 @@ function statusline#job_status() "{{{2
     return !empty(l:status) ? 'Job: '.l:status : ''
 endfunction
 
-function statusline#file_type() "{{{2
+function! statusline#file_type() "{{{2
     if !s:is_active_file() | return '' | endif
     let l:ftsymbol = s:rpad(s:dev_icon('FileType'))
     let l:out = ''
@@ -263,7 +263,7 @@ function statusline#file_type() "{{{2
     return ''
 endfunction
 
-function statusline#file_format() "{{{2
+function! statusline#file_format() "{{{2
     if !s:is_active_file() | return '' | endif
     let l:ff = &fileformat
     if l:ff ==# 'unix' || statusline#is_not_file()
@@ -276,7 +276,7 @@ function statusline#file_format() "{{{2
         \ : ''
 endfunction
 
-function statusline#is_not_file() "{{{2
+function! statusline#is_not_file() "{{{2
     " Return true if not treated as file
     let l:bufname = @%
     let l:ft = &filetype
@@ -307,19 +307,19 @@ function statusline#is_not_file() "{{{2
     return 0
 endfunction
 
-function statusline#modified() "{{{2
+function! statusline#modified() "{{{2
     return &modified ? g:sl.symbol.modified : &modifiable ? '' : g:sl.symbol.unmodifiable
 endfunction
 
-function statusline#read_only() "{{{2
+function! statusline#read_only() "{{{2
     return !statusline#is_not_file() && &readonly ? g:sl.symbol.readonly : ''
 endfunction
 
-function statusline#syntax_group() " {{{2
+function! statusline#syntax_group() " {{{2
     return synIDattr(synID(line('.'), col('.'), 1), 'name')
 endfunction
 
-function statusline#file_name() "{{{2
+function! statusline#file_name() "{{{2
     let l:ft = &filetype
     let l:bt = &buftype
     if l:ft ==# 'help'
@@ -338,7 +338,7 @@ function statusline#file_name() "{{{2
     return l:fname
 endfunction
 
-function statusline#file_size() "{{{2
+function! statusline#file_size() "{{{2
     let l:div = 1024.0
     let l:num = getfsize(@%)
     if l:num <= 0 | return '' | endif
@@ -355,19 +355,19 @@ function statusline#file_size() "{{{2
     return printf('%.1fY')
 endfunction
 
-function statusline#file_encoding() "{{{2
+function! statusline#file_encoding() "{{{2
     " Only return a value if != utf-8
     return &fileencoding !=? 'utf-8' ? &fileencoding : ''
 endfunction
 
-function statusline#tab_name() "{{{3
+function! statusline#tab_name() "{{{3
     let l:fname = @%
     return l:fname =~? '__Tagbar__' ? 'Tagbar' :
         \ l:fname =~? 'NERD_tree' ? 'NERDTree' :
         \ statusline#file_name()
 endfunction
 
-function statusline#git_summary() "{{{2
+function! statusline#git_summary() "{{{2
     " Look for status in this order
     " 1. coc-git
     " 2. gitgutter
@@ -391,7 +391,7 @@ function statusline#git_summary() "{{{2
         \ )
 endfunction
 
-function statusline#git_branch() "{{{2
+function! statusline#git_branch() "{{{2
     if exists('g:coc_git_status')
         " TODO: needed on vim8; check to see if still needed
         return substitute(g:coc_git_status, '', '', '')
@@ -401,7 +401,7 @@ function statusline#git_branch() "{{{2
     return ''
 endfunction
 
-function statusline#git_status() "{{{2
+function! statusline#git_status() "{{{2
     if !s:is_active_file()
         \ || !filereadable(@%)
         \ || winwidth(0) < g:sl.width.min
@@ -418,14 +418,14 @@ function statusline#git_status() "{{{2
         \ )
 endfunction
 
-function statusline#venv_name() "{{{2
+function! statusline#venv_name() "{{{2
     if exists('g:did_coc_loaded') | return '' | endif
     return &filetype ==# 'python' && !empty($VIRTUAL_ENV)
         \ ? printf(' (%s)', split($VIRTUAL_ENV, '/')[-1])
         \ : ''
 endfunction
 
-function statusline#current_tag() "{{{2
+function! statusline#current_tag() "{{{2
     if winwidth(0) < g:sl.width.max | return '' | endif
     let l:coc_func = get(b:, 'coc_current_function', '')
     if l:coc_func !=# '' | return l:coc_func | endif
@@ -435,7 +435,7 @@ function statusline#current_tag() "{{{2
     return ''
 endfunction
 
-function statusline#coc_status() "{{{2
+function! statusline#coc_status() "{{{2
     if !s:is_active_file() | return '' | endif
     if winwidth(0) > g:sl.width.min && exists('*coc#status')
         return coc#status()
@@ -443,68 +443,68 @@ function statusline#coc_status() "{{{2
     return ''
 endfunction
 
-function statusline#lsp_status() "{{{2
+function! statusline#lsp_status() "{{{2
     if !s:is_active_file() || !has('nvim')
         return ''
     endif
     return luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))') ? 'LSP': ''
 endfunction
 
-function s:ale_linted() "{{{2
+function! s:ale_linted() "{{{2
     return get(g:, 'ale_enabled', 0) == 1
         \ && get(b:, 'ale_linted', 0) > 0
         \ && ale#engine#IsCheckingBuffer(0) == 0
 endfunction
 
-function s:coc_error_ct() "{{{2
+function! s:coc_error_ct() "{{{2
     let l:coc = get(b:, 'coc_diagnostic_info', {})
     let l:ct = get(l:coc, 'error', 0)
     return l:ct
 endfunction
 
-function s:ale_error_ct() "{{{2
+function! s:ale_error_ct() "{{{2
     if !s:ale_linted() | return 0 | endif
     let l:counts = ale#statusline#Count(bufnr('%'))
     return l:counts.error + l:counts.style_error
 endfunction
 
-function s:lsp_error_ct() "{{{2
+function! s:lsp_error_ct() "{{{2
     if has('nvim')
         return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
     endif
     return 0
 endfunction
 
-function s:ale_warning_ct() "{{{2
+function! s:ale_warning_ct() "{{{2
     if !s:ale_linted() | return 0 | endif
     let l:counts = ale#statusline#Count(bufnr('%'))
     return l:counts.warning + l:counts.style_warning
 endfunction
 
-function s:lsp_warning_ct() "{{{2
+function! s:lsp_warning_ct() "{{{2
     if has('nvim')
         return v:lua.vim.lsp.util.buf_diagnostics_count('Warning')
     endif
     return 0
 endfunction
 
-function s:coc_warning_ct() " {{{2
+function! s:coc_warning_ct() " {{{2
     let l:coc = get(b:, 'coc_diagnostic_info', {})
     let l:ct = get(l:coc, 'warning', 0)
     return l:ct
 endfunction
 
-function statusline#linter_errors() " {{{2
+function! statusline#linter_errors() " {{{2
     let l:ct = s:coc_error_ct() + s:ale_error_ct() + s:lsp_error_ct()
     return l:ct > 0 ? g:sl.symbol.error_sign.l:ct : ''
 endfunction
 
-function statusline#linter_warnings() " {{{2
+function! statusline#linter_warnings() " {{{2
     let l:ct = s:coc_warning_ct() + s:ale_warning_ct() + s:lsp_warning_ct()
     return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
 endfunction
 
-function statusline#mucomplete_method() "{{{2
+function! statusline#mucomplete_method() "{{{2
     if !exists('g:mucomplete_current_method')
         \ || !s:is_active_file()
         \ || winwidth(0) < g:sl.width.med
@@ -513,7 +513,7 @@ function statusline#mucomplete_method() "{{{2
     return '['.g:mucomplete_current_method.']'
 endfunction
 
-function statusline#toggled() " {{{2
+function! statusline#toggled() " {{{2
     if !exists('g:statusline_toggle') | return '' | endif
     let l:sl = ''
     for l:v in g:statusline_toggle

@@ -12,7 +12,7 @@ call sign_define('LspDiagnosticsHintSign',        {'text' : '»', 'texthl' : 'Ls
 nnoremap <buffer> <silent> ]q :NextDiagnosticCycle<CR>
 nnoremap <buffer> <silent> [q :PrevDiagnosticCycle<CR>
 
-function s:set_hi()
+function! s:set_hi()
     highlight LspDiagnosticsError       ctermfg=Red guifg=#ff5f87
     highlight LspDiagnosticsWarning     ctermfg=178 guifg=#d78f00
     highlight LspDiagnosticsInformation ctermfg=178 guifg=#d78f00

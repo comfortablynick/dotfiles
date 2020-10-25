@@ -56,7 +56,7 @@ command! -nargs=? -complete=custom,statusline#complete_args SL
 
 " The following lines must come after colorscheme declaration
 " Remove bold from StatusLine
-function s:set_user_highlights()
+function! s:set_user_highlights()
     call syntax#derive('StatusLine', 'StatusLine', 'cterm=reverse', 'gui=reverse')
     call syntax#derive('IncSearch', 'User1')
     call syntax#derive('WildMenu', 'User2', 'cterm=NONE', 'gui=NONE')

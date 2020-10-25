@@ -47,7 +47,7 @@ let g:PaperColor_Theme_Options = {
     \ }
 
 " Assign colorscheme
-function s:get_vim_color()
+function! s:get_vim_color()
     if has('nvim')
         return !empty($NVIM_COLOR) ? $NVIM_COLOR : 'papercolor-dark'
     else

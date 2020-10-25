@@ -1,4 +1,4 @@
-function plugins#coc#pre() "{{{1
+function! plugins#coc#pre() "{{{1
     " let g:coc_force_debug = 1
     let g:coc_filetype_map = {
         \ 'yaml.ansible': 'yaml'
@@ -26,12 +26,12 @@ function plugins#coc#pre() "{{{1
     endif
 endfunction
 
-function plugins#coc#preconfig() "{{{1
+function! plugins#coc#preconfig() "{{{1
     " This has to be called explicitly before the plugin loads
 endfunction
 
 
-function plugins#coc#cmds() "{{{1
+function! plugins#coc#cmds() "{{{1
     if ! coc#rpc#ready() || exists('b:coc_suggest_disable') | return | endif
     augroup coc_config_auto
         autocmd!
@@ -45,13 +45,13 @@ function plugins#coc#cmds() "{{{1
 endfunction
 
 " Helper function for <TAB> completion keymap
-function s:check_back_space() "{{{1
+function! s:check_back_space() "{{{1
     let l:col = col('.') - 1
     return !l:col || getline('.')[l:col - 1]  =~# '\s'
 endfunction
 
 " Remap only if active for filetype
-function plugins#coc#apply_maps() "{{{1
+function! plugins#coc#apply_maps() "{{{1
     if exists('b:coc_suggest_disable') | return | endif
     " Capture any existing maps
     let l:coc_existing_maps = map#save([
@@ -120,17 +120,17 @@ function plugins#coc#apply_maps() "{{{1
     command! -nargs=? Fold :call CocAction('fold', <f-args>)
 endfunction
 
-function s:coc_actions_open_from_selection(type) "{{{1
+function! s:coc_actions_open_from_selection(type) "{{{1
     execute 'CocCommand actions.open' a:type
 endfunction
 
-function plugins#coc#abbrev() "{{{1
+function! plugins#coc#abbrev() "{{{1
     call map#set_cabbr('es', 'CocCommand snippets.editSnippets')
     call map#set_cabbr('ci', 'CocInfo')
     call map#set_cabbr('cc', 'CocConfig')
 endfunction
 
-function plugins#coc#init() "{{{1
+function! plugins#coc#init() "{{{1
     if get(g:, 'use_explorer_coc', 'coc-explorer') ==# 'coc-explorer'
         let g:use_explorer = 'coc-explorer'
     endif

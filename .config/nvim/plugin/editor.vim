@@ -67,13 +67,13 @@ augroup number_toggle
 augroup END
 
 " Functions {{{1
-function s:cmdwin_enter() "{{{2
+function! s:cmdwin_enter() "{{{2
     nnoremap <buffer> <Leader>q <C-c><C-c>
     nnoremap <buffer> <Esc> <C-c><C-c>
     setlocal norelativenumber number
 endfunction
 
-function s:recall_cursor_position() "{{{2
+function! s:recall_cursor_position() "{{{2
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 

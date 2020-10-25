@@ -1,4 +1,4 @@
-function s:signify_hunk_next(count)
+function! s:signify_hunk_next(count)
   let oldpos = getcurpos()
   call sy#jump#next_hunk(a:count)
   if getcurpos() == oldpos
@@ -6,7 +6,7 @@ function s:signify_hunk_next(count)
   endif
 endfunction
 
-function s:signify_hunk_prev(count)
+function! s:signify_hunk_prev(count)
   let oldpos = getcurpos()
   call sy#jump#prev_hunk(a:count)
   if getcurpos() == oldpos

@@ -1,4 +1,4 @@
-function plugins#ultisnips#pre()
+function! plugins#ultisnips#pre()
     " Remap UltiSnips triggers so they don't interfere with mucomplete
     let g:UltiSnipsExpandTrigger = '<C-s>'
     let g:UltiSnipsJumpForwardTrigger = '<C-right>'
@@ -32,7 +32,7 @@ endfunction
 " achieves this kind of behaviour:
 
 
-function s:try_ultisnips()
+function! s:try_ultisnips()
     let g:ulti_expand_or_jump_res = 0
     if !pumvisible() " With the pop-up menu open, let Tab move down
         call UltiSnips#ExpandSnippetOrJump()
@@ -40,6 +40,6 @@ function s:try_ultisnips()
     return ''
 endf
 
-function s:try_mucomplete()
+function! s:try_mucomplete()
     return g:ulti_expand_or_jump_res ? '' : "\<plug>(MUcompleteFwd)"
 endf

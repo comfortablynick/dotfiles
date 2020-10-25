@@ -55,7 +55,7 @@ autocmd BufRead,BufNewFile $1 setfiletype $2]],
   ftdetect_verbose = [[" vint: -ProhibitAutocmdWithNoGroup
 autocmd BufRead,BufNewFile $1 call s:set_filetype()
 
-function! s:set_filetype() abort
+function s:set_filetype()
     if &filetype !=# '$2'
         set filetype=$2
     endif

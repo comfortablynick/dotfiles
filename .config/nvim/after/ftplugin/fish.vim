@@ -3,7 +3,7 @@ compiler fish
 setlocal shiftwidth=4 
 setlocal formatoptions-=ro
 setlocal errorformat=%f\ (line\ %l):\ %m
-Packadd ale
+" Packadd ale
 
 " Error example
 " || 00_start_tmux.fish (line 2): Missing end to bala

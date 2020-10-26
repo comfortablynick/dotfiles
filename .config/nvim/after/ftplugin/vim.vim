@@ -4,7 +4,7 @@ setlocal foldexpr=VimFoldLevel()
 setlocal makeprg=vint\ %
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
-Packadd ale
+" Packadd ale
 
 " Maps
 " Execute visual selection

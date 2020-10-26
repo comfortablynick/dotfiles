@@ -220,8 +220,8 @@ let g:loaded_python_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-silent! packadd! vim-doge
-silent! packadd! vim-dirvish
+" silent! packadd! vim-doge
+" silent! packadd! vim-dirvish
 
 " Nvim/vim specific packages {{{3
 if has('nvim')

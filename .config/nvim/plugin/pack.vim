@@ -61,9 +61,11 @@ function! s:deferred_load()
     call localrc#load_from_env()
 endfunction
 
+finish
+
 " Plugins {{{1
 " Packager setup {{{2
-let g:packager_path = expand('$XDG_DATA_HOME/nvim/site')..'/pack/packager-test'
+let g:packager_path = expand("$XDG_DATA_HOME/nvim/site")..'/pack/packager-test'
 let s:vim_packager_path = g:packager_path..'/opt/vim-packager'
 if !isdirectory(s:vim_packager_path)
     echo 'Downloading vim-packager'
@@ -76,7 +78,7 @@ call plug#begin({
     \ 'jobs': 0,
     \ })
 
-" Plug 'comfortablynick/plugpackager.vim'
+Plug 'kristijanhusak/vim-packager'
 " General {{{2
 Plug 'chrisbra/Colorizer'
 Plug 'airblade/vim-rooter'
@@ -86,10 +88,14 @@ Plug 'moll/vim-bbye'
 Plug 'psliwka/vim-smoothie'
 
 " Linters/formatters/runners {{{2
-Plug 'dense-analysis/ale',         {'for': ['fish', 'vim'], 'pre': 'source autoload/plugins/ale'}
+Plug 'dense-analysis/ale',
+    \ {
+    \  'for': ['fish', 'vim'],
+    \  'pre': {-> plugins#ale#pre()},
+    \ }
 Plug 'sbdchd/neoformat',           {'on': 'Neoformat'}
 Plug 'psf/black',                  {'branch': 'stable'}
-Plug 'skywind3000/asyncrun.vim',   {'on': 'AsyncRun'}
+Plug 'skywind3000/asyncrun.vim',   {'on': 'AsyncRun', 'post': {-> plugins#asyncrun#()}}
 Plug 'skywind3000/asynctasks.vim',
     \ {
     \   'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin',
@@ -103,7 +109,7 @@ Plug 'kkoomen/vim-doge', {'type': 'start'}
 " Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-unimpaired'
 Plug 'machakann/vim-sandwich'
-Plug 'tomtom/tcomment_vim'
+Plug 'tomtom/tcomment_vim', {'post': {-> plugins#tcomment#()}}
 Plug 'justinmk/vim-sneak'
 Plug 'rhysd/clever-f.vim'
 Plug 'tommcdo/vim-lion'
@@ -113,11 +119,16 @@ Plug 'bfredl/nvim-miniyank'
 Plug 'antoinemadec/FixCursorHold.nvim'
 
 " Explorer/finder utils {{{2
+Plug 'junegunn/fzf',
+    \ {
+    \   'pre': function('plugins#fzf#()'),
+    \   'post': {-> plugins#fzf#()},
+    \   'do': './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1',
+    \ }
+Plug 'junegunn/fzf.vim'
 Plug 'kevinhwang91/rnvimr',      {'do': 'pip3 install -U pynvim'}
 Plug 'liuchengxu/vista.vim',     {'on': 'Vista'}
 Plug 'liuchengxu/vim-clap',      {'on': 'Clap', 'do': ':Clap install-binary!'}
-Plug 'junegunn/fzf',             {'do': { p -> s:fzf_post(p) }}
-Plug 'junegunn/fzf.vim'
 Plug 'laher/fuzzymenu.vim',      {'on': 'Fzm'}
 Plug 'majutsushi/tagbar',        {'on': 'TagbarToggle'}
 Plug 'mbbill/undotree',          {'on': 'UndotreeToggle'}
@@ -125,7 +136,15 @@ Plug 'preservim/nerdtree',       {'on': 'NERDTreeToggle'}
 Plug 'Shougo/defx.nvim',         {'on': 'Defx'}
 Plug 'kyazdani42/nvim-tree.lua', {'on': 'LuaTreeToggle'}
 Plug 'justinmk/vim-dirvish',     {'type': 'start'}
-Plug 'srstevenson/vim-picker'
+
+function s:PickerPre()
+    let g:picker_custom_find_executable = 'fd'
+    let g:picker_custom_find_flags = '-t f -HL --color=never'
+endfunction
+let g:PickerPre = function('s:PickerPre')
+Plug 'srstevenson/vim-picker',   {'on': ['<Plug>(PickerEdit)', '<Plug>(PickerVsplit)'], 'pre': g:PickerPre}
+nmap <silent> <Leader>e <Plug>(PickerEdit)
+nmap <silent> <Leader>v <Plug>(PickerVsplit)
 Plug 'voldikss/vim-floaterm',    {'on': ['FloatermNew', 'FloatermToggle']}
 
 " Vim Development {{{2
@@ -138,6 +157,9 @@ Plug 'dstein64/vim-startuptime'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/lib.kom'
+Plug 'romgrk/barbar.nvim'
 
 " Syntax/filetype {{{2
 Plug 'vhdirk/vim-cmake'
@@ -145,13 +167,13 @@ Plug 'cespare/vim-toml',              {'type': 'start'}
 Plug 'tbastos/vim-lua',               {'type': 'start'}
 Plug 'blankname/vim-fish',            {'type': 'start'}
 Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
-Plug 'freitass/todo.txt-vim',         {'type': 'start'}
+Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
 Plug 'SidOfc/mkdx',                   {'type': 'start'}
 Plug 'habamax/vim-asciidoctor',       {'type': 'start'}
 Plug 'masukomi/vim-markdown-folding', {'type': 'start'}
 
 " Git {{{2
-Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter', {'pre': {-> plugins#gitgutter#pre()}}
 " Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
@@ -160,24 +182,24 @@ Plug 'iberianpig/tig-explorer.vim', {'on': ['Tig', 'TigStatus']}
 " Snippets {{{2
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'norcalli/snippets.nvim'
+Plug 'norcalli/snippets.nvim', {'if': has('nvim')}
 
 " Language server/completion {{{2
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp-status.nvim'
-Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
-Plug 'steelsojka/completion-buffers'
+Plug 'neovim/nvim-lspconfig',         {'if': has('nvim')}
+Plug 'nvim-lua/lsp-status.nvim',      {'if': has('nvim')}
+Plug 'nvim-lua/completion-nvim',      {'if': has('nvim')}
+Plug 'nvim-lua/diagnostic-nvim',      {'if': has('nvim')}
+Plug 'steelsojka/completion-buffers', {'if': has('nvim')}
 Plug 'lifepillar/vim-mucomplete'
 " Plug 'neoclide/coc.nvim', {'do': {-> coc#util#install()}}
 
 " Lua/nvim {{{2
-Plug 'bfredl/nvim-luadev'
-Plug 'TravonteD/luajob'
-Plug 'nvim-lua/plenary.nvim'
+Plug 'bfredl/nvim-luadev',    {'if': has('nvim')}
+Plug 'TravonteD/luajob',      {'if': has('nvim')}
+Plug 'nvim-lua/plenary.nvim', {'if': has('nvim')}
 
 " Training/Vim help {{{2
-Plug 'tjdevries/train.nvim'
+Plug 'tjdevries/train.nvim',     {'if': has('nvim')}
 Plug 'liuchengxu/vim-which-key', {'on': ['WhichKey', 'WhichKeyVisual']}
 
 " Tmux {{{2
@@ -187,13 +209,3 @@ Plug 'comfortablynick/vim-tmux-runner'
 
 " Initialize plugins {{{2
 call plug#end()
-
-" Plugin management helper functions {{{1
-" fzf_post :: fzf update hook {{{2
-function! s:fzf_post(plugin)
-    let l:cmd = './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
-    let l:args = '-cwd='..a:plugin['dir']
-    execute 'Term' l:args l:cmd
-endfunction
-
-" vim:fdl=1:

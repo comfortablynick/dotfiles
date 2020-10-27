@@ -83,7 +83,7 @@ function! plugins#init()
     Pack 'tbastos/vim-lua',               {'type': 'start'}
     Pack 'blankname/vim-fish',            {'type': 'start'}
     Pack 'vim-jp/syntax-vim-ex',          {'type': 'start'}
-    Pack 'freitass/todo.txt-vim',         {'type': 'start'}
+    Pack 'dbeniamine/todo.txt-vim',       {'type': 'start'}
     Pack 'SidOfc/mkdx',                   {'type': 'start'}
     Pack 'habamax/vim-asciidoctor',       {'type': 'start'}
     Pack 'masukomi/vim-markdown-folding', {'type': 'start'}

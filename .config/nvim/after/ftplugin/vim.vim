@@ -5,6 +5,7 @@ setlocal makeprg=vint\ %
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
 " Packadd ale
+packadd ale
 
 " Maps
 " Execute visual selection

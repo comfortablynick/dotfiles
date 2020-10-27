@@ -14,12 +14,43 @@ if has('nvim') && g:use_packer
 endif
 
 let g:globpath = []
+let g:test_packs_called = []
 " Autocmds {{{2
 augroup plugin_config_handler
     autocmd!
-    autocmd SourcePre  */pack/*/*/plugin/*.vim call s:source_handler(expand('<afile>'), 1)
-    autocmd SourcePost */pack/*/*/plugin/*.vim call s:source_handler(expand('<afile>'), 0)
+    autocmd SourcePre  */pack/* call s:source_handler(expand('<amatch>'), 1)
+    autocmd SourcePost */pack/* call s:source_handler(expand('<amatch>'), 0)
 augroup END
+
+augroup init_vim
+    autocmd!
+    autocmd SourcePre */pack/* call s:ConfigPack(expand('<amatch>'))
+augroup END
+
+function! s:GetPackName(filename) abort "{{{3
+    return matchstr(a:filename, '[\/]pack[\/][^\/]\+[\/]\%(opt\|start\)[\/]\zs[^\/]\+')
+endf
+
+function! s:ConfigPack(filename) abort "{{{3
+    let l:packname = s:GetPackName(a:filename)
+    " call s:ConfigPack(packname, 'before')
+    let g:test_packs_called += [l:packname]
+endf
+
+function ConfigMatches()
+    let l:matches = []
+    for l:file in g:plugin_config_files
+        " return map(copy(g:test_packs_called), {_,v-> matchstr(l:file, )})
+        for l:pack in g:test_packs_called
+            let l:match = matchstr(l:file, l:pack)
+            if !empty(l:match)
+                let l:matches += [l:match]
+                return
+            endif
+        endfor
+    endfor
+    return l:matches
+endfunction
 
 " Commands {{{2
 command! -nargs=+ -complete=packadd Packadd call s:packadd_handler(<f-args>)
@@ -58,7 +89,7 @@ function! s:source_handler(sourced, pre) "{{{2
         return
     endif
     let g:plugins_{l:type}_called += [l:file]
-    if l:type ==# 'pre'
+   if l:type ==# 'pre'
         let g:plugins_sourced += [a:sourced]
         let g:plugins_called += [l:file]
     endif
@@ -108,7 +139,7 @@ else
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
-    filetype plugin on                                          " Allow loading .vim files for different filetypes
+    " filetype plugin on                                          " Allow loading .vim files for different filetypes
     syntax enable                                               " Syntax highlighting on
 endif
 
@@ -119,6 +150,7 @@ set backup
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{2
+filetype off
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
 set termguicolors                                               " Use true color
@@ -231,7 +263,7 @@ if has('nvim')
     silent! packadd! FixCursorHold.nvim
 
     lua require'helpers'
-    lua require'config.lsp'.init()
+    "lua require'config.lsp'.init()
 else
     " Vim only
     packadd! matchit " Nvim loads by default

@@ -18,41 +18,12 @@ endif
 " Alias :: set command abbreviation {{{2
 command -nargs=+ Alias call map#set_cabbr(<f-args>)
 
-" Global Variables {{{2
-let g:plugin_config_files = map(
-    \ globpath(&runtimepath, 'autoload/plugins/*.vim', 0, 1),
-    \ {_, val -> fnamemodify(val, ':t:r')}
-    \ )
-let g:plugins_sourced = []
-let g:plugins_called = []
-let g:plugins_pre_called = []
-let g:plugins_post_called = []
-
-function! s:source_handler(sourced, pre) "{{{2
-    let l:type = a:pre == 1 ? 'pre' : 'post'
-    let l:file = tolower(fnamemodify(a:sourced, ':t:r'))
-    " Return if we don't have file in autoload/plugins/{l:file}.vim
-    " or if function has been called previously
-    if index(g:plugin_config_files, l:file) < 0
-        \ || index(g:plugins_{l:type}_called, l:file) > -1
-        return
-    endif
-    let g:plugins_{l:type}_called += [l:file]
-    if l:type ==# 'pre'
-        let g:plugins_sourced += [a:sourced]
-        let g:plugins_called += [l:file]
-    endif
-    " try
-    "     call plugins#{l:file}#{l:type}()
-    " catch /^Vim\%((\a\+)\)\=:E117/
-    "     " fn doesn't exist; do nothing
-    " endtry
-endfunction
-
+" init.lua {{{2
 if has('nvim') && get(g:, 'use_init_lua', 0) == 1
     lua require 'init'
     finish
 endif
+
 " General configuration {{{1
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')

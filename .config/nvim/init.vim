@@ -4,8 +4,9 @@
 " | | | | | | |_ \ V /| | | | | | |
 " |_|_| |_|_|\__(_)_/ |_|_| |_| |_|
 "
-" Plugin config handler {{{1
-" let g:packpath_pre = map(globpath(&rtp, 'pack/*/*/*/plugin/*.vim', 0, 1), {_, val -> fnamemodify(val, ':t:r')})
+" Packages {{{1
+" Init configuration handler {{{2
+call plugins#set_source_handler()
 " Packer {{{2
 let g:use_packer = 0
 if has('nvim') && g:use_packer
@@ -13,60 +14,8 @@ if has('nvim') && g:use_packer
     set packpath+=~/vim-test/
 endif
 
-let g:globpath = []
-let g:test_packs_called = []
-" Autocmds {{{2
-augroup plugin_config_handler
-    autocmd!
-    autocmd SourcePre  */pack/* call s:source_handler(expand('<amatch>'), 1)
-    autocmd SourcePost */pack/* call s:source_handler(expand('<amatch>'), 0)
-augroup END
-
-augroup init_vim
-    autocmd!
-    autocmd SourcePre */pack/* call s:ConfigPack(expand('<amatch>'))
-augroup END
-
-function! s:GetPackName(filename) abort "{{{3
-    return matchstr(a:filename, '[\/]pack[\/][^\/]\+[\/]\%(opt\|start\)[\/]\zs[^\/]\+')
-endf
-
-function! s:ConfigPack(filename) abort "{{{3
-    let l:packname = s:GetPackName(a:filename)
-    " call s:ConfigPack(packname, 'before')
-    let g:test_packs_called += [l:packname]
-endf
-
-function ConfigMatches()
-    let l:matches = []
-    for l:file in g:plugin_config_files
-        " return map(copy(g:test_packs_called), {_,v-> matchstr(l:file, )})
-        for l:pack in g:test_packs_called
-            let l:match = matchstr(l:file, l:pack)
-            if !empty(l:match)
-                let l:matches += [l:match]
-                return
-            endif
-        endfor
-    endfor
-    return l:matches
-endfunction
-
-" Commands {{{2
-command! -nargs=+ -complete=packadd Packadd call s:packadd_handler(<f-args>)
-
-function! s:packadd_handler(...)
-    let l:save_ei = &eventignore
-    set eventignore+=SourcePre,SourcePost
-    for l:pack in a:000
-        call s:source_handler(l:pack, 1)
-        execute 'silent! packadd' l:pack
-        call s:source_handler(l:pack, 0)
-    endfor
-    let &eventignore = l:save_ei
-endfunction
-
-" Alias :: set command abbreviation
+" Commands {{{1
+" Alias :: set command abbreviation {{{2
 command -nargs=+ Alias call map#set_cabbr(<f-args>)
 
 " Global Variables {{{2
@@ -89,15 +38,15 @@ function! s:source_handler(sourced, pre) "{{{2
         return
     endif
     let g:plugins_{l:type}_called += [l:file]
-   if l:type ==# 'pre'
+    if l:type ==# 'pre'
         let g:plugins_sourced += [a:sourced]
         let g:plugins_called += [l:file]
     endif
-    try
-        call plugins#{l:file}#{l:type}()
-    catch /^Vim\%((\a\+)\)\=:E117/
-        " fn doesn't exist; do nothing
-    endtry
+    " try
+    "     call plugins#{l:file}#{l:type}()
+    " catch /^Vim\%((\a\+)\)\=:E117/
+    "     " fn doesn't exist; do nothing
+    " endtry
 endfunction
 
 if has('nvim') && get(g:, 'use_init_lua', 0) == 1
@@ -114,8 +63,7 @@ if has('nvim')
     let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
     let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
     let &shadafile =
-        \ stdpath('data').'/shada/main.shada'                   " Location of nvim replacement for viminfofile
-    " let &termguicolors = !$MOSH_CONNECTION
+        \ stdpath('data')..'/shada/main.shada'                  " Location of nvim replacement for viminfofile
 else
     " Vim Only
     set pyxversion=3
@@ -135,11 +83,7 @@ else
     let &t_SR = "\<esc>[4 q"                                    " Replace mode
     let &t_EI = "\<esc>[2 q"                                    " Normal mode
 
-    " set Vim-specific sequences for RGB colors
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
-    " filetype plugin on                                          " Allow loading .vim files for different filetypes
+    filetype plugin on                                          " Allow loading .vim files for different filetypes
     syntax enable                                               " Syntax highlighting on
 endif
 
@@ -173,7 +117,7 @@ set showmatch                                                   " Show matching 
 set updatetime=300                                              " Update more often (helps GitGutter)
 let &signcolumn = has('patch-8.1.1564') ? 'number' : 'yes'      " Use number column for signs if patch is applied
 set scrolloff=10                                                " Lines before/after cursor during scroll
-set timeoutlen=400                                              " How long in ms to wait for key combinations (if used)
+set timeoutlen=300                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
@@ -242,6 +186,11 @@ let g:loaded_tarPlugin = 1
 let g:loaded_tutor_mode_plugin = 1
 let g:loaded_vimballPlugin = 1
 
+" Terminal colors {{{2
+" Set sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
 " Disable providers {{{2
 let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
@@ -252,8 +201,8 @@ let g:loaded_python_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-" silent! packadd! vim-doge
-" silent! packadd! vim-dirvish
+silent! packadd! vim-doge
+silent! packadd! vim-dirvish
 
 " Nvim/vim specific packages {{{3
 if has('nvim')
@@ -263,7 +212,7 @@ if has('nvim')
     silent! packadd! FixCursorHold.nvim
 
     lua require'helpers'
-    "lua require'config.lsp'.init()
+    lua require'config.lsp'.init()
 else
     " Vim only
     packadd! matchit " Nvim loads by default

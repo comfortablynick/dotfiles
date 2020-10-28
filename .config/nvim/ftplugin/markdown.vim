@@ -2,15 +2,15 @@ setlocal tabstop=2
 setlocal spell
 
 " Mkdx plugin settings
-let g:mkdx#settings = {
-    \ 'fold': {'enable': 0},
-    \ 'toc':  {
-    \       'position': 2,
-    \       'text': 'Table of Contents',
-    \       'update_on_write': 0,
-    \   },
-    \ 'enter': {'shift': 1},
-    \ }
+" let g:mkdx#settings = {
+"     \ 'fold': {'enable': 0},
+"     \ 'toc':  {
+"     \       'position': 2,
+"     \       'text': 'Table of Contents',
+"     \       'update_on_write': 0,
+"     \   },
+"     \ 'enter': {'shift': 1},
+"     \ }
 
 " vim-markdown-folding settings
 let g:markdown_fold_override_foldtext = 0

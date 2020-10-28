@@ -55,7 +55,7 @@ function! s:deferred_load()
     endif
 
     packadd vim-fugitive
-    call FugitiveDetect(expand('%:p'))
+    silent! call FugitiveDetect(expand('%:p'))
 
     " Load local vimrc if env var
     call localrc#load_from_env()

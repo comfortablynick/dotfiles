@@ -6,7 +6,7 @@ let g:pack_post_called = []
 let g:pack_called = []
 let g:pack_sourced = []
 
-function! plugins#init()
+function plugins#init()
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
         echo 'Downloading vim-packager'
@@ -14,7 +14,7 @@ function! plugins#init()
     endif
     packadd vim-packager
     " Emulate vim-plug command for ease of copy/pasting plugins
-    command! -nargs=+ Plug call packager#add(<args>)
+    command -nargs=+ Plug call packager#add(<args>)
     call packager#init({
         \ 'dir': g:package_path.'/pack/packager',
         \ 'default_plugin_type': 'opt',

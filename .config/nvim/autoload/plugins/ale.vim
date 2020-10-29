@@ -1,6 +1,5 @@
 scriptencoding utf-8
 
-function plugins#ale#pre()
 " Main options
 let g:ale_disable_lsp                     = 1       " Use other plugins for lsp integration
 let g:ale_cursor_detail                   = 0       " Open preview window when focusing on error
@@ -65,7 +64,6 @@ let g:ale_c_gcc_options                     = '-std=gnu11 -Wall -Wextra'
 let g:ale_cmake_cmakeformat_executable      = 'cmake-format'
 let g:ale_cmake_cmakeformat_options         = '-c $HOME/.config/cmake/cmake-format.py'
 let g:ale_cmake_cmakelint_options           = '--config=$HOME/.config/cmake/cmakelintrc'
-endfunction
 
 " Maps
 nmap <silent><buffer> <Leader>f <Plug>(ale_next_wrap)

@@ -65,7 +65,6 @@ set backup
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{2
-filetype off
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
 set termguicolors                                               " Use true color
@@ -172,20 +171,23 @@ let g:loaded_python_provider = 0
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-silent! packadd! vim-doge
-silent! packadd! vim-dirvish
+packadd! vim-doge
+packadd! vim-dirvish
 
-" Nvim/vim specific packages {{{3
+" Nvim/vim specific packages
 if has('nvim')
     " Nvim-only
-    silent! packadd! luajob
-    silent! packadd! nvim-lspconfig
-    silent! packadd! FixCursorHold.nvim
+    packadd! luajob
+    packadd! nvim-lspconfig
 
     lua require'helpers'
+    lua require'config.treesitter'
     lua require'config.lsp'.init()
 else
     " Vim only
     packadd! matchit " Nvim loads by default
+    " Use only for vim since we have nvim treesitter
+    packadd! vim-toml
+    packadd! vim-lua
 endif
 " vim:fdl=1:

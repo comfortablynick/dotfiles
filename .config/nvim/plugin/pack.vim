@@ -52,6 +52,7 @@ function! s:deferred_load()
         " Seems to have issue on vim
         packadd nvim-miniyank
         packadd plenary.nvim
+        packadd FixCursorHold.nvim
     endif
 
     packadd vim-fugitive

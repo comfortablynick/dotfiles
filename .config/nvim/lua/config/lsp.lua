@@ -45,6 +45,9 @@ local on_attach_cb = function(client, bufnr)
   for lhs, rhs in pairs(nmaps) do
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
+  vim.cmd[[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
+  vim.cmd[[autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()]]
+  vim.cmd[[autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()]]
 end
 
 function M.init()

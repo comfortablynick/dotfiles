@@ -5,6 +5,7 @@ let g:pack_pre_called = []
 let g:pack_post_called = []
 let g:pack_called = []
 let g:pack_sourced = []
+let g:vim_sourced = []
 
 function plugins#init()
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
@@ -15,10 +16,10 @@ function plugins#init()
     packadd vim-packager
     " Emulate vim-plug command for ease of copy/pasting plugins
     command -nargs=+ Plug call packager#add(<args>)
-    call packager#init({
-        \ 'dir': g:package_path.'/pack/packager',
-        \ 'default_plugin_type': 'opt',
-        \ 'jobs': 0,
+    call packager#init(#{
+        \ dir: g:package_path.'/pack/packager',
+        \ default_plugin_type: 'opt',
+        \ jobs: 0,
         \ })
     Plug 'kristijanhusak/vim-packager'
 
@@ -86,8 +87,8 @@ function plugins#init()
 
     " Syntax/filetype {{{2
     Plug 'vhdirk/vim-cmake'
-    Plug 'cespare/vim-toml',              {'type': 'start'}
-    Plug 'tbastos/vim-lua',               {'type': 'start'}
+    Plug 'cespare/vim-toml'
+    Plug 'tbastos/vim-lua'
     Plug 'blankname/vim-fish',            {'type': 'start'}
     Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
     Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
@@ -120,6 +121,7 @@ function plugins#init()
     Plug 'bfredl/nvim-luadev'
     Plug 'TravonteD/luajob'
     Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-treesitter/nvim-treesitter'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'
@@ -207,7 +209,7 @@ endfunction
 
 function s:source_handler(sourced, pre) "{{{2
     let l:type = a:pre == 1 ? 'pre' : 'post'
-    let l:file = get(s:packs_installed(), a:sourced, '')
+    let l:file = get(plugins#packs_installed(), a:sourced, '')
     " Return if we don't have file in autoload/plugins/{l:file}.vim
     " or if function has been called previously
     if index(s:config_files(), l:file) < 0
@@ -232,11 +234,11 @@ function s:config_pack(filename, pre)
     call s:source_handler(l:packname, a:pre)
 endf
 
-" function s:packs_installed() :: Get all pack names in rtp " {{{2
-function s:packs_installed()
+" function plugins#packs_installed() :: Get all pack names in rtp " {{{2
+function plugins#packs_installed()
     if !exists('s:packs_installed')
         let s:packs_installed = {}
-        let l:packs = globpath(&runtimepath, 'pack/*/*/*/plugin/*.vim', 0, 1)
+        let l:packs = globpath(&packpath, 'pack/*/*/*/plugin/*.vim', 0, 1)
         for l:pack in l:packs
             let l:packname = s:get_pack_name(l:pack)
             let s:packs_installed[l:packname] = fnamemodify(l:pack, ':t:r')

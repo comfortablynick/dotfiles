@@ -4,9 +4,6 @@ setlocal foldexpr=VimFoldLevel()
 setlocal makeprg=vint\ %
 let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
 
-" Load ale and configuration
-Packload ale
-
 " Maps
 " Execute visual selection
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>

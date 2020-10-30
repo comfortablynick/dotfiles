@@ -6,8 +6,8 @@ if exists('$TMUX') && g:fzf_prefer_tmux
     " See `man fzf-tmux` for available options
     let g:fzf_layout = {'tmux': '-p90%,60%'}
 else
-    " let g:fzf_layout = {'window': {'width': 0.9, 'height': 0.6}}
-    let g:fzf_layout = {'down': '40%'}
+    let g:fzf_layout = {'window': {'width': 0.9, 'height': 0.6}}
+    " let g:fzf_layout = {'down': '40%'}
 endif
 
 " Colors {{{2

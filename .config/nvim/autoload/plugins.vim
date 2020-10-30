@@ -1,5 +1,4 @@
 " Plugin definitions {{{1
-" Vim-Packager init {{{2
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 let g:pack_pre_called = []
 let g:pack_post_called = []
@@ -7,6 +6,9 @@ let g:pack_called = []
 let g:pack_sourced = []
 let g:vim_sourced = []
 
+command -nargs=+ Plug call packager#add(<args>)
+
+" function plugins#init() :: load packages with vim-packager {{{2
 function plugins#init()
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
@@ -15,7 +17,6 @@ function plugins#init()
     endif
     packadd vim-packager
     " Emulate vim-plug command for ease of copy/pasting plugins
-    command -nargs=+ Plug call packager#add(<args>)
     call packager#init(#{
         \ dir: g:package_path.'/pack/packager',
         \ default_plugin_type: 'opt',
@@ -235,6 +236,7 @@ function s:config_pack(filename, pre)
 endf
 
 " function plugins#packs_installed() :: Get all pack names in rtp " {{{2
+" NOTE: does not capture ftplugin-only plugins (not sure if this matters)
 function plugins#packs_installed()
     if !exists('s:packs_installed')
         let s:packs_installed = {}

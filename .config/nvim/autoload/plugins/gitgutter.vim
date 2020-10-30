@@ -15,13 +15,13 @@ endfunction
 
 augroup autoload_plugins_gitgutter
     autocmd!
-    autocmd ColorScheme * call s:s:set_gitgutter_highlights()
+    autocmd ColorScheme * call s:set_gitgutter_highlights()
 augroup END
 
 " Preserve diff mode functionality for navigating changes
-nnoremap <silent> <expr> <plug>(gitgutter-hunk-next)
+nnoremap <silent> <expr> <Plug>(gitgutter-hunk-next)
     \ &diff ? ']c' : ":\<c-u>call <SID>gitgutter_hunk_next(v:count1)\<CR>"
-nnoremap <silent> <expr> <plug>(gitgutter-hunk-prev)
+nnoremap <silent> <expr> <Plug>(gitgutter-hunk-prev)
     \ &diff ? '[c' : ":\<c-u>call <SID>gitgutter_hunk_prev(v:count1)\<CR>"
 
 nmap         ]c  <Plug>(gitgutter-hunk-next)

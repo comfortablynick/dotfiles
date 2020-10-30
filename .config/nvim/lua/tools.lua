@@ -232,8 +232,6 @@ function M.sh(o)
     end
   end
 
-  local close_buf = function() vim.cmd("silent bwipeout! " .. bufnr) end
-
   local on_exit = function(code, signal)
     for _, io in ipairs{stdin, stdout, stderr} do
       io:read_stop()
@@ -244,7 +242,7 @@ function M.sh(o)
     if code == 0 and signal == 0 then
       vim.g.job_status = "Success"
       if o.autoclose then
-        vim.schedule(close_buf)
+        vim.schedule(api.nvim_buf_delete(bufnr, {force = true}))
         return
       end
     else
@@ -303,7 +301,7 @@ function M.term_run(o)
       vim.g.job_status = "Success"
       if o.autoclose == nil or o.autoclose == "1" or
         o.autoclose == true then
-        vim.cmd("silent bwipeout! " .. bufnr)
+        api.nvim_buf_delete(bufnr, {force = true})
       end
     else
       vim.g.job_status = "Failed"

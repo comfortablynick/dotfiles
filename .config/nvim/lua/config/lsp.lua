@@ -25,8 +25,6 @@ local diag = npcall(require, "diagnostic")
 
 local on_attach_cb = function(client, bufnr)
   -- TODO: create lua `packadd` command that will combine the below steps
-  if diag then diag.on_attach() end
-
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
@@ -41,6 +39,12 @@ local on_attach_cb = function(client, bufnr)
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
     ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
   }
+
+  if diag then
+    diag.on_attach()
+    nmaps["]q"] = "<Cmd>NextDiagnosticCycle<CR>"
+    nmaps["[q"] = "<Cmd>PrevDiagnosticCycle<CR>"
+  end
 
   for lhs, rhs in pairs(nmaps) do
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
@@ -124,10 +128,6 @@ function M.init()
       },
     },
   }
-
-  -- Set global callbacks
-  -- Can also be set locally for each server
-  -- vim.lsp.callbacks["textDocument/publishDiagnostics"] = diagnostics_qf_cb
 
   -- Set local configs
   for server, cfg in pairs(configs) do

@@ -36,7 +36,7 @@ nnoremap <silent> <Leader>gg :RG<CR>
 nnoremap <silent> z= :call <SID>fzf_spell()<CR>
 
 " Functions {{{1
-function! s:fzf_rg(query, fullscreen) "{{{2
+function s:fzf_rg(query, fullscreen) "{{{2
     let l:rg = {}
     let l:rg['source'] = printf(
         \ 'rg --column --line-number --no-heading --color=always --smart-case %s || true',
@@ -56,7 +56,7 @@ function! s:fzf_rg(query, fullscreen) "{{{2
 endfunction
 
 " Use `rg` to filter, passing through to fzf as a selector
-function! s:fzf_rg_passthrough(query, fullscreen) "{{{2
+function s:fzf_rg_passthrough(query, fullscreen) "{{{2
     let l:command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
     let l:initial_command = printf(l:command_fmt, shellescape(a:query))
     let l:reload_command = printf(l:command_fmt, '{q}')
@@ -69,7 +69,7 @@ function! s:fzf_rg_passthrough(query, fullscreen) "{{{2
         \ )
 endfunction
 
-function! s:fzf_mru(fullscreen) "{{{2
+function s:fzf_mru(fullscreen) "{{{2
     let l:mru = {}
     let l:mru['source'] = luaeval('require("tools").mru_files()')
     let l:mru['sink'] = 'edit'
@@ -83,7 +83,18 @@ function! s:fzf_mru(fullscreen) "{{{2
     call fzf#run(l:mru)
 endfunction
 
-function! s:fzf_scriptnames(fullscreen) "{{{2
+function s:fzf_globals(fullscreen) "{{{2
+    let l:globals = map(sort(keys(g:)), {_,v -> 'g:'..v})
+    " for l:item in g:
+    " endfor
+    let l:spec = {}
+    let l:spec['source'] = l:globals
+    let l:spec['sink'] = ''
+    let l:spec['options'] = '--color hl:68,hl+:110 --prompt="Globals:> "'
+    call fzf#run(fzf#wrap(l:spec, a:fullscreen))
+endfunction
+
+function s:fzf_scriptnames(fullscreen) "{{{2
     " Use fzf.vim's preview script (it handles file names better)
     let l:preview_cmd =  substitute(fzf#vim#with_preview()['options'][-1], '{}', '{2..-1}', '')
     let l:preview_pos = a:fullscreen ? 'up:60%' : 'right:60%'
@@ -96,8 +107,8 @@ function! s:fzf_scriptnames(fullscreen) "{{{2
     call fzf#run(fzf#wrap(l:spec, a:fullscreen))
 endfunction
 
-function! s:fzf_asynctasks(fullscreen) "{{{2
-    function! s:sink(sel)
+function s:fzf_asynctasks(fullscreen) "{{{2
+    function s:sink(sel)
         let g:sel = a:sel
         echo a:sel
         let l:name = split(a:sel, '<')[0]
@@ -120,7 +131,7 @@ function! s:fzf_asynctasks(fullscreen) "{{{2
     call fzf#run(fzf#wrap(l:tasks, a:fullscreen))
 endfunction
 
-function! s:fzf_spell() "{{{2
+function s:fzf_spell() "{{{2
     let l:spec = {}
     let l:col = wincol()
     let l:row = winline()
@@ -132,13 +143,13 @@ function! s:fzf_spell() "{{{2
     return fzf#run(l:spec)
 endfunction
 
-function! s:grep_to_qf(line) "{{{2
+function s:grep_to_qf(line) "{{{2
     let l:parts = split(a:line, ':')
     return {'filename': l:parts[0], 'lnum': l:parts[1], 'col': l:parts[2],
         \ 'text': join(l:parts[3:], ':')}
 endfunction
 
-function! s:grep_handler(lines) "{{{2
+function s:grep_handler(lines) "{{{2
     if len(a:lines) < 2 | return | endif
 
     let l:cmd = get({'ctrl-x': 'split',
@@ -158,7 +169,7 @@ function! s:grep_handler(lines) "{{{2
     endif
 endfunction
 
-function! s:map_types_completion(a,l,p) "{{{2
+function s:map_types_completion(a,l,p) "{{{2
     return [
         \ 'n',
         \ 'i',
@@ -173,20 +184,20 @@ endfunction
 
 " Commands {{{1
 " Map :: View maps in any mode {{{2
-command! -bang -nargs=1 -complete=customlist,s:map_types_completion Map
+command -bang -nargs=1 -complete=customlist,s:map_types_completion Map
     \ call fzf#vim#maps(<q-args>, <bang>0)
 
 " Rg :: grep with preview window {{{2
 "   :Rg - Start fzf with hidden preview window that can be enabled with `?` key
 "   :RG - Execute rg with every change in search term (no fuzzy filter)
 "     ! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
-command! -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
+command -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
+command -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
 
 " Ag :: grep with preview window {{{2
 "   :Ag  - Start fzf with hidden preview window that can be enabled with `?` key
 "   :Ag! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Ag
+command -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>,
     \ <bang>0 ? fzf#vim#with_preview('up:60%')
     \ : fzf#vim#with_preview('right:60%:hidden', '?'),
@@ -194,17 +205,20 @@ command! -bang -nargs=* Ag
     \ )
 
 " Files :: files list with preview window {{{2
-command! -bang -nargs=* -complete=dir Files
+command -bang -nargs=* -complete=dir Files
     \ call fzf#vim#files(<q-args>,
     \ <bang>0 ? fzf#vim#with_preview('up:60%')
     \ : fzf#vim#with_preview('right:60%', '?'),
     \ <bang>0)
 
 " Mru :: most recently used files {{{2
-command! -bang Mru call s:fzf_mru(<bang>0)
+command -bang Mru call s:fzf_mru(<bang>0)
+
+" Globals :: global variables {{{2
+command -bang Globals call s:fzf_globals(<bang>0)
 
 " Sourced :: fuzzy :scriptnames {{{2
-command! -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
-command! -bang -nargs=* Tasks call s:fzf_asynctasks(<bang>0)
+command -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)
+command -bang -nargs=* Tasks call s:fzf_asynctasks(<bang>0)
 
 " vim:fdl=1:

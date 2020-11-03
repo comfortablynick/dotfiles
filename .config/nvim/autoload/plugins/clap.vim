@@ -3,17 +3,19 @@ let s:using_icons = v:false
 
 " General settings
 let g:clap_multi_selection_warning_silent = 1
-let g:clap_enable_icon = !$MOSH_CONNECTION
+let g:clap_enable_icon = 1
 " let g:clap_use_pure_python = 1  " Set this if vim crashes when looking at files
 
 let g:clap_provider_alias = {
-    \ 'map': 'map',
+    \ 'map':         'map',
     \ 'scriptnames': 'scriptnames',
+    \ 'globals':     'globals',
+    \ 'mru':         'mru',
     \ }
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags<CR>
-nnoremap <silent> <Leader>h :Clap hist:<CR>
+nnoremap <silent> <Leader>h :Clap command_history<CR>
 
 command! Filer :Clap filer
 
@@ -139,6 +141,18 @@ endfunction
 let s:scriptnames.syntax = 'clap_scriptnames'
 
 let g:clap#provider#scriptnames# = s:scriptnames
+
+" globals :: display global vim variables {{{2
+let s:globals = {}
+let s:globals.source = map(keys(g:), {_,v -> 'g:'..v})
+let s:globals.sink = {sel -> execute('Redir PPrint '..sel, '')}
+
+function s:globals.on_move()
+    let l:curline = g:clap.display.getcurline()
+    let l:var = execute('PPrint '..l:curline)
+    call clap#preview#show_lines(split(l:var, '\n'), 'vim', 0)
+endfunction
+let g:clap#provider#globals# = s:globals
 
 " task :: asynctasks.vim list {{{2
 let s:task = {}

@@ -1,7 +1,27 @@
 #!/bin/sh
 
 # Wrapper script to make lua-language-server easier to run
+DIR="$HOME/src/lua-language-server"
 
-cd "$HOME/src/lua-language-server/src/lua-language-server" || exit 1
+run() {
+    cd "$DIR" || exit 1
+    bin/Linux/lua-language-server -E -e LANG=en ./main.lua
+}
 
-bin/Linux/lua-language-server -E -e LANG=en ./main.lua
+update() {
+    cd "$DIR"
+    git pull
+    git submodule update --init --recursive
+
+    cd 3rd/luamake
+    ninja -f ninja/linux.ninja
+    cd ../..
+    ./3rd/luamake/luamake rebuild
+}
+
+if [ "$1" = "update" ]; then
+    echo "Updating lua-language-server"
+    update
+else
+    run
+fi

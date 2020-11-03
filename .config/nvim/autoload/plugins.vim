@@ -56,12 +56,12 @@ function plugins#init()
     Plug 'antoinemadec/FixCursorHold.nvim'
 
     " Explorer/finder utils {{{2
-    Plug 'kevinhwang91/rnvimr', {'do': 'pip3 install -U pynvim'}
+    let s:fzf_hook = './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
+    Plug 'junegunn/fzf',             {'do': s:fzf_hook}
+    Plug 'kevinhwang91/rnvimr',      {'do': 'pip3 install -U pynvim'}
     Plug 'liuchengxu/vista.vim'
     " TODO: download clap binary so we don't have to compile all the time!
-    Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary!'}
-    Plug 'junegunn/fzf',
-        \ {'do': './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'}
+    Plug 'liuchengxu/vim-clap',      {'do': ':Clap install-binary!'}
     Plug 'junegunn/fzf.vim'
     Plug 'laher/fuzzymenu.vim'
     Plug 'majutsushi/tagbar'
@@ -72,6 +72,7 @@ function plugins#init()
     Plug 'justinmk/vim-dirvish'
     Plug 'srstevenson/vim-picker'
     Plug 'voldikss/vim-floaterm'
+    Plug 'haorenW1025/floatLf-nvim', {'do': 'pip3 install -U neovim-remote'}
 
     " Vim Development {{{2
     Plug 'tpope/vim-scriptease'
@@ -85,6 +86,7 @@ function plugins#init()
     Plug 'NLKNguyen/papercolor-theme'
     Plug 'lifepillar/vim-gruvbox8'
     Plug 'ryanoasis/vim-devicons'
+    Plug 'kyazdani42/nvim-web-devicons'
 
     " Syntax/filetype {{{2
     Plug 'vhdirk/vim-cmake'

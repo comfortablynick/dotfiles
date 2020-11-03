@@ -45,7 +45,6 @@ function! s:deferred_load()
     packadd vim-bbye
     packadd vim-floaterm
     packadd vim-picker
-    packadd vim-devicons
     packadd vim-lion
 
     if has('nvim')
@@ -53,6 +52,9 @@ function! s:deferred_load()
         packadd nvim-miniyank
         packadd plenary.nvim
         packadd FixCursorHold.nvim
+        packadd nvim-web-devicons
+    else
+        packadd vim-devicons
     endif
 
     packadd vim-fugitive

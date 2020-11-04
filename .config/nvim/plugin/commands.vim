@@ -74,7 +74,7 @@ command! -bang -nargs=* -range=0 AsyncTask
 
 " Git {{{1
 " GV :: git commit viewer {{{2
-command -bang -nargs=* -range=0 GV
+command! -bang -nargs=* -range=0 GV
     \ call plugins#lazy_run('GV', 'gv.vim',
     \   {'bang': '<bang>', 'args': '<args>'})
 
@@ -83,8 +83,8 @@ command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
 nnoremap <silent><Leader>gp :Gpush<CR>
 
 " Tig[Status] :: view tig in terminal {{{2
-command Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
-command TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
+command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
+command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
 nnoremap <silent><Leader>ts :TigStatus<CR>
 call map#set_cabbr('Ts', 'TigStatus')
 
@@ -103,6 +103,11 @@ command! -nargs=* -complete=file Startup
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
 command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
+command! -nargs=* -complete=var PP
+    \ call plugins#lazy_run(
+    \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
+    \ 'vim-scriptease'
+    \ )
 
 " Redir :: send output of <expr> to scratch window {{{2
 " Usage:
@@ -117,14 +122,14 @@ command! -nargs=* -bar -count=0 Scriptnames
     \ <count>
 
 " WhichKey[Visual] :: display key maps {{{2
-command -nargs=1 WhichKey
+command! -nargs=1 WhichKey
     \ call plugins#lazy_run(
     \   'WhichKey',
     \   'vim-which-key',
     \   {'args': <q-args>, 'bang': '<bang>'}
     \ )
 
-command -nargs=1 WhichKeyVisual
+command! -nargs=1 WhichKeyVisual
     \ call plugins#lazy_run(
     \   'WhichKeyVisual',
     \   'vim-which-key',

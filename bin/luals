@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# NOTE: Use system package if possible
 # Wrapper script to make lua-language-server easier to run
 DIR="$HOME/src/lua-language-server"
 

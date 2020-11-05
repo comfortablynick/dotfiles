@@ -4,6 +4,7 @@ let g:lua_syntax_nofold = 1
 setlocal tabstop=2 shiftwidth=0
 setlocal formatoptions-=o formatoptions-=r
 setlocal formatprg=lua-format\ --config=$XDG_CONFIG_HOME/.lua-format
+setlocal foldmethod=marker
 
 silent! packadd nvim-luadev
 

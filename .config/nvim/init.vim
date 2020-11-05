@@ -106,7 +106,6 @@ set dictionary+=/usr/share/dict/words-insane                    " Dictionary fil
 
 " Folds {{{2
 set foldenable                                                  " Enable folds by default
-set foldmethod=marker                                           " Fold using markers by default
 set foldnestmax=5                                               " Max nested levels (default=20)
 
 " Indents {{{2

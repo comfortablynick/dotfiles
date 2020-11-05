@@ -31,8 +31,7 @@ and echo -n 'Sourcing config.fish...  '
 if not functions -q fisher
     echo "Downloading fisher..." >&2
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
+    curl -sL git.io/fisher | source; and fisher install jorgebucaran/fisher
 end
 
 # Environment {{{1

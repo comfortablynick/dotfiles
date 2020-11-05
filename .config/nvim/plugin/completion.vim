@@ -1,7 +1,7 @@
-let g:completion_filetypes = {
-    \ 'coc': [
+let g:completion_filetypes = #{
+    \ coc: [
     \ ],
-    \ "nvim-lsp": [
+    \ nvim-lsp: [
     \    'c',
     \    'cmake',
     \    'cpp',
@@ -19,7 +19,7 @@ let g:completion_filetypes = {
     \    'yaml',
     \    'yaml.ansible',
     \ ],
-    \ 'complete-nvim': [
+    \ complete-nvim: [
     \    'fish',
     \    'asciidoctor',
     \    'markdown',
@@ -35,10 +35,10 @@ let g:completion_filetypes = {
     \    'snippets',
     \    'mail',
     \ ],
-    \ 'mucomplete': [
+    \ mucomplete: [
     \    'chordpro',
     \ ],
-    \ 'none': [
+    \ none: [
     \    'help',
     \    'nerdtree',
     \    'coc-explorer',
@@ -57,7 +57,7 @@ function! s:get_completion_type(ftype)
             endif
         endfor
     endfor
-    return ""
+    return ''
 endfunction
 
 let g:completion_handler_fts = []
@@ -100,7 +100,4 @@ augroup plugin_completion
     autocmd!
     autocmd FileType * ++nested call s:completion_handler(expand('<amatch>'))
     autocmd User CocNvimInit ++once call plugins#coc#init()
-    " Disable folding on floating windows (coc-git chunk diff)
-    autocmd User CocOpenFloat if exists('w:float') | setl nofoldenable | endif
-    autocmd BufWinEnter * if exists('w:clap_search_hl_id') | setl nofoldenable | endif
 augroup END

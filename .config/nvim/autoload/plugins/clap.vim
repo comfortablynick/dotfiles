@@ -3,11 +3,14 @@
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = 1
 let g:clap_preview_size = 10
-" let g:clap_use_pure_python = 1  " Set this if vim crashes when looking at files
+let g:clap_layout = #{
+    \ relative: 'editor'
+    \ }
 
 " Commands 
-command! Task  :Clap task
-command! Filer :Clap filer
+command Task  :Clap task
+command Filer :Clap filer
+Alias t Clap\ tags
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags<CR>
@@ -15,11 +18,6 @@ nnoremap <silent> <Leader>h :Clap command_history<CR>
 
 " Autocommands {{{2
 function s:clap_on_enter() "{{{3
-    augroup ClapEnsureAllClosed
-        autocmd!
-        autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
-    augroup END
-    call s:clap_win_disable_fold()
     if exists('g:loaded_mucomplete')
         silent! MUcompleteAutoOff
         let s:mucomplete_disabled = 1
@@ -34,18 +32,19 @@ function s:clap_on_exit() "{{{3
 endfunction
 
 function s:clap_win_disable_fold() "{{{3
+    " Probably not needed if we specifically enable folding per filetype
     let l:clap = get(g:, 'clap')
     if empty(l:clap) | return | endif
     let l:winid = l:clap['display']['winid']
     call setwinvar(l:winid, '&foldenable', 0)
 endfunction
 
-augroup autoload_plugins_clap "{{{3
-    autocmd!
-    " Set autocmd to close clap win if we leave
-    autocmd User ClapOnEnter call s:clap_on_enter()
-    autocmd User ClapOnExit call s:clap_on_exit()
-augroup END
+" augroup autoload_plugins_clap "{{{3
+"     autocmd!
+"     " Set autocmd to close clap win if we leave
+"     autocmd User ClapOnEnter call s:clap_on_enter()
+"     autocmd User ClapOnExit call s:clap_on_exit()
+" augroup END
 
 " Functions {{{1
 " function plugins#clap#get_selected() :: Get selection sans icon {{{2
@@ -78,7 +77,7 @@ function plugins#clap#history() "{{{2
         \ {v-> !empty(v)}
         \ )
     let l:cmd_hist_len = len(l:hist)
-    return map(l:hist, {k,v-> printf('%4d', l:cmd_hist_len - k).'  '.v})
+    return map(l:hist, {k,v-> printf('%4d', l:cmd_hist_len - k)..'  '..v})
 endfunction
 
 function plugins#clap#history_lua() "{{{2

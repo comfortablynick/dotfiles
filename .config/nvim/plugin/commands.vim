@@ -85,8 +85,8 @@ nnoremap <silent><Leader>gp :Gpush<CR>
 " Tig[Status] :: view tig in terminal {{{2
 command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
 command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
+Alias Ts TigStatus
 nnoremap <silent><Leader>ts :TigStatus<CR>
-call map#set_cabbr('Ts', 'TigStatus')
 
 " LazyGit :: tui for git {{{2
 command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)

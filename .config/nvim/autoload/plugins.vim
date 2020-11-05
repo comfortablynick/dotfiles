@@ -93,7 +93,7 @@ function plugins#init()
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
     Plug 'blankname/vim-fish',            {'type': 'start'}
-    Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
+    " Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
     Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',       {'type': 'start'}
     Plug 'masukomi/vim-markdown-folding', {'type': 'start'}

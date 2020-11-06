@@ -8,8 +8,8 @@ augroup after_ftplugin_qf
     autocmd BufEnter <buffer> ++nested  if get(g:, 'qf_auto_quit', 1) && winnr('$') < 2 | q | endif
     " autocmd QuickFixCmdPost l*    if get(g:, 'qf_auto_open', 1) | lwindow | endif
     " autocmd QuickFixCmdPost [^l]* if get(g:, 'qf_auto_open', 1) | cwindow | endif
-    " autocmd QuickFixCmdPost * cwindow
 augroup END
 
-nnoremap <silent> <buffer> <Left> :call quickfix#older()<CR>
-nnoremap <silent> <buffer> <Right> :call quickfix#newer()<CR>
+nnoremap <silent><buffer> <Left>  :call quickfix#older()<CR>
+nnoremap <silent><buffer> <Right> :call quickfix#newer()<CR>
+nnoremap <silent><buffer> q       :call editor#quick_close_buffer()<CR>

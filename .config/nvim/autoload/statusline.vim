@@ -1,5 +1,12 @@
 scriptencoding utf-8
 
+" Globals {{{1
+" Nvim {{{2
+let s:loaded_treesitter = 0
+if has('nvim')
+    let s:webdevicons = v:lua.require('nvim-web-devicons')
+endif
+
 " Linter indicators {{{2
 let s:LinterChecking = g:nf ? "\uf110 " : '...'
 let s:LinterWarnings = g:nf ? "\uf071 " : '•'
@@ -7,10 +14,7 @@ let s:LinterErrors = g:nf ? "\uf05e " : '•'
 let s:LinterOK = ''
 
 " Main {{{1
-function statusline#get(winnr) "{{{2
-    " let l:default_status = '%<%f %h%m%r%'
-    " let l:inactive_status = ' %n %<%f %h%m%r%'
-
+function statusline#get() "{{{2
     let l:sl = ''
     let l:sl .= '%(%1*%{statusline#bufnr()}%* %)'
     let l:sl .= '%(%{statusline#bufnr_inactive()} %)'
@@ -79,7 +83,8 @@ endfunction
 
 " Component functions {{{1
 function s:is_active() "{{{2
-    return get(g:, 'actual_curbuf', bufnr('%')) == bufnr('%')
+    " return get(g:, 'actual_curbuf', bufnr('%')) == bufnr('%')
+    return win_getid() ==# g:actual_curwin
 endfunction
 
 function s:is_active_file() "{{{2
@@ -98,6 +103,9 @@ endfunction
 function s:dev_icon(type) "{{{2
     if exists('*WebDevIconsGet'.a:type.'Symbol')
         return WebDevIconsGet{a:type}Symbol()
+    endif
+    if a:type ==# 'FileType' && exists('s:webdevicons')
+        return s:webdevicons.get_icon(expand('%'), &filetype)
     endif
     return ''
 endfunction
@@ -235,7 +243,6 @@ function statusline#bufnr() "{{{2
     if ! s:is_active() | return '' | endif
     let l:bufnr = bufnr('')
     return buflisted(l:bufnr) ? '  '.l:bufnr.' ' : ''
-   " return buflisted(l:bufnr) ? '  '.statusline#unicode_number(l:bufnr).'  ' : ''
 endfunction
 
 function statusline#bufnr_inactive() "{{{2
@@ -430,10 +437,13 @@ function statusline#current_tag() "{{{2
     if winwidth(0) < g:sl.width.max | return '' | endif
     let l:tag = get(b:, 'coc_current_function', '')
     if l:tag !=# '' | return l:tag | endif
-    if exists('*nvim_treesitter#statusline')
-        let l:tag = nvim_treesitter#statusline({'indicator_size': 50})
-        if l:tag !=# v:null | return l:tag | endif
-    endif
+    " if exists('*nvim_treesitter#statusline')
+    "     let l:tag = nvim_treesitter#statusline({'indicator_size': 50})
+    "     if l:tag !=# v:null | return l:tag | endif
+    " elseif !exists('*nvim_treesitter#statusline') && s:loaded_treesitter ==# 0
+    "     runtime autoload/nvim_treesitter.vim
+    "     let s:loaded_treesitter = 1
+    " endif
     if exists('*tagbar#currenttag')
         return tagbar#currenttag('%s', '', 'f')
     endif

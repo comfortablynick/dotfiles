@@ -2,29 +2,9 @@
 local M = {}
 local api = vim.api
 local lsp = npcall(require, "nvim_lsp")
-
--- TODO: create lua `packadd` command that will combine the below steps
-vim.cmd[[silent! packadd diagnostic-nvim]]
-local diag = npcall(require, "diagnostic")
-
--- local diagnostics_qf_cb = function(err, method, result, client_id)
---   -- Use default callback too
---   local def_diagnostics_cb = vim.lsp.callbacks["textDocument/publishDiagnostics"]
---   def_diagnostics_cb(err, method, result, client_id)
---   -- Add to quickfix
---   if result and result.diagnostics then
---     for _, v in ipairs(result.diagnostics) do
---       v.bufnr = client_id
---       v.lnum = v.range.start.line + 1
---       v.col = v.range.start.character + 1
---       v.text = v.message
---     end
---     vim.lsp.util.set_qflist(result.diagnostics)
---   end
--- end
+local diag = nvim.packrequire("diagnostic-nvim", "diagnostic")
 
 local on_attach_cb = function(client, bufnr)
-  -- TODO: create lua `packadd` command that will combine the below steps
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
@@ -49,9 +29,16 @@ local on_attach_cb = function(client, bufnr)
   for lhs, rhs in pairs(nmaps) do
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
+  vim.cmd[[hi link LspReferenceText CursorColumn]]
+  vim.cmd[[hi link LspReferenceRead LspReferenceText]]
+  vim.cmd[[hi link LspReferenceWrite LspReferenceText]]
+
+  vim.cmd[[augroup lsp_on_attach]]
+  vim.cmd[[autocmd!]]
   vim.cmd[[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
-  vim.cmd[[autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()]]
   vim.cmd[[autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()]]
+  vim.cmd[[autocmd InsertEnter <buffer> lua vim.lsp.buf.clear_references()]]
+  vim.cmd[[augroup END]]
 end
 
 function M.init()

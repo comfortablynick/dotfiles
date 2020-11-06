@@ -34,7 +34,6 @@ function! s:deferred_load()
     packadd vim-sneak
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
-    " packadd tig-explorer.vim
     packadd vim-sandwich
     packadd vim-smoothie
     packadd vim-repeat
@@ -46,15 +45,12 @@ function! s:deferred_load()
     packadd vim-floaterm
     packadd vim-picker
     packadd vim-lion
+    packadd vim-devicons
 
     if has('nvim')
-        " Seems to have issue on vim
-        packadd nvim-miniyank
+        packadd nvim-miniyank           " Seems to have issue on vim
         packadd plenary.nvim
         packadd FixCursorHold.nvim
-        packadd nvim-web-devicons
-    else
-        packadd vim-devicons
     endif
 
     packadd vim-fugitive

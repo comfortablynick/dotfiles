@@ -407,14 +407,21 @@ end
 function nvim.warn(text) -- {{{2
   vim.validate{text = {text, "string"}}
   vim.cmd"echohl WarningMsg"
-  vim.cmd("echo "..string.format("%q", text))
+  vim.cmd("echo " .. string.format("%q", text))
   vim.cmd"echohl None"
 end
 
 -- Misc {{{1
--- nvim.unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`)
+-- nvim.unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
 function nvim.unlet(var_name, var_scope)
   pcall(function() vim[var_scope or "g"][var_name] = nil end)
+end
+
+-- nvim.packrequire :: load pack + lua module and return module or nil {{{2
+function nvim.packrequire(packname, modname)
+  vim.validate{packname = {packname, "string"}}
+  vim.cmd("silent! packadd " .. packname)
+  return npcall(require, modname or packname)
 end
 
 -- Iterator utils (luafun is probably faster) {{{1

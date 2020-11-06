@@ -72,6 +72,7 @@ function plugins#init()
     Plug 'justinmk/vim-dirvish'
     Plug 'srstevenson/vim-picker'
     Plug 'voldikss/vim-floaterm'
+    " TODO: is this any better than using Lf in floaterm?
     Plug 'haorenW1025/floatLf-nvim', {'do': 'pip3 install -U neovim-remote'}
 
     " Vim Development {{{2
@@ -92,8 +93,8 @@ function plugins#init()
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    Plug 'blankname/vim-fish',            {'type': 'start'}
     " Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
+    Plug 'blankname/vim-fish',            {'type': 'start'}
     Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',       {'type': 'start'}
     Plug 'masukomi/vim-markdown-folding', {'type': 'start'}
@@ -125,6 +126,7 @@ function plugins#init()
     Plug 'TravonteD/luajob'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'romgrk/barbar.nvim'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

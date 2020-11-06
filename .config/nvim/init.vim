@@ -25,6 +25,23 @@ if has('nvim') && get(g:, 'use_init_lua', 0) == 1
 endif
 
 " General configuration {{{1
+
+" " Background colors for active vs inactive windows
+" hi ActiveWindow guibg=#17252c
+" hi InactiveWindow guibg=#0D1B22
+"
+" " Call method on window enter
+" augroup plugin_colortheme
+"   autocmd!
+"   autocmd WinEnter,FocusGained * call Handle_Win_Enter()
+" augroup END
+"
+" " Change highlight group of active/inactive windows
+" function! Handle_Win_Enter()
+"
+"   setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+" endfunction
+
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')
 
@@ -176,6 +193,8 @@ packadd! vim-dirvish
 " Nvim/vim specific packages
 if has('nvim')
     " Nvim-only
+    packadd! nvim-web-devicons
+    packadd! barbar.nvim
     packadd! luajob
     packadd! nvim-lspconfig
 

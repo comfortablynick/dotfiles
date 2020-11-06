@@ -48,11 +48,10 @@ let g:sl  = {
 " }}}
 
 " Set statusline
-set statusline=%!statusline#get(winnr())
+set statusline=%!statusline#get()
 
 " SL :: toggle statusline items
-command! -nargs=? -complete=custom,statusline#complete_args SL
-    \ call statusline#command(<f-args>)
+command! -nargs=? -complete=custom,statusline#complete_args SL call statusline#command(<f-args>)
 
 " The following lines must come after colorscheme declaration
 " Remove bold from StatusLine

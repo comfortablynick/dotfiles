@@ -11,6 +11,7 @@ let g:clap_layout = #{
 command Task  :Clap task
 command Filer :Clap filer
 Alias t Clap\ tags
+Alias scr Clap\ scriptnames
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags<CR>

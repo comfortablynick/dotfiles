@@ -95,4 +95,8 @@ nnoremap <silent> cq :call quickfix#toggle()<CR>
 " %% -> cwd
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
-" vim:fdl=1 noml:
+" Format/indent {{{1
+" Format buffer and restore cursor position
+nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
+" Indent buffer and restore cursor position
+nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>

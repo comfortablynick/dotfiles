@@ -1,4 +1,4 @@
-" General {{{1
+" General commands/aliases {{{1
 " S :: save if file has changed and re-source (vim development) {{{2
 command! S update | source %
 
@@ -12,7 +12,8 @@ command! -bang -complete=buffer -nargs=? Bclose
     \ {'bang': '<bang>', 'args': '<args>'})
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
-command! UndotreeToggle packadd undotree | UndotreeToggle | UndotreeFocus
+command! UndotreeToggle
+    \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
 noremap <silent> <F5> :UndotreeToggle<CR>
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
@@ -37,6 +38,22 @@ noremap <silent> <F3> :Neoformat<CR>
 
 " Rooter :: Find project root {{{2
 command! -nargs=0 Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
+
+" h[g] :: Open help[grep] in new or existing tab {{{2
+cnoreabbrev <expr> h
+    \ map#cabbr('h', {->window#tab_mod('help', 'help')})
+cnoreabbrev <expr> hg
+    \ map#cabbr('hg', {->window#tab_mod('helpgrep', 'help')})
+
+" vh :: Open help in vert split {{{2
+Alias vh vert\ help
+
+" man :: Open :Man in new or existing tab {{{2
+cnoreabbrev <expr> man
+    \ map#cabbr('man', {->window#tab_mod('Man', 'man')})
+
+" fff :: Insert comment with fold marker {{{2
+inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
@@ -156,6 +173,11 @@ if has('nvim')
 
     " LspDisable :: stop active lsp clients {{{2
     " command! Lsp
+
+    " Lua {{{2
+    Alias l lua
+    cnoreabbrev <expr> lp
+        \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
     " Term :: Run async command in terminal buffer {{{2
     command! -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)

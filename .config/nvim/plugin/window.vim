@@ -23,7 +23,7 @@ augroup plugin_window
     autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
         \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
     " Easier exit from cmdwin
-    autocmd CmdwinEnter * call s:on_cmdwin_enter()()
+    autocmd CmdwinEnter * call s:on_cmdwin_enter()
 augroup END
 
 function s:on_termopen()

@@ -13,7 +13,12 @@ nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
 nnoremap <silent><buffer> <C-]> :call plugins#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
 nnoremap <silent><buffer> <C-t> :call plugins#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
-function! VimFoldLevel()
+if has('nvim')
+    nnoremap <silent><buffer> glo
+        \ :call v:lua.require('config.lsp').rename('l:'..expand('<cword>'))<CR>
+endif
+
+function VimFoldLevel()
     let l:marker = split(&foldmarker, ',')[0]
     let l:line = getline(v:lnum)
     " Functions

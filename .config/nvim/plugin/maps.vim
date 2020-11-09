@@ -85,7 +85,7 @@ nnoremap <silent> ]t :tabnext<CR>
 " Buffer navigation {{{1
 nnoremap <silent> <Tab>      :bnext<CR>
 nnoremap <silent> <S-Tab>    :bprevious<CR>
-nnoremap <silent> <Leader>q  :bd<CR>
+nnoremap <silent> <Leader>q  :call buffer#sayonara(1)<CR>
 nnoremap <silent> <Leader>xx :BufOnly<CR>
 
 " Quickfix
@@ -97,6 +97,8 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " Format/indent {{{1
 " Format buffer and restore cursor position
-nnoremap <silent> <Leader>ff :call editor#restore_cursor_after('gggqG')<CR>
+nnoremap <silent> <Leader>ff :call buffer#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
-nnoremap <silent> <Leader>fi :call editor#restore_cursor_after('gg=G')<CR>
+nnoremap <silent> <Leader>fi :call buffer#restore_cursor_after('gg=G')<CR>
+
+" vim:fdl=1:

@@ -177,7 +177,7 @@ packadd! vim-dirvish
 if has('nvim')
     " Nvim-only
     packadd! nvim-web-devicons
-    packadd! barbar.nvim
+    " packadd! barbar.nvim
     packadd! luajob
     packadd! nvim-lspconfig
 

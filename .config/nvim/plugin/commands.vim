@@ -53,7 +53,7 @@ cnoreabbrev <expr> man
     \ map#cabbr('man', {->window#tab_mod('Man', 'man')})
 
 " fff :: Insert comment with fold marker {{{2
-inoreabbrev fff <C-R>=editor#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
+inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Misc commonly mistyped commands {{{2
 command! WQ wq
@@ -168,7 +168,11 @@ command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 " nvim-only {{{1
 " [H]elp :: floating help window {{{2
 if has('nvim')
-    command! -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
+    let s:tools = v:lua.require('tools')
+    let s:buffer = v:lua.require('buffer')
+    let s:window = v:lua.require('window')
+
+    command! -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
     Alias H Help
 
     " LspDisable :: stop active lsp clients {{{2
@@ -180,25 +184,25 @@ if has('nvim')
         \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
     " Term :: Run async command in terminal buffer {{{2
-    command! -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
+    command -complete=file -nargs=+ Term call s:tools.term_run_cmd(<f-args>)
 
     " Sh :: Run async command in shell and output to scratch buffer {{{2
-    command! -complete=file -nargs=+ Sh lua require'tools'.sh{cmd = <q-args>}
+    command -complete=file -nargs=+ Sh call s:tools.sh({'cmd': <q-args>})
 
     " Run :: lua version of AsyncRun {{{2
-    command! -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
+    command -complete=file -bang -nargs=+ Run call s:tools.async_run(<q-args>, '<bang>')
 
     " MRU :: most recently used files {{{2
-    command! -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>), '<mods>')
+    command -nargs=? MRU call s:window.create_scratch(s:tools.mru_files(<args>), '<mods>')
 
     " Grep :: async grep {{{2
-    command! -nargs=+ -complete=file -bar Grep lua require'tools'.async_grep(<q-args>)
+    command! -nargs=+ -complete=file -bar Grep call s:tools.async_grep(<q-args>)
 
     " Make :: async make {{{2
-    command! -nargs=0 -complete=file Make lua require'tools'.make()
+    command! -nargs=0 -complete=file Make call s:tools.make()
 
     " BufOnly :: keep only current buffer {{{2
-    command BufOnly lua require'buffer'.only()
+    command BufOnly call s:buffer.only()
 endif
 
 " vim:fdl=1:

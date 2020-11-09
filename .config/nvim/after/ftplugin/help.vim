@@ -2,7 +2,7 @@
 nnoremap <silent><buffer> yxx     :execute trim(getline('.'))<CR>
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 " Close on 'q'
-nnoremap <silent><buffer> q :call editor#quick_close_buffer()<CR>
+nnoremap <silent><buffer> q :call buffer#quick_close()<CR>
 " Help TOC
 nnoremap <silent><buffer> <Leader>t :call <SID>show_toc()<CR>
 nnoremap <silent><buffer> gO :call <SID>show_toc()<CR>

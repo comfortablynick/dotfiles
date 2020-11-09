@@ -60,7 +60,6 @@ function plugins#init()
     Plug 'junegunn/fzf',             {'do': s:fzf_hook}
     Plug 'kevinhwang91/rnvimr',      {'do': 'pip3 install -U pynvim'}
     Plug 'liuchengxu/vista.vim'
-    " TODO: download clap binary so we don't have to compile all the time!
     Plug 'liuchengxu/vim-clap',      {'do': ':Clap install-binary!'}
     Plug 'junegunn/fzf.vim'
     Plug 'laher/fuzzymenu.vim'

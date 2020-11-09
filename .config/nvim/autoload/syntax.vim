@@ -25,6 +25,12 @@ function! syntax#enable_code_snip(filetype,start,end,textSnipHl)
         \ contains=@'.l:group
 endfunction
 
+" Return fold marker + comment string if not already in comment
+function! syntax#foldmarker()
+    let l:open = matchstr(&foldmarker, '^[^,]*')
+    return syntax#is_comment_line() ? l:open : printf(&commentstring, l:open)
+endfunction
+
 " Use syntax stack to find if cursor is in comment
 function! syntax#is_comment()
     let l:hg = join(syntax#synstack())

@@ -176,7 +176,7 @@ function M.floating_help(query) -- {{{1
   vim.bo.buftype = "help"
   vim.cmd("help " .. query)
   api.nvim_buf_set_keymap(buf, "n", "<C-c>",
-                          ":call editor#quick_close_buffer()<CR>",
+                          ":call buffer#quick_close()<CR>",
                           {silent = true, noremap = true})
 end
 

@@ -1,8 +1,40 @@
 -- LSP configurations
 local M = {}
 local api = vim.api
+local util = vim.lsp.util
 local lsp = npcall(require, "nvim_lsp")
 local diag = nvim.packrequire("diagnostic-nvim", "diagnostic")
+
+local custom_symbol_callback = function(_, _, result, _, bufnr)
+  if not result or vim.tbl_isempty(result) then return end
+
+  local items = util.symbols_to_items(result, bufnr)
+  local items_by_name = {}
+  for _, item in ipairs(items) do items_by_name[item.text] = item end
+
+  local opts = vim.fn["fzf#wrap"]({
+    source = vim.tbl_keys(items_by_name),
+    sink = function() end,
+    options = {"--prompt", "Symbol > "},
+  })
+  opts.sink = function(item)
+    local selected = items_by_name[item]
+    vim.fn.cursor(selected.lnum, selected.col)
+  end
+  vim.fn["fzf#run"](opts)
+end
+
+vim.lsp.callbacks["textDocument/documentSymbol"] = custom_symbol_callback
+vim.lsp.callbacks["workspace/symbol"] = custom_symbol_callback
+
+-- Standard rename functionality so I can wrap it if desired
+function M.rename(new_name)
+  local params = util.make_position_params()
+  new_name = new_name or npcall(vim.fn.input, "New Name: ", vim.fn.expand('<cword>'))
+  if not (new_name and #new_name > 0) then return end
+  params.newName = new_name
+  vim.lsp.buf_request(0, 'textDocument/rename', params)
+end
 
 local on_attach_cb = function(client, bufnr)
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
@@ -105,7 +137,10 @@ function M.init()
       },
     },
     tsserver = {},
-    vimls = {initializationOptions = {diagnostic = {enable = true}}},
+    vimls = {
+      -- callbacks = {["textDocument/rename"] = vim_rename},
+      initializationOptions = {diagnostic = {enable = true}},
+    },
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
       settings = {

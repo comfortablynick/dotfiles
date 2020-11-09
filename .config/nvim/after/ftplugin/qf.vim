@@ -12,4 +12,4 @@ augroup END
 
 nnoremap <silent><buffer> <Left>  :call quickfix#older()<CR>
 nnoremap <silent><buffer> <Right> :call quickfix#newer()<CR>
-nnoremap <silent><buffer> q       :call editor#quick_close_buffer()<CR>
+nnoremap <silent><buffer> q       :call buffer#quick_close()<CR>

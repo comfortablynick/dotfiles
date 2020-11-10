@@ -10,10 +10,11 @@ no_retry = true
 #  "~/.config/something"
 #]
 
-# Same options as the command line flag
+# Disable upgrade steps
 disable = [
   "node",
   "vim",
+  "go",       # Until go solves errors finding modules
 ]
 
 # List of remote machines with Topgrade installed on them

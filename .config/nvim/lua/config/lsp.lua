@@ -138,7 +138,6 @@ function M.init()
     },
     tsserver = {},
     vimls = {
-      -- callbacks = {["textDocument/rename"] = vim_rename},
       initializationOptions = {diagnostic = {enable = true}},
     },
     yamlls = {

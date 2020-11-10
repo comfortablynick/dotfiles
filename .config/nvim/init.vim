@@ -172,6 +172,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 " Load packages at startup {{{2
 packadd! vim-doge
 packadd! vim-dirvish
+packadd! vim-toml
 
 " Nvim/vim specific packages
 if has('nvim')
@@ -188,7 +189,6 @@ else
     " Vim only
     packadd! matchit " Nvim loads by default
     " Use only for vim since we have nvim treesitter
-    packadd! vim-toml
     packadd! vim-lua
 endif
 " vim:fdl=1:

@@ -181,8 +181,15 @@ function plugins#lazy_run(cmd, package, ...)
     for l:after_cmd in l:after
         execute l:after_cmd
     endfor
-    if type(a:cmd) == v:t_func
+    if type(a:cmd) ==# v:t_func
         return a:cmd()
+    endif
+    if type(l:bang) ==# v:t_number
+        let l:bang = l:bang ==# 1 ? '!' : ''
+    endif
+
+    if type(l:extra_args) ==# v:t_list
+        let l:extra_args = join(l:extra_args, ' ')
     endif
     " Build command
     let l:final_cmd = printf(

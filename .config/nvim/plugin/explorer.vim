@@ -10,8 +10,9 @@ command! -nargs=0 DefxToggle
 command! -nargs=0 NetrwToggle call explorer#toggle('netrw')
 
 " vim-floaterm wrappers
-command! -nargs=* Lf call plugins#floaterm#wrap('lf', <f-args>)
-command! -nargs=* Ranger call plugins#floaterm#wrap('ranger', <f-args>)
+command! -nargs=* Lf call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'lf')
+command! -nargs=* Ranger 
+    \ call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'ranger')
 
 if has('nvim')
     command! -nargs=0 LuaTreeToggle

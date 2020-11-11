@@ -106,7 +106,8 @@ Alias Ts TigStatus
 nnoremap <silent><Leader>ts :TigStatus<CR>
 
 " LazyGit :: tui for git {{{2
-command! -nargs=* LazyGit call plugins#floaterm#wrap('lazygit', <f-args>)
+command -bang -nargs=* LazyGit
+    \ call floaterm#run('new', <bang>0, '--width=0.9', '--height=0.6', 'lazygit')
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
@@ -201,8 +202,8 @@ if has('nvim')
     " Make :: async make {{{2
     command! -nargs=0 -complete=file Make call s:tools.make()
 
-    " BufOnly :: keep only current buffer {{{2
-    command BufOnly call s:buffer.only()
+    " BufOnly :: keep only current buffer (! forces close) {{{2
+    command -bang BufOnly call s:buffer.only(<bang>0)
 endif
 
 " vim:fdl=1:

@@ -108,7 +108,7 @@ function s:fzf_scriptnames(fullscreen) "{{{2
 endfunction
 
 function s:fzf_asynctasks(fullscreen) "{{{2
-    function s:sink(sel)
+    function! s:sink(sel)
         let g:sel = a:sel
         echo a:sel
         let l:name = split(a:sel, '<')[0]
@@ -125,8 +125,8 @@ function s:fzf_asynctasks(fullscreen) "{{{2
     let l:tasks = {}
     let l:tasks['source'] = l:source
     " let l:tasks['sink'] = {sel->execute('AsyncTask '..trim(fnameescape(split(sel, '<')[0])))}
-    let l:tasks['sink'] = function('s:sink')
-    " let l:tasks['sink'] = {sel->execute('echo '..sel)}
+    " let l:tasks['sink'] = {sel -> s:sink(sel)}
+    let l:tasks['sink'] = {sel->execute('echo '..sel)}
     let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks:> "'
     call fzf#run(fzf#wrap(l:tasks, a:fullscreen))
 endfunction

@@ -14,12 +14,12 @@ local qf_open = function(max_size) -- {{{1
   vim.cmd(("copen %d | wincmd k"):format(qf_size))
 end
 
-function M.async_grep(term) -- {{{1
-  vim.validate{term = {term, "string"}}
+function M.async_grep(cmd_args) -- {{{1
+  vim.validate{cmd_args = {cmd_args, "table"}}
   local grep = vim.o.grepprg
   local grep_args = vim.split(grep, " ")
   local grep_prg = table.remove(grep_args, 1)
-  table.insert(grep_args, vim.fn.expand(term))
+  vim.list_extend(grep_args, cmd_args)
   local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
                                                 table.concat(grep_args, " "))
 

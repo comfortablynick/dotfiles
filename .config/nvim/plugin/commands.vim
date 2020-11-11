@@ -196,7 +196,7 @@ if has('nvim')
     command -nargs=? MRU call s:window.create_scratch(s:tools.mru_files(<args>), '<mods>')
 
     " Grep :: async grep {{{2
-    command! -nargs=+ -complete=file -bar Grep call s:tools.async_grep(<q-args>)
+    command! -nargs=+ -complete=file -bar Grep call s:tools.async_grep([<f-args>])
 
     " Make :: async make {{{2
     command! -nargs=0 -complete=file Make call s:tools.make()

@@ -104,6 +104,9 @@ function! syntax#derive(from, to, ...)
             let l:original_definition = filter(split(execute('hi '..l:link), '\n'), {_,v -> v =~# '^'..l:link })[0]
             let l:original_group = l:link
         endwhile
+    elseif l:original_definition =~# 'cleared$'
+        execute 'hi clear' a:to
+        return
     else
         let l:original_group = a:from
     endif

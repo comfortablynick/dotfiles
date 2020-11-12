@@ -82,13 +82,16 @@ function! s:completion_handler(ft)
             " packadd ultisnips
             packadd snippets.nvim
             lua require'config.completion'.init()
+            return
         elseif g:completion_type ==# 'complete-nvim'
             packadd vim-gitgutter
             packadd completion-nvim
             packadd completion-buffers
             packadd snippets.nvim
             lua require'config.completion'.init()
+            return
         endif
+        packadd vim-gitgutter
     else
         " Vim only
         " TODO: use mucomplete on everything in vim?
@@ -99,5 +102,5 @@ endfunction
 augroup plugin_completion
     autocmd!
     autocmd FileType * ++nested call s:completion_handler(expand('<amatch>'))
-    autocmd User CocNvimInit ++once call plugins#coc#init()
+    " autocmd User CocNvimInit ++once call plugins#coc#init()
 augroup END

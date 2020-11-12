@@ -3,6 +3,7 @@ local M = {}
 
 -- Kill the target buffer (or the current one if 0/nil)
 -- TODO: properly handle sending any buffer to target_buf
+-- TODO: add exception for help tabs
 function M.kill(target_buf, should_force)
   if not should_force and api.nvim_buf_get_option(target_buf, "modified") then
     return api.nvim_err_writeln("Buffer is modified. Force required.")

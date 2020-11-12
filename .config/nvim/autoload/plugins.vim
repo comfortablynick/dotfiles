@@ -7,6 +7,7 @@ let g:pack_sourced = []
 let g:vim_sourced = []
 
 command -nargs=+ Plug call packager#add(<args>)
+command -nargs=+ PlugLocal call packager#local(<args>)
 
 " function plugins#init() :: load packages with vim-packager {{{2
 function plugins#init()
@@ -83,16 +84,19 @@ function plugins#init()
     " Editor appearance {{{2
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
-    Plug 'NLKNguyen/papercolor-theme'
-    Plug 'lifepillar/vim-gruvbox8'
     Plug 'ryanoasis/vim-devicons'
     Plug 'kyazdani42/nvim-web-devicons'
+
+    " Colorschemes {{{2
+    Plug 'NLKNguyen/papercolor-theme'
+    Plug 'lifepillar/vim-gruvbox8'
+    PlugLocal '~/git/nvim-highlite'
 
     " Syntax/filetype {{{2
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    " Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
+    Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
     Plug 'blankname/vim-fish',            {'type': 'start'}
     Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',       {'type': 'start'}

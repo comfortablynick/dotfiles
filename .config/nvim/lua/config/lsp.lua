@@ -31,12 +31,12 @@ end
 
 vim.lsp.handlers["textDocument/documentSymbol"] = custom_symbol_handler
 vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
--- vim.lsp.handlers["textDocument/publishDiagnostics"] =
---   vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
---     underline = true,
---     virtual_text = {spacing = 2},
---     update_in_insert = false,
---   })
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
+    virtual_text = {spacing = 2},
+    update_in_insert = false,
+  })
 
 -- Standard rename functionality so I can wrap it if desired
 function M.rename(new_name)
@@ -52,12 +52,13 @@ local on_attach_cb = function(client, bufnr)
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
 
   local ns = api.nvim_create_namespace("hl-lsp")
+  -- TODO: fix statusline functions to use new nvim api
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError", {bg = "#ff5f87", sp = "#ff5f87"})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning", {bg = "#d78f00", sp = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError", {fg = "#ff5f87", sp = "#ff5f87"})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning", {fg = "#d78f00", sp = "#d78f00"})
   api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
   api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
   api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})

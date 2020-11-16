@@ -1,4 +1,4 @@
-local Job = nvim.packrequire("plenary.nvim", "plenary.job")
+local Job = require"plenary.job"
 
 local grepper = {}
 
@@ -6,7 +6,7 @@ local get_job = function(str, cwd)
   local grep = vim.o.grepprg
   local grep_args = vim.split(grep, " ")
   local grep_prg = table.remove(grep_args, 1)
-  table.insert(grep_args, str)
+  vim.list_extend(grep_args, vim.split(str, " "))
   local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
                                                 table.concat(grep_args, " "))
   vim.fn.setqflist({}, " ", {title = qf_title})

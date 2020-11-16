@@ -1,8 +1,7 @@
 --- Neovim Helpers
 --- Customized from: https://github.com/norcalli/nvim_utils/blob/master/lua/nvim_utils.lua
 local api = vim.api
-local npcall = vim.F.npcall
-nvim = {}
+nvim = nvim or {}
 
 -- Global functions {{{1
 function printf(msg, ...) -- {{{2
@@ -415,7 +414,7 @@ end
 function nvim.packrequire(packname, modname)
   vim.validate{packname = {packname, "string"}}
   vim.cmd("silent! packadd " .. packname)
-  return npcall(require, modname or packname)
+  return vim.F.npcall(require, modname or packname)
 end
 
 -- Iterator utils (luafun is probably faster) {{{1

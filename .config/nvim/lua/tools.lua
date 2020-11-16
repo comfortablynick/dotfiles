@@ -3,7 +3,6 @@ local uv = vim.loop
 local npcall = vim.F.npcall
 local util = require"util"
 local fn = require"fun"
--- local Job = nvim.packrequire("plenary.nvim", "plenary.job")
 local M = {}
 
 local qf_open = function(max_size) -- {{{1

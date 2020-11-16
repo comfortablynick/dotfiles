@@ -179,7 +179,7 @@ if has('nvim')
     " Nvim-only
     packadd! nvim-web-devicons
     " packadd! barbar.nvim
-    packadd! luajob
+    packadd! plenary.nvim
     packadd! nvim-lspconfig
 
     lua require'helpers'

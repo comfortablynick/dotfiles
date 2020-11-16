@@ -49,7 +49,6 @@ function! s:deferred_load()
 
     if has('nvim')
         packadd nvim-miniyank           " Seems to have issue on vim
-        " packadd plenary.nvim
         packadd FixCursorHold.nvim
     endif
 

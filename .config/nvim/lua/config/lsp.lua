@@ -4,9 +4,13 @@ local api = vim.api
 local util = vim.lsp.util
 local npcall = vim.F.npcall
 local lsp = npcall(require, "nvim_lsp")
-local diag = nvim.packrequire("diagnostic-nvim", "diagnostic")
 
-local custom_symbol_callback = function(_, _, result, _, bufnr)
+vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
+vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
+vim.fn.sign_define("LspDiagnosticsSignInformation", {text = "i"})
+vim.fn.sign_define("LspDiagnosticsSignHint", {text = "»"})
+
+local custom_symbol_handler = function(_, _, result, _, bufnr)
   if not result or vim.tbl_isempty(result) then return end
 
   local items = util.symbols_to_items(result, bufnr)
@@ -25,20 +29,40 @@ local custom_symbol_callback = function(_, _, result, _, bufnr)
   vim.fn["fzf#run"](opts)
 end
 
-vim.lsp.callbacks["textDocument/documentSymbol"] = custom_symbol_callback
-vim.lsp.callbacks["workspace/symbol"] = custom_symbol_callback
+vim.lsp.handlers["textDocument/documentSymbol"] = custom_symbol_handler
+vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] =
+--   vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+--     underline = true,
+--     virtual_text = {spacing = 2},
+--     update_in_insert = false,
+--   })
 
 -- Standard rename functionality so I can wrap it if desired
 function M.rename(new_name)
   local params = util.make_position_params()
-  new_name = new_name or npcall(vim.fn.input, "New Name: ", vim.fn.expand('<cword>'))
+  new_name = new_name or
+               npcall(vim.fn.input, "New Name: ", vim.fn.expand("<cword>"))
   if not (new_name and #new_name > 0) then return end
   params.newName = new_name
-  vim.lsp.buf_request(0, 'textDocument/rename', params)
+  vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
 local on_attach_cb = function(client, bufnr)
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
+
+  local ns = api.nvim_create_namespace("hl-lsp")
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError", {bg = "#ff5f87", sp = "#ff5f87"})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning", {bg = "#d78f00", sp = "#d78f00"})
+  api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
+  api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
+  api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
+  api.nvim_set_hl_ns(ns)
+
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
     ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
@@ -51,27 +75,22 @@ local on_attach_cb = function(client, bufnr)
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
     ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
     ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
+    ["[d"] = "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>",
+    ["]d"] = "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>",
   }
-
-  if diag then
-    diag.on_attach()
-    nmaps["]q"] = "<Cmd>NextDiagnosticCycle<CR>"
-    nmaps["[q"] = "<Cmd>PrevDiagnosticCycle<CR>"
-  end
 
   for lhs, rhs in pairs(nmaps) do
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
-  vim.cmd[[hi link LspReferenceText CursorColumn]]
-  vim.cmd[[hi link LspReferenceRead LspReferenceText]]
-  vim.cmd[[hi link LspReferenceWrite LspReferenceText]]
 
-  vim.cmd[[augroup lsp_on_attach]]
-  vim.cmd[[autocmd!]]
-  vim.cmd[[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
-  vim.cmd[[autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()]]
-  vim.cmd[[autocmd InsertEnter <buffer> lua vim.lsp.buf.clear_references()]]
-  vim.cmd[[augroup END]]
+  api.nvim_exec([[
+  augroup lsp_on_attach
+    autocmd!
+    autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+    autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    autocmd InsertEnter <buffer> lua vim.lsp.buf.clear_references()
+  augroup END
+  ]], false)
 end
 
 function M.init()
@@ -138,9 +157,7 @@ function M.init()
       },
     },
     tsserver = {},
-    vimls = {
-      initializationOptions = {diagnostic = {enable = true}},
-    },
+    vimls = {initializationOptions = {diagnostic = {enable = true}}},
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
       settings = {

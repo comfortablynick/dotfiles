@@ -1,8 +1,9 @@
 " Execute line/selection
 nnoremap <silent><buffer> yxx     :execute trim(getline('.'))<CR>
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
-" Close on 'q'
+" Close on `[,]q`
 nnoremap <silent><buffer> q :call buffer#quick_close()<CR>
+nnoremap <silent><buffer> <Leader>q :call buffer#quick_close()<CR>
 " Help TOC
 nnoremap <silent><buffer> <Leader>t :call <SID>show_toc()<CR>
 nnoremap <silent><buffer> gO :call <SID>show_toc()<CR>

@@ -1,8 +1,9 @@
 local api = vim.api
 local uv = vim.loop
+local npcall = vim.F.npcall
 local util = require"util"
 local fn = require"fun"
--- local Job = require"plenary.job"
+-- local Job = nvim.packrequire("plenary.nvim", "plenary.job")
 local M = {}
 
 local qf_open = function(max_size) -- {{{1
@@ -14,33 +15,6 @@ local qf_open = function(max_size) -- {{{1
   vim.cmd(("copen %d | wincmd k"):format(qf_size))
 end
 
-function M.async_grep(cmd_args) -- {{{1
-  vim.validate{cmd_args = {cmd_args, "table"}}
-  local grep = vim.o.grepprg
-  local grep_args = vim.split(grep, " ")
-  local grep_prg = table.remove(grep_args, 1)
-  vim.list_extend(grep_args, cmd_args)
-  local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
-                                                table.concat(grep_args, " "))
-
-  local on_read = function(err, data)
-    assert(not err, err)
-    vim.fn.setqflist({}, "a", {title = qf_title, lines = data})
-  end
-
-  local on_exit = function()
-    local result_ct = #vim.fn.getqflist()
-    if result_ct > 0 then
-      vim.cmd("cwindow " .. math.min(result_ct, 20))
-    else
-      nvim.warn"grep: no results found"
-    end
-  end
-
-  vim.fn.setqflist({}, " ", {title = qf_title})
-  M.spawn(grep_prg, {args = grep_args}, vim.schedule_wrap(on_read),
-          vim.schedule_wrap(on_exit))
-end
 
 function M.scandir(path) -- {{{1
   local d = uv.fs_scandir(vim.fn.expand(path))
@@ -185,7 +159,6 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   end
 end
 
-
 -- function M.sh() :: Spawn a new job and put output to scratch window {{{1
 -- @param o table
 -- @field o.cmd string            : Command to run (will be split into args)
@@ -299,8 +272,7 @@ function M.term_run(o)
   local on_exit = function(_, code)
     if code == 0 then
       vim.g.job_status = "Success"
-      if o.autoclose == nil or o.autoclose == "1" or
-        o.autoclose == true then
+      if o.autoclose == nil or o.autoclose == "1" or o.autoclose == true then
         api.nvim_buf_delete(bufnr, {force = true})
       end
     else
@@ -316,7 +288,7 @@ function M.term_run(o)
   vim.g.job_status = "Running"
 end
 
-local parse_raw_args = function(...) --{{{1
+local parse_raw_args = function(...) -- {{{1
   -- TODO: differentiate between shell command params and vim command args, e.g. `--`
   local parsed = {cmd = {}}
   for _, arg in ipairs{...} do

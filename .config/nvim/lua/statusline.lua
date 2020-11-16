@@ -6,7 +6,7 @@ local winbufnr = api.nvim_win_get_buf
 local winwidth = api.nvim_win_get_width
 local exists = vim.fn.exists
 local util = require"util"
-local npcall = util.npcall
+local npcall = vim.F.npcall
 local nvim = require"helpers"
 sl = {}
 

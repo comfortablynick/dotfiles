@@ -487,7 +487,7 @@ endfunction
 
 function s:lsp_error_ct() "{{{2
     if has('nvim')
-        return v:lua.vim.lsp.util.buf_diagnostics_count('Error')
+        return v:lua.vim.lsp.diagnostic.get_count('Error')
     endif
     return 0
 endfunction
@@ -499,8 +499,8 @@ function s:ale_warning_ct() "{{{2
 endfunction
 
 function s:lsp_warning_ct() "{{{2
-    if has('nvim')
-        return v:lua.vim.lsp.util.buf_diagnostics_count('Warning')
+    if has("nvim")
+        return v:lua.vim.lsp.diagnostic.get_count('Warning')
     endif
     return 0
 endfunction

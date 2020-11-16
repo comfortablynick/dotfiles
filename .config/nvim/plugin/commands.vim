@@ -1,6 +1,7 @@
 " General commands/aliases {{{1
 " S :: save if file has changed and re-source (vim development) {{{2
-command! S update | source %
+" command! S update | source %
+command S update | AsyncTask file-run
 
 " Light/Dark :: easily change background {{{2
 command! Light set background=light
@@ -167,12 +168,14 @@ endif
 command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
 " nvim-only {{{1
-" [H]elp :: floating help window {{{2
 if has('nvim')
+    " Lua modules {{{2
     let s:tools = v:lua.require('tools')
     let s:buffer = v:lua.require('buffer')
     let s:window = v:lua.require('window')
+    let s:grep = v:lua.require('grep')
 
+    " [H]elp :: floating help window {{{2
     command! -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
     Alias H Help
 
@@ -197,7 +200,7 @@ if has('nvim')
     command -nargs=? MRU call s:window.create_scratch(s:tools.mru_files(<args>), '<mods>')
 
     " Grep :: async grep {{{2
-    command! -nargs=+ -complete=file -bar Grep call s:tools.async_grep([<f-args>])
+    command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)
 
     " Make :: async make {{{2
     command! -nargs=0 -complete=file Make call s:tools.make()

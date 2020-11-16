@@ -119,7 +119,7 @@ function plugins#init()
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'nvim-lua/completion-nvim'
-    Plug 'nvim-lua/diagnostic-nvim'
+    " Plug 'nvim-lua/diagnostic-nvim'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
     Plug 'neoclide/coc.nvim', {'do': {-> coc#util#install()}}

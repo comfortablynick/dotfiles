@@ -2,6 +2,7 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
+local npcall = vim.F.npcall
 local lsp = npcall(require, "nvim_lsp")
 local diag = nvim.packrequire("diagnostic-nvim", "diagnostic")
 

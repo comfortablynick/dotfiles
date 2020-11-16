@@ -37,14 +37,6 @@ end
 -- Error handling
 ---
 
-function M.npcall(fn, ...)
-  local ok_or_nil = function(status, ...)
-    if not status then return end
-    return ...
-  end
-  return ok_or_nil(pcall(fn, ...))
-end
-
 -- Some path utilities
 -- From: https://github.com/neovim/nvim-lsp/blob/master/lua/nvim_lsp/util.lua
 M.path = (function()

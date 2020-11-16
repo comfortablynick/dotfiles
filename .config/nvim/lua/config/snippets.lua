@@ -1,4 +1,4 @@
-local snippets = npcall(require, "snippets")
+local snippets = vim.F.npcall(require, "snippets")
 if not snippets then return end
 
 local U = require"snippets.utils"

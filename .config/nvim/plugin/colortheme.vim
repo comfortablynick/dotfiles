@@ -1,4 +1,4 @@
-" Set theme options/overrides {{{1
+" Set theme options/overrides
 let g:PaperColor_Theme_Options = {
     \   'language': {
     \     'python': {
@@ -24,6 +24,10 @@ let g:PaperColor_Theme_Options = {
     \   }
     \ }
 
+colorscheme PaperColor
+" packadd nvim-highlite
+" colorscheme highlite
+finish
 " Assign colorscheme {{{1
 let g:vim_color = has('nvim') ? (!empty($NVIM_COLOR) ? $NVIM_COLOR : 'papercolor-dark')
     \ : (!empty($VIM_COLOR) ? $VIM_COLOR : 'gruvbox-dark')

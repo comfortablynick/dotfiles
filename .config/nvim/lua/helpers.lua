@@ -1,6 +1,7 @@
 --- Neovim Helpers
 --- Customized from: https://github.com/norcalli/nvim_utils/blob/master/lua/nvim_utils.lua
 local api = vim.api
+local npcall = vim.F.npcall
 nvim = {}
 
 -- Global functions {{{1
@@ -22,14 +23,6 @@ function p(val, ...) -- {{{2
   end
   -- Just print if there's an error (bad format str, etc.)
   if not pcall(wrapper, val, ...) then print(val, ...) end
-end
-
-function npcall(fn, ...) -- {{{2
-  local ok_or_nil = function(status, ...)
-    if not status then return end
-    return ...
-  end
-  return ok_or_nil(pcall(fn, ...))
 end
 
 -- luacheck: ignore string
@@ -209,6 +202,7 @@ function nvim.source_current_buffer() -- {{{2
 end
 
 -- Higher level text manipulation {{{1
+-- TODO: do I use any of these?
 function nvim.set_selection_lines(lines) -- {{{2
   return nvim.buf_set_region_lines(nil, "<", ">", VISUAL_MODE.line, lines)
 end
@@ -224,8 +218,8 @@ end
 -- VimL glue function for nvim_text_operator
 -- Calls the lua function whose name is g:lua_fn_name and forwards its arguments
 vim.cmd[[
-function LuaExprCallback(...)
-	return luaeval(g:lua_expr, a:000)
+function! LuaExprCallback(...)
+    return luaeval(g:lua_expr, a:000)
 endfunction
 ]]
 

@@ -1,4 +1,3 @@
-local util = require"util"
 local M = {}
 
 local text_complete = {
@@ -26,7 +25,7 @@ end
 function M.init()
   require"config.snippets"
 
-  local completion = util.npcall(require, "completion")
+  local completion = vim.F.npcall(require, "completion")
   if completion then
     -- Custom sources
     completion.addCompletionSource("fish",

@@ -85,7 +85,7 @@ nnoremap <silent> ]t :tabnext<CR>
 " Buffer navigation {{{1
 nnoremap <silent> <Tab>      :bnext<CR>
 nnoremap <silent> <S-Tab>    :bprevious<CR>
-nnoremap <silent> <Leader>q  :call buffer#sayonara(1)<CR>
+nnoremap <silent> <Leader>q  :bwipeout<CR>
 nnoremap <silent> <Leader>xx :BufOnly<CR>
 
 " Quickfix

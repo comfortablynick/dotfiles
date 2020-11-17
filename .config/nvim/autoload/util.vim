@@ -3,11 +3,10 @@ function util#capture(cmd)
     if a:cmd =~# '^!'
         " System command output
         let l:cmd = a:cmd =~# ' %' ? substitute(a:cmd, ' %', ' ' . expand('%:p'), '') : a:cmd
-        let l:out = system(matchstr(l:cmd, '^!\zs.*'))
-    else
-        " Redirect of vim command
-        let l:out = execute(a:cmd)
+        return systemlist(matchstr(l:cmd, '^!\zs.*'))
     endif
+    " Redirect of vim command
+    let l:out = execute(a:cmd)
     return split(l:out, '\n')
 endfunction
 

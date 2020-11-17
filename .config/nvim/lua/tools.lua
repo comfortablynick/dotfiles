@@ -70,10 +70,10 @@ function M.set_executable(file) -- {{{1
     local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
     local new_mode_str = get_perm_str(new_mode)
     if orig_mode ~= new_mode then
-      printf("Permissions changed: %s (%s) -> %s (%s)", get_perm_str(orig_mode),
-             orig_mode_oct, new_mode_str, new_mode_oct)
+      print(("Permissions changed: %s (%s) -> %s (%s)"):format(get_perm_str(orig_mode),
+             orig_mode_oct, new_mode_str, new_mode_oct))
     else
-      printf("Permissions not changed: %s (%s)", new_mode_str, new_mode_oct)
+      print(("Permissions not changed: %s (%s)"):format(new_mode_str, new_mode_oct))
     end
   end)
 end
@@ -156,6 +156,16 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
       stdin:shutdown(function(err) assert(not err, err) end)
     end)
   end
+end
+
+-- function M.redir() :: Redirect command output to scratch window
+-- @param o table
+-- @field o.cmd  : Vim ex command
+-- @field o.mods : Mods for scratch window
+function M.redir(o) --{{{1
+  vim.validate{o = {o, "table"}}
+  local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
+  require"window".create_scratch(lines, o.mods or "")
 end
 
 -- function M.sh() :: Spawn a new job and put output to scratch window {{{1

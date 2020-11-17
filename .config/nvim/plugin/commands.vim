@@ -199,6 +199,12 @@ if has('nvim')
     " MRU :: most recently used files {{{2
     command -nargs=? MRU call s:window.create_scratch(s:tools.mru_files(<args>), '<mods>')
 
+    " Redir :: send output of <expr> to scratch window {{{2
+    " Usage:
+    "   :Redir hi .........show the full output of command ':hi' in a scratch window
+    "   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
+    command! -nargs=1 -complete=command Redir call s:tools.redir({'cmd': <q-args>, 'mods': '<mods>'})
+
     " Grep :: async grep {{{2
     command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)
 

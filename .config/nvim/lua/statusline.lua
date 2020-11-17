@@ -1,3 +1,4 @@
+--[==[
 local api = vim.api
 local uv = vim.loop
 local getbufvar = api.nvim_buf_get_var
@@ -344,4 +345,5 @@ end
 -- local runs = 1000
 -- require'util'.bench(runs, sl.git_status)
 -- require'util'.bench(runs, vim.fn.LL_GitStatus)
+--]==]
 -- vim:fdm=marker fdl=1:

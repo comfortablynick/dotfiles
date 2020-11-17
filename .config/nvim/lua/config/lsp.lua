@@ -66,15 +66,15 @@ local on_attach_cb = function(client, bufnr)
 
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
-    ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
-    ["gd"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
+    -- ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
+    ["gd"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist({open = true})<CR>",
+    ["gD"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
     ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     ["gS"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
     ["ga"] = "<Cmd>lua vim.lsp.buf.code_action()<CR>",
     ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
     ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
-    ["gld"] = "<Cmd>lua vim.lsp.util.show_line_diagnostics()<CR>",
     ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
     ["[d"] = "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>",
     ["]d"] = "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>",
@@ -133,7 +133,7 @@ function M.init()
           completion = {keywordSnippet = "Disable"},
           diagnostics = {
             enable = true,
-            globals = {"vim", "nvim", "sl", "p", "printf", "npcall"},
+            globals = {"vim", "nvim", "p"},
           },
           workspace = {
             library = (function()

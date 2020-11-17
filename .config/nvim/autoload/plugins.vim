@@ -26,7 +26,7 @@ function plugins#init()
     Plug 'kristijanhusak/vim-packager'
 
     " General {{{2
-    Plug 'chrisbra/Colorizer'
+    " Plug 'chrisbra/Colorizer'
     Plug 'airblade/vim-rooter'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-eunuch'
@@ -119,12 +119,13 @@ function plugins#init()
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'nvim-lua/completion-nvim'
-    " Plug 'nvim-lua/diagnostic-nvim'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
     Plug 'neoclide/coc.nvim', {'do': {-> coc#util#install()}}
 
     " Lua/nvim {{{2
+    Plug 'norcalli/nvim-colorizer.lua'
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'bfredl/nvim-luadev'
     Plug 'TravonteD/luajob'
     Plug 'nvim-lua/plenary.nvim'

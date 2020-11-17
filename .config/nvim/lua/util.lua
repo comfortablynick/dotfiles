@@ -45,6 +45,11 @@ M.path = (function()
     return stat and stat.type or false
   end
 
+  local function basename(str)
+    local name = string.gsub(str, "(.*/)(.*)", "%2")
+    return name
+  end
+
   local function is_dir(filename) return exists(filename) == "directory" end
 
   local function is_file(filename) return exists(filename) == "file" end
@@ -138,6 +143,7 @@ M.path = (function()
     is_file = is_file,
     is_absolute = is_absolute,
     exists = exists,
+    basename = basename,
     sep = path_sep,
     dirname = dirname,
     join = path_join,

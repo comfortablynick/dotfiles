@@ -380,7 +380,9 @@ function statusline#git_summary() "{{{2
     " 1. coc-git
     " 2. gitgutter
     " 3. signify
-    if exists('b:coc_git_status')
+    if exists('b:gitsigns_status')
+        return trim(b:gitsigns_status)
+    elseif exists('b:coc_git_status')
         return trim(b:coc_git_status)
     elseif exists('*GitGutterGetHunkSummary')
         let l:githunks = GitGutterGetHunkSummary()
@@ -487,7 +489,7 @@ endfunction
 
 function s:lsp_error_ct() "{{{2
     if has('nvim')
-        return v:lua.vim.lsp.diagnostic.get_count('Error')
+        return v:lua.vim.lsp.diagnostic.get_count(0, 'Error')
     endif
     return 0
 endfunction
@@ -499,8 +501,8 @@ function s:ale_warning_ct() "{{{2
 endfunction
 
 function s:lsp_warning_ct() "{{{2
-    if has("nvim")
-        return v:lua.vim.lsp.diagnostic.get_count('Warning')
+    if has('nvim')
+        return v:lua.vim.lsp.diagnostic.get_count(0, 'Warning')
     endif
     return 0
 endfunction

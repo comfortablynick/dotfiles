@@ -181,9 +181,12 @@ if has('nvim')
     " packadd! barbar.nvim
     packadd! plenary.nvim
     packadd! nvim-lspconfig
+    packadd! gitsigns.nvim
 
+    lua nvim = require'nvim'
     lua require'helpers'
     lua require'config.treesitter'
+    lua require'config.gitsigns'
     lua require'config.lsp'.init()
 else
     " Vim only

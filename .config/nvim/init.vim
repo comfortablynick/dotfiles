@@ -184,7 +184,7 @@ if has('nvim')
     packadd! gitsigns.nvim
 
     lua nvim = require'nvim'
-    lua require'helpers'
+    lua require'globals'
     lua require'config.treesitter'
     lua require'config.gitsigns'
     lua require'config.lsp'.init()

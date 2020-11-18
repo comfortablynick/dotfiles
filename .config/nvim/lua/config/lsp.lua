@@ -3,7 +3,7 @@ local M = {}
 local api = vim.api
 local util = vim.lsp.util
 local npcall = vim.F.npcall
-local lsp = npcall(require, "nvim_lsp")
+local lsp = npcall(require, "lspconfig")
 
 vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
 vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
@@ -127,6 +127,7 @@ function M.init()
     pyls_ms = {},
     rust_analyzer = {},
     sumneko_lua = {
+      cmd = {"lua-language-server"},
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},

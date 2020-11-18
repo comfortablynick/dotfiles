@@ -65,6 +65,7 @@ set backup
 set backupdir=~/.vim/backup//                                   " Store backup files
 
 " General {{{2
+set background=dark
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
 set termguicolors                                               " Use true color
@@ -123,10 +124,13 @@ set incsearch                                                   " Move cursor to
 set magic                                                       " Magic escaping for regex
 
 " Grep {{{2
-" use ripgrep as grepprg
+" Check for grep alternatives and use if present
 if executable('rg')
     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
     set grepformat=%f:%l:%c:%m,%f:%l:%m
+elseif executable('ug')
+    set grepprg=ug\ -RInk\ -j\ -u\ --tabs=1\ --ignore-files
+    set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
 endif
 
 " Undo {{{2

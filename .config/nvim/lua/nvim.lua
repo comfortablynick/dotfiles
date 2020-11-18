@@ -358,7 +358,7 @@ end
 function M.source_current_buffer()
   -- luacheck: ignore loadstring
   loadstring(table.concat(
-               api.nvim_buf_get_region_lines(0, 0, -1, false), "\n"))()
+               api.nvim_buf_get_region_lines(0, 0, -1, true), "\n"))()
 end
 
 -- warn :: echo warning message {{{2

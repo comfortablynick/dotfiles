@@ -1,7 +1,10 @@
 " General commands/aliases {{{1
-" S :: save if file has changed and re-source (vim development) {{{2
-" command! S update | source %
-command S update | AsyncTask file-run
+" S :: save if file has changed and re-run {{{2
+" Use asynctasks task runner to determine command based on filetype
+"
+" Can't use plugins#lazy_run here because it will try to overwrite itself
+" while running. Manually packadd on demand or packadd[!] somewhere else
+command S update | packadd asynctasks.vim | AsyncTask file-run
 
 " Light/Dark :: easily change background {{{2
 command! Light set background=light

@@ -14,6 +14,34 @@ local qf_open = function(max_size) -- {{{1
   vim.cmd(("copen %d | wincmd k"):format(qf_size))
 end
 
+function M.async_grep(cmd_args) -- {{{1
+  vim.validate{cmd_args = {cmd_args, "table"}}
+  local grep = vim.o.grepprg
+  local grep_args = vim.split(grep, " ")
+  local grep_prg = table.remove(grep_args, 1)
+  vim.list_extend(grep_args, cmd_args)
+  local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg,
+                                                table.concat(grep_args, " "))
+
+  local on_read = function(err, data)
+    assert(not err, err)
+    vim.fn.setqflist({}, "a",
+                     {efm = vim.o.grepformat, title = qf_title, lines = data})
+  end
+
+  local on_exit = function()
+    local result_ct = #vim.fn.getqflist()
+    if result_ct > 0 then
+      vim.cmd("cwindow " .. math.min(result_ct, 20))
+    else
+      nvim.warn"grep: no results found"
+    end
+  end
+
+  vim.fn.setqflist({}, " ", {title = qf_title})
+  M.spawn(grep_prg, {args = grep_args}, vim.schedule_wrap(on_read),
+          vim.schedule_wrap(on_exit))
+end
 
 function M.scandir(path) -- {{{1
   local d = uv.fs_scandir(vim.fn.expand(path))
@@ -70,10 +98,11 @@ function M.set_executable(file) -- {{{1
     local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
     local new_mode_str = get_perm_str(new_mode)
     if orig_mode ~= new_mode then
-      print(("Permissions changed: %s (%s) -> %s (%s)"):format(get_perm_str(orig_mode),
-             orig_mode_oct, new_mode_str, new_mode_oct))
+      print(("Permissions changed: %s (%s) -> %s (%s)"):format(
+              get_perm_str(orig_mode), orig_mode_oct, new_mode_str, new_mode_oct))
     else
-      print(("Permissions not changed: %s (%s)"):format(new_mode_str, new_mode_oct))
+      print(("Permissions not changed: %s (%s)"):format(new_mode_str,
+                                                        new_mode_oct))
     end
   end)
 end
@@ -162,7 +191,7 @@ end
 -- @param o table
 -- @field o.cmd  : Vim ex command
 -- @field o.mods : Mods for scratch window
-function M.redir(o) --{{{1
+function M.redir(o) -- {{{1
   vim.validate{o = {o, "table"}}
   local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
   require"window".create_scratch(lines, o.mods or "")

@@ -90,7 +90,6 @@ function plugins#init()
     " Colorschemes {{{2
     Plug 'NLKNguyen/papercolor-theme'
     Plug 'lifepillar/vim-gruvbox8'
-    PlugLocal '~/git/nvim-highlite'
 
     " Syntax/filetype {{{2
     Plug 'vhdirk/vim-cmake'
@@ -131,6 +130,9 @@ function plugins#init()
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-treesitter/nvim-treesitter'
     Plug 'romgrk/barbar.nvim'
+    Plug 'norcalli/nvim-base16.lua'
+    " Plug 'tjdevries/colorbuddy.vim'
+    " Plug 'Th3Whit3Wolf/spacebuddy'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

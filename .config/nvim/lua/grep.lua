@@ -14,16 +14,19 @@ local get_job = function(str, cwd)
     command = grep_prg,
     args = grep_args,
     cwd = cwd,
-    on_stdout = vim.schedule_wrap(function(_, line)
-      local split_line = vim.split(line, ":")
-
-      local filename = split_line[1]
-      local lnum = split_line[2]
-      local col = split_line[3]
-
-      vim.fn.setqflist({
-        {filename = filename, lnum = lnum, col = col, text = split_line[4]},
-      }, "a")
+    on_stdout = vim.schedule_wrap(function(err, line)
+      assert(not err, err)
+      local lines = vim.split(line, "\n")
+      vim.fn.setqflist({}, "a", {efm = vim.o.grepformat, lines = lines})
+      -- local split_line = vim.split(line, ":")
+      --
+      -- local filename = split_line[1]
+      -- local lnum = split_line[2]
+      -- local col = split_line[3]
+      --
+      -- vim.fn.setqflist({
+      --   {filename = filename, lnum = lnum, col = col, text = split_line[4]},
+      -- }, "a")
     end),
 
     on_exit = vim.schedule_wrap(function()

@@ -31,11 +31,9 @@ endif
 lua << EOF
 vim.cmd[[packadd nvim-base16.lua]]
 local base16 = require 'base16'
-base16(base16.themes["twilight"], true)
+base16(base16.themes["mocha"], true)
 EOF
-" packadd nvim-base16.lua
-" let s:base16 = v:lua.require('base16')
-" call s:base16.apply_theme(s:base16.themes['twilight'], v:true)
+
 finish
 " Assign colorscheme {{{1
 let g:vim_color = has('nvim') ? (!empty($NVIM_COLOR) ? $NVIM_COLOR : 'papercolor-dark')

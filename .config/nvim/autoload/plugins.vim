@@ -128,11 +128,8 @@ function plugins#init()
     Plug 'bfredl/nvim-luadev'
     Plug 'TravonteD/luajob'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'romgrk/barbar.nvim'
-    Plug 'norcalli/nvim-base16.lua'
-    " Plug 'tjdevries/colorbuddy.vim'
-    " Plug 'Th3Whit3Wolf/spacebuddy'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'
@@ -291,7 +288,7 @@ endfunction
 
 " function plugins#set_source_handler() :: set config handlers for packages {{{2
 function plugins#set_source_handler()
-    command -nargs=+ -complete=packadd Packload call plugins#packadd(<q-args>)
+    command! -nargs=+ -complete=packadd Packload call plugins#packadd(<q-args>)
     augroup autoload_plugins
         autocmd!
         autocmd SourcePre  */pack/* call s:config_pack(expand('<amatch>'), 1)

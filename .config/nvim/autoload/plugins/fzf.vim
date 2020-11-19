@@ -60,7 +60,14 @@ function s:fzf_rg_passthrough(query, fullscreen) "{{{2
     let l:command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
     let l:initial_command = printf(l:command_fmt, shellescape(a:query))
     let l:reload_command = printf(l:command_fmt, '{q}')
-    let l:spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.l:reload_command]}
+    let l:spec = {
+        \ 'options': [
+        \    '--prompt', 'RG> ',
+        \    '--phony',
+        \    '--query', a:query,
+        \    '--bind',
+        \    'change:reload:'..l:reload_command,
+        \ ]}
     call fzf#vim#grep(
         \ l:initial_command,
         \ 1,

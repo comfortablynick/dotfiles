@@ -1,4 +1,6 @@
-" asynctasks.vim tasks
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Load available asynctasks.vim tasks
+
 let s:task = {}
 
 function! s:task.source()

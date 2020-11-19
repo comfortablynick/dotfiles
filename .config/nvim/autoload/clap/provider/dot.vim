@@ -1,4 +1,6 @@
-" Open dotfiles quickly {{{2
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: open dotfiles quickly
+
 let s:dot = {}
 
 function! s:dot.source()

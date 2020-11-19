@@ -1,12 +1,14 @@
-" Show a list of floaterm buffer instances
-let s:floaterm = {}
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Show a list of floaterm buffer instances
+
+let s:spec = {}
 let s:preview_height = 10
 let s:bufnr_width = 7
 let s:name_width = 60
 let s:fmt = '%'..s:bufnr_width..'s      %-'..s:name_width..'s'..'   %s'
 let s:bar = printf(s:fmt, '[bufnr]', '[name]', '[title]')
 
-function s:floaterm.source()
+function s:spec.source()
     let l:candidates = [s:bar]
     let l:bufs = floaterm#buflist#gather()
     for l:bufnr in l:bufs
@@ -20,7 +22,7 @@ function s:floaterm.source()
     return l:candidates
 endfunction
 
-function s:floaterm.on_move()
+function s:spec.on_move()
     let l:curline = g:clap.display.getcurline()
     if l:curline ==# s:bar | return | endif
     let l:bufnr = str2nr(matchstr(l:curline, '\d\+'))
@@ -30,10 +32,10 @@ function s:floaterm.on_move()
     call g:clap.preview.show(l:lines)
 endfunction
 
-function s:floaterm.sink(curline)
+function s:spec.sink(curline)
     if a:curline ==# s:bar | return | endif
     let l:bufnr = str2nr(matchstr(a:curline, '\d\+'))
     call floaterm#terminal#open_existing(l:bufnr)
 endfunction
 
-let g:clap#provider#floaterm# = s:floaterm
+let g:clap#provider#floaterms# = s:spec

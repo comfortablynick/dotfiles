@@ -46,6 +46,8 @@ augroup END]],
   func = indent[[function ${1|vim.trim(S.v)}($2)
     $0
 endfunction]],
+  clap = comment([[Author: Nick Murphy <comfortablynick@gmail.com>
+Description: $0]]),
   -- Do string formatting so function name shows upon snippet insertion using default inserter
   fua = indent(format([[function %s#${1|vim.trim(S.v)}($2)
     $0

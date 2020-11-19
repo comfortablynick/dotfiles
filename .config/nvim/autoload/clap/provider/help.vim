@@ -1,4 +1,6 @@
-" Search help tags and open help tab
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Search help tags and open help tab
+
 let s:help = {}
 
 function! s:help.source()

@@ -1,4 +1,6 @@
-" Show defined maps for all modes
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Show defined maps for all modes
+
 " Keep this for now; built-in `maps` provider is confusing with which mode is shown
 let s:map = {}
 

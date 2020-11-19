@@ -1,4 +1,6 @@
-" Frequently used commands {{{2
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Frequently used commands
+
 let s:cmds = {
     \ 'ALEInfo': 'ALE debugging info',
     \ 'CocConfig': 'Coc configuration',

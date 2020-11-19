@@ -26,13 +26,14 @@ let g:PaperColor_Theme_Options = {
 
 if !has('nvim')
     colorscheme PaperColor
-    finish
+else
+    " colorscheme PaperColor
+    let s:base16 = 'monokai'
+    " let s:base16 = 'mocha'
+    " let s:base16 = 'gruvbox-dark-hard'
+    " let s:base16 = 'irblack'
+    call v:lua.require('config.theme').set_theme(s:base16)
 endif
-lua << EOF
-vim.cmd[[packadd nvim-base16.lua]]
-local base16 = require 'base16'
-base16(base16.themes["mocha"], true)
-EOF
 
 finish
 " Assign colorscheme {{{1

@@ -3,6 +3,8 @@
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = 1
 let g:clap_preview_size = 10
+let g:clap_enable_background_shadow = v:false
+let g:clap_background_shadow_blend = 50
 let g:clap_layout = #{
     \ relative: 'editor'
     \ }

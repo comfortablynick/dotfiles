@@ -27,7 +27,6 @@ function! s:deferred_load()
     packadd fzf.vim
     packadd targets.vim
     packadd vim-exchange
-    " packadd vim-commentary
     packadd tcomment_vim
     packadd vim-unimpaired
     packadd clever-f.vim
@@ -41,7 +40,6 @@ function! s:deferred_load()
     packadd vim-clap
     packadd vim-snippets
     packadd vista.vim
-    packadd vim-bbye
     packadd vim-floaterm
     packadd vim-picker
     packadd vim-lion

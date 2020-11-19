@@ -1,13 +1,27 @@
-" Preview lua base16 theme variations
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Preview lua base16 theme variations
+
 let s:spec = {}
 
-let s:base16 = v:lua.require('theme.base16')
+" Favorites:
+" darktooth
+" mocha
 
-let s:spec.source = sort(s:base16.theme_names())
-let s:spec.on_move = {->s:base16.apply_theme(s:base16.themes[g:clap.display.getcurline()], v:true)}
+let s:base16 = v:lua.require('theme.base16')
+let s:config = v:lua.require('config.theme')
+let s:start_theme = s:config.base16_theme
+let s:last_theme = get(g:, 'last_theme', s:start_theme)
+
+let s:spec.source = {->s:config.themes_after(s:last_theme)}
+let s:spec.on_move = {->s:config.set_theme(g:clap.display.getcurline())}
 
 function s:spec.sink(selected)
-    echo 'Base16 theme changed to '..a:selected
+    if a:selected !=# s:last_theme
+        " Theme has changed since we last moved in clap
+        call s:config.set_theme(a:selected)
+        echo 'Base16 theme changed to '..a:selected
+    endif
+    let s:last_theme = a:selected
 endfunction
 
 let g:clap#provider#base16# = s:spec

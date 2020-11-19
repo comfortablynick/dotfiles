@@ -1,4 +1,5 @@
-" Clap provider to display global vim variables
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Clap provider to display global vim variables
 
 let s:globals = {}
 

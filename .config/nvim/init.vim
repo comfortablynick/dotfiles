@@ -125,12 +125,12 @@ set magic                                                       " Magic escaping
 
 " Grep {{{2
 " Check for grep alternatives and use if present
-if executable('rg')
+if executable('ug')
+    set grepprg=ug\ -RInkju.\ --tabs=1
+    set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
+elseif executable('rg')
     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
     set grepformat=%f:%l:%c:%m,%f:%l:%m
-elseif executable('ug')
-    set grepprg=ug\ -RInk\ -j\ -u\ --tabs=1\ --ignore-files
-    set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
 endif
 
 " Undo {{{2

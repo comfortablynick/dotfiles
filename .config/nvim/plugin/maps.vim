@@ -5,25 +5,14 @@ nnoremap qqq :q!<CR>
 nnoremap QQ ZQ
 nnoremap Y y$
 
-" nnoremap : ;
-" xnoremap : ;
-" onoremap : ;
-
+" Remap ; to :
 nnoremap ; :
 xnoremap ; :
 onoremap ; :
-
 nnoremap g: g;
 nnoremap @; @:
-
-" nnoremap g; <Nop>
-" nnoremap @: <Nop>
-
 nnoremap q; q:
 xnoremap q; q:
-
-" nnoremap q: <Nop>
-" xnoremap q: <Nop>
 
 " Run the last command
 nnoremap <Leader><Leader>c :<Up>
@@ -85,7 +74,8 @@ nnoremap <silent> ]t :tabnext<CR>
 " Buffer navigation {{{1
 nnoremap <silent> <Tab>      :bnext<CR>
 nnoremap <silent> <S-Tab>    :bprevious<CR>
-nnoremap <silent> <Leader>q  :bwipeout<CR>
+nnoremap <silent> <Leader>w  :write\|bwipeout<CR>
+nnoremap <silent> <Leader>q  :Bdelete<CR>
 nnoremap <silent> <Leader>xx :BufOnly<CR>
 
 " Quickfix

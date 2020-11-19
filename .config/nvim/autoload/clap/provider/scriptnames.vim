@@ -1,4 +1,6 @@
-" Clap provider similar to :Scriptnames in vim-scriptease
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Show loaded scripts (like :Scriptnames in vim-scriptease)
+
 let s:scriptnames = {}
 
 function! s:scriptnames.source()

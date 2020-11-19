@@ -1,4 +1,6 @@
-" Most recently used {{{2
+" Author: Nick Murphy <comfortablynick@gmail.com>
+" Description: Most recently used
+
 let s:mru = {}
 
 function s:mru.source()

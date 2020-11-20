@@ -6,6 +6,7 @@ let s:mru = {}
 function s:mru.source()
     let s:using_icons = v:true
     let l:files = luaeval('require"tools".mru_files()')
+    let l:files = filter(l:files, {_,v -> v !=# expand('%:p:~')})
     return map(l:files, {_,v -> clap#icon#get(v)..' '..v})
 endfunction
 

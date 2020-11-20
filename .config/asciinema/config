@@ -1,0 +1,27 @@
+[record]
+
+; Command to record, default: $SHELL
+; Use fish in private mode (ignore shell history)
+command = fish -P
+
+; Enable stdin (keyboard) recording, default: no
+; stdin = yes
+
+; List of environment variables to capture, default: SHELL,TERM
+; env = SHELL,TERM
+
+; Limit recorded terminal inactivity to max n seconds, default: off
+; idle_time_limit = 2
+
+; Answer "yes" to all interactive prompts, default: no
+; yes = false
+
+; Be quiet, suppress all notices/warnings, default: no
+; quiet = false
+
+; [play]
+
+; Playback speed (can be fractional), default: 1
+; speed = 1
+
+; vim:ft=dosini:

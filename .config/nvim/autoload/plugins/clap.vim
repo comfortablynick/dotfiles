@@ -3,51 +3,24 @@
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = 1
 let g:clap_preview_size = 10
-let g:clap_enable_background_shadow = v:false
+let g:clap_enable_background_shadow = v:true
 let g:clap_background_shadow_blend = 50
 let g:clap_layout = #{
     \ relative: 'editor'
     \ }
 
 " Commands 
-command Task  :Clap task
-command Filer :Clap filer
-Alias t Clap\ tags
+command Task    Clap task
+command Filer   Clap filer
+command Base16  call plugins#clap#base16()
+Alias t   Clap\ tags
 Alias scr Clap\ scriptnames
+Alias mru Clap\ mru
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags<CR>
 nnoremap <silent> <Leader>h :Clap command_history<CR>
-
-" Autocommands {{{2
-function s:clap_on_enter() "{{{3
-    if exists('g:loaded_mucomplete')
-        silent! MUcompleteAutoOff
-        let s:mucomplete_disabled = 1
-    endif
-endfunction
-
-function s:clap_on_exit() "{{{3
-    if exists('s:mucomplete_disabled')
-        silent! MUcompleteAutoOn
-        unlet s:mucomplete_disabled
-    endif
-endfunction
-
-function s:clap_win_disable_fold() "{{{3
-    " Probably not needed if we specifically enable folding per filetype
-    let l:clap = get(g:, 'clap')
-    if empty(l:clap) | return | endif
-    let l:winid = l:clap['display']['winid']
-    call setwinvar(l:winid, '&foldenable', 0)
-endfunction
-
-" augroup autoload_plugins_clap "{{{3
-"     autocmd!
-"     " Set autocmd to close clap win if we leave
-"     autocmd User ClapOnEnter call s:clap_on_enter()
-"     autocmd User ClapOnExit call s:clap_on_exit()
-" augroup END
+nnoremap <silent> <Leader>m :Clap mru<CR>
 
 " Functions {{{1
 " function plugins#clap#get_selected() :: Get selection sans icon {{{2
@@ -71,6 +44,12 @@ function plugins#clap#file_edit(selected)
         \ a:selected[4:] :
         \ a:selected
     execute 'edit' l:fname
+endfunction
+
+" function plugins#clap#base16() :: theme select {{{1
+function plugins#clap#base16()
+    let g:clap_enable_background_shadow = v:false
+    Clap base16
 endfunction
 
 " history (lua/Viml test) {{{1

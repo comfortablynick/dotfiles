@@ -1,6 +1,6 @@
 " FZF Config {{{1
 " Layout {{{2
-let g:fzf_prefer_tmux = 0
+let g:fzf_prefer_tmux = get(g:, 'fzf_prefer_tmux', v:false)
 
 if exists('$TMUX') && g:fzf_prefer_tmux
     " See `man fzf-tmux` for available options

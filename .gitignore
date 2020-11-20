@@ -18,3 +18,4 @@ tags
 .config/direnv/allow/
 .config/nvim/spell
 vifminfo*
+*/asciinema/install-id

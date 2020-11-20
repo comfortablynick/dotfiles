@@ -6,6 +6,7 @@ let s:spec = {}
 " Favorites:
 " darktooth
 " mocha
+" monokai
 
 let s:base16 = v:lua.require('theme.base16')
 let s:config = v:lua.require('config.theme')
@@ -22,6 +23,10 @@ function s:spec.sink(selected)
         echo 'Base16 theme changed to '..a:selected
     endif
     let s:last_theme = a:selected
+endfunction
+
+function s:spec.on_exit()
+    let g:clap_enable_background_shadow = v:true
 endfunction
 
 let g:clap#provider#base16# = s:spec

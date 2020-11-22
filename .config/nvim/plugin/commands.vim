@@ -183,6 +183,10 @@ if has('nvim')
     command! -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
     Alias H Help
 
+    " Colorizer :: run nvim-colorizer.lua {{{2
+    " command Colorizer call plugins#lazy_run('ColorizerToggle', 'nvim-colorizer.lua')
+    command Colorizer packadd nvim-colorizer.lua | lua require'colorizer'.attach_to_buffer{0, {mode = "foreground"}}
+
     " LspDisable :: stop active lsp clients {{{2
     " command! Lsp
 

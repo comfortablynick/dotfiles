@@ -27,12 +27,15 @@ let g:PaperColor_Theme_Options = {
 if !has('nvim')
     colorscheme PaperColor
 else
-    " colorscheme PaperColor
-    let s:base16 = 'monokai'
-    " let s:base16 = 'mocha'
-    " let s:base16 = 'gruvbox-dark-hard'
-    " let s:base16 = 'irblack'
-    call v:lua.require('config.theme').set_theme(s:base16)
+    if 1
+        let s:base16 = 'monokai'
+        " let s:base16 = 'mocha'
+        " let s:base16 = 'gruvbox-dark-hard'
+        " let s:base16 = 'irblack'
+        call v:lua.require('config.theme').set_theme(s:base16)
+    else
+        colorscheme gruvbox8_hard
+    endif
 endif
 
 finish

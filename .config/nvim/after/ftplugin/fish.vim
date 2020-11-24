@@ -1,7 +1,7 @@
 compiler fish
 
 setlocal shiftwidth=4 
-setlocal formatoptions-=ro
+setlocal formatoptions-=cro
 setlocal errorformat=%f\ (line\ %l):\ %m
 setlocal foldmethod=marker
 packadd ale

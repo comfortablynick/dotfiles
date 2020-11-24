@@ -11,5 +11,7 @@ set shortmess+=c
 
 let g:completion_enable_snippet = 'snippets.nvim'
 let g:completion_enable_auto_paren = 1
+let g:completion_enable_auto_hover = 1
+let g:completion_enable_auto_signature = 1
 let g:completion_auto_change_source = 1
 let g:completion_customize_lsp_label = {'Buffer': 'B', 'Buffers': 'Bs'}

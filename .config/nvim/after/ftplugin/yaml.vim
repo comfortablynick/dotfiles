@@ -1,3 +1,2 @@
-setlocal formatoptions-=o
-setlocal formatoptions-=r
+setlocal formatoptions-=cro
 setlocal tabstop=2

@@ -4,11 +4,10 @@ augroup plugin_window
     " Neovim terminal
     if has('nvim')
         " Terminal starts in insert mode
-        autocmd TermOpen * call s:on_termopen()
-        " autocmd TermOpen * tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
-        autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
-        " Neovim yank highlight
-        autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=500}
+        autocmd TermOpen     * call s:on_termopen()
+        autocmd TermClose    * call feedkeys("\<C-\>\<C-n>")
+        autocmd ColorScheme  * call s:yank_hl()
+        autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="Yank", timeout=750}
     endif
 
     " Set cursorline depending on mode, if cursorline is enabled locally
@@ -37,3 +36,9 @@ function s:on_cmdwin_enter()
     nnoremap <buffer> <Esc> <C-c><C-c>
     setlocal norelativenumber nonumber
 endfunction
+
+function s:yank_hl()
+    highlight Yank cterm=reverse gui=reverse
+endfunction
+
+call s:yank_hl()

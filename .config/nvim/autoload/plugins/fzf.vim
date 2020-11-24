@@ -221,8 +221,6 @@ command -bang -nargs=* -complete=dir Files
 " Mru :: most recently used files {{{2
 command -bang Mru call s:fzf_mru(<bang>0)
 
-" Globals :: global variables {{{2
-command -bang Globals call s:fzf_globals(<bang>0)
 
 " Sourced :: fuzzy :scriptnames {{{2
 command -bang -nargs=* Sourced call s:fzf_scriptnames(<bang>0)

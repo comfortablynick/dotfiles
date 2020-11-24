@@ -1,7 +1,7 @@
 setlocal tabstop=4
 setlocal shiftwidth=0
 setlocal foldmethod=marker
-setlocal formatoptions-=o
+setlocal formatoptions-=cro
 setlocal formatprg=rustfmt\ +nightly
 setlocal makeprg=cargo\ install\ --path='.'\ -f
 

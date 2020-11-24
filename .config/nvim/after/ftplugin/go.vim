@@ -1,5 +1,4 @@
-" Golang Options
-setlocal formatoptions-=t                                       " Don't autowrap text
+setlocal formatoptions-=crot
 setlocal comments=s1:/*,mb:*,ex:*/,://
 setlocal nolist                                                 " No tab characters
 setlocal noexpandtab                                            " Don't convert tab to spaces (gofmt uses tabs)

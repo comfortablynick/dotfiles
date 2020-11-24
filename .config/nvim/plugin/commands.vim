@@ -168,8 +168,9 @@ if has('nvim')
     command! -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
 endif
 
-" Using python pformat (handles lists better)
-command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
+" " Using python pformat (handles lists better but does not convert all vim
+" " datatypes)
+" command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
 " nvim-only {{{1
 if has('nvim')

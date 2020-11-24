@@ -13,6 +13,8 @@ let g:clap_layout = #{
 command Task    Clap task
 command Filer   Clap filer
 command Base16  call plugins#clap#base16()
+command Globals Clap globals
+
 Alias t   Clap\ tags
 Alias scr Clap\ scriptnames
 Alias mru Clap\ mru

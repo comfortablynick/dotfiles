@@ -1,2 +1,1 @@
-set formatoptions-=o
-set formatoptions-=r
+set formatoptions-=cro

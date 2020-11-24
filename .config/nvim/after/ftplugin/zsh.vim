@@ -1,2 +1,2 @@
-setlocal formatoptions-=o formatoptions-=r
+setlocal formatoptions-=cro
 setlocal foldmethod=marker

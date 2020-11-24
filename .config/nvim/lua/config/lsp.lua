@@ -48,6 +48,17 @@ function M.rename(new_name)
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
+local set_hl_autocmds = function()
+  local hl_autocmds = {
+    lsp_highlight = {
+      {"CursorHold", "<buffer>", "lua vim.lsp.buf.document_highlight()"},
+      {"CursorMoved", "<buffer>", "lua vim.lsp.buf.clear_references()"},
+      {"InsertEnter", "<buffer>", "lua vim.lsp.buf.clear_references()"},
+    },
+  }
+  nvim.create_augroups(hl_autocmds)
+end
+
 local on_attach_cb = function(client, bufnr)
   api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
 
@@ -57,8 +68,10 @@ local on_attach_cb = function(client, bufnr)
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError", {fg = "#ff5f87", sp = "#ff5f87"})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning", {fg = "#d78f00", sp = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
+                  {fg = "#ff5f87", sp = "#ff5f87"})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
+                  {fg = "#d78f00", sp = "#d78f00"})
   api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
   api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
   api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
@@ -84,14 +97,8 @@ local on_attach_cb = function(client, bufnr)
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
 
-  api.nvim_exec([[
-  augroup lsp_on_attach
-    autocmd!
-    autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
-    autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-    autocmd InsertEnter <buffer> lua vim.lsp.buf.clear_references()
-  augroup END
-  ]], false)
+  -- TODO: detect highlight capability
+  set_hl_autocmds()
 end
 
 function M.init()
@@ -127,15 +134,12 @@ function M.init()
     pyls_ms = {},
     rust_analyzer = {},
     sumneko_lua = {
-      cmd = {"lua-language-server"},
+      -- cmd = {"lua-language-server"},
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
           completion = {keywordSnippet = "Disable"},
-          diagnostics = {
-            enable = true,
-            globals = {"vim", "nvim", "p"},
-          },
+          diagnostics = {enable = true, globals = {"vim", "nvim", "p"}},
           workspace = {
             library = (function()
               -- Load the `lua` files from nvim into the runtime
@@ -161,10 +165,11 @@ function M.init()
     tsserver = {},
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
     yamlls = {
+      -- handlers
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
         yaml = {
-          schemas = {["http://json.schemastore.org/ansible-stable-2.9"] = "*"},
+          schemas = {["https://json.schemastore.org/ansible-role-2.9"] = "*"},
         },
       },
     },

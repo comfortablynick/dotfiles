@@ -6,7 +6,7 @@
 local api = vim.api
 local M = {}
 
---[==[Currently unused {{{
+-- Currently unused {{{1
 function M.mark_or_index(buf, input) -- {{{2
   -- An enhanced version of nvim_buf_get_mark which also accepts:
   -- - A number as input: which is taken as a line number.
@@ -38,7 +38,7 @@ function M.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   --- Return the lines of the selection, respecting selection modes.
   -- RETURNS: table
   mode = mode or VISUAL_MODE.char
-  buf = buf or api.nvim_get_current_buf()
+  buf = buf or 0
   -- TODO keep these? @refactor
   mark_a = mark_a or "<"
   mark_b = mark_b or ">"
@@ -87,7 +87,7 @@ function M.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
   -- because it can save api calls.
   -- It's also the only way to do transformations that are correct with `char` mode
   -- since it has to have access to the initial values of the region lines.
-  buf = buf or api.nvim_get_current_buf()
+  buf = buf or 0
   -- TODO keep these? @refactor
   mark_a = mark_a or "<"
   mark_b = mark_b or ">"
@@ -205,7 +205,7 @@ end
 function M.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
   return M.text_operator(function(visualmode)
     M.buf_transform_region_lines(nil, "[", "]",
-                                    forced_visual_mode or visualmode, function(
+                                 forced_visual_mode or visualmode, function(
       lines
     ) return fn(lines, visualmode) end)
   end)
@@ -223,14 +223,12 @@ function M.visual_mode() -- {{{2
 end
 
 function M.transform_cword(fn) -- {{{2
-  M.text_operator_transform_selection(
-    function(lines) return {fn(lines[1])} end)
+  M.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iw", "ni", false)
 end
 
 function M.transform_cWORD(fn) -- {{{2
-  M.text_operator_transform_selection(
-    function(lines) return {fn(lines[1])} end)
+  M.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iW", "ni", false)
 end
 
@@ -351,14 +349,12 @@ function M.define_text_object(mapping, function_name) -- {{{2
   api.nvim_set_keymap("x", mapping,
                       (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
---}}} ]==]
 
 -- source_current_bufffer :: hot reload buffer {{{2
 -- TODO: remove module from packages.loaded first?
 function M.source_current_buffer()
   -- luacheck: ignore loadstring
-  loadstring(table.concat(
-               api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
+  loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
 
 -- warn :: echo warning message {{{2
@@ -424,11 +420,7 @@ function M.tbl_foreach(t, fn, ...)
 end
 
 -- Lazy load vim.api.nvim_{method} into M.{method} {{{2
-setmetatable(M, {
-  __index = function(_, k)
-    return api["nvim_" .. k]
-  end
-})
+setmetatable(M, {__index = function(_, k) return api["nvim_" .. k] end})
 
 -- Return module {{{1
 return M

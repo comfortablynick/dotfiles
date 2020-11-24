@@ -34,10 +34,23 @@ nnoremap <silent>j gj
 nnoremap <silent><Up>   :let _=&lazyredraw<CR>:set lazyredraw<CR>?\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 nnoremap <silent><Down> :let _=&lazyredraw<CR>:set lazyredraw<CR>/\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 
-" Insert mode <Esc> maps {{{2
-inoremap kj   <Esc>`^
-inoremap lkj  <Esc>`^:w<CR>
-inoremap ;lkj <Esc>`^:x<CR>
+" Insert <Esc> {{{2
+inoremap <expr> j <SID>escape_kj()
+
+" s:escape_kj() :: If `k` is found before `j`, then remove `k` and go to normal mode
+" If actual `kj` is needed, use CTRL_V before j
+function s:escape_kj()
+    let l:col = col('.') == 1 ? 0 : col('.')
+    let l:line_text = getline('.')
+    let l:cur_ch_idx = strchars(l:line_text[: l:col - 2])
+    let l:pre_char = l:line_text[l:cur_ch_idx - 1]
+    " echom 'pre_char is:' l:pre_char
+    if l:pre_char ==# 'k'
+        return "\b\e"
+    else
+        return 'j'
+    endif
+endfunction
 
 " Indent/outdent {{{2
 vnoremap <Tab>   <Cmd>normal! >gv<CR>
@@ -74,7 +87,8 @@ nnoremap <silent> ]t :tabnext<CR>
 " Buffer navigation {{{1
 nnoremap <silent> <Tab>      :bnext<CR>
 nnoremap <silent> <S-Tab>    :bprevious<CR>
-nnoremap <silent> <Leader>w  :write\|bwipeout<CR>
+nnoremap <silent> <Leader>w  :update\|bwipeout<CR>
+nnoremap <silent> <Leader>u  :update\|Bdelete<CR>
 nnoremap <silent> <Leader>q  :Bdelete<CR>
 nnoremap <silent> <Leader>xx :BufOnly<CR>
 

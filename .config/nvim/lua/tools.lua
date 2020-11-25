@@ -2,7 +2,6 @@ local api = vim.api
 local uv = vim.loop
 local npcall = vim.F.npcall
 local util = require"util"
-local fn = require"fun"
 local M = {}
 
 local qf_open = function(max_size) -- {{{1
@@ -381,6 +380,7 @@ function M.async_run(cmd, bang) -- {{{1
 end
 
 function M.mru_files(n) -- {{{1
+  local fn = require"fun"
   local exclude_patterns = {
     "nvim/.*/doc/.*%.txt", -- nvim help files (approximately)
     ".git", -- git dirs

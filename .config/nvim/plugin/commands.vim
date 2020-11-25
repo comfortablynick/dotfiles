@@ -165,12 +165,11 @@ execute 'nnoremap <silent> <Leader> :<c-u>WhichKey "'..get(g:, 'mapleader', ',')
 " Pretty-printing {{{2
 " nvim: Using Lua vim.inspect()
 if has('nvim')
-    command! -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
+    command -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
 endif
 
-" " Using python pformat (handles lists better but does not convert all vim
-" " datatypes)
-" command! -complete=var -nargs=1 PPrint echo util#pformat(<args>)
+" Using python pformat (handles lists better but does not convert all vim
+command -complete=var -nargs=1 PPrint echo util#pformat(<args>)
 
 " nvim-only {{{1
 if has('nvim')

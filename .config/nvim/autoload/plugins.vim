@@ -132,6 +132,7 @@ function plugins#init()
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'romgrk/barbar.nvim'
+    Plug 'norcalli/profiler.nvim'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

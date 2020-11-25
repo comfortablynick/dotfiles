@@ -192,6 +192,12 @@ if has('nvim')
     lua require'config.treesitter'
     lua require'config.gitsigns'
     lua require'config.lsp'.init()
+
+    if getenv('AK_PROFILER') == 1
+        " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
+        packadd! profiler.nvim
+        lua require'profiler'
+    endif
 else
     " Vim only
     packadd! matchit " Nvim loads by default

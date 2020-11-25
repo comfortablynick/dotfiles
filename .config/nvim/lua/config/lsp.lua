@@ -80,8 +80,8 @@ local on_attach_cb = function(client, bufnr)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
     -- ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
-    ["gd"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist({open = true})<CR>",
-    ["gD"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
+    ["gd"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
+    ["gD"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist({open = true})<CR>",
     ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     ["gS"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
@@ -165,7 +165,7 @@ function M.init()
     tsserver = {},
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
     yamlls = {
-      -- handlers
+      handlers = {["textDocument/documentHighlight"] = nil},
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
         yaml = {

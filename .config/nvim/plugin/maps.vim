@@ -21,7 +21,7 @@ nnoremap <Leader><Leader>c :<Up>
 nnoremap <expr> <CR> {-> v:hlsearch ? ":nohlsearch\<CR>" : "\<CR>"}()
 tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
 
-" Enhanced up/down movement {j,k} {{{2
+" Up/down
 " For long, wrapped lines
 nnoremap <silent>k gk
 " For long, wrapped lines
@@ -34,23 +34,8 @@ nnoremap <silent>j gj
 nnoremap <silent><Up>   :let _=&lazyredraw<CR>:set lazyredraw<CR>?\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 nnoremap <silent><Down> :let _=&lazyredraw<CR>:set lazyredraw<CR>/\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
 
-" Insert <Esc> {{{2
-inoremap <expr> j <SID>escape_kj()
-
-" s:escape_kj() :: If `k` is found before `j`, then remove `k` and go to normal mode
-" If actual `kj` is needed, use CTRL_V before j
-function s:escape_kj()
-    let l:col = col('.') == 1 ? 0 : col('.')
-    let l:line_text = getline('.')
-    let l:cur_ch_idx = strchars(l:line_text[: l:col - 2])
-    let l:pre_char = l:line_text[l:cur_ch_idx - 1]
-    " echom 'pre_char is:' l:pre_char
-    if l:pre_char ==# 'k'
-        return "\b\e"
-    else
-        return 'j'
-    endif
-endfunction
+" Use kj to escape insert mode
+inoremap kj <Esc>`^
 
 " Indent/outdent {{{2
 vnoremap <Tab>   <Cmd>normal! >gv<CR>
@@ -104,5 +89,56 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <silent> <Leader>ff :call buffer#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
 nnoremap <silent> <Leader>fi :call buffer#restore_cursor_after('gg=G')<CR>
+
+" Insert mode escape {{{2
+" This works well, but it creates undo points and sometimes results in lost work
+" Regular maps work well if timeoutlen is set low
+
+" let s:escape_string = 'kj'
+" let s:escape_timeout_ms = 100
+" let s:escape_start_key = s:escape_string[0]
+" let s:escape_end_key = s:escape_string[1]
+" let s:escape_sequence = "\<BS>\<Esc>`^"
+"
+" function s:escape_map_start(char)
+"     let s:escape_timestamp = reltime()
+"     return a:char
+" endfunction
+"
+" function s:escape_map_end(char)
+"     if !exists('s:escape_timestamp') | return a:char | endif
+"     let l:elapsed_ms = reltimefloat(reltime(s:escape_timestamp)) * 1000
+"     unlet s:escape_timestamp
+"     if l:elapsed_ms > s:escape_timeout_ms
+"         let b:escape_edited = 1
+"         return a:char
+"     endif
+"
+"     let l:line_check_empty = getline('.')
+"     if l:line_check_empty ==# s:escape_start_key | return s:escape_sequence | endif
+"
+"     let l:trimmed  = substitute(l:line_check_empty, '^\s*\(.\{-}\)\s*$', '\1', '')
+"     if l:trimmed ==# s:escape_start_key
+"         return "\<BS>\<C-w>\<Esc>"
+"     else
+"         return s:escape_sequence
+"     endif
+" endfunction
+"
+" " execute 'inoremap <expr>' s:escape_start_key '<SID>escape_map_start("'..s:escape_start_key..'")'
+" " execute 'inoremap <expr>' s:escape_end_key   '<SID>escape_map_end("'..  s:escape_end_key  ..'")'
+"
+" function s:escape_insert_char_pre()
+"     if v:char !=# s:escape_start_key && v:char !=# s:escape_end_key
+"         let b:escape_edited = 1
+"     endif
+" endfunction
+"
+" augroup insert_escape_maps
+"     autocmd!
+"     autocmd InsertCharPre *  call s:escape_insert_char_pre()
+"     autocmd InsertEnter   *  let b:escape_edited = &modified
+"     autocmd InsertLeave   *  if b:escape_edited == 0 | setl nomod | endif
+" augroup END
 
 " vim:fdl=1:

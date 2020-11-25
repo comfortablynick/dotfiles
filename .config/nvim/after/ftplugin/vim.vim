@@ -1,5 +1,5 @@
 setlocal tabstop=4                                              " Treat spaces as tab
-setlocal formatoptions-=ro                                      " Don't insert comment marker automatically on O, o, <Enter>
+setlocal formatoptions-=cro                                      " Don't insert comment marker automatically on O, o, <Enter>
 setlocal foldexpr=VimFoldLevel()
 setlocal foldmethod=marker
 setlocal makeprg=vint\ %

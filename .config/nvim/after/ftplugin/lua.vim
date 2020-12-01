@@ -6,9 +6,4 @@ setlocal formatoptions-=cro
 setlocal formatprg=lua-format\ --config=$XDG_CONFIG_HOME/.lua-format
 setlocal foldmethod=marker
 
-silent! packadd nvim-luadev
-
-if exists(':Luadev')
-    map lr   <Plug>(Luadev-Run)
-    map lrl  <Plug>(Luadev-RunLine)
-endif
+call plugins#packadd('nvim-luadev')

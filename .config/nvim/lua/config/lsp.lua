@@ -4,6 +4,9 @@ local api = vim.api
 local util = vim.lsp.util
 local npcall = vim.F.npcall
 local lsp = npcall(require, "lspconfig")
+local lsp_status = npcall(require, "lsp-status")
+
+if lsp_status ~= nil then lsp_status.register_progress() end
 
 vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
 vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
@@ -48,10 +51,26 @@ function M.rename(new_name)
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
+function M.status()
+  if lsp_status ~= nil then
+    return lsp_status.status{current_function = false}
+  else
+    return ""
+  end
+end
+
+function M.messages()
+  if lsp_status ~= nil then
+    return lsp_status.messages()
+  else
+    return {}
+  end
+end
+
 local set_hl_autocmds = function()
   local hl_autocmds = {
     lsp_highlight = {
-      {"CursorHold", "<buffer>", "lua vim.lsp.buf.document_highlight()"},
+      {"CursorHold", "<buffer>", "lua pcall(vim.lsp.buf.document_highlight)"},
       {"CursorMoved", "<buffer>", "lua vim.lsp.buf.clear_references()"},
       {"InsertEnter", "<buffer>", "lua vim.lsp.buf.clear_references()"},
     },
@@ -60,9 +79,11 @@ local set_hl_autocmds = function()
 end
 
 local on_attach_cb = function(client, bufnr)
-  api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
+  -- if lsp_status ~= nil then lsp_status.on_attach(client) end
 
+  vim.cmd [[let g:vista_{&ft}_executive = 'nvim_lsp']]
   local ns = api.nvim_create_namespace("hl-lsp")
+
   -- TODO: fix statusline functions to use new nvim api
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
@@ -97,8 +118,10 @@ local on_attach_cb = function(client, bufnr)
     api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
   end
 
-  -- TODO: detect highlight capability
-  set_hl_autocmds()
+  vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
+
+  -- Set autocmds for highlighting if server supports it
+  if client.resolved_capabilities.document_highlight then set_hl_autocmds() end
 end
 
 function M.init()
@@ -108,7 +131,6 @@ function M.init()
     bashls = {},
     cmake = {},
     ccls = {},
-    -- TODO: wait until PR is merged to only send requests to supported features
     diagnosticls = {
       filetypes = {"lua", "vim", "sh", "python"},
       init_options = {
@@ -131,10 +153,10 @@ function M.init()
       },
     },
     gopls = {},
+    jsonls = {},
     pyls_ms = {},
     rust_analyzer = {},
     sumneko_lua = {
-      -- cmd = {"lua-language-server"},
       settings = {
         Lua = {
           runtime = {version = "LuaJIT"},
@@ -165,7 +187,6 @@ function M.init()
     tsserver = {},
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
     yamlls = {
-      handlers = {["textDocument/documentHighlight"] = nil},
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
         yaml = {
@@ -178,6 +199,7 @@ function M.init()
   -- Set local configs
   for server, cfg in pairs(configs) do
     cfg.on_attach = on_attach_cb
+    if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end
     lsp[server].setup(cfg)
   end
 end

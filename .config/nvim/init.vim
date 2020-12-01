@@ -185,6 +185,7 @@ if has('nvim')
     " packadd! barbar.nvim
     packadd! plenary.nvim
     packadd! nvim-lspconfig
+    packadd! lsp-status.nvim
     packadd! gitsigns.nvim
 
     lua nvim = require'nvim'

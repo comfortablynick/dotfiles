@@ -16,24 +16,24 @@ let s:LinterOK = ''
 " Main {{{1
 function statusline#get() "{{{2
     let l:sl = ''
-    let l:sl .= '%(%1*%{statusline#bufnr()}%* %)'
-    let l:sl .= '%(%{statusline#bufnr_inactive()} %)'
-    let l:sl .= '%(%{statusline#file_name()} %)'
-    let l:sl .= '%<'
-    let l:sl .= '%(%h%w%q%m%r %)'
-    let l:sl .= '%(  %4*%{statusline#linter_errors()}%*%)'
-    let l:sl .= '%( %5*%{statusline#linter_warnings()}%*%)'
+    let l:sl ..= '%(%1*%{statusline#bufnr()}%* %)'
+    let l:sl ..= '%(%{statusline#bufnr_inactive()} %)'
+    let l:sl ..= '%(%{statusline#file_name()} %)'
+    let l:sl ..= '%<'
+    let l:sl ..= '%(%h%w%q%m%r %)'
+    let l:sl ..= '%(  %4*%{statusline#linter_errors()}%*%)'
+    let l:sl ..= '%( %5*%{statusline#linter_warnings()}%*%)'
 
-    let l:sl .= '%='
-    let l:sl .= '%( %{statusline#toggled()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#mucomplete_method()} %)'
-    let l:sl .= '%( %{statusline#job_status()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#current_tag()}%)'
-    let l:sl .= '%( %{statusline#lsp_status()} '.g:sl.sep.'%)'
-    let l:sl .= '%( %{statusline#coc_status()} %)'
-    let l:sl .= '%( %{statusline#file_type()} %)'
-    let l:sl .= '%(%3* %{statusline#git_status()} %*%)'
-    let l:sl .= '%(%2* %{statusline#line_info()}%*%)'
+    let l:sl ..= '%='
+    let l:sl ..= '%( %{statusline#toggled()} '..g:sl.sep..'%)'
+    let l:sl ..= '%( %{statusline#mucomplete_method()} %)'
+    let l:sl ..= '%( %{statusline#job_status()} '..g:sl.sep..'%)'
+    let l:sl ..= '%( %{statusline#current_tag()}%)'
+    let l:sl ..= '%( %-10.50{statusline#lsp_status()}%)'
+    let l:sl ..= '%( %{statusline#coc_status()} %)'
+    let l:sl ..= '%( %{statusline#file_type()} %)'
+    let l:sl ..= '%(%3* %{statusline#git_status()} %*%)'
+    let l:sl ..= '%(%2* %{statusline#line_info()}%*%)'
     return l:sl
 endfunction
 
@@ -118,7 +118,7 @@ function statusline#set_highlight(group, bg, fg, opt) " {{{2
     let l:mode = ['gui', 'cterm']
     let l:cmd = 'hi '.a:group.' term='.l:opt[1]
     for l:i in (range(0, len(l:mode)-1))
-        let l:cmd .= printf(' %sbg=%s %sfg=%s %s=%s',
+        let l:cmd ..= printf(' %sbg=%s %sfg=%s %s=%s',
             \ l:mode[l:i], l:bg[l:i],
             \ l:mode[l:i], l:fg[l:i],
             \ l:mode[l:i], l:opt[l:i]
@@ -265,7 +265,7 @@ function statusline#file_type() "{{{2
     let l:ftsymbol = s:rpad(s:dev_icon('FileType'))
     let l:out = ''
     if winwidth(0) > g:sl.width.med
-        let l:out .= &filetype
+        let l:out ..= &filetype
         return l:ftsymbol.l:out
     endif
     return ''
@@ -467,6 +467,7 @@ function statusline#lsp_status() "{{{2
         return ''
     endif
     return '[LSP]'
+    " return luaeval('require"config.lsp".status()')
 endfunction
 
 function s:ale_linted() "{{{2
@@ -537,7 +538,7 @@ function statusline#toggled() " {{{2
     let l:sl = ''
     for l:v in g:statusline_toggle
         let l:str = {l:v}()
-        let l:sl .= empty(l:sl) ? l:str.' ' : g:sl.sep.' '.l:str.' '
+        let l:sl ..= empty(l:sl) ? l:str.' ' : g:sl.sep.' '.l:str.' '
     endfor
     return l:sl[:-2]
 endfunction

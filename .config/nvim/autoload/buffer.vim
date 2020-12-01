@@ -5,6 +5,23 @@ function buffer#restore_cursor_after(motion)
     call winrestview(l:wv)
 endfunction
 
+function buffer#list()
+  let l:buffers = split(execute('buffers'), '\n')
+  " let l:line_info = {}
+  " for l:line in split(l:buffers, "\n")
+  "   let l:bufnr = str2nr(trim(matchstr(l:line, '^\s*\d\+')))
+  "   let l:lnum = matchstr(l:line, '\s\+\zsline.*$')
+  "   let l:line_info[l:bufnr] = l:lnum
+  " endfor
+  " let bufs = map(clap#util#buflisted_sorted(s:cur_tab_only), 's:format_buffer(str2nr(v:val))')
+  " if empty(bufs)
+  "   return []
+  " else
+  "   return bufs[1:] + [bufs[0]]
+  " endif
+  return filter(l:buffers, {_,v -> str2nr(trim(matchstr(v, '^\s*\d\+')))})
+endfunction
+
 " Close buffer if not modifiable; quit vim if last buf
 " ex: map to `q` on buffers where macros wouldn't be used
 function buffer#quick_close()

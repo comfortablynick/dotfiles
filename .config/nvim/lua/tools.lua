@@ -395,6 +395,37 @@ function M.mru_files(n) -- {{{1
            n or 999):totable()
 end
 
+function M.get_maps() --{{{1
+  -- `nvim_get_keymap`
+  -- ================
+  -- buffer  (num)
+  -- expr    (num)
+  -- lhs     (str)
+  -- mode    (str)
+  -- noremap (num)
+  -- nowait  (num)
+  -- rhs     (str)
+  -- script  (num)
+  -- sid     (num)
+  -- silent  (num)
+  --
+  -- {
+  --   buffer = 0,
+  --   expr = 0,
+  --   lhs = "<Tab>",
+  --   lnum = 73,
+  --   mode = "n",
+  --   noremap = 1,
+  --   nowait = 0,
+  --   rhs = ":bnext<CR>",
+  --   script = 0,
+  --   sid = 35,
+  --   silent = 1
+  -- }
+  local maps = api.nvim_get_keymap('')
+  return maps
+end
+
 function M.make() -- {{{1
   local makeprg = npcall(api.nvim_buf_get_option, 0, "makeprg") or vim.o.makeprg
   local efm = npcall(api.nvim_buf_get_option, 0, "errorformat") or

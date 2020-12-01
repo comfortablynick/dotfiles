@@ -1,9 +1,10 @@
 " Quickfix window functions
 " Toggle quickfix window
 let s:quickfix_size = 20
+let s:qf_size = {lines -> min([max([1, lines]), get(g:, 'quickfix_size', s:quickfix_size)])}
 
 " Show :scriptnames in quickfix list and optionally filter
-function! quickfix#scriptnames(...)
+function quickfix#scriptnames(...)
     call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
     if len(a:000) > 0
         if !exists(':Cfilter') | packadd cfilter | endif
@@ -15,7 +16,7 @@ endfunction
 
 " Originally from:
 " https://github.com/skywind3000/asyncrun.vim/blob/master/plugin/asyncrun.vim
-function! s:qf_toggle(size, ...)
+function s:qf_toggle(size, ...)
     let l:mode = (a:0 == 0)? 2 : (a:1)
     function! s:window_check(mode)
         if &l:buftype ==# 'quickfix'
@@ -56,13 +57,20 @@ function! s:qf_toggle(size, ...)
     noautocmd silent! execute l:winnr 'wincmd w'
 endfunction
 
-function! quickfix#toggle()
+function quickfix#toggle()
     let l:qf_lines = len(getqflist())
     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
     call s:qf_toggle(l:qf_size)
 endfunction
 
-function! quickfix#open()
+function quickfix#tog(is_loc)
+    let l:list = a:is_loc ? 'loc' : 'qf'
+    let l:lines = len(getqflist())
+    let l:qf_size = s:qf_size(l:lines)
+    call s:qf_toggle(l:qf_size)
+endfunction
+
+function quickfix#open()
     let l:qf_lines = len(getqflist())
     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
     execute 'copen' l:qf_size
@@ -70,7 +78,7 @@ function! quickfix#open()
 endfunction
 
 " Close an empty quickfix window
-function! quickfix#close_empty()
+function quickfix#close_empty()
     if len(getqflist())
         return
     endif
@@ -83,7 +91,7 @@ function! quickfix#close_empty()
 endfunction
 
 " Return 1 if quickfix window is open, else 0
-function! quickfix#is_open()
+function quickfix#is_open()
     for l:buffer in tabpagebuflist()
         if bufname(l:buffer) ==? ''
             return 1
@@ -94,7 +102,7 @@ endfunction
 
 " Close quickfix on quit
 " (Use autoclose script instead)
-function! quickfix#autoclose()
+function quickfix#autoclose()
     if &filetype ==? 'qf'
         " if this window is last on screen quit without warning
         if winnr('$') < 2
@@ -103,18 +111,18 @@ function! quickfix#autoclose()
     endif
 endfunction
 
-function! s:isLocation()
+function s:isLocation()
     " Get dictionary of properties of the current window
-    let wininfo = filter(getwininfo(), {i,v -> v.winnr == winnr()})[0]
-    return wininfo.loclist
+    let l:wininfo = filter(getwininfo(), {i,v -> v.winnr == winnr()})[0]
+    return l:wininfo.loclist
 endfunction
 
-function! s:length()
+function s:length()
     " Get the size of the current quickfix/location list
     return len(s:isLocation() ? getloclist(0) : getqflist())
 endfunction
 
-function! s:getProperty(key, ...)
+function s:getProperty(key, ...)
     " getqflist() and getloclist() expect a dictionary argument
     " If a 2nd argument has been passed in, use it as the value, else 0
     let l:what = {a:key : a:0 ? a:1 : 0}
@@ -122,15 +130,15 @@ function! s:getProperty(key, ...)
     return get(l:listdict, a:key)
 endfunction
 
-function! s:isFirst()
+function s:isFirst()
     return s:getProperty('nr') <= 1
 endfunction
 
-function! s:isLast()
-    return s:getProperty("nr") == s:getProperty("nr", '$')
+function s:isLast()
+    return s:getProperty('nr') == s:getProperty('nr', '$')
 endfunction
 
-function! s:history(goNewer)
+function s:history(goNewer)
     " Build the command: one of colder/cnewer/lolder/lnewer
     let l:cmd = (s:isLocation() ? 'l' : 'c') . (a:goNewer ? 'newer' : 'older')
 
@@ -165,32 +173,32 @@ function! s:history(goNewer)
     echohl None
 endfunction
 
-function! quickfix#older()
+function quickfix#older()
     call s:history(0)
 endfunction
 
-function! quickfix#newer()
+function quickfix#newer()
     call s:history(1)
 endfunction
 
-function! quickfix#move(direction, prefix)
+function quickfix#move(direction, prefix)
     if a:direction ==# 'up'
         try
-            execute a:prefix . "previous"
+            execute a:prefix 'previous'
         catch /^Vim\%((\a\+)\)\=:E553/
-            execute a:prefix . "last"
+            execute a:prefix 'last'
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
     else
         try
-            execute a:prefix . "next"
+            execute a:prefix 'next'
         catch /^Vim\%((\a\+)\)\=:E553/
-            execute a:prefix . "first"
+            execute a:prefix 'first'
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
     endif
 
-    if &foldopen =~ 'quickfix' && foldclosed(line('.')) != -1
+    if &foldopen =~# 'quickfix' && foldclosed(line('.')) != -1
         normal! zv
     endif
 endfunction

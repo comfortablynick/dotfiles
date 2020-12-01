@@ -23,6 +23,7 @@ augroup plugin_window
         \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
     " Easier exit from cmdwin
     autocmd CmdwinEnter * call s:on_cmdwin_enter()
+    autocmd QuitPre * call autoclose#quit_if_only_window()
 augroup END
 
 function s:on_termopen()

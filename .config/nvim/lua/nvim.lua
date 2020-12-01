@@ -350,9 +350,7 @@ function M.define_text_object(mapping, function_name) -- {{{2
                       (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
--- source_current_bufffer :: hot reload buffer {{{2
--- TODO: remove module from packages.loaded first?
-function M.source_current_buffer()
+function M.source_current_buffer() -- {{{2
   -- luacheck: ignore loadstring
   loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
@@ -375,6 +373,25 @@ function M.packrequire(packname, modname)
   vim.validate{packname = {packname, "string"}}
   vim.cmd("silent! packadd " .. packname)
   return vim.F.npcall(require, modname or packname)
+end
+
+-- unload :: unload lua module/namespace {{{2
+function M.unload(prefix)
+  local found = vim.tbl_map(function(s)
+    if s:find("^" .. prefix .. "[%./]?%w*$") then
+      return s
+    else
+      return nil
+    end
+  end, vim.tbl_keys(package.loaded))
+  for _, v in pairs(found) do package.loaded[v] = nil end
+  return found
+  -- local prefix_with_dot = prefix .. "."
+  -- for k in pairs(package.loaded) do
+  --   -- if k == prefix or k:sub(1, #prefix_with_dot) == prefix_with_dot then
+  --   --   package.loaded[k] = nil
+  --   -- end
+  -- end
 end
 
 -- Iterator utils (luafun is probably faster) {{{2

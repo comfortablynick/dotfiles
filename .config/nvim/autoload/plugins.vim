@@ -7,7 +7,6 @@ let g:pack_sourced = []
 let g:vim_sourced = []
 
 command -nargs=+ Plug call packager#add(<args>)
-command -nargs=+ PlugLocal call packager#local(<args>)
 
 " function plugins#init() :: load packages with vim-packager {{{2
 function plugins#init()
@@ -95,11 +94,12 @@ function plugins#init()
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    Plug 'vim-jp/syntax-vim-ex',          {'type': 'start'}
-    Plug 'blankname/vim-fish',            {'type': 'start'}
-    Plug 'dbeniamine/todo.txt-vim',       {'type': 'start'}
-    Plug 'habamax/vim-asciidoctor',       {'type': 'start'}
-    Plug 'masukomi/vim-markdown-folding', {'type': 'start'}
+    Plug 'vim-jp/syntax-vim-ex',                       {'type': 'start'}
+    Plug 'blankname/vim-fish',                         {'type': 'start'}
+    Plug 'habamax/vim-asciidoctor',                    {'type': 'start'}
+    Plug 'masukomi/vim-markdown-folding',              {'type': 'start'}
+
+    call packager#local('~/git/todo.txt-vim',          {'type': 'start'})
 
     " Git {{{2
     Plug 'airblade/vim-gitgutter'
@@ -128,7 +128,6 @@ function plugins#init()
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'bfredl/nvim-luadev'
-    Plug 'TravonteD/luajob'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'romgrk/barbar.nvim'

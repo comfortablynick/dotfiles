@@ -329,7 +329,7 @@ local parse_raw_args = function(...) -- {{{1
   -- TODO: differentiate between shell command params and vim command args, e.g. `--`
   local parsed = {cmd = {}}
   for _, arg in ipairs{...} do
-    local k, v = arg:match("-([^&=%s]+)=([^&=%s]+)")
+    local k, v = arg:match("-*([^&=%s]+)=([^&=%s]+)")
     if k ~= nil then
       parsed[k] = v
     else

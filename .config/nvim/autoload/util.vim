@@ -47,3 +47,38 @@ args = pformat(vim.eval('a:args'))
 END
     return py3eval('args')
 endfunction
+
+" Originally from:
+" https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/autoload/tj.vim
+function util#json_encode(val)
+    if type(a:val) == v:t_number
+        return a:val
+    elseif type(a:val) == v:t_string
+        let l:json = '"'..escape(a:val, '\"')..'"'
+        let l:json = substitute(l:json, "\r", '\\r', 'g')
+        let l:json = substitute(l:json, "\n", '\\n', 'g')
+        let l:json = substitute(l:json, "\t", '\\t', 'g')
+        let l:json = substitute(l:json, '\([[:cntrl:]]\)', '\=printf("\x%02d", char2nr(submatch(1)))', 'g')
+        return iconv(l:json, &encoding, 'utf-8')
+    elseif type(a:val) == v:t_func
+        let l:s = substitute(string(a:val), 'function(', '', '')[:-2]
+        let l:args_split = split(l:s, ', ')
+
+        if len(l:args_split) <= 1
+            return util#json_encode(substitute(l:args_split[0], "'", '', 'g'))
+        endif
+        return util#json_encode('function('..l:args_split[0]..')')
+    elseif type(a:val) == 3
+        return '['..join(map(copy(a:val), {_,v->util#json_encode(v)}), ',')..']'
+    elseif type(a:val) == v:t_dict
+        return '{'..join(map(keys(a:val),
+            \ {_,v->util#json_encode(v)..':'..util#json_encode(a:val[v])}), ',')..'}'
+    elseif type(a:val) == v:t_bool
+        return a:val ? 'true' : 'false'
+    endif
+endfunction
+
+function util#json_format(val)
+    let l:json = util#json_encode(a:val)
+    return system('echo '..shellescape(l:json)..' | jq -S .')
+endfunction

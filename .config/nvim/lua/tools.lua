@@ -395,7 +395,7 @@ function M.mru_files(n) -- {{{1
            n or 999):totable()
 end
 
-function M.get_maps() --{{{1
+function M.get_maps(mode) -- {{{1
   -- `nvim_get_keymap`
   -- ================
   -- buffer  (num)
@@ -422,7 +422,27 @@ function M.get_maps() --{{{1
   --   sid = 35,
   --   silent = 1
   -- }
-  local maps = api.nvim_get_keymap('')
+  local longer = function(s1, s2)
+    vim.validate{s1 = {s1, "s"}, s2 = {s2, "s"}}
+    return not s1:sub(#s2):find("^$")
+  end
+  local maps = {}
+  local data = api.nvim_get_keymap(mode or "")
+  local keys = vim.tbl_keys(data[1])
+  local widths = {}
+
+  for _, k in ipairs(keys) do
+    local longest = ""
+    for _, v in ipairs(data) do
+      local val = tostring(v[k])
+      if longer(val, longest) then longest = val end
+    end
+    widths[k] = longest:len()
+  end
+
+  for _, v in ipairs(data) do
+      table.insert(maps, string.format("%s %s %s", v.lhs, string.rep(" ", widths.lhs - v.lhs:len()), v.rhs))
+  end
   return maps
 end
 

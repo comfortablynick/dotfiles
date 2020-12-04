@@ -9,15 +9,20 @@ let g:clap_layout = #{
     \ relative: 'editor'
     \ }
 
-" Commands 
-command Task    Clap task
-command Filer   Clap filer
-command Base16  call plugins#clap#base16()
-command Globals Clap globals
+" Commands
+" command! Buffers Clap buffers
+command  Task    Clap task
+command  Filer   Clap filer
+command  Base16  call plugins#clap#base16()
+command  Globals Clap globals
 
-Alias t   Clap\ tags
-Alias scr Clap\ scriptnames
-Alias mru Clap\ mru
+Alias bs   Clap buffers
+Alias t    Clap tags
+Alias scr  Clap scriptnames
+Alias mru  Clap mru
+Alias mapn Clap map ++mode=n
+Alias mapi Clap map ++mode=i
+Alias mapv Clap map ++mode=v
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags<CR>

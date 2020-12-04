@@ -68,6 +68,7 @@ function M.messages()
 end
 
 local set_hl_autocmds = function()
+  -- TODO: how to undo this if server detaches?
   local hl_autocmds = {
     lsp_highlight = {
       {"CursorHold", "<buffer>", "lua pcall(vim.lsp.buf.document_highlight)"},
@@ -80,8 +81,7 @@ end
 
 local on_attach_cb = function(client, bufnr)
   -- if lsp_status ~= nil then lsp_status.on_attach(client) end
-
-  vim.cmd [[let g:vista_{&ft}_executive = 'nvim_lsp']]
+  vim.cmd[[let g:vista_{&ft}_executive = 'nvim_lsp']]
   local ns = api.nvim_create_namespace("hl-lsp")
 
   -- TODO: fix statusline functions to use new nvim api
@@ -101,8 +101,8 @@ local on_attach_cb = function(client, bufnr)
   local map_opts = {noremap = true, silent = true}
   local nmaps = {
     -- ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
-    ["gd"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
-    ["gD"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist({open = true})<CR>",
+    ["gD"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
+    ["gd"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist{open = true}<CR>",
     ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
     ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
     ["gS"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
@@ -132,10 +132,17 @@ function M.init()
     cmake = {},
     ccls = {},
     diagnosticls = {
-      filetypes = {"lua", "vim", "sh", "python"},
+      filetypes = {"vim", "sh", "python"},
       init_options = {
-        filetypes = {vim = "vint", sh = "shellcheck", python = "pydocstyle"},
+        filetypes = {
+          lua = "luacheck",
+          vim = "vint",
+          sh = "shellcheck",
+          python = "pydocstyle",
+        },
         linters = {
+          -- TODO: why doesn't this work?
+          luacheck = {command = "luacheck", args = {"-"}},
           vint = {
             command = "vint",
             debounce = 100,
@@ -161,7 +168,7 @@ function M.init()
         Lua = {
           runtime = {version = "LuaJIT"},
           completion = {keywordSnippet = "Disable"},
-          diagnostics = {enable = true, globals = {"vim", "nvim", "p"}},
+          diagnostics = {enable = true, globals = {"vim", "nvim", "p"}, disable = {"redefined-local"}},
           workspace = {
             library = (function()
               -- Load the `lua` files from nvim into the runtime

@@ -350,6 +350,9 @@ local function apply_base16_theme(theme, use_256_colorspace)
   -- Java highlighting
   highlight("javaOperator", theme.base0D, nil, cterm0D, nil, nil, nil)
 
+  -- Vimscript highlighting
+  -- highlight("vimUsrCmd", theme.base08, nil, cterm08, nil, nil, nil)
+
   -- TODO
   -- vim.command 'syntax on'
 end

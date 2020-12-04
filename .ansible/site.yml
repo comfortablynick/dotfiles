@@ -23,6 +23,13 @@
     - neovim
     - dotfiles
 
+- name: Install vim
+  hosts: jupiter
+  roles:
+    - vim
+  tags:
+    - vim
+
 - name: Install rust
   hosts: all
   roles:

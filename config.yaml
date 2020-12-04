@@ -59,6 +59,10 @@ dotfiles:
     src: vimrc
     dst: ~/.vimrc
     link: link
+  f_ugrep:
+    src: ugrep
+    dst: ~/.ugrep
+    link: link
 profiles:
   core:
     dotfiles:
@@ -71,6 +75,7 @@ profiles:
     - d_bin
     - f_vintrc.yaml
     - f_vimrc
+    - f_ugrep
   io:
     include:
     - core

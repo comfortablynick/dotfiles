@@ -13,8 +13,9 @@ no_retry = true
 # Disable upgrade steps
 disable = [
   "node",
-  "vim",
-  "go",       # Until go solves errors finding modules
+  "vim",        # Nvim upgrade takes care of common plugins
+  "go",         # Until go solves errors finding modules
+  "powershell", # TODO: figure out how to bypass prompts
 ]
 
 # List of remote machines with Topgrade installed on them

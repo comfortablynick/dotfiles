@@ -8,7 +8,7 @@ function s:globals.source()
     let l:vals = []
     for [l:k, l:v] in items(g:)
         let l:v = string(l:v)
-        let l:vals += ['let g:'..l:k..' = '..l:v]
+        let l:vals += ['g:'..l:k..' = '..l:v]
     endfor
     return l:vals
 endfunction

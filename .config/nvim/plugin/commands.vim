@@ -51,7 +51,7 @@ cnoreabbrev <expr> hg
     \ map#cabbr('hg', {->window#tab_mod('helpgrep', 'help')})
 
 " vh :: Open help in vert split {{{2
-Alias vh vert\ help
+Alias vh vert help
 
 " man :: Open :Man in new or existing tab {{{2
 cnoreabbrev <expr> man
@@ -69,7 +69,7 @@ command! W w
 Alias ehco echo
 
 " Misc command abbreviations {{{2
-Alias grep silent\ grep!
+Alias grep silent grep!
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2
@@ -170,6 +170,9 @@ endif
 
 " Using python pformat (handles lists better but does not convert all vim
 command -complete=var -nargs=1 PPrint echo util#pformat(<args>)
+
+" Use custom json converter and shell out to `jq` to format
+command -complete=var -nargs=1 JPrint echo util#json_format(<args>)
 
 " nvim-only {{{1
 if has('nvim')

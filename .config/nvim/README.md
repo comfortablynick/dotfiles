@@ -4,8 +4,9 @@ This configuration focuses mostly on neovim.
 
 ## Configuration todo
 
-- [ ] Fix completion-nvim buffer completion
+- [X] Fix completion-nvim buffer completion
 - [ ] Implement `<Tab>` through all buffers (and switch tabs if needed)
+- [ ] Add generic interface to toggle quickfix/loclist
 - [ ] Replicate `cbefore` and `cafter` behavior for nvim in lua
 
 ## Plugin ideas

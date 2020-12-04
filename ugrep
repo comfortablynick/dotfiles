@@ -1,0 +1,67 @@
+# default .ugrep configuration file used by ug and ugrep --config.
+#
+# A long option is defined per line with an optional `=' and its argument,
+# when applicable. Empty lines and lines starting with a `#' are ignored.
+#
+# Try `ugrep --help [WHAT]' for more information.
+
+### TERMINAL DISPLAY ###
+
+# Custom color scheme overrides default GREP_COLORS parameters
+# Colors like `ag`
+colors=mt=Yk:fn=gh:ln=yh:se=w
+# The argument is a colon-separated list of one or more parameters `sl='
+# (selected line), `cx=' (context line), `mt=' (matched text), `ms=' (match
+# selected), `mc=' (match context), `fn=' (file name), `ln=' (line number),
+# `cn=' (column number), `bn=' (byte offset), `se=' (separator).  Parameter
+# values are ANSI SGR color codes or `k' (black), `r' (red), `g' (green), `y'
+# (yellow), `b' (blue), `m' (magenta), `c' (cyan), `w' (white).  Upper case
+# specifies background colors.  A `+' qualifies a color as bright.  A
+# foreground and a background color may be combined with font properties `n'
+# (normal), `f' (faint), `h' (highlight), `i' (invert), `u' (underline).
+
+# Enable/disable color
+color
+
+# Enable/disable query UI confirmation prompts, default: no-confirm
+confirm
+
+# Enable/disable headings for terminal output, default: no-heading
+heading
+
+# Enable/disable or specify a pager for terminal output, default: no-pager
+no-pager
+
+# Enable/disable pretty output to the terminal, default: no-pretty
+pretty
+
+### SEARCH PATTERNS ###
+
+# Enable/disable case-insensitive search, default: no-ignore-case
+# no-ignore-case
+
+# Enable/disable smart case, default: no-smart-case
+smart-case
+
+# Enable/disable empty pattern matches, default: no-empty
+# no-empty
+
+### SEARCH TARGETS ###
+
+# Enable/disable searching hidden files and directories, default: no-hidden
+no-hidden
+
+# Enable/disable binary files, default: no-ignore-binary
+no-ignore-binary
+
+# Enable/disable decompression and archive search, default: no-decompress
+no-decompress
+
+# Enable/disable ignore files, default: no-ignore-files
+ignore-files
+
+### OUTPUT ###
+
+# Enable/disable sorted output, default: no-sort
+# name
+

@@ -187,12 +187,20 @@ if has('nvim')
     packadd! nvim-lspconfig
     packadd! lsp-status.nvim
     packadd! gitsigns.nvim
+    packadd! completion-nvim
+    packadd! completion-buffers
+    packadd! snippets.nvim
 
     lua nvim = require'nvim'
     lua require'globals'
     lua require'config.treesitter'
     lua require'config.gitsigns'
     lua require'config.lsp'.init()
+
+    augroup vimrc
+        autocmd!
+        autocmd BufEnter * lua require'config.completion'
+    augroup END
 
     if getenv('AK_PROFILER') == 1
         " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
@@ -204,5 +212,8 @@ else
     packadd! matchit " Nvim loads by default
     " Use only for vim since we have nvim treesitter
     packadd! vim-lua
+
+    packadd! vim-gitgutter
+    packadd! vim-mucomplete
 endif
 " vim:fdl=1:

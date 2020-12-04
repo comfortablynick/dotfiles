@@ -3,7 +3,7 @@ syn cluster vimFuncBodyList	add=vimPythonRegion
 syntax include @vimPythonScript syntax/python.vim
 try
     syntax include @vimPythonScript after/syntax/python.vim
-catch
+catch /^Vim\%((\a\+)\)\=:E484/
 endtry
 syn region vimPythonRegion matchgroup=vimScriptDelim start=+py\%[thon]3\=\s*<<\s*\z(\S*\)\ze\(\s*#.*\)\=$+ end=+^\z1\ze\(\s*".*\)\=$+	contains=@vimPythonScript
 syn region vimPythonRegion matchgroup=vimScriptDelim start=+py\%[thon]3\=\s*<<\s*$+ end=+\.$+			contains=@vimPythonScript

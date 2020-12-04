@@ -1,10 +1,13 @@
 compiler fish
 
 setlocal shiftwidth=4 
-setlocal formatoptions-=cro
+setlocal formatoptions-=c
+setlocal formatoptions-=r
+setlocal formatoptions-=o
 setlocal errorformat=%f\ (line\ %l):\ %m
 setlocal foldmethod=marker
-packadd ale
+" packadd ale
+call plugins#packadd('ale')
 
 " Error example
 " || 00_start_tmux.fish (line 2): Missing end to bala

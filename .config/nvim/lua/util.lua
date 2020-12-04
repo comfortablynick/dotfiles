@@ -132,7 +132,7 @@ M.path = (function()
   ]]
 
   local function shorten(path)
-    -- TODO: replace /home/user/ with ~/
+    path = path:gsub(uv.os_homedir(), '~')
     local c_str = ffi.new("char[?]", #path + 1)
     ffi.copy(c_str, path)
     return ffi.string(ffi.C.shorten_dir(c_str))

@@ -59,6 +59,8 @@ inoremap <A-j> <C-\><C-N><C-w>j
 inoremap <A-k> <C-\><C-N><C-w>k
 inoremap <A-l> <C-\><C-N><C-w>l
 
+nnoremap <silent><M-=> <Cmd>exe min([winheight('%'),line('$')]) 'wincmd _'<CR>
+
 " Delete window to the left/below/above/to the right with d<C-h/j/k/l> {{{2
 nnoremap d<C-j> <C-w>j<C-w>c
 nnoremap d<C-k> <C-w>k<C-w>c

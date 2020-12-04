@@ -127,6 +127,7 @@ if functions -q __bobthefish_colors
     end
 
 # pure {{{2
+
 else if functions -q _pure_prompt
     set -g pure_symbol_prompt "❯"
     set -g pure_symbol_git_unpulled_commits '↓' # "⇣"

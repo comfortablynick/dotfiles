@@ -3,7 +3,7 @@
 - name: Get python3 config dir
   command:
     argv:
-      - python3-config
+      - /usr/bin/python3-config
       - --configdir
   register: python3_config_dir
   changed_when: false
@@ -12,7 +12,7 @@
   git:
     repo: https://github.com/vim/vim
     dest: "{{ vim_source_dir }}"
-    depth: 1
+    depth: "1"
     force: yes
   register: vim_git_clone
 
@@ -42,4 +42,4 @@
           --enable-luainterp
     - make -j{{ make_concurrency }}
     - make install
-  when: vim_git_clone.changed
+  when: vim_git_clone.changed or vim_force_build

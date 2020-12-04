@@ -1,9 +1,6 @@
-# default .ugrep configuration file used by ug and ugrep --config.
+# config file used by ug and ugrep --config.
 #
-# A long option is defined per line with an optional `=' and its argument,
-# when applicable. Empty lines and lines starting with a `#' are ignored.
-#
-# Try `ugrep --help [WHAT]' for more information.
+# One long opt per line with optional `=' and argument if needed
 
 ### TERMINAL DISPLAY ###
 
@@ -31,6 +28,9 @@ heading
 
 # Enable/disable or specify a pager for terminal output, default: no-pager
 no-pager
+
+# Leading tab when printing each result in a file
+no-initial-tab
 
 # Enable/disable pretty output to the terminal, default: no-pretty
 pretty

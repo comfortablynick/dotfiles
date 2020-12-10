@@ -2,6 +2,7 @@
 " Toggle quickfix window
 let s:quickfix_size = 20
 let s:qf_size = {lines -> min([max([1, lines]), get(g:, 'quickfix_size', s:quickfix_size)])}
+let s:is_loc_open = {-> get(getloclist(0, {'winid':0}), 'winid', 0)}
 
 " Show :scriptnames in quickfix list and optionally filter
 function quickfix#scriptnames(...)
@@ -31,7 +32,7 @@ function s:qf_toggle(size, ...)
                 unlet w:quickfix_save
             endif
         endif
-    endfunc
+    endfunction
     let s:quickfix_open = 0
     let l:winnr = winnr()
     noautocmd windo call s:window_check(0)
@@ -57,17 +58,62 @@ function s:qf_toggle(size, ...)
     noautocmd silent! execute l:winnr 'wincmd w'
 endfunction
 
-function quickfix#toggle()
-    let l:qf_lines = len(getqflist())
-    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
-    call s:qf_toggle(l:qf_size)
+" toggles the location window associated with the current window
+" or whatever location window has the focus
+function s:loc_toggle(stay)
+    " save the view if the current window is not a location window
+    if get(g:, 'qf_save_win_view', 1) && !quickfix#is_loc()
+        let l:winview = winsaveview()
+    else
+        let l:winview = {}
+    endif
+
+    if s:is_loc_open()
+        lclose
+        if !empty(l:winview)
+            call winrestview(l:winview)
+        endif
+    else
+        silent! lwindow
+        if s:is_loc_open()
+            wincmd p
+            if !empty(l:winview)
+                call winrestview(l:winview)
+            endif
+            if !a:stay
+                wincmd p
+            endif
+        endif
+    endif
 endfunction
 
-function quickfix#tog(is_loc)
-    let l:list = a:is_loc ? 'loc' : 'qf'
-    let l:lines = len(getqflist())
+" Old func
+" function quickfix#toggle()
+"     let l:qf_lines = len(getqflist())
+"     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
+"     call s:qf_toggle(l:qf_size)
+" endfunction
+
+" Toggle quickfix list or, if empty, toggle existing loclist for this window
+" TODO: toggle loclist if window exists, even if empty
+function quickfix#toggle()
+    let l:qflist = getqflist()
+    let l:loclist = []
+    let l:is_loc = 0
+    if len(l:qflist) == 0
+        let l:loclist = getloclist(0)
+        if len(l:loclist) > 0
+            let l:is_loc = 1
+        endif
+    endif
+    let l:list = l:is_loc ? l:loclist : getqflist()
+    let l:lines = len(l:list)
     let l:qf_size = s:qf_size(l:lines)
-    call s:qf_toggle(l:qf_size)
+    if l:is_loc
+        call s:loc_toggle(0)
+    else
+        call s:qf_toggle(l:qf_size)
+    end
 endfunction
 
 function quickfix#open()
@@ -79,25 +125,25 @@ endfunction
 
 " Close an empty quickfix window
 function quickfix#close_empty()
-    if len(getqflist())
-        return
-    endif
-    for l:buffer in tabpagebuflist()
-        if bufname(l:buffer) ==? ''
-            cclose
-            return
-        endif
-    endfor
+    " if len(getqflist())
+    "     return
+    " endif
+    " for l:buffer in tabpagebuflist()
+    "     if bufname(l:buffer) ==? ''
+    "         cclose
+    "         return
+    "     endif
+    " endfor
+    if len(getqflist()) == 0
+        cclose
+    end
 endfunction
 
 " Return 1 if quickfix window is open, else 0
 function quickfix#is_open()
-    for l:buffer in tabpagebuflist()
-        if bufname(l:buffer) ==? ''
-            return 1
-        endif
-    endfor
-    return 0
+    let l:open_wins = get(gettabinfo(tabpagenr())[0], 'windows', {})
+    let l:qf_wins = filter(l:open_wins, {_, v->getwininfo(v)[0].quickfix == 1})
+    return len(l:qf_wins) != 0
 endfunction
 
 " Close quickfix on quit
@@ -111,9 +157,18 @@ function quickfix#autoclose()
     endif
 endfunction
 
+" let l:open_wins = get(gettabinfo(tabpagenr())[0], 'windows', {})
+
+function quickfix#is_loc(...)
+    let l:winnr = get(a:, 1, 0)
+    let l:winnr = l:winnr == 0 ? winnr() : l:winnr
+    let l:wininfo = filter(getwininfo(), {_,v -> v.winnr == l:winnr})[0]
+    return l:wininfo.loclist
+endfunction
+
 function s:isLocation()
     " Get dictionary of properties of the current window
-    let l:wininfo = filter(getwininfo(), {i,v -> v.winnr == winnr()})[0]
+    let l:wininfo = filter(getwininfo(), {_,v -> v.winnr == winnr()})[0]
     return l:wininfo.loclist
 endfunction
 

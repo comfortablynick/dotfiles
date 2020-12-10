@@ -8,6 +8,8 @@ nnoremap <silent><buffer> <Leader>q :call buffer#quick_close()<CR>
 nnoremap <silent><buffer> <Leader>t :call <SID>show_toc()<CR>
 nnoremap <silent><buffer> gO :call <SID>show_toc()<CR>
 
+nnoremap <silent><buffer> <Tab> :tabnext<CR>
+
 " loclist TOC for vim
 function s:show_toc()
     let l:bufname = bufname('%')

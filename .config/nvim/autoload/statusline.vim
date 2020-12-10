@@ -23,13 +23,14 @@ function statusline#get() "{{{2
     let l:sl ..= '%(%h%w%q%m%r %)'
     let l:sl ..= '%(  %4*%{statusline#linter_errors()}%*%)'
     let l:sl ..= '%( %5*%{statusline#linter_warnings()}%*%)'
+    let l:sl ..= '%( %6*%{statusline#linter_hints()}%*%)'
 
     let l:sl ..= '%='
     let l:sl ..= '%( %{statusline#toggled()} '..g:sl.sep..'%)'
     let l:sl ..= '%( %{statusline#mucomplete_method()} %)'
     let l:sl ..= '%( %{statusline#job_status()} '..g:sl.sep..'%)'
     let l:sl ..= '%( %{statusline#current_tag()}%)'
-    let l:sl ..= '%( %-10.50{statusline#lsp_status()}%)'
+    let l:sl ..= '%( %-20.50{statusline#lsp_status()}%)'
     let l:sl ..= '%( %{statusline#coc_status()} %)'
     let l:sl ..= '%( %{statusline#file_type()} %)'
     let l:sl ..= '%(%3* %{statusline#git_status()} %*%)'
@@ -83,7 +84,6 @@ endfunction
 
 " Component functions {{{1
 function s:is_active() "{{{2
-    " return get(g:, 'actual_curbuf', bufnr('%')) == bufnr('%')
     return win_getid() ==# g:actual_curwin
 endfunction
 
@@ -461,13 +461,9 @@ function statusline#coc_status() "{{{2
 endfunction
 
 function statusline#lsp_status() "{{{2
-    if !s:is_active_file()
-        \ || !has('nvim')
-        \ || !luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
-        return ''
-    endif
-    return '[LSP]'
-    " return luaeval('require"config.lsp".status()')
+    if !s:is_active_file() || !has('nvim') | return '' | endif
+    " return '[LSP]'
+    return luaeval('require"config.lsp".attached_lsps()')
 endfunction
 
 function s:ale_linted() "{{{2
@@ -495,6 +491,13 @@ function s:lsp_error_ct() "{{{2
     return 0
 endfunction
 
+function s:lsp_hint_ct() "{{{2
+    if has('nvim')
+        return v:lua.vim.lsp.diagnostic.get_count(0, 'Hint')
+    endif
+    return 0
+endfunction
+
 function s:ale_warning_ct() "{{{2
     if !s:ale_linted() | return 0 | endif
     let l:counts = ale#statusline#Count(bufnr('%'))
@@ -515,13 +518,21 @@ function s:coc_warning_ct() " {{{2
 endfunction
 
 function statusline#linter_errors() " {{{2
+    if !s:is_active_file() | return '' | endif
     let l:ct = s:coc_error_ct() + s:ale_error_ct() + s:lsp_error_ct()
-    return l:ct > 0 ? g:sl.symbol.error_sign.l:ct : ''
+    return l:ct > 0 ? g:sl.symbol.error_sign..l:ct : ''
 endfunction
 
 function statusline#linter_warnings() " {{{2
+    if !s:is_active_file() | return '' | endif
     let l:ct = s:coc_warning_ct() + s:ale_warning_ct() + s:lsp_warning_ct()
-    return l:ct > 0 ? g:sl.symbol.warning_sign.l:ct : ''
+    return l:ct > 0 ? g:sl.symbol.warning_sign..l:ct : ''
+endfunction
+
+function statusline#linter_hints() " {{{2
+    if !s:is_active_file() | return '' | endif
+    let l:ct = s:lsp_hint_ct()
+    return l:ct > 0 ? g:sl.symbol.hint_sign..l:ct : ''
 endfunction
 
 function statusline#mucomplete_method() "{{{2

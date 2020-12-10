@@ -17,7 +17,7 @@ command  Base16  call plugins#clap#base16()
 command  Globals Clap globals
 
 Alias bs   Clap buffers
-Alias t    Clap tags
+Alias t    Clap tags nvim_lsp
 Alias scr  Clap scriptnames
 Alias mru  Clap mru
 Alias mapn Clap map ++mode=n
@@ -25,7 +25,7 @@ Alias mapi Clap map ++mode=i
 Alias mapv Clap map ++mode=v
 
 " Maps
-nnoremap <silent> <Leader>t :Clap tags<CR>
+nnoremap <silent> <Leader>t :Clap tags nvim_lsp<CR>
 nnoremap <silent> <Leader>h :Clap command_history<CR>
 nnoremap <silent> <Leader>m :Clap mru<CR>
 

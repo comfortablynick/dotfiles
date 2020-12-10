@@ -1,17 +1,14 @@
 " Allow for netrw to be toggled
 function! s:toggle_netrw()
-    if get(g:, 'NetrwIsOpen', 0)
-        let l:i = bufnr('$')
-        while (l:i >= 1)
-            if (getbufvar(l:i, '&filetype') ==# 'netrw')
-                silent exe 'bwipeout '.l:i
-            endif
-            let l:i-=1
-        endwhile
-        let g:NetrwIsOpen = 0
+    if exists('g:NetrwIsOpen')
+        let l:netrw_bufs = filter(getbufinfo(), {_,v-> getbufvar(v.bufnr, '&filetype') ==# 'netrw'})
+        for l:buf in l:netrw_bufs
+            silent execute 'bwipeout' l:buf.bufnr
+        endfor
+        unlet! g:NetrwIsOpen
     else
-        let g:NetrwIsOpen = 1
         silent Lexplore
+        let g:NetrwIsOpen = 1
     endif
 endfunction
 

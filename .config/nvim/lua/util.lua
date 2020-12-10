@@ -1,7 +1,7 @@
 -- Utility functions, not necessarily integral to vim
 local vim = vim
 local uv = vim.loop
-local ffi = require"ffi"
+local ffi = vim.F.npcall(require, "ffi")
 local M = {}
 
 function M.humanize_bytes(size)
@@ -126,16 +126,21 @@ M.path = (function()
     return dir == root;
   end
 
-  ffi.cdef[[
-  typedef unsigned char char_u;
-  char_u *shorten_dir(char_u *str);
-  ]]
-
   local function shorten(path)
-    path = path:gsub(uv.os_homedir(), '~')
-    local c_str = ffi.new("char[?]", #path + 1)
-    ffi.copy(c_str, path)
-    return ffi.string(ffi.C.shorten_dir(c_str))
+    path = path:gsub(uv.os_homedir(), "~")
+
+    if ffi then
+      ffi.cdef[[
+const char *shorten_dir(const char *str)
+]]
+
+      return (function()
+        local c_str = ffi.new("const char[?]", #path + 1, path)
+        return ffi.string(ffi.C.shorten_dir(c_str))
+      end)()
+    else
+      return path
+    end
   end
 
   return {

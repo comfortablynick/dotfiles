@@ -1,4 +1,6 @@
-local Job = require"plenary.job"
+local Job = vim.F.npcall(require, "plenary.job")
+
+if not Job then return end
 
 local grepper = {}
 
@@ -18,17 +20,7 @@ local get_job = function(str, cwd)
       assert(not err, err)
       local lines = vim.split(line, "\n")
       vim.fn.setqflist({}, "a", {efm = vim.o.grepformat, lines = lines})
-      -- local split_line = vim.split(line, ":")
-      --
-      -- local filename = split_line[1]
-      -- local lnum = split_line[2]
-      -- local col = split_line[3]
-      --
-      -- vim.fn.setqflist({
-      --   {filename = filename, lnum = lnum, col = col, text = split_line[4]},
-      -- }, "a")
     end),
-
     on_exit = vim.schedule_wrap(function()
       local result_ct = #vim.fn.getqflist()
       if result_ct > 0 then

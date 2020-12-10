@@ -1,4 +1,7 @@
-require"gitsigns".setup{
+local gitsigns = vim.F.npcall(require, "gitsigns")
+if not gitsigns then return end
+
+gitsigns.setup{
   signs = {
     add = {hl = "DiffAdd", text = "│"},
     change = {hl = "DiffChange", text = "│"},

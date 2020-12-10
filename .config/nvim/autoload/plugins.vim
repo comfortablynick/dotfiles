@@ -25,7 +25,6 @@ function plugins#init()
     Plug 'kristijanhusak/vim-packager'
 
     " General {{{2
-    " Plug 'chrisbra/Colorizer'
     Plug 'airblade/vim-rooter'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-eunuch'
@@ -66,13 +65,9 @@ function plugins#init()
     Plug 'majutsushi/tagbar'
     Plug 'mbbill/undotree'
     Plug 'preservim/nerdtree'
-    Plug 'Shougo/defx.nvim'
-    Plug 'kyazdani42/nvim-tree.lua'
     Plug 'justinmk/vim-dirvish'
     Plug 'srstevenson/vim-picker'
     Plug 'voldikss/vim-floaterm'
-    " TODO: is this any better than using Lf in floaterm?
-    Plug 'haorenW1025/floatLf-nvim', {'do': 'pip3 install -U neovim-remote'}
 
     " Vim Development {{{2
     Plug 'tpope/vim-scriptease'
@@ -81,8 +76,6 @@ function plugins#init()
     Plug 'dstein64/vim-startuptime'
 
     " Editor appearance {{{2
-    Plug 'itchyny/lightline.vim'
-    Plug 'mengelbrecht/lightline-bufferline'
     Plug 'ryanoasis/vim-devicons'
     Plug 'kyazdani42/nvim-web-devicons'
 
@@ -115,7 +108,7 @@ function plugins#init()
     Plug 'norcalli/snippets.nvim'
 
     " Language server/completion {{{2
-    Plug 'neovim/nvim-lspconfig', {'do': ':LspInstall sumneko_lua yamlls'}
+    Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'nvim-lua/completion-nvim'
     Plug 'steelsojka/completion-buffers'

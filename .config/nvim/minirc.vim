@@ -4,16 +4,18 @@ scriptencoding utf-8
 
 " vint: -ProhibitSetNoCompatible
 set nocompatible
-set runtimepath=$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after
+set runtimepath=$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,~/vim-test
 let s:pack_path = '~/vim-test'
 let &packpath = &runtimepath..','..s:pack_path
 
+" luafile $XDG_CONFIG_HOME/nvim/lua/config/completion/init.lua
+
 " Test lsp config
-if 0
+if 1
     let s:opt_dir = s:pack_path..'/pack/test/opt'
     let s:plugins = [
         \ 'neovim/nvim-lspconfig',
-        \ 'nvim-lua/diagnostic-nvim',
+        \ 'nvim-lua/completion-nvim',
         \ ]
 
     for s:plug in s:plugins
@@ -24,16 +26,30 @@ if 0
             call system(printf('git clone https://github.com/%s %s', s:plug, s:dir))
         endif
     endfor
+
+    augroup minirc
+        autocmd!
+        autocmd BufEnter * lua require'config.completion'
+    augroup END
+
+    imap <Tab>   <Plug>(completion_smart_tab)
+    imap <S-Tab> <Plug>(completion_smart_s_tab)
+
+    set completeopt=menuone,noinsert,noselect
+    set shortmess+=c
+
+    let g:completion_enable_auto_paren = 1
+    let g:completion_enable_auto_hover = 1
+    let g:completion_enable_auto_signature = 1
+    let g:completion_auto_change_source = 1
+
     lua <<EOF
     local api = vim.api
-    vim.cmd('packadd nvim-lspconfig')
-    vim.cmd('packadd diagnostic-nvim')
-    local diag_found, diag = pcall(require, "diagnostic")
+    vim.cmd[[packadd nvim-lspconfig]]
+    vim.cmd[[packadd completion-nvim]]
 
-    local on_attach_cb = function(client, bufnr)
-      if diag_found then diag.on_attach() end
-
-      api.nvim_buf_set_var(bufnr, "lsp_client_id", client.id)
+    local on_attach_cb = function(client)
+      require'completion'.on_attach()
       local map_opts = {noremap = true, silent = true}
       local nmaps = {
         [";d"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
@@ -49,13 +65,13 @@ if 0
       }
 
       for lhs, rhs in pairs(nmaps) do
-        api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
+        api.nvim_buf_set_keymap(0, "n", lhs, rhs, map_opts)
       end
     end
 
-    require'nvim_lsp'.sumneko_lua.setup{on_attach = on_attach_cb}
-    require'nvim_lsp'.vimls.setup{on_attach = on_attach_cb}
-    require'nvim_lsp'.diagnosticls.setup{
+    require'lspconfig'.sumneko_lua.setup{on_attach = on_attach_cb}
+    require'lspconfig'.vimls.setup{on_attach = on_attach_cb}
+    require'lspconfig'.diagnosticls.setup{
           on_attach = on_attach_cb,
           filetypes = {"lua", "vim", "sh", "python"},
           init_options = {

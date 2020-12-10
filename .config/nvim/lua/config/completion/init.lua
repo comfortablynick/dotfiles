@@ -1,21 +1,30 @@
 local api = vim.api
+local M = {}
+
+-- Set completeopt to have a better completion experience
+vim.o.completeopt = "menuone,noinsert,noselect"
+
+-- Avoid showing message extra message when using completion
+vim.cmd[[set shortmess+=c]]
+
+vim.g.completion_enable_snippet = "snippets.nvim"
+vim.g.completion_enable_auto_paren = 1
+vim.g.completion_enable_auto_hover = 1
+vim.g.completion_enable_auto_signature = 1
+vim.g.completion_auto_change_source = 1
 
 -- Don't load completion-nvim for these buffers
-local complete_exclude_fts = {"clap_input"}
-if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then return end
-
 local text_complete = {
-  {complete_items = {"buffers"}},
   {complete_items = {"path"}, triggered_only = {"/"}},
+  {complete_items = {"buffer", "buffers"}},
 }
 
 local default_complete = {
   default = {
+    {complete_items = {"path"}, triggered_only = {"/"}},
     {complete_items = {"lsp"}},
     {complete_items = {"snippet", "UltiSnips"}},
     {complete_items = {"buffer", "buffers"}},
-    -- TODO: Doesn't seem to work
-    {complete_items = {"path"}, triggered_only = {"/"}},
   },
   string = text_complete,
   comment = text_complete,
@@ -28,13 +37,14 @@ local add_complete_item = function(item, pos)
   return copy
 end
 
-local set_maps = function()
-  local map_opts = {silent = true}
-  api.nvim_set_keymap("i", "<C-h>", "<Plug>(completion_next_source)", map_opts)
-  -- api.nvim_set_keymap("i", "<C-k>", "<Plug>(completion_prev_source)", map_opts)
+local mapper = function(key, result)
+  api.nvim_buf_set_keymap(0, "i", key, result, {silent = true})
 end
 
-local init = function()
+M.init = function()
+  local complete_exclude_fts = {"clap_input"}
+  if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then return end
+
   require"config.snippets"
 
   local completion = vim.F.npcall(require, "completion")
@@ -48,7 +58,11 @@ local init = function()
     fish = add_complete_item({"fish"}, 1),
   }
   completion.on_attach{chain_complete_list = complete_chain}
-  set_maps()
+
+  mapper("<C-h>", "<Plug>(completion_next_source)")
+  mapper("<C-k>", "<Plug>(completion_prev_source)")
+  mapper("<Tab>", "<Plug>(completion_smart_tab)")
+  mapper("<S-Tab>", "<Plug>(completion_smart_s_tab)")
 end
 
-return init()
+return M

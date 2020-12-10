@@ -27,15 +27,23 @@ nnoremap <silent>k gk
 " For long, wrapped lines
 nnoremap <silent>j gj
 
-" For moving quickly up and down
-" https://github.com/tjdevries/config_manager/blob/master/xdg_config/nvim/plugin/keymaps.vim
-" Goes to the first line above/below that isn't whitespace
-" Thanks to: http://vi.stackexchange.com/a/213
-nnoremap <silent><Up>   :let _=&lazyredraw<CR>:set lazyredraw<CR>?\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
-nnoremap <silent><Down> :let _=&lazyredraw<CR>:set lazyredraw<CR>/\%<C-R>=virtcol(".")<CR>v\S<CR>:nohl<CR>:let &lazyredraw=_<CR>
+" For moving quickly up and down by skipping whitespace in current column
+" TODO: moves inside folds; would be better to skip over them
+nnoremap <silent><Up>   :call search('\%'..virtcol('.')..'v\S', 'bw')<CR>
+nnoremap <silent><Down> :call search('\%'..virtcol('.')..'v\S', 'w')<CR>
 
 " Use kj to escape insert mode
 inoremap kj <Esc>`^
+
+" TODO: turn this into snippet
+let g:timefmts = [
+    \ '%Y-%m-%d %H:%M:%S',
+    \ '%a, %d %b %Y %H:%M:%S %z',
+    \ '%Y %b %d',
+    \ '%d-%b-%y',
+    \ '%a %b %d %T %Z %Y',
+    \ ]
+inoremap <silent><C-G><C-T> <C-R>=repeat(complete(col('.'),map(g:timefmts,{_,v->strftime(v)})),0)<CR>
 
 " Indent/outdent {{{2
 vnoremap <Tab>   <Cmd>normal! >gv<CR>

@@ -5,22 +5,12 @@ let g:use_explorer_coc = 'rnvimr'
 command! -nargs=0 NERDTreeToggle call plugins#lazy_run('NERDTreeToggle', 'nerdtree')
 command! -nargs=0 TagbarToggle call plugins#tagbar#toggle()
 command! -nargs=0 RnvimrToggle call plugins#lazy_run('RnvimrToggle', 'rnvimr')
-command! -nargs=0 DefxToggle
-    \ call plugins#lazy_run('Defx -toggle -split=vertical -winwidth=30 -direction=topleft', 'defx.nvim')
 command! -nargs=0 NetrwToggle call explorer#toggle('netrw')
 
 " vim-floaterm wrappers
 command! -nargs=* Lf call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'lf')
 command! -nargs=* Ranger 
     \ call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'ranger')
-
-if has('nvim')
-    command! -nargs=0 LuaTreeToggle
-        \ call plugins#lazy_run(
-        \ 'LuaTreeToggle',
-        \ 'nvim-tree.lua',
-        \ {'after': 'lua require"tree".on_enter()'})
-endif
 
 " Maps
 nnoremap <silent>    <C-E>  :call explorer#toggle(g:use_explorer)<CR>

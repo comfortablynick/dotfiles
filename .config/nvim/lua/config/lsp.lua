@@ -5,6 +5,7 @@ local util = vim.lsp.util
 local npcall = vim.F.npcall
 local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
+local lsps_attached = {}
 
 if lsp_status ~= nil then lsp_status.register_progress() end
 
@@ -13,8 +14,24 @@ vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
 vim.fn.sign_define("LspDiagnosticsSignInformation", {text = "i"})
 vim.fn.sign_define("LspDiagnosticsSignHint", {text = "»"})
 
+local ns = api.nvim_create_namespace("hl-lsp")
+
+-- TODO: fix statusline functions to use new nvim api
+api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
+api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
+api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
+api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
+api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
+                {fg = "#ff5f87", sp = "#ff5f87"})
+api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
+                {fg = "#d78f00", sp = "#d78f00"})
+api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
+api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
+api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
+api.nvim_set_hl_ns(ns)
+
 local custom_symbol_handler = function(_, _, result, _, bufnr)
-  if not result or vim.tbl_isempty(result) then return end
+  if vim.tbl_isempty(result or {}) then return end
 
   local items = util.symbols_to_items(result, bufnr)
   local items_by_name = {}
@@ -35,11 +52,19 @@ end
 vim.lsp.handlers["textDocument/documentSymbol"] = custom_symbol_handler
 vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
-  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    virtual_text = {spacing = 2},
-    update_in_insert = false,
-  })
+  function(err, method, params, client_id, bufnr, config)
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+      underline = true,
+      virtual_text = {spacing = 2},
+      signs = true,
+      update_in_insert = false,
+    })(err, method, params, client_id, bufnr, config)
+    bufnr = bufnr or vim.uri_to_bufnr(params.uri)
+
+    if bufnr == api.nvim_get_current_buf() then
+      vim.lsp.diagnostic.set_loclist{open_loclist = false}
+    end
+  end
 
 -- Standard rename functionality so I can wrap it if desired
 function M.rename(new_name)
@@ -57,6 +82,13 @@ function M.status()
   else
     return ""
   end
+end
+
+function M.attached_lsps()
+  local bufnr = api.nvim_get_current_buf()
+  if not lsps_attached[bufnr] then return "" end
+  return "LSP[" .. table.concat(vim.tbl_values(lsps_attached[bufnr]), ",") ..
+           "]"
 end
 
 function M.messages()
@@ -79,49 +111,43 @@ local set_hl_autocmds = function()
   nvim.create_augroups(hl_autocmds)
 end
 
-local on_attach_cb = function(client, bufnr)
-  -- if lsp_status ~= nil then lsp_status.on_attach(client) end
+local mapper = function(mode, key, result)
+  api.nvim_buf_set_keymap(0, mode, key, "<Cmd>lua " .. result .. "<CR>",
+                          {noremap = true, silent = true})
+end
+
+local on_attach_cb = function(client)
+  -- vim.cmd(string.format("echom 'buffer %d: %s started'",
+  --                       api.nvim_get_current_buf(), client.name))
+  local bufnr = api.nvim_get_current_buf()
   vim.cmd[[let g:vista_{&ft}_executive = 'nvim_lsp']]
-  local ns = api.nvim_create_namespace("hl-lsp")
 
-  -- TODO: fix statusline functions to use new nvim api
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
-                  {fg = "#ff5f87", sp = "#ff5f87"})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
-                  {fg = "#d78f00", sp = "#d78f00"})
-  api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
-  api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
-  api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
-  api.nvim_set_hl_ns(ns)
+  local cap = client.resolved_capabilities
 
-  local map_opts = {noremap = true, silent = true}
-  local nmaps = {
-    -- ["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>",
-    ["gD"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
-    ["gd"] = "<Cmd>lua vim.lsp.diagnostic.set_loclist{open = true}<CR>",
-    ["gh"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
-    ["gi"] = "<Cmd>lua vim.lsp.buf.implementation()<CR>",
-    ["gS"] = "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
-    ["ga"] = "<Cmd>lua vim.lsp.buf.code_action()<CR>",
-    ["gt"] = "<Cmd>lua vim.lsp.buf.type_definition()<CR>",
-    ["gr"] = "<Cmd>lua vim.lsp.buf.references()<CR>",
-    ["<F2>"] = "<Cmd>lua vim.lsp.buf.rename()<CR>",
-    ["[d"] = "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>",
-    ["]d"] = "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>",
-  }
-
-  for lhs, rhs in pairs(nmaps) do
-    api.nvim_buf_set_keymap(bufnr, "n", lhs, rhs, map_opts)
+  if cap.goto_definition then mapper("n", "gD", "vim.lsp.buf.definition()") end
+  if cap.hover then mapper("n", "gh", "vim.lsp.buf.hover()") end
+  if cap.implementation then mapper("n", "gi", "vim.lsp.buf.implementation()") end
+  if cap.signature_help then mapper("n", "gS", "vim.lsp.buf.signature_help()") end
+  if cap.code_action then mapper("n", "ga", "vim.lsp.buf.code_action()") end
+  if cap.type_definition then
+    mapper("n", "gt", "vim.lsp.buf.type_definition()")
   end
+  if cap.find_references then mapper("n", "gr", "vim.lsp.buf.references()") end
+  if cap.rename then mapper("n", "<F2>", "vim.lsp.buf.rename()") end
+  mapper("n", "gd", "vim.lsp.diagnostic.set_loclist{open = true}")
+  mapper("n", "[d", "vim.lsp.diagnostic.goto_prev()")
+  mapper("n", "]d", "vim.lsp.diagnostic.goto_next()")
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
+  -- Add client name to variable
+  local name_replacements = {diagnosticls = "diag", sumneko_lua = "sumneko"}
+  if not lsps_attached[bufnr] then lsps_attached[bufnr] = {} end
+  table.insert(lsps_attached[bufnr],
+               name_replacements[client.name] or client.name)
+
   -- Set autocmds for highlighting if server supports it
-  if client.resolved_capabilities.document_highlight then set_hl_autocmds() end
+  if false and cap.document_highlight then set_hl_autocmds() end
 end
 
 function M.init()
@@ -132,7 +158,7 @@ function M.init()
     cmake = {},
     ccls = {},
     diagnosticls = {
-      filetypes = {"vim", "sh", "python"},
+      filetypes = {"lua", "vim", "sh", "python"},
       init_options = {
         filetypes = {
           lua = "luacheck",
@@ -166,9 +192,13 @@ function M.init()
     sumneko_lua = {
       settings = {
         Lua = {
-          runtime = {version = "LuaJIT"},
+          runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
           completion = {keywordSnippet = "Disable"},
-          diagnostics = {enable = true, globals = {"vim", "nvim", "p"}, disable = {"redefined-local"}},
+          diagnostics = {
+            enable = true,
+            globals = {"vim", "nvim", "p"},
+            disable = {"redefined-local"},
+          },
           workspace = {
             library = (function()
               -- Load the `lua` files from nvim into the runtime
@@ -206,7 +236,7 @@ function M.init()
   -- Set local configs
   for server, cfg in pairs(configs) do
     cfg.on_attach = on_attach_cb
-    if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end
+    -- if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end
     lsp[server].setup(cfg)
   end
 end

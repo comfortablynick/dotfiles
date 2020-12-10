@@ -118,7 +118,7 @@ set shiftwidth=0                                                " Columns of whi
 set backspace=2                                                 " Backspace behaves as expected
 
 " Search & replace {{{2
-set ignorecase                                                  " Ignore case while searching
+set noignorecase                                                " Ignore case while searching
 set smartcase                                                   " Case sensitive if uppercase in pattern
 set incsearch                                                   " Move cursor to matched string
 set magic                                                       " Magic escaping for regex
@@ -199,7 +199,7 @@ if has('nvim')
 
     augroup vimrc
         autocmd!
-        autocmd BufEnter * lua require'config.completion'
+        autocmd BufEnter * lua require'config.completion'.init()
     augroup END
 
     if getenv('AK_PROFILER') == 1

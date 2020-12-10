@@ -68,6 +68,9 @@ function! syntax#get_color(attr, ...)
     let l:gui = has('termguicolors') && &termguicolors
     let l:fam = l:gui ? 'gui' : 'cterm'
     let l:pat = l:gui ? '^#[a-f0-9]\+' : '^[0-9]\+$'
+    " if a:attr = ''
+        " let l:pat = l:gui ? 'cterm=
+    " endif
     for l:group in a:000
         let l:code = synIDattr(synIDtrans(hlID(l:group)), a:attr, l:fam)
         if l:code =~? l:pat

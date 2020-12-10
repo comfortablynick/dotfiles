@@ -396,7 +396,7 @@ function M.mru_files(n) -- {{{1
 end
 
 function M.get_maps(mode) -- {{{1
-  -- `nvim_get_keymap`
+  -- `nvim[_buf]_get_keymap`
   -- ================
   -- buffer  (num)
   -- expr    (num)
@@ -422,26 +422,34 @@ function M.get_maps(mode) -- {{{1
   --   sid = 35,
   --   silent = 1
   -- }
-  local longer = function(s1, s2)
-    vim.validate{s1 = {s1, "s"}, s2 = {s2, "s"}}
-    return not s1:sub(#s2):find("^$")
-  end
   local maps = {}
-  local data = api.nvim_get_keymap(mode or "")
+  local data = vim.tbl_extend("keep", api.nvim_buf_get_keymap(0, mode or ""),
+                              api.nvim_get_keymap(mode or ""))
   local keys = vim.tbl_keys(data[1])
   local widths = {}
 
   for _, k in ipairs(keys) do
-    local longest = ""
+    local i = 0
     for _, v in ipairs(data) do
-      local val = tostring(v[k])
-      if longer(val, longest) then longest = val end
+      local val = tostring(v[k]):len()
+      if val > i then i = val end
     end
-    widths[k] = longest:len()
+    widths[k] = i
   end
 
   for _, v in ipairs(data) do
-      table.insert(maps, string.format("%s %s %s", v.lhs, string.rep(" ", widths.lhs - v.lhs:len()), v.rhs))
+    local attrs = (function()
+      local out = ""
+      if v.noremap == 1 then out = out .. "*" end
+      if v.script == 1 then out = out .. "&" end
+      if v.buffer > 0 then out = out .. "@" end
+      return out
+    end)()
+    local lhs = v.lhs ~= " " and v.lhs or "<Space>"
+    local rhs = v.rhs ~= "" and v.rhs or "<Nop>"
+    -- TODO: calculate width of clap window for rhs
+    table.insert(maps, string.format("%-" .. widths.lhs .. "s %3s %s", lhs,
+                                     attrs, rhs:sub(1, 100)))
   end
   return maps
 end
@@ -497,6 +505,32 @@ function M.make() -- {{{1
   vim.g.job_status = "Running"
   for _, io in ipairs{stdout, stderr} do
     io:read_start(vim.schedule_wrap(on_read))
+  end
+end
+
+function M.test_iter(iter_ct) --{{{1
+  local function get_time() return vim.fn.reltimefloat(vim.fn.reltime()) end
+
+  local ITERATIONS = iter_ct or 10000000
+  local start
+
+  local report = function(cmd_string, time)
+    print(("%-20s %d iterations in %-.04f"):format(cmd_string, ITERATIONS, time))
+  end
+
+  local compare = {
+    {
+      "vim.fn.pathshorten(vim.fn.expand'%')",
+      "vim.api.nvim_call_function('pathshorten', vim.api.nvim_call_function(expand, {'%'}))",
+    },
+  }
+
+  for _, commands in ipairs(compare) do
+    for _, cmd in pairs(commands) do
+      start = get_time()
+      for _ = 1, ITERATIONS do loadstring(cmd) end
+      report(cmd, get_time() - start)
+    end
   end
 end
 

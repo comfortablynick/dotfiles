@@ -126,7 +126,7 @@ command! -nargs=* -complete=file Startup
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
 command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
-command! -nargs=* -complete=var PP
+command! -nargs=* -complete=expression PP
     \ call plugins#lazy_run(
     \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
     \ 'vim-scriptease'
@@ -165,14 +165,14 @@ execute 'nnoremap <silent> <Leader> :<c-u>WhichKey "'..get(g:, 'mapleader', ',')
 " Pretty-printing {{{2
 " nvim: Using Lua vim.inspect()
 if has('nvim')
-    command -complete=var -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
+    command -complete=expression -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
 endif
 
 " Using python pformat (handles lists better but does not convert all vim
-command -complete=var -nargs=1 PPrint echo util#pformat(<args>)
+command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
 
 " Use custom json converter and shell out to `jq` to format
-command -complete=var -nargs=1 JPrint echo util#json_format(<args>)
+command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 
 " nvim-only {{{1
 if has('nvim')
@@ -191,7 +191,7 @@ if has('nvim')
     command Colorizer packadd nvim-colorizer.lua | lua require'colorizer'.attach_to_buffer{0, {mode = "foreground"}}
 
     " LspDisable :: stop active lsp clients {{{2
-    " command! Lsp
+    command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 
     " Lua {{{2
     Alias l lua

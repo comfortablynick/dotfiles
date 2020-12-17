@@ -13,6 +13,10 @@ nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
 nnoremap <silent><buffer> <C-]> :call plugins#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
 nnoremap <silent><buffer> <C-t> :call plugins#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
+" Turn maps into <Cmd> type
+" nnoremap <buffer> ycc <Cmd>s/\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)/\1\3\<Cmd\>\5<CR>\|:noh<CR>
+nnoremap <buffer> ycc <Cmd>call setline('.', substitute(getline('.'), '\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)', '\1\3\<Cmd\>\5', ''))<CR>
+
 if has('nvim')
     nnoremap <silent><buffer> glo
         \ :call v:lua.require('config.lsp').rename('l:'..expand('<cword>'))<CR>

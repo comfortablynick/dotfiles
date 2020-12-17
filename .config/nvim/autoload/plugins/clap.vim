@@ -23,6 +23,8 @@ Alias mru  Clap mru
 Alias mapn Clap map ++mode=n
 Alias mapi Clap map ++mode=i
 Alias mapv Clap map ++mode=v
+Alias mapo Clap map ++mode=o
+Alias mapx Clap map ++mode=x
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags nvim_lsp<CR>

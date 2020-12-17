@@ -33,8 +33,10 @@ function s:on_termopen()
 endfunction
 
 function s:on_cmdwin_enter()
-    nnoremap <buffer> <Leader>q <C-c><C-c>
-    nnoremap <buffer> <Esc> <C-c><C-c>
+    let l:exit_maps = ['<Leader>q', '<Esc>', 'cq']
+    for l:lhs in l:exit_maps
+        execute 'nnoremap <buffer>' l:lhs '<C-c><C-c>'
+    endfor
     setlocal number
     setlocal norelativenumber
 endfunction

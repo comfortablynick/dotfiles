@@ -29,8 +29,8 @@ nnoremap <silent>j gj
 
 " For moving quickly up and down by skipping whitespace in current column
 " TODO: moves inside folds; would be better to skip over them
-nnoremap <silent><Up>   :call search('\%'..virtcol('.')..'v\S', 'bw')<CR>
-nnoremap <silent><Down> :call search('\%'..virtcol('.')..'v\S', 'w')<CR>
+nnoremap <Up>   <Cmd>call search('\%'..virtcol('.')..'v\S', 'bw')<CR>
+nnoremap <Down> <Cmd>call search('\%'..virtcol('.')..'v\S', 'w')<CR>
 
 " Use kj to escape insert mode
 inoremap kj <Esc>`^
@@ -67,8 +67,6 @@ inoremap <A-j> <C-\><C-N><C-w>j
 inoremap <A-k> <C-\><C-N><C-w>k
 inoremap <A-l> <C-\><C-N><C-w>l
 
-nnoremap <silent><M-=> <Cmd>exe min([winheight('%'),line('$')]) 'wincmd _'<CR>
-
 " Delete window to the left/below/above/to the right with d<C-h/j/k/l> {{{2
 nnoremap d<C-j> <C-w>j<C-w>c
 nnoremap d<C-k> <C-w>k<C-w>c
@@ -76,19 +74,19 @@ nnoremap d<C-h> <C-w>h<C-w>c
 nnoremap d<C-l> <C-w>l<C-w>c
 
 " Override vim-impaired tagstack mapping {{{2
-nnoremap <silent> [t :tabprevious<CR>
-nnoremap <silent> ]t :tabnext<CR>
+nnoremap <silent> [t <Cmd>tabprevious<CR>
+nnoremap <silent> ]t <Cmd>tabnext<CR>
 
 " Buffer navigation {{{1
-nnoremap <silent> <Tab>      :bnext<CR>
-nnoremap <silent> <S-Tab>    :bprevious<CR>
-nnoremap <silent> <Leader>w  :update\|bwipeout<CR>
-nnoremap <silent> <Leader>u  :update\|Bdelete<CR>
-nnoremap <silent> <Leader>q  :Bdelete<CR>
-nnoremap <silent> <Leader>xx :BufOnly<CR>
+nnoremap <Tab>      <Cmd>bnext<CR>
+nnoremap <S-Tab>    <Cmd>bprevious<CR>
+nnoremap <Leader>w  <Cmd>update\|bwipeout<CR>
+nnoremap <Leader>u  <Cmd>update\|Bdelete<CR>
+nnoremap <Leader>q  <Cmd>Bdelete<CR>
+nnoremap <Leader>xx <Cmd>BufOnly<CR>
 
 " Quickfix
-nnoremap <silent> cq :call quickfix#toggle()<CR>
+nnoremap cq <Cmd>call quickfix#toggle()<CR>
 
 " Command line {{{1
 " %% -> cwd
@@ -96,9 +94,9 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " Format/indent {{{1
 " Format buffer and restore cursor position
-nnoremap <silent> <Leader>ff :call buffer#restore_cursor_after('gggqG')<CR>
+nnoremap <Leader>ff <Cmd>call buffer#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
-nnoremap <silent> <Leader>fi :call buffer#restore_cursor_after('gg=G')<CR>
+nnoremap <Leader>fi <Cmd>call buffer#restore_cursor_after('gg=G')<CR>
 
 " Insert mode escape {{{2
 " This works well, but it creates undo points and sometimes results in lost work

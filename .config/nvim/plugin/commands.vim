@@ -7,8 +7,8 @@
 command S update | packadd asynctasks.vim | AsyncTask file-run
 
 " Light/Dark :: easily change background {{{2
-command! Light set background=light
-command! Dark  set background=dark
+command Light set background=light
+command Dark  set background=dark
 
 " Bdelete :: delete buffer without changing window layout {{{2
 " command! -bang -complete=buffer -nargs=? Bclose
@@ -19,27 +19,27 @@ command -nargs=? -complete=buffer Bdelete call buffer#sayonara(v:true)
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle
     \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
-noremap <silent> <F5> :UndotreeToggle<CR>
+noremap <F5> <Cmd>UndotreeToggle<CR>
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
-command! Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
-command! -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
+command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
+command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
 
 " LGrep :: location list grep {{{2
-command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
+command -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 
-function! s:grep(...)
+function s:grep(...)
     return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
 endfunction
 
 " Fzm :: lazy load fuzzymenu.vim {{{2
 command! -bang -nargs=0 Fzm
     \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
-nnoremap <C-P> :Fzm<CR>
+nnoremap <C-P> <Cmd>Fzm<CR>
 
 " Neoformat :: lazy load neoformat {{{2
 command! -nargs=0 Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
-noremap <silent> <F3> :Neoformat<CR>
+noremap <F3> <Cmd>Neoformat<CR>
 
 " Rooter :: Find project root {{{2
 command! -nargs=0 Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
@@ -61,10 +61,10 @@ cnoreabbrev <expr> man
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
 " Misc commonly mistyped commands {{{2
-command! WQ wq
-command! Wq wq
-command! Wqa wqa
-command! W w
+command WQ wq
+command Wq wq
+command Wqa wqa
+command W w
 
 Alias ehco echo
 
@@ -102,13 +102,13 @@ command! -bang -nargs=* -range=0 GV
 
 " Gpush :: custom git push {{{2
 command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
-nnoremap <silent><Leader>gp :Gpush<CR>
+nnoremap <Leader>gp <Cmd>Gpush<CR>
 
 " Tig[Status] :: view tig in terminal {{{2
 command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
 command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
 Alias Ts TigStatus
-nnoremap <silent><Leader>ts :TigStatus<CR>
+nnoremap <Leader>ts <Cmd>TigStatus<CR>
 
 " LazyGit :: tui for git {{{2
 command -bang -nargs=* LazyGit
@@ -140,9 +140,8 @@ command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
 
 " Scriptnames :: display :scriptnames in quickfix and optionally filter {{{2
 command! -nargs=* -bar -count=0 Scriptnames
-    \ call quickfix#scriptnames(<f-args>) |
-    \ copen 20 |
-    \ <count>
+    \ call quickfix#scriptnames(<f-args>)
+    \| call quickfix#open(#{size: <count>, stay: v:false})
 
 " WhichKey[Visual] :: display key maps {{{2
 command! -nargs=1 WhichKey
@@ -160,7 +159,8 @@ command! -nargs=1 WhichKeyVisual
     \ )
 
 " Map WhichKey to g:mapleader
-execute 'nnoremap <silent> <Leader> :<c-u>WhichKey "'..get(g:, 'mapleader', ',')..'"<CR>'
+execute 'nnoremap <Leader>      <Cmd>WhichKey "'..get(g:, 'mapleader', ',')..'"<CR>'
+execute 'nnoremap <LocalLeader> <Cmd>WhichKey "'..get(g:, 'maplocalleader', '\\')..'"<CR>'
 
 " Pretty-printing {{{2
 " nvim: Using Lua vim.inspect()
@@ -168,7 +168,7 @@ if has('nvim')
     command -complete=expression -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
 endif
 
-" Using python pformat (handles lists better but does not convert all vim
+" Using python pformat (handles lists better but does not convert all vim types
 command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
 
 " Use custom json converter and shell out to `jq` to format
@@ -183,7 +183,7 @@ if has('nvim')
     let s:grep = v:lua.require('grep')
 
     " [H]elp :: floating help window {{{2
-    command! -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
+    command -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
     Alias H Help
 
     " Colorizer :: run nvim-colorizer.lua {{{2

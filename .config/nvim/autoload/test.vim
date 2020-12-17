@@ -14,13 +14,9 @@ endfunction
 " Get <SID> for arbitrary scripts in &rtp
 " Defaults to current file unless pattern is specified
 function test#get_sid(...)
-    if a:0 > 0
-        let l:file = a:1
-        execute 'runtime' l:file
-    else
-        let l:file = expand('%')
-    endif
-    return matchlist(execute('scriptnames'), '\([0-9]\+\): [^ ]*'..l:file)[1]
+    let l:file = a:0 > 0 ? a:1 : expand('%')
+    silent! execute 'runtime' l:file
+    return filter(util#scriptnames(), {_,v -> v.filename =~# l:file})[0]['text']
 endfunction
 
 function test#call_sfunc(func, ...)

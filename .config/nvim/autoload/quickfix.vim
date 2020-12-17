@@ -116,11 +116,19 @@ function quickfix#toggle()
     end
 endfunction
 
-function quickfix#open()
+" Open qf window and move back to current window if `stay`
+"
+" Optional param object:
+"   `stay` Don't move to qf window
+"   `size` Size that overrides any other setting
+function quickfix#open(...) abort
+    let l:config = get(a:, 1, {})
+    if type(l:config) isnot# v:t_dict | echoerr 'param must be a dict' | return | endif
     let l:qf_lines = len(getqflist())
-    let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
-    execute 'copen' l:qf_size
-    wincmd k
+    let l:qf_size = min([max([1, len(getqflist())]), get(g:, 'quickfix_size', s:quickfix_size)])
+    let l:size = get(l:config, 'size')
+    execute 'copen' l:size > 0 ? l:size : l:qf_size
+    if get(l:config, 'stay', v:true) | wincmd p | endif
 endfunction
 
 " Close an empty quickfix window

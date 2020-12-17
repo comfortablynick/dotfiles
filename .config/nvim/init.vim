@@ -85,7 +85,7 @@ set keywordprg=:Help                                            " Default to flo
 set nocursorline                                                " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
-set updatetime=300                                              " Update more often (helps GitGutter)
+set updatetime=700                                              " Controls CursorHold timing and swap file write time
 let &signcolumn = has('patch-8.1.1564') ? 'number' : 'yes'      " Use number column for signs if patch is applied
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set timeoutlen=300                                              " How long in ms to wait for key combinations (if used)
@@ -100,6 +100,7 @@ set list                                                        " Show extra cha
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title
 let g:mapleader = ','
+" let g:maplocalleader = '\\'
 
 " Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion
@@ -158,6 +159,7 @@ let g:loaded_rrhelper = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_tutor_mode_plugin = 1
 let g:loaded_vimballPlugin = 1
+let g:vimsyn_embed = 'lP'                                       " Enable embedded lua/Python
 
 " Terminal colors {{{2
 " Set sequences for RGB colors
@@ -169,7 +171,9 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_python_provider = 0
 
-" Plugins {{{1
+" Plugins -- exit if 'noloadplugins' {{{1
+if !&loadplugins | finish | endif
+
 " Package management {{{2
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
@@ -179,7 +183,7 @@ packadd! vim-dirvish
 packadd! vim-toml
 
 " Nvim/vim specific packages
-if has('nvim')
+if has('nvim-0.5')
     " Nvim-only
     packadd! nvim-web-devicons
     " packadd! barbar.nvim
@@ -191,15 +195,15 @@ if has('nvim')
     packadd! completion-buffers
     packadd! snippets.nvim
 
-    lua nvim = require'nvim'
-    lua require'globals'
-    lua require'config.treesitter'
-    lua require'config.gitsigns'
-    lua require'config.lsp'.init()
+    lua nvim = require('nvim')
+    lua require('globals')
+    lua require('config.treesitter')
+    lua require('config.gitsigns')
+    lua require('config.lsp').init()
 
     augroup vimrc
         autocmd!
-        autocmd BufEnter * lua require'config.completion'.init()
+        autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
     augroup END
 
     if getenv('AK_PROFILER') == 1

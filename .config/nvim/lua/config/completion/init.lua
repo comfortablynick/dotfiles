@@ -13,7 +13,6 @@ vim.g.completion_enable_auto_hover = 1
 vim.g.completion_enable_auto_signature = 1
 vim.g.completion_auto_change_source = 1
 
--- Don't load completion-nvim for these buffers
 local text_complete = {
   {complete_items = {"path"}, triggered_only = {"/"}},
   {complete_items = {"buffer", "buffers"}},
@@ -42,7 +41,9 @@ local mapper = function(key, result)
 end
 
 M.init = function()
+  -- Don't load completion-nvim for these buffers
   local complete_exclude_fts = {"clap_input"}
+
   if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then return end
 
   require"config.snippets"

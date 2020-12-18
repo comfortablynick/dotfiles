@@ -157,6 +157,7 @@ function M.init()
     bashls = {},
     cmake = {},
     ccls = {},
+    -- diagnosticls {{{1
     diagnosticls = {
       filetypes = {"lua", "vim", "sh", "python"},
       init_options = {
@@ -167,8 +168,44 @@ function M.init()
           python = "pydocstyle",
         },
         linters = {
-          -- TODO: why doesn't this work?
-          luacheck = {command = "luacheck", args = {"-"}},
+          -- TODO: why doesn't luacheck work?
+          luacheck = {
+            command = "luacheck",
+            debounce = 100,
+            args = {"--formatter", "plain", "-"},
+            offsetLine = 0,
+            offsetColumn = 0,
+            formatLines = 1,
+            formatPattern = {
+              "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+              {line = 1, column = 2, message = 3},
+            },
+          },
+          shellcheck = {
+            command = "shellcheck",
+            rootPatterns = {},
+            isStdout = true,
+            isStderr = false,
+            debounce = 100,
+            args = {"--format=gcc", "-"},
+            offsetLine = 0,
+            offsetColumn = 0,
+            sourceName = "shellcheck",
+            formatLines = 1,
+            formatPattern = {
+              "^([^:]+):(\\d+):(\\d+):\\s+([^:]+):\\s+(.*)$",
+              {
+                line = 2,
+                column = 3,
+                endline = 2,
+                endColumn = 3,
+                message = {5},
+                security = 4,
+              },
+            },
+            securities = {error = "error", warning = "warning", note = "info"},
+          },
+          -- vint {{{2
           vint = {
             command = "vint",
             debounce = 100,
@@ -183,12 +220,18 @@ function M.init()
             },
           },
         },
+        -- shfmt {{{2
+        formatFiletypes = {sh = "shfmt"},
+        formatters = {
+          shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
+        },
       },
     },
     gopls = {},
     jsonls = {},
     pyls_ms = {},
     rust_analyzer = {},
+    -- sumneko_lua {{{1
     sumneko_lua = {
       settings = {
         Lua = {
@@ -223,6 +266,7 @@ function M.init()
     },
     tsserver = {},
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
+    -- yamlls {{{1
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
@@ -233,7 +277,7 @@ function M.init()
     },
   }
 
-  -- Set local configs
+  -- Set local configs {{{1
   for server, cfg in pairs(configs) do
     cfg.on_attach = on_attach_cb
     -- if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end

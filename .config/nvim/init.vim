@@ -206,7 +206,7 @@ if has('nvim-0.5')
         autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
     augroup END
 
-    if getenv('AK_PROFILER') == 1
+    if getenv("AK_PROFILER") == 1
         " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
         packadd! profiler.nvim
         lua require'profiler'

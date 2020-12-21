@@ -60,7 +60,7 @@ endfunction
 
 " toggles the location window associated with the current window
 " or whatever location window has the focus
-function s:loc_toggle(stay, ...)
+function quickfix#loc_toggle(stay, ...)
     " save the view if the current window is not a location window
     if get(g:, 'qf_save_win_view', 1) && !quickfix#is_loc()
         let l:winview = winsaveview()
@@ -111,7 +111,7 @@ function quickfix#toggle()
     let l:lines = len(l:list)
     let l:qf_size = s:qf_size(l:lines)
     if l:is_loc
-        call s:loc_toggle(0, l:qf_size)
+        call quickfix#loc_toggle(0, l:qf_size)
     else
         call s:qf_toggle(l:qf_size)
     end

@@ -25,7 +25,7 @@ local default_complete = {
     {complete_items = {"snippet", "UltiSnips"}},
     {complete_items = {"buffer", "buffers"}},
   },
-  string = text_complete,
+  -- string = text_complete,
   comment = text_complete,
 }
 

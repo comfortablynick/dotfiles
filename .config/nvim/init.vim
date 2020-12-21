@@ -204,6 +204,13 @@ if has('nvim-0.5')
     augroup vimrc
         autocmd!
         autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
+        " TODO: use different highlight + move to lua
+        autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
+            \ lua nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints{
+            \   prefix = ' » ',
+            \   highlight = "NonText",
+            \   enabled = {"ChainingHint"}
+            \ }
     augroup END
 
     if getenv("AK_PROFILER") == 1

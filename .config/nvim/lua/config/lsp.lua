@@ -153,11 +153,9 @@ end
 function M.init()
   -- Safely return without error if nvim_lsp isn't installed
   if not lsp then return end
+  -- Server configs {{{1
   local configs = {
-    bashls = {},
-    cmake = {},
-    ccls = {},
-    -- diagnosticls {{{1
+    -- diagnosticls {{{2
     diagnosticls = {
       filetypes = {"lua", "vim", "sh", "python"},
       init_options = {
@@ -205,7 +203,7 @@ function M.init()
             },
             securities = {error = "error", warning = "warning", note = "info"},
           },
-          -- vint {{{2
+          -- vint {{{3
           vint = {
             command = "vint",
             debounce = 100,
@@ -220,18 +218,14 @@ function M.init()
             },
           },
         },
-        -- shfmt {{{2
+        -- shfmt {{{3
         formatFiletypes = {sh = "shfmt"},
         formatters = {
           shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
         },
       },
     },
-    gopls = {},
-    jsonls = {},
-    pyls_ms = {},
-    rust_analyzer = {},
-    -- sumneko_lua {{{1
+    -- sumneko_lua {{{2
     sumneko_lua = {
       settings = {
         Lua = {
@@ -264,20 +258,32 @@ function M.init()
         },
       },
     },
-    tsserver = {},
+    -- vimlls {{{2
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
-    -- yamlls {{{1
+    -- yamlls {{{2
     yamlls = {
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
         yaml = {
-          schemas = {["https://json.schemastore.org/ansible-role-2.9"] = "*"},
+          schemas = {
+            ["https://json.schemastore.org/ansible-role-2.9"] = ".ansible/roles/*/*.yml",
+            ["https://gist.githubusercontent.com/KROSF/c5435acf590acd632f71bb720f685895/raw/6f11aa982ad09a341e20fa7f4beed1a1b2a8f40e/taskfile.schema.json"] = "Taskfile.yml",
+          },
         },
       },
     },
+    -- other servers {{{2
+    bashls = {},
+    cmake = {},
+    ccls = {},
+    gopls = {},
+    jsonls = {},
+    pyls_ms = {},
+    rust_analyzer = {},
+    tsserver = {},
   }
 
-  -- Set local configs {{{1
+  -- Set configs {{{1
   for server, cfg in pairs(configs) do
     cfg.on_attach = on_attach_cb
     -- if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end

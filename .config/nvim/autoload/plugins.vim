@@ -110,13 +110,13 @@ function plugins#init()
     " Language server/completion {{{2
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/lsp-status.nvim'
+    Plug 'nvim-lua/lsp_extensions.nvim'
     Plug 'nvim-lua/completion-nvim'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
     Plug 'neoclide/coc.nvim',     {'do': {-> coc#util#install()}}
 
     " Lua/nvim {{{2
-    Plug 'glepnir/galaxyline.nvim'
     Plug 'rktjmp/lush.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'

@@ -220,7 +220,7 @@ if has('nvim')
     command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)
 
     " Make :: async make {{{2
-    command! -nargs=0 -complete=file Make call s:tools.make()
+    " command! -bang -nargs=0 -complete=file Make call s:tools.make()
 
     " BufOnly :: keep only current buffer (! forces close) {{{2
     command -bang BufOnly call s:buffer.only(<bang>0)

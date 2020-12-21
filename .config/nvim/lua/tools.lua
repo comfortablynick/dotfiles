@@ -361,7 +361,10 @@ function M.async_run(cmd, bang) -- {{{1
       vim.g.job_status = "Success"
     end
     if bang == "!" then
-      print(results[1])
+      do
+        local res = results[1]
+        if res ~= nil then print(res) end
+      end
     else
       qf_open()
     end
@@ -395,7 +398,7 @@ function M.mru_files(n) -- {{{1
            n or 999):totable()
 end
 
-function M.get_maps(mode) -- {{{1
+function M.get_maps(mode, bufnr) -- {{{1
   -- `nvim[_buf]_get_keymap`
   -- ================
   -- buffer  (num)
@@ -423,7 +426,9 @@ function M.get_maps(mode) -- {{{1
   --   silent = 1
   -- }
   local maps = {}
-  local data = vim.tbl_extend("keep", api.nvim_buf_get_keymap(0, mode or ""),
+  local mode = mode or ""
+  -- TODO: for clap -- get buffer that we are calling this from, not 0
+  local data = vim.tbl_extend("keep", api.nvim_buf_get_keymap(bufnr or 0, mode or ""),
                               api.nvim_get_keymap(mode or ""))
   local keys = vim.tbl_keys(data[1])
   local widths = {}
@@ -455,12 +460,15 @@ function M.get_maps(mode) -- {{{1
 end
 
 function M.make() -- {{{1
+  -- TODO: Doesn't handle spaces properly in paths
+  -- Figure out some way other than dumb splitting by space
   local makeprg = npcall(api.nvim_buf_get_option, 0, "makeprg") or vim.o.makeprg
   local efm = npcall(api.nvim_buf_get_option, 0, "errorformat") or
                 vim.o.errorformat
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
-  local expanded_cmd = vim.fn.expandcmd(makeprg)
+  -- local expanded_cmd = vim.fn.expandcmd(makeprg)
+  local expanded_cmd = makeprg
   local args = vim.split(expanded_cmd, " ")
   local cmd = table.remove(args, 1)
   local options = {stdio = {nil, stdout, stderr}, args = args}
@@ -508,7 +516,7 @@ function M.make() -- {{{1
   end
 end
 
-function M.test_iter(iter_ct) --{{{1
+function M.test_iter(iter_ct) -- {{{1
   local function get_time() return vim.fn.reltimefloat(vim.fn.reltime()) end
 
   local ITERATIONS = iter_ct or 10000000

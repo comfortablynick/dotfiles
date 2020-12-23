@@ -18,7 +18,7 @@ endif
 
 augroup plugin_pack
     autocmd!
-    autocmd VimEnter * ++once call timer_start(g:package_defer_time, { -> s:deferred_load() })
+    autocmd VimEnter * ++once call timer_start(g:package_defer_time, {-> s:deferred_load()})
 augroup END
 
 " Load packages that are safe to defer
@@ -29,8 +29,9 @@ function! s:deferred_load()
     packadd vim-exchange
     packadd tcomment_vim
     packadd vim-unimpaired
-    packadd clever-f.vim
-    packadd vim-sneak
+    " packadd clever-f.vim
+    " packadd vim-sneak
+    packadd vim-easymotion
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
     packadd vim-sandwich
@@ -44,6 +45,8 @@ function! s:deferred_load()
     packadd vim-picker
     packadd vim-lion
     packadd vim-devicons
+    packadd asynctasks.vim
+    packadd ultisnips
 
     if has('nvim')
         packadd nvim-miniyank           " Seems to have issue on vim

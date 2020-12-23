@@ -87,12 +87,13 @@ command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
 
-" AsyncTask :: lazy load plugin {{{2
-command! -bang -nargs=* -range=0 AsyncTask
-    \ call plugins#lazy_run(
-    \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-    \ 'asynctasks.vim'
-    \ )
+" " AsyncTask :: lazy load plugin {{{2
+" command! -bang -nargs=* -range=0 AsyncTask
+"     \ call plugins#lazy_run(
+"     \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+"     \ 'asynctasks.vim'
+"     \ )
+Alias T AsyncTask
 
 " Git {{{1
 " GV :: git commit viewer {{{2

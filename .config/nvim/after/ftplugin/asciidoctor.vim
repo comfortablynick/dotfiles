@@ -1,3 +1,4 @@
+" Separate sentences in a paragraph and put each on its own line
 function FormatExpr(start, end)
     silent execute a:start.','.a:end.'s/[.!?]\zs /\r/g'
 endfunction
@@ -8,7 +9,7 @@ set formatexpr=FormatExpr(v:lnum,v:lnum+v:count-1)
 function s:toc()
     let l:toc = []
     let l:buf = bufnr('')
-    let l:lines = filter(map(getbufline(l:buf, 1, '$'), {k,v->[k+1, v]}), {_,v->v[1] =~# '^=\+'})
+    let l:lines = filter(map(getbufline(l:buf, 1, '$'), {k,v->[k+1, v]}), {_,v->v[1] =~# '\v^\={2,}'})
     for [l:ln, l:text] in l:lines
         call add(l:toc, #{bufnr: l:buf, lnum: l:ln, text: l:text})
     endfor

@@ -4,7 +4,6 @@ let g:pack_pre_called = []
 let g:pack_post_called = []
 let g:pack_called = []
 let g:pack_sourced = []
-let g:vim_sourced = []
 
 command -nargs=+ Plug call packager#add(<args>)
 
@@ -40,13 +39,13 @@ function plugins#init()
     Plug 'kkoomen/vim-doge'
 
     " Editing behavior {{{2
-    Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-surround'
+    " Plug 'tpope/vim-commentary'
+    " Plug 'tpope/vim-surround'
+    Plug 'easymotion/vim-easymotion'
     Plug 'tpope/vim-unimpaired'
     Plug 'machakann/vim-sandwich'
     Plug 'tomtom/tcomment_vim'
     Plug 'justinmk/vim-sneak'
-    Plug 'easymotion/vim-easymotion'
     Plug 'rhysd/clever-f.vim'
     Plug 'tommcdo/vim-lion'
     Plug 'wellle/targets.vim'
@@ -55,8 +54,8 @@ function plugins#init()
     Plug 'antoinemadec/FixCursorHold.nvim'
 
     " Explorer/finder utils {{{2
-    let s:fzf_hook = './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'
-    Plug 'junegunn/fzf',             {'do': s:fzf_hook}
+    Plug 'junegunn/fzf',
+        \ {'do': './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1'}
     Plug 'kevinhwang91/rnvimr',      {'do': 'pip3 install -U pynvim'}
     Plug 'liuchengxu/vista.vim'
     Plug 'liuchengxu/vim-clap',      {'do': ':Clap install-binary!'}
@@ -90,8 +89,7 @@ function plugins#init()
     Plug 'vim-jp/syntax-vim-ex',                       {'type': 'start'}
     Plug 'blankname/vim-fish',                         {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',                    {'type': 'start'}
-    Plug 'masukomi/vim-markdown-folding',              {'type': 'start'}
-
+    Plug 'benknoble/gitignore-vim',                    {'type': 'start'}
     call packager#local('~/git/todo.txt-vim',          {'type': 'start'})
 
     " Git {{{2
@@ -114,7 +112,7 @@ function plugins#init()
     Plug 'nvim-lua/completion-nvim'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
-    Plug 'neoclide/coc.nvim',     {'do': {-> coc#util#install()}}
+    " Plug 'neoclide/coc.nvim',     {'do': {-> coc#util#install()}}
 
     " Lua/nvim {{{2
     Plug 'rktjmp/lush.nvim'
@@ -220,19 +218,24 @@ endfunction
 function s:source_handler(sourced, pre) "{{{2
     let l:type = a:pre == 1 ? 'pre' : 'post'
     let l:file = get(plugins#packs_installed(), a:sourced, '')
+    " Case-insensitive match of filename
+    " Replace with for-loop for more elaborate regex/glob matching
+    let l:config_files_idx = index(s:config_files(), l:file, 0, v:true)
     " Return if we don't have file in autoload/plugins/{l:file}.vim
     " or if function has been called previously
-    if index(s:config_files(), l:file) < 0
-        \ || index(g:pack_{l:type}_called, l:file) > -1
+    if l:config_files_idx == -1
+        \ || index(g:pack_{l:type}_called, l:file, 0, v:true) > -1
         return
     endif
+    " Replace with actual filename that we matched
+    let l:file = s:config_files()[l:config_files_idx]
     let g:pack_{l:type}_called += [l:file]
     if l:type ==# 'pre'
         let g:pack_sourced += [a:sourced]
         let g:pack_called += [l:file]
     endif
     try
-        call plugins#{l:file}#{l:type}()
+        return plugins#{l:file}#{l:type}()
     catch /^Vim\%((\a\+)\)\=:E117/
         " fn doesn't exist; do nothing
     endtry
@@ -260,13 +263,13 @@ endfunction
 
 " function s:config_files() :: Get files in au/plugins/.vim {{{2
 function s:config_files()
-    if !exists('s:pack_config_files')
-        let s:pack_config_files = map(
+    if !exists('g:pack_config_files')
+        let g:pack_config_files = map(
             \ globpath(&runtimepath, 'autoload/plugins/*.vim', 0, 1),
             \ {_, val -> fnamemodify(val, ':t:r')}
             \ )
     endif
-    return s:pack_config_files
+    return g:pack_config_files
 endfunction
 
 " function plugins#packadd() :: Load plugin and handle config manually {{{2

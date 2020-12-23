@@ -7,7 +7,26 @@ local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
 local lsps_attached = {}
 
-if lsp_status ~= nil then lsp_status.register_progress() end
+if lsp_status ~= nil then
+  lsp_status.register_progress()
+  -- lsp_status.config{
+  --   select_symbol = function(cursor_pos, symbol)
+  --     if symbol.valueRange then
+  --       local value_range = {
+  --         ["start"] = {
+  --           character = 0,
+  --           line = vim.fn.byte2line(symbol.valueRange[1]),
+  --         },
+  --         ["end"] = {
+  --           character = 0,
+  --           line = vim.fn.byte2line(symbol.valueRange[2]),
+  --         },
+  --       }
+  --       return require("lsp-status.util").in_range(cursor_pos, value_range)
+  --     end
+  --   end,
+  -- }
+end
 
 vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
 vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
@@ -117,8 +136,6 @@ local mapper = function(mode, key, result)
 end
 
 local on_attach_cb = function(client)
-  -- vim.cmd(string.format("echom 'buffer %d: %s started'",
-  --                       api.nvim_get_current_buf(), client.name))
   local bufnr = api.nvim_get_current_buf()
   vim.cmd[[let g:vista_{&ft}_executive = 'nvim_lsp']]
 
@@ -157,28 +174,33 @@ function M.init()
   local configs = {
     -- diagnosticls {{{2
     diagnosticls = {
-      filetypes = {"lua", "vim", "sh", "python"},
+      filetypes = {
+        -- "lua",
+        "vim",
+        "sh",
+        "python",
+      },
       init_options = {
         filetypes = {
-          lua = "luacheck",
+          -- lua = "luacheck",
           vim = "vint",
           sh = "shellcheck",
           python = "pydocstyle",
         },
         linters = {
           -- TODO: why doesn't luacheck work?
-          luacheck = {
-            command = "luacheck",
-            debounce = 100,
-            args = {"--formatter", "plain", "-"},
-            offsetLine = 0,
-            offsetColumn = 0,
-            formatLines = 1,
-            formatPattern = {
-              "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-              {line = 1, column = 2, message = 3},
-            },
-          },
+          -- luacheck = {
+          --   command = "luacheck",
+          --   debounce = 100,
+          --   args = {"--formatter", "plain", "-"},
+          --   offsetLine = 0,
+          --   offsetColumn = 0,
+          --   formatLines = 1,
+          --   formatPattern = {
+          --     "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+          --     {line = 1, column = 2, message = 3},
+          --   },
+          -- },
           shellcheck = {
             command = "shellcheck",
             rootPatterns = {},
@@ -272,12 +294,13 @@ function M.init()
         },
       },
     },
+    -- jsonls {{{2
+    jsonls = {filetypes = {"json", "jsonc"}},
     -- other servers {{{2
     bashls = {},
     cmake = {},
     ccls = {},
     gopls = {},
-    jsonls = {},
     pyls_ms = {},
     rust_analyzer = {},
     tsserver = {},
@@ -286,7 +309,10 @@ function M.init()
   -- Set configs {{{1
   for server, cfg in pairs(configs) do
     cfg.on_attach = on_attach_cb
-    -- if lsp_status ~= nil then cfg.capabilities = lsp_status.capabilities end
+    if lsp_status ~= nil then
+      cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
+                                        lsp_status.capabilities)
+    end
     lsp[server].setup(cfg)
   end
 end

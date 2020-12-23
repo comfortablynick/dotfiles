@@ -1,16 +1,17 @@
-function! plugins#easymotion#pre()
-    " <Leader>f{char} to move to {char}
-    map  f <Plug>(easymotion-bd-f)
-    nmap f <Plug>(easymotion-overwin-f)
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_smartcase = 1
 
-    " s{char}{char} to move to {char}{char}
-    nmap s <Plug>(easymotion-overwin-f2)
+" <Leader>f{char} to move to {char}
+map  f <Plug>(easymotion-bd-f)
+nmap f <Plug>(easymotion-overwin-f)
 
-    " Move to line
-    map L <Plug>(easymotion-bd-jk)
-    nmap L <Plug>(easymotion-overwin-line)
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
 
-    " Move to word
-    map  <Leader>w <Plug>(easymotion-bd-w)
-    nmap <Leader>w <Plug>(easymotion-overwin-w)
-endfunction
+" Move to line
+map L <Plug>(easymotion-bd-jk)
+nmap L <Plug>(easymotion-overwin-line)
+
+" Movesymotion-prefix) to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)

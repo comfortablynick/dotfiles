@@ -1,4 +1,4 @@
-.git
+.git/
 .netrwhist
 coc-settings.json
 zig-cache/

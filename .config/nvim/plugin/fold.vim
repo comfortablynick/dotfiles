@@ -15,12 +15,12 @@ function! CustomFoldText(string)
     else
         let l:line = substitute(getline(l:fs), '\t', repeat(' ', &tabstop), 'g')
     endif
-    let g:pat  = matchstr(&l:cms, '^\V\.\{-}\ze%s\m')
+    let l:pat  = matchstr(&l:cms, '^\V\.\{-}\ze%s\m')
     " remove leading comments from line
-    let l:line = substitute(l:line, '^\s*'.g:pat.'\s*', '', '')
+    let l:line = substitute(l:line, '^\s*'.l:pat.'\s*', '', '')
     " remove foldmarker from line
-    let g:pat  = '\%('. g:pat. '\)\?\s*'.split(&l:fmr, ',')[0].'\s*\d*'
-    let l:line = substitute(l:line, g:pat, '', '')
+    let l:pat  = '\%('. l:pat. '\)\?\s*'.split(&l:fmr, ',')[0].'\s*\d*'
+    let l:line = substitute(l:line, l:pat, '', '')
     let l:line = trim(join(split(l:line)))
     " Get actual width of window
     let l:w = window#width()

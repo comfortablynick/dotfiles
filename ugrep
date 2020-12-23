@@ -52,13 +52,30 @@ smart-case
 no-hidden
 
 # Enable/disable binary files, default: no-ignore-binary
-no-ignore-binary
+ignore-binary
 
 # Enable/disable decompression and archive search, default: no-decompress
 no-decompress
 
+### IGNORE ###
+# exclude files and directories specified in the following files when encountered in recursive searches
 # Enable/disable ignore files, default: no-ignore-files
-ignore-files
+# ignore-files
+ignore-files=.ignore
+ignore-files=.gitignore
+
+# exclude files and directories specified by the following gitignore-style files
+# exclude-from=~/.config/git/ignore
+# exclude-from=~/.ignore
+
+# exclude files and directories that match the following gitignore-style globs
+# exclude=a.out
+# exclude=Makefile*
+# exclude-dir=backup
+
+# override the exclusions by including the following files and directories
+# exclude=!Makefile.am
+# exclude-dir=!/**/archived/backup
 
 ### OUTPUT ###
 

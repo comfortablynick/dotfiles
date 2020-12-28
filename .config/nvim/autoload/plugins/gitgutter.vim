@@ -1,7 +1,4 @@
-function plugins#gitgutter#pre()
-    let g:gitgutter_map_keys = 0
-    call s:set_gitgutter_highlights()
-endfunction
+let g:gitgutter_map_keys = 0
 
 function s:set_gitgutter_highlights()
     highlight link GitGutterAdd                DiffAdd

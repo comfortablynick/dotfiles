@@ -6,7 +6,7 @@ augroup plugin_window
         " Terminal starts in insert mode
         autocmd TermOpen     * call s:on_termopen()
         autocmd TermClose    * call feedkeys("\<C-\>\<C-n>")
-        autocmd ColorScheme  * call s:yank_hl()
+        autocmd ColorScheme  * call s:set_hl()
         autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="Yank", timeout=750}
     endif
 
@@ -16,20 +16,23 @@ augroup plugin_window
         autocmd WinLeave,InsertEnter * set nocursorline
     endif
 
-    " Toggle relativenumber depending on mode and focus
-    autocmd FocusGained,WinEnter,BufEnter,InsertLeave *
-        \ if &l:number && empty(&buftype) | setlocal relativenumber | endif
-    autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
-        \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
-    " Easier exit from cmdwin
-    autocmd CmdwinEnter * call s:on_cmdwin_enter()
-    " autocmd QuitPre * call autoclose#quit_if_only_window()
+    " Toggle relativenumber depending on mode and focus, if relativenumber is enabled
+    if &l:relativenumber
+        autocmd FocusGained,WinEnter,BufEnter,InsertLeave *
+            \ if &l:number && empty(&buftype) | setlocal relativenumber | endif
+        autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
+            \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
+        " Easier exit from cmdwin
+        autocmd CmdwinEnter * call s:on_cmdwin_enter()
+        " autocmd QuitPre * call autoclose#quit_if_only_window()
+    endif
 augroup END
 
 function s:on_termopen()
     startinsert
     setlocal nonumber norelativenumber
     setlocal nobuflisted
+    setlocal signcolumn=no
 endfunction
 
 function s:on_cmdwin_enter()
@@ -41,8 +44,10 @@ function s:on_cmdwin_enter()
     setlocal norelativenumber
 endfunction
 
-function s:yank_hl()
+function s:set_hl()
     highlight Yank cterm=reverse gui=reverse
+    highlight clear CursorLine
+    " call syntax#derive('CursorLineNr', 'CursorLineNr', 'guifg=yellow', 'gui=none')
 endfunction
 
-call s:yank_hl()
+call s:set_hl()

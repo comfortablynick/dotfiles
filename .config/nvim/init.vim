@@ -18,12 +18,6 @@ endif
 " Alias :: set command abbreviation {{{2
 command -nargs=+ Alias call map#set_cabbr(<f-args>)
 
-" init.lua {{{2
-if has('nvim') && get(g:, 'use_init_lua', 0) == 1
-    lua require 'init'
-    finish
-endif
-
 " General configuration {{{1
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')
@@ -37,6 +31,7 @@ if has('nvim')
         \ stdpath('data')..'/shada/main.shada'                  " Location of nvim replacement for viminfofile
 else
     " Vim Only
+    set wildmenu
     set pyxversion=3
     let g:python3_host_prog = 'python3'
 
@@ -81,26 +76,23 @@ set nowrap                                                      " Text wrapping 
 set showmode                                                    " Show default mode text (e.g. -- INSERT -- below statusline)
 set shortmess+=c                                                " Don't show 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
-set keywordprg=:Help                                            " Default to floating help window for keywordprg rather than :Man
-set nocursorline                                                " Show line under cursor's line (check autocmds)
+set cursorline                                                  " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=700                                              " Controls CursorHold timing and swap file write time
-let &signcolumn = has('patch-8.1.1564') ? 'number' : 'yes'      " Use number column for signs if patch is applied
+set signcolumn=yes                                              " Display signcolumn or use numbercolumn
 set scrolloff=10                                                " Lines before/after cursor during scroll
 set timeoutlen=300                                              " How long in ms to wait for key combinations (if used)
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
-set concealcursor=                                              " Don't conceal when cursor goes to line
+set concealcursor=n                                             " Enable concealing when cursor on line in these modes
 set virtualedit=onemore                                         " Allow cursor to extend past line
-set wildmenu                                                    " Enabled by default in nvim
 set wildignore+=__pycache__                                     " Ignore in glob patterns
 set list                                                        " Show extra characters
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title
 let g:mapleader = ','
-" let g:maplocalleader = '\\'
 
 " Completion {{{2
 set completeopt+=preview                                        " Enable preview option for completion
@@ -146,7 +138,8 @@ let g:window_width = &columns                                   " Initial window
 
 " Line numbers {{{2
 set number                                                      " Show linenumbers
-set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
+" set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
+set numberwidth=2
 
 " Disable Vim default plugins {{{2
 let g:loaded_gzip = 1
@@ -171,10 +164,9 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_python_provider = 0
 
-" Plugins -- exit if 'noloadplugins' {{{1
-if !&loadplugins | finish | endif
-
+" Plugins/packages -- exit if 'noloadplugins' {{{1
 " Package management {{{2
+if !&loadplugins | finish | endif
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
@@ -190,30 +182,32 @@ if has('nvim-0.5')
     packadd! plenary.nvim
     packadd! nvim-lspconfig
     packadd! lsp-status.nvim
-    packadd! gitsigns.nvim
     packadd! completion-nvim
     packadd! completion-buffers
     packadd! snippets.nvim
 
-    lua nvim = require('nvim')
-    lua require('globals')
-    lua require('config.treesitter')
-    lua require('config.gitsigns')
-    lua require('config.lsp').init()
+    lua <<
+    require"nvim"
+    require"globals"
+    require"config.treesitter"
+    require"config.gitsigns".init()
+    require"config.lsp".init()
+.
 
     augroup vimrc
         autocmd!
         autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
         " TODO: use different highlight + move to lua
-        autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
+        " TODO: trigger this after rust_analyzer loads
+        autocmd InsertLeave,BufWritePost *.rs
             \ lua nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints{
-            \   prefix = ' » ',
-            \   highlight = "NonText",
-            \   enabled = {"ChainingHint"}
+            \   prefix = ' ',
+            \   highlight = "Comment",
+            \   enabled = {"ChainingHint", "TypeHint"}
             \ }
     augroup END
 
-    if getenv("AK_PROFILER") == 1
+    if getenv('AK_PROFILER') == 1
         " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
         packadd! profiler.nvim
         lua require'profiler'
@@ -226,5 +220,6 @@ else
 
     packadd! vim-gitgutter
     packadd! vim-mucomplete
+    packadd! vim-devicons
 endif
 " vim:fdl=1:

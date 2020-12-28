@@ -4,10 +4,10 @@
 --
 -- Many items adapted from github.com/norcalli/nvim_utils
 local api = vim.api
-local M = {}
+nvim = {}
 
 -- Currently unused {{{1
-function M.mark_or_index(buf, input) -- {{{2
+function nvim.mark_or_index(buf, input) -- {{{2
   -- An enhanced version of nvim_buf_get_mark which also accepts:
   -- - A number as input: which is taken as a line number.
   -- - A pair, which is validated and passed through otherwise.
@@ -34,7 +34,7 @@ local VISUAL_MODE = {
   char = "char", -- blockwise-visual
 }
 
-function M.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
+function nvim.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   --- Return the lines of the selection, respecting selection modes.
   -- RETURNS: table
   mode = mode or VISUAL_MODE.char
@@ -43,8 +43,8 @@ function M.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   mark_a = mark_a or "<"
   mark_b = mark_b or ">"
 
-  local start = M.mark_or_index(buf, mark_a)
-  local finish = M.mark_or_index(buf, mark_b)
+  local start = nvim.mark_or_index(buf, mark_a)
+  local finish = nvim.mark_or_index(buf, mark_b)
   local lines = api.nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
 
   if mode == VISUAL_MODE.line then return lines end
@@ -69,20 +69,20 @@ function M.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   return lines
 end
 
-function M.buf_set_region_lines(buf, mark_a, mark_b, mode, lines) -- {{{2
+function nvim.buf_set_region_lines(buf, mark_a, mark_b, mode, lines) -- {{{2
   buf = buf or 0
   mark_a = mark_a or "<"
   mark_b = mark_b or ">"
 
   assert(mode == VISUAL_MODE.line, "Other modes aren't supported yet")
 
-  local start = M.mark_or_index(buf, mark_a)
-  local finish = M.mark_or_index(buf, mark_b)
+  local start = nvim.mark_or_index(buf, mark_a)
+  local finish = nvim.mark_or_index(buf, mark_b)
 
   return api.nvim_buf_set_lines(buf, start[1] - 1, finish[1], false, lines)
 end
 
-function M.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
+function nvim.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
   -- This is actually more efficient if what you're doing is modifying a region
   -- because it can save api calls.
   -- It's also the only way to do transformations that are correct with `char` mode
@@ -92,8 +92,8 @@ function M.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
   mark_a = mark_a or "<"
   mark_b = mark_b or ">"
 
-  local start = M.mark_or_index(buf, mark_a)
-  local finish = M.mark_or_index(buf, mark_b)
+  local start = nvim.mark_or_index(buf, mark_a)
+  local finish = nvim.mark_or_index(buf, mark_b)
 
   assert(start and finish)
 
@@ -175,14 +175,14 @@ function M.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
   return api.nvim_buf_set_lines(buf, start[1] - 1, finish[1], false, result)
 end
 
-function M.set_selection_lines(lines) -- {{{2
-  return M.buf_set_region_lines(nil, "<", ">", VISUAL_MODE.line, lines)
+function nvim.set_selection_lines(lines) -- {{{2
+  return nvim.buf_set_region_lines(nil, "<", ">", VISUAL_MODE.line, lines)
 end
 
-function M.selection(mode) -- {{{2
+function nvim.selection(mode) -- {{{2
   -- Return the selection as a string
   -- RETURNS: string
-  local sel = M.buf_get_region_lines(nil, "<", ">", mode or VISUAL_MODE.char)
+  local sel = nvim.buf_get_region_lines(nil, "<", ">", mode or VISUAL_MODE.char)
   return table.concat(sel, "\n")
 end
 
@@ -195,23 +195,23 @@ function! LuaExprCallback(...)
 endfunction
 ]]
 
-function M.text_operator(fn) -- {{{2
+function nvim.text_operator(fn) -- {{{2
   LUA_FUNCTION = fn
   vim.g.lua_expr = "LUA_FUNCTION(_A[1])"
   vim.o.opfunc = "LuaExprCallback"
   api.nvim_feedkeys("g@", "ni", false)
 end
 
-function M.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
-  return M.text_operator(function(visualmode)
-    M.buf_transform_region_lines(nil, "[", "]",
+function nvim.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
+  return nvim.text_operator(function(visualmode)
+    nvim.buf_transform_region_lines(nil, "[", "]",
                                  forced_visual_mode or visualmode, function(
       lines
     ) return fn(lines, visualmode) end)
   end)
 end
 
-function M.visual_mode() -- {{{2
+function nvim.visual_mode() -- {{{2
   local visualmode = vim.fn.visualmode()
   if visualmode == "v" then
     return VISUAL_MODE.char
@@ -222,13 +222,13 @@ function M.visual_mode() -- {{{2
   end
 end
 
-function M.transform_cword(fn) -- {{{2
-  M.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
+function nvim.transform_cword(fn) -- {{{2
+  nvim.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iw", "ni", false)
 end
 
-function M.transform_cWORD(fn) -- {{{2
-  M.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
+function nvim.transform_cWORD(fn) -- {{{2
+  nvim.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iW", "ni", false)
 end
 
@@ -253,7 +253,7 @@ local valid_modes = {
   [" "] = "",
 }
 
-function M.apply_mappings(mappings, default_options) -- {{{2
+function nvim.apply_mappings(mappings, default_options) -- {{{2
   -- TODO(ashkan) @feature Disable noremap if the rhs starts with <Plug>
   local LUA_MAPPING = {} -- luacheck: ignore
   -- May or may not be used.
@@ -326,7 +326,7 @@ function M.apply_mappings(mappings, default_options) -- {{{2
   end
 end
 
-function M.create_augroups(definitions) -- {{{2
+function nvim.create_augroups(definitions) -- {{{2
   for group_name, definition in pairs(definitions) do
     vim.cmd("augroup " .. group_name)
     vim.cmd("autocmd!")
@@ -341,7 +341,7 @@ function M.create_augroups(definitions) -- {{{2
   end
 end
 
-function M.define_text_object(mapping, function_name) -- {{{2
+function nvim.define_text_object(mapping, function_name) -- {{{2
   local options = {silent = true, noremap = true}
   api.nvim_set_keymap("n", mapping,
                       ("<Cmd>lua %s(%s)<CR>"):format(function_name, false),
@@ -350,13 +350,13 @@ function M.define_text_object(mapping, function_name) -- {{{2
                       (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
-function M.source_current_buffer() -- {{{2
+function nvim.source_current_buffer() -- {{{2
   -- luacheck: ignore loadstring
   loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
 
 -- warn :: echo warning message {{{2
-function M.warn(text)
+function nvim.warn(text)
   vim.validate{text = {text, "string"}}
   vim.cmd"echohl WarningMsg"
   vim.cmd("echo " .. string.format("%q", text))
@@ -364,19 +364,19 @@ function M.warn(text)
 end
 
 -- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
-function M.unlet(var_name, var_scope)
+function nvim.unlet(var_name, var_scope)
   pcall(function() vim[var_scope or "g"][var_name] = nil end)
 end
 
 -- packrequire :: load pack + lua module and return module or nil {{{2
-function M.packrequire(packname, modname)
+function nvim.packrequire(packname, modname)
   vim.validate{packname = {packname, "string"}}
   vim.cmd("silent! packadd " .. packname)
   return vim.F.npcall(require, modname or packname)
 end
 
 -- unload :: unload lua module/namespace {{{2
-function M.unload(prefix)
+function nvim.unload(prefix)
   local found = vim.tbl_map(function(s)
     if s:find("^" .. prefix .. "[%./]?%w*$") then
       return s
@@ -407,7 +407,7 @@ end
 
 -- tbl_reduce :: applies `fn` cumulatively to values in table `t` {{{2
 -- Reduces array to a single value.
-function M.tbl_reduce(t, fn, first)
+function nvim.tbl_reduce(t, fn, first)
   local started = first ~= nil
   local acc = first
   local iter = getiter(t)
@@ -426,7 +426,7 @@ end
 -- tbl_foreach :: calls `fn` on each value in table `t` {{{2
 -- If `fn` is a string, it is called as a method.
 -- Returns `t` unmodified.
-function M.tbl_foreach(t, fn, ...)
+function nvim.tbl_foreach(t, fn, ...)
   local iter = getiter(t)
   if type(fn) == "string" then
     for _, v in iter(t) do v[fn](v, ...) end
@@ -436,9 +436,7 @@ function M.tbl_foreach(t, fn, ...)
   return t
 end
 
--- Lazy load vim.api.nvim_{method} into M.{method} {{{2
-setmetatable(M, {__index = function(_, k) return api["nvim_" .. k] end})
+-- Lazy load vim.api.nvim_{method} into nvim.{method} {{{2
+setmetatable(nvim, {__index = function(_, k) return api["nvim_" .. k] end})
 
--- Return module {{{1
-return M
 -- vim:fdl=1:

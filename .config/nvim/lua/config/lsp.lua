@@ -95,14 +95,6 @@ function M.rename(new_name)
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
-function M.status()
-  if lsp_status ~= nil then
-    return lsp_status.status{current_function = false}
-  else
-    return ""
-  end
-end
-
 function M.attached_lsps()
   local bufnr = api.nvim_get_current_buf()
   if not lsps_attached[bufnr] then return "" end

@@ -13,5 +13,5 @@ map L <Plug>(easymotion-bd-jk)
 nmap L <Plug>(easymotion-overwin-line)
 
 " Movesymotion-prefix) to word
-map  <Leader>w <Plug>(easymotion-bd-w)
-nmap <Leader>w <Plug>(easymotion-overwin-w)
+" map  <Leader>w <Plug>(easymotion-bd-w)
+" nmap <Leader>w <Plug>(easymotion-overwin-w)

@@ -1,3 +1,7 @@
+set conceallevel=2
+
+let g:asciidoctor_syntax_conceal = 1
+
 " Separate sentences in a paragraph and put each on its own line
 function FormatExpr(start, end)
     silent execute a:start.','.a:end.'s/[.!?]\zs /\r/g'

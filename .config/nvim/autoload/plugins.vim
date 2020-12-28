@@ -86,7 +86,7 @@ function plugins#init()
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    Plug 'vim-jp/syntax-vim-ex',                       {'type': 'start'}
+    " Plug 'vim-jp/syntax-vim-ex',                       {'type': 'start'}
     Plug 'blankname/vim-fish',                         {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',                    {'type': 'start'}
     Plug 'benknoble/gitignore-vim',                    {'type': 'start'}

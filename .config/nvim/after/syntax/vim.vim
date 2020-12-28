@@ -9,6 +9,7 @@ if g:vimsyn_embed =~# 'l'
     syn region  vimLuaRegion matchgroup=vimScriptDelim start=+lua\s*<<\s*$+ end=+\.$+		contains=@vimLuaScript
     syn cluster vimFuncBodyList add=vimLuaRegion
 
-    syntax keyword vimCommand contained Pack[load] Alias Plug[Local]
     let b:current_syntax = 'vim'
 endif
+
+syntax keyword vimCommand contained Pack[load] Alias Plug[Local]

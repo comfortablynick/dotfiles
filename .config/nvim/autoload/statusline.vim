@@ -3,8 +3,8 @@ scriptencoding utf-8
 " Globals {{{1
 " Nvim {{{2
 let s:loaded_treesitter = 0
-if has('nvim')
-    let s:webdevicons = v:lua.require('nvim-web-devicons')
+if has('nvim-0.5')
+    let s:webdevicons = luaeval('vim.F.npcall(require, [[nvim-web-devicons]])')
 endif
 
 " Linter indicators {{{2
@@ -101,10 +101,10 @@ endfunction
 
 " Safely call devicons
 function s:dev_icon(type) "{{{2
-    if exists('*WebDevIconsGet'.a:type.'Symbol')
+    if exists('*WebDevIconsGet'..a:type..'Symbol')
         return WebDevIconsGet{a:type}Symbol()
     endif
-    if a:type ==# 'FileType' && exists('s:webdevicons')
+    if a:type ==? 'filetype' && exists('s:webdevicons') && type(s:webdevicons) is v:t_dict
         return s:webdevicons.get_icon(expand('%'), &filetype)
     endif
     return ''

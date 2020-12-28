@@ -44,7 +44,6 @@ function! s:deferred_load()
     packadd vim-floaterm
     packadd vim-picker
     packadd vim-lion
-    packadd vim-devicons
     packadd asynctasks.vim
     packadd ultisnips
 

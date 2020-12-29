@@ -197,17 +197,9 @@ if has('nvim-0.5')
     augroup vimrc
         autocmd!
         autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
-        " TODO: use different highlight + move to lua
-        " TODO: trigger this after rust_analyzer loads
-        autocmd InsertLeave,BufWritePost *.rs
-            \ lua nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints{
-            \   prefix = ' ',
-            \   highlight = "Comment",
-            \   enabled = {"ChainingHint", "TypeHint"}
-            \ }
     augroup END
 
-    if getenv('AK_PROFILER') == 1
+    if getenv("AK_PROFILER") == 1
         " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
         packadd! profiler.nvim
         lua require'profiler'

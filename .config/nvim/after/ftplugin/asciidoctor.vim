@@ -22,3 +22,5 @@ function s:toc()
 endfunction
 
 nnoremap <buffer> gO <Cmd>call <SID>toc()\|call quickfix#loc_toggle(0)<CR>
+
+let b:undo_ftplugin .= '|setl cole< fex< |nunmap <buffer> gO'

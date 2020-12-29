@@ -42,9 +42,10 @@ end
 
 M.init = function()
   -- Don't load completion-nvim for these buffers
-  local complete_exclude_fts = {"clap_input"}
+  local complete_exclude_fts = {"clap_input", "qf"}
 
-  if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then return end
+  if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) or vim.bo.filetype ==
+    "" then return end
 
   require"config.snippets"
 

@@ -96,7 +96,6 @@ endfunction
 " endfunction
 
 " Toggle quickfix list or, if empty, toggle existing loclist for this window
-" TODO: toggle loclist if window exists, even if empty
 function quickfix#toggle()
     let l:qflist = getqflist()
     let l:loclist = []
@@ -107,7 +106,7 @@ function quickfix#toggle()
             let l:is_loc = 1
         endif
     endif
-    let l:list = l:is_loc ? l:loclist : getqflist()
+    let l:list = l:is_loc ? l:loclist : l:qflist
     let l:lines = len(l:list)
     let l:qf_size = s:qf_size(l:lines)
     if l:is_loc
@@ -171,7 +170,7 @@ endfunction
 function quickfix#is_loc(...)
     let l:winnr = get(a:, 1, 0)
     let l:winnr = l:winnr == 0 ? winnr() : l:winnr
-    let l:wininfo = filter(getwininfo(), {_,v -> v.winnr == l:winnr})[0]
+    let l:wininfo = getwininfo(win_getid(l:winnr))[0]
     return l:wininfo.loclist
 endfunction
 
@@ -264,5 +263,18 @@ function quickfix#move(direction, prefix)
 
     if &foldopen =~# 'quickfix' && foldclosed(line('.')) != -1
         normal! zv
+    endif
+endfunction
+
+" Removes current entry from current qf/loclist
+function quickfix#remove_current_entry()
+    let l:index = line('.') - 1
+    let l:is_loc = quickfix#is_loc()
+    let l:list = l:is_loc ? getloclist(0) : getqflist()
+    call remove(l:list, l:index)
+    if l:is_loc
+        call setloclist(0, l:list, 'r')
+    else
+        call setqflist(l:list, 'r')
     endif
 endfunction

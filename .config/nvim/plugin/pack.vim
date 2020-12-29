@@ -29,9 +29,8 @@ function! s:deferred_load()
     packadd vim-exchange
     packadd tcomment_vim
     packadd vim-unimpaired
-    " packadd clever-f.vim
-    " packadd vim-sneak
-    packadd vim-easymotion
+    packadd clever-f.vim
+    packadd vim-sneak
     packadd vim-tmux-navigator
     packadd better-vim-tmux-resizer
     packadd vim-sandwich

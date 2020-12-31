@@ -15,3 +15,6 @@ call plugins#packadd('ale')
 " || if status is-interactive
 " || ^
 " || warning: Error while reading file 00_start_tmux.fish
+
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
+let b:undo_ftplugin .= '|setl sw< fo< efm< fdm<'

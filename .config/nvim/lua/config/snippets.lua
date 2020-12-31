@@ -1,5 +1,5 @@
 local snippets = vim.F.npcall(require, "snippets")
-if not snippets then return end
+if not snippets then return nil end
 
 local U = require"snippets.utils"
 local indent = U.match_indentation

@@ -421,10 +421,11 @@ function statusline#git_status() "{{{2
     if empty(l:branch) | return '' | endif
     let l:hunks = s:rpad(statusline#git_summary())
     " Assume master branch
-    return printf('%s%s%s',
+    return printf('%s%s%s %s',
         \ l:hunks,
         \ substitute(l:branch, 'master', '', ''),
         \ g:sl.symbol.branch,
+        \ g:sl.symbol.git,
         \ )
 endfunction
 

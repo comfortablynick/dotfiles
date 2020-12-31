@@ -7,4 +7,6 @@ setlocal foldmethod=marker
 let &l:tabstop = winwidth(0) > 150 ? 8 : 4                      " View tabs as 8 spaces (std) if window is wide enough
 
 compiler go
+
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
 let b:undo_ftplugin .= '|setl fo< com< list< et< fdm< ts<'

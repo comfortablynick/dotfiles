@@ -3,28 +3,29 @@ scriptencoding utf-8
 " Variables {{{
 let g:default_statusline = '%<%f %h%m%r'
 let g:nf = !$MOSH_CONNECTION
-let g:sl  = {
-    \ 'width': {
-    \     'min': 90,
-    \     'med': 140,
-    \     'max': 200,
+let g:sl  = #{
+    \ width: #{
+    \     min: 90,
+    \     med: 140,
+    \     max: 200,
     \ },
-    \ 'sep': '┊',
-    \ 'symbol': {
-    \     'buffer': '❖',
-    \     'branch': '',
-    \     'git': '',
-    \     'line_no': '',
-    \     'lines': '☰',
-    \     'modified': '●',
-    \     'unmodifiable': '-',
-    \     'readonly': '',
-    \     'warning_sign' : '‼',
-    \     'error_sign'   : '✘',
-    \     'hint_sign'    : '•',
-    \     'success_sign' : '✓',
+    \ sep: '┊',
+    \ symbol: #{
+    \     buffer       : '❖',
+    \     branch       : '',
+    \     git-reverse  : '',
+    \     git          : '',
+    \     line_no      : '',
+    \     lines        : '☰',
+    \     modified     : '●',
+    \     unmodifiable : '-',
+    \     readonly     : '',
+    \     warning_sign : '‼',
+    \     error_sign   : '✘',
+    \     hint_sign    : '•',
+    \     success_sign : '✓',
     \ },
-    \ 'ignore': [
+    \ ignore: [
     \     'pine',
     \     'vfinder',
     \     'qf',
@@ -32,18 +33,6 @@ let g:sl  = {
     \     'diff',
     \     'coc-explorer',
     \ ],
-    \ 'apply': {},
-    \ 'colors': {
-    \     'background'      : ['#2f343f', 'none'],
-    \     'backgroundDark'  : ['#191d27', '16'],
-    \     'backgroundLight' : ['#464b5b', '59'],
-    \     'green'           : ['#2acf2a', '40'],
-    \     'orange'          : ['#ff8700', 'none'],
-    \     'main'            : ['#5295e2', '68'],
-    \     'red'             : ['#f01d22', '160'],
-    \     'text'            : ['#cbcbcb', '251'],
-    \     'textDark'        : ['#8c8c8c', '244'],
-    \ },
     \ }
 
 " }}}

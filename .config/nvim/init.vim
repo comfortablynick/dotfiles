@@ -95,7 +95,6 @@ set title                                                       " Set window tit
 let g:mapleader = ','
 
 " Completion {{{2
-set completeopt+=preview                                        " Enable preview option for completion
 set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{2
@@ -177,7 +176,6 @@ packadd! vim-toml
 " Nvim/vim specific packages
 if has('nvim-0.5')
     " Nvim-only
-    packadd! nvim-web-devicons
     " packadd! barbar.nvim
     packadd! plenary.nvim
     packadd! nvim-lspconfig
@@ -190,6 +188,7 @@ if has('nvim-0.5')
     require"nvim"
     require"globals"
     require"config.treesitter"
+    require"config.devicons"
     require"config.gitsigns".init()
     require"config.lsp".init()
 .

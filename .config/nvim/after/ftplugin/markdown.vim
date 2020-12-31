@@ -35,6 +35,15 @@ endfunction
 
 inoremap <buffer> <C-]> <Cmd>call <SID>indent(1)<CR>
 inoremap <buffer> <C-[> <Cmd>call <SID>indent(0)<CR>
+" inoremap <buffer> <script> <expr> <C-]>
+"     \ '<C-O>:call <SID>indent(1)<CR>'
+" inoremap <buffer> <script> <expr> <C-[>
+"     \ '<C-O>:call <SID>indent(0)<CR>'
+
+
+imap <buffer><expr> <Tab>   <SID>is_empty_list_item() ? "<Cmd>call <SID>indent(1)<CR>" : "\<Plug>(completion_smart_tab)"
+imap <buffer><S-Tab> <Plug>(completion_smart_s_tab)
+" imap <buffer><expr> <S-Tab> "<Cmd>call <SID>indent(0)<CR>"
 
 function s:jump_to_heading(direction, count)
     let l:col = virtcol('.')
@@ -47,3 +56,31 @@ endfunction
 
 nnoremap <buffer> ]] <Cmd>call <SID>jump_to_heading("down", v:count1)<CR>
 nnoremap <buffer> [[ <Cmd>call <SID>jump_to_heading("up", v:count1)<CR>
+
+call sign_define('headline1',  {'linehl': 'markdownH1Line'})
+call sign_define('headline2',  {'linehl': 'markdownH2Line'})
+call sign_define('headline3',  {'linehl': 'markdownH3Line'})
+
+function s:set_signs()
+    let l:markdown_sign_namespace = 'markdown_sign_namespace'
+    let l:buf = bufnr()
+    let l:offset = max([line('w0') - 1, 0])
+    let l:lines = getbufline(l:buf, line('w0'), line('w$'))
+
+    call sign_unplace(l:markdown_sign_namespace, #{buffer: bufname(l:buf)})
+
+    for l:i in range(len(l:lines))
+        let l:line = l:lines[l:i]
+        let l:level = strlen(matchstr(l:line, '^#\+'))
+        if l:level > 0
+            call sign_place(0, l:markdown_sign_namespace, 'headline'..l:level, l:buf, #{lnum: l:i + 1 + l:offset})
+        endif
+    endfor
+endfunction
+
+let s:sign_events = 'FileChangedShellPost,Syntax,TextChanged,InsertLeave'
+if has('nvim')
+    let s:sign_events ..= ',WinScrolled'
+endif
+
+execute 'autocmd' s:sign_events '<buffer> call s:set_signs()'

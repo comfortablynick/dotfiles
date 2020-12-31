@@ -100,3 +100,8 @@ snippet cabbr "save command abbr"
 cnoreabbrev <expr> ${1:abbr}
     \ util#cabbr('$1', '$2')
 endsnippet
+
+snippet undo_ftplugin "add ftplugin undo" b
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
+let b:undo_ftplugin .= '|setl $0'
+endsnippet

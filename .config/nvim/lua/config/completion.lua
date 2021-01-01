@@ -25,6 +25,23 @@ vim.cmd[[set shortmess+=c]]
 -- }
 --
 
+-- TODO: how does this work?
+local items_priority = {
+    Field = 5,
+    Function = 7,
+    Module = 7,
+    Variables = 7,
+    Method = 10,
+    Interfaces = 5,
+    Constant = 5,
+    Class = 5,
+    Keyword = 4,
+    UltiSnips = 2,
+    ["snippets.nvim"] = 1,
+    Buffers = 1,
+    File = 0
+}
+
 local utf8 = function(cp)
   if cp < 128 then
     return string.char(cp)
@@ -75,7 +92,8 @@ local text_complete = {
 local default_complete = {
   default = {
     {complete_items = {"path"}, triggered_only = {"/"}},
-    {complete_items = {"lsp", "snippets.nvim", "UltiSnips"}},
+    {complete_items = {"lsp"}},
+    {complete_items = {"snippets.nvim", "UltiSnips"}},
     {complete_items = {"buffers"}},
   },
   string = text_complete,
@@ -117,13 +135,13 @@ M.init = function()
   completion.on_attach{
     chain_complete_list = complete_chain,
     customize_lsp_label = customize_lsp_label,
+    items_priority = items_priority,
     enable_snippet = "snippets.nvim",
-    enable_auto_paren = 0,
+    enable_auto_paren = 1,
     enable_auto_hover = 1,
     enable_auto_signature = 1,
     auto_change_source = 1,
-    matching_strategy_list = {"exact"},
-    -- matching_strategy_list = {"substring"},
+    matching_strategy_list = {"exact", "substring"},
     matching_smart_case = 1,
   }
 

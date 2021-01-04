@@ -161,32 +161,37 @@ local on_attach_cb = function(client)
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  local cap = client.resolved_capabilities
+  local nmaps = {
+    gD = "vim.lsp.buf.definition()",
+    gh = "vim.lsp.buf.hover()",
+    gi = "vim.lsp.buf.implementation()",
+    gS = "vim.lsp.buf.signature_help()",
+    ga = "vim.lsp.buf.code_action()",
+    gt = "vim.lsp.buf.type_definition()",
+    gr = "vim.lsp.buf.references()",
+    gd = "vim.lsp.diagnostic.set_loclist{open = true}",
+    ["<F2>"] = "vim.lsp.buf.rename()",
+    ["[d"] = "vim.lsp.diagnostic.goto_prev()",
+    ["]d"] = "vim.lsp.diagnostic.goto_next()",
+  }
 
-  if cap.goto_definition then mapper("n", "gD", "vim.lsp.buf.definition()") end
-  if cap.hover then mapper("n", "gh", "vim.lsp.buf.hover()") end
-  if cap.implementation then mapper("n", "gi", "vim.lsp.buf.implementation()") end
-  if cap.signature_help then mapper("n", "gS", "vim.lsp.buf.signature_help()") end
-  if cap.code_action then mapper("n", "ga", "vim.lsp.buf.code_action()") end
-  if cap.type_definition then
-    mapper("n", "gt", "vim.lsp.buf.type_definition()")
-  end
-  if cap.find_references then mapper("n", "gr", "vim.lsp.buf.references()") end
-  if cap.rename then mapper("n", "<F2>", "vim.lsp.buf.rename()") end
-  mapper("n", "gd", "vim.lsp.diagnostic.set_loclist{open = true}")
-  mapper("n", "[d", "vim.lsp.diagnostic.goto_prev()")
-  mapper("n", "]d", "vim.lsp.diagnostic.goto_next()")
+  for k, v in pairs(nmaps) do mapper("n", k, v) end
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable
   local name_replacements = {diagnosticls = "diag", sumneko_lua = "sumneko"}
   if not lsps_attached[bufnr] then lsps_attached[bufnr] = {} end
-  table.insert(lsps_attached[bufnr],
-               name_replacements[client.name] or client.name)
+  local client_display_name = name_replacements[client.name] or client.name
+  -- Don't duplicate name if we're reloading, etc.
+  if not vim.tbl_contains(lsps_attached[bufnr], client_display_name) then
+    table.insert(lsps_attached[bufnr], client_display_name)
+  end
 
   -- Set autocmds for highlighting if server supports it
-  if false and cap.document_highlight then set_hl_autocmds() end
+  if false and client.resolved_capabilities.document_highlight then
+    set_hl_autocmds()
+  end
 
   -- Rust inlay hints
   if ft == "rust" then set_rust_inlay_hints() end
@@ -276,7 +281,13 @@ function M.init()
     -- efm-languageserver {{{2
     efm = {
       filetypes = {
-          "lua", "vim", "sh", "python", "javascript", "markdown", "yaml"
+        "lua",
+        "vim",
+        "sh",
+        "python",
+        "javascript",
+        "markdown",
+        "yaml",
       },
       init_options = {documentFormatting = true},
       -- settings = {
@@ -288,6 +299,7 @@ function M.init()
     },
     -- sumneko_lua {{{2
     sumneko_lua = {
+      cmd = {"lua-language-server"},
       settings = {
         Lua = {
           runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},

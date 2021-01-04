@@ -419,14 +419,17 @@ function statusline#git_status() "{{{2
     endif
     let l:branch = statusline#git_branch()
     if empty(l:branch) | return '' | endif
+    let l:branch = substitute(l:branch, 'master', '', '')
     let l:hunks = s:rpad(statusline#git_summary())
     " Assume master branch
-    return printf('%s%s%s %s',
+    let l:out = printf('%s%s%s',
         \ l:hunks,
-        \ substitute(l:branch, 'master', '', ''),
-        \ g:sl.symbol.branch,
-        \ g:sl.symbol.git,
+        \ l:branch,
+        \ !empty(l:branch) ? g:sl.symbol.branch : '',
         \ )
+    return winwidth(0) >= g:sl.width.max
+        \ ? l:out..s:rpad(g:sl.symbol.git)
+        \ : l:out
 endfunction
 
 function statusline#venv_name() "{{{2

@@ -24,64 +24,47 @@ vim.cmd[[set shortmess+=c]]
 --   Interface = " [interface]",
 -- }
 --
+local customize_lsp_label = {
+  Buffers = " [buffers]",
+  Class = " [class]",
+  Color = " [color]",
+  Enum = " [enum]",
+  Field = "פּ [field]",
+  Folder = " [folder]",
+  Function = " [function]",
+  Interface = " [interface]",
+  Keyword = " [keyword]",
+  Method = " [method]",
+  Module = " [module]",
+  Operator = " [operator]",
+  Property = " [property]",
+  Reference = " [reference]",
+  Snippet = " [snippet]",
+  Struct = "פּ [struct]",
+  Text = " [text]",
+  TypeParameter = " [type]",
+  UltiSnips = " [UltiSnips]",
+  Unit = " [unit]",
+  Value = " [value]",
+  Variable = " [variable]",
+  ["snippets.nvim"] = " [nsnip]",
+}
 
 -- TODO: how does this work?
 local items_priority = {
-    Field = 5,
-    Function = 7,
-    Module = 7,
-    Variables = 7,
-    Method = 10,
-    Interfaces = 5,
-    Constant = 5,
-    Class = 5,
-    Keyword = 4,
-    UltiSnips = 2,
-    ["snippets.nvim"] = 1,
-    Buffers = 1,
-    File = 0
-}
-
-local utf8 = function(cp)
-  if cp < 128 then
-    return string.char(cp)
-  end
-  local s = ""
-  local prefix_max = 32
-  while true do
-    local suffix = cp % 64
-    s = string.char(128 + suffix)..s
-    cp = (cp - suffix) / 64
-    if cp < prefix_max then
-      return string.char((256 - (2 * prefix_max)) + cp)..s
-    end
-    prefix_max = prefix_max / 2
-  end
-end
-
-local customize_lsp_label = {
-  Method = utf8(0xf794) .. ' [method]',
-  Function = utf8(0xf794) .. ' [function]',
-  Variable = utf8(0xf6a6) .. ' [variable]',
-  Field = utf8(0xf6a6) .. ' [field]',
-  Class = utf8(0xfb44) .. ' [class]',
-  Struct = utf8(0xfb44) .. ' [struct]',
-  Interface = utf8(0xf836) .. ' [interface]',
-  Module = utf8(0xf668) .. ' [module]',
-  Property = utf8(0xf0ad) .. ' [property]',
-  Value = utf8(0xf77a) .. ' [value]',
-  Enum = utf8(0xf77a) .. ' [enum]',
-  Operator = utf8(0xf055) .. ' [operator]',
-  Reference = utf8(0xf838) .. ' [reference]',
-  Keyword = utf8(0xf80a) .. ' [keyword]',
-  Color = utf8(0xe22b) .. ' [color]',
-  Unit = utf8(0xe3ce) .. ' [unit]',
-  ["snippets.nvim"] = utf8(0xf68e) .. ' [nsnip]',
-  UltiSnips = utf8(0xf68e) .. ' [UltiSnips]',
-  Snippet = utf8(0xf68e) .. ' [snippet]',
-  Text = utf8(0xf52b) .. ' [text]',
-  Buffers = utf8(0xf64d) .. ' [buffers]',
-  TypeParameter = utf8(0xf635) .. ' [type]',
+  Field = 5,
+  Function = 7,
+  Module = 7,
+  Variables = 7,
+  Method = 10,
+  Interfaces = 5,
+  Constant = 5,
+  Class = 5,
+  Keyword = 4,
+  UltiSnips = 2,
+  ["snippets.nvim"] = 1,
+  Buffers = 1,
+  File = 0,
 }
 
 local text_complete = {
@@ -111,6 +94,7 @@ local mapper = function(key, result, opts)
   api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
 end
 
+M.lsp_labels = customize_lsp_label
 M.init = function()
   -- Don't load completion-nvim for these buffers
   local complete_exclude_fts = {"clap_input", "qf"}
@@ -143,6 +127,7 @@ M.init = function()
     auto_change_source = 1,
     matching_strategy_list = {"exact", "substring"},
     matching_smart_case = 1,
+    trigger_keyword_length = 2,
   }
 
   mapper("<C-h>", "<Plug>(completion_next_source)")

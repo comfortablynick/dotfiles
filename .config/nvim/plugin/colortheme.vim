@@ -25,7 +25,7 @@ let g:PaperColor_Theme_Options = {
     \ }
 
 if !has('nvim')
-    colorscheme PaperColor
+    silent! colorscheme PaperColor
 else
     if 1
         let s:base16 = 'monokai'

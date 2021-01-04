@@ -57,7 +57,11 @@ endif
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
 set backup
+
 set backupdir=~/.vim/backup//                                   " Store backup files
+if filewritable(&backupdir) != 2
+    call mkdir(&backupdir, 'p')
+endif
 
 " General {{{2
 set background=dark
@@ -169,9 +173,9 @@ if !&loadplugins | finish | endif
 let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 
 " Load packages at startup {{{2
-packadd! vim-doge
-packadd! vim-dirvish
-packadd! vim-toml
+silent! packadd! vim-doge
+silent! packadd! vim-dirvish
+silent! packadd! vim-toml
 
 " Nvim/vim specific packages
 if has('nvim-0.5')
@@ -205,12 +209,12 @@ if has('nvim-0.5')
     endif
 else
     " Vim only
-    packadd! matchit " Nvim loads by default
+    silent! packadd! matchit " Nvim loads by default
     " Use only for vim since we have nvim treesitter
-    packadd! vim-lua
+    silent! packadd! vim-lua
 
-    packadd! vim-gitgutter
-    packadd! vim-mucomplete
-    packadd! vim-devicons
+    silent! packadd! vim-gitgutter
+    silent! packadd! vim-mucomplete
+    silent! packadd! vim-devicons
 endif
 " vim:fdl=1:

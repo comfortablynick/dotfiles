@@ -51,7 +51,7 @@ function! s:set_user_highlights()
     call syntax#derive('IncSearch', 'User1')
     call syntax#derive('WildMenu', 'User2', 'cterm=NONE', 'gui=NONE')
     call syntax#derive('Visual', 'User3')
-    call syntax#derive('DiffDelete', 'User4', 'guibg='..l:sl.guifg)
+    call syntax#derive('DiffDelete', 'User4', 'guibg='..get(l:sl, 'guifg', 'NONE'))
     call syntax#derive('StatusLine', 'User5', 'guibg=#900c3f', 'gui=reverse,bold')
     call syntax#derive('StatusLine', 'User6', 'guibg=#ecff00', 'gui=reverse,bold')
 endfunction

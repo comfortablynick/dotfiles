@@ -164,6 +164,6 @@ end
 # End config {{{1
 # Print config.fish load time {{{2
 set -l end_time (get_date)
-set -l elapsed (math \($end_time - $start_time\))
-echo "Completed in $elapsed sec."
+# set -l elapsed (math \($end_time - $start_time\))
+# echo "Completed in $elapsed sec."
 set_color brblue; echo 'Done'; set_color normal; echo ''

@@ -5,6 +5,8 @@ PATH="$("$HOME/bin/path_remove" "$PWD")"
 # cmd="$(type -p sha1sum || type -p gsha1sum)"
 if [ -n "$(command -v sha1sum 2>/dev/null)" ]; then
     sha1sum "$@"
+elif [ -n "$(command -v shasum 2>/dev/null)" ]; then
+    shasum "$@"
 else
     gsha1sum "$@"
 fi

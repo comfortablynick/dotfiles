@@ -335,6 +335,7 @@ function M.init()
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
     -- yamlls {{{2
     yamlls = {
+      cmd = {"yaml-language-server"},
       filetypes = {"yaml", "yaml.ansible"},
       settings = {
         yaml = {

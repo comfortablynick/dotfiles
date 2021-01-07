@@ -70,6 +70,7 @@ Alias ehco echo
 
 " Misc command abbreviations {{{2
 Alias grep silent grep!
+Alias make silent make!
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2

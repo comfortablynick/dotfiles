@@ -90,7 +90,7 @@ local add_complete_item = function(item, pos)
   return copy
 end
 
-local mapper = function(key, result, opts)
+local imap = function(key, result, opts)
   api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
 end
 
@@ -125,17 +125,17 @@ M.init = function()
     enable_auto_hover = 1,
     enable_auto_signature = 1,
     auto_change_source = 1,
-    matching_strategy_list = {"exact", "substring"},
+    -- matching_strategy_list = {"exact", "substring"},
     matching_smart_case = 1,
-    trigger_keyword_length = 2,
+    trigger_keyword_length = 1,
   }
 
-  mapper("<C-h>", "<Plug>(completion_next_source)")
-  mapper("<C-k>", "<Plug>(completion_prev_source)")
+  imap("<C-h>", "<Plug>(completion_next_source)")
+  imap("<C-k>", "<Plug>(completion_prev_source)")
 
   if vim.bo.filetype ~= "markdown" then
-    mapper("<Tab>", "<Plug>(completion_smart_tab)")
-    mapper("<S-Tab>", "<Plug>(completion_smart_s_tab)")
+    imap("<Tab>", "<Plug>(completion_smart_tab)")
+    imap("<S-Tab>", "<Plug>(completion_smart_s_tab)")
   end
 end
 

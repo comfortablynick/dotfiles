@@ -80,7 +80,7 @@ set nowrap                                                      " Text wrapping 
 set showmode                                                    " Show default mode text (e.g. -- INSERT -- below statusline)
 set shortmess+=c                                                " Don't show 'Match x of x'
 set clipboard=unnamed                                           " Use system clipboard
-set cursorline                                                  " Show line under cursor's line (check autocmds)
+set nocursorline                                                " Show line under cursor's line (check autocmds)
 set noruler                                                     " Line position (not needed if using a statusline plugin
 set showmatch                                                   " Show matching pair of brackets (), [], {}
 set updatetime=700                                              " Controls CursorHold timing and swap file write time
@@ -141,7 +141,7 @@ let g:window_width = &columns                                   " Initial window
 
 " Line numbers {{{2
 set number                                                      " Show linenumbers
-" set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
+set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
 set numberwidth=2
 
 " Disable Vim default plugins {{{2

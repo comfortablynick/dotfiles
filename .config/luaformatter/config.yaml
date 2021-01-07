@@ -23,5 +23,3 @@ break_after_operator: true
 double_quote_to_single_quote: false
 single_quote_to_double_quote: true
 spaces_before_call: 0
-
-# vim:ft=conf:

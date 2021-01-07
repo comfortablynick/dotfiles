@@ -122,6 +122,19 @@ function M.messages()
   end
 end
 
+-- Return table of useful client info
+function M.clients()
+  local servers = {}
+  for _, client in ipairs(vim.lsp.get_active_clients()) do
+    table.insert(servers, {
+      name = client.name,
+      id = client.id,
+      capabilities = client.resolved_capabilities,
+    })
+  end
+  return servers
+end
+
 local set_hl_autocmds = function()
   -- TODO: how to undo this if server detaches?
   local hl_autocmds = {
@@ -137,7 +150,7 @@ end
 local set_rust_inlay_hints = function()
   local inlay_hint_cmd =
     [[nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints]] ..
-      [[{ prefix = " » ", aligned = true, highlight = "NonText", enabled = {"ChainingHint", "TypeHint"}}]]
+      [[{ prefix = " » ", aligned = false, highlight = "NonText", enabled = {"ChainingHint", "TypeHint"}}]]
   local augroup = {
     lsp_rust_inlay_hints = {
       {
@@ -151,31 +164,35 @@ local set_rust_inlay_hints = function()
   nvim.create_augroups(augroup)
 end
 
-local mapper = function(mode, key, result)
-  api.nvim_buf_set_keymap(0, mode, key, "<Cmd>lua " .. result .. "<CR>",
-                          {noremap = true, silent = true})
+local nmap = function(key, result)
+  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>lua " .. result .. "<CR>",
+                          {noremap = true})
 end
 
 local on_attach_cb = function(client)
+  local nmap_capability = function(lhs, method, capability_name)
+    if client.resolved_capabilities[capability_name or method] then
+      nmap(lhs, "vim.lsp.buf." .. method .. "()")
+    end
+  end
+
   local bufnr = api.nvim_get_current_buf()
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  local nmaps = {
-    gD = "vim.lsp.buf.definition()",
-    gh = "vim.lsp.buf.hover()",
-    gi = "vim.lsp.buf.implementation()",
-    gS = "vim.lsp.buf.signature_help()",
-    ga = "vim.lsp.buf.code_action()",
-    gt = "vim.lsp.buf.type_definition()",
-    gr = "vim.lsp.buf.references()",
-    gd = "vim.lsp.diagnostic.set_loclist{open = true}",
-    ["<F2>"] = "vim.lsp.buf.rename()",
-    ["[d"] = "vim.lsp.diagnostic.goto_prev()",
-    ["]d"] = "vim.lsp.diagnostic.goto_next()",
-  }
+  nmap_capability("gD", "definition", "goto_definition")
+  nmap_capability("gh", "hover")
+  nmap_capability("gi", "implementation")
+  nmap_capability("gS", "signature_help")
+  nmap_capability("ga", "code_action")
+  nmap_capability("gt", "type_definition")
+  nmap_capability("gr", "references")
+  nmap_capability("<F2>", "rename")
+  nmap_capability("<F3>", "formatting", "document_formatting")
 
-  for k, v in pairs(nmaps) do mapper("n", k, v) end
+  nmap("gd", "vim.lsp.diagnostic.set_loclist{open = true}")
+  nmap("[d", "vim.lsp.diagnostic.goto_prev()")
+  nmap("]d", "vim.lsp.diagnostic.goto_next()")
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
@@ -288,14 +305,9 @@ function M.init()
         "javascript",
         "markdown",
         "yaml",
+        "toml",
       },
       init_options = {documentFormatting = true},
-      -- settings = {
-      --   rootMarkers = {".git/"},
-      --   languages = {
-      --     lua = {{formatCommand = "lua-format -i", formatStdin = true}},
-      --   },
-      -- },
     },
     -- sumneko_lua {{{2
     sumneko_lua = {

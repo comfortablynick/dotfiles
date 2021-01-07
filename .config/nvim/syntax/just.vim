@@ -1,14 +1,13 @@
 " Justfile syntax with regions of other languages
 
-let b:current_syntax = ''
-unlet b:current_syntax
+if exists('b:current_syntax') | finish | endif
 
 syntax keyword  justType            alias
 
 syntax match    specialChar         '\v[^\\]\@'
 syntax match    justComment         '#.*$'              display contains=@spell
 syntax match    justVarName         '\v[A-Z_]'
-syntax match    justVarNameSub      '\v[a-z]'           contained
+syntax match    justVarNameSub      '\v[A-z_]'          contained
 syntax match    justOperator        '\v:\='
 syntax match    justOperator        '\v\='
 syntax match    justOperator        '\v\+'
@@ -18,13 +17,11 @@ syntax region   justVarSub          start='{{' end='}}'                         
 syntax region   justString          start=+'+ skip=+\\'+ end=+'+                        keepend
 syntax region   justString          start=+"+ skip=+\\"+ end=+"+                        keepend
 
-" Embedded shell script
-" syntax include @sh      syntax/sh.vim
-" syntax include @py      syntax/python.vim
-" syntax region shEmbed   matchgroup=Shebang start='#!/usr/bin/env sh'       end='#\n' contains=@sh
-" syntax region shEmbed   matchgroup=Shebang start='#!/bin/sh'               end='#\n' contains=@sh
-" syntax region bashEmbed matchgroup=Shebang start='#!/usr/bin/env bash'     end='#\n' contains=@sh
-" syntax region py3Embed  matchgroup=Shebang start='#!/usr/bin/env python3'  end='#\n' contains=@py
+" Enable embedded code in justfile
+call syntax#enable_code_snip('sh',     '#!/usr/bin/env bash',    '#\n', 'justEmbedShebang')
+call syntax#enable_code_snip('sh',     '#!/usr/bin/env sh',      '#\n', 'justEmbedShebang')
+call syntax#enable_code_snip('sh',     '#!/bin/sh',              '#\n', 'justEmbedShebang')
+call syntax#enable_code_snip('python', '#!/usr/bin/env python3', '#\n', 'justEmbedShebang')
 
 " Define the default highlighting.
 " Only when an item doesn't have highlighting yet
@@ -39,6 +36,6 @@ hi def link     justVarSub          Structure
 hi def link     justVarName         Identifier
 hi def link     justVarNameSub      Constant
 hi def link     justOperator        Operator
-" hi def link     Shebang             SpecialComment
+hi def link     justEmbedShebang    NonText
 
 let b:current_syntax = 'just'

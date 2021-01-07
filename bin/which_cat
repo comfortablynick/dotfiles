@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # use cat alternatives if installed
 cmd="cat"

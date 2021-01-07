@@ -63,11 +63,6 @@ dotfiles:
     src: ugrep
     dst: ~/.ugrep
     link: link
-  d_efm-langserver:
-    src: config/efm-langserver
-    dst: ~/.config/efm-langserver
-    link: link
-    chmod: '700'
 profiles:
   core:
     dotfiles:
@@ -88,7 +83,6 @@ profiles:
     dotfiles:
     - d_mutt
     - f_muttrc
-    - d_efm-langserver
     include:
     - core
     - ansible

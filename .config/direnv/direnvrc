@@ -63,3 +63,11 @@ layout_pipenv() {
     export PIPENV_ACTIVE=1
     export VIRTUAL_ENV
 }
+
+add_local_vimrc() {
+  local extravim="$(find_up .lvimrc)"
+  if [ -n "$extravim" ]; then
+    echo "Adding local .vimrc: ${extravim}"
+    path_add LOCAL_VIMRC $extravim
+  fi
+}

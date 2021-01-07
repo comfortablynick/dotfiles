@@ -22,10 +22,10 @@ augroup plugin_window
             \ if &l:number && empty(&buftype) | setlocal relativenumber | endif
         autocmd FocusLost,WinLeave,BufLeave,InsertEnter *
             \ if &l:number && empty(&buftype) | setlocal norelativenumber | endif
-        " Easier exit from cmdwin
-        autocmd CmdwinEnter * call s:on_cmdwin_enter()
-        " autocmd QuitPre * call autoclose#quit_if_only_window()
     endif
+    " Easier exit from cmdwin
+    autocmd CmdwinEnter * call s:on_cmdwin_enter()
+    " autocmd QuitPre * call autoclose#quit_if_only_window()
 augroup END
 
 function s:on_termopen()
@@ -46,7 +46,7 @@ endfunction
 
 function s:set_hl()
     highlight Yank cterm=reverse gui=reverse
-    highlight clear CursorLine
+    " highlight clear CursorLine
     " call syntax#derive('CursorLineNr', 'CursorLineNr', 'guifg=yellow', 'gui=none')
 endfunction
 

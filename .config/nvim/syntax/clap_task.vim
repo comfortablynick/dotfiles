@@ -4,6 +4,6 @@ syntax match ClapTaskDetails /\s\+<\w\+>\s\+:.*$/ contains=ClapTaskScope,ClapTas
 syntax match ClapTaskScope /\s\+<\w\+>\s\+:/ contained
 syntax match ClapTask /^.$/ contained
 
-hi default link ClapTaskName Number
-hi default link ClapTaskScope Typedef
-hi default link ClapTaskDetails SpecialComment
+hi default link ClapTaskName Keyword
+hi default link ClapTaskScope Number
+hi default link ClapTaskDetails Statement

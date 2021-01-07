@@ -30,7 +30,7 @@ isort==4.3.4
 jedi==0.13.2
 Jinja2==2.10
 libtmux==0.8.0
-lxml==4.3.0
+lxml==4.6.2
 MarkupSafe==1.1.0
 mccabe==0.6.1
 monotonic==1.5

@@ -181,12 +181,12 @@ silent! packadd! vim-toml
 if has('nvim-0.5')
     " Nvim-only
     " packadd! barbar.nvim
-    packadd! plenary.nvim
-    packadd! nvim-lspconfig
-    packadd! lsp-status.nvim
-    packadd! completion-nvim
-    packadd! completion-buffers
-    packadd! snippets.nvim
+    silent! packadd! plenary.nvim
+    silent! packadd! nvim-lspconfig
+    silent! packadd! lsp-status.nvim
+    silent! packadd! completion-nvim
+    silent! packadd! completion-buffers
+    silent! packadd! snippets.nvim
 
     lua <<
     require"nvim"

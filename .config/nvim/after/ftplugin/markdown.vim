@@ -57,23 +57,24 @@ endfunction
 nnoremap <buffer> ]] <Cmd>call <SID>jump_to_heading("down", v:count1)<CR>
 nnoremap <buffer> [[ <Cmd>call <SID>jump_to_heading("up", v:count1)<CR>
 
+let s:md_sign_ns = 'md_headlines'
+
 call sign_define('headline1',  {'linehl': 'markdownH1Line'})
 call sign_define('headline2',  {'linehl': 'markdownH2Line'})
 call sign_define('headline3',  {'linehl': 'markdownH3Line'})
 
 function s:set_signs()
-    let l:markdown_sign_namespace = 'markdown_sign_namespace'
     let l:buf = bufnr()
     let l:offset = max([line('w0') - 1, 0])
     let l:lines = getbufline(l:buf, line('w0'), line('w$'))
 
-    call sign_unplace(l:markdown_sign_namespace, #{buffer: bufname(l:buf)})
+    call sign_unplace(s:md_sign_ns, #{buffer: bufname(l:buf)})
 
     for l:i in range(len(l:lines))
         let l:line = l:lines[l:i]
         let l:level = strlen(matchstr(l:line, '^#\+'))
         if l:level > 0
-            call sign_place(0, l:markdown_sign_namespace, 'headline'..l:level, l:buf, #{lnum: l:i + 1 + l:offset})
+            call sign_place(0, s:md_sign_ns, 'headline'..l:level, l:buf, #{lnum: l:i + 1 + l:offset})
         endif
     endfor
 endfunction
@@ -84,3 +85,11 @@ if has('nvim')
 endif
 
 execute 'autocmd' s:sign_events '<buffer> call s:set_signs()'
+
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
+" TODO: sign unplace doesn't seem to work here
+let b:undo_ftplugin ..= '|setl ts< spell<'
+    \ ..'|sil! iunmap <buffer> <Tab>|sil! iunmap <buffer> <S-Tab>'
+    \ ..'|sil! iunmap <buffer> <C-]>|sil! iunmap <buffer> <C-[>'
+    \ ..'|sil! nunmap <buffer> ]]   |sil! nunmap <buffer> [['
+    \ ..'|sign unplace * group='..s:md_sign_ns..' buffer='..bufnr()

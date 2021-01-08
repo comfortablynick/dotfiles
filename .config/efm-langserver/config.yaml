@@ -110,6 +110,12 @@ tools:
     format-command: 'lua-format -i'
     format-stdin: true
 
+  lua-luacheck: &lua-luacheck
+    lint-command: 'luacheck --formatter=plain --codes --filename ${INPUT} -'
+    lint-stdin: true
+    lint-formats:
+      - '%f:%l:%c: (%t%*\d) %m'
+
 languages:
   vim:
     - <<: *vim-vint
@@ -158,3 +164,4 @@ languages:
 
   lua:
     - <<: *lua-lua-format
+    - <<: *lua-luacheck

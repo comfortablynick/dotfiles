@@ -4,12 +4,11 @@ stds.nvim = {
         "vim",
         "unpack",
         "nvim",
-        "printf",
         "p",
         string = {fields = {basename = {}}},
     },
     read_globals = {string = {fields = {basename = {}}}},
 }
 std = "min+nvim"
-allow_defined = true
-ignore = {"131"}
+-- allow_defined = true
+-- ignore = {"131"}

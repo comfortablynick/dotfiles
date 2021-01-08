@@ -9,7 +9,7 @@ Once you've created a test file, say `myplug_spec.lua`, you can simply run
 neovim and all dependencies if necessary, and then run the test. If successful, the output will
 look like
 
-```
+```txt
 [----------] Global test environment setup.
 [----------] Running tests from tmp_spec.lua
 [ RUN      ] myplug basically works: 379.14 ms OK
@@ -21,7 +21,7 @@ look like
 
 If a test fails, the output might look like this
 
-```
+```txt
 [----------] Global test environment setup.
 [----------] Running tests from tmp_spec.lua
 [ RUN      ] myplug basically works: ERR

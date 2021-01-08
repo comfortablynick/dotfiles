@@ -188,11 +188,15 @@ local on_attach_cb = function(client)
   nmap_capability("gt", "type_definition")
   nmap_capability("gr", "references")
   nmap_capability("<F2>", "rename")
-  nmap_capability("<F3>", "formatting", "document_formatting")
+  nmap_capability("<F3>", "formatting", "document_formatting") -- neoformat still kinda works better
 
   nmap("gd", "vim.lsp.diagnostic.set_loclist{open = true}")
-  nmap("[d", "vim.lsp.diagnostic.goto_prev()")
-  nmap("]d", "vim.lsp.diagnostic.goto_next()")
+  nmap("[d", "vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
+  nmap("]d", "vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
+  nmap("[D",
+       "vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
+  nmap("]D",
+       "vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
@@ -219,148 +223,11 @@ function M.init()
   if not lsp then return end
   -- Server configs {{{1
   local configs = {
-    -- diagnosticls {{{2
-    -- diagnosticls = {
-    --   filetypes = {
-    --     -- "lua",
-    --     "vim",
-    --     "sh",
-    --     "python",
-    --   },
-    --   init_options = {
-    --     filetypes = {
-    --       -- lua = "luacheck",
-    --       vim = "vint",
-    --       sh = "shellcheck",
-    --       python = "pydocstyle",
-    --     },
-    --     linters = {
-    --       -- TODO: why doesn't luacheck work?
-    --       -- luacheck = {
-    --       --   command = "luacheck",
-    --       --   debounce = 100,
-    --       --   args = {"--formatter", "plain", "-"},
-    --       --   offsetLine = 0,
-    --       --   offsetColumn = 0,
-    --       --   formatLines = 1,
-    --       --   formatPattern = {
-    --       --     "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-    --       --     {line = 1, column = 2, message = 3},
-    --       --   },
-    --       -- },
-    --       -- shellcheck {{{3
-    --       shellcheck = {
-    --         command = "shellcheck",
-    --         rootPatterns = {},
-    --         isStdout = true,
-    --         isStderr = false,
-    --         debounce = 100,
-    --         args = {"--format=gcc", "-"},
-    --         offsetLine = 0,
-    --         offsetColumn = 0,
-    --         sourceName = "shellcheck",
-    --         formatLines = 1,
-    --         formatPattern = {
-    --           "^([^:]+):(\\d+):(\\d+):\\s+([^:]+):\\s+(.*)$",
-    --           {
-    --             line = 2,
-    --             column = 3,
-    --             endline = 2,
-    --             endColumn = 3,
-    --             message = {5},
-    --             security = 4,
-    --           },
-    --         },
-    --         securities = {error = "error", warning = "warning", note = "info"},
-    --       },
-    --       -- vint {{{3
-    --       vint = {
-    --         command = "vint",
-    --         debounce = 100,
-    --         args = {"--enable-neovim", "-"},
-    --         offsetLine = 0,
-    --         offsetColumn = 0,
-    --         sourceName = "vint",
-    --         formatLines = 1,
-    --         formatPattern = {
-    --           "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-    --           {line = 1, column = 2, message = 3},
-    --         },
-    --       },
-    --     },
-    --     -- shfmt {{{3
-    --     formatFiletypes = {sh = "shfmt"},
-    --     formatters = {
-    --       shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
-    --     },
-    --   },
-    -- },
-    -- efm-languageserver {{{2
-    efm = {
-      filetypes = {
-        "lua",
-        "vim",
-        "sh",
-        "python",
-        "javascript",
-        "markdown",
-        "yaml",
-        "toml",
-      },
-      init_options = {documentFormatting = true},
-    },
-    -- sumneko_lua {{{2
-    sumneko_lua = {
-      cmd = {"lua-language-server"},
-      settings = {
-        Lua = {
-          runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
-          completion = {keywordSnippet = "Disable"},
-          diagnostics = {
-            enable = true,
-            globals = {"vim", "nvim", "p"},
-            disable = {"redefined-local"},
-          },
-          workspace = {
-            library = (function()
-              -- Load the `lua` files from nvim into the runtime
-              -- From https://github.com/tjdevries/nlua.nvim/blob/master/lua/nlua/lsp/nvim.lua
-              local result = {};
-              for _, path in pairs(api.nvim_list_runtime_paths()) do
-                local lua_path = path .. "/lua/";
-                if vim.fn.isdirectory(lua_path) then
-                  result[lua_path] = true
-                end
-              end
-              result[vim.fn.expand("$VIMRUNTIME/lua")] = true
-              -- Extra files in the source code only?
-              result[vim.fn.expand("$HOME/src/neovim/src/nvim/lua")] = true
-              return result;
-            end)(),
-            maxPreload = 1000,
-            preloadFileSize = 1000,
-          },
-        },
-      },
-    },
-    -- vimlls {{{2
+    sumneko_lua = require"config.lsp.sumneko_lua",
+    efm = require"config.lsp.efm",
     vimls = {initializationOptions = {diagnostic = {enable = true}}},
-    -- yamlls {{{2
-    yamlls = {
-      cmd = {"yaml-language-server"},
-      filetypes = {"yaml", "yaml.ansible"},
-      settings = {
-        yaml = {
-          schemas = {
-            ["https://json.schemastore.org/ansible-role-2.9"] = ".ansible/roles/*/*.yml",
-            ["https://gist.githubusercontent.com/KROSF/c5435acf590acd632f71bb720f685895/raw/6f11aa982ad09a341e20fa7f4beed1a1b2a8f40e/taskfile.schema.json"] = "Taskfile.yml",
-          },
-        },
-      },
-    },
-    -- jsonls {{{2
+    yamlls = require"config.lsp.yamlls",
     jsonls = {filetypes = {"json", "jsonc"}},
-    -- other servers {{{2
     bashls = {},
     cmake = {},
     ccls = {},

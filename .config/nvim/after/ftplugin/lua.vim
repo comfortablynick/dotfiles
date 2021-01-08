@@ -5,6 +5,7 @@ setlocal tabstop=2 shiftwidth=0
 setlocal formatoptions-=cro
 setlocal formatprg=lua-format
 setlocal foldmethod=marker
+setlocal makeprg=luacheck\ %\ --formatter=plain
 
 packadd nvim-luadev
 vmap <buffer><Enter> <Plug>(Luadev-Run)

@@ -57,34 +57,38 @@ endfunction
 nnoremap <buffer> ]] <Cmd>call <SID>jump_to_heading("down", v:count1)<CR>
 nnoremap <buffer> [[ <Cmd>call <SID>jump_to_heading("up", v:count1)<CR>
 
-let s:md_sign_ns = 'md_headlines'
+let s:highlight_headings = v:false
 
-call sign_define('headline1',  {'linehl': 'markdownH1Line'})
-call sign_define('headline2',  {'linehl': 'markdownH2Line'})
-call sign_define('headline3',  {'linehl': 'markdownH3Line'})
+if s:highlight_headings
+    let s:md_sign_ns = 'md_headlines'
 
-function s:set_signs()
-    let l:buf = bufnr()
-    let l:offset = max([line('w0') - 1, 0])
-    let l:lines = getbufline(l:buf, line('w0'), line('w$'))
+    call sign_define('headline1',  {'linehl': 'markdownH1Line'})
+    call sign_define('headline2',  {'linehl': 'markdownH2Line'})
+    call sign_define('headline3',  {'linehl': 'markdownH3Line'})
 
-    call sign_unplace(s:md_sign_ns, #{buffer: bufname(l:buf)})
+    function s:set_signs()
+        let l:buf = bufnr()
+        let l:offset = max([line('w0') - 1, 0])
+        let l:lines = getbufline(l:buf, line('w0'), line('w$'))
 
-    for l:i in range(len(l:lines))
-        let l:line = l:lines[l:i]
-        let l:level = strlen(matchstr(l:line, '^#\+'))
-        if l:level > 0
-            call sign_place(0, s:md_sign_ns, 'headline'..l:level, l:buf, #{lnum: l:i + 1 + l:offset})
-        endif
-    endfor
-endfunction
+        call sign_unplace(s:md_sign_ns, #{buffer: bufname(l:buf)})
 
-let s:sign_events = 'FileChangedShellPost,Syntax,TextChanged,InsertLeave'
-if has('nvim')
-    let s:sign_events ..= ',WinScrolled'
+        for l:i in range(len(l:lines))
+            let l:line = l:lines[l:i]
+            let l:level = strlen(matchstr(l:line, '^#\+'))
+            if l:level > 0
+                call sign_place(0, s:md_sign_ns, 'headline'..l:level, l:buf, #{lnum: l:i + 1 + l:offset})
+            endif
+        endfor
+    endfunction
+
+    let s:sign_events = 'FileChangedShellPost,Syntax,TextChanged,InsertLeave'
+    if has('nvim')
+        let s:sign_events ..= ',WinScrolled'
+    endif
+
+    execute 'autocmd' s:sign_events '<buffer> call s:set_signs()'
 endif
-
-execute 'autocmd' s:sign_events '<buffer> call s:set_signs()'
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
 " TODO: sign unplace doesn't seem to work here
@@ -92,4 +96,7 @@ let b:undo_ftplugin ..= '|setl ts< spell<'
     \ ..'|sil! iunmap <buffer> <Tab>|sil! iunmap <buffer> <S-Tab>'
     \ ..'|sil! iunmap <buffer> <C-]>|sil! iunmap <buffer> <C-[>'
     \ ..'|sil! nunmap <buffer> ]]   |sil! nunmap <buffer> [['
-    \ ..'|sign unplace * group='..s:md_sign_ns..' buffer='..bufnr()
+
+if s:highlight_headings
+    let b:undo_ftplugin ..= '|sign unplace * group='..s:md_sign_ns..' buffer='..bufnr()
+endif

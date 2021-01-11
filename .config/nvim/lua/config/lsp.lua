@@ -246,7 +246,105 @@ function M.init()
     end
     lsp[server].setup(cfg)
   end
+  M.configs = configs
 end
+
+M.util = {
+  lsp_info = function()
+    local print_clients = function(clients)
+      local clients_fmt = {}
+      for _, client in ipairs(clients) do
+        vim.list_extend(clients_fmt, {
+          "",
+          ("### Client %d: %s"):format(client.id, client.name),
+          "- Cmd: " .. table.concat(client.config.cmd, ", "),
+          "- Root: " .. client.workspaceFolders[1].name,
+          "- Filetypes: " .. table.concat(client.config.filetypes, ", "),
+        })
+      end
+      return clients_fmt
+    end
+
+    local lsp_configs = npcall(require, "lspconfig/configs")
+    -- These options need to be cached before switching to the floating
+    -- buffer.
+    local buf_clients = vim.lsp.buf_get_clients()
+    local clients = vim.lsp.get_active_clients()
+    local buffer_filetype = vim.bo.filetype
+    local buffer_dir = vim.fn.expand("%:p:h")
+    local buf_lines = {}
+    local header = {
+      "# Lsp Info",
+      "",
+      "## Available servers",
+      table.concat(vim.tbl_keys(lsp_configs), ", "),
+      "",
+      "## Attached clients",
+      "Attached to this buffer: " .. tostring(#buf_clients),
+    }
+    vim.list_extend(buf_lines, header)
+    vim.list_extend(buf_lines, print_clients(buf_clients))
+
+    local active_section_header = {
+      "",
+      "## Active clients",
+      "",
+      "Total active clients: " .. tostring(#clients),
+    }
+    vim.list_extend(buf_lines, active_section_header)
+    vim.list_extend(buf_lines, print_clients(clients))
+    local matching_config_header = {
+      "",
+      "## Clients that match the current buffer filetype:",
+    }
+    vim.list_extend(buf_lines, matching_config_header)
+    for _, config in ipairs(lsp_configs) do
+      local config_table = config.make_config(buffer_dir)
+
+      local cmd_is_executable, cmd
+      if config_table.cmd then
+        cmd = table.concat(config_table.cmd, " ")
+        if vim.fn.executable(config_table.cmd[1]) == 1 then
+          cmd_is_executable = "True"
+        else
+          cmd_is_executable =
+            "False. Please check your path and ensure the server is installed"
+        end
+      else
+        cmd = "cmd not defined"
+        cmd_is_executable = cmd
+      end
+
+      for _, filetype_match in ipairs(config_table.filetypes) do
+        if buffer_filetype == filetype_match then
+          local matching_config_info = {
+            "",
+            "Config: " .. config.name,
+            "\tcmd: " .. cmd,
+            "\tcmd is executable: " .. cmd_is_executable,
+            "\tidentified root: " .. (config_table.root_dir or "None"),
+            "\tcustom handlers: " ..
+              table.concat(vim.tbl_keys(config_table.handlers), ", "),
+          }
+          vim.list_extend(buf_lines, matching_config_info)
+        end
+      end
+    end
+    local bufnr = require"window".create_centered_floating{
+      height = 0.6,
+      width = 0.4,
+    }
+    vim.bo[bufnr].filetype = "markdown"
+    api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
+    api.nvim_buf_set_keymap(bufnr, "n", "<Esc>", "<Cmd>bd<CR>", {noremap = true})
+    api.nvim_buf_set_keymap(bufnr, "n", "<C-c>", "<Cmd>bd<CR>", {noremap = true})
+    vim.bo[bufnr].modifiable = false
+    local winnr = vim.fn.bufwinnr(bufnr)
+    local winid = vim.fn.win_getid(winnr)
+    vim.lsp.util.close_preview_autocmd({"BufHidden", "BufLeave"}, winnr)
+    vim.wo[winid].spell = false
+  end,
+}
 
 return M
 -- vim:fdl=1:

@@ -6,6 +6,7 @@ stds.nvim = {
         "nvim",
         "p",
         string = {fields = {basename = {}}},
+        table = {fields = {print = {}}},
     },
     read_globals = {string = {fields = {basename = {}}}},
 }

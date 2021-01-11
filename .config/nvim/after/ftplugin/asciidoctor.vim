@@ -23,5 +23,7 @@ endfunction
 
 nnoremap <buffer> gO <Cmd>call <SID>toc()\|call quickfix#loc_toggle(0)<CR>
 
+setlocal errorformat=asciidoctor:\ %tRROR:\ %f:\ line\ %l:\ %m,asciidoctor:\ %tARNING:\ %f:\ line\ %l:\ %m
+
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
 let b:undo_ftplugin .= '|setl cole< fex< |nunmap <buffer> gO'

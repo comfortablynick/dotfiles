@@ -110,6 +110,7 @@ if functions -q __bobthefish_colors
     set -g theme_display_git_untracked yes
 
     # Other settings
+    set -g theme_display_ruby no
     set -g theme_avoid_ambiguous_glyphs yes
     set -g fish_prompt_pwd_dir_length 1 # Abbreviate PWD in prompt
     set -g theme_project_dir_length 1 # Abbreviate relative path to proj root

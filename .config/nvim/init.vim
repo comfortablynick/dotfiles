@@ -25,8 +25,8 @@ let g:vim_exists = executable('vim')
 if has('nvim')
     " Neovim Only
     set inccommand=split                                        " Live substitution
-    let g:python_host_prog = $NVIM_PY2_DIR                      " Python2 binary
-    let g:python3_host_prog = $NVIM_PY3_DIR                     " Python3 binary
+    let g:python_host_prog = $NVIM_PY2_DIR 
+    let g:python3_host_prog = $NVIM_PY3_DIR
     let &shadafile =
         \ stdpath('data')..'/shada/main.shada'                  " Location of nvim replacement for viminfofile
 else
@@ -137,6 +137,7 @@ set undofile                                                    " Enable persist
 set cmdwinheight=10                                             " Height of cmdwin (`q:` or <C-f> in cmdline)
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
+set winblend=15                                                 " Transparency of floating windows (0-100)
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
 
 " Line numbers {{{2

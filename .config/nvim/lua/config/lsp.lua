@@ -6,6 +6,7 @@ local npcall = vim.F.npcall
 local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
 local lsps_attached = {}
+M.configs = {}
 
 if lsp_status ~= nil then
   lsp_status.register_progress()
@@ -169,7 +170,8 @@ local nmap = function(key, result)
                           {noremap = true})
 end
 
-local on_attach_cb = function(client)
+local on_attach_cb = function(client, buf)
+  print(buf)
   local nmap_capability = function(lhs, method, capability_name)
     if client.resolved_capabilities[capability_name or method] then
       nmap(lhs, "vim.lsp.buf." .. method .. "()")
@@ -219,36 +221,38 @@ local on_attach_cb = function(client)
 end
 
 function M.init()
-  -- Safely return without error if nvim_lsp isn't installed
   if not lsp then return end
   -- Server configs {{{1
+  -- If configs[server] == true, load config from config.lsp.{server}
   local configs = {
-    sumneko_lua = require"config.lsp.sumneko_lua",
-    efm = require"config.lsp.efm",
-    vimls = {initializationOptions = {diagnostic = {enable = true}}},
-    yamlls = require"config.lsp.yamlls",
-    jsonls = {filetypes = {"json", "jsonc"}},
-    bashls = {},
-    cmake = {},
-    ccls = {},
-    gopls = {},
-    pyls_ms = {},
-    rust_analyzer = {},
-    tsserver = {},
+    sumneko_lua = true,
+    efm = true,
+    vimls = true,
+    yamlls = true,
+    jsonls = true,
+    gopls = true,
+    bashls = false,
+    cmake = false,
+    ccls = false,
+    pyright = false,
+    rust_analyzer = false,
+    tsserver = false,
   }
 
-  -- Set configs {{{1
-  for server, cfg in pairs(configs) do
+  for server, load_cfg in pairs(configs) do
+    local cfg = {}
+    if load_cfg then cfg = npcall(require, "config.lsp." .. server) end
     cfg.on_attach = on_attach_cb
     if lsp_status ~= nil then
       cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
                                         lsp_status.capabilities)
     end
     lsp[server].setup(cfg)
+    M.configs[server] = cfg
   end
-  M.configs = configs
 end
 
+-- Util :: utility functions --{{{1
 M.util = {
   lsp_info = function()
     local print_clients = function(clients)
@@ -257,7 +261,7 @@ M.util = {
         vim.list_extend(clients_fmt, {
           "",
           ("### Client %d: %s"):format(client.id, client.name),
-          "- Cmd: " .. table.concat(client.config.cmd, ", "),
+          "- Cmd: `" .. table.concat(client.config.cmd, ", ") .. "`",
           "- Root: " .. client.workspaceFolders[1].name,
           "- Filetypes: " .. table.concat(client.config.filetypes, ", "),
         })
@@ -271,7 +275,7 @@ M.util = {
     local buf_clients = vim.lsp.buf_get_clients()
     local clients = vim.lsp.get_active_clients()
     local buffer_filetype = vim.bo.filetype
-    local buffer_dir = vim.fn.expand("%:p:h")
+    local buffer_dir = vim.fn.expand"%:p:h"
     local buf_lines = {}
     local header = {
       "# Lsp Info",
@@ -298,7 +302,7 @@ M.util = {
       "## Clients that match the current buffer filetype:",
     }
     vim.list_extend(buf_lines, matching_config_header)
-    for _, config in ipairs(lsp_configs) do
+    for _, config in pairs(lsp_configs) do
       local config_table = config.make_config(buffer_dir)
 
       local cmd_is_executable, cmd
@@ -319,11 +323,11 @@ M.util = {
         if buffer_filetype == filetype_match then
           local matching_config_info = {
             "",
-            "Config: " .. config.name,
-            "\tcmd: " .. cmd,
-            "\tcmd is executable: " .. cmd_is_executable,
-            "\tidentified root: " .. (config_table.root_dir or "None"),
-            "\tcustom handlers: " ..
+            "### Config: " .. config.name,
+            "- Cmd: `" .. cmd .. "`",
+            "- Executable: " .. cmd_is_executable,
+            "- Identified root: " .. (config_table.root_dir or "None"),
+            "- Custom handlers: " ..
               table.concat(vim.tbl_keys(config_table.handlers), ", "),
           }
           vim.list_extend(buf_lines, matching_config_info)
@@ -331,8 +335,8 @@ M.util = {
       end
     end
     local bufnr = require"window".create_centered_floating{
-      height = 0.6,
-      width = 0.4,
+      height = 0.8,
+      width = 0.7,
     }
     vim.bo[bufnr].filetype = "markdown"
     api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
@@ -343,8 +347,11 @@ M.util = {
     local winid = vim.fn.win_getid(winnr)
     vim.lsp.util.close_preview_autocmd({"BufHidden", "BufLeave"}, winnr)
     vim.wo[winid].spell = false
+    vim.wo[winid].wrap = true
   end,
 }
 
+-- Utility commands {{{2
+vim.cmd[[command! LspClients lua require'config.lsp'.util.lsp_info()]]
+
 return M
--- vim:fdl=1:

@@ -11,5 +11,5 @@ stds.nvim = {
     read_globals = {string = {fields = {basename = {}}}},
 }
 std = "min+nvim"
--- allow_defined = true
+allow_defined = true
 -- ignore = {"131"}

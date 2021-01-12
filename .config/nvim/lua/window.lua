@@ -96,16 +96,19 @@ function M.create_centered_floating(options) -- {{{1
       options.width,
       function(v) return v == nil or v > 0 end,
       "nil or greater than 0",
-      true,
     },
     height = {
       options.height,
       function(v) return v == nil or v > 0 end,
       "nil or greater than 0",
-      true,
     },
     border = {options.border, "boolean", true},
     hl = {options.hl, "string", true},
+    winblend = {
+      options.winblend,
+      function(v) return v == nil or (v >= 1 and v <= 100) end,
+      "between 1 and 100",
+    },
   }
   local cols, lines
   do
@@ -155,10 +158,16 @@ function M.create_centered_floating(options) -- {{{1
   win_opts.width = win_opts.width - 4
   local text_buf = api.nvim_create_buf(false, true)
   local text_win = api.nvim_open_win(text_buf, true, win_opts)
+
   -- Set style
   options.hl = options.hl or "Pmenu"
   vim.wo[border_win].winhl = "NormalFloat:" .. options.hl
   vim.wo[text_win].winhl = "NormalFloat:" .. options.hl
+  if options.winblend ~= nil then
+    vim.wo[border_win].winblend = options.winblend
+    vim.wo[text_win].winblend = options.winblend
+  end
+
   -- Set autocmds
   vim.cmd"augroup lua_create_centered_floating"
   vim.cmd"autocmd!"

@@ -1,0 +1,1 @@
+return {filetypes = {"json", "jsonc"}}

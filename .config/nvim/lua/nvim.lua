@@ -5,6 +5,7 @@
 -- Many items adapted from github.com/norcalli/nvim_utils
 local api = vim.api
 nvim = {}
+vim = vim or {}
 
 -- Currently unused {{{1
 function nvim.mark_or_index(buf, input) -- {{{2
@@ -205,7 +206,7 @@ end
 function nvim.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
   return nvim.text_operator(function(visualmode)
     nvim.buf_transform_region_lines(nil, "[", "]",
-                                 forced_visual_mode or visualmode, function(
+                                    forced_visual_mode or visualmode, function(
       lines
     ) return fn(lines, visualmode) end)
   end)
@@ -223,12 +224,14 @@ function nvim.visual_mode() -- {{{2
 end
 
 function nvim.transform_cword(fn) -- {{{2
-  nvim.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
+  nvim.text_operator_transform_selection(
+    function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iw", "ni", false)
 end
 
 function nvim.transform_cWORD(fn) -- {{{2
-  nvim.text_operator_transform_selection(function(lines) return {fn(lines[1])} end)
+  nvim.text_operator_transform_selection(
+    function(lines) return {fn(lines[1])} end)
   api.nvim_feedkeys("iW", "ni", false)
 end
 
@@ -363,6 +366,12 @@ end
 -- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
 function nvim.unlet(var_name, var_scope)
   pcall(function() vim[var_scope or "g"][var_name] = nil end)
+end
+
+-- mcmd :: multiline `vim.cmd` {{{2
+function nvim.mcmd(command)
+  vim.validate{command = {command, "s"}}
+  for line in vim.gsplit(command, "\n", true) do vim.cmd(line) end
 end
 
 -- packrequire :: load pack + lua module and return module or nil {{{2

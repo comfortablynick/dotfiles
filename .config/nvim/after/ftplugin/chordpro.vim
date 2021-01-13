@@ -82,6 +82,7 @@ function ChordComplete()
 endfun
 
 setlocal completefunc=CompleteChords
+" setlocal omnifunc=CompleteChords
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
 let b:undo_ftplugin .= '|setl cfu< |nunmap <buffer> <C-x><C-m>|nunmap <buffer> <C-m>'

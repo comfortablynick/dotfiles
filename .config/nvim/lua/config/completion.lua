@@ -110,10 +110,14 @@ M.init = function()
   -- Custom sources
   completion.addCompletionSource("fish",
                                  require"config.completion.fish".complete_item)
+  completion.addCompletionSource("chordpro",
+                                 require"config.completion.chordpro".complete_item)
+
   -- Build complete chain
   local complete_chain = {
     default = default_complete,
     fish = add_complete_item({"fish"}, 1),
+    -- chordpro = add_complete_item({"chordpro"}, 1),
   }
 
   completion.on_attach{

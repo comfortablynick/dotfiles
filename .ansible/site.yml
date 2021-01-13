@@ -35,7 +35,7 @@
   roles:
     - rust
   vars:
-    - rust_version: 1.38
+    - rust_version: 1.49
     - cargo_items:
       - name: cargo-update
         binary: cargo-install-update
@@ -50,4 +50,3 @@
         args: --git https://github.com/comfortablynick/sysinfo.git
       - name: just
       - name: bat
-      - name: starship

@@ -170,8 +170,7 @@ local nmap = function(key, result)
                           {noremap = true})
 end
 
-local on_attach_cb = function(client, buf)
-  print(buf)
+local on_attach_cb = function(client)
   local nmap_capability = function(lhs, method, capability_name)
     if client.resolved_capabilities[capability_name or method] then
       nmap(lhs, "vim.lsp.buf." .. method .. "()")

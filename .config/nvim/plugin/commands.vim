@@ -216,7 +216,7 @@ if has('nvim')
     " Usage:
     "   :Redir hi .........show the full output of command ':hi' in a scratch window
     "   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
-    command! -nargs=1 -complete=command Redir call s:tools.redir({'cmd': <q-args>, 'mods': '<mods>'})
+    command! -bang -nargs=1 -complete=command Redir call s:tools.redir({'cmd': <q-args>, 'mods': '<mods>', 'bang': '<bang>'})
 
     " Grep :: async grep {{{2
     command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)

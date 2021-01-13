@@ -29,6 +29,7 @@ if has('nvim')
     let g:python3_host_prog = $NVIM_PY3_DIR
     let &shadafile =
         \ stdpath('data')..'/shada/main.shada'                  " Location of nvim replacement for viminfofile
+    set winblend=15                                             " Transparency of floating windows (0-100)
 else
     " Vim Only
     set wildmenu
@@ -90,7 +91,7 @@ set timeoutlen=300                                              " How long in ms
 set mouse=a                                                     " Use mouse in all modes (allows mouse scrolling in tmux)
 set nostartofline                                               " Don't move to start of line with j/k
 set conceallevel=1                                              " Enable concealing, if defined
-set concealcursor=n                                             " Enable concealing when cursor on line in these modes
+set concealcursor=                                              " Enable concealing when cursor on line in these modes
 set virtualedit=onemore                                         " Allow cursor to extend past line
 set wildignore+=__pycache__                                     " Ignore in glob patterns
 set list                                                        " Show extra characters
@@ -137,7 +138,6 @@ set undofile                                                    " Enable persist
 set cmdwinheight=10                                             " Height of cmdwin (`q:` or <C-f> in cmdline)
 set splitright                                                  " Split right instead of left
 set splitbelow                                                  " Split below instead of above
-set winblend=15                                                 " Transparency of floating windows (0-100)
 let g:window_width = &columns                                   " Initial window size (use to determine if on iPad)
 
 " Line numbers {{{2

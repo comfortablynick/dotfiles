@@ -191,9 +191,8 @@ end
 -- @field o.cmd  : Vim ex command
 -- @field o.mods : Mods for scratch window
 function M.redir(o) -- {{{1
-  vim.validate{o = {o, "table"}}
   local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
-  require"window".create_scratch(lines, o.mods or "")
+  require"window".create_scratch(lines, o.mods or "", o.bang == "!")
 end
 
 -- function M.sh() :: Spawn a new job and put output to scratch window {{{1
@@ -428,7 +427,8 @@ function M.get_maps(mode, bufnr) -- {{{1
   local maps = {}
   local mode = mode or ""
   -- TODO: for clap -- get buffer that we are calling this from, not 0
-  local data = vim.tbl_extend("keep", api.nvim_buf_get_keymap(bufnr or 0, mode or ""),
+  local data = vim.tbl_extend("keep",
+                              api.nvim_buf_get_keymap(bufnr or 0, mode or ""),
                               api.nvim_get_keymap(mode or ""))
   local keys = vim.tbl_keys(data[1])
   local widths = {}

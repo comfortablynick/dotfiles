@@ -283,10 +283,12 @@ function M.floating_help(query) -- {{{1
                           {silent = true, noremap = true})
 end
 
-function M.create_scratch(lines, mods) -- {{{1
-  for _, win in ipairs(api.nvim_list_wins()) do
-    if pcall(api.nvim_win_get_var, win, "scratch") then
-      api.nvim_win_close(win, 0)
+function M.create_scratch(lines, mods, replace_existing) -- {{{1
+  if replace_existing then
+    for _, win in ipairs(api.nvim_list_wins()) do
+      if pcall(api.nvim_win_get_var, win, "scratch") then
+        api.nvim_win_close(win, 0)
+      end
     end
   end
   vim.cmd((mods or "") .. " new")

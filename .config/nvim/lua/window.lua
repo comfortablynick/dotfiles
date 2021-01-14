@@ -1,4 +1,3 @@
-local vim = vim
 local api = vim.api
 local M = {}
 
@@ -59,7 +58,7 @@ function M.get_decoration_width(winnr) -- {{{1
   return decoration_width
 end
 
-function M.float_term(command, scale_pct) -- {{{1
+function M.float_term(command, scale_pct, border, title) -- {{{1
   -- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
   vim.validate{
     scale_pct = {
@@ -68,6 +67,8 @@ function M.float_term(command, scale_pct) -- {{{1
       "nil or between 0 and 1",
       true,
     },
+    border = {border, "b", true},
+    title = {title, "s", true},
   }
   local width, height
   do
@@ -78,8 +79,13 @@ function M.float_term(command, scale_pct) -- {{{1
       height = math.floor(ui.height * scale_pct)
     end
   end
-  M.create_centered_floating{width = width, height = height, border = false}
-  api.nvim_call_function("termopen", {command})
+  M.create_centered_floating{
+    width = width,
+    height = height,
+    border = border or false,
+    title = title,
+  }
+  vim.fn.termopen(command)
   vim.cmd"startinsert"
 end
 
@@ -116,7 +122,8 @@ function M.create_centered_floating(options) -- {{{1
     cols = ui.width
     lines = ui.height
   end
-  local width, height = options.width, options.height
+  local width, height, title = options.width, options.height,
+                               options.title or ""
   do
     local usable_w = M.get_usable_width(0)
     if not options.width or options.width < 1 then
@@ -136,11 +143,14 @@ function M.create_centered_floating(options) -- {{{1
     height = height,
     style = "minimal",
   }
-  -- Create border buffer, window
-  local border_buf = api.nvim_create_buf(false, true)
-  -- Add border lines
+  -- Add border lines if applicable
+  local border_win, border_buf
   if options.border then
-    local border_top = "╭" .. string.rep("─", width - 2) .. "╮"
+    -- Create border buffer, window
+    border_buf = api.nvim_create_buf(false, true)
+    if #title > 0 then title = " " .. title .. " " end
+    local border_top =
+      "╭" .. title .. string.rep("─", width - 2 - #title) .. "╮"
     local border_mid = "│" .. string.rep(" ", width - 2) .. "│"
     local border_bot = "╰" .. string.rep("─", width - 2) .. "╯"
     local border_lines = {}
@@ -149,8 +159,8 @@ function M.create_centered_floating(options) -- {{{1
                     vim.split(string.rep(border_mid, height - 2, "\n"), "\n"))
     table.insert(border_lines, border_bot)
     api.nvim_buf_set_lines(border_buf, 0, -1, true, border_lines)
+    border_win = api.nvim_open_win(border_buf, true, win_opts)
   end
-  local border_win = api.nvim_open_win(border_buf, true, win_opts)
   -- Create text buffer, window
   win_opts.row = win_opts.row + 1
   win_opts.height = win_opts.height - 2
@@ -161,21 +171,25 @@ function M.create_centered_floating(options) -- {{{1
 
   -- Set style
   options.hl = options.hl or "Pmenu"
-  vim.wo[border_win].winhl = "NormalFloat:" .. options.hl
   vim.wo[text_win].winhl = "NormalFloat:" .. options.hl
-  if options.winblend ~= nil then
-    vim.wo[border_win].winblend = options.winblend
-    vim.wo[text_win].winblend = options.winblend
+  if options.winblend ~= nil then vim.wo[text_win].winblend = options.winblend end
+  if border_win ~= nil then
+    vim.wo[border_win].winhl = "NormalFloat:" .. options.hl
+    if options.winblend ~= nil then
+      vim.wo[border_win].winblend = options.winblend
+    end
   end
 
   -- Set autocmds
-  vim.cmd"augroup lua_create_centered_floating"
-  vim.cmd"autocmd!"
-  vim.cmd(string.format(
-            "autocmd WinClosed * ++once if winnr() == %d | :bd! | endif | call nvim_win_close(%d, v:true)",
-            text_win, border_win))
-  vim.cmd"autocmd WinClosed * ++once doautocmd BufDelete"
-  vim.cmd"augroup END"
+  if border_buf ~= nil then
+    vim.cmd("autocmd BufWipeout <buffer> exe 'silent bwipeout!'" .. border_buf)
+  end
+  api.nvim_buf_set_keymap(text_buf, "n", "<C-c>",
+                          "<Cmd>call nvim_win_close(" .. text_win ..
+                            ", v:true)<CR>", {noremap = true})
+  api.nvim_buf_set_keymap(text_buf, "n", "q", "<Cmd>call nvim_win_close(" ..
+                            text_win .. ", v:true)<CR>", {noremap = true})
+  api.nvim_buf_set_option(text_buf, "bufhidden", "wipe")
   return text_buf
 end
 

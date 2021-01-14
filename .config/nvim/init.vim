@@ -54,15 +54,20 @@ else
     syntax enable                                               " Syntax highlighting on
 endif
 
-" Files/Swap/Backup {{{2
+" Swap/Backup/Undo {{{2
 set noswapfile                                                  " Swap files if vim quits without saving
 set autoread                                                    " Detect when a file has been changed outside of vim
 set backup
+set undofile
+set backupdir=~/.vim/backup//
+set undodir=~/.vim/undo//
 
-set backupdir=~/.vim/backup//                                   " Store backup files
-if filewritable(&backupdir) != 2
-    call mkdir(&backupdir, 'p')
-endif
+let s:dirs = [&backupdir, &undodir]
+for s:dir in s:dirs
+    if filewritable(s:dir) != 2
+        call mkdir(s:dir, 'p')
+    endif
+endfor
 
 " General {{{2
 set background=dark
@@ -129,10 +134,6 @@ elseif executable('rg')
     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
     set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
-
-" Undo {{{2
-set undodir=~/.vim/undo//
-set undofile                                                    " Enable persistent undo
 
 " Windows/Splits {{{2
 set cmdwinheight=10                                             " Height of cmdwin (`q:` or <C-f> in cmdline)

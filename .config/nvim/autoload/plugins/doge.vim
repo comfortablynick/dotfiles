@@ -1,1 +1,1 @@
-nnoremap <silent> <F4> :DogeGenerate<CR>
+nnoremap <F4> <Cmd>DogeGenerate<CR>

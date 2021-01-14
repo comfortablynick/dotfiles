@@ -33,14 +33,19 @@ function s:is_empty_quote()
     return getline('.') =~# '\v^\s*(\s?\>)+\s*$'
 endfunction
 
+if has('nvim-0.5')
+    command Preview lua
+        \ require'window'.float_term(
+        \ 'glow '..vim.fn.expand('%', ':p'),
+        \ 0.4,
+        \ true,
+        \ vim.fn.expand('%', ':.')
+        \ )
+    nnoremap <buffer> gp <Cmd>Preview<CR>
+endif
+
 inoremap <buffer> <C-]> <Cmd>call <SID>indent(1)<CR>
 inoremap <buffer> <C-[> <Cmd>call <SID>indent(0)<CR>
-" inoremap <buffer> <script> <expr> <C-]>
-"     \ '<C-O>:call <SID>indent(1)<CR>'
-" inoremap <buffer> <script> <expr> <C-[>
-"     \ '<C-O>:call <SID>indent(0)<CR>'
-
-
 imap <buffer><expr> <Tab>   <SID>is_empty_list_item() ? "<Cmd>call <SID>indent(1)<CR>" : "\<Plug>(completion_smart_tab)"
 imap <buffer><S-Tab> <Plug>(completion_smart_s_tab)
 " imap <buffer><expr> <S-Tab> "<Cmd>call <SID>indent(0)<CR>"

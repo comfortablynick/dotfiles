@@ -36,7 +36,7 @@ function plugins#init()
     Plug 'psf/black',                  {'branch': 'stable'}
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
-    Plug 'kkoomen/vim-doge'
+    Plug 'kkoomen/vim-doge',           {'do': 'call doge#install(#{headless: 1})'}
 
     " Editing behavior {{{2
     " Plug 'tpope/vim-commentary'

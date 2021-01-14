@@ -30,7 +30,7 @@ function statusline#get() "{{{2
     let l:sl ..= '%( %{statusline#mucomplete_method()} %)'
     let l:sl ..= '%( %{statusline#job_status()} '..g:sl.sep..'%)'
     let l:sl ..= '%( %{statusline#current_tag()}%)'
-    let l:sl ..= '%( %-20.50{statusline#lsp_status()}%)'
+    let l:sl ..= '%( %-20.60{statusline#lsp_status()}%)'
     let l:sl ..= '%( %{statusline#coc_status()} %)'
     let l:sl ..= '%( %{statusline#file_type()} %)'
     let l:sl ..= '%(%3* %{statusline#git_status()} %*%)'
@@ -465,9 +465,12 @@ function statusline#coc_status() "{{{2
 endfunction
 
 function statusline#lsp_status() "{{{2
-    if !s:is_active_file() || !has('nvim') | return '' | endif
-    " return '[LSP]'
-    return luaeval('require"config.lsp".attached_lsps()')
+    if !s:is_active_file() || !has('nvim-0.5') | return '' | endif
+    let l:msgs = luaeval('require"config.lsp".status()')
+    if l:msgs ==# ''
+        return luaeval('require"config.lsp".attached_lsps()')
+    endif
+    return l:msgs
 endfunction
 
 function s:ale_linted() "{{{2

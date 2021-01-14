@@ -6,27 +6,28 @@ local npcall = vim.F.npcall
 local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
 local lsps_attached = {}
+
 M.configs = {}
 
 if lsp_status ~= nil then
   lsp_status.register_progress()
-  -- lsp_status.config{
-  --   select_symbol = function(cursor_pos, symbol)
-  --     if symbol.valueRange then
-  --       local value_range = {
-  --         ["start"] = {
-  --           character = 0,
-  --           line = vim.fn.byte2line(symbol.valueRange[1]),
-  --         },
-  --         ["end"] = {
-  --           character = 0,
-  --           line = vim.fn.byte2line(symbol.valueRange[2]),
-  --         },
-  --       }
-  --       return require("lsp-status.util").in_range(cursor_pos, value_range)
-  --     end
-  --   end,
-  -- }
+  lsp_status.config{
+    select_symbol = function(cursor_pos, symbol)
+      if symbol.valueRange then
+        local value_range = {
+          ["start"] = {
+            character = 0,
+            line = vim.fn.byte2line(symbol.valueRange[1]),
+          },
+          ["end"] = {
+            character = 0,
+            line = vim.fn.byte2line(symbol.valueRange[2]),
+          },
+        }
+        return require("lsp-status.util").in_range(cursor_pos, value_range)
+      end
+    end,
+  }
 end
 
 vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
@@ -98,7 +99,9 @@ vim.lsp.handlers["textDocument/formatting"] =
     end
   end
 
--- Standard rename functionality so I can wrap it if desired
+-- Standard rename functionality wrapper
+--
+-- @param new_name (string) New name for variable under cursor
 function M.rename(new_name)
   local params = util.make_position_params()
   new_name = new_name or
@@ -113,14 +116,6 @@ function M.attached_lsps()
   if not lsps_attached[bufnr] then return "" end
   return "LSP[" .. table.concat(vim.tbl_values(lsps_attached[bufnr]), ",") ..
            "]"
-end
-
-function M.messages()
-  if lsp_status ~= nil then
-    return lsp_status.messages()
-  else
-    return {}
-  end
 end
 
 -- Return table of useful client info
@@ -138,31 +133,18 @@ end
 
 local set_hl_autocmds = function()
   -- TODO: how to undo this if server detaches?
-  local hl_autocmds = {
-    lsp_highlight = {
-      {"CursorHold", "<buffer>", "lua pcall(vim.lsp.buf.document_highlight)"},
-      {"CursorMoved", "<buffer>", "lua vim.lsp.buf.clear_references()"},
-      {"InsertEnter", "<buffer>", "lua vim.lsp.buf.clear_references()"},
-    },
-  }
-  nvim.create_augroups(hl_autocmds)
+  nvim.mcmd[[
+      au CursorHold <buffer> lua pcall(vim.lsp.buf.document_highlight)
+      au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      au InsertEnter <buffer> lua vim.lsp.buf.clear_references()
+      ]]
 end
 
 local set_rust_inlay_hints = function()
-  local inlay_hint_cmd =
-    [[nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints]] ..
-      [[{ prefix = " » ", aligned = false, highlight = "NonText", enabled = {"ChainingHint", "TypeHint"}}]]
-  local augroup = {
-    lsp_rust_inlay_hints = {
-      {
-        "InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost",
-        "<buffer>",
-        "lua",
-        inlay_hint_cmd,
-      },
-    },
-  }
-  nvim.create_augroups(augroup)
+  vim.cmd(
+    [[au InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost <buffer> lua ]] ..
+      [[nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints]] ..
+      [[{ prefix = " » ", aligned = false, highlight = "NonText", enabled = {"ChainingHint", "TypeHint"}}]])
 end
 
 local nmap = function(key, result)
@@ -171,6 +153,7 @@ local nmap = function(key, result)
 end
 
 local on_attach_cb = function(client)
+  if lsp_status ~= nil then lsp_status.on_attach(client) end
   local nmap_capability = function(lhs, method, capability_name)
     if client.resolved_capabilities[capability_name or method] then
       nmap(lhs, "vim.lsp.buf." .. method .. "()")
@@ -211,7 +194,7 @@ local on_attach_cb = function(client)
   end
 
   -- Set autocmds for highlighting if server supports it
-  if false and client.resolved_capabilities.document_highlight then
+  if true and client.resolved_capabilities.document_highlight then
     set_hl_autocmds()
   end
 
@@ -353,4 +336,6 @@ M.util = {
 -- Utility commands {{{2
 vim.cmd[[command! LspClients lua require'config.lsp'.util.lsp_info()]]
 
+-- Set and return module
+M.status = require"config.lsp.status".status
 return M

@@ -369,6 +369,9 @@ function nvim.unlet(var_name, var_scope)
 end
 
 -- mcmd :: multiline `vim.cmd` {{{2
+--
+-- Execute block of excommands
+-- @param command (string) Multiline command to execute
 function nvim.mcmd(command)
   vim.validate{command = {command, "s"}}
   for line in vim.gsplit(command, "\n", true) do vim.cmd(line) end
@@ -429,10 +432,11 @@ function nvim.tbl_reduce(t, fn, first)
   return acc
 end
 
--- tbl_foreach :: calls `fn` on each value in table `t` {{{2
--- If `fn` is a string, it is called as a method.
--- Returns `t` unmodified.
-function nvim.tbl_foreach(t, fn, ...)
+-- Calls {fn} on each value in table {t}
+-- If {fn} is a string, it is called as a method
+-- @param t (table) Values to feed to {fn}
+-- @param fn (function|string) Callback function
+function nvim.tbl_foreach(t, fn, ...) --{{{2
   local iter = getiter(t)
   if type(fn) == "string" then
     for _, v in iter(t) do v[fn](v, ...) end

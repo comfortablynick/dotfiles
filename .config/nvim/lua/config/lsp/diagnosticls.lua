@@ -12,18 +12,20 @@ return {
       sh = "shellcheck",
       python = "pydocstyle",
     },
+    formatFiletypes = {sh = "shfmt"},
     linters = {
       -- TODO: why doesn't luacheck work?
       luacheck = {
         command = "luacheck",
         debounce = 100,
-        args = {"--formatter", "plain", "-"},
+        args = {"--formatter=plain", "--codes", "-"},
         offsetLine = 0,
         offsetColumn = 0,
+        sourceName = "luacheck",
         formatLines = 1,
         formatPattern = {
-          "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-          {line = 1, column = 2, message = 3},
+          "([^:]+):(\\d+):(\\d+):\\s*(.*)$",
+          {file = 1, line = 2, column = 3, message = 4},
         },
       },
       shellcheck = {
@@ -55,7 +57,7 @@ return {
         debounce = 100,
         args = {"--enable-neovim", "-"},
         offsetLine = 0,
-        offsetColumn = 0,
+        offsetColumn = 3,
         sourceName = "vint",
         formatLines = 1,
         formatPattern = {
@@ -64,7 +66,6 @@ return {
         },
       },
     },
-    formatFiletypes = {sh = "shfmt"},
     formatters = {
       shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
     },

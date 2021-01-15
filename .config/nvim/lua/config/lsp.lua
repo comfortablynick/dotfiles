@@ -212,7 +212,7 @@ function M.init()
   local configs = {
     sumneko_lua = true,
     -- efm = true,
-    -- diagnosticls = true,
+    diagnosticls = true,
     vimls = true,
     yamlls = true,
     jsonls = true,

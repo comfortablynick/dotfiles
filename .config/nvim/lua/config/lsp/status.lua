@@ -28,7 +28,7 @@ local function statusline_lsp(bufnr)
   local msgs = {}
   for _, msg in ipairs(buf_messages) do
     local name = aliases[msg.name] or msg.name
-    local client_name = "[" .. name .. "]"
+    local client_name = "LSP[" .. name .. "]"
     local contents = ""
     local _ = contents -- get rid of luacheck unused var msg
     if msg.progress then
@@ -50,7 +50,9 @@ local function statusline_lsp(bufnr)
         local filename = vim.uri_to_fname(msg.uri)
         filename = vim.fn.fnamemodify(filename, ":~:.")
         local space = math.min(60, math.floor(0.6 * vim.fn.winwidth(0)))
-        if #filename > space then filename = require'util'.path.shorten(filename) end
+        if #filename > space then
+          filename = require"util".path.shorten(filename)
+        end
 
         contents = "(" .. filename .. ") " .. contents
       end
@@ -67,6 +69,4 @@ local function statusline_lsp(bufnr)
   return ""
 end
 
-local M = {_init = init, status = statusline_lsp}
-
-return M
+return {_init = init, status = statusline_lsp}

@@ -1,4 +1,5 @@
 -- vim:ft=lua:
+-- luacheck: ignore 131
 stds.nvim = {
     globals = {
         "vim",
@@ -11,5 +12,6 @@ stds.nvim = {
     read_globals = {string = {fields = {basename = {}}}},
 }
 std = "min+nvim"
+codes = true
 allow_defined = true
 -- ignore = {"131"}

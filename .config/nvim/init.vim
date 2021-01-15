@@ -201,7 +201,7 @@ if has('nvim-0.5')
 
     augroup vimrc
         autocmd!
-        autocmd BufEnter * lua vim.defer_fn(require'config.completion'.init, 1000)
+        autocmd BufEnter * lua require'config.completion'.init()
     augroup END
 
     if getenv('AK_PROFILER') == 1

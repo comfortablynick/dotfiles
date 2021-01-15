@@ -123,15 +123,17 @@ M.init = function()
   completion.on_attach{
     chain_complete_list = complete_chain,
     customize_lsp_label = customize_lsp_label,
-    items_priority = items_priority,
+    -- items_priority = items_priority,
     enable_snippet = "snippets.nvim",
-    enable_auto_paren = 1,
+    -- enable_auto_paren = 1,
     enable_auto_hover = 1,
     enable_auto_signature = 1,
     auto_change_source = 1,
     -- matching_strategy_list = {"exact", "substring"},
     matching_smart_case = 1,
     trigger_keyword_length = 1,
+    trigger_on_delete = 1,
+    -- timer_cycle = 200,
   }
 
   imap("<C-h>", "<Plug>(completion_next_source)")

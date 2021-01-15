@@ -125,7 +125,7 @@ endif
 
 augroup minirc
     autocmd!
-    autocmd BufEnter * lua completion_on_attach_cb()
+    autocmd BufEnter * call v:lua.completion_on_attach_cb()
 augroup END
 
 set completeopt=menuone,noinsert,noselect

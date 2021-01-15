@@ -1,31 +1,31 @@
 return {
   filetypes = {
-    -- "lua",
+    "lua",
     "vim",
     "sh",
     "python",
   },
   init_options = {
     filetypes = {
-      -- lua = "luacheck",
+      lua = "luacheck",
       vim = "vint",
       sh = "shellcheck",
       python = "pydocstyle",
     },
     linters = {
       -- TODO: why doesn't luacheck work?
-      -- luacheck = {
-      --   command = "luacheck",
-      --   debounce = 100,
-      --   args = {"--formatter", "plain", "-"},
-      --   offsetLine = 0,
-      --   offsetColumn = 0,
-      --   formatLines = 1,
-      --   formatPattern = {
-      --     "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-      --     {line = 1, column = 2, message = 3},
-      --   },
-      -- },
+      luacheck = {
+        command = "luacheck",
+        debounce = 100,
+        args = {"--formatter", "plain", "-"},
+        offsetLine = 0,
+        offsetColumn = 0,
+        formatLines = 1,
+        formatPattern = {
+          "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
+          {line = 1, column = 2, message = 3},
+        },
+      },
       shellcheck = {
         command = "shellcheck",
         rootPatterns = {},

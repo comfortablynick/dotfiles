@@ -1,32 +1,42 @@
+local api = vim.api
+
 local install_path = "/tmp/site/pack/packer/opt/packer.nvim"
+
+-- vim.o.loadplugins = false
 
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.cmd("!git clone https://github.com/wbthomason/packer.nvim " ..
             install_path)
 end
 
-vim.cmd(
-  "set runtimepath=$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,/tmp/site")
-vim.cmd[[let &packpath = &runtimepath]]
+vim.o.runtimepath = "$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,/tmp/site"
+vim.o.packpath = vim.o.runtimepath
+vim.o.completeopt = "menuone,noinsert,noselect"
 
+vim.cmd[[set shortmess+=c]]
 vim.cmd[[packadd! packer.nvim]]
 vim.cmd[[autocmd BufWritePost minimal_init.lua PackerCompile]]
 vim.cmd[[autocmd BufWritePost minimal_init.lua PackerInstall]]
 
-local use = require("packer").use
-require("packer").startup({
-  function() use"neovim/nvim-lspconfig" end,
+local packer = require("packer")
+
+packer.startup{
+  function()
+    local use = packer.use
+    use{"wbthomason/packer.nvim", opt = true}
+    use{"neovim/nvim-lspconfig", requires = {"nvim-lua/completion-nvim"}}
+  end,
   config = {package_root = "/tmp/site/pack"},
-})
+}
 
 -- LSP settings
 -- log file location: $HOME/.local/share/nvim/lsp.log
 vim.lsp.set_log_level("debug")
 local nvim_lsp = require("lspconfig")
 local on_attach = function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  local bufnr = api.nvim_get_current_buf()
+  local function buf_set_keymap(...) api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) api.nvim_buf_set_option(bufnr, ...) end
 
   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 

@@ -101,7 +101,8 @@ vim.lsp.handlers["textDocument/formatting"] =
 
 -- Standard rename functionality wrapper
 --
--- @param new_name (string) New name for variable under cursor
+-- @param new_name string New name for variable under cursor
+-- @return string
 function M.rename(new_name)
   local params = util.make_position_params()
   new_name = new_name or
@@ -202,13 +203,16 @@ local on_attach_cb = function(client)
   if ft == "rust" then set_rust_inlay_hints() end
 end
 
+-- vim.lsp.set_log_level("debug")
+
 function M.init()
   if not lsp then return end
   -- Server configs {{{1
   -- If configs[server] == true, load config from config.lsp.{server}
   local configs = {
     sumneko_lua = true,
-    efm = true,
+    -- efm = true,
+    -- diagnosticls = true,
     vimls = true,
     yamlls = true,
     jsonls = true,

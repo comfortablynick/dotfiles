@@ -87,7 +87,7 @@ find_up_all() {
 add_local_vimrc() {
     local extravim
     extravim="$(find_up_all .lvimrc)"
-    if [ -n "$extravim" ]; then
+    if [[ -n $extravim ]]; then
         echo "Adding local .vimrc(s): ${extravim}"
         path_add LOCAL_VIMRC "$extravim"
     fi

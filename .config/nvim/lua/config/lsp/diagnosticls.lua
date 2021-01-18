@@ -1,5 +1,5 @@
 return {
-  cmd = {"diagnostic-language-server", "--stdio"},
+  cmd = {"diagnostic-languageserver", "--stdio"},
   filetypes = {"lua", "vim", "sh", "python", "rust"},
   init_options = {
     filetypes = {

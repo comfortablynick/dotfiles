@@ -74,11 +74,10 @@ find_up_all() {
             if [[ $PWD == / ]] || [[ $PWD == // ]]; then
                 if [ ${#found[@]} -eq 0 ]; then
                     return 1
-                else
-                    IFS=:
-                    echo "${found[*]}"
-                    return 0
                 fi
+                IFS=:
+                echo "${found[*]}"
+                return 0
             fi
             cd ..
         done
@@ -86,10 +85,10 @@ find_up_all() {
 }
 
 add_local_vimrc() {
-  local extravim
-  extravim="$(find_up_all .lvimrc)"
-  if [ -n "$extravim" ]; then
-      echo "Adding local .vimrc(s): ${extravim}"
-    path_add LOCAL_VIMRC "$extravim"
-  fi
+    local extravim
+    extravim="$(find_up_all .lvimrc)"
+    if [ -n "$extravim" ]; then
+        echo "Adding local .vimrc(s): ${extravim}"
+        path_add LOCAL_VIMRC "$extravim"
+    fi
 }

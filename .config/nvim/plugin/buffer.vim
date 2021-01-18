@@ -4,6 +4,7 @@ augroup plugin_buffer
     autocmd BufWinEnter * call s:recall_cursor_position()
     " Execute `direnv allow` after editing .envrc
     autocmd BufWritePost .envrc if executable('direnv') | silent !direnv allow % | endif
+    autocmd FileType * if exists('$LOCAL_VIMRC') | call buffer#load_lvimrc() | endif
 augroup end
 
 function! s:recall_cursor_position()

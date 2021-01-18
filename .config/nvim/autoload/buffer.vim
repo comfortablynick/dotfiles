@@ -1,3 +1,22 @@
+let b:localrc_loaded = 0
+let b:localrc_files = []
+
+function buffer#load_lvimrc()
+    " Use direnv to find .lvimrc files and add to env var $LOCAL_VIMRC
+    " See https://github.com/direnv/direnv/wiki/Vim
+    let b:localrc_files = get(b:, 'localrc_files', [])
+    let b:localrc_loaded = get(b:, 'localrc_loaded', 0)
+    let l:lvimrcs = $LOCAL_VIMRC
+    if empty(l:lvimrcs) | return | endif
+    for l:file in split(l:lvimrcs, ':')
+        if index(b:localrc_files, l:file) == -1
+            source `=l:file`
+            let b:localrc_loaded += 1
+            let b:localrc_files += [l:file]
+        endif
+    endfor
+endfunction
+
 " Restore cursor position after motion
 function buffer#restore_cursor_after(motion)
     let l:wv = winsaveview()

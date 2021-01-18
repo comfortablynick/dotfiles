@@ -86,18 +86,6 @@ vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
 --       vim.lsp.diagnostic.set_loclist{open_loclist = false}
 --     end
 --   end
-vim.lsp.handlers["textDocument/formatting"] =
-  function(err, _, result, _, bufnr)
-    if err ~= nil or result == nil then return end
-    if not vim.bo[bufnr].modified then
-      local view = vim.fn.winsaveview()
-      vim.lsp.util.apply_text_edits(result, bufnr)
-      vim.fn.winrestview(view)
-      if bufnr == api.nvim_get_current_buf() then
-        vim.cmd[[noautocmd :update]]
-      end
-    end
-  end
 
 -- Standard rename functionality wrapper
 --
@@ -173,7 +161,6 @@ local on_attach_cb = function(client)
   nmap_capability("gt", "type_definition")
   nmap_capability("gr", "references")
   nmap_capability("<F2>", "rename")
-  nmap_capability("<F3>", "formatting", "document_formatting") -- neoformat still kinda works better
 
   nmap("gd", "vim.lsp.diagnostic.set_loclist{open = true}")
   nmap("[d", "vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
@@ -182,6 +169,13 @@ local on_attach_cb = function(client)
        "vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
   nmap("]D",
        "vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
+
+  if client.resolved_capabilities["document_formatting"] then
+    vim.cmd[[command! Format lua vim.lsp.buf.formatting()]]
+    -- TODO: why does this not work as well as Neoformat?
+    api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>",
+                            {noremap = true})
+  end
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 

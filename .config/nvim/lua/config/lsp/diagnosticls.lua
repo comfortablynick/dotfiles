@@ -1,11 +1,6 @@
 return {
   cmd = {"diagnostic-language-server", "--stdio"},
-  filetypes = {
-    "lua",
-    "vim",
-    "sh",
-    "python",
-  },
+  filetypes = {"lua", "vim", "sh", "python", "rust"},
   init_options = {
     filetypes = {
       lua = "luacheck",
@@ -13,9 +8,8 @@ return {
       sh = "shellcheck",
       python = "pydocstyle",
     },
-    formatFiletypes = {sh = "shfmt"},
+    formatFiletypes = {sh = "shfmt", lua = "luaformat", rust = "rustfmt"},
     linters = {
-      -- TODO: why doesn't luacheck work?
       luacheck = {
         command = "luacheck",
         debounce = 100,
@@ -68,6 +62,8 @@ return {
       },
     },
     formatters = {
+      luaformat = {command = "lua-format", isStdout = true},
+      rustfmt = {},
       shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
     },
   },

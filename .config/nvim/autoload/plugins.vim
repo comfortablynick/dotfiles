@@ -36,7 +36,7 @@ function plugins#init()
     Plug 'psf/black',                  {'branch': 'stable'}
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
-    Plug 'kkoomen/vim-doge',           {'do': 'call doge#install(#{headless: 1})'}
+    Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
 
     " Editing behavior {{{2
     " Plug 'tpope/vim-commentary'
@@ -123,6 +123,7 @@ function plugins#init()
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'romgrk/barbar.nvim'
     Plug 'norcalli/profiler.nvim'
+    Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

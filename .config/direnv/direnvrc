@@ -64,10 +64,32 @@ layout_pipenv() {
     export VIRTUAL_ENV
 }
 
+find_up_all() {
+    (
+        declare -a found
+        while true; do
+            if [[ -f $1 ]]; then
+                found=("$PWD/$1" "${found[@]}")
+            fi
+            if [[ $PWD == / ]] || [[ $PWD == // ]]; then
+                if [ ${#found[@]} -eq 0 ]; then
+                    return 1
+                else
+                    IFS=:
+                    echo "${found[*]}"
+                    return 0
+                fi
+            fi
+            cd ..
+        done
+    )
+}
+
 add_local_vimrc() {
-  local extravim="$(find_up .lvimrc)"
+  local extravim
+  extravim="$(find_up_all .lvimrc)"
   if [ -n "$extravim" ]; then
-    echo "Adding local .vimrc: ${extravim}"
-    path_add LOCAL_VIMRC $extravim
+      echo "Adding local .vimrc(s): ${extravim}"
+    path_add LOCAL_VIMRC "$extravim"
   fi
 }

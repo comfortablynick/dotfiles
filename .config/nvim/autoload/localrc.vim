@@ -1,4 +1,3 @@
-" Acknowledgments: Code from thinca <thinca+vim@gmail.com> (zlib License)
 let b:localrc_loaded = 0
 let b:localrc_files = []
 
@@ -21,6 +20,7 @@ function localrc#load(fnames, ...)
     endfor
 endfunction
 
+" Acknowledgments: Code from thinca <thinca+vim@gmail.com> (zlib License)
 " function localrc#search(fnames, ...)
 "     let l:path = 1 <= a:0 ? a:1 : expand('%:p:h')
 "     if empty(a:fnames) || !isdirectory(l:path)

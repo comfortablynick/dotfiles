@@ -1,4 +1,5 @@
 return {
+  cmd = {"efm-langserver"},
   filetypes = {
     "lua",
     "vim",

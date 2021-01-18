@@ -217,17 +217,23 @@ function M.init()
     yamlls = true,
     jsonls = true,
     gopls = true,
+    rust_analyzer = true,
     bashls = false,
     cmake = false,
     ccls = false,
     pyright = false,
-    rust_analyzer = false,
     tsserver = false,
   }
 
   for server, load_cfg in pairs(configs) do
     local cfg = {}
-    if load_cfg then cfg = npcall(require, "config.lsp." .. server) end
+    if load_cfg then 
+      cfg = npcall(require, "config.lsp." .. server)
+      -- Check if defined cmd is executable
+      if cfg.cmd ~= nil then
+        if vim.fn.executable(cfg.cmd[1]) ~= 1 then goto continue end
+      end
+    end
     cfg.on_attach = on_attach_cb
     if lsp_status ~= nil then
       cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
@@ -235,6 +241,7 @@ function M.init()
     end
     lsp[server].setup(cfg)
     M.configs[server] = cfg
+    ::continue::
   end
 end
 

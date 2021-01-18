@@ -217,11 +217,11 @@ function M.init()
     yamlls = true,
     jsonls = true,
     gopls = true,
+    rust_analyzer = true,
     bashls = false,
     cmake = false,
     ccls = false,
     pyright = false,
-    rust_analyzer = false,
     tsserver = false,
   }
 

@@ -1,4 +1,5 @@
 return {
+  cmd = {"diagnostic-language-server", "--stdio"},
   filetypes = {
     "lua",
     "vim",

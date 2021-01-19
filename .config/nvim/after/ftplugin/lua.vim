@@ -25,3 +25,11 @@ let b:doge_doc_standard = 'ldoc-typed'
 " Ensure we do not overwrite an existing doc standard.
 let b:doge_patterns['ldoc-typed'] = b:doge_patterns['ldoc']
 let b:doge_patterns['ldoc-typed'][0]['parameters']['format'] = '@param {name} (!type) !description'
+
+augroup after_ftplugin_lua
+    autocmd!
+    " Add {} for the `argument` text object
+    " Autocmd will not fire if targets.vim is not installed
+    autocmd User targets#mappings#user
+        \ call targets#mappings#extend({'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': ','}]}})
+augroup END

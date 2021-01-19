@@ -84,6 +84,16 @@ snip.rv = '#'.join(parts[1:]) + '#'
 endfunction
 endsnippet
 
+snippet augroup "augroup block with file path name" b
+augroup `!p
+relpath = PurePath(file_relative_path(True))
+parts = relpath.parts
+snip.rv = '_'.join(parts)`
+    autocmd!
+    autocmd $0
+augroup END
+endsnippet
+
 snippet filetype_detect "filetype detection boilerplate" b
 " vint: -ProhibitAutocmdWithNoGroup
 

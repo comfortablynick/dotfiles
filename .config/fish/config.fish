@@ -49,7 +49,7 @@ end
 # Fish git prompt {{{2
 # Settings {{{3
 set -g __fish_git_prompt_show_informative_status true
-set -g __fish_git_prompt_showupstream 'informative'
+set -g __fish_git_prompt_showupstream informative
 set -g __fish_git_prompt_showcolorhints true
 
 # Symbols {{{3
@@ -98,10 +98,6 @@ if functions -q __bobthefish_colors
     set -g theme_powerline_fonts yes
     set -g theme_nerd_fonts yes
 
-    if test $MOSH_CONNECTION -eq 1
-        set -g theme_nerd_fonts no
-    end
-
     # Git
     set -g theme_display_git_master_branch no
     set -g theme_display_git_ahead_verbose yes
@@ -114,7 +110,7 @@ if functions -q __bobthefish_colors
     set -g theme_avoid_ambiguous_glyphs yes
     set -g fish_prompt_pwd_dir_length 1 # Abbreviate PWD in prompt
     set -g theme_project_dir_length 1 # Abbreviate relative path to proj root
-    set -g theme_display_cmd_duration yes # Threshold for showing command dur in ms
+    set -g theme_display_cmd_duration 1 # Threshold for showing command dur in ms
     set -g theme_show_exit_status yes # Show code instead of just !
 
     # Tmux shows user/host
@@ -127,7 +123,7 @@ if functions -q __bobthefish_colors
         set -g theme_display_hostname ssh
     end
 
-# pure {{{2
+    # pure {{{2
 
 else if functions -q _pure_prompt
     set -g pure_symbol_prompt "❯"
@@ -167,4 +163,7 @@ end
 set -l end_time (get_date)
 # set -l elapsed (math \($end_time - $start_time\))
 # echo "Completed in $elapsed sec."
-set_color brblue; echo 'Done'; set_color normal; echo ''
+set_color brblue
+echo Done
+set_color normal
+echo ''

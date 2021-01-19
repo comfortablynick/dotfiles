@@ -1,9 +1,6 @@
 " Plugin definitions {{{1
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
-let g:pack_pre_called = []
-let g:pack_post_called = []
-let g:pack_called = []
-let g:pack_sourced = []
+let g:packages = {}
 
 command -nargs=+ Plug call packager#add(<args>)
 
@@ -217,23 +214,27 @@ function s:get_pack_name(filename)
 endfunction
 
 function s:source_handler(sourced, pre) "{{{2
-    let l:type = a:pre == 1 ? 'pre' : 'post'
+    let l:type = a:pre ? 'pre' : 'post'
     let l:file = get(plugins#packs_installed(), a:sourced, '')
+    let g:packages[a:sourced] = get(
+        \ g:packages,
+        \ a:sourced,
+        \ #{plugin_file: l:file, sourced_pre: 0, sourced_post: 0}
+        \ )
     " Case-insensitive match of filename
-    " Replace with for-loop for more elaborate regex/glob matching
     let l:config_files_idx = index(s:config_files(), l:file, 0, v:true)
-    " Return if we don't have file in autoload/plugins/{l:file}.vim
-    " or if function has been called previously
+    " Return if we don't have file in autoload/plugins/{l:file}.vim or if already sourced
     if l:config_files_idx == -1
-        \ || index(g:pack_{l:type}_called, l:file, 0, v:true) > -1
+            \ || g:packages[a:sourced]['sourced_'..l:type]
         return
     endif
     " Replace with actual filename that we matched
     let l:file = s:config_files()[l:config_files_idx]
-    let g:pack_{l:type}_called += [l:file]
     if l:type ==# 'pre'
-        let g:pack_sourced += [a:sourced]
-        let g:pack_called += [l:file]
+        let g:packages[a:sourced]['sourced_pre'] = 1
+        exe 'silent! doautocmd User plugin#'..l:file
+    else
+        let g:packages[a:sourced]['sourced_post'] = 1
     endif
     try
         return plugins#{l:file}#{l:type}()
@@ -290,8 +291,8 @@ function plugins#set_source_handler()
     command! -nargs=+ -complete=packadd Packload call plugins#packadd(<q-args>)
     augroup autoload_plugins
         autocmd!
-        autocmd SourcePre  */pack/* call s:config_pack(expand('<amatch>'), 1)
-        autocmd SourcePost */pack/* call s:config_pack(expand('<amatch>'), 0)
+        autocmd SourcePre  */pack/* call s:config_pack(expand('<amatch>'), v:true)
+        autocmd SourcePost */pack/* call s:config_pack(expand('<amatch>'), v:false)
     augroup END
 endfunction
 " vim:fdl=1:

@@ -77,7 +77,7 @@ set termguicolors                                               " Use true color
 set shell=sh                                                    " Use posix-compatible shell
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
-set history=10000                                               " Use max history entries
+set history=5000                                                " # of history entries (max 10000)
 set synmaxcol=300                                               " Don't try to highlight if line > N
 set laststatus=2                                                " Always show statusline
 set showtabline=2                                               " Always show tabline
@@ -202,6 +202,7 @@ if has('nvim-0.5')
     augroup vimrc
         autocmd!
         autocmd BufEnter * lua require'config.completion'.init()
+        autocmd ColorScheme * lua require'config.lsp'.set_hl()
     augroup END
 
     if getenv('AK_PROFILER') == 1

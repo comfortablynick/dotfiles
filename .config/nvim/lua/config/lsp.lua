@@ -30,26 +30,14 @@ if lsp_status ~= nil then
   }
 end
 
-vim.fn.sign_define("LspDiagnosticsSignError", {text = "✖"})
-vim.fn.sign_define("LspDiagnosticsSignWarning", {text = "‼"})
-vim.fn.sign_define("LspDiagnosticsSignInformation", {text = "i"})
-vim.fn.sign_define("LspDiagnosticsSignHint", {text = "»"})
-
-local ns = api.nvim_create_namespace("hl-lsp")
-
--- TODO: fix statusline functions to use new nvim api
-api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
-api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
-api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
-api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
-api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
-                {fg = "#ff5f87", sp = "#ff5f87"})
-api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
-                {fg = "#d78f00", sp = "#d78f00"})
-api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
-api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
-api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
-api.nvim_set_hl_ns(ns)
+vim.fn.sign_define("LspDiagnosticsSignError",
+                   {text = "", numhl = "LspDiagnosticsDefaultError"})
+vim.fn.sign_define("LspDiagnosticsSignWarning",
+                   {text = "", numhl = "LspDiagnosticsDefaultWarning"})
+vim.fn.sign_define("LspDiagnosticsSignInformation",
+                   {text = "", numhl = "LspDiagnosticsDefaultInformation"})
+vim.fn.sign_define("LspDiagnosticsSignHint",
+                   {text = "", numhl = "LspDiagnosticsDefaultHint"})
 
 local custom_symbol_handler = function(_, _, result, _, bufnr)
   if vim.tbl_isempty(result or {}) then return end
@@ -72,20 +60,31 @@ end
 
 vim.lsp.handlers["textDocument/documentSymbol"] = custom_symbol_handler
 vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
--- vim.lsp.handlers["textDocument/publishDiagnostics"] =
---   function(err, method, params, client_id, bufnr, config)
---     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
---       underline = true,
---       virtual_text = {spacing = 2},
---       signs = true,
---       update_in_insert = false,
---     })(err, method, params, client_id, bufnr, config)
---     bufnr = bufnr or vim.uri_to_bufnr(params.uri)
---
---     if bufnr == api.nvim_get_current_buf() then
---       vim.lsp.diagnostic.set_loclist{open_loclist = false}
---     end
---   end
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
+    virtual_text = {spacing = 2},
+    signs = true,
+    update_in_insert = true,
+  })
+
+function M.set_hl()
+  local ns = api.nvim_create_namespace("hl-lsp")
+
+  -- TODO: fix statusline functions to use new nvim api
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
+                  {fg = "#ff5f87", sp = "#ff5f87", undercurl = true})
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
+                  {fg = "#d78f00", sp = "#d78f00", undercurl = true})
+  api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
+  api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
+  api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
+  api.nvim_set_hl_ns(ns)
+end
 
 -- Standard rename functionality wrapper
 --
@@ -221,7 +220,7 @@ function M.init()
 
   for server, load_cfg in pairs(configs) do
     local cfg = {}
-    if load_cfg then 
+    if load_cfg then
       cfg = npcall(require, "config.lsp." .. server)
       -- Check if defined cmd is executable
       if cfg.cmd ~= nil then

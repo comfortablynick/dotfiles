@@ -52,7 +52,7 @@ return {
         debounce = 100,
         args = {"--enable-neovim", "-"},
         offsetLine = 0,
-        offsetColumn = 3,
+        offsetColumn = 0,
         sourceName = "vint",
         formatLines = 1,
         formatPattern = {

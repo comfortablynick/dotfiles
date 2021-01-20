@@ -12,7 +12,7 @@ function __bobthefish_glyphs -S -d 'Define glyphs used by bobthefish'
   set -x nonzero_exit_glyph      '! '
   set -x private_glyph           \uE0A2 ' '
   set -x superuser_glyph         '$ '
-  set -x bg_job_glyph            '% '
+  set -x bg_job_glyph            '%⚒ '
   set -x hg_glyph                \u263F
 
   # Python glyphs

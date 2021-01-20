@@ -1,6 +1,5 @@
-# Defined in /tmp/fish.vDpAft/cat.fish @ line 2
 function cat --description 'alias cat for best cat option installed'
-    set -l cats bat ccat gcat
+    set -l cats bat ccat gcat cat
     set -l found
     for cat in $cats
         if type -qf $cat
@@ -8,5 +7,5 @@ function cat --description 'alias cat for best cat option installed'
             break
         end
     end
-    $found $argv
+    eval command $found $argv
 end

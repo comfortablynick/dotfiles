@@ -34,7 +34,7 @@ else
         " let s:base16 = 'irblack'
         call v:lua.require('config.theme').set_theme(s:base16)
     else
-        colorscheme gruvbox8
+        silent! colorscheme gruvbox8
     endif
 endif
 

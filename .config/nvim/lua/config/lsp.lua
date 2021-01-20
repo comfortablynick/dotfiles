@@ -212,7 +212,7 @@ function M.init()
     jsonls = true,
     gopls = true,
     rust_analyzer = true,
-    bashls = false,
+    bashls = true,
     cmake = false,
     ccls = false,
     pyright = false,

@@ -1,6 +1,6 @@
-" Remember last place in file
 augroup plugin_buffer
     autocmd!
+    " Remember last place in file
     autocmd BufWinEnter * call s:recall_cursor_position()
     " Execute `direnv allow` after editing .envrc
     autocmd BufWritePost .envrc if executable('direnv') | silent !direnv allow % | endif

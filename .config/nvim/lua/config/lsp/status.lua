@@ -1,3 +1,12 @@
+local messaging = vim.F.npcall(require, "lsp-status/messaging")
+
+if not messaging then
+  local noop = function() end
+  return {_init = noop, status = noop}
+end
+
+local messages = messaging.messages
+
 local config = {
   kind_labels = {},
   current_function = true,
@@ -15,7 +24,6 @@ local config = {
 local function init(_, _config) config =
   vim.tbl_extend("force", config, _config) end
 
-local messages = require("lsp-status/messaging").messages
 local aliases = {pyls_ms = "MPLS"}
 
 local function statusline_lsp(bufnr)

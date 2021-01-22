@@ -29,7 +29,7 @@ if has('nvim')
     let g:python3_host_prog = $NVIM_PY3_DIR
     let &shadafile =
         \ stdpath('data')..'/shada/main.shada'                  " Location of nvim replacement for viminfofile
-    set winblend=15                                             " Transparency of floating windows (0-100)
+    set winblend=10                                             " Transparency of floating windows (0-100)
 else
     " Vim Only
     set wildmenu

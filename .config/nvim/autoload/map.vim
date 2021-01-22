@@ -52,8 +52,8 @@ function map#restore(mappings)
     endfor
 endfunction
 
-" map#cabbr() :: Safe expansion of command-line abbreviations {{{1
-function map#cabbr(lhs, rhs)
+" s:safe_abbr() :: Safe expansion of command-line abbreviations {{{1
+function s:safe_cabbr(lhs, rhs)
     if getcmdtype() ==# ':' && getcmdline() ==# a:lhs
         if type(a:rhs) == v:t_func
             return a:rhs()
@@ -64,10 +64,21 @@ function map#cabbr(lhs, rhs)
 endfunction
 
 " map#set_cabbr() :: Create safe cnoreabbrev {{{1
-function map#set_cabbr(from, ...)
-    execute 'cnoreabbrev <expr>' a:from
-        \ '((getcmdtype() ==# ":" && getcmdline() ==# "'..a:from..'")'
-        \ .'? ("'..join(a:000, ' ')..'") : ("'..a:from..'"))'
+function map#set_cabbr(from, to)
+    execute printf('cnoreabbrev <expr> %s getcmdtype() ==# ":" && getcmdline() ==# %s ? %s : %s',
+        \ a:from,
+        \ string(a:from),
+        \ string(a:to),
+        \ string(a:from),
+        \ )
+endfunction
+
+function map#cabbr(lhs, rhs)
+    execute printf('cnoreabbrev <expr> %s <SID>safe_cabbr(%s, %s)',
+        \ a:lhs,
+        \ string(a:lhs),
+        \ string(a:rhs),
+        \ )
 endfunction
 
 " map#eatchar() :: Eat character if it matches pattern {{{1

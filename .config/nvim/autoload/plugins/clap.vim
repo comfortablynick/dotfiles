@@ -16,15 +16,15 @@ command  Filer   Clap filer
 command  Base16  call plugins#clap#base16()
 command  Globals Clap globals
 
-Alias bs   Clap buffers
-Alias t    Clap tags nvim_lsp
-Alias scr  Clap scriptnames
-Alias mru  Clap mru
-Alias mapn Clap map ++mode=n
-Alias mapi Clap map ++mode=i
-Alias mapv Clap map ++mode=v
-Alias mapo Clap map ++mode=o
-Alias mapx Clap map ++mode=x
+call map#cabbr('bs', 'Clap buffers')
+call map#cabbr('t', 'Clap tags nvim_lsp')
+call map#cabbr('scr', 'Clap scriptnames')
+call map#cabbr('mru', 'Clap mru')
+call map#cabbr('mapn', 'Clap map ++mode=n')
+call map#cabbr('mapi', 'Clap map ++mode=i')
+call map#cabbr('mapv', 'Clap map ++mode=v')
+call map#cabbr('mapo', 'Clap map ++mode=o')
+call map#cabbr('mapx', 'Clap map ++mode=x')
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags nvim_lsp<CR>

@@ -45,17 +45,14 @@ noremap <F3> <Cmd>Neoformat<CR>
 command! -nargs=0 Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
 
 " h[g] :: Open help[grep] in new or existing tab {{{2
-cnoreabbrev <expr> h
-    \ map#cabbr('h', {->window#tab_mod('help', 'help')})
-cnoreabbrev <expr> hg
-    \ map#cabbr('hg', {->window#tab_mod('helpgrep', 'help')})
+call map#cabbr('h', function('window#tab_mod', ['help', 'help']))
+call map#cabbr('hg', function('window#tab_mod', ['helpgrep', 'help']))
 
 " vh :: Open help in vert split {{{2
-Alias vh vert help
+call map#cabbr('vh', 'vert help')
 
 " man :: Open :Man in new or existing tab {{{2
-cnoreabbrev <expr> man
-    \ map#cabbr('man', {->window#tab_mod('Man', 'man')})
+call map#cabbr('man', function('window#tab_mod', ['Man', 'man']))
 
 " fff :: Insert comment with fold marker {{{2
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
@@ -66,11 +63,11 @@ command Wq wq
 command Wqa wqa
 command W w
 
-Alias ehco echo
+call map#cabbr('ehco', 'echo')
 
 " Misc command abbreviations {{{2
-Alias grep silent grep!
-Alias make silent make!
+call map#cabbr('grep', 'silent grep!')
+call map#cabbr('make', 'silent make!')
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2
@@ -79,7 +76,7 @@ command! -bang -nargs=+ -range=0 -complete=file AsyncRun
     \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
     \   'asyncrun.vim'
     \ )
-Alias R AsyncRun
+call map#cabbr('R', 'AsyncRun')
 
 " Make :: async make {{{2
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
@@ -94,7 +91,7 @@ command! -nargs=+ -complete=file_in_path -bar Grep
 "     \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
 "     \ 'asynctasks.vim'
 "     \ )
-Alias T AsyncTask
+call map#cabbr('T', 'AsyncTask')
 
 " Git {{{1
 " GV :: git commit viewer {{{2
@@ -109,7 +106,7 @@ nnoremap <Leader>gp <Cmd>Gpush<CR>
 " Tig[Status] :: view tig in terminal {{{2
 command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
 command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
-Alias Ts TigStatus
+call map#cabbr('Ts', 'TigStatus')
 nnoremap <Leader>ts <Cmd>TigStatus<CR>
 
 " LazyGit :: tui for git {{{2
@@ -186,7 +183,7 @@ if has('nvim')
 
     " [H]elp :: floating help window {{{2
     command -complete=help -nargs=? Help call s:window.floating_help(<q-args>)
-    Alias H Help
+    call map#cabbr('H', 'Help')
 
     " Colorizer :: run nvim-colorizer.lua {{{2
     " command Colorizer call plugins#lazy_run('ColorizerToggle', 'nvim-colorizer.lua')
@@ -196,9 +193,8 @@ if has('nvim')
     command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 
     " Lua {{{2
-    Alias l lua
-    cnoreabbrev <expr> lp
-        \ map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
+    call map#cabbr('l', 'lua')
+    call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
     " Term :: Run async command in terminal buffer {{{2
     command -complete=file -nargs=+ Term call s:tools.term_run_cmd(<f-args>)

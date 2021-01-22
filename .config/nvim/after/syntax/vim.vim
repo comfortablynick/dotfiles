@@ -12,4 +12,4 @@ if g:vimsyn_embed =~# 'l'
     let b:current_syntax = 'vim'
 endif
 
-syntax keyword vimCommand contained Pack[load] Alias Plug[Local]
+syntax keyword vimCommand contained Pack[load] Plug[Local]

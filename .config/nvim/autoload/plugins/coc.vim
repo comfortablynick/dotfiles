@@ -125,9 +125,9 @@ function! s:coc_actions_open_from_selection(type) "{{{1
 endfunction
 
 function! plugins#coc#abbrev() "{{{1
-    call map#set_cabbr('es', 'CocCommand snippets.editSnippets')
-    call map#set_cabbr('ci', 'CocInfo')
-    call map#set_cabbr('cc', 'CocConfig')
+    call map#cabbr('es', 'CocCommand snippets.editSnippets')
+    call map#cabbr('ci', 'CocInfo')
+    call map#cabbr('cc', 'CocConfig')
 endfunction
 
 function! plugins#coc#init() "{{{1

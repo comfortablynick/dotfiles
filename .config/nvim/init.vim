@@ -14,10 +14,6 @@ if has('nvim') && g:use_packer
     set packpath+=~/vim-test/
 endif
 
-" Commands {{{1
-" Alias :: set command abbreviation {{{2
-command -nargs=+ Alias call map#set_cabbr(<f-args>)
-
 " General configuration {{{1
 " Vim/Neovim Only {{{2
 let g:vim_exists = executable('vim')

@@ -5,7 +5,7 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-left>'
 let g:UltiSnipsSnippetDirectories = ['~/.config/ultisnips']
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = '~/.config/ultisnips'
 
-Alias es UltiSnipsEdit
+call map#cabbr('es', 'UltiSnipsEdit')
 
 " " Define <Plug> mappings
 " inoremap <expr> <Plug>(MyCR)

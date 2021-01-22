@@ -5,16 +5,17 @@
 DIR="$HOME/src/lua-language-server"
 
 run() {
+    OS="$(uname -s | sed s/Darwin/macOS/)"
     cd "$DIR" || exit 1
-    bin/Linux/lua-language-server -E -e LANG=en ./main.lua
+    "bin/$OS/lua-language-server" -E -e LANG=en ./main.lua
 }
 
 update() {
-    cd "$DIR"
+    cd "$DIR" || exit 1
     git pull
     git submodule update --init --recursive
 
-    cd 3rd/luamake
+    cd 3rd/luamake || exit 1
     ninja -f ninja/linux.ninja
     cd ../..
     ./3rd/luamake/luamake rebuild
@@ -23,6 +24,8 @@ update() {
 if [ "$1" = "update" ]; then
     echo "Updating lua-language-server"
     update
+elif command -v lua-language-server >/dev/null 2>&1; then
+    lua-language-server "$@"
 else
     run
 fi

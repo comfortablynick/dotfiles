@@ -44,7 +44,7 @@ function! s:deferred_load()
     packadd vim-picker
     packadd vim-lion
     packadd asynctasks.vim
-    packadd ultisnips
+    " packadd ultisnips
 
     if has('nvim')
         packadd nvim-miniyank           " Seems to have issue on vim

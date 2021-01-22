@@ -8,7 +8,7 @@ return {
       sh = "shellcheck",
       python = "pydocstyle",
     },
-    formatFiletypes = {sh = "shfmt", lua = "luaformat", rust = "rustfmt"},
+    formatFiletypes = {sh = "shfmt", lua = "luaformat", rust = "rustfmt", python = "black"},
     linters = {
       luacheck = {
         command = "luacheck",
@@ -62,9 +62,11 @@ return {
       },
     },
     formatters = {
-      luaformat = {command = "lua-format", isStdout = true},
+      -- Use lua-format wrapper script
+      luaformat = {command = "lua_format", isStdout = true},
       rustfmt = {},
       shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
+      black = {command = "black", args={"quiet", "-"}},
     },
   },
 }

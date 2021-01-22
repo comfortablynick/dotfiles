@@ -10,15 +10,16 @@ if status is-interactive; and test -d "$dotdir"
     # Run parsing script to update env.fish
     echo "env.toml has changed!"
     # set -l py_paths ($HOME/.asdf/bin/asdf which python 2>/dev/null) python3
-    set -l py_paths python3
-    test -x $HOME/.asdf/bin/asdf; and set -p py_paths ($HOME/.asdf/bin/asdf which python)
-    set -l py_path
-    for path in $py_paths
-        if type -qf $path
-            set py_path $path
-            break
-        end
-    end
+    # set -l py_paths python3
+    # test -x $HOME/.asdf/bin/asdf; and set -p py_paths ($HOME/.asdf/bin/asdf which python)
+    # set -l py_path
+    # for path in $py_paths
+    #     if type -qf $path
+    #         set py_path $path
+    #         break
+    #     end
+    # end
+    set -l py_path (which python3)
     set -l parse_env $HOME/bin/parse_env
     set -l toml_file $dotdir/env.toml
     set -l env_file $HOME/.config/fish/env.fish
@@ -27,6 +28,6 @@ if status is-interactive; and test -d "$dotdir"
         set -U env_file_sourced 0
         set -U env_toml_sha "$env_sha"
     else
-        echo "01_check_env.fish error: no asdf python interpreter found. Aborting!"
+        echo "01_check_env.fish error: no python interpreter found. Aborting!"
     end
 end

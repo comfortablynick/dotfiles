@@ -1,4 +1,4 @@
-# Defined in /tmp/fish.0PH6A8/edit.fish @ line 2
+# Defined in /var/folders/09/rfyz42rn67z2lg9jnw0gs9240000gn/T//fish.kkdRgW/edit.fish @ line 2
 function edit
     argparse --ignore-unknown f/finder= h/help -- $argv
     or return 1
@@ -14,6 +14,11 @@ function edit
 
     if set -q _flag_help
         echo -e $help_txt
+        return 1
+    end
+
+    if test -z "$EDITOR"
+        echo -e '$EDITOR is not set'
         return 1
     end
 
@@ -41,16 +46,19 @@ function edit
         echo "Missing fuzzy finder; install fzy, fzf, etc. before running this command"
         return 1
     end
-    eval "$FZY_DEFAULT_COMMAND" | $use_finder | read file
-    if test -z "$file"
+    eval "$FZY_DEFAULT_COMMAND" | $use_finder | while read -l result
+        set files $files $result
+    end
+    if test -z "$files"
         commandline -f repaint
         return
-    else
-        commandline -t ""
     end
+    commandline -r ""
 
-    commandline -it -- "$EDITOR "
-    commandline -it -- (string escape $file)
-    commandline -f repaint
+    for file in $files
+        commandline -it -- "$EDITOR "
+        commandline -it -- (string escape $file)
+        commandline -it ' '
+    end
     commandline -f execute
 end

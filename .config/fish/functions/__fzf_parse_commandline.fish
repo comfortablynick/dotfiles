@@ -1,3 +1,4 @@
+# Defined in /var/folders/09/rfyz42rn67z2lg9jnw0gs9240000gn/T//fish.C9zVYy/__fzf_parse_commandline.fish @ line 2
 function __fzf_parse_commandline --description 'Parse the current command line token and return split of existing filepath and rest of token'
     # eval is used to do shell expansion on paths
     set -l commandline (eval "printf '%s' "(commandline -t))

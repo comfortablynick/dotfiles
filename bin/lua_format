@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# NOTE: Use system package if possible
+# Wrapper script to make lua-language-server easier to run
+DIR="$HOME/src/LuaFormatter"
+
+run() {
+    cd "$DIR" || exit 1
+    ./lua-format "$@"
+}
+
+update() {
+    cd "$DIR" || exit 1
+    git pull
+    git submodule update --init --recursive
+
+    cmake .
+    make
+    make install
+}
+
+if [ "$1" = "update" ]; then
+    echo "Updating LuaFormatter"
+    update
+elif command -v lua-format >/dev/null 2>&1; then
+    lua-format "$@"
+else
+    run "$@"
+fi

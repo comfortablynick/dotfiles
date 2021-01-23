@@ -1,5 +1,6 @@
 return {
-  cmd = {"lua-language-server"},
+  -- Use wrapper script
+  cmd = {"luals"},
   settings = {
     Lua = {
       runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},

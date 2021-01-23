@@ -19,7 +19,7 @@ return {
       luacheck = {
         command = "luacheck",
         debounce = 100,
-        args = {"--formatter=plain", "--codes", "-"},
+        args = {"--formatter=plain", "--codes", "--config=~/.config/luacheck/.luacheckrc", "-"},
         offsetLine = 0,
         offsetColumn = 0,
         sourceName = "luacheck",

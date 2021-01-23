@@ -7,6 +7,22 @@ local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
 local lsps_attached = {}
 
+local configs = require"lspconfig/configs"
+local lsp_util = require"lspconfig/util"
+
+local root_pattern = lsp_util.root_pattern(".git", "config.yml")
+
+configs.taplo = {
+  default_config = {
+    cmd = {"taplo-lsp", "run"},
+    filetypes = {"toml"},
+    root_dir = function(fname)
+      return root_pattern(fname) or vim.loop.os_homedir()
+    end,
+    settings = {},
+  },
+}
+
 M.configs = {}
 
 if lsp_status ~= nil then
@@ -196,13 +212,13 @@ local on_attach_cb = function(client)
   if ft == "rust" then set_rust_inlay_hints() end
 end
 
--- vim.lsp.set_log_level("debug")
+vim.lsp.set_log_level("debug")
 
 function M.init()
   if not lsp then return end
   -- Server configs {{{1
-  -- If configs[server] == true, load config from config.lsp.{server}
-  local configs = {
+  -- If true, load config from config.lsp.{server}
+  local local_configs = {
     sumneko_lua = true,
     -- efm = true,
     diagnosticls = true,
@@ -212,13 +228,14 @@ function M.init()
     gopls = true,
     rust_analyzer = true,
     bashls = true,
+    taplo = false,
     cmake = false,
     ccls = false,
     pyright = false,
     tsserver = false,
   }
 
-  for server, load_cfg in pairs(configs) do
+  for server, load_cfg in pairs(local_configs) do
     local cfg = {}
     if load_cfg then
       cfg = npcall(require, "config.lsp." .. server)

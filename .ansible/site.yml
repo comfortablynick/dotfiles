@@ -30,6 +30,13 @@
   tags:
     - vim
 
+- name: Install tmux
+  hosts: jupiter
+  roles:
+    - tmux
+  tags:
+    - tmux
+
 - name: Install rust
   hosts: all
   roles:

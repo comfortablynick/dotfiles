@@ -6,6 +6,12 @@
     suffix: _tmux_build
   register: temp_dir
 
+- name: Check that temp dir was created
+  assert:
+    that:
+      - temp_dir.path is directory
+  when: not ansible_check_mode
+
 - name: Print temp dir
   debug:
     var: temp_dir
@@ -51,7 +57,7 @@
   git:
     repo: https://github.com/tmux/tmux
     dest: "{{ tmux_source_dir }}"
-    depth: 1
+    depth: "1"
     force: yes
   register: tmux_git_clone
 

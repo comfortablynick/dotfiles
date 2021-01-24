@@ -16,6 +16,7 @@ RSUB="${RSUB}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
+TMUX_MEM_CPU=$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load
 
 # Status commands
 if [[ -x $SYSINFO ]]; then
@@ -37,6 +38,8 @@ else
     if [[ -x $TMUX_TOP ]]; then
         MEMUSAGE="$("$TMUX_TOP" m)"
         LOADAVG="$("$TMUX_TOP" l)"
+    elif [[ -x $TMUX_MEM_CPU ]]; then
+        MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
     else
         MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
         LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
@@ -58,16 +61,12 @@ if [[ $WIDTH -gt $MEDIUM ]]; then
 
     if [[ $WIDTH -gt $LARGE ]] || [[ $TABS -lt 5 ]]; then
         UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
-        # if [[ $MOSH_CONNECTION -ne 1 ]]; then
-        #     WTTR=$("$HOME/.config/tmux/_weather")
-        #     WEATHER="#[fg=colour251,bg=default,nobold,noitalics,nounderscore]$WTTR$SP$SP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
-        # fi
     fi
 fi
 
 if [[ $WIDTH -ge $SMALL ]]; then
     USER="#[fg=colour31,bg=colour236,nobold,noitalics,nounderscore]$RSEP#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$(whoami)"
-    UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOSTNAME $(uname -n)"
+    UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOSTNAME $(uname -n | sed 's/.local//')"
 fi
 
-echo "$WEATHER $UPTIME $LOAD $DATE $TIME $USER $UNAME" | sed 's/ *$/ /g'
+echo "$UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME " | sed 's/ \{2,\}/ /g'

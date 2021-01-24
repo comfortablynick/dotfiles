@@ -212,7 +212,7 @@ local on_attach_cb = function(client)
   if ft == "rust" then set_rust_inlay_hints() end
 end
 
-vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level("debug")
 
 function M.init()
   if not lsp then return end

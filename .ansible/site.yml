@@ -37,6 +37,13 @@
   tags:
     - tmux
 
+- name: Install mosh
+  hosts: pollux
+  roles:
+    - mosh
+  tags:
+    - mosh
+
 - name: Install rust
   hosts: all
   roles:

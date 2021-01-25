@@ -1,6 +1,6 @@
 return {
   cmd = {"diagnostic-languageserver", "--stdio"},
-  filetypes = {"lua", "vim", "sh", "python", "rust", "toml"},
+  filetypes = {"lua", "vim", "sh", "python", "toml"},
   init_options = {
     filetypes = {
       lua = "luacheck",
@@ -12,7 +12,6 @@ return {
     formatFiletypes = {
       sh = "shfmt",
       lua = "luaformat",
-      rust = "rustfmt",
       python = "black",
     },
     linters = {
@@ -76,7 +75,6 @@ return {
     formatters = {
       -- Use lua-format wrapper script
       luaformat = {command = "lua_format", isStdout = true},
-      rustfmt = {},
       shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
       black = {command = "black", args = {"quiet", "-"}},
     },

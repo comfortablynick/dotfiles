@@ -8,7 +8,7 @@
 
 --italic-text=always
 
---map-syntax justfile:make
+--map-syntax justfile:Makefile
 --map-syntax .ignore:gitignore
 --map-syntax .MD:markdown
 --map-syntax .tasks:INI

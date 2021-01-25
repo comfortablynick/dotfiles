@@ -38,8 +38,8 @@ else
     if [[ -x $TMUX_TOP ]]; then
         MEMUSAGE="$("$TMUX_TOP" m)"
         LOADAVG="$("$TMUX_TOP" l)"
-    elif [[ -x $TMUX_MEM_CPU ]]; then
-        MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
+    # elif [[ -x $TMUX_MEM_CPU ]]; then
+    #     MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
     else
         MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
         LOADAVG="$("$HOME"/.config/tmux/_loadavg)"

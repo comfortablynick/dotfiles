@@ -35,7 +35,6 @@ function! s:deferred_load()
         \ 'vista.vim',
         \ 'vim-floaterm',
         \ 'vim-picker',
-        \ 'vim-lion',
         \ 'vim-easy-align',
         \ 'asynctasks.vim',
         \ 'ultisnips',

@@ -45,6 +45,7 @@ function plugins#init()
     Plug 'justinmk/vim-sneak'
     Plug 'rhysd/clever-f.vim'
     Plug 'tommcdo/vim-lion'
+    Plug 'junegunn/vim-easy-align'
     Plug 'wellle/targets.vim'
     Plug 'tommcdo/vim-exchange'
     Plug 'bfredl/nvim-miniyank'

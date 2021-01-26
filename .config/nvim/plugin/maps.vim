@@ -45,6 +45,11 @@ let g:timefmts = [
     \ ]
 inoremap <silent><C-G><C-T> <C-R>=repeat(complete(col('.'),map(g:timefmts,{_,v->strftime(v)})),0)<CR>
 
+" Diff mode {{{2
+nnoremap <expr> <Leader>gg &diff ? "<Cmd>diffget //1\<CR>" : ""
+nnoremap <expr> <Leader>gh &diff ? "<Cmd>diffget //2\<CR>" : ""
+nnoremap <expr> <Leader>gl &diff ? "<Cmd>diffget //3\<CR>" : ""
+
 " Indent/outdent {{{2
 vnoremap <Tab>   <Cmd>normal! >gv<CR>
 vnoremap <S-Tab> <Cmd>normal! <gv<CR>

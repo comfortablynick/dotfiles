@@ -3,18 +3,10 @@ let g:package_manager = 'vim-packager'
 let g:package_defer_time = 300
 
 " Package management
-if get(g:, 'use_packer', 0)
-    command! PackerInstall packadd packer.nvim | lua require('plugins').install()
-    command! PackerUpdate  packadd packer.nvim | lua require('plugins').update()
-    command! PackerSync    packadd packer.nvim | lua require('plugins').sync()
-    command! PackerClean   packadd packer.nvim | lua require('plugins').clean()
-    command! PackerCompile packadd packer.nvim | lua require('plugins').compile()
-else
-    command!       PackInstall call plugins#init() | call packager#install()
-    command! -bang PackUpdate  call plugins#init() | call packager#update({'force_hooks': '<bang>'})
-    command!       PackClean   call plugins#init() | call packager#clean()
-    command!       PackStatus  call plugins#init() | call packager#status()
-endif
+command       PackInstall call plugins#init() | call packager#install()
+command -bang PackUpdate  call plugins#init() | call packager#update({'force_hooks': '<bang>'})
+command       PackClean   call plugins#init() | call packager#clean()
+command       PackStatus  call plugins#init() | call packager#status()
 
 augroup plugin_pack
     autocmd!
@@ -23,34 +15,41 @@ augroup END
 
 " Load packages that are safe to defer
 function! s:deferred_load()
-    packadd fzf
-    packadd fzf.vim
-    packadd targets.vim
-    packadd vim-exchange
-    packadd tcomment_vim
-    packadd vim-unimpaired
-    packadd clever-f.vim
-    packadd vim-sneak
-    packadd vim-tmux-navigator
-    packadd better-vim-tmux-resizer
-    packadd vim-sandwich
-    packadd vim-smoothie
-    packadd vim-repeat
-    packadd vim-eunuch
-    packadd vim-clap
-    packadd vim-snippets
-    packadd vista.vim
-    packadd vim-floaterm
-    packadd vim-picker
-    packadd vim-lion
-    packadd asynctasks.vim
-    " packadd ultisnips
+    let l:packs = [
+        \ 'fzf',
+        \ 'fzf.vim',
+        \ 'targets.vim',
+        \ 'vim-exchange',
+        \ 'tcomment_vim',
+        \ 'vim-unimpaired',
+        \ 'clever-f.vim',
+        \ 'vim-sneak',
+        \ 'vim-tmux-navigator',
+        \ 'better-vim-tmux-resizer',
+        \ 'vim-sandwich',
+        \ 'vim-smoothie',
+        \ 'vim-repeat',
+        \ 'vim-eunuch',
+        \ 'vim-clap',
+        \ 'vim-snippets',
+        \ 'vista.vim',
+        \ 'vim-floaterm',
+        \ 'vim-picker',
+        \ 'vim-lion',
+        \ 'vim-easy-align',
+        \ 'asynctasks.vim',
+        \ 'ultisnips',
+        \ 'vim-fugitive',
+        \ ]
 
     if has('nvim')
-        packadd nvim-miniyank           " Seems to have issue on vim
-        packadd FixCursorHold.nvim
+        let l:packs += [
+            \ 'nvim-miniyank',
+            \ 'FixCursorHold.nvim',
+            \ ]
     endif
 
-    packadd vim-fugitive
-    silent! call FugitiveDetect(expand('%:p'))
+    for l:pack in l:packs
+        exe 'packadd' l:pack
+    endfor
 endfunction

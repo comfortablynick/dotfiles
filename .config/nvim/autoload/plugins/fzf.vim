@@ -32,8 +32,7 @@ augroup fzf_config "{{{2
 augroup END
 
 " Maps {{{2
-nnoremap <silent> <Leader>gg :RG<CR>
-nnoremap <silent> z= :call <SID>fzf_spell()<CR>
+nnoremap z= <Cmd>call <SID>fzf_spell()<CR>
 
 " Functions {{{1
 function s:fzf_rg(query, fullscreen) "{{{2

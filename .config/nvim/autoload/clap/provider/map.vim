@@ -18,7 +18,7 @@ function s:map.source()
     let l:mode = s:get_mode()
     let l:self.prompt_format = ' %spinner%%forerunner_status% '..l:mode..'map:'
     call clap#spinner#refresh()
-    return luaeval('require"tools".get_maps(_A[1], _A[2])', [l:mode, bufnr('')])
+    return luaeval('require"tools".get_maps(_A[1], _A[2])', [l:mode, g:clap.start.bufnr])
 endfunction
 
 function s:map.sink(sel)

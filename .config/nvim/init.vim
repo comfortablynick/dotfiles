@@ -182,8 +182,9 @@ if has('nvim-0.5')
     silent! packadd! plenary.nvim
     silent! packadd! nvim-lspconfig
     silent! packadd! lsp-status.nvim
-    silent! packadd! completion-nvim
-    silent! packadd! completion-buffers
+    " silent! packadd! completion-nvim
+    " silent! packadd! completion-buffers
+    silent! packadd! nvim-compe
     silent! packadd! snippets.nvim
 
     lua <<
@@ -193,11 +194,13 @@ if has('nvim-0.5')
     require"config.devicons"
     require"config.gitsigns".init()
     require"config.lsp".init()
+    require"config.autopairs".init()
 .
 
     augroup vimrc
         autocmd!
-        autocmd BufEnter * lua require'config.completion'.init()
+        " autocmd BufEnter * lua require'config.completion'.init()
+        autocmd BufEnter * lua require'config.compe'.init()
         autocmd ColorScheme * lua require'config.lsp'.set_hl()
     augroup END
 

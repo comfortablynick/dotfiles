@@ -355,6 +355,30 @@ function nvim.source_current_buffer() -- {{{2
   loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
 
+function nvim.smart_tab() --{{{2
+  if vim.fn.pumvisible() ~= 0 then
+    api.nvim_eval[[feedkeys("\<c-n>", "n")]]
+    return
+  end
+  local col = vim.fn.col('.') - 1
+  if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+    api.nvim_eval[[feedkeys("\<tab>", "n")]]
+    return
+  end
+  -- vim.F.npcall(fallback_cb)
+  -- Trigger completion otherwise?
+  -- source.triggerCompletion(true, manager)
+  api.nvim_eval[[feedkeys("\<C-Space>")]]
+end
+
+function nvim.smart_s_tab() --{{{2
+  if vim.fn.pumvisible() ~= 0 then
+    api.nvim_eval([[feedkeys("\<c-p>", "n")]])
+    return
+  end
+  api.nvim_eval([[feedkeys("\<s-tab>", "n")]])
+end
+
 -- warn :: echo warning message {{{2
 function nvim.warn(text)
   vim.validate{text = {text, "string"}}

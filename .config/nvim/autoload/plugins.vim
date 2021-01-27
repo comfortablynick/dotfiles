@@ -107,9 +107,9 @@ function plugins#init()
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'nvim-lua/lsp_extensions.nvim'
     Plug 'nvim-lua/completion-nvim'
+    Plug 'hrsh7th/nvim-compe'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
-    " Plug 'neoclide/coc.nvim',     {'do': {-> coc#util#install()}}
 
     " Lua/nvim {{{2
     Plug 'rktjmp/lush.nvim'
@@ -121,6 +121,7 @@ function plugins#init()
     Plug 'romgrk/barbar.nvim'
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
+    Plug 'windwp/nvim-autopairs'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

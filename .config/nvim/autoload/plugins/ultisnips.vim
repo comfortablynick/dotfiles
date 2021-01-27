@@ -1,7 +1,7 @@
 " Remap UltiSnips triggers so they don't interfere with mucomplete
 let g:UltiSnipsExpandTrigger = '<C-s>'
-let g:UltiSnipsJumpForwardTrigger = '<C-right>'
-let g:UltiSnipsJumpBackwardTrigger = '<C-left>'
+let g:UltiSnipsJumpForwardTrigger = '<C-k>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
 let g:UltiSnipsSnippetDirectories = ['~/.config/ultisnips']
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = '~/.config/ultisnips'
 

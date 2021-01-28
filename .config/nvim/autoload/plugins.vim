@@ -129,7 +129,6 @@ function plugins#init()
 
     " Tmux {{{2
     Plug 'christoomey/vim-tmux-navigator'
-    Plug 'RyanMillerC/better-vim-tmux-resizer'
     Plug 'comfortablynick/vim-tmux-runner'
 endfunction
 

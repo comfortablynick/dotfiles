@@ -25,6 +25,7 @@ call map#cabbr('mapi', 'Clap map ++mode=i')
 call map#cabbr('mapv', 'Clap map ++mode=v')
 call map#cabbr('mapo', 'Clap map ++mode=o')
 call map#cabbr('mapx', 'Clap map ++mode=x')
+call map#cabbr('api', 'Clap api')
 
 " Maps
 nnoremap <silent> <Leader>t :Clap tags nvim_lsp<CR>

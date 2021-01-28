@@ -1,35 +1,24 @@
-# Defined in /tmp/fish.PsTBMq/pass.fish @ line 2
+# Defined in /tmp/fish.DDiDVJ/pass.fish @ line 2
 function pass --description 'fuzzy find passwords from lastpass-cli'
-	for arg in $argv
-        switch $arg
-            case --help
-                echo 'pass: fuzzy find passwords from lastpass-cli'
-                echo 'USAGE: pass [pattern]'
-                echo 'Note: most flags will get passed to ripgrep'
-                return 0
-        end
-    end
-
-    # filter account list by argv, store in tmp_file
-    set tmp_file (mktemp /tmp/getpass_tmp_file.XXXXXXXXXXXXXXX)
-    lpass ls | rg -i "$argv" >$tmp_file
-
-    set match_count (wc -l < $tmp_file)
-    set lpass_id_regex '\d{5,}'
-
-    if test $match_count -eq 0
-        echo "Could not find $argv -" (lpass status)
+    argparse h/help p/password -- $argv; or return
+    if set -q _flag_help
+        echo 'Fuzzy find passwords from lastpass-cli'
+        echo
+        echo 'Usage: pass [{-h|--help}{-p|--password}] PATTERN'
+        echo
+        echo 'PATTERN    Search string to pass to `lpass ls`'
+        echo
+        echo 'Flags:'
+        echo '  -h, --help          Show this help message and exit'
+        echo '  -p, --password      Output password only to stdout'
         return 1
-
-    else if test $match_count -ge 2
-        # fuzzy find account, pass account id back, lpass finds then copies pass to clipboard
-        set choice (cat $tmp_file | fzf-tmux | rg -o $lpass_id_regex)
-        lpass show -cp $choice
-    else
-        # lpass show -cp (cat $tmp_file | rg -o $lpass_id_regex)
-        echo "Figure out how to copy from lpass"
-        cat $tmp_file
     end
 
-    rm $tmp_file
+    lpass ls | fzf-tmux -1 -q "$argv" | read -l result
+    set result (string replace -r -a '.+\[id: (\d+)\]' '$1' -- $result)
+    set -l lpass_args
+    if set -q _flag_password
+        set lpass_args --password
+    end
+    and lpass show $lpass_args $result
 end

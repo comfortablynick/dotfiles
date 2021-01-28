@@ -25,7 +25,6 @@ function! s:deferred_load()
         \ 'clever-f.vim',
         \ 'vim-sneak',
         \ 'vim-tmux-navigator',
-        \ 'better-vim-tmux-resizer',
         \ 'vim-sandwich',
         \ 'vim-smoothie',
         \ 'vim-repeat',

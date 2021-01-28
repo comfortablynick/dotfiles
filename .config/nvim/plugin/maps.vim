@@ -61,8 +61,14 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-" `ALT+{h,j,k,l}` to navigate windows from other modes {{{2
+" `ALT+{h,j,k,l}` resize vim/tmux panes in normal mode {{{2
 " Note: vim has trouble with Meta/Alt key
+nnoremap <A-h> <Cmd>call window#tmux_aware_resize('h')<CR>
+nnoremap <A-j> <Cmd>call window#tmux_aware_resize('j')<CR>
+nnoremap <A-k> <Cmd>call window#tmux_aware_resize('k')<CR>
+nnoremap <A-l> <Cmd>call window#tmux_aware_resize('l')<CR>
+
+" `ALT+{h,j,k,l}` to navigate windows from other modes {{{2
 tnoremap <A-h> <C-\><C-N><C-w>h
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k

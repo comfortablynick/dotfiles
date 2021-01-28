@@ -7,23 +7,26 @@ vim.o.completeopt = "menuone,noinsert,noselect"
 vim.cmd[[set shortmess+=c]]
 
 local imap = function(key, result, opts)
-  api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
+  api.nvim_set_keymap("i", key, result, opts or {silent = true})
 end
+
+local noop = function() end
 
 local init = function()
   local compe = vim.F.npcall(require, "compe")
-  local complete_exclude_fts = {"clap_input", "qf", ""}
-
-  -- Don't load completion
-  if compe == nil or vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then
-    return
-  end
+  if compe == nil then return end
+  -- local complete_exclude_fts = {"clap_input", "qf", ""}
+  --
+  -- -- Don't load completion
+  -- if compe == nil or vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then
+  --   return
+  -- end
 
   require"config.snippets"
 
   compe.setup{
     enabled = true,
-    debug = true,
+    debug = false,
     min_length = 1,
     preselect = "disable", -- 'enable' || 'disable' || 'always',
     -- throttle_time = ... number ...,
@@ -33,7 +36,6 @@ local init = function()
     source = {
       path = true,
       buffer = true,
-      vsnip = true,
       ultisnips = true,
       nvim_lsp = true,
       nvim_lua = true,

@@ -192,6 +192,9 @@ if has('nvim')
     " LspDisable :: stop active lsp clients {{{2
     command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 
+    " LspLog :: open lsp log {{{2
+    command LspLog edit `=v:lua.vim.lsp.get_log_path()`
+
     " Lua {{{2
     call map#cabbr('l', 'lua')
     call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')

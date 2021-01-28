@@ -228,7 +228,7 @@ function M.init()
     gopls = true,
     rust_analyzer = true,
     bashls = true,
-    taplo = false,
+    -- taplo = false,
     cmake = false,
     ccls = false,
     pyright = false,

@@ -220,8 +220,8 @@ function M.init()
   -- If true, load config from config.lsp.{server}
   local local_configs = {
     sumneko_lua = true,
-    -- efm = true,
-    diagnosticls = true,
+    efm = true,
+    -- diagnosticls = true,
     vimls = true,
     yamlls = true,
     jsonls = true,

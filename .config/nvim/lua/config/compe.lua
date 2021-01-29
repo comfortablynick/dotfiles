@@ -7,36 +7,62 @@ vim.o.completeopt = "menuone,noinsert,noselect"
 vim.cmd[[set shortmess+=c]]
 
 local imap = function(key, result, opts)
-  api.nvim_set_keymap("i", key, result, opts or {silent = true})
+  api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
 end
 
-local noop = function() end
+
+local labels = {
+  Buffer = " [buffer]",
+  Class = " [class]",
+  Color = " [color]",
+  Enum = " [enum]",
+  Field = "פּ [field]",
+  Folder = " [folder]",
+  Function = " [function]",
+  Interface = " [interface]",
+  Keyword = " [keyword]",
+  Method = " [method]",
+  Module = " [module]",
+  Operator = " [operator]",
+  Property = " [property]",
+  Reference = " [reference]",
+  Snippet = " [snippet]",
+  Struct = "פּ [struct]",
+  Text = " [text]",
+  TypeParameter = " [type]",
+  UltiSnips = " [UltiSnips]",
+  Unit = " [unit]",
+  Value = " [value]",
+  Variable = " [variable]",
+  ["snippets.nvim"] = " [nsnip]",
+}
 
 local init = function()
   local compe = vim.F.npcall(require, "compe")
   if compe == nil then return end
-  -- local complete_exclude_fts = {"clap_input", "qf", ""}
-  --
-  -- -- Don't load completion
-  -- if compe == nil or vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then
-  --   return
-  -- end
+  local complete_exclude_fts = {"clap_input", "qf", ""}
+
+  -- Don't load completion
+  if compe == nil or vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) then
+    return
+  end
 
   require"config.snippets"
 
-  compe.setup{
+  compe.setup_buffer{
     enabled = true,
     debug = false,
     min_length = 1,
     preselect = "disable", -- 'enable' || 'disable' || 'always',
-    -- throttle_time = ... number ...,
-    -- source_timeout = ... number ...,
-    -- incomplete_delay = ... number ...,
+    source_timeout = 200,
+    -- throttle_time = 80,
+    -- incomplete_delay = 400,
     allow_prefix_unmatch = false,
     source = {
       path = true,
-      buffer = true,
-      ultisnips = true,
+      buffer = {menu = labels.Buffer},
+      spell = true,
+      ultisnips = {menu = labels.UltiSnips},
       nvim_lsp = true,
       nvim_lua = true,
     },

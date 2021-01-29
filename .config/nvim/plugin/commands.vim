@@ -4,7 +4,7 @@
 "
 " Can't use plugins#lazy_run here because it will try to overwrite itself
 " while running. Manually packadd on demand or packadd[!] somewhere else
-command S update | packadd asynctasks.vim | AsyncTask file-run
+command S packadd asynctasks.vim | AsyncTask file-run
 
 " Light/Dark :: easily change background {{{2
 command Light set background=light

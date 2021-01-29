@@ -4,6 +4,9 @@ let g:UltiSnipsJumpForwardTrigger = '<C-k>'
 let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
 let g:UltiSnipsSnippetDirectories = ['~/.config/ultisnips']
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = '~/.config/ultisnips'
+let g:snips_author = 'Nick Murphy'
+let g:snips_email = 'comfortablynick@gmail.com'
+let g:snips_github = 'https://github.com/comfortablynick'
 
 call map#cabbr('es', 'UltiSnipsEdit')
 

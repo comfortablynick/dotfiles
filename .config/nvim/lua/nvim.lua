@@ -350,9 +350,32 @@ function nvim.define_text_object(mapping, function_name) -- {{{2
                       (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
+
+-- Used {{{1
+
+function nvim.relative_name(path) -- {{{2
+  -- Return path relative to config
+  -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
+  local fp = vim.fn.expand(path or '%')
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
+end
+
+function nvim.module_name(path) --{{{2
+  -- Return module name of path or current file
+  local fp = vim.fn.expand(path or '%')
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub("%W", ".")
+end
+
 function nvim.source_current_buffer() -- {{{2
   -- luacheck: ignore loadstring
   loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
+end
+
+function nvim.reload() --{{{2
+  -- Remove module from `package.loaded` and source buffer to hot reload
+  local bufname = api.nvim_buf_get_name(0)
+  package.loaded[nvim.module_name(bufname)] = nil
+  nvim.source_current_buffer()
 end
 
 function nvim.smart_tab() --{{{2

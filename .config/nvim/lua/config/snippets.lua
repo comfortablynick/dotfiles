@@ -7,11 +7,6 @@ local comment = U.force_comment
 local format = string.format
 local snips = {}
 
-function _G.nvim_relative_name() -- {{{1
-  -- TODO: find some way to make this non-global
-  return vim.fn.expand("%:p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
-end
-
 snips._global = { -- {{{1
   -- If you aren't inside of a comment, make the line a comment.
   copyright = comment[[© Nicholas Murphy ${=os.date("%Y")}]],
@@ -39,7 +34,7 @@ end]],
 }
 
 snips.vim = { -- {{{1
-  augroup = [[augroup ${=nvim_relative_name()}
+  augroup = [[augroup ${=nvim.relative_name()}
     autocmd!
     autocmd $0
 augroup END]],
@@ -51,7 +46,7 @@ Description: $0]]),
   -- Do string formatting so function name shows upon snippet insertion using default inserter
   fua = indent(format([[function %s#${1|vim.trim(S.v)}($2)
     $0
-endfunction]], nvim_relative_name():gsub("autoload_", ""):gsub("_", "#"))),
+endfunction]], nvim.relative_name():gsub("autoload_", ""):gsub("_", "#"))),
   ftdetect = [[" vint: -ProhibitAutocmdWithNoGroup
 autocmd BufRead,BufNewFile $1 setfiletype $2]],
   ftdetect_verbose = [[" vint: -ProhibitAutocmdWithNoGroup
@@ -63,7 +58,7 @@ function s:set_filetype()
     endif
 endfunction]],
   modeline = comment[[vim:fdl=${=tostring(vim.wo.fdl)}:]],
-  scriptguard = [[let s:guard = 'g:loaded_${=nvim_relative_name()}' | if exists(s:guard) | finish | endif
+  scriptguard = [[let s:guard = 'g:loaded_${=nvim.relative_name()}' | if exists(s:guard) | finish | endif
 let {s:guard} = 1]],
 }
 

@@ -2,9 +2,11 @@
 # Calculate tmux status bar on right side
 # TODO: there _has_ to be a better way of doing this
 
-HOSTNAME=''
-WIDTH="$(tmux display -p '#{client_width}')"
-TABS="$(tmux list-windows | wc -l)"
+HOSTNAME=$(uname -n)
+USERNAME=${USER:-$(whoami)}
+HOST=" ${HOSTNAME/.local/}"
+WIDTH=$(tmux display -p '#{client_width}')
+TABS=$(tmux display -p '#{session_windows}')
 SMALL=40
 MEDIUM=100
 MEDIUM_LARGE=150
@@ -12,11 +14,11 @@ LARGE=200
 
 # Separators
 SP=' '
-RSUB="${RSUB}"
+RSUB="${RSUB:-|}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
-TMUX_MEM_CPU=$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load
+# TMUX_MEM_CPU=$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load
 
 # Status commands
 if [[ -x $SYSINFO ]]; then
@@ -54,19 +56,29 @@ if [[ -n $CPUTEMP ]]; then
 fi
 
 if [[ $WIDTH -gt $MEDIUM ]]; then
-    DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
-    TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB#[fg=colour252,bg=colour236,noitalics,nounderscore]$SP$(date +'%R')"
+    # Unused {{{
     # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
+    # DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]"
+    # DATE+="$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
+    # TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB"
+    # }}}
+    TIME+="#[fg=colour252,bg=colour236,noitalics,nounderscore]$SP$(date +'%R')"
     LOAD="#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
 
     if [[ $WIDTH -gt $LARGE ]] || [[ $TABS -lt 5 ]]; then
-        UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
+        UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP"
+        UPTIME+="$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
     fi
 fi
 
 if [[ $WIDTH -ge $SMALL ]]; then
-    USER="#[fg=colour31,bg=colour236,nobold,noitalics,nounderscore]$RSEP#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$(whoami)"
-    UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOSTNAME $(uname -n | sed 's/.local//')"
+    USER="#[fg=colour31,bg=colour236,nobold,noitalics,nounderscore]$RSEP"
+    USER+="#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$USERNAME"
+    UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP"
+    UNAME+="#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOST"
+    UNAME+=" #[]" # Easy way to allow space at end without bash eating it
 fi
 
-echo "$UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME " | sed 's/ \{2,\}/ /g'
+# Allow bash to mangle extra spaces and avoid piping to tr
+# shellcheck disable=SC2086
+echo $UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME

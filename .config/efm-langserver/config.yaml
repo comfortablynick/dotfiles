@@ -45,6 +45,10 @@ tools:
     lint-command: 'yamllint -f parsable -'
     lint-stdin: true
 
+  python-black: &python-black
+    format-command: 'black --quiet -'
+    format-stdin: true
+
   python-flake8: &python-flake8
     lint-command: 'flake8 --stdin-display-name ${INPUT} -'
     lint-stdin: true
@@ -134,6 +138,7 @@ languages:
     - <<: *yaml-yamllint
 
   python:
+    - <<: *python-black
     - <<: *python-flake8
     - <<: *python-mypy
 

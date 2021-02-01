@@ -8,7 +8,11 @@ global !p
 import string, vim
 from vimsnippets import get_comment_format, foldmarker
 
-# _commentDict = { }
+def commentize(text):
+    """Format as simple (single line) comment."""
+    # cfmt = get_comment_format() # (1st line, middle lines, end line, indent)
+    return vim.eval("&commentstring") % text
+
 def make_box(twidth, bwidth=None):
     """Maps a filetype to comment format used for boxes.
 
@@ -63,7 +67,7 @@ snippet todo "TODO comment" bw
 endsnippet
 
 snippet copyright "Insert copyright with year" b
-`!p snip.rv=get_comment_format()[0]`©t `!v strftime('%Y')` `!v g:snips_author` `!p snip.rv=get_comment_format()[2]`
+`!p snip.rv=commentize(" © {} {}".format(vim.eval("strftime('%Y')"), vim.vars.get('snips_author')))`
 endsnippet
 
 ##########################

@@ -51,6 +51,9 @@ call map#cabbr('hg', function('window#tab_mod', ['helpgrep', 'help']))
 " vh :: Open help in vert split {{{2
 call map#cabbr('vh', 'vert help')
 
+" pyp :: Python3 print {{{2
+call map#cabbr('pyp', 'py3 print()<Left><C-R>=map#eatchar(''\s'')<CR>')
+
 " man :: Open :Man in new or existing tab {{{2
 call map#cabbr('man', function('window#tab_mod', ['Man', 'man']))
 

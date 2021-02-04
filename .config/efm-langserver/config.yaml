@@ -49,6 +49,10 @@ tools:
     format-command: 'black --quiet -'
     format-stdin: true
 
+  python-isort: &python-isort
+    format-command: 'isort -'
+    format-stdin: true
+
   python-flake8: &python-flake8
     lint-command: 'flake8 --stdin-display-name ${INPUT} -'
     lint-stdin: true
@@ -141,6 +145,7 @@ languages:
     - <<: *python-black
     - <<: *python-flake8
     - <<: *python-mypy
+    - <<: *python-isort
 
   dockerfile:
     - <<: *dockerfile-hadolint

@@ -11,26 +11,26 @@ let g:clap_layout = #{
 
 " Commands
 " command! Buffers Clap buffers
-command  Task    Clap task
-command  Filer   Clap filer
-command  Base16  call plugins#clap#base16()
-command  Globals Clap globals
+command Task    Clap task
+command Filer   Clap filer
+command Base16  call plugins#clap#base16()
+command Globals Clap globals
 
-call map#cabbr('bs', 'Clap buffers')
-call map#cabbr('t', 'Clap tags nvim_lsp')
-call map#cabbr('scr', 'Clap scriptnames')
-call map#cabbr('mru', 'Clap mru')
+call map#cabbr('bs',   'Clap buffers')
+call map#cabbr('t',    'Clap tags nvim_lsp')
+call map#cabbr('scr',  'Clap scriptnames')
+call map#cabbr('mru',  'Clap mru')
 call map#cabbr('mapn', 'Clap map ++mode=n')
 call map#cabbr('mapi', 'Clap map ++mode=i')
 call map#cabbr('mapv', 'Clap map ++mode=v')
 call map#cabbr('mapo', 'Clap map ++mode=o')
 call map#cabbr('mapx', 'Clap map ++mode=x')
-call map#cabbr('api', 'Clap api')
+call map#cabbr('api',  'Clap api')
 
 " Maps
-nnoremap <silent> <Leader>t :Clap tags nvim_lsp<CR>
-nnoremap <silent> <Leader>h :Clap command_history<CR>
-nnoremap <silent> <Leader>m :Clap mru<CR>
+nnoremap <Leader>t <Cmd>Clap tags nvim_lsp<CR>
+nnoremap <Leader>h <Cmd>Clap command_history<CR>
+nnoremap <Leader>m <Cmd>Clap mru<CR>
 
 " Functions {{{1
 " function plugins#clap#get_selected() :: Get selection sans icon {{{2

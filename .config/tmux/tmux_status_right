@@ -38,13 +38,13 @@ if [[ -x $SYSINFO ]]; then
     # CPUUSAGE="$(eval "$SYSINFO" "$cpu_usage_cmd")"
 else
     if [[ -x $TMUX_TOP ]]; then
-        MEMUSAGE="$("$TMUX_TOP" m)"
-        LOADAVG="$("$TMUX_TOP" l)"
+        MEMUSAGE=$("$TMUX_TOP" m)
+        LOADAVG=$("$TMUX_TOP" l)
     # elif [[ -x $TMUX_MEM_CPU ]]; then
     #     MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
     else
-        MEMUSAGE="$("$HOME"/.config/tmux/_memusage 2>/dev/null)"
-        LOADAVG="$("$HOME"/.config/tmux/_loadavg)"
+        MEMUSAGE=$("$HOME/.config/tmux/_memusage" 2>/dev/null)
+        LOADAVG=$("$HOME/.config/tmux/_loadavg")
     fi
     UP=$("$HOME/.config/tmux/_uptime")
 fi

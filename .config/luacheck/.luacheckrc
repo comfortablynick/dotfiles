@@ -6,6 +6,7 @@ stds.nvim = {
         "unpack",
         "nvim",
         "p",
+        "loadstring",
         string = {fields = {basename = {}}},
         table = {fields = {print = {}}},
     },

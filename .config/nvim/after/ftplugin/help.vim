@@ -10,6 +10,8 @@ nnoremap <silent><buffer> gO :call <SID>show_toc()<CR>
 
 nnoremap <silent><buffer> <Tab> :tabnext<CR>
 
+setlocal statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+
 " loclist TOC for vim
 function s:show_toc()
     let l:bufname = bufname('%')

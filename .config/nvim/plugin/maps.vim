@@ -60,6 +60,7 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <C-p> <C-w>p
 
 " `ALT+{h,j,k,l}` resize vim/tmux panes in normal mode {{{2
 " Note: vim has trouble with Meta/Alt key
@@ -69,14 +70,14 @@ nnoremap <A-k> <Cmd>call window#tmux_aware_resize('k')<CR>
 nnoremap <A-l> <Cmd>call window#tmux_aware_resize('l')<CR>
 
 " `ALT+{h,j,k,l}` to navigate windows from other modes {{{2
-tnoremap <A-h> <C-\><C-N><C-w>h
-tnoremap <A-j> <C-\><C-N><C-w>j
-tnoremap <A-k> <C-\><C-N><C-w>k
-tnoremap <A-l> <C-\><C-N><C-w>l
-inoremap <A-h> <C-\><C-N><C-w>h
-inoremap <A-j> <C-\><C-N><C-w>j
-inoremap <A-k> <C-\><C-N><C-w>k
-inoremap <A-l> <C-\><C-N><C-w>l
+" tnoremap <A-h> <C-\><C-N><C-w>h
+" tnoremap <A-j> <C-\><C-N><C-w>j
+" tnoremap <A-k> <C-\><C-N><C-w>k
+" tnoremap <A-l> <C-\><C-N><C-w>l
+" inoremap <A-h> <C-\><C-N><C-w>h
+" inoremap <A-j> <C-\><C-N><C-w>j
+" inoremap <A-k> <C-\><C-N><C-w>k
+" inoremap <A-l> <C-\><C-N><C-w>l
 
 " Delete window to the left/below/above/to the right with d<C-h/j/k/l> {{{2
 nnoremap d<C-j> <C-w>j<C-w>c

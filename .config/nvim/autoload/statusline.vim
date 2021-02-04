@@ -92,11 +92,15 @@ function s:is_active_file() "{{{2
 endfunction
 
 function s:lpad(expr) "{{{2
-    return !empty(a:expr) ? ' '.a:expr : ''
+    return !empty(a:expr) ? ' '..a:expr : ''
 endfunction
 
 function s:rpad(expr) "{{{2
-    return !empty(a:expr) ? a:expr.' ' : ''
+    return !empty(a:expr) ? a:expr..' ' : ''
+endfunction
+
+function s:pad(expr) "{{{2
+    return !empty(a:expr) ? ' '..a:expr..' ' : ''
 endfunction
 
 " Safely call devicons
@@ -425,7 +429,7 @@ function statusline#git_status() "{{{2
     let l:out = printf('%s%s%s',
         \ l:hunks,
         \ l:branch,
-        \ !empty(l:branch) ? g:sl.symbol.branch : '',
+        \ !empty(l:branch) ? s:pad(g:sl.symbol.branch) : '',
         \ )
     return winwidth(0) >= g:sl.width.max
         \ ? l:out..s:rpad(g:sl.symbol.git)

@@ -35,7 +35,6 @@ endfunction
 " Fzm :: lazy load fuzzymenu.vim {{{2
 command! -bang -nargs=0 Fzm
     \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
-nnoremap <C-P> <Cmd>Fzm<CR>
 
 " Neoformat :: lazy load neoformat {{{2
 command! -nargs=0 Neoformat call plugins#lazy_run('Neoformat', 'neoformat')

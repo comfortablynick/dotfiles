@@ -70,7 +70,7 @@ set background=dark
 set encoding=utf-8                                              " Default to unicode
 scriptencoding utf-8                                            " Encoding used in sourced script
 set termguicolors                                               " Use true color
-set shell=sh                                                    " Use posix-compatible shell
+set shell=/bin/sh                                               " Use posix-compatible shell
 set hidden                                                      " Don't unload hidden buffers
 set fileformat=unix                                             " Always use LF and not CRLF
 set history=5000                                                " # of history entries (max 10000)
@@ -101,6 +101,7 @@ set title                                                       " Set window tit
 let g:mapleader = ','
 
 " Completion {{{2
+" set completeopt=menuone,menu,no
 set dictionary+=/usr/share/dict/words-insane                    " Dictionary file for dict completion
 
 " Folds {{{2
@@ -194,7 +195,7 @@ if has('nvim-0.5')
     require"config.devicons"
     require"config.gitsigns".init()
     require"config.lsp".init()
-    require"config.autopairs".init()
+    -- require"config.autopairs".init()
 .
 
     augroup vimrc

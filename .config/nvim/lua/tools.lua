@@ -181,7 +181,7 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   if opts.stream then
     stdin:write(opts.stream, function(err)
       assert(not err, err)
-      stdin:shutdown(function(err) assert(not err, err) end)
+      stdin:shutdown(function(error) assert(not error, error) end)
     end)
   end
 end
@@ -397,7 +397,7 @@ function M.mru_files(n) -- {{{1
            n or 999):totable()
 end
 
-function M.get_maps(mode, bufnr) -- {{{1
+function M.get_maps(mode, bufnr, width) -- {{{1
   -- `nvim[_buf]_get_keymap`
   -- ================
   -- buffer  (num)
@@ -425,7 +425,7 @@ function M.get_maps(mode, bufnr) -- {{{1
   --   silent = 1
   -- }
   local maps = {}
-  local mode = mode or ""
+  mode = mode or ""
   -- TODO: for clap -- get buffer that we are calling this from, not 0
   local data = vim.tbl_extend("keep",
                               api.nvim_buf_get_keymap(bufnr or 0, mode or ""),
@@ -443,13 +443,10 @@ function M.get_maps(mode, bufnr) -- {{{1
   end
 
   for _, v in ipairs(data) do
-    local attrs = (function()
-      local out = ""
-      if v.noremap == 1 then out = out .. "*" end
-      if v.script == 1 then out = out .. "&" end
-      if v.buffer > 0 then out = out .. "@" end
-      return out
-    end)()
+    local attrs = ""
+    if v.noremap == 1 then attrs = attrs .. "*" end
+    if v.script == 1 then attrs = attrs .. "&" end
+    if v.buffer > 0 then attrs = attrs .. "@" end
     local lhs = v.lhs ~= " " and v.lhs or "<Space>"
     local rhs = v.rhs ~= "" and v.rhs or "<Nop>"
     -- TODO: calculate width of clap window for rhs

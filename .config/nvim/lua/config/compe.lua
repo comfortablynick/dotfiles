@@ -40,7 +40,7 @@ local init = function()
   local compe = vim.F.npcall(require, "compe")
   if compe == nil then return end
   local bufnr = api.nvim_get_current_buf()
-  local complete_exclude_fts = {"clap_input", "qf", ""}
+  local complete_exclude_fts = {"clap_input", "qf", "floaterm", ""}
 
   -- Don't load completion
   if compe == nil or

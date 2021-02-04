@@ -27,6 +27,7 @@ for cmd in collected:
     command=just {cmd}
     cwd=<root>
     output=terminal
+    pos=tmux
     save=1
     """
     )

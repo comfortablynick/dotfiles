@@ -21,11 +21,11 @@ function! s:run(cmd)
     call timer_start(l:time, {-> runner#run_cmd(a:cmd)})
 endfunction
 
-nmap <silent> <Leader>z <Plug>(VtrAttachToPane)
-nmap <silent> <Leader>x <Plug>(VtrKillRunner)
+nmap <Leader>z <Plug>(VtrAttachToPane)
+nmap <Leader>x <Plug>(VtrKillRunner)
 
-nnoremap <silent> <Leader>r :call runner#run_cmd('run')<CR>
-nnoremap <silent> <Leader>i :call <SID>run('install')<CR>
-nnoremap <silent> <Leader>b :call runner#run_cmd('build')<CR>
-nnoremap <silent> <Leader><Leader>b :call runner#run_cmd('bench')<CR>
-nnoremap <silent> <Leader><Leader>t :call runner#run_cmd('test')<CR>
+nnoremap <Leader>r         <Cmd>call runner#run_cmd('run')<CR>
+nnoremap <Leader>i         <Cmd>call <SID>run('install')<CR>
+nnoremap <Leader>b         <Cmd>call runner#run_cmd('build')<CR>
+nnoremap <Leader><Leader>b <Cmd>call runner#run_cmd('bench')<CR>
+nnoremap <Leader><Leader>t <Cmd>call runner#run_cmd('test')<CR>

@@ -6,11 +6,11 @@ import logging
 import os
 import re
 import socket
+import subprocess
 import sys
 from datetime import datetime
 from pprint import pformat
-from subprocess import run
-from typing import Iterator, MutableMapping, Any, Optional
+from typing import Any, Iterator, MutableMapping, Optional
 
 try:
     from tomlkit import parse
@@ -26,8 +26,7 @@ RE_SPACE = re.compile(r"\s")
 TomlDocument = MutableMapping[str, Any]
 
 
-# Functions {{{1
-def get_file_hash(filepath: str) -> str:  # {{{2
+def get_file_hash(filepath: str) -> str:  # {{{1
     """Get sha hash of filepath.
 
     Hash can be compared to determine if changes were made to file.
@@ -63,7 +62,7 @@ def get_file_hash(filepath: str) -> str:  # {{{2
     return hash_sha.hexdigest()
 
 
-def get_env_objs(toml: TomlDocument) -> Iterator[dict]:  # {{{2
+def get_env_objs(toml: TomlDocument) -> Iterator[dict]:  # {{{1
     """Get dict of env objects from TOML data."""
     for k in toml.keys():
         for d in toml[k]:
@@ -71,14 +70,14 @@ def get_env_objs(toml: TomlDocument) -> Iterator[dict]:  # {{{2
             yield d
 
 
-def get_toml(file_path: str) -> TomlDocument:  # {{{2
+def get_toml(file_path: str) -> TomlDocument:  # {{{1
     """Return toml data from file."""
     with open(file_path, "r", encoding="utf-8") as f:
         toml = parse(f.read())
     return toml
 
 
-def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{2
+def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{1
     """Write settings file to disk, formatted for shell.
 
     Writes to stdout if no valid file is specified.
@@ -91,36 +90,36 @@ def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{2
     f.close()
 
 
-def is_shell_match(var_shell, target_shell) -> bool:  # {{{2
+def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
     """Return true if var is valid for target shell."""
     return bool(set(var_shell) & set(target_shell))
 
 
-def do_eval(v: str) -> str:  # {{{2
-    """Do python eval, then shell eval."""
-    try:
-        out = do_python_eval(v)
-    except (SyntaxError, NameError):
-        # Not python syntax; let the shell eval it
-        out = do_shell_eval(v)
-    return out
+# def do_eval(v: str) -> str:  # {{{1
+#     """Do python eval, then shell eval."""
+#     try:
+#         out = do_python_eval(v)
+#     except (SyntaxError, NameError):
+#         # Not python syntax; let the shell eval it
+#         out = do_shell_eval(v)
+#     return out
 
 
-def do_python_eval(v: str) -> str:  # {{{2
-    """Do python eval."""
-    out = eval(v)
-    LOG.debug("Python eval called on: %s; result: %s", v, out)
-    return out
+# def do_python_eval(v: str) -> str:  # {{{1
+#     """Do python eval."""
+#     out = eval(v)
+#     LOG.debug("Python eval called on: %s; result: %s", v, out)
+#     return out
 
 
-def do_shell_eval(v: str) -> str:  # {{{2
+def do_shell_eval(v: str) -> subprocess.CompletedProcess:  # {{{1
     """Do shell eval."""
-    out = run(v, shell=True, capture_output=True).stdout.strip().decode("utf-8")
-    LOG.debug("Shell eval called on: %s; result: %s", v, out)
-    return out
+    result = subprocess.run(v, shell=True, capture_output=True, timeout=0.5)
+    LOG.debug("Shell eval called on: %s; result: %s", v, result)
+    return result
 
 
-def get_shell_vars(  # {{{2
+def get_shell_vars(  # {{{1
     toml: TomlDocument, shell: str, print_comments: bool = False
 ) -> list:
     """Get shell script to create vars for given shell.
@@ -163,11 +162,10 @@ def get_shell_vars(  # {{{2
             k = var.get("key")
             a = var.get("args", var_def.get("default_args"))
             eval = var.get("eval")
-            # shell_eval = var.get("shell_eval")
             quote = var.get("quote")
             test = var.get("if")
 
-            if test is not None and not do_eval(test):
+            if test is not None and do_shell_eval(test).returncode != 0:
                 continue
 
             if isinstance(var["val"], list):
@@ -180,14 +178,14 @@ def get_shell_vars(  # {{{2
                 if quote or RE_SPACE.search(v):
                     v = repr(v)
 
+            if eval:
+                v = do_shell_eval(v).stdout.rstrip().decode("utf-8")
+
             # Convert posix subshell `$()` to fish `()`
             # Convert posix `&&` to fish `; and`
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
-
-            if eval:
-                v = do_eval(v)
 
             if var["var_type"] == "path" and not os.path.isdir(os.path.expandvars(v)):
                 LOG.info("'%s' is not a valid directory", v)
@@ -201,7 +199,7 @@ def get_shell_vars(  # {{{2
     return all_vars
 
 
-def process_args(args: list):  # {{{2
+def process_args(args: list):  # {{{1
     """Parse command line input."""
     parser = argparse.ArgumentParser(
         prog="parse_env", description="parse shell environment from TOML config file"
@@ -240,12 +238,12 @@ def process_args(args: list):  # {{{2
         choices=["fish", "bash", "zsh"],
         help="Shell syntax for output [fish,bash,zsh] (default $SHELL)",
         metavar="SHELL",
-        default=os.path.basename(os.environ.get("SHELL")),
+        default=os.path.basename(os.getenv("SHELL", default="/bin/bash")),
     )
     return parser.parse_args(args)
 
 
-def main():  # {{{2
+def main():  # {{{1
     """Script entry point."""
     try:
         sys.argv[1]
@@ -271,7 +269,6 @@ def main():  # {{{2
 
     # Prepend header
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # shell_vars.insert(0, f"#!/usr/bin/env {args.shell}")
     shell_vars.insert(0, f"# File generated from env.toml: {timestamp}")
 
     # write to file and/or stdout
@@ -281,7 +278,7 @@ def main():  # {{{2
         write_shell_file(shell_vars=shell_vars, file=None)
 
 
-# Run {{{2
+# Run {{{1
 if __name__ == "__main__":
     main()
 

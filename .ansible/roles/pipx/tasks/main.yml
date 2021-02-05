@@ -1,8 +1,9 @@
 ---
+# tasks file for pipx
 - name: Install pipx
   pip:
     name: pipx
-    executable: "{{ pip3_path }}"
+    executable: "{{ pipx_pip3_path }}"
     state: latest
 
 - name: Get installed pipx packages
@@ -10,19 +11,26 @@
   register: pipx_installed
   changed_when: false
 
+- name: Debug packages
+  debug:
+    var: pipx_pkgs
+
+- name: Debug $PIPX_BIN_DIR
+  debug:
+    var: ansible_env.PIPX_BIN_DIR
+    verbosity: 1
+
 - name: Install pipx packages
   command: "{{ pipx_path }} install {{ item.name }}"
-  loop: "{{ pipx_default_pkgs }}"
+  loop: "{{ pipx_pkgs }}"
   register: pipx
   changed_when: "'--force' not in pipx.stdout"
-  environment:
-    - PIPX_BIN_DIR: "{{ pipx_bin_dir }}"
   when:
     - pipx_installed.stdout is defined
     - item.name not in pipx_installed.stdout
 
 - name: Inject pipx dependencies
   command: "{{ pipx_path }} inject {{ item.name }} {{ item.inject|join(' ') }}"
-  loop: "{{ pipx_default_pkgs }}"
+  loop: "{{ pipx_pkgs }}"
   when: item.inject is defined
-  changed_when: false # no way to detect if this is a change or not
+  changed_when: false  # no way to detect if this is a change or not

@@ -8,6 +8,7 @@ return {
     "javascript",
     "markdown",
     "yaml",
+    "yaml.ansible",
     "toml",
   },
   init_options = {documentFormatting = true},

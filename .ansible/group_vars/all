@@ -1,2 +1,10 @@
 asdf_home: "{{ ansible_env.HOME }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
+
+pipx_packages_all:
+  # dev tools
+  - name: dotdrop
+  - name: flake8
+  - name: neovim-remote
+  - name: ranger-fm
+  - name: speedtest-cli

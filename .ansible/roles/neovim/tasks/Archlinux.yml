@@ -1,9 +1,8 @@
 ---
 # neovim
-- name: Install nightly neovim from aur
+- name: Install neovim from aur
   aur:
     name:
-      - neovim-nightly
-      # - neovim-symlinks # conflicts with vim
-  become: yes
+      - neovim-git
+  become: true
   become_user: aur_builder

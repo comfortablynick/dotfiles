@@ -5,6 +5,18 @@
   roles:
     - ssh
 
+- name: Install neovim
+  hosts: all
+  roles:
+    - neovim
+  tags:
+    - nvim
+
+- name: Sync dotfiles
+  hosts: all
+  roles:
+    - dotfiles
+
 - name: Install asdf and plugins
   hosts: all
   roles:
@@ -20,8 +32,6 @@
   hosts: all
   roles:
     - pkg
-    - neovim
-    - dotfiles
 
 - name: Install vim
   hosts: jupiter
@@ -44,23 +54,15 @@
   tags:
     - mosh
 
-- name: Install rust
+- import_playbook: rust.yml
+  tags:
+    - rust
+
+- name: Install pipx
   hosts: all
   roles:
-    - rust
-  vars:
-    - rust_version: 1.49
-    - cargo_items:
-      - name: cargo-update
-        binary: cargo-install-update
-      - name: ripgrep
-        binary: rg
-      - name: fd-find
-        binary: fd
-      - name: exa
-      - name: lsd
-      - name: sysinfo
-        binary: sysinfo
-        args: --git https://github.com/comfortablynick/sysinfo.git
-      - name: just
-      - name: bat
+    - role: pipx
+      vars:
+        pipx_pkgs: "{{ pipx_packages_all }} + {{ pipx_packages | default([]) }}"
+  tags:
+    - pipx

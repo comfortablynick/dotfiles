@@ -4,28 +4,29 @@
   git:
     repo: https://github.com/neovim/neovim.git
     dest: "{{ neovim_source_dir }}"
-    force: yes
-    accept_hostkey: yes
+    force: true
+    accept_hostkey: true
   register: source_repo
   when: neovim_install_arm
 
 - block:
-  - name: Install build prerequisites
-    become: yes
-    apt:
-      name: "{{ Debian_neovim_required_packages }}"
-      state: present
-    when: ansible_facts['os_family'] == 'Debian'
-  - name: Build from source
-    command: "{{ item }}"
-    args:
-      chdir: "{{ neovim_source_dir }}"
-    loop:
-      - make distclean
-      - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
-  - name: Install
-    command: make install
-    become: yes
+    - name: Install build prerequisites
+      become: true
+      apt:
+        name: "{{ Debian_neovim_required_packages }}"
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+    - name: Build from source
+      command: "{{ item }}"
+      args:
+        chdir: "{{ neovim_source_dir }}"
+      loop:
+        - make distclean
+        - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
+    - name: Install
+      command: make install
+      become: true
+
   # - name: Create deps dir
   #   file:
   #     path: "{{ neovim_source_dir }}/.deps"

@@ -34,4 +34,4 @@
 [pull]
 	rebase = false
 [credential]
-	helper = lastpass
+	helper = lastpass -l comfortablynick@gmail.com

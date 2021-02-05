@@ -40,53 +40,13 @@ pip3_default_pkgs:
   # pynvim for rnvimr plugin
   - pynvim
 
-pipx_default_pkgs:
-  # dev tools
-  - name: black
-  - name: cmakelang[YAML]
-  - name: dirtools
-  - name: dotdrop
-  - name: legit
-  - name: mypy
-  - name: neovim-remote
-  - name: optimize-images
-    inject:
-    - pillow
-  - name: pipenv
-  - name: ptpython
-    inject:
-    - pynvim
-  - name: pydocstyle
-  - name: python-language-server
-    inject:
-    - pyls-mypy
-    - pyls-isort
-    - pyls-black
-  - name: ranger-fm
-  - name: speedtest-cli
-  - name: topydo
-  - name: git+https://github.com/vimjas/vint
-
-pipx_inject_dependencies:
-  - pkg: optimize-images
-    inject:
-      - pillow
-  - pkg: ptpython
-    inject:
-      - pynvim
-  - pkg: python-language-server
-    inject:
-      - pyls-mypy
-      - pyls-isort
-      - pyls-black
-
 asdf_bin: "{{ ansible_env.HOME }}/.asdf/bin/asdf"
 asdf_shims_path: "{{ ansible_env.HOME }}/.asdf/shims"
-pipx_path: "{{ asdf_shims_path }}/pipx"
-pipx_bin_dir: "{{ ansible_env.HOME }}/.local/bin"
+
 python2_path: /usr/bin/python2
-pip2_path: /usr/bin/pip2
 python3_path: "{{ asdf_shims_path }}/python3"
+pip2_path: /usr/bin/pip2
 pip3_path: "{{ asdf_shims_path }}/pip3"
+
 new_mirrorlist_path: /tmp/mirrorlist
 mirrorlist_file_age: "1w"

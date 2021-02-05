@@ -83,6 +83,24 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
     signs = true,
     update_in_insert = true,
   })
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] =
+--   function(err, method, params, client_id, bufnr, config)
+--     if err ~= nil then return end
+--     local uri = params.uri
+--
+--     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+--       underline = true,
+--       virtual_text = {spacing = 2},
+--       signs = true,
+--       update_in_insert = false,
+--     })(err, method, params, client_id, bufnr, config)
+--
+--     bufnr = bufnr or vim.uri_to_bufnr(uri)
+--
+--     if bufnr == api.nvim_get_current_buf() then
+--       vim.lsp.diagnostic.set_loclist{open_loclist = false}
+--     end
+--   end
 
 function M.set_hl()
   local ns = api.nvim_create_namespace("hl-lsp")

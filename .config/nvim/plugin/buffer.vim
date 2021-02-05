@@ -6,6 +6,8 @@ augroup plugin_buffer
     autocmd BufWritePost .envrc if executable('direnv') | silent !direnv allow % | endif
     autocmd BufNewFile   .envrc call append(0, ['# shellcheck shell=sh', 'use asdf'])
     autocmd FileType     * if exists('$LOCAL_VIMRC') | call buffer#load_lvimrc() | endif
+    " Disable concealcursor when editing help files
+    autocmd BufEnter doc/*.txt setlocal concealcursor=
 augroup end
 
 function! s:recall_cursor_position()

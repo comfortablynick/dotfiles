@@ -5,3 +5,22 @@ apt_default_packages:
 
 pacman_default_packages:
   - cmake
+
+pipx_packages:
+  - name: black
+  - name: cmakelang[YAML]
+  - name: legit
+  - name: mypy
+  - name: optimize-images
+    inject:
+      - pillow
+  - name: pipenv
+  - name: ptpython
+    inject:
+      - pynvim
+  - name: pydocstyle
+  - name: pycodestyle
+  - name: topydo
+  - name: git+https://github.com/vimjas/vint
+  - name: toml-sort
+  - name: yamllint

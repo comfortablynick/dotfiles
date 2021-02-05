@@ -1,0 +1,4 @@
+---
+# defaults file for pipx
+pipx_pip3_path: pip3
+pipx_path: pipx

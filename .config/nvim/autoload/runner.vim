@@ -12,6 +12,10 @@ function runner#run_cmd(cmd_type)
         packadd asyncrun.vim
         execute 'AsyncRun' l:cmd
         return
+    elseif l:run_loc ==? 'AsyncTask'
+        packadd asynctasks.vim
+        execute 'AsyncTask' l:cmd
+        return
     elseif l:run_loc ==? 'Vtr'
         packadd vim-tmux-runner
         execute 'VtrSendCommandToRunner!' l:cmd

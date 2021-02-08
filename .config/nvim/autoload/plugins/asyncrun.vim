@@ -66,9 +66,5 @@ endfunction
 " Tmux Runner {{{1
 function s:tmux_runner(opts)
     packadd vim-tmux-runner
-    " asyncrun has temporarily changed dir for you
-    " getcwd() in the runner function is the target directory defined in `-cwd=xxx`  
-    let l:cwd = getcwd()
-    " execute 'VtrSendCommandToRunner! cd' shellescape(l:cwd)..';' a:opts.cmd
     exe 'VtrSendCommandToRunner!' a:opts.cmd
 endfunction

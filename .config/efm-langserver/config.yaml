@@ -1,3 +1,4 @@
+---
 version: 2
 root-markers:
   - .git/
@@ -50,17 +51,19 @@ tools:
     format-stdin: true
 
   python-isort: &python-isort
-    format-command: 'isort -'
+    format-command: 'isort --stdout --profile black -'
     format-stdin: true
 
   python-flake8: &python-flake8
     lint-command: 'flake8 --stdin-display-name ${INPUT} -'
+    lint-ignore-exit-code: true
     lint-stdin: true
     lint-formats:
       - '%f:%l:%c: %m'
 
   python-mypy: &python-mypy
     lint-command: 'mypy --show-column-numbers'
+    lint-ignore-exit-code: true
     lint-formats:
       - '%f:%l:%c: %trror: %m'
       - '%f:%l:%c: %tarning: %m'

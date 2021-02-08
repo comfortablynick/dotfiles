@@ -1,7 +1,7 @@
 return function(on_attach)
   return {
-    cmd = {"bash-language-server", "start"},
+    cmd = {"pyright", "--stdio"},
     on_attach = on_attach,
-    filetypes = {"sh"},
+    filetypes = {"python"},
   }
 end

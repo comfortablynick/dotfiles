@@ -205,9 +205,9 @@ local on_attach_cb = function(client)
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd[[command! Format lua vim.lsp.buf.formatting()]]
-    -- TODO: why does this not work as well as Neoformat?
     api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>",
                             {noremap = true})
+    -- vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
   end
 
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -256,13 +256,16 @@ function M.init()
   for server, load_cfg in pairs(local_configs) do
     local cfg = {}
     if load_cfg then
-      cfg = npcall(require, "config.lsp." .. server)
+      -- Load config from disk
+      cfg = npcall(require, "config.lsp." .. server)(on_attach_cb)
       -- Check if defined cmd is executable
       if cfg.cmd ~= nil then
         if vim.fn.executable(cfg.cmd[1]) ~= 1 then goto continue end
       end
+    else
+      -- Default server settings
+      cfg.on_attach = on_attach_cb
     end
-    cfg.on_attach = on_attach_cb
     if lsp_status ~= nil then
       cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
                                         lsp_status.capabilities)

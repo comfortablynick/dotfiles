@@ -10,14 +10,13 @@ local lsps_attached = {}
 local configs = require"lspconfig/configs"
 local lsp_util = require"lspconfig/util"
 
-local root_pattern = lsp_util.root_pattern(".git", "config.yml")
-
 configs.taplo = {
   default_config = {
     cmd = {"taplo-lsp", "run"},
     filetypes = {"toml"},
     root_dir = function(fname)
-      return root_pattern(fname) or vim.loop.os_homedir()
+      return lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
+               util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
     end,
     settings = {},
   },
@@ -81,7 +80,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
     underline = true,
     virtual_text = {spacing = 2},
     signs = true,
-    update_in_insert = true,
+    update_in_insert = false,
   })
 -- vim.lsp.handlers["textDocument/publishDiagnostics"] =
 --   function(err, method, params, client_id, bufnr, config)
@@ -155,18 +154,11 @@ end
 
 local set_hl_autocmds = function()
   -- TODO: how to undo this if server detaches?
-  nvim.mcmd[[
+  api.nvim_exec([[
       au CursorHold <buffer> lua pcall(vim.lsp.buf.document_highlight)
       au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       au InsertEnter <buffer> lua vim.lsp.buf.clear_references()
-      ]]
-end
-
-local set_rust_inlay_hints = function()
-  vim.cmd(
-    [[au InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost <buffer> lua ]] ..
-      [[nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints]] ..
-      [[{ prefix = " » ", aligned = false, highlight = "NonText", enabled = {"ChainingHint", "TypeHint"}}]])
+      ]], false)
 end
 
 local nmap = function(key, result)
@@ -209,7 +201,7 @@ local on_attach_cb = function(client)
                             {noremap = true})
     -- vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
   end
-
+  vim.cmd[[autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist{open_loclist = false}]]
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable
@@ -225,9 +217,10 @@ local on_attach_cb = function(client)
   if true and client.resolved_capabilities.document_highlight then
     set_hl_autocmds()
   end
-
-  -- Rust inlay hints
-  if ft == "rust" then set_rust_inlay_hints() end
+  vim.cmd[[augroup UserLsp]]
+  vim.cmd[[au!]]
+  vim.cmd[[au User Lsp echo 'Lsp fired']]
+  vim.cmd[[augroup END]]
 end
 
 -- vim.lsp.set_log_level("debug")
@@ -235,36 +228,35 @@ end
 function M.init()
   if not lsp then return end
   -- Server configs {{{1
-  -- If true, load config from config.lsp.{server}
   local local_configs = {
-    sumneko_lua = true,
-    efm = true,
-    -- diagnosticls = true,
-    vimls = true,
-    yamlls = true,
-    jsonls = true,
-    gopls = true,
-    rust_analyzer = true,
     bashls = true,
-    -- taplo = false,
     cmake = false,
     ccls = false,
-    pyright = false,
+    diagnosticls = false,
+    efm = true,
+    gopls = true,
+    jsonls = true,
+    pyright = true,
+    rust_analyzer = true,
+    sumneko_lua = true,
+    taplo = false,
     tsserver = false,
+    vimls = true,
+    yamlls = true,
   }
 
-  for server, load_cfg in pairs(local_configs) do
-    local cfg = {}
-    if load_cfg then
-      -- Load config from disk
-      cfg = npcall(require, "config.lsp." .. server)(on_attach_cb)
-      -- Check if defined cmd is executable
-      if cfg.cmd ~= nil then
-        if vim.fn.executable(cfg.cmd[1]) ~= 1 then goto continue end
-      end
-    else
-      -- Default server settings
-      cfg.on_attach = on_attach_cb
+  for server, active in pairs(local_configs) do
+    if not active then goto continue end
+    -- Load config from disk
+    local cfg
+    do
+      local def_cfg = {on_attach = on_attach_cb}
+      local cfg_fn = npcall(require, "config.lsp." .. server)
+      cfg = cfg_fn ~= nil and cfg_fn(on_attach_cb) or def_cfg
+    end
+    -- Check if defined cmd is executable
+    if cfg.cmd ~= nil then
+      if vim.fn.executable(cfg.cmd[1]) ~= 1 then goto continue end
     end
     if lsp_status ~= nil then
       cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
@@ -380,4 +372,16 @@ vim.cmd[[command! LspClients lua require'config.lsp'.util.lsp_info()]]
 
 -- Set and return module
 M.status = require"config.lsp.status".status
-return M
+
+local mt = {}
+
+local servers = {}
+
+function mt:__index(k) -- luacheck: ignore
+  if servers[k] == nil then
+    servers[k] = npcall(require, 'config.lsp.'..k)
+  end
+  return servers[k]
+end
+
+return setmetatable(M, mt)

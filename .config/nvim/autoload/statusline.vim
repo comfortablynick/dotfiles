@@ -109,7 +109,7 @@ function s:dev_icon(type) "{{{2
         return WebDevIconsGet{a:type}Symbol()
     endif
     if a:type ==? 'filetype' && exists('s:webdevicons') && type(s:webdevicons) is v:t_dict
-        return s:webdevicons.get_icon(expand('%'), &filetype)
+        return s:webdevicons.get_icon(expand('%'), expand('%:e'))
     endif
     return ''
 endfunction

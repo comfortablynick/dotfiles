@@ -16,7 +16,7 @@ tsconfigs.setup{
       node_decremental = "grm",
     },
   },
-  indent = {enable = true},
+  indent = {enable = false},
 }
 
 vim.wo.foldmethod = "expr"

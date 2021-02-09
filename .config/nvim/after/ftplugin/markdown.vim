@@ -1,6 +1,7 @@
 setlocal tabstop=2
 setlocal spell
 
+let g:markdown_fenced_languages = ['lua', 'python', 'sh', 'vim', 'rust']
 " function! MarkdownFoldLevel()
 "     " WIP: only increases fold level, never decreases
 "     let l:currline = getline(v:lnum)

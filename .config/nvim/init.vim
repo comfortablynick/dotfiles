@@ -94,7 +94,7 @@ set nostartofline                                               " Don't move to 
 set conceallevel=1                                              " Enable concealing, if defined
 set concealcursor=                                              " Enable concealing when cursor on line in these modes
 set virtualedit=onemore                                         " Allow cursor to extend past line
-set wildignore+=__pycache__                                     " Ignore in glob patterns
+set wildignore+=__pycache__,.mypy_cache,.git
 set list                                                        " Show extra characters
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title

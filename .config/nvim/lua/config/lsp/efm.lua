@@ -1,3 +1,5 @@
+local util = require"lspconfig/util"
+
 return function(on_attach)
   return {
     cmd = {"efm-langserver"},
@@ -14,5 +16,10 @@ return function(on_attach)
       "toml",
     },
     init_options = {documentFormatting = true},
+    root_dir = function(fname)
+      return
+        util.root_pattern(".git")(fname) or util.find_git_ancestor(fname) or
+          util.path.dirname(fname)
+    end,
   }
 end

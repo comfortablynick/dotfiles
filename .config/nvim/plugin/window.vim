@@ -29,7 +29,8 @@ augroup plugin_window
 augroup END
 
 function s:on_termopen()
-    startinsert
+    " startinsert
+    nnoremap <buffer> q <Cmd>Bdelete!<CR>
     setlocal nonumber norelativenumber
     setlocal nobuflisted
     setlocal signcolumn=no

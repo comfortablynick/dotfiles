@@ -10,11 +10,9 @@ command S packadd asynctasks.vim | AsyncTask file-run
 command Light set background=light
 command Dark  set background=dark
 
-" Bdelete :: delete buffer without changing window layout {{{2
-" command! -bang -complete=buffer -nargs=? Bclose
-"     \ call plugins#lazy_run('Bdelete', 'vim-bbye',
-"     \ {'bang': '<bang>', 'args': '<args>'})
-command -nargs=? -complete=buffer Bdelete call buffer#sayonara(v:true)
+" Bdelete[!] :: delete buffer without changing window layout {{{2
+" With [!], do not preserve window layout
+command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle

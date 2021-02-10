@@ -51,7 +51,7 @@ function buffer#quick_close()
     if bufnr('$') == 1
         quit
     else
-        bwipeout
+        bwipeout!
     endif
 endfunction
 
@@ -216,12 +216,12 @@ function s:prototype.is_buffer_shown_in_another_window(target_buffer)
 endfunction
 
 " buffer#sayonara() {{{1
-function buffer#sayonara(do_preserve)
+function buffer#sayonara(do_not_preserve)
     let l:hidden = &hidden
     set hidden
     try
         let l:instance = extend(s:prototype, {
-            \ 'do_preserve': a:do_preserve,
+            \ 'do_preserve': !a:do_not_preserve,
             \ 'target_buffer': bufnr('%'),
             \ })
         execute l:instance.handle_modified_buffer()

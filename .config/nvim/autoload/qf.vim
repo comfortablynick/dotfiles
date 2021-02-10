@@ -5,7 +5,7 @@ let s:qf_size = {lines -> min([max([1, lines]), get(g:, 'quickfix_size', s:quick
 let s:is_loc_open = {-> get(getloclist(0, {'winid':0}), 'winid', 0)}
 
 " Show :scriptnames in quickfix list and optionally filter
-function quickfix#scriptnames(...)
+function qf#scriptnames(...)
     call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
     if len(a:000) > 0
         if !exists(':Cfilter') | packadd cfilter | endif
@@ -60,9 +60,9 @@ endfunction
 
 " toggles the location window associated with the current window
 " or whatever location window has the focus
-function quickfix#loc_toggle(stay, ...)
+function qf#loc_toggle(stay, ...)
     " save the view if the current window is not a location window
-    if get(g:, 'qf_save_win_view', 1) && !quickfix#is_loc()
+    if get(g:, 'qf_save_win_view', 1) && !qf#is_loc()
         let l:winview = winsaveview()
     else
         let l:winview = {}
@@ -89,14 +89,14 @@ function quickfix#loc_toggle(stay, ...)
 endfunction
 
 " Old func
-" function quickfix#toggle()
+" function qf#toggle()
 "     let l:qf_lines = len(getqflist())
 "     let l:qf_size = min([max([1, l:qf_lines]), get(g:, 'quickfix_size', s:quickfix_size)])
 "     call s:qf_toggle(l:qf_size)
 " endfunction
 
 " Toggle quickfix list or, if empty, toggle existing loclist for this window
-function quickfix#toggle()
+function qf#toggle()
     let l:qflist = getqflist()
     let l:loclist = []
     let l:is_loc = 0
@@ -110,7 +110,7 @@ function quickfix#toggle()
     let l:lines = len(l:list)
     let l:qf_size = s:qf_size(l:lines)
     if l:is_loc
-        call quickfix#loc_toggle(0, l:qf_size)
+        call qf#loc_toggle(0, l:qf_size)
     else
         call s:qf_toggle(l:qf_size)
     end
@@ -121,7 +121,7 @@ endfunction
 " Optional param object:
 "   `stay` Don't move to qf window
 "   `size` Size that overrides any other setting
-function quickfix#open(...) abort
+function qf#open(...) abort
     let l:config = get(a:, 1, {})
     if type(l:config) isnot# v:t_dict | echoerr 'param must be a dict' | return | endif
     let l:qf_lines = len(getqflist())
@@ -132,7 +132,7 @@ function quickfix#open(...) abort
 endfunction
 
 " Close an empty quickfix window
-function quickfix#close_empty()
+function qf#close_empty()
     " if len(getqflist())
     "     return
     " endif
@@ -148,7 +148,7 @@ function quickfix#close_empty()
 endfunction
 
 " Return 1 if quickfix window is open, else 0
-function quickfix#is_open()
+function qf#is_open()
     let l:open_wins = get(gettabinfo(tabpagenr())[0], 'windows', {})
     let l:qf_wins = filter(l:open_wins, {_, v->getwininfo(v)[0].quickfix == 1})
     return len(l:qf_wins) != 0
@@ -156,7 +156,7 @@ endfunction
 
 " Close quickfix on quit
 " (Use autoclose script instead)
-function quickfix#autoclose()
+function qf#autoclose()
     if &filetype ==? 'qf'
         " if this window is last on screen quit without warning
         if winnr('$') < 2
@@ -167,7 +167,7 @@ endfunction
 
 " let l:open_wins = get(gettabinfo(tabpagenr())[0], 'windows', {})
 
-function quickfix#is_loc(...)
+function qf#is_loc(...)
     let l:winnr = get(a:, 1, 0)
     let l:winnr = l:winnr == 0 ? winnr() : l:winnr
     let l:wininfo = getwininfo(win_getid(l:winnr))[0]
@@ -236,15 +236,15 @@ function s:history(goNewer)
     echohl None
 endfunction
 
-function quickfix#older()
+function qf#older()
     call s:history(0)
 endfunction
 
-function quickfix#newer()
+function qf#newer()
     call s:history(1)
 endfunction
 
-function quickfix#move(direction, prefix)
+function qf#move(direction, prefix)
     if a:direction ==# 'up'
         try
             execute a:prefix 'previous'
@@ -267,9 +267,9 @@ function quickfix#move(direction, prefix)
 endfunction
 
 " Removes current entry from current qf/loclist
-function quickfix#remove_current_entry()
+function qf#remove_current_entry()
     let l:index = line('.') - 1
-    let l:is_loc = quickfix#is_loc()
+    let l:is_loc = qf#is_loc()
     let l:list = l:is_loc ? getloclist(0) : getqflist()
     call remove(l:list, l:index)
     if l:is_loc

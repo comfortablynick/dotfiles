@@ -6,15 +6,16 @@ setlocal foldmethod=marker
 " setlocal errorformat=%E%f:%l:%c:
 " setlocal errorformat+=%E%m
 " setlocal errorformat+=%-G%.%#
-setlocal makeprg=taplo\ lint\ %
 " setlocal errorformat=%C\ %#-->\ %f:%l:%c
+
+setlocal makeprg=taplo\ lint\ --silent\ %
 setlocal errorformat=
-            \%-G,
-            \%-Gerror:\ aborting\ %.%#,
-            \%-Gerror:\ Could\ not\ compile\ %.%#,
-            \%Eerror:\ %m,
-            \%Eerror[E%n]:\ %m,
-            \%Wwarning:\ %m,
-            \%Inote:\ %m,
-            \%C\ %#-->\ %f:%l:%c,
-            \%E\ \ left:%m,%C\ right:%m\ %f:%l:%c,%Z
+    \%-G,
+    \%-Gerror:\ aborting\ %.%#,
+    \%-Gerror:\ Could\ not\ compile\ %.%#,
+    \%Eerror:\ %m,
+    \%Eerror[E%n]:\ %m,
+    \%Wwarning:\ %m,
+    \%Inote:\ %m,
+    \%C\ %#-->\ %f:%l:%c,
+    \%E\ \ left:%m,%C\ right:%m\ %f:%l:%c,%Z

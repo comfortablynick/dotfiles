@@ -21,7 +21,7 @@ function s:toc()
     call setloclist(0, [], 'a', #{title: 'TOC'})
 endfunction
 
-nnoremap <buffer> gO <Cmd>call <SID>toc()\|call quickfix#loc_toggle(0)<CR>
+nnoremap <buffer> gO <Cmd>call <SID>toc()\|call qf#loc_toggle(0)<CR>
 
 setlocal errorformat=asciidoctor:\ %tRROR:\ %f:\ line\ %l:\ %m,asciidoctor:\ %tARNING:\ %f:\ line\ %l:\ %m
 

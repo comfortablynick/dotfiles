@@ -141,8 +141,8 @@ command! -nargs=1 -complete=command Redir silent call util#redir(<q-args>)
 
 " Scriptnames :: display :scriptnames in quickfix and optionally filter {{{2
 command! -nargs=* -bar -count=0 Scriptnames
-    \ call quickfix#scriptnames(<f-args>)
-    \| call quickfix#open(#{size: <count>, stay: v:false})
+    \ call qf#scriptnames(<f-args>)
+    \| call qf#open(#{size: <count>, stay: v:false})
 
 " WhichKey[Visual] :: display key maps {{{2
 command! -nargs=1 WhichKey

@@ -98,7 +98,7 @@ nnoremap <Leader>q  <Cmd>Bdelete<CR>
 nnoremap <Leader>xx <Cmd>BufOnly<CR>
 
 " Quickfix
-nnoremap cq <Cmd>call quickfix#toggle()<CR>
+nnoremap cq <Cmd>call qf#toggle()<CR>
 
 " Command line {{{1
 " %% -> cwd

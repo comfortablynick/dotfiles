@@ -1,19 +1,18 @@
 local configs = require"lspconfig/configs"
 local util = require"lspconfig/util"
 
-local root_pattern = util.root_pattern(".git", "config.yml")
-
 return function(on_attach)
   configs.taplo = {
     default_config = {
       cmd = {"taplo-lsp", "run"},
       filetypes = {"toml"},
-      root_dir = function(fname)
-        return root_pattern(fname) or vim.loop.os_homedir()
-      end,
-      settings = {},
-    },
+    root_dir = function(fname)
+      return
+        util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
+          util.find_git_ancestor(fname) or util.path.dirname(fname)
+    end,
   }
+}
 
   return {
     cmd = configs.taplo.cmd,

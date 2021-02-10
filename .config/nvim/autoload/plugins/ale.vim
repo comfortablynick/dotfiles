@@ -79,7 +79,7 @@ endfunction
 " Autocommands
 augroup autoload_plugins_ale
     autocmd!
-    autocmd User ALELintPost call quickfix#close_empty()
+    autocmd User ALELintPost call qf#close_empty()
     autocmd ColorScheme * call s:set_hi()
 augroup END
 

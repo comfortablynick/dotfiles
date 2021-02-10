@@ -16,8 +16,8 @@ setlocal cursorline
 " are we in a location list or a quickfix list?
 let b:qf_is_loc = !empty(getloclist(0))
 
-nnoremap <silent><buffer> <Left>  :call quickfix#older()<CR>
-nnoremap <silent><buffer> <Right> :call quickfix#newer()<CR>
+nnoremap <silent><buffer> <Left>  :call qf#older()<CR>
+nnoremap <silent><buffer> <Right> :call qf#newer()<CR>
 nnoremap <silent><buffer> q       :call buffer#quick_close()<CR>
 
 let b:undo_ftplugin .= '|setl list< rnu< bl< cul<'

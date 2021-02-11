@@ -1,7 +1,7 @@
 local api = vim.api
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = "menu,menuone,noselect"
+vim.o.completeopt = "menuone,noselect"
 
 -- Avoid showing message extra message when using completion
 vim.cmd[[set shortmess+=c]]

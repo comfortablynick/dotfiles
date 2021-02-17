@@ -34,7 +34,7 @@
     - pkg
 
 - name: Install vim
-  hosts: jupiter
+  hosts: all
   roles:
     - vim
   tags:

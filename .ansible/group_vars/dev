@@ -7,8 +7,11 @@ pacman_default_packages:
   - cmake
 
 pipx_packages:
+  - name: ansible --include-deps
   - name: black
   - name: cmakelang[YAML]
+  - name: cmakelang
+  - name: cmakelint
   - name: legit
   - name: mypy
   - name: optimize-images

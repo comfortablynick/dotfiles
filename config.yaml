@@ -89,6 +89,7 @@ profiles:
   mars:
     include:
     - core
+    - ansible
   thor.local:
     include:
     - core

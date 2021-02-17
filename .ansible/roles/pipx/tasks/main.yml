@@ -5,11 +5,8 @@
     name: pipx
     executable: "{{ pipx_pip3_path }}"
     state: latest
-
-- name: Get installed pipx packages
-  command: "{{ pipx_path }} list"
-  register: pipx_installed
-  changed_when: false
+  register: pip
+  changed_when: "'Successfully installed' in pip.stdout"
 
 - name: Debug packages
   debug:
@@ -25,12 +22,15 @@
   loop: "{{ pipx_pkgs }}"
   register: pipx
   changed_when: "'--force' not in pipx.stdout"
-  when:
-    - pipx_installed.stdout is defined
-    - item.name not in pipx_installed.stdout
+  failed_when: pipx.rc > 1
 
 - name: Inject pipx dependencies
   command: "{{ pipx_path }} inject {{ item.name }} {{ item.inject|join(' ') }}"
   loop: "{{ pipx_pkgs }}"
   when: item.inject is defined
   changed_when: false  # no way to detect if this is a change or not
+
+- name: Upgrade pipx packages
+  command: "{{ pipx_path }} upgrade-all"
+  register: pipx_upgrade
+  changed_when: "'Versions did not change' not in pipx_upgrade.stdout"

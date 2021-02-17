@@ -1,8 +1,14 @@
+---
+# all group vars
 asdf_home: "{{ ansible_env.HOME }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
+asdf_python_version: 3.9.1
+asdf_python_bin_dir: "{{ asdf_dir }}/installs/python/{{ asdf_python_version }}/bin"
+
+pipx_pip3_path: "{{ asdf_python_bin_dir }}/pip3"
+pipx_path: "{{ asdf_python_bin_dir }}/pipx"
 
 pipx_packages_all:
-  # dev tools
   - name: dotdrop
   - name: flake8
   - name: neovim-remote

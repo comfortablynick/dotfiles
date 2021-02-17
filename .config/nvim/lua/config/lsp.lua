@@ -7,21 +7,23 @@ local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
 local lsps_attached = {}
 
-local configs = require"lspconfig/configs"
-local lsp_util = require"lspconfig/util"
+local configs = npcall(require, "lspconfig/configs")
+local lsp_util = npcall(require, "lspconfig/util")
 
-configs.taplo = {
-  default_config = {
-    cmd = {"taplo-lsp", "run"},
-    filetypes = {"toml"},
-    root_dir = function(fname)
-      return
+if configs ~= nil then
+  configs.taplo = {
+    default_config = {
+      cmd = {"taplo-lsp", "run"},
+      filetypes = {"toml"},
+      root_dir = function(fname)
+        return
         lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
-          lsp_util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
-    end,
-    settings = {},
-  },
-}
+        lsp_util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
+      end,
+      settings = {},
+    },
+  }
+end
 
 M.configs = {}
 
@@ -268,7 +270,9 @@ function M.init()
     ::continue::
   end
 end
-configs.taplo.setup{on_attach = on_attach_cb}
+if configs ~= nil then
+  configs.taplo.setup{on_attach = on_attach_cb}
+end
 
 -- Set and return module {{{1
 M.status = require"config.lsp.status".status

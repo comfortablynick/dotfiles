@@ -91,7 +91,7 @@ command! -nargs=+ -complete=file_in_path -bar Grep
 "     \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
 "     \ 'asynctasks.vim'
 "     \ )
-call map#cabbr('T', 'AsyncTask')
+call map#cabbr('ta', 'AsyncTask')
 
 " Git {{{1
 " GV :: git commit viewer {{{2

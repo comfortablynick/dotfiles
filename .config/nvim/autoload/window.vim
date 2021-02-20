@@ -2,7 +2,7 @@ scriptencoding utf-8
 
 " Get usable width of window
 " Adapted from https://stackoverflow.com/a/52921337/10370751
-function! window#width() "{{{1
+function window#width() "{{{1
     let l:width = winwidth(0)
     let l:numberwidth = max([&numberwidth, strlen(line('$')) + 1])
     let l:numwidth = (&number || &relativenumber) ? l:numberwidth : 0
@@ -20,7 +20,7 @@ function! window#width() "{{{1
 endfunction
 
 " Create scratch window (accepts mods)
-function! window#open_scratch(mods, cmd) "{{{1
+function window#open_scratch(mods, cmd) "{{{1
     if a:cmd ==# ''
         let l:output = ''
     elseif a:cmd[0] == '@'
@@ -41,9 +41,18 @@ function! window#open_scratch(mods, cmd) "{{{1
     call setline(1, l:output)
 endfunction
 
+" Close all terminal windows in current tabpage
+function window#close_term() "{{{1
+    let l:wininfo = filter(getwininfo(), {_,v -> v.tabnr == tabpagenr() && v.terminal == 1})
+    if empty(l:wininfo) | return | endif
+    for l:win in l:wininfo
+        execute l:win.winnr..'quit'
+    endfor
+endfunction
+
 " Create popup/float terminal
 " With help from junegunn/fzf
-function! window#popterm(cmd) "{{{1
+function window#popterm(cmd) "{{{1
     call s:popup({'width': 0.9, 'height': 0.6})
 
     if has('nvim')
@@ -61,7 +70,7 @@ function! window#popterm(cmd) "{{{1
 endfunction
 
 if has('nvim')
-    function! s:create_popup(hl, opts) "{{{1 (nvim)
+    function s:create_popup(hl, opts) "{{{1 (nvim)
         let l:buf = nvim_create_buf(v:false, v:true)
         let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
         let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
@@ -74,7 +83,7 @@ if has('nvim')
         return l:buf
     endfunction
 else
-    function! s:create_popup(hl, opts) "{{{1 (vim)
+    function s:create_popup(hl, opts) "{{{1 (vim)
         let l:is_frame = has_key(a:opts, 'border')
         let l:buf = l:is_frame ? '' : term_start(&shell, #{hidden: 1, term_finish: 'close'})
         let l:id = popup_create(l:buf, #{
@@ -96,7 +105,7 @@ else
     endfunction
 endif
 
-function! s:popup(opts) "{{{1
+function s:popup(opts) "{{{1
     " Support ambiwidth == 'double'
     let l:ambidouble = &ambiwidth ==# 'double' ? 2 : 1
 
@@ -155,7 +164,7 @@ function! s:popup(opts) "{{{1
     endif
 endfunction
 
-function! window#tab_mod(cmd, ft) " Show cmd in new or existing tab {{{1
+function window#tab_mod(cmd, ft) " Show cmd in new or existing tab {{{1
     " Reuse open tab if filetype matches `ft`
     " Adapted from https://github.com/airblade/vim-helptab
     let l:cmdtabnr = 0
@@ -181,7 +190,7 @@ endfunction
 
 " Vim Only
 if !has('nvim')
-    function! window#float_term(cmd, width, height) " Simple vim-only popup terminal {{{1
+    function window#float_term(cmd, width, height) " Simple vim-only popup terminal {{{1
         let l:width = float1nr(&columns * a:width)
         let l:height = float2nr(&lines * a:height)
         let l:bufnr = term_start(a:cmd, {'hidden': 1, 'term_finish': 'close', 'cwd': getcwd()})

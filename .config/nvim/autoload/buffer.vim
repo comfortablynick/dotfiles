@@ -24,21 +24,62 @@ function buffer#restore_cursor_after(motion)
     call winrestview(l:wv)
 endfunction
 
-function buffer#list()
-  let l:buffers = split(execute('buffers'), '\n')
-  " let l:line_info = {}
-  " for l:line in split(l:buffers, "\n")
-  "   let l:bufnr = str2nr(trim(matchstr(l:line, '^\s*\d\+')))
-  "   let l:lnum = matchstr(l:line, '\s\+\zsline.*$')
-  "   let l:line_info[l:bufnr] = l:lnum
-  " endfor
-  " let bufs = map(clap#util#buflisted_sorted(s:cur_tab_only), 's:format_buffer(str2nr(v:val))')
-  " if empty(bufs)
-  "   return []
-  " else
-  "   return bufs[1:] + [bufs[0]]
-  " endif
-  return filter(l:buffers, {_,v -> str2nr(trim(matchstr(v, '^\s*\d\+')))})
+" Close all buffers that can be closed, other than current
+function buffer#only(...)
+    let l:opts = get(a:, 1, {})
+    let l:cur_bufnr = get(l:opts, 'bufnr', bufnr('%'))
+    let l:force = get(l:opts, 'bang', 0)
+
+    let l:buffers = filter(
+        \ getbufinfo({'bufloaded': 1}),
+        \ {_,v -> !v.hidden && v.bufnr != l:cur_bufnr}
+        \)
+    let l:deleted = 0
+    let l:modified = 0
+    for l:buf in l:buffers
+        let l:bn = l:buf.bufnr
+        if !l:force && l:buf.changed
+            let l:modified += 1
+        else
+            silent exe printf(
+                \ 'bdelete%s %d', 
+                \ l:force || has_key(l:buf.variables, 'term_title') ? '!' : '',
+                \ l:bn,
+                \)
+            let l:deleted += 1
+        endif
+    endfor
+    let l:msg = 'BufOnly:'
+    if l:deleted || l:modified
+        if l:deleted
+            let l:msg ..= printf(' %d buffer%s deleted%s',
+                \ l:deleted,
+                \ l:deleted == 1 ? '' : 's',
+                \ l:modified ? ';' : '',
+                \)
+        endif
+        if l:modified
+            let l:msg ..= printf(
+                \ ' %d buffer%s modified',
+                \ l:modified,
+                \ l:modified == 1 ? '' : 's',
+                \)
+        endif
+    else
+        let l:msg ..= ' no buffers to delete!'
+    endif
+    echom l:msg
+endfunction
+
+function buffer#autoclose()
+    let l:cur_bufnr = bufnr('%')
+    let l:buffers = filter(
+        \ getbufinfo(#{bufloaded: 1}),
+        \ {_,v -> v.bufnr != l:cur_bufnr}
+        \)
+    if empty(filter(copy(l:buffers), {_,v->v.listed && !v.hidden}))
+        return buffer#only()
+    endif
 endfunction
 
 " Close buffer if not modifiable; quit vim if last buf
@@ -92,7 +133,7 @@ endfunction
 function s:prototype.handle_quit()
     execute 'silent bdelete!' l:self.target_buffer
     redraw!
-    if (get(g:, 'sayonara_confirm_quit'))
+    if get(g:, 'sayonara_confirm_quit')
         echo 'No active buffer remaining. Quit Vim? [y/n]: '
         if nr2char(getchar()) !=? 'y'
             redraw!
@@ -155,7 +196,7 @@ function s:prototype.handle_window()
         \ {_, v -> buflisted(v) && v != l:self.target_buffer}))
 
     " Special case: don't quit last window if there are other listed buffers
-    if (tabpagenr('$') == 1) && (winnr('$') == 1) && (l:valid_buffers >= 1)
+    if tabpagenr('$') == 1 && winnr('$') == 1 && l:valid_buffers >= 1
         execute 'silent bdelete!' l:self.target_buffer
         return
     endif

@@ -14,6 +14,9 @@ command Dark  set background=dark
 " With [!], do not preserve window layout
 command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
 
+" BufOnly :: keep only current buffer (! forces close) {{{2
+command -bang BufOnly call buffer#only({'bang': <bang>0})
+
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle
     \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
@@ -53,6 +56,10 @@ call map#cabbr('pyp', 'py3 print()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
 " man :: Open :Man in new or existing tab {{{2
 call map#cabbr('man', function('window#tab_mod', ['Man', 'man']))
+
+" [v|h]t :: Open vertical or horizontal split terminal
+call map#cabbr('vt', 'vsplit \| terminal')
+call map#cabbr('ht', 'split \| terminal')
 
 " fff :: Insert comment with fold marker {{{2
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
@@ -106,8 +113,7 @@ nnoremap <Leader>gp <Cmd>Gpush<CR>
 " Tig[Status] :: view tig in terminal {{{2
 command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
 command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
-call map#cabbr('Ts', 'TigStatus')
-nnoremap <Leader>ts <Cmd>TigStatus<CR>
+call map#cabbr('ts', 'TigStatus')
 
 " LazyGit :: tui for git {{{2
 command -bang -nargs=* LazyGit
@@ -222,9 +228,6 @@ if has('nvim')
 
     " Make :: async make {{{2
     " command! -bang -nargs=0 -complete=file Make call s:tools.make()
-
-    " BufOnly :: keep only current buffer (! forces close) {{{2
-    command -bang BufOnly call s:buffer.only(<bang>0)
 endif
 
 " vim:fdl=1:

@@ -121,7 +121,7 @@ function plugins#init()
     Plug 'romgrk/barbar.nvim'
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
-    Plug 'windwp/nvim-autopairs'
+    " Plug 'windwp/nvim-autopairs'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

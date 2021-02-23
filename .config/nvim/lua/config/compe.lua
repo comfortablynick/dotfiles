@@ -61,7 +61,8 @@ local labels = {
   -- Unit = " [unit]",
   -- Value = " [value]",
   -- Variable = " [variable]",
-  -- ["snippets.nvim"] = " [nsnip]",
+  ["snippets.nvim"] = " [nsnip]",
+  Treesitter = "פּ [TS]",
 }
 
 local init = function()
@@ -85,23 +86,63 @@ local init = function()
     -- throttle_time = 80,
     -- incomplete_delay = 400,
     allow_prefix_unmatch = false,
+    documentation = true,
     source = {
       path = true,
       buffer = {menu = labels.Buffer},
       spell = true,
       ultisnips = {menu = labels.UltiSnips},
+      snippets_nvim = {menu = labels["snippets.nvim"]},
       nvim_lsp = true,
       nvim_lua = true,
+      treesitter = {menu = labels.Treesitter},
     },
   }, bufnr)
 
   imap("<C-Space>", "compe#complete()", {expr = true, silent = true})
   if vim.bo.filetype ~= "markdown" then
-    imap("<Tab>", "<Cmd>lua nvim.smart_tab()<CR>")
-    imap("<S-Tab>", "<Cmd>lua nvim.smart_s_tab()<CR>")
+    imap("<Tab>", "v:lua.smart_tab()", {expr = true})
+    imap("<S-Tab>", "v:lua.smart_s_tab()", {expr = true})
   end
   imap("<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
   imap("<C-e>", "compe#close('<C-e>')", {expr = true, silent = true})
+end
+
+local t = function(str)
+  return api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+  local col = vim.fn.col(".") - 1
+  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
+    return true
+  else
+    return false
+  end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.smart_tab = function()
+  if vim.fn.pumvisible() == 1 then
+    return t"<C-n>"
+    -- elseif vim.fn.call("vsnip#available", {1}) == 1 then
+    --   return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t"<Tab>"
+  else
+    return vim.fn["compe#complete"]()
+  end
+end
+_G.smart_s_tab = function()
+  if vim.fn.pumvisible() == 1 then
+    return t"<C-p>"
+    -- elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+    --   return t "<Plug>(vsnip-jump-prev)"
+  else
+    return t"<S-Tab>"
+  end
 end
 
 return {init = init}

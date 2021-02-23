@@ -1,5 +1,6 @@
 " Clap setup {{{1
 " General settings
+let g:clap_always_open_preview = 0
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = 1
 let g:clap_preview_size = 10

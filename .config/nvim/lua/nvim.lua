@@ -352,7 +352,6 @@ end
 
 
 -- Used {{{1
-
 function nvim.relative_name(path) -- {{{2
   -- Return path relative to config
   -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'

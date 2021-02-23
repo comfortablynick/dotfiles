@@ -195,7 +195,6 @@ if has('nvim-0.5')
     require"config.devicons"
     require"config.gitsigns".init()
     require"config.lsp".init()
-    -- require"config.autopairs".init()
 .
 
     augroup vimrc

@@ -10,7 +10,7 @@ augroup plugin_buffer
     autocmd BufEnter doc/*.txt setlocal concealcursor=
 augroup end
 
-function! s:recall_cursor_position()
+function s:recall_cursor_position()
     " Derived from and simplified:
     " https://github.com/farmergreg/vim-lastplace/blob/master/plugin/vim-lastplace.vim
 

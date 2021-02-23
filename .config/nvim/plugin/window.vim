@@ -1,4 +1,5 @@
 " Window settings
+
 augroup plugin_window
     autocmd!
     " Neovim terminal
@@ -25,8 +26,17 @@ augroup plugin_window
     endif
     " Easier exit from cmdwin
     autocmd CmdwinEnter * call s:on_cmdwin_enter()
-    " autocmd QuitPre * call autoclose#quit_if_only_window()
+    autocmd QuitPre * if &l:filetype != 'qf' | silent! lclose | silent! cclose | endif
+    autocmd QuitPre * silent call buffer#autoclose()
 augroup END
+
+function AllBufs()
+    let l:windows = []
+    for l:tab in range(1, tabpagenr('$'))
+        call add(l:windows, winlayout(l:tab))
+    endfor
+    return l:windows
+endfunction
 
 function s:on_termopen()
     " startinsert

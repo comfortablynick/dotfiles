@@ -49,6 +49,8 @@ function plugins#init()
     Plug 'tommcdo/vim-exchange'
     Plug 'bfredl/nvim-miniyank'
     Plug 'antoinemadec/FixCursorHold.nvim'
+    " Lua impl of easymotion
+    Plug 'phaazon/hop.nvim'
 
     " Explorer/finder utils {{{2
     Plug 'junegunn/fzf',

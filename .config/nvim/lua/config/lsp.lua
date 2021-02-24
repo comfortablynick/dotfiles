@@ -204,10 +204,10 @@ local on_attach_cb = function(client)
                             {noremap = true})
     -- vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
   end
-  api.nvim_exec([[augroup config_lsp
-    autocmd!
-    autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist{open_loclist = false}
-  augroup END]], false)
+  -- api.nvim_exec([[augroup config_lsp
+  --   autocmd!
+  --   autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist{open_loclist = false}
+  -- augroup END]], false)
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable

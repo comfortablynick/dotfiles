@@ -9,13 +9,13 @@ run() {
     cd "$DIR" || exit 1
     "bin/$OS/lua-language-server" -E -e LANG=en ./main.lua
 }
-
+# (cd 3rd/luamake && git fetch && git rebase master && git submodule update --init --recursive)
 update() {
     cd "$DIR" || exit 1
     git pull
-    git submodule update --init --recursive
 
     cd 3rd/luamake || exit 1
+    git fetch && git rebase master && git submodule update --init --recursive
     ninja -f ninja/linux.ninja
     cd ../..
     ./3rd/luamake/luamake rebuild

@@ -1,10 +1,7 @@
-let b:localrc_loaded = 0
-let b:localrc_files = []
-
-function buffer#load_lvimrc()
+function buffer#load_lvimrc() " Load local vimrc using env var of paths {{{1
     " Use direnv to find .lvimrc files and add to env var $LOCAL_VIMRC
     " See https://github.com/direnv/direnv/wiki/Vim
-    let b:localrc_files = get(b:, 'localrc_files', [])
+    let b:localrc_files  = get(b:, 'localrc_files', [])
     let b:localrc_loaded = get(b:, 'localrc_loaded', 0)
     let l:lvimrcs = $LOCAL_VIMRC
     if empty(l:lvimrcs) | return | endif
@@ -12,23 +9,62 @@ function buffer#load_lvimrc()
         if index(b:localrc_files, l:file) == -1
             source `=l:file`
             let b:localrc_loaded += 1
-            let b:localrc_files += [l:file]
+            let b:localrc_files  += [l:file]
         endif
     endfor
 endfunction
 
-" Restore cursor position after motion
-function buffer#restore_cursor_after(motion)
+function buffer#restore_cursor_after(motion) " Restore cursor after motion {{{1
     let l:wv = winsaveview()
     execute 'normal! '.a:motion
     call winrestview(l:wv)
 endfunction
 
+function buffer#close_complete(...)
+    return ['other', 'hidden', 'unnamed', 'all', 'this', 'select']
+endfunction
+
+function buffer#close(bang, option) "{{{1
+    let l:option = trim(a:option)
+    let l:command = printf('bwipeout%s', a:bang ? '!' : '')
+    if l:option ==# 'select'
+        pwd
+        ls!
+        call feedkeys(':'..l:command ..' ', 'n')
+    elseif l:option ==# 'this'
+        execute l:command
+    else
+        let l:all_bufs = getbufinfo()
+        if l:option ==# 'other'
+            let l:filtered_bufinfo = filter(l:all_bufs, {_,v -> v.bufnr != bufnr('%')})
+        elseif l:option ==# 'hidden'
+            let l:filtered_bufinfo = filter(l:all_bufs, {_,v -> empty(v.windows)})
+        elseif l:option ==# 'nameless'
+            let l:filtered_bufinfo = filter(l:all_bufs, {_,v -> v.name ==# ''})
+        elseif l:option ==# 'all'
+            let l:filtered_bufinfo = l:all_bufs
+        else
+            echohl WarningMsg 
+            echo printf('buffer close: invalid option ''%s''', l:option) 
+            echohl None
+            return
+        endif
+
+        let l:buffer_numbers = map(l:filtered_bufinfo, {_,v -> v.bufnr})
+        if !empty(l:buffer_numbers)
+            execute printf('%s %s', l:command, join(l:buffer_numbers, ' '))
+        endif
+    endif
+endfunction
+
 " Close all buffers that can be closed, other than current
-function buffer#only(...)
-    let l:opts = get(a:, 1, {})
+function buffer#only(...) " Close buffers other than current (or supplied bufnr) {{{1
+    " Argument should be dict with following keys
+    "   bufnr   buffer other than current to be left open
+    "   bang    force close buffers even if modified
+    let l:opts      = get(a:, 1, {})
     let l:cur_bufnr = get(l:opts, 'bufnr', bufnr('%'))
-    let l:force = get(l:opts, 'bang', 0)
+    let l:force     = get(l:opts, 'bang', 0)
 
     let l:buffers = filter(
         \ getbufinfo({'bufloaded': 1}),
@@ -71,43 +107,40 @@ function buffer#only(...)
     echom l:msg
 endfunction
 
-function buffer#autoclose()
+function buffer#autoclose() " Close unnecessary buffers (use with QuitPre autocmd) {{{1
     let l:cur_bufnr = bufnr('%')
     let l:buffers = filter(
-        \ getbufinfo(#{bufloaded: 1}),
+        \ getbufinfo(#{bufloaded: 1, buflisted: 1}),
         \ {_,v -> v.bufnr != l:cur_bufnr}
         \)
-    if empty(filter(copy(l:buffers), {_,v->v.listed && !v.hidden}))
+    if empty(filter(copy(l:buffers), {_,v -> !v.hidden}))
         return buffer#only()
     endif
 endfunction
 
 " Close buffer if not modifiable; quit vim if last buf
 " ex: map to `q` on buffers where macros wouldn't be used
-function buffer#quick_close()
+function buffer#quick_close() " Close non-modifiable buffers or quit if last buffer {{{1
     if &l:modifiable
-        echohl WarningMsg | echo 'Cannot quick close modifiable buffer' | echohl None
+        echohl WarningMsg | echo 'autoclose: cannot quick close modifiable buffer' | echohl None
         return
     endif
-    if bufnr('$') == 1
-        quit
-    else
-        bwipeout!
-    endif
+    if len(getbufinfo(#{buflisted: 1})) < 2 | quit | endif
+    bwipeout!
 endfunction
 
 let s:prototype = {}
 
-" Sayonara :: close buffer without necessarily disrupting window layout
+" Sayonara :: close buffer without necessarily disrupting window layout {{{1
 " Adapted from https://github.com/mhinz/vim-sayonara
-" s:prototype.create_scratch_buffer() {{{1
+" s:prototype.create_scratch_buffer() {{{2
 function s:prototype.create_scratch_buffer()
     enew!
     setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
     return bufnr('%')
 endfunction
 
-" s:prototype.handle_modified_buffer() {{{1
+" s:prototype.handle_modified_buffer() {{{2
 function s:prototype.handle_modified_buffer()
     if &l:modified
         echo 'Unsaved changes: [w]rite, [s]kip, [b]reak '
@@ -129,7 +162,7 @@ function s:prototype.handle_modified_buffer()
     return ''
 endfunction
 
-" s:prototype.handle_quit() {{{1
+" s:prototype.handle_quit() {{{2
 function s:prototype.handle_quit()
     execute 'silent bdelete!' l:self.target_buffer
     redraw!
@@ -143,7 +176,7 @@ function s:prototype.handle_quit()
     return 'quit!'
 endfunction
 
-" s:prototype.handle_window() {{{1
+" s:prototype.handle_window() {{{2
 function s:prototype.handle_window()
     if has_key(get(g:, 'sayonara_filetypes', {}), &filetype)
         execute g:sayonara_filetypes[&filetype]
@@ -214,7 +247,7 @@ function s:prototype.handle_window()
     endif
 endfunction
 
-" s:prototype.preserve_window() {{{1
+" s:prototype.preserve_window() {{{2
 function s:prototype.preserve_window()
     let l:altbufnr = bufnr('#')
     let l:valid_buffers = filter(range(1, bufnr('$')),
@@ -238,7 +271,7 @@ function s:prototype.preserve_window()
     endif
 endfunction
 
-" s:prototype.is_buffer_shown_in_another_window() {{{1
+" s:prototype.is_buffer_shown_in_another_window() {{{2
 function s:prototype.is_buffer_shown_in_another_window(target_buffer)
     let l:current_tab = tabpagenr()
     let l:other_tabs  = filter(range(1, tabpagenr('$')), {_,v -> v != l:current_tab})

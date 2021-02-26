@@ -46,9 +46,9 @@ function s:recall_cursor_position()
         return
     endtry
 
-    let l:lastpos = line("'\"")
-    let l:buffend = line('$')
-    let l:winend = line('w$')
+    let l:lastpos  = line("'\"")
+    let l:buffend  = line('$')
+    let l:winend   = line('w$')
     let l:winstart = line('w0')
 
     if l:lastpos > 0 && l:lastpos <= l:buffend

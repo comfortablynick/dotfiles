@@ -14,8 +14,13 @@ command Dark  set background=dark
 " With [!], do not preserve window layout
 command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
 
-" BufOnly :: keep only current buffer (! forces close) {{{2
+" BufOnly[!] :: keep only current buffer (! forces close) {{{2
 command -bang BufOnly call buffer#only({'bang': <bang>0})
+
+" Bclose[!] :: close buffers with common options
+" TODO: does this take the place of BufOnly?
+command -nargs=1 -bang -complete=customlist,buffer#close_complete
+    \ Bclose call buffer#close(<bang>0, <q-args>)
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
 command! UndotreeToggle

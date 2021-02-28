@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pandoc "$1" \
+    -f markdown_mmd \
+    -V linkcolor:blue \
+    -V geometry:margin=.5in \
+    -V mainfont="Source Sans Pro" \
+    -V monofont="Source Code Pro" \
+    --pdf-engine=xelatex \
+    -o "$2"

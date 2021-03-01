@@ -21,6 +21,8 @@ function s:toc()
     call setloclist(0, [], 'a', #{title: 'TOC'})
 endfunction
 
+compiler asciidoctor2pdf
+
 nnoremap <buffer> gO <Cmd>call <SID>toc()\|call qf#loc_toggle(0)<CR>
 
 setlocal errorformat=asciidoctor:\ %tRROR:\ %f:\ line\ %l:\ %m,asciidoctor:\ %tARNING:\ %f:\ line\ %l:\ %m

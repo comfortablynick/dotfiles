@@ -5,6 +5,7 @@ local util = vim.lsp.util
 local npcall = vim.F.npcall
 local lsp = npcall(require, "lspconfig")
 local lsp_status = npcall(require, "lsp-status")
+local lsp_saga = npcall(require, "lspsaga")
 local lsps_attached = {}
 
 local configs = npcall(require, "lspconfig/configs")
@@ -17,8 +18,8 @@ if configs ~= nil then
       filetypes = {"toml"},
       root_dir = function(fname)
         return
-        lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
-        lsp_util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
+          lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
+            lsp_util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
       end,
       settings = {},
     },
@@ -165,7 +166,7 @@ local set_hl_autocmds = function()
 end
 
 local nmap = function(key, result)
-  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>lua " .. result .. "<CR>",
+  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>" .. result .. "<CR>",
                           {noremap = true})
 end
 
@@ -173,7 +174,7 @@ local on_attach_cb = function(client)
   if lsp_status ~= nil then lsp_status.on_attach(client) end
   local nmap_capability = function(lhs, method, capability_name)
     if client.resolved_capabilities[capability_name or method] then
-      nmap(lhs, "vim.lsp.buf." .. method .. "()")
+      nmap(lhs, "lua vim.lsp.buf." .. method .. "()")
     end
   end
 
@@ -181,7 +182,7 @@ local on_attach_cb = function(client)
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  nmap_capability("gD", "definition", "goto_definition")
+  nmap_capability("gtd", "definition", "goto_definition")
   nmap_capability("gh", "hover")
   nmap_capability("gi", "implementation")
   nmap_capability("gS", "signature_help")
@@ -190,24 +191,33 @@ local on_attach_cb = function(client)
   nmap_capability("gr", "references")
   nmap_capability("<F2>", "rename")
 
-  nmap("gd", "vim.lsp.diagnostic.set_loclist{open = true}")
-  nmap("[d", "vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
-  nmap("]d", "vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
+  nmap("gd", "lua vim.lsp.diagnostic.set_loclist{open = true}")
+  nmap("[d",
+       "lua vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
+  nmap("]d",
+       "lua vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
   nmap("[D",
-       "vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
+       "lua vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
   nmap("]D",
-       "vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
+       "lua vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
+
+  if lsp_saga ~= nil then
+    nmap("gh", "Lspsaga hover_doc")
+    nmap("gD", "Lspsaga preview_definition")
+    nmap("[d", "Lspsaga diagnostic_jump_prev")
+    nmap("]d", "Lspsaga diagnostic_jump_next")
+    nmap("ga", "Lspsaga code_action")
+    nmap("gS", "Lspsaga signature_help")
+    nmap("<F2>", "Lspsaga rename")
+    nmap("<C-f>", "lua require'lspsaga.action'.smart_scroll_with_saga(1)")
+    nmap("<C-b>", "lua require'lspsaga.action'.smart_scroll_with_saga(-1)")
+  end
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd[[command! Format lua vim.lsp.buf.formatting()]]
     api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>",
                             {noremap = true})
-    -- vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
   end
-  -- api.nvim_exec([[augroup config_lsp
-  --   autocmd!
-  --   autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist{open_loclist = false}
-  -- augroup END]], false)
   vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable
@@ -270,9 +280,7 @@ function M.init()
     ::continue::
   end
 end
-if configs ~= nil then
-  configs.taplo.setup{on_attach = on_attach_cb}
-end
+if configs ~= nil then configs.taplo.setup{on_attach = on_attach_cb} end
 
 -- Set and return module {{{1
 M.status = require"config.lsp.status".status

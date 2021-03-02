@@ -8,18 +8,18 @@ let g:floaterm_autoclose = 1
 
 " hi link Floaterm NormalFloat
 " hi link FloatermBorder NormalFloat
-" augroup autoload_plugins_floaterm
-"     autocmd!
-"     autocmd FileType floaterm call s:floaterm_ft()
-" augroup END
+augroup autoload_plugins_floaterm
+    autocmd!
+    autocmd FileType floaterm call s:floaterm_ft()
+augroup END
 
 function s:floaterm_ft()
-    tnoremap <buffer><silent><F7>  <C-\><C-n>:FloatermToggle<CR>
-    tnoremap <buffer><silent><Esc> <C-\><C-n>:FloatermKill<CR>
-    tnoremap <buffer><silent><C-c> <C-\><C-n>:FloatermKill<CR>
+    tnoremap <buffer><F7>  <C-\><C-n><Cmd>FloatermToggle<CR>
+    tnoremap <buffer><Esc> <C-\><C-n><Cmd>FloatermKill<CR>
+    tnoremap <buffer><C-c> <C-\><C-n><Cmd>FloatermKill<CR>
 endfunction
 
-nnoremap <silent><F7> :FloatermToggle<CR>
+nnoremap <F7> <Cmd>FloatermToggle<CR>
 
 " " Use floaterm for Async[Run|Tasks] {{{1
 " function s:runner_proc(opts)

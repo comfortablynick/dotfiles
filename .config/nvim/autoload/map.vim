@@ -86,4 +86,10 @@ endfunction
 function map#eatchar(pat)
     let l:c = nr2char(getchar(0))
     return (l:c =~ a:pat) ? '' : l:c
-endfunc
+endfunction
+
+" map#check_back_space() :: Helper for tab mappings and completion {{{1
+function map#check_back_space()
+  let l:col = col('.') -1
+  return !l:col || getline('.')[l:col - 1] =~# '\s'
+endfunction

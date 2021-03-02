@@ -110,6 +110,7 @@ function plugins#init()
     Plug 'nvim-lua/lsp_extensions.nvim'
     Plug 'nvim-lua/completion-nvim'
     Plug 'hrsh7th/nvim-compe'
+    Plug 'glepnir/lspsaga.nvim'
     Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
 

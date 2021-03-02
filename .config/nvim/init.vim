@@ -186,6 +186,7 @@ if has('nvim-0.5')
     " silent! packadd! completion-nvim
     " silent! packadd! completion-buffers
     silent! packadd! nvim-compe
+    silent! packadd! lspsaga.nvim
     silent! packadd! snippets.nvim
 
     lua <<

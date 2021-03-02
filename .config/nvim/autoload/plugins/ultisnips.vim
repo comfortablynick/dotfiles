@@ -16,6 +16,8 @@ call map#cabbr('es', 'UltiSnipsEdit')
 " inoremap <Plug>(TryUlti) <C-R>=<SID>try_ultisnips()<CR>
 " imap <expr> <Plug>(TryMU) <SID>try_mucomplete()
 
+inoremap <Plug>(UltiForward) <C-R>=UltiSnips#JumpForwards()<CR>
+
 " " Try to expand snippet, then try completion
 " imap <expr> <silent> <Tab>
 "     \ "\<Plug>(TryUlti)\<Plug>(TryMU)"
@@ -33,8 +35,8 @@ function s:try_ultisnips()
         call UltiSnips#ExpandSnippetOrJump()
     endif
     return ''
-endf
+endfunction
 
 function s:try_mucomplete()
     return g:ulti_expand_or_jump_res ? '' : "\<plug>(MUcompleteFwd)"
-endf
+endfunction

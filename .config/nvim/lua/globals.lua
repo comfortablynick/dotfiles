@@ -1,5 +1,5 @@
 -- Global functions
--- p :: Debug print helper
+-- p :: Debug print helper {{{1
 -- If `val` is not a simple type, run it through inspect() first
 -- Else treat as printf
 function _G.p(val, ...)
@@ -14,53 +14,46 @@ function _G.p(val, ...)
   if not pcall(wrapper, val, ...) then print(val, ...) end
 end
 
----A helper function to print a table's contents.
----@param tbl table @The table to print.
----@param depth number @The depth of sub-tables to traverse through and print.
----@param n number @Do NOT manually set this. This controls formatting through recursion.
-function table.print(tbl, depth, n)
-  n = n or 0;
-  depth = depth or 5;
+-- Smart [S-]Tab {{{1
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
 
-  if (depth == 0) then
-      print(string.rep(' ', n).."...");
-      return;
-  end
-
-  if (n == 0) then
-      print(" ");
-  end
-
-  for key, value in pairs(tbl) do
-      if (key and type(key) == "number" or type(key) == "string") then
-          key = string.format("[\"%s\"]", key);
-
-          if (type(value) == "table") then
-              if (next(value)) then
-                  print(string.rep(' ', n)..key.." = {");
-                  table.print(value, depth - 1, n + 4);
-                  print(string.rep(' ', n).."},");
-              else
-                  print(string.rep(' ', n)..key.." = {},");
-              end
-          else
-              if (type(value) == "string") then
-                  value = string.format("\"%s\"", value);
-              else
-                  value = tostring(value);
-              end
-
-              print(string.rep(' ', n)..key.." = "..value..",");
-          end
-      end
-  end
-
-  if (n == 0) then
-      print(" ");
+-- TODO: possibly include markdown tab logic
+local check_back_space = function()
+  local col = vim.fn.col(".") - 1
+  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
+    return true
+  else
+    return false
   end
 end
 
--- String indexing
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.smart_tab = function()
+  if vim.fn.pumvisible() == 1 then
+    return t"<C-n>"
+    -- TODO: why doesn't this work?
+    -- elseif vim.F.npcall(vim.fn["Ultisnips#CanJumpForwards"]) == 1 then
+    --   return t"<Plug>(UltiForward)"
+  elseif check_back_space() then
+    return t"<Tab>"
+  else
+    return vim.fn["compe#complete"]()
+  end
+end
+
+_G.smart_s_tab = function()
+  if vim.fn.pumvisible() == 1 then
+    return t"<C-p>"
+  else
+    return t"<S-Tab>"
+  end
+end
+
+-- String indexing metamethods {{{1
 -- Example:
 -- a='abcdef'
 -- return a[4]       --> d
@@ -78,8 +71,8 @@ getmetatable("").__call = function(str, i, j)
   if type(i) ~= "table" then
     return string.sub(str, i, j)
   else
-    local t = {}
-    for k, v in ipairs(i) do t[k] = string.sub(str, v, v) end
-    return table.concat(t)
+    local tbl = {}
+    for k, v in ipairs(i) do tbl[k] = string.sub(str, v, v) end
+    return table.concat(tbl)
   end
 end

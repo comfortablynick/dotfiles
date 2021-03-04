@@ -1,6 +1,6 @@
 # Check env.toml file for changes compared with previous checksum
 set -gx CURRENT_SHELL fish
-set -l dotdir $HOME/dotfiles
+set -l dotdir $HOME
 
 if status is-interactive; and test -d "$dotdir"
     set -l env_sha (string split ' ' ($HOME/bin/sha1 "$dotdir/env.toml"))[1]

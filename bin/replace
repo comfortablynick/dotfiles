@@ -4,6 +4,7 @@
 # from: https://github.com/thoughtbot/dotfiles/blob/master/bin/replace
 #
 # replace foo bar **/*.rb
+# NOTE: Prefer using a tool such as fastmod
 
 find_this="$1"
 shift

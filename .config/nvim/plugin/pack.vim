@@ -22,8 +22,6 @@ function! s:deferred_load()
         \ 'vim-exchange',
         \ 'tcomment_vim',
         \ 'vim-unimpaired',
-        \ 'clever-f.vim',
-        \ 'vim-sneak',
         \ 'vim-tmux-navigator',
         \ 'vim-sandwich',
         \ 'vim-smoothie',

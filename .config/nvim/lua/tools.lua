@@ -4,6 +4,15 @@ local npcall = vim.F.npcall
 local util = require"util"
 local M = {}
 
+function M.lf_select_current_file() -- {{{1
+  local filename = api.nvim_buf_get_name(0)
+  local cmd = "FloatermNew lf"
+  if uv.fs_stat(filename) ~= nil then
+    cmd = cmd .. (" -command 'select %s'"):format(filename)
+  end
+  vim.cmd(cmd)
+end
+
 local qf_open = function(max_size) -- {{{1
   if not max_size then max_size = 0 end
   local vim_qf_size = vim.g.quickfix_size or 20

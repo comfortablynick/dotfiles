@@ -7,10 +7,18 @@ command! -nargs=0 TagbarToggle call plugins#tagbar#toggle()
 command! -nargs=0 RnvimrToggle call plugins#lazy_run('RnvimrToggle', 'rnvimr')
 command! -nargs=0 NetrwToggle call explorer#toggle('netrw')
 
+function s:lf_current_file()
+    let l:file = expand('%:p')
+    let l:cmd = 'FloatermNew lf'
+    if filereadable(l:file)
+        let l:cmd ..= printf(' -command "select %s"', l:file)
+    endif
+    exe l:cmd
+endfunction
+
 " vim-floaterm wrappers
-command! -nargs=* Lf call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'lf')
-command! -nargs=* Ranger 
-    \ call floaterm#run('new', <bang>0, '--width=0.6', '--height=0.6', 'ranger')
+command! Lf     call s:lf_current_file()
+command! Ranger FloatermNew ranger
 
 " Maps
 nnoremap <silent>    <C-E>  :call explorer#toggle(g:use_explorer)<CR>

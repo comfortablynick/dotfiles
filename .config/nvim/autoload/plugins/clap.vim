@@ -1,13 +1,14 @@
 " Clap setup {{{1
 " General settings
-let g:clap_always_open_preview = 0
+" let g:clap_open_preview = 'never'
+let g:clap_preview_direction = 'UD'
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = 1
 let g:clap_preview_size = 10
 let g:clap_enable_background_shadow = v:true
 let g:clap_background_shadow_blend = 50
 let g:clap_layout = #{
-    \ relative: 'editor'
+    \ relative: 'editor',
     \ }
 
 " Commands

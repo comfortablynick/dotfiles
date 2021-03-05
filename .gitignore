@@ -1,5 +1,6 @@
 fish_universal_variables
 fish_variables*
+.envrc
 env.fish
 env.bash
 env.zsh

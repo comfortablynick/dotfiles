@@ -1,0 +1,42 @@
+# Don't print newline at start of the prompt
+add_newline = false
+scan_timeout = 10
+
+[hostname]
+disabled = true
+
+[username]
+disabled = true
+
+[directory]
+style = "39"
+truncate_to_repo = false
+
+[git_branch]
+style = "14"
+
+[git_status]
+style = "9"
+prefix = ""
+suffix = " "
+
+conflicted = "‼"
+
+modified.value = "Δ"
+modified.style = "220"
+modified_count.enabled = true
+modified_count.style = "220"
+
+staged.value = "●"
+staged.style = "green"
+staged_count.enabled = true
+staged_count.style = "green"
+
+[cmd_duration]
+style = "243"
+min_time = 0
+show_milliseconds = true
+prefix = ""
+
+# [nodejs]
+# disabled = true

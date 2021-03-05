@@ -21,6 +21,8 @@
   hosts: all
   roles:
     - asdf
+  tags:
+    - asdf
 
 - name: Install hub
   hosts: all
@@ -31,6 +33,8 @@
 - name: Install software on all hosts
   hosts: all
   roles:
+    - pkg
+  tags:
     - pkg
 
 - name: Install vim

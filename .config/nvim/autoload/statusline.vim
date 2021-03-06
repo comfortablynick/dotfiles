@@ -423,7 +423,7 @@ function statusline#git_status() "{{{2
     endif
     let l:branch = statusline#git_branch()
     if empty(l:branch) | return '' | endif
-    let l:branch = substitute(l:branch, 'master\|main', '', '')
+    let l:branch = substitute(l:branch, 'master\|main\|dotfiles', '', '')
     let l:hunks = s:rpad(statusline#git_summary())
     " Assume master branch
     let l:out = printf('%s%s%s',

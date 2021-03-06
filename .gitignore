@@ -28,6 +28,7 @@ vifminfo*
 /git/
 /go/
 /.cargo/
+/certificates/
 /.asdf/
 /.cache/
 /.cheat.sh/
@@ -44,6 +45,7 @@ vifminfo*
 /.mono/
 /.mutt/
 /.npm/
+/.nvm/
 /.nuget/
 /.pandoc/
 /.parallel/
@@ -64,6 +66,8 @@ vifminfo*
 /.bash_logout
 /.ctags
 /_direnv.txt
+/.dropbox_uploader
+/.htaccess
 /.lesshst
 /.node_repl_history
 /package.json

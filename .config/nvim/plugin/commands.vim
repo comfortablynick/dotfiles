@@ -39,15 +39,18 @@ function s:grep(...)
 endfunction
 
 " Fzm :: lazy load fuzzymenu.vim {{{2
-command! -bang -nargs=0 Fzm
+command! -bang Fzm
     \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
 
 " Neoformat :: lazy load neoformat {{{2
-command! -nargs=0 Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
+command! Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
 noremap <F3> <Cmd>Neoformat<CR>
 
+" Neogit :: lazy load neogit {{{2
+command! Neogit call plugins#lazy_run('Neogit', 'neogit')
+
 " Rooter :: Find project root {{{2
-command! -nargs=0 Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
+command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
 
 " h[g] :: Open help[grep] in new or existing tab {{{2
 call map#cabbr('h', function('window#tab_mod', ['help', 'help']))
@@ -232,7 +235,7 @@ if has('nvim')
     command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)
 
     " Make :: async make {{{2
-    " command! -bang -nargs=0 -complete=file Make call s:tools.make()
+    " command! -bang -complete=file Make call s:tools.make()
 endif
 
 " vim:fdl=1:

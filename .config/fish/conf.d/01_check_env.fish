@@ -1,9 +1,9 @@
 # Check env.toml file for changes compared with previous checksum
 set -gx CURRENT_SHELL fish
-set -l dotdir $HOME
 
-if status is-interactive; and test -d "$dotdir"
-    set -l env_sha (string split ' ' ($HOME/bin/sha1 "$dotdir/env.toml"))[1]
+if status is-interactive
+    set -l toml_file $HOME/env.toml
+    set -l env_sha (string split ' ' ($HOME/bin/sha1 $toml_file))[1]
     if test "$env_sha" = "$env_toml_sha"
         exit 0 # No changes; we're good!
     end
@@ -11,7 +11,6 @@ if status is-interactive; and test -d "$dotdir"
     echo "env.toml has changed!"
     set -l py_path (which python3)
     set -l parse_env $HOME/bin/parse_env
-    set -l toml_file $dotdir/env.toml
     set -l env_file $HOME/.config/fish/env.fish
     if test -n "$py_path"
         echo "$py_path $parse_env $toml_file $env_file -s fish" | source

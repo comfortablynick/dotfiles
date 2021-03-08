@@ -1,10 +1,10 @@
 # set -l direnv_versions $HOME/.tool-versions
 
 if status is-interactive # ; and type -qf asdf; and test -e "$direnv_versions"
-    if type -qf direnv
+    if direnv &>/dev/null
         direnv hook fish | source
     else
-        if type -qf asdf
+        if asdf &>/dev/null
             asdf exec direnv hook fish | source
         end
     end

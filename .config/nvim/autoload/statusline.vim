@@ -17,9 +17,9 @@ let s:LinterOK = ''
 function statusline#get() abort "{{{2
     let l:sl = ''
     let l:sl ..= '%(%1* %{statusline#bufnr()} %*%)'
-    let l:sl ..= '%(%7* %{statusline#file_size()} %* %)'
-    let l:sl ..= '%([%{statusline#bufnr_inactive()}] %)'
-    let l:sl ..= '%(%{statusline#file_name()} %)'
+    let l:sl ..= '%(%7* %{statusline#file_size()} %*%)'
+    let l:sl ..= '%([%{statusline#bufnr_inactive()}]%)'
+    let l:sl ..= '%( %{statusline#file_name()} %)'
     let l:sl ..= '%<'
     let l:sl ..= '%(%h%w%q%m%r %)'
     let l:sl ..= '%(  %4*%{statusline#linter_errors()}%*%)'
@@ -291,12 +291,11 @@ endfunction
 
 function statusline#is_not_file() abort "{{{2
     " Return true if not treated as file
-    let l:bufname = @%
-    let l:ft = &filetype
     let l:exclude = [
         \ 'help',
         \ 'startify',
         \ 'nerdtree',
+        \ 'fugitive',
         \ 'netrw',
         \ 'output',
         \ 'vista',
@@ -312,9 +311,11 @@ function statusline#is_not_file() abort "{{{2
         \ 'output:///info',
         \ 'nofile',
         \ ]
-    if index(l:exclude, l:ft) > -1
-        \ || index(l:exclude, fnamemodify(l:bufname, ':t')) > -1
+    let l:bufname = @%
+    if index(l:exclude, &filetype) > -1
         \ || index(l:exclude, l:bufname) > -1
+        \ || index(l:exclude, fnamemodify(l:bufname, ':t')) > -1
+        \ || index(l:exclude, &buftype) > -1
         return 1
     endif
     return 0
@@ -352,7 +353,7 @@ function statusline#file_name() abort "{{{2
 endfunction
 
 function statusline#file_size() abort "{{{2
-    if ! s:is_active() | return '' | endif
+    if ! s:is_active_file() | return '' | endif
     let l:div = 1024.0
     let l:num = getfsize(@%)
     if l:num <= 0 | return '' | endif

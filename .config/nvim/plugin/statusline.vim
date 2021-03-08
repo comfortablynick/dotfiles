@@ -54,6 +54,7 @@ function! s:set_user_highlights()
     call syntax#derive('DiffDelete', 'User4', 'guibg='..get(l:sl, 'guifg', 'NONE'))
     call syntax#derive('StatusLine', 'User5', 'guibg=#900c3f', 'gui=reverse,bold')
     call syntax#derive('StatusLine', 'User6', 'guibg=#ecff00', 'gui=reverse,bold')
+    call syntax#derive('CursorLineNr', 'User7')
 endfunction
 
 call s:set_user_highlights()

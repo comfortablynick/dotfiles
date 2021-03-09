@@ -36,7 +36,7 @@ function plugins#init()
     Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
 
     " Editing behavior {{{2
-    " Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-commentary'
     " Plug 'tpope/vim-surround'
     Plug 'easymotion/vim-easymotion'
     Plug 'tpope/vim-unimpaired'
@@ -124,7 +124,6 @@ function plugins#init()
     Plug 'romgrk/barbar.nvim'
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
-    " Plug 'windwp/nvim-autopairs'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

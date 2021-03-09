@@ -30,6 +30,7 @@ call map#cabbr('mapx', 'Clap map ++mode=x')
 call map#cabbr('api',  'Clap api')
 
 " Maps
+nnoremap <F6>      <Cmd>Clap task<CR>
 nnoremap <Leader>t <Cmd>Clap tags nvim_lsp<CR>
 nnoremap <Leader>h <Cmd>Clap command_history<CR>
 nnoremap <Leader>m <Cmd>Clap mru<CR>

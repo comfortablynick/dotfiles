@@ -14,13 +14,13 @@ augroup plugin_pack
 augroup END
 
 " Load packages that are safe to defer
-function! s:deferred_load()
+function s:deferred_load() abort
     let l:packs = [
         \ 'fzf',
         \ 'fzf.vim',
         \ 'targets.vim',
         \ 'vim-exchange',
-        \ 'tcomment_vim',
+        \ 'vim-commentary',
         \ 'vim-unimpaired',
         \ 'vim-tmux-navigator',
         \ 'vim-sandwich',

@@ -22,8 +22,18 @@ vifminfo*
 */asciinema/install-id
 
 # Home dir repo ignores
-/.ansible_async/
+/Applications/
+/Creative Cloud Files/
+/Desktop/
+/Documents/
+/Downloads/
 /Dropbox/
+/Library/
+/Movies/
+/Music/
+/Pictures/
+/Public/
+/.ansible_async/
 /.dropbox*/
 /git/
 /go/
@@ -34,6 +44,7 @@ vifminfo*
 /.cheat.sh/
 /.cht.sh/
 /.cmake/
+/.cups/
 /.dotnet/
 /.fzf/
 /.gem/
@@ -55,19 +66,25 @@ vifminfo*
 /src/
 /saturn/
 /.tmux/
+/.Trash/
+/.tldrc/
+/.terminfo/
 /.vcpkg/
 /vim-test/
 /.vim/
 /.w3m/
 /.zinit/
+/.zsh_sessions/
 
 /.ansible_galaxy
 /.bash_history
 /.bash_logout
 /.ctags
+/.CFUserTextEncoding
 /_direnv.txt
 /.dropbox_uploader
 /.htaccess
+/.iterm2_shell_integration.fish
 /.lesshst
 /.node_repl_history
 /package.json

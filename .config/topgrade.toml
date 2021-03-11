@@ -15,6 +15,7 @@ disable = [
   "node",
   "vim",        # Nvim upgrade takes care of common plugins
   # "go",         # Until go solves errors finding modules
+  "fisher",
   "powershell", # TODO: figure out how to bypass prompts
 ]
 

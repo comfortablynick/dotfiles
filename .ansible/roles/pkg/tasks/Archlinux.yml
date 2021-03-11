@@ -10,13 +10,13 @@
       lineinfile:
         path: /etc/sudoers.d/11-install-aur_builder
         line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
-        create: yes
+        create: true
         validate: 'visudo -cf %s'
-  become: yes
+  become: true
 
 - name: Find out age of mirrorlist
   find:
-    paths: /etc/pacman.d
+    paths: [/etc/pacman.d]
     pattern: mirrorlist
     age: "{{ mirrorlist_file_age }}"
     age_stamp: mtime
@@ -25,29 +25,29 @@
 - name: Update mirrorlist
   block:
     - name: Install reflector
-      become: yes
+      become: true
       pacman:
         name: reflector
         state: present
     - name: Run reflector
       command: /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ new_mirrorlist_path }}
     - name: Replace mirrorlist with new file
-      become: yes
+      become: true
       copy:
         src: "{{ new_mirrorlist_path }}"
         dest: /etc/pacman.d/mirrorlist
-        backup: yes
+        backup: true
   when: mirrorlist_found['matched'] > 0
 
 - name: Upgrade pacman packages
-  become: yes
+  become: true
   pacman:
-    update_cache: yes
-    upgrade: yes
+    update_cache: true
+    upgrade: true
   register: pacout
 
 - name: Update aur packages
-  become: yes
+  become: true
   become_user: aur_builder
   command: yay -Syu --noconfirm
   register: yayout

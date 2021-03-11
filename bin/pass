@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+echo "$@"
+
+uglify=0
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h | --help)
+            echo "print help"
+            exit 1
+            ;;
+        -t | --target)
+            target="$2"
+            shift
+            ;;
+        -u | --uglify) uglify=1 ;;
+        ls | list) command=list ;;
+        *)
+            echo "Unknown parameter passed: $1" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+echo "-t/--target      = $target"
+echo "-u/--uglify      = $uglify"
+echo "command          = $command"

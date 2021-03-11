@@ -5,7 +5,16 @@ let g:packages = {}
 command -nargs=+ Plug call packager#add(<args>)
 
 " function plugins#init() :: load packages with vim-packager {{{2
-function plugins#init()
+function plugins#init() abort
+    " Determine OS if any plugins are os-specific
+    if !exists('g:os')
+        if has('win64') || has('win32')
+            let g:os = 'Windows'
+        else
+            let g:os = substitute(system('uname'), '\n', '', '')
+        endif
+    endif
+
     let l:packager_path = g:package_path.'/pack/packager/opt/vim-packager'
     if !isdirectory(l:packager_path)
         echo 'Downloading vim-packager'
@@ -28,12 +37,13 @@ function plugins#init()
     Plug 'psliwka/vim-smoothie'
 
     " Linters/formatters/runners {{{2
+    Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
     Plug 'dense-analysis/ale'
     Plug 'sbdchd/neoformat'
     Plug 'psf/black',                  {'branch': 'stable'}
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
-    Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
+    Plug 'michaelb/sniprun',           {'do': './install.sh'}
 
     " Editing behavior {{{2
     Plug 'tpope/vim-commentary'

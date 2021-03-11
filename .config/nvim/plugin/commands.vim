@@ -1,10 +1,7 @@
 " General commands/aliases {{{1
 " S :: save if file has changed and re-run {{{2
 " Use asynctasks task runner to determine command based on filetype
-"
-" Can't use plugins#lazy_run here because it will try to overwrite itself
-" while running. Manually packadd on demand or packadd[!] somewhere else
-command S packadd asynctasks.vim | AsyncTask file-run
+command S AsyncTask file-run
 
 " Light/Dark :: easily change background {{{2
 command Light set background=light
@@ -100,13 +97,17 @@ command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
 
-" " AsyncTask :: lazy load plugin {{{2
-" command! -bang -nargs=* -range=0 AsyncTask
-"     \ call plugins#lazy_run(
-"     \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-"     \ 'asynctasks.vim'
-"     \ )
+" AsyncTask :: task runner integrated with asyncrun {{{2
+if !exists(':AsyncTask')
+    " Lazy load if we haven't loaded the plugin
+    command -bang -nargs=* -range=0 AsyncTask
+        \ call plugins#lazy_run(
+        \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+        \ 'asynctasks.vim'
+        \ )
+endif
 call map#cabbr('ta', 'AsyncTask')
+nnoremap <Leader>r <Cmd>AsyncTask file-run<CR>
 
 " Git {{{1
 " GV :: git commit viewer {{{2

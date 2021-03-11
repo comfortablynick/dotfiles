@@ -13,6 +13,9 @@ let g:asyncrun_rootmarks = [
     \ '.root',
     \ '.hg',
     \ 'justfile',
+    \ '.tasks',
+    \ 'tasks.ini',
+    \ 'Taskfile.yml',
     \ 'cargo.toml',
     \ 'go.mod',
     \ ]

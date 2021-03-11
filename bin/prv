@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-cd "$PYENV_ROOT/versions/provision/bin"
-
-./python provision "$@"

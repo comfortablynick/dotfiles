@@ -1,0 +1,41 @@
+---
+# tasks file for lua-language-server
+
+- name: Clone lua-language-server repo
+  git:
+    repo: https://github.com/sumneko/lua-language-server.git
+    dest: "{{ source_dir }}"
+    depth: "1"
+    force: true
+    track_submodules: true
+  register: git_clone
+
+- name: Show commit hashes before/after pull
+  debug:
+    msg: |
+      Before  {{ git_clone.before }}
+      After   {{ git_clone.after }}
+    verbosity: 1
+
+- name: Get clone status
+  set_fact:
+    key_value: ""
+    git_changed: git_clone.before != git_clone.after
+
+- name: Show message if git does not have changes
+  debug:
+    msg: No upstream changes to lua-language-server! Skipping build. Force with `force_build=true`
+  when: not git_changed and not force_build
+
+- name: Build and install lua-language-server
+  block:
+    - name: Generate build files
+      command: ninja -f ninja/linux.ninja
+      args:
+        chdir: "{{ source_dir }}/3rd/luamake"
+
+    - name: Build server
+      command: ./3rd/luamake/luamake rebuild
+      args:
+        chdir: "{{ source_dir }}"
+  when: git_changed or force_build

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Display git diff if available, or file contents
 
 if [ -z "$1" ]; then

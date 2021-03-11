@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Create minimal ansible role with only tasks/ and defaults/ dirs
+
+ansible-galaxy role init "$@"
+cd "$@" || exit 1
+rm -rf files/ handlers/ meta/ templates/ tests/ vars/ .travis.yml

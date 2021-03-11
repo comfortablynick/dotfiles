@@ -5,6 +5,3 @@
 
 - name: Install/update pip packages
   include_tasks: pip.yml
-
-- name: Install/update pipx packages
-  include_tasks: pipx.yml

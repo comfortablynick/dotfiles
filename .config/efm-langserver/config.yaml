@@ -40,6 +40,13 @@ tools:
     lint-command: 'yamllint -f parsable -'
     lint-stdin: true
 
+  yaml-ansible-lint: &yaml-ansible-lint
+    lint-command: 'ansible-lint -p'
+    lint-formats:
+      - '%f:%l: [E%n] %m'
+      - '%f:%l: [EANSIBLE%n] %m'
+      - '%f:%l: [ANSIBLE%n] %m'
+
   python-black: &python-black
     format-command: 'black --quiet -'
     format-stdin: true
@@ -142,6 +149,9 @@ languages:
 
   yaml:
     - <<: *yaml-yamllint
+
+  yaml.ansible:
+    - <<: *yaml-ansible-lint
 
   toml:
     - <<: *toml-taplo-lint

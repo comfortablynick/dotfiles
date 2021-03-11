@@ -70,3 +70,10 @@
         pipx_pkgs: "{{ pipx_packages_all }} + {{ pipx_packages | default([]) }}"
   tags:
     - pipx
+
+- name: Install lua-language-server
+  hosts: dev
+  roles:
+    - lua_language_server
+  tags:
+    - lua_language_server

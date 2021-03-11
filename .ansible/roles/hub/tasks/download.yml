@@ -28,7 +28,7 @@
   unarchive:
     src: "{{ hub_release_url }}"
     dest: "{{ hub_dl_dir.path }}"
-    remote_src: yes
+    remote_src: true
 
 - name: Hub | Run install script
   command: ./install

@@ -9,6 +9,7 @@ Cargo.lock
 .cache/
 .vscode*/
 .mypy_cache/
+typings/
 .venv/
 *.egg-info/
 node_modules/

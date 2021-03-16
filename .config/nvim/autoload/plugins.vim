@@ -1,4 +1,4 @@
-" Plugin definitions {{{1
+" Plugin definitions {{{1{{{
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 let g:packages = {}
 
@@ -134,6 +134,7 @@ function plugins#init() abort
     Plug 'romgrk/barbar.nvim'
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
+    Plug 'kevinhwang91/nvim-bqf'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

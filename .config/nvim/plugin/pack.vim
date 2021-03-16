@@ -42,6 +42,7 @@ function s:deferred_load() abort
         let l:packs += [
             \ 'nvim-miniyank',
             \ 'FixCursorHold.nvim',
+            \ 'nvim-bqf',
             \ ]
     endif
 

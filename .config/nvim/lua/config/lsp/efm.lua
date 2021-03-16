@@ -18,7 +18,7 @@ return function(on_attach)
     init_options = {documentFormatting = true},
     root_dir = function(fname)
       return
-        util.root_pattern(".git")(fname) or util.find_git_ancestor(fname) or
+        util.root_pattern(".git", "init.vim")(fname) or util.find_git_ancestor(fname) or
           util.path.dirname(fname)
     end,
   }

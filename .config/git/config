@@ -35,3 +35,5 @@
 	rebase = false
 [credential]
 	helper = lastpass -l comfortablynick@gmail.com
+[init]
+	defaultBranch = main

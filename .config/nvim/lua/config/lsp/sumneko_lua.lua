@@ -1,8 +1,14 @@
+local util = require'lspconfig/util'
 return function(on_attach)
   return {
     on_attach = on_attach,
     -- Use wrapper script
     cmd = {"luals"},
+    root_dir = function(fname)
+      return
+        util.root_pattern(".git", "init.vim")(fname) or util.find_git_ancestor(fname) or
+          util.path.dirname(fname)
+    end,
     settings = {
       Lua = {
         runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},

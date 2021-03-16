@@ -8,6 +8,7 @@
 # Profile/debug {{{1
 # Exit if not interactive {{{2
 [[ $- != *i* ]] && return                                       # Everything after this line for interactive only
+
 # variables {{{2
 export DEBUG_MODE=false
 export PROFILE=0
@@ -66,30 +67,31 @@ _fzf_compgen_dir() {
 autoload -Uz compinit && compinit                               # Needed to autoload completions
 autoload -Uz bashcompinit && bashcompinit                       # Bash completions must be sourced
 
-# Directories {{{2
-export XDG_CONFIG_HOME=${HOME}/.config
-export XDG_DATA_HOME=${HOME}/.local/share
-export XDG_CACHE_HOME=${HOME}/.cache
-export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
-typeset -A ZINIT
-ZINIT[HOME_DIR]=${ZDOTDIR}/.zinit
-
-for shfile ($XDG_CONFIG_HOME/shell/conf.d/*.sh) sh_source $shfile
-    for config ($XDG_CONFIG_HOME/zsh/conf.d/*.zsh) source $config
-
-        fpath=($XDG_CONFIG_HOME/zsh/completions
-            $XDG_CONFIG_HOME/zsh/functions
-            $XDG_CONFIG_HOME/shell/functions
-            $fpath)
-
 # Environment variables {{{2
-export LANG=en_US.UTF-8                                         # Default term language setting
-export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
-export ZSH_THEME="powerlevel10k"                                # Prompt theme
+export LANG=en_US.UTF-8
+export UPDATE_ZSH_DAYS=7
+export ZSH_THEME="powerlevel10k"
 
-if [[ $MOSH_CONNECTION -eq 0 ]] && (( $+commands[delta] )); then
-    export GIT_PAGER="delta --dark"
-fi
+# if [[ $MOSH_CONNECTION -eq 0 ]] && (( $+commands[delta] )); then
+#     export GIT_PAGER="delta --dark"
+# fi
+export ZDOTDIR=${HOME}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=${HOME}/.config}
+export XDG_DATA_HOME=${XDG_DATA_HOME:=${HOME}/.local/share}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:=${HOME}/.cache}
+export ZSH_CACHE_DIR=${XDG_CACHE_HOME}/zsh
+
+[[ ! -d ${ZSH_CACHE_DIR} ]] && command mkdir -p ${ZSH_CACHE_DIR}
+
+
+# Config snippets {{{2
+# for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
+for config (${XDG_CONFIG_HOME}/zsh/conf.d/*.zsh) source $config
+
+fpath=(${XDG_CONFIG_HOME}/zsh/completions
+    ${XDG_CONFIG_HOME}/zsh/functions
+    ${XDG_CONFIG_HOME}/shell/functions
+    $fpath)
 
 # Autoload functions {{{2
 autoload -Uz remove_last_history_entry
@@ -106,39 +108,24 @@ chpwd_functions+=("list_all")
 
 # Shell opts {{{1
 # General {{{2
-typeset -U path                                                 # Unique PATH entries only
-setopt auto_cd;                                                 # Perform cd if command matches dir
-setopt auto_list;                                               # List choices if unambiguous completion
-setopt auto_pushd;                                              # Push old directory into stack
-setopt pushdsilent;                                             # Don't echo directories during pushd
-setopt pushd_ignore_dups;                                       # Ignore multiple copies of same dir in stack
-setopt interactivecomments;                                     # Allow bash-style command line comments
-HYPHEN_INSENSITIVE="true"                                       # Hyphen and dash will be interchangeable
-COMPLETION_WAITING_DOTS="true"                                  # Display dots while loading completions
-DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked files won't be dirty (for speed)
-DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
+typeset -U path
+setopt auto_cd    auto_list           pushd_ignore_dups
+setopt auto_pushd interactivecomments pushdsilent
+HYPHEN_INSENSITIVE="true"            # Hyphen and dash will be interchangeable
+COMPLETION_WAITING_DOTS="true"       # Display dots while loading completions
+DISABLE_UNTRACKED_FILES_DIRTY="true" # Untracked files won't be dirty (for speed)
+DIRSTACKSIZE=20                      # Limit size of stack since we're always using it
 
 # History {{{2
-HISTFILE="${XDG_CACHE_HOME}/zsh/history"
+HISTFILE=${ZSH_CACHE_DIR}/histfile
 HISTSIZE=10000000
 SAVEHIST=10000000
-setopt NO_SHARE_HISTORY
-unsetopt SHARE_HISTORY                                          # Shells share history
-setopt BANG_HIST                                                # Treat the '!' character specially during expansion.
-setopt EXTENDED_HISTORY                                         # Write the history file in the ":start:elapsed;command" format.
-setopt INC_APPEND_HISTORY                                       # Write to the history file immediately, not when the shell exits.
-setopt HIST_EXPIRE_DUPS_FIRST                                   # Expire duplicate entries first when trimming history.
-setopt HIST_IGNORE_DUPS                                         # Don't record an entry that was just recorded again.
-setopt HIST_IGNORE_ALL_DUPS                                     # Delete old recorded entry if new entry is a duplicate.
-setopt HIST_FIND_NO_DUPS                                        # Do not display a line previously found.
-setopt HIST_IGNORE_SPACE                                        # Don't record an entry starting with a space.
-setopt HIST_SAVE_NO_DUPS                                        # Don't write duplicate entries in the history file.
-setopt HIST_REDUCE_BLANKS                                       # Remove superfluous blanks before recording entry.
-setopt HIST_VERIFY                                              # Don't execute immediately upon history expansion.
-setopt HIST_BEEP                                                # Beep when accessing nonexistent history.
-
-# Zstyle {{{2
-# zstyle ':completion:*' menu yes select                          # Show immediate completion menu
+unsetopt share_history
+setopt   no_share_history
+setopt   bang_hist          extended_history  inc_append_history
+setopt   hist_save_no_dups  hist_ignore_dups  hist_expire_dups_first
+setopt   hist_find_no_dups  hist_ignore_space hist_ignore_all_dups
+setopt   hist_reduce_blanks hist_verify       hist_beep
 
 # Keymaps {{{2
 bindkey -v
@@ -149,9 +136,9 @@ bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
-bindkey -M viins "kj" vi-cmd-mode                               # Add `kj` -> ESC
+bindkey -M viins "kj" vi-cmd-mode
 
-autoload -Uz edit-command-line                                  # ! in vi cmd mode opens prompt in $EDITOR
+autoload -Uz edit-command-line # ! in vi cmd mode opens prompt in $EDITOR
 zle -N edit-command-line
 bindkey -M vicmd '!' edit-command-line
 
@@ -160,62 +147,51 @@ zle -N fzy-edit
 bindkey '^E' fzy-edit
 
 # Plugins {{{1
-# zinit Config {{{2
-if ! [[ -d $ZINIT[HOME_DIR] ]]; then
-    mkdir $ZINIT[HOME_DIR]
-    chmod g-rwX $ZINIT[HOME_DIR]
-fi
+# zinit {{{2
+export ZINIT_HOME=${HOME}/.zinit
+typeset -A ZINIT=(
+   HOME_DIR          ${ZINIT_HOME}
+   BIN_DIR           ${ZINIT_HOME}/bin
+   PLUGINS_DIR       ${ZINIT_HOME}/plugins
+   COMPLETIONS_DIR   ${ZINIT_HOME}/completions
+   SNIPPETS_DIR      ${ZINIT_HOME}/snippets
+   COMPINIT_OPTS     -C
+   ZCOMPDUMP_PATH    ${ZSH_CACHE_DIR}/zcompdump-${ZSH_VERSION}
+)
 
-if ! [[ -d $ZINIT[HOME_DIR]/bin/.git ]]; then
-    echo ">>> Downloading zinit to $ZINIT[HOME_DIR]/bin"
-    git clone --depth 10 https://github.com/zdharma/zinit.git $ZINIT[HOME_DIR]/bin
-    echo ">>> Done"
-fi
+ZINIT_SCRIPT=${ZINIT[BIN_DIR]}/zinit.zsh
 
-source $ZINIT[HOME_DIR]/bin/zinit.zsh
+### Added by Zinit's installer
+if [[ ! -f ${ZINIT_SCRIPT} ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing DHARMA Initiative Plugin Manager (zdharma/zinit)…%f"
+    command mkdir -p "${ZINIT[HOME_DIR]}" && command chmod g-rwX "${ZINIT[HOME_DIR]}" && \
+        command git clone https://github.com/zdharma/zinit "${ZINIT[BIN_DIR]}" && \
+            print -P "%F{33}▓▒░ %F{34}Installation successful.%f" || \
+            print -P "%F{160}▓▒░ The clone has failed.%f"
+fi
+source ${ZINIT_SCRIPT}
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
+### End of Zinit installer's chunk
 
-# powerlevel10k {{{2
-zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
-zinit load romkatv/powerlevel10k
-
-# Completions {{{2
-zinit ice wait"0" blockf lucid
-zinit light zsh-users/zsh-completions
-
-# Autosuggestions {{{2
-zinit ice wait"0" atload"_zsh_autosuggest_start" lucid
 zinit light zsh-users/zsh-autosuggestions
+zinit snippet https://github.com/junegunn/fzf/blob/master/shell/completion.zsh
+zinit snippet https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
 
-# Syntax {{{2
-zinit ice wait"0" atinit"zpcompinit; zpcdreplay" lucid
-zinit light zdharma/fast-syntax-highlighting
+zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
+zinit light romkatv/powerlevel10k
 
-# fuzzy find {{{2
-zinit ice wait"1" multisrc'shell/{completion,key-bindings}.zsh' lucid
-zinit load junegunn/fzf
+# zinit ice atpull'zinit creinstall -q "$PWD"'
+# zinit light zsh-users/zsh-completions
 
-# FZF_TAB_COMMAND=(
-#     fzf-tmux
-#     --ansi   # Enable ANSI color support, necessary for showing groups
-#     --expect='$continuous_trigger' # For continuous completion
-#     '--color=hl:$(( $#headers == 0 ? 108 : 255 ))'
-#     --nth=2,3 --delimiter='\x00'  # Don't search prefix
-#     --layout=reverse --height=100
-#     --tiebreak=begin -m --bind=tab:down,btab:up,change:top,ctrl-space:toggle --cycle
-#     '--query=$query'   # $query will be expanded to query string at runtime.
-#     '--header-lines=$#headers' # $#headers will be expanded to lines of headers at runtime
-# )
-zinit ice wait"1" atload'zstyle ":fzf-tab:*" fzf-command fzf-tmux' lucid
-zinit light Aloxaf/fzf-tab
+# zinit ice wait"1" atload'zstyle ":fzf-tab:*" fzf-command fzf-tmux' lucid
+# zinit light Aloxaf/fzf-tab
 
-# dircolors {{{2
-# Use my fork of trapd00r plugin
-zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
-    atpull'%atclone' pick"clrs.zsh" nocompile'!' \
-    atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}"'
-    zinit light comfortablynick/LS_COLORS
+# # Use my fork of trapd00r plugin
+# zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+#     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
+#     atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}"'
+#     zinit light comfortablynick/LS_COLORS
 
 # Theme / appearance options {{{1
 # Alien minimal {{{2

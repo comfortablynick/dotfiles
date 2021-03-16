@@ -72,7 +72,7 @@ vifminfo*
 /vim-test/
 /.vim/
 /.w3m/
-/.zinit/
+/.zinit*/
 /.zsh_sessions/
 
 /.ansible_galaxy

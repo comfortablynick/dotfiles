@@ -53,6 +53,7 @@ vifminfo*
 /.ipython/
 /.irssi/
 /.local/
+/.lpass/
 /.luarocks/
 /.mono/
 /.mutt/

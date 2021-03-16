@@ -67,8 +67,9 @@ autoload -Uz compinit && compinit                               # Needed to auto
 autoload -Uz bashcompinit && bashcompinit                       # Bash completions must be sourced
 
 # Directories {{{2
-export XDG_CONFIG_HOME=${HOME}/.config                          # Common config dir
-export XDG_DATA_HOME=${HOME}/.local/share                       # Common data dir
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_DATA_HOME=${HOME}/.local/share
+export XDG_CACHE_HOME=${HOME}/.cache
 export ZDOTDIR=${HOME}                                          # ZSH dotfile subdir
 typeset -A ZINIT
 ZINIT[HOME_DIR]=${ZDOTDIR}/.zinit
@@ -82,9 +83,6 @@ for shfile ($XDG_CONFIG_HOME/shell/conf.d/*.sh) sh_source $shfile
             $fpath)
 
 # Environment variables {{{2
-export DOTFILES="$HOME/dotfiles"
-export VISUAL=nvim                                              # Set default visual editor
-export EDITOR="${VISUAL}"                                       # Set default text editor
 export LANG=en_US.UTF-8                                         # Default term language setting
 export UPDATE_ZSH_DAYS=7                                        # How often to check for ZSH updates
 export ZSH_THEME="powerlevel10k"                                # Prompt theme
@@ -121,7 +119,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"                            # Untracked file
 DIRSTACKSIZE=20                                                 # Limit size of stack since we're always using it
 
 # History {{{2
-HISTFILE="${HOME}/.zsh_history"
+HISTFILE="${XDG_CACHE_HOME}/zsh/history"
 HISTSIZE=10000000
 SAVEHIST=10000000
 setopt NO_SHARE_HISTORY

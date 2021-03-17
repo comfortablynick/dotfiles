@@ -52,7 +52,7 @@
     - tmux
 
 - name: Install mosh
-  hosts: pollux
+  hosts: all
   roles:
     - mosh
   tags:

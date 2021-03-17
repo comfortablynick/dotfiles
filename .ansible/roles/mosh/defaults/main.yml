@@ -3,6 +3,7 @@
 make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
 mosh_source_dir: "{{ ansible_facts.user_dir }}/src/mosh"
 install_path: "{{ ansible_facts['user_dir'] }}/.local"
+mosh_force_build: false
 
 Arch_required_packages:
   - git

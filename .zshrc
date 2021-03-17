@@ -85,7 +85,7 @@ export ZSH_CACHE_DIR=${XDG_CACHE_HOME}/zsh
 
 
 # Config snippets {{{2
-# for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
+for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
 for config (${XDG_CONFIG_HOME}/zsh/conf.d/*.zsh) source $config
 
 fpath=(${XDG_CONFIG_HOME}/zsh/completions

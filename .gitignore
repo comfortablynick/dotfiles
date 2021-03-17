@@ -19,6 +19,7 @@ tags
 .config/nvim/spell
 vifminfo*
 */asciinema/install-id
+/src
 
 # Home dir repo ignores
 /Applications/
@@ -32,6 +33,7 @@ vifminfo*
 /Music/
 /Pictures/
 /Public/
+/.adobe/
 /.ansible_async/
 /.dropbox*/
 /git/
@@ -51,6 +53,7 @@ vifminfo*
 /.ipython/
 /.irssi/
 /.local/
+/.lpass/
 /.luarocks/
 /.mono/
 /.mutt/

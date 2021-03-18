@@ -120,7 +120,7 @@ function M.set_hl()
   api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
   api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
   api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
-  api.nvim_set_hl_ns(ns)
+  api.nvim__set_hl_ns(ns) -- This changed to unstable API
 end
 
 -- Standard rename functionality wrapper

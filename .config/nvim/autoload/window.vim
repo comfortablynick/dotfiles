@@ -41,8 +41,11 @@ function window#open_scratch(mods, cmd) "{{{1
     call setline(1, l:output)
 endfunction
 
-" Close all terminal windows in current tabpage
+" Close all terminal windows in current tabpage and vim-tmux-runner panes
 function window#close_term() "{{{1
+    " Kill vtr panes, if any
+    " TODO: is there a way to do this only with the pane attached to window?
+    silent! VtrKillRunner
     let l:wininfo = filter(getwininfo(), {_,v -> v.tabnr == tabpagenr() && v.terminal == 1})
     if empty(l:wininfo) | return | endif
     for l:win in l:wininfo

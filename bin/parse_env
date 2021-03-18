@@ -15,10 +15,10 @@ from typing import Any, Iterator, MutableMapping, Optional
 try:
     from tomlkit import parse
 except ModuleNotFoundError:
-    from toml import loads as parse
+    from toml import loads as parse  # type: ignore
 
 # Globals {{{1
-logging.basicConfig()
+logging.basicConfig(level=logging.CRITICAL)
 LOG = logging.getLogger(__name__)
 RE_CMD = re.compile(r"\$\(")
 RE_AND = re.compile(r" && ")
@@ -40,26 +40,33 @@ def get_file_hash(filepath: str) -> str:  # {{{1
         Side Effects:
             running_hash.update()
         """
-        if encoding:
-            file = open(filepath, "r", encoding=encoding)
-            for line in file:
-                hashed_line = hashlib.sha1(line.encode(encoding))
-                hex_digest = hashed_line.hexdigest().encode(encoding)
-                running_hash.update(hex_digest)
-            file.close()
+        if encoding is not None:
+            with open(filepath, "r", encoding=encoding) as file:
+                for line in file:
+                    hashed_line = hashlib.sha1(line.encode(encoding))
+                    hex_digest = hashed_line.hexdigest().encode(encoding)
+                    running_hash.update(hex_digest)
         else:
-            file = open(filepath, "rb")
-            while True:
-                # Read file in as little chunks.
-                buffer = file.read(4096)
-                if not buffer:
-                    break
-                running_hash.update(hashlib.sha1(buffer).hexdigest())
-            file.close()
+            with open(filepath, "rb") as file:
+                while True:
+                    # Read file in as little chunks.
+                    buffer = file.read(4096)
+                    if not buffer:
+                        break
+                    running_hash.update(hashlib.sha1(buffer).hexdigest())
 
     hash_sha = hashlib.sha1()
     update_hash(hash_sha, filepath, "utf-8")
     return hash_sha.hexdigest()
+
+
+def get_log_level(verbosity: int) -> int:
+    levels = {
+        0: logging.WARN,
+        1: logging.INFO,
+        2: logging.DEBUG,
+    }
+    return levels.get(verbosity, logging.DEBUG)
 
 
 def get_env_objs(toml: TomlDocument) -> Iterator[dict]:  # {{{1
@@ -77,7 +84,7 @@ def get_toml(file_path: str) -> TomlDocument:  # {{{1
     return toml
 
 
-def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{1
+def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{2
     """Write settings file to disk, formatted for shell.
 
     Writes to stdout if no valid file is specified.
@@ -93,23 +100,6 @@ def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{1
 def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
     """Return true if var is valid for target shell."""
     return bool(set(var_shell) & set(target_shell))
-
-
-# def do_eval(v: str) -> str:  # {{{1
-#     """Do python eval, then shell eval."""
-#     try:
-#         out = do_python_eval(v)
-#     except (SyntaxError, NameError):
-#         # Not python syntax; let the shell eval it
-#         out = do_shell_eval(v)
-#     return out
-
-
-# def do_python_eval(v: str) -> str:  # {{{1
-#     """Do python eval."""
-#     out = eval(v)
-#     LOG.debug("Python eval called on: %s; result: %s", v, out)
-#     return out
 
 
 def do_shell_eval(v: str) -> subprocess.CompletedProcess:  # {{{1
@@ -188,94 +178,120 @@ def get_shell_vars(  # {{{1
                 v = RE_AND.sub("; and ", str(v))
 
             if var["var_type"] == "path" and not os.path.isdir(os.path.expandvars(v)):
-                LOG.info("'%s' is not a valid directory", v)
+                LOG.warning("'%s' is not a valid directory", v)
                 continue
 
             desc = var.get("desc")
             c = f"# {desc}" if print_comments and desc else ""
             # Remove extra whitespace
             str_out = " ".join(var_def["format"].format(a, k, v, c).split())
-            all_vars.append(str_out)
+            all_vars.append(str_out + "\n")
     return all_vars
 
 
-def process_args(args: list):  # {{{1
-    """Parse command line input."""
+def build_parser() -> argparse.ArgumentParser:  # {{{1
+    """Build command line parser."""
     parser = argparse.ArgumentParser(
-        prog="parse_env", description="parse shell environment from TOML config file"
+        description="parse shell environment from TOML config file",
+        formatter_class=argparse.RawTextHelpFormatter,
+        add_help=False,
     )
     parser.add_argument(
-        "input_file",
-        metavar="INPUT",
-        action="store",
-        help="Parse environment from this TOML file",
-    )
-    parser.add_argument(
-        "output_file",
-        metavar="OUTPUT",
-        action="store",
+        "input",
+        type=argparse.FileType("r"),
         nargs="?",
-        default=None,
-        help="Save output in this file, otherwise print to stdout",
+        default="-",
+        help=(
+            "Parse environment from this TOML file,"
+            " or from stdin (default: %(default)s)"
+        ),
     )
     parser.add_argument(
-        "-d",
-        "--debug",
-        action="count",
-        help="Print debug info to terminal",
-        default=0,
+        "output",
+        type=argparse.FileType("w"),
+        nargs="?",
+        default="-",
+        help="Save output to this file, or stdout (default: %(default)s)",
+    )
+    parser.add_argument(
+        "-h",
+        action="store_true",
+        dest="show_help",
+        help="Show this help message and exit",
     )
     parser.add_argument(
         "-c",
-        "--print-comments",
         action="store_true",
-        help="print description as comment for each item",
+        dest="print_comments",
+        help="Print description as comment for each item",
     )
     parser.add_argument(
         "-s",
-        "--shell",
-        action="store",
+        dest="shell",
         choices=["fish", "bash", "zsh"],
-        help="Shell syntax for output [fish,bash,zsh] (default $SHELL)",
+        help="Shell syntax for output [fish,bash,zsh] (default: $SHELL)",
         metavar="SHELL",
         default=os.path.basename(os.getenv("SHELL", default="/bin/bash")),
     )
-    return parser.parse_args(args)
+    parser.add_argument(
+        "-v",
+        action="count",
+        dest="verbosity",
+        help="Print debug info to terminal; supply multiple times for more verbosity",
+        default=0,
+    )
+    parser.add_argument(
+        "-q",
+        action="store_true",
+        dest="quiet",
+        help="Silence debug output (overrides -v)",
+    )
+    return parser
 
 
 def main():  # {{{1
     """Script entry point."""
-    try:
-        sys.argv[1]
-        cli_args = sys.argv[1:]
-    except IndexError:
-        cli_args = [os.path.expanduser("~/dotfiles/env.toml"), "-dd"]
-    finally:
-        args = process_args(cli_args)
+    test_mode = True
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.show_help:
+        parser.print_help(file=sys.stderr)
+        parser.exit(1)
 
     # Set up logger
-    if args.debug == 0:
-        LOG.setLevel(logging.WARNING)
-    elif args.debug == 1:
-        LOG.setLevel(logging.INFO)
-    else:
-        LOG.setLevel(logging.DEBUG)
+    if not args.quiet:
+        LOG.setLevel(get_log_level(args.verbosity))
     LOG.debug(args)
 
-    toml = get_toml(args.input_file)
+    if args.input is None:
+        if not sys.stdin.isatty():
+            args.input = sys.stdin
+        else:
+            # TODO: remove after test
+            if test_mode:
+                args.input = open(os.path.expanduser("~/env.toml"))
+            else:
+                print(
+                    "Error: no input detected.",
+                    "Pass toml through stdin or file input argument.",
+                    file=sys.stderr,
+                )
+                parser.print_usage(file=sys.stderr)
+                parser.exit(1)
+    toml = parse(args.input.read())
+    args.input.close()
     LOG.debug(pformat(toml))
 
     shell_vars = get_shell_vars(toml, args.shell, args.print_comments)
 
     # Prepend header
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    shell_vars.insert(0, f"# File generated from env.toml: {timestamp}")
+    shell_vars.insert(0, f"# File generated from env.toml: {timestamp}\n")
 
-    # write to file and/or stdout
-    if args.output_file:
-        write_shell_file(shell_vars=shell_vars, file=args.output_file)
-    else:
-        write_shell_file(shell_vars=shell_vars, file=None)
+    # write to file or stdout
+    args.output.writelines(shell_vars)
+    args.output.close()
 
 
 # Run {{{1

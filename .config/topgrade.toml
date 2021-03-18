@@ -12,9 +12,10 @@ no_retry = true
 
 # Disable upgrade steps
 disable = [
-  "node",
-  "vim",        # Nvim upgrade takes care of common plugins
-  "powershell", # TODO: figure out how to bypass prompts
+  # "node",
+  "vim",
+  "powershell",
+  "shell",
 ]
 
 # List of remote machines with Topgrade installed on them
@@ -37,5 +38,5 @@ set_title = false
 #"Emacs Snapshot" = "rm -rf ~/.emacs.d/elpa.bak && cp -rl ~/.emacs.d/elpa ~/.emacs.d/elpa.bak"
 
 # Custom commands
-[commands]
-"nvim" = "nvim +PackUpdate +qa"
+# [commands]
+# "nvim" = "nvim +PackUpdate +qa"

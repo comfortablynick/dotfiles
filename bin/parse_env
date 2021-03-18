@@ -10,7 +10,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pprint import pformat
-from typing import Any, Iterator, MutableMapping, Optional
+from typing import Any, Iterator, List, MutableMapping, Optional
 
 try:
     from tomlkit import parse
@@ -62,9 +62,10 @@ def get_file_hash(filepath: str) -> str:  # {{{1
 
 def get_log_level(verbosity: int) -> int:
     levels = {
-        0: logging.WARN,
-        1: logging.INFO,
-        2: logging.DEBUG,
+        0: logging.ERROR,
+        1: logging.WARN,
+        2: logging.INFO,
+        3: logging.DEBUG,
     }
     return levels.get(verbosity, logging.DEBUG)
 
@@ -84,6 +85,26 @@ def get_toml(file_path: str) -> TomlDocument:  # {{{1
     return toml
 
 
+def output_to_pager(text: List[str], syntax: Optional[str] = None) -> None:
+    """Write output to stdin of pager."""
+    cmd = ["bat"]
+    if syntax is not None:
+        cmd = cmd + ["-l", syntax]
+    try:
+        # args stolen fron git source, see `man less`
+        pager = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=sys.stdout,
+        )
+        for line in text:
+            pager.stdin.write(line.encode())
+        pager.stdin.close()
+        pager.wait()
+    except KeyboardInterrupt:
+        pass
+
+
 def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{2
     """Write settings file to disk, formatted for shell.
 
@@ -93,7 +114,7 @@ def write_shell_file(shell_vars: list, file: Optional[str]) -> None:  # {{{2
         f = open(file, "w", encoding="utf-8")
     else:
         f = sys.stdout
-    print(*shell_vars, sep="\n", file=f)
+    print(*shell_vars, sep=os.linesep, file=f)
     f.close()
 
 
@@ -185,7 +206,7 @@ def get_shell_vars(  # {{{1
             c = f"# {desc}" if print_comments and desc else ""
             # Remove extra whitespace
             str_out = " ".join(var_def["format"].format(a, k, v, c).split())
-            all_vars.append(str_out + "\n")
+            all_vars.append(str_out + os.linesep)
     return all_vars
 
 
@@ -226,6 +247,12 @@ def build_parser() -> argparse.ArgumentParser:  # {{{1
         help="Print description as comment for each item",
     )
     parser.add_argument(
+        "-p",
+        action="store_true",
+        dest="use_pager",
+        help="Use pager for stdout output",
+    )
+    parser.add_argument(
         "-s",
         dest="shell",
         choices=["fish", "bash", "zsh"],
@@ -262,7 +289,7 @@ def main():  # {{{1
     # Set up logger
     if not args.quiet:
         LOG.setLevel(get_log_level(args.verbosity))
-    LOG.debug(args)
+    LOG.info("Parsed args: %s", args)
 
     if args.input is None:
         if not sys.stdin.isatty():
@@ -287,10 +314,15 @@ def main():  # {{{1
 
     # Prepend header
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    shell_vars.insert(0, f"# File generated from env.toml: {timestamp}\n")
+    shell_vars.insert(
+        0, f"# File generated from {args.input.name}: {timestamp}{os.linesep}"
+    )
 
     # write to file or stdout
-    args.output.writelines(shell_vars)
+    if args.use_pager:
+        output_to_pager(shell_vars, syntax=args.shell)
+    else:
+        args.output.writelines(shell_vars)
     args.output.close()
 
 

@@ -12,11 +12,6 @@
   tags:
     - nvim
 
-- name: Sync dotfiles
-  hosts: all
-  roles:
-    - dotfiles
-
 - name: Install asdf and plugins
   hosts: all
   roles:
@@ -45,7 +40,7 @@
     - vim
 
 - name: Install tmux
-  hosts: jupiter
+  hosts: all
   roles:
     - tmux
   tags:
@@ -57,6 +52,13 @@
     - mosh
   tags:
     - mosh
+
+- name: Install fish shell
+  hosts: titan
+  roles:
+    - fish_shell
+  tags:
+    - fish
 
 - import_playbook: rust.yml
   tags:

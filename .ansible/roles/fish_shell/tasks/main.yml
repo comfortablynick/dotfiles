@@ -1,0 +1,36 @@
+---
+# tasks file for fish_shell
+- name: Clone Neovim git repo
+  git:
+    repo: https://github.com/fish-shell/fish-shell
+    dest: "{{ fish_source_dir }}"
+    force: true
+    accept_hostkey: true
+  register: source_repo
+
+- name: Build fish from git master
+  block:
+    - name: Remove existing build dir if exists
+      file:
+        path: "{{ fish_source_dir }}/build"
+        state: absent
+
+    - name: Make build dir
+      file:
+        path: "{{ fish_source_dir }}/build"
+        state: directory
+
+    - name: Build fish
+      command: "{{ item }}"
+      args:
+        chdir: "{{ fish_source_dir }}/build"
+      loop:
+        - cmake -DCMAKE_INSTALL_PREFIX={{ fish_install_prefix }} ..
+        - make
+
+    - name: Install fish
+      command: make install
+      args:
+        chdir: "{{ fish_source_dir }}/build"
+      become: true
+  when: (source_repo.before != source_repo.after) or fish_force_build

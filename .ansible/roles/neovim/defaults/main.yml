@@ -43,7 +43,6 @@ pip3_name: pip3
 
 # Build from source
 neovim_source_dir: "{{ ansible_env.HOME }}/src/neovim"
-neovim_cmake_build_type: RelWithDebInfo
+neovim_cmake_build_type: Release
 neovim_install_prefix: "{{ ansible_env.HOME }}/.local"
 neovim_force_build: false
-neovim_install_arm: false

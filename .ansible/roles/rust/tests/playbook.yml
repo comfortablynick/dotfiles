@@ -20,4 +20,4 @@
       failed_when: false
 
   roles:
-    - role_under_test
+    - rust

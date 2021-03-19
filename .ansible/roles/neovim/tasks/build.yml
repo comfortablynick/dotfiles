@@ -7,53 +7,21 @@
     force: true
     accept_hostkey: true
   register: source_repo
-  when: neovim_install_arm
 
-- block:
-    - name: Install build prerequisites
+- name: Build neovim from source
+  block:
+    - name: Install neovim build prerequisites
       become: true
       apt:
         name: "{{ Debian_neovim_required_packages }}"
         state: present
       when: ansible_facts['os_family'] == 'Debian'
-    - name: Build from source
+    - name: Build and install neovim
       command: "{{ item }}"
       args:
         chdir: "{{ neovim_source_dir }}"
       loop:
         - make distclean
         - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
-    - name: Install
-      command: make install
-      become: true
-
-  # - name: Create deps dir
-  #   file:
-  #     path: "{{ neovim_source_dir }}/.deps"
-  #     state: directory
-  # - name: Build deps
-  #   command: "{{ item }}"
-  #   args:
-  #     chdir: "{{ neovim_source_dir }}/.deps"
-  #   loop:
-  #     - cmake ../third-party
-  #     - make
-  # - name: Create build dir
-  #   file:
-  #     path: "{{ neovim_source_dir }}/build"
-  #     state: directory
-  # - name: Build from source_repo
-  #   command: "{{ item }}"
-  #   args:
-  #     chdir: "{{ neovim_source_dir }}/build"
-  #   loop:
-  #     - >
-  #       cmake -GNinja
-  #       -DCMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
-  #       -DLIBLUV_LIBRARY=/usr/lib/arm-linux-gnueabihf/libuv.so
-  #       -DLIBLUV_INCLUDE_DIR=/usr/lib/arm-linux-gnueabihf
-  #       -DCMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}
-  #       -DENABLE_JEMALLOC=ON
-  #       ..
-  #     - ninja
-  when: (source_repo.changed or neovim_force_build) and neovim_install_arm
+        - make CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
+  when: source_repo.before != source_repo.after or neovim_force_build

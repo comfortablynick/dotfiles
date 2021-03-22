@@ -11,11 +11,7 @@ import sys
 from datetime import datetime
 from pprint import pformat
 from typing import Any, Iterator, List, MutableMapping, Optional
-
-try:
-    from tomlkit import parse
-except ModuleNotFoundError:
-    from toml import loads as parse  # type: ignore
+from rtoml import loads
 
 # Globals {{{1
 logging.basicConfig(level=logging.CRITICAL)
@@ -306,7 +302,7 @@ def main():  # {{{1
                 )
                 parser.print_usage(file=sys.stderr)
                 parser.exit(1)
-    toml = parse(args.input.read())
+    toml = loads(args.input.read())
     args.input.close()
     LOG.debug(pformat(toml))
 

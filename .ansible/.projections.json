@@ -1,0 +1,7 @@
+{
+  "roles/**/tasks/*.yml":    {"type": "task"},
+  "roles/**/defaults/*.yml": {"type": "default"},
+  "roles/**/templates/**":   {"type": "template"},
+  "roles/**/handlers/*.yml": {"type": "handlers"},
+  "roles/**/README.md":      {"type": "doc"}
+}

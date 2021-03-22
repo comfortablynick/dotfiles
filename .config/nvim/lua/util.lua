@@ -1,8 +1,48 @@
 -- Utility functions, not necessarily integral to vim
-local vim = vim
 local uv = vim.loop
 local ffi = vim.F.npcall(require, "ffi")
 local M = {}
+
+-- Root finder utilities originally from nvim-lspconfig
+-- TODO: replace vim rooter
+function M.search_ancestors(startpath, func)
+  vim.validate{func = {func, "f"}}
+  if func(startpath) then return startpath end
+  for path in M.path.iterate_parents(startpath) do
+    if func(path) then return path end
+  end
+end
+
+function M.root_pattern(...)
+  local patterns = vim.tbl_flatten{...}
+  local function matcher(path)
+    for _, pattern in ipairs(patterns) do
+      -- TODO: use luv funcs instead of vim?
+      if M.path.exists(vim.fn.glob(M.path.join(path, pattern))) then
+        return path
+      end
+    end
+  end
+  return function(startpath) return M.search_ancestors(startpath, matcher) end
+end
+
+function M.find_git_ancestor(startpath)
+  return M.search_ancestors(startpath, function(path)
+    if M.path.is_dir(M.path.join(path, ".git")) then return path end
+  end)
+end
+
+function M.find_node_modules_ancestor(startpath)
+  return M.search_ancestors(startpath, function(path)
+    if M.path.is_dir(M.path.join(path, "node_modules")) then return path end
+  end)
+end
+
+function M.find_package_json_ancestor(startpath)
+  return M.search_ancestors(startpath, function(path)
+    if M.path.is_file(M.path.join(path, "package.json")) then return path end
+  end)
+end
 
 function M.humanize_bytes(size)
   local div = 1024

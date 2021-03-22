@@ -175,6 +175,7 @@ let g:package_path = expand('$XDG_DATA_HOME/nvim/site')
 silent! packadd! vim-doge
 silent! packadd! vim-dirvish
 silent! packadd! vim-toml
+silent! packadd! vim-projectionist
 
 " Nvim/vim specific packages
 if has('nvim-0.5')

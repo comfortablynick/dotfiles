@@ -16,7 +16,6 @@ tmux_libevent_path: "{{ tmux_source_dir }}/libevent-{{ tmux_libevent_version }}-
 tmux_ncurses_version: "6.1"
 tmux_ncurses_path: "{{ tmux_source_dir }}/ncurses-{{ tmux_ncurses_version }}"
 
-
 Debian_tmux_required_packages:
   - git
   - automake

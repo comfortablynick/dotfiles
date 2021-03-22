@@ -6,6 +6,12 @@ apt_default_packages:
 pacman_default_packages:
   - cmake
 
+asdf_plugins_dev:
+  - name: nodejs
+    versions:
+      - "14.16.0"
+    global: "14.16.0"
+
 pipx_packages:
   - name: ansible --include-deps
   - name: black
@@ -13,7 +19,7 @@ pipx_packages:
   - name: cmakelang
   - name: cmakelint
   - name: legit
-  - name: mypy
+  - name: flake8
   - name: optimize-images
     inject:
       - pillow

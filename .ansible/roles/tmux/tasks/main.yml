@@ -1,9 +1,9 @@
 ---
 # tasks file for tmux
-- name: Get current tmux version
-  command: tmux -V
-  register: tmux_current_version
-  changed_when: False
+# - name: Get current tmux version
+#   command: tmux -V
+#   register: tmux_current_version
+#   changed_when: False
 
 - name: Install tmux from source
   include_tasks: build.yml

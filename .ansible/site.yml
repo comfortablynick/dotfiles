@@ -15,7 +15,9 @@
 - name: Install asdf and plugins
   hosts: all
   roles:
-    - asdf
+    - role: asdf
+      vars:
+        asdf_plugins: "{{ asdf_plugins_all }} + {{ asdf_plugins_dev | d([]) }}"
   tags:
     - asdf
 

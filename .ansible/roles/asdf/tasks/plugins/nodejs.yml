@@ -5,18 +5,16 @@
     path: "{{ asdf_nodejs_keyring }}"
   register: keyring
 
-- name: Create keyring and import node.js gpg keys
-  block:
-    - name: Create keyring for Node.js keys
-      file:
-        path: "{{ asdf_nodejs_keyring }}"
-        state: directory
-        mode: 0700
+- name: Create keyring for Node.js keys
+  file:
+    path: "{{ asdf_nodejs_keyring }}"
+    state: directory
+    mode: 0700
 
-    - name: Import Node.js keys to keyring
-      command: "bash -lc '{{ asdf_dir }}/plugins/nodejs/bin/import-release-team-keyring'"
-      args:
-        creates: "{{ asdf_nodejs_keyring }}/pubring.gpg"
-      environment:
-        GNUPGHOME: "{{ asdf_nodejs_keyring }}"
-  when: keyring.stat.exists is defined and keyring.stat.exists
+- name: Import Node.js keys to keyring
+  command:
+    bash -lc '{{ asdf_dir }}/plugins/nodejs/bin/import-release-team-keyring'
+  args:
+    creates: "{{ asdf_nodejs_keyring }}/pubring.gpg"
+  environment:
+    GNUPGHOME: "{{ asdf_nodejs_keyring }}"

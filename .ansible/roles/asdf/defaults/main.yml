@@ -11,23 +11,6 @@ asdf_install_shell: /bin/sh
 asdf_fish_config_dir: "{{ asdf_home }}/.config/fish"
 asdf_nodejs_keyring: "{{ asdf_dir }}/keyrings/nodejs"
 
-# plugins
-asdf_plugins:
-  - name: python
-    versions:
-      - "3.9.2"
-    global: "3.9.2"
-    environment:
-      PYTHON_CONFIGURE_OPTS: "--enable-shared"
-  - name: nodejs
-    versions:
-      - "14.16.0"
-    global: "14.16.0"
-  - name: direnv
-    versions:
-      - "2.27.0"
-    global: "2.27.0"
-
 asdf_debian_packages:
   - build-essential
   - git

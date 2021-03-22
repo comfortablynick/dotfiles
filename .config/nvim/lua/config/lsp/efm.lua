@@ -5,6 +5,7 @@ return function(on_attach)
     cmd = {"efm-langserver"},
     on_attach = on_attach,
     filetypes = {
+      "fish",
       "lua",
       "vim",
       "sh",

@@ -12,6 +12,21 @@ asdf_plugins_dev:
       - "14.16.0"
     global: "14.16.0"
 
+asdf_python_packages_dev:
+  - click
+
+asdf_npm_packages_dev:
+  - bash-language-server
+  - markdownlint-cli
+  - pyright
+  - typescript-language-server
+  - vim-language-server
+  - vscode-json-languageserver
+  - yaml-language-server
+  - clasp
+  - luafmt
+  - npm
+
 pipx_packages:
   - name: ansible --include-deps
   - name: black

@@ -1,9 +1,8 @@
 ---
 # asdf plugins
 - name: Install asdf plugins
-  shell: asdf plugin-add {{ item.name }} {{ item.repository|d() }}
+  command: "{{ asdf_bin }} plugin-add {{ item.name }} {{ item.repository|d() }}"
   args:
-    executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/plugins/{{ item.name }}"
     chdir: "{{ asdf_home }}"
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
@@ -15,11 +14,15 @@
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
   when: '"nodejs" in item["name"]'
 
+- name: Include tasks for python
+  include_tasks: "plugins/python.yml"
+  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  when: '"python" in item["name"]'
+
 # Install binaries using plugins
 - name: Install asdf packages
-  shell: asdf install {{ item.0.name }} {{ item.1 }}
+  command: "{{ asdf_bin }} install {{ item.0.name }} {{ item.1 }}"
   args:
-    executable: "{{ asdf_install_shell|d(omit) }}"
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
     chdir: "{{ asdf_home }}"
   environment: "{{ item.0.environment|d(ansible_facts['env']) }}"
@@ -47,9 +50,3 @@
     chdir: "{{ asdf_home }}"
   when: item.skipped is not defined and item.rc != 0
   loop: "{{ asdf_plugins_versions.results|flatten(levels=1) }}"
-
-- name: Copy python defaults template
-  template:
-    src: .default-python-packages.j2
-    dest: "{{ asdf_home }}/.default-python-packages"
-  when: python_default_packages is defined

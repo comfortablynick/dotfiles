@@ -17,7 +17,9 @@
   roles:
     - role: asdf
       vars:
-        asdf_plugins: "{{ asdf_plugins_all }} + {{ asdf_plugins_dev | d([]) }}"
+        asdf_plugins: "{{ asdf_plugins_all|d([]) }} + {{ asdf_plugins_dev|d([]) }}"
+        asdf_python_packages: "{{ asdf_python_packages_all|d([]) }} + {{ asdf_python_packages_dev|d([]) }}"
+        asdf_npm_packages: "{{ asdf_npm_packages_all|d([]) }} + {{ asdf_npm_packages_dev|d([]) }}"
   tags:
     - asdf
 

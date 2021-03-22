@@ -10,6 +10,15 @@ if status is-interactive
     # Run parsing script to update env.fish
     echo "env.toml has changed!"
     set -l py_path (which python3)
+    set -l asdf_versions_file $HOME/.tool-versions
+
+    # Use asdf global python if available
+    if test -e $asdf_versions_file
+        set -l asdf_py_ver (string match -r -- '^python\s(3.*)$' <$asdf_versions_file)[2]
+        set -l asdf_py_path "$HOME/.asdf/installs/python/$asdf_py_ver/bin/python3"
+        test -x $asdf_py_path; and set py_path $asdf_py_path
+    end
+
     set -l parse_env $HOME/bin/parse_env
     set -l env_file $HOME/.config/fish/env.fish
     if test -n "$py_path"

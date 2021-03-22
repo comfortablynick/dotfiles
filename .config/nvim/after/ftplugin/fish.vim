@@ -4,14 +4,16 @@ setlocal shiftwidth=4
 setlocal formatoptions-=c
 setlocal formatoptions-=r
 setlocal formatoptions-=o
-setlocal errorformat=%f\ (line\ %l):\ %m
+setlocal errorformat=%E%f\ (line\ %l):\ %m
+setlocal errorformat+=%-G%.%#
+setlocal errorformat+=%p^
+setlocal errorformat+=%E
+" setlocal errorformat+=%E%m
 setlocal foldmethod=marker
-" packadd ale
-call plugins#packadd('ale')
+" call plugins#packadd('ale')
 
 " Error example
-" || 00_start_tmux.fish (line 2): Missing end to bala
-" || nce this if statement
+" || 00_start_tmux.fish (line 2): Missing end to balance this if statement
 " || if status is-interactive
 " || ^
 " || warning: Error while reading file 00_start_tmux.fish

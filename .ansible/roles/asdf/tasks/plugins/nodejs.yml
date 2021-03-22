@@ -1,5 +1,11 @@
 ---
 # asdf nodejs tasks
+- name: Copy npm defaults template
+  template:
+    src: .default-npm-packages.j2
+    dest: "{{ asdf_home }}/.default-npm-packages"
+  when: asdf_npm_packages is defined
+
 - name: Check if node.js keyring exists
   stat:
     path: "{{ asdf_nodejs_keyring }}"

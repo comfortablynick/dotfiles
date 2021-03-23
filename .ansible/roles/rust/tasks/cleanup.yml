@@ -7,15 +7,16 @@
     line: "{{ item[1].lineinfile }}"
     state: absent
   with_nested:
-  - "{{ stat_shell_profiles.results }}"
-  - "{{ shell_exports }}"
+    - "{{ stat_shell_profiles.results }}"
+    - "{{ shell_exports }}"
   when:
-  - shell_profiles is defined
-  - shell_exports is defined
-  - item[0].stat.exists|bool == true
+    - shell_profiles is defined
+    - shell_exports is defined
+    - item[0].stat.exists|bool == true
 
 - name: "Rust | Remove $HOME/.cargo"
   file:
     path: "{{ rust_user_dir }}/.cargo"
     state: absent
   failed_when: false
+

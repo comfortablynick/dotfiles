@@ -1,0 +1,5 @@
+---
+- name: Install mosh
+  hosts: all
+  roles:
+    - mosh

@@ -1,6 +1,6 @@
 ---
 - name: Rust | Install cargo binaries
-  command: "{{ rust_user_dir }}/.cargo/bin/cargo install {{ item.name }} {{ item.args|d(omit) }}"
+  command: "{{ cargo_bin }} install {{ item.name }} {{ item.args|d(omit) }}"
   loop: "{{ cargo_items }}"
   register: cargo_result
   changed_when: "'Add --force to overwrite' not in cargo_result.stderr|d()"
@@ -19,6 +19,6 @@
   register: cargo_update
 
 - name: Rust | Update binaries
-  command: "{{ rust_user_dir }}/.cargo/bin/cargo install-update -ag"
+  command: "{{ cargo_bin }} install-update -ag"
   when: cargo_update.stat.executable
   changed_when: "'Updated' in cargo_update.stdout|d()"

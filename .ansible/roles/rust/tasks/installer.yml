@@ -2,18 +2,22 @@
 - name: Rust | Check if rustup installed
   shell: which rustup
   register: rustup_install_location
-  changed_when: False
-  failed_when: False
+  changed_when: false
+  failed_when: false
 
 - name: Rust | Install
-  shell: "curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y --default-toolchain {{ rust_default_toolchain }}"
+  shell:
+    curl https://sh.rustup.rs -sSf |
+    sh -s -- --no-modify-path -y
+    --default-toolchain {{ rust_default_toolchain }}
   args:
-    warn: no
-  changed_when: False
+    warn: false
+  changed_when: false
   when: rustup_install_location.rc != 0
 
 - name: Rust | Set rustup location
   set_fact:
+    key_value: ''
     rustup_bin: "{{ rustup_install_location.stdout|d(rustup_path) }}"
 
 - name: Rust | Debug print rustup bin path
@@ -26,5 +30,5 @@
   register: rustup_toolchain_install
   changed_when: "'installed' in rustup_toolchain_install.stdout|d()"
   loop: "{{ rust_toolchains }}"
-  failed_when: rustup_bin|d()
+  # failed_when: rustup_bin|d()
   when: item is defined

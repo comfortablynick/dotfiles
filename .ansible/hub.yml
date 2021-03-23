@@ -1,0 +1,6 @@
+---
+- name: Install hub
+  hosts: all
+  roles:
+    - hub
+  strategy: linear

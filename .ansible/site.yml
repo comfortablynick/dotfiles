@@ -1,85 +1,14 @@
-# vim:ft=yaml.ansible:
 ---
-- name: Ensure ssh setup
-  hosts: all
-  roles:
-    - ssh
-
-- name: Install neovim
-  hosts: all
-  roles:
-    - neovim
-  tags:
-    - nvim
-
-- name: Install asdf and plugins
-  hosts: all
-  roles:
-    - role: asdf
-      vars:
-        asdf_plugins: "{{ asdf_plugins_all|d([]) }} + {{ asdf_plugins_dev|d([]) }}"
-        asdf_python_packages: "{{ asdf_python_packages_all|d([]) }} + {{ asdf_python_packages_dev|d([]) }}"
-        asdf_npm_packages: "{{ asdf_npm_packages_all|d([]) }} + {{ asdf_npm_packages_dev|d([]) }}"
-  tags:
-    - asdf
-
-- name: Install hub
-  hosts: all
-  roles:
-    - hub
-  strategy: linear
-
-- name: Install software on all hosts
-  hosts: all
-  roles:
-    - pkg
-  tags:
-    - pkg
-
-- name: Install vim
-  hosts: all
-  roles:
-    - vim
-  tags:
-    - vim
-
-- name: Install tmux
-  hosts: all
-  roles:
-    - tmux
-  tags:
-    - tmux
-
-- name: Install mosh
-  hosts: all
-  roles:
-    - mosh
-  tags:
-    - mosh
-
-- name: Install fish shell
-  hosts: titan
-  roles:
-    - fish_shell
-  tags:
-    - fish
-
+# master level playbook
+- import_playbook: asdf.yml
+- import_playbook: fish.yml
+- import_playbook: hub.yml
+- import_playbook: luals.yml
+- import_playbook: mosh.yml
+- import_playbook: nvim.yml
+- import_playbook: pipx.yml
+- import_playbook: pkg.yml
 - import_playbook: rust.yml
-  tags:
-    - rust
-
-- name: Install pipx
-  hosts: all
-  roles:
-    - role: pipx
-      vars:
-        pipx_pkgs: "{{ pipx_packages_all }} + {{ pipx_packages | default([]) }}"
-  tags:
-    - pipx
-
-- name: Install lua-language-server
-  hosts: dev
-  roles:
-    - lua_language_server
-  tags:
-    - lua_language_server
+- import_playbook: ssh.yml
+- import_playbook: tmux.yml
+- import_playbook: vim.yml

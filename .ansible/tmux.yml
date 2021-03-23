@@ -1,0 +1,5 @@
+---
+- name: Install tmux
+  hosts: all
+  roles:
+    - tmux

@@ -64,30 +64,32 @@
 
 - name: Rust | Formulate source string comparison requirements
   set_fact:
+    key_value: ''
     rust_version_requirement: "rustc {{ rust_version }}"
   when:
-    - build_rust_from_source
+    - rust_build_from_source
     - rust_version_requirement is not defined
 
 - name: Rust | Formulate installer string comparison requirements
   set_fact:
+    key_value: ''
     rust_version_requirement: "Usage: rustc"
   when:
-    - not build_rust_from_source
+    - not rust_build_from_source
     - rust_version_requirement is not defined
 
 - name: Rust | Looking for installer installation
   shell: rustc
   register: rust_preinstall_version_r
-  changed_when: False
-  failed_when: False
-  when: not build_rust_from_source
+  changed_when: false
+  failed_when: false
+  when: not rust_build_from_source
 
 - name: Rust | Looking for source installation
   command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
   register: rust_preinstall_version_s
   changed_when: false
-  when: build_rust_from_source
+  when: rust_build_from_source
 
 - name: Rust | Detect configured shell profiles
   stat:

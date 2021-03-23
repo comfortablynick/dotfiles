@@ -1,0 +1,5 @@
+---
+- name: Install lua-language-server
+  hosts: dev
+  roles:
+    - lua_language_server

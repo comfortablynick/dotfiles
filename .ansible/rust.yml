@@ -1,22 +1,8 @@
 # vim:ft=yaml.ansible
 ---
 - name: Install rust
-  hosts: dev
+  hosts: all
   roles:
     - rust
   vars:
-    - rust_version: 1.49
-    - cargo_items:
-        - name: cargo-update
-          binary: cargo-install-update
-        - name: ripgrep
-          binary: rg
-        - name: fd-find
-          binary: fd
-        - name: exa
-        - name: lsd
-        - name: sysinfo
-          binary: sysinfo
-          args: --git https://github.com/comfortablynick/sysinfo.git
-        - name: just
-        - name: bat
+    - rust_version: 1.50

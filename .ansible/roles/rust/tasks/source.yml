@@ -1,22 +1,23 @@
 ---
 
-- name: "Rust | Clone"
+- name: Rust | Clone
   git:
-    repo: "https://github.com/rust-lang/rust.git"
-    dest: "/tmp/rust"
+    repo: https://github.com/rust-lang/rust.git
+    dest: "{{ rust_source_dir }}"
     version: "{{ rust_version }}"
-    clone: yes
+    clone: true
 
-- name: "Rust | Build"
-  shell: "cd /tmp/rust && ./x.py build"
+- name: Rust | Build
+  shell: cd /tmp/rust && ./x.py build
   changed_when: false
 
-- name: "Rust | Install"
-  shell: "cd /tmp/rust && ./x.py install cargo"
+- name: Rust | Install
+  shell: cd /tmp/rust && ./x.py install cargo
   changed_when: false
 
-- name: "Rust | Verify"
-  shell: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
+- name: Rust | Verify
+  command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
   register: installed_rust_version
   changed_when: false
-  failed_when: 'new_rust_version not in installed_rust_version.stdout'
+  failed_when: new_rust_version not in installed_rust_version.stdout
+

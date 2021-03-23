@@ -1,0 +1,5 @@
+---
+- name: Install neovim
+  hosts: all
+  roles:
+    - neovim

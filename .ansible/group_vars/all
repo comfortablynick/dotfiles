@@ -28,3 +28,20 @@ pipx_packages_all:
   - name: neovim-remote
   - name: ranger-fm
   - name: speedtest-cli
+
+cargo_packages_all:
+  - name: cargo-update
+    binary: cargo-install-update
+  - name: ripgrep
+    binary: rg
+  - name: fd-find
+    binary: fd
+  - name: exa
+  - name: lsd
+  - name: sysinfo
+    binary: sysinfo
+    args: --git https://github.com/comfortablynick/sysinfo.git
+  - name: just
+  - name: bat
+  - name: git-delta
+    binary: delta

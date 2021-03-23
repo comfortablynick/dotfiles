@@ -48,3 +48,9 @@ pipx_packages:
   - name: git+https://github.com/vimjas/vint
   - name: toml-sort
   - name: yamllint
+
+cargo_packages_dev:
+  - name: just
+  - name: zoxide
+  - name: fastmod
+  - name: ttdl

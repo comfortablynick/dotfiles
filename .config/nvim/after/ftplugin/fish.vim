@@ -5,9 +5,11 @@ setlocal formatoptions-=c
 setlocal formatoptions-=r
 setlocal formatoptions-=o
 setlocal errorformat=%E%f\ (line\ %l):\ %m
-setlocal errorformat+=%-G%.%#
-setlocal errorformat+=%p^
-setlocal errorformat+=%E
+setlocal errorformat+=%C%m
+" setlocal errorformat+=%-G%.%#
+" setlocal errorformat+=%-C%.%#
+setlocal errorformat+=%Z%p^
+" setlocal errorformat+=%E
 " setlocal errorformat+=%E%m
 setlocal foldmethod=marker
 " call plugins#packadd('ale')

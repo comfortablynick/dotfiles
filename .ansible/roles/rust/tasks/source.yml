@@ -1,5 +1,5 @@
 ---
-
+# rust source tasks
 - name: Rust | Clone
   git:
     repo: https://github.com/rust-lang/rust.git
@@ -7,12 +7,12 @@
     version: "{{ rust_version }}"
     clone: true
 
-- name: Rust | Build
-  shell: cd /tmp/rust && ./x.py build
-  changed_when: false
-
-- name: Rust | Install
-  shell: cd /tmp/rust && ./x.py install cargo
+- name: Rust | Build & Install
+  command:
+    - ./x.py build
+    - ./x.py install cargo
+  args:
+    chdir: "{{ rust_source_dir }}"
   changed_when: false
 
 - name: Rust | Verify

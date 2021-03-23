@@ -1,29 +1,30 @@
 ---
 - name: Rust | Check if rustup installed
-  shell: which rustup
-  register: rustup_install_location
+  stat:
+    path: '{{ rustup_bin }}'
   changed_when: false
-  failed_when: false
+  register: rustup_bin_stat
 
-- name: Rust | Install
-  shell:
-    curl https://sh.rustup.rs -sSf |
-    sh -s -- --no-modify-path -y
-    --default-toolchain {{ rust_default_toolchain }}
-  args:
-    warn: false
-  changed_when: false
-  when: rustup_install_location.rc != 0
+# - name: Rust | Check if rustup installed
+#   shell: which rustup
+#   register: rustup_install_location
+#   changed_when: false
+#   failed_when: false
 
-- name: Rust | Set rustup location
-  set_fact:
-    key_value: ''
-    rustup_bin: "{{ rustup_install_location.stdout|d(rustup_path) }}"
+# - name: Rust | Install
+#   shell:
+#     curl https://sh.rustup.rs -sSf |
+#     sh -s -- --no-modify-path -y
+#     --default-toolchain {{ rust_default_toolchain }}
+#   args:
+#     warn: false
+#   changed_when: false
+#   when: rustup_install_location.rc != 0
 
-- name: Rust | Debug print rustup bin path
-  debug:
-    msg: "Rustup bin path: {{ rustup_bin }}"
-    verbosity: 1
+# - name: Rust | Set rustup location
+#   set_fact:
+#     key_value: ''
+#     rustup_bin: "{{ rustup_install_location.stdout|d(rustup_path) }}"
 
 - name: Rust | Install toolchain
   command: "{{ rustup_bin }} toolchain install {{ item }}"
@@ -32,3 +33,21 @@
   loop: "{{ rust_toolchains }}"
   # failed_when: rustup_bin|d()
   when: item is defined
+
+- name: Rust | Install
+  block:
+    - name: Download rustup-init
+      get_url:
+        url: '{{ rustup_init_url }}'
+        dest: /tmp/rustup-init
+        mode: 0755
+    - name: Install rust
+      command: /tmp/rustup-init --no-modify-path -y --default-toolchain {{ rust_default_toolchain }}
+      args:
+        creates: '{{ rustup_home }}'
+  always:
+    - name: cleanup
+      file:
+        path: /tmp/rustup-init
+        state: absent
+  when: not rustup_bin.stat.exists

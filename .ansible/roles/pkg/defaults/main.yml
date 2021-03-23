@@ -40,8 +40,8 @@ pip3_default_pkgs:
   # pynvim for rnvimr plugin
   - pynvim
 
-asdf_bin: "{{ ansible_env.HOME }}/.asdf/bin/asdf"
-asdf_shims_path: "{{ ansible_env.HOME }}/.asdf/shims"
+asdf_bin: "{{ ansible_facts.user_dir }}/.asdf/bin/asdf"
+asdf_shims_path: "{{ ansible_facts.user_dir }}/.asdf/shims"
 
 python2_path: /usr/bin/python2
 python3_path: "{{ asdf_shims_path }}/python3"

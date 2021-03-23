@@ -1,8 +1,9 @@
 ---
 # tasks file for pipx
 - name: Check for line in .tool-versions
-  command: grep -i 'python 3' {{ ansible_env.HOME }}/.tool-versions
+  command: grep -i 'python 3' {{ ansible_facts.user_dir }}/.tool-versions
   register: asdf_python_version
+  changed_when: false
 
 - name: Set python dir
   set_fact:

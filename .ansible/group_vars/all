@@ -1,6 +1,6 @@
 ---
 # all group vars
-asdf_home: "{{ ansible_env.HOME }}"
+asdf_home: "{{ ansible_facts.user_dir }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
 
 asdf_plugins_all:

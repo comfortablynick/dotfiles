@@ -35,14 +35,14 @@ install_state: latest
 # choices: [ present, absent ]
 configure_state: present
 
-nvim_venv_dir: "{{ ansible_env.HOME }}/.env"
+nvim_venv_dir: "{{ ansible_facts.user_dir }}/.env"
 nvim_py2_venv_name: nvim2
 nvim_py3_venv_name: nvim3
 pip2_name: pip2
 pip3_name: pip3
 
 # Build from source
-neovim_source_dir: "{{ ansible_env.HOME }}/src/neovim"
+neovim_source_dir: "{{ ansible_facts.user_dir }}/src/neovim"
 neovim_cmake_build_type: Release
-neovim_install_prefix: "{{ ansible_env.HOME }}/.local"
+neovim_install_prefix: "{{ ansible_facts.user_dir }}/.local"
 neovim_force_build: false

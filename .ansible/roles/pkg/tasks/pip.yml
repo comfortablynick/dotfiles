@@ -35,14 +35,14 @@
 - name: Install python2 venv for neovim
   pip:
     name: pynvim
-    virtualenv: "{{ ansible_env.HOME }}/.env/nvim2"
+    virtualenv: "{{ ansible_facts.user_dir }}/.env/nvim2"
     virtualenv_python: "{{ python2_path }}"
   when: pip2.stat.exists is defined and pip2.stat.exists
 
 - name: Install python3 venv for neovim
   pip:
     name: pynvim
-    virtualenv: "{{ ansible_env.HOME }}/.env/nvim3"
+    virtualenv: "{{ ansible_facts.user_dir }}/.env/nvim3"
     virtualenv_command: "{{ python3_path }} -m venv"
   when: py3.stat.exists is defined and py3.stat.exists
 

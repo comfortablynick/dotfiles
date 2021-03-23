@@ -2,15 +2,29 @@
 # all group vars
 asdf_home: "{{ ansible_env.HOME }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
-asdf_python_version: 3.9.1
-asdf_python_bin_dir: "{{ asdf_dir }}/installs/python/{{ asdf_python_version }}/bin"
 
-pipx_pip3_path: "{{ asdf_python_bin_dir }}/pip3"
-pipx_path: "{{ asdf_python_bin_dir }}/pipx"
+asdf_plugins_all:
+  - name: python
+    versions:
+      - "3.9.2"
+    global: "3.9.2"
+    environment:
+      PYTHON_CONFIGURE_OPTS: "--enable-shared"
+  - name: direnv
+    versions:
+      - "2.28.0"
+    global: "2.28.0"
+
+asdf_python_packages_all:
+  - rtoml
+  - pipx
+  - ruamel.yaml
+
+asdf_npm_packages_all:
+  - neovim
+  - yarn
 
 pipx_packages_all:
-  - name: dotdrop
-  - name: flake8
   - name: neovim-remote
   - name: ranger-fm
   - name: speedtest-cli

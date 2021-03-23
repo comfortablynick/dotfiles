@@ -1,0 +1,12 @@
+neovim
+yarn
+bash-language-server
+markdownlint-cli
+pyright
+typescript-language-server
+vim-language-server
+vscode-json-languageserver
+yaml-language-server
+clasp
+luafmt
+npm

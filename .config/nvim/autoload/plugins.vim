@@ -31,7 +31,6 @@ function plugins#init() abort
 
     " General {{{2
     Plug 'airblade/vim-rooter'
-    Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-eunuch'
     Plug 'moll/vim-bbye'
     Plug 'psliwka/vim-smoothie'
@@ -46,21 +45,29 @@ function plugins#init() abort
     Plug 'michaelb/sniprun',           {'do': './install.sh'}
 
     " Editing behavior {{{2
-    Plug 'tpope/vim-commentary'
-    " Plug 'tpope/vim-surround'
-    Plug 'easymotion/vim-easymotion'
-    Plug 'tpope/vim-unimpaired'
-    Plug 'machakann/vim-sandwich'
-    Plug 'tomtom/tcomment_vim'
-    Plug 'justinmk/vim-sneak'
-    Plug 'rhysd/clever-f.vim'
-    Plug 'junegunn/vim-easy-align'
-    Plug 'wellle/targets.vim'
-    Plug 'tommcdo/vim-exchange'
     Plug 'bfredl/nvim-miniyank'
-    Plug 'antoinemadec/FixCursorHold.nvim'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'tpope/vim-projectionist'
+
+    " Motions {{{2
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-unimpaired'
     " Lua impl of easymotion
     Plug 'phaazon/hop.nvim'
+
+    " [s|S]{char}{char} motion
+    Plug 'justinmk/vim-sneak'
+    " [f|F]{char} motion
+    Plug 'rhysd/clever-f.vim'
+
+    " Text objects {{{2
+    Plug 'wellle/targets.vim'
+    Plug 'tommcdo/vim-exchange'
+    Plug 'machakann/vim-sandwich'
+
+    " Commenting
+    Plug 'tpope/vim-commentary'
+    Plug 'tomtom/tcomment_vim'
 
     " Explorer/finder utils {{{2
     Plug 'junegunn/fzf',
@@ -70,7 +77,6 @@ function plugins#init() abort
     Plug 'liuchengxu/vim-clap',      {'do': ':Clap install-binary!'}
     Plug 'junegunn/fzf.vim'
     Plug 'laher/fuzzymenu.vim'
-    Plug 'majutsushi/tagbar'
     Plug 'mbbill/undotree'
     Plug 'preservim/nerdtree'
     Plug 'justinmk/vim-dirvish'
@@ -95,7 +101,6 @@ function plugins#init() abort
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    " Plug 'vim-jp/syntax-vim-ex',                       {'type': 'start'}
     Plug 'blankname/vim-fish',                         {'type': 'start'}
     Plug 'habamax/vim-asciidoctor',                    {'type': 'start'}
     Plug 'benknoble/gitignore-vim',                    {'type': 'start'}
@@ -135,6 +140,7 @@ function plugins#init() abort
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
     Plug 'kevinhwang91/nvim-bqf'
+    Plug 'antoinemadec/FixCursorHold.nvim'
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

@@ -1,9 +1,13 @@
 ---
 # tasks file for tmux
-- name: Get current tmux version
-  command: tmux -V
-  register: tmux_current_version
-  changed_when: False
+# - name: Get current tmux version
+#   command: tmux -V
+#   register: tmux_current_version
+#   changed_when: False
+
+- name: Install tmux from source
+  include_tasks: build.yml
+  when: tmux_build_from_source
 
 # - name: Set flag to true if upgrade needed
 #   set_fact:
@@ -17,10 +21,6 @@
 # - debug:
 #     msg: Forcing tmux build/install
 #   when: tmux_force_build and not tmux_upgrade
-
-- name: Install tmux from source
-  include_tasks: build.yml
-  when: tmux_force_build
 
 # - name: Install tmux
 #   include_tasks: "{{ ansible_facts['os_family'] }}.yml"

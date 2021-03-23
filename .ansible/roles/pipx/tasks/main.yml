@@ -1,21 +1,40 @@
 ---
 # tasks file for pipx
+- name: Check for line in .tool-versions
+  command: grep -i 'python 3' {{ ansible_env.HOME }}/.tool-versions
+  register: asdf_python_version
+
+- name: Set python dir
+  set_fact:
+    key_value: ''
+    asdf_python_bin_dir: "{{ asdf_dir }}/installs/python/{{ asdf_python_version.stdout|replace('python ', '') }}/bin"
+  when: asdf_python_version.stdout is defined
+
+- name: Set python paths
+  set_fact:
+    key_value: ''
+    pipx_pip3_path: "{{ asdf_python_bin_dir }}/pip3"
+    pipx_path: "{{ asdf_python_bin_dir }}/pipx"
+  when: asdf_python_bin_dir is defined
+
+- name: Debug paths
+  debug:
+    msg: |
+      asdf python bin dir: {{ asdf_python_bin_dir|default('') }}
+      pipx pip3 path:      {{ pipx_pip3_path }}
+      pipx path:           {{ pipx_path }}
+
 - name: Install pipx
   pip:
     name: pipx
     executable: "{{ pipx_pip3_path }}"
     state: latest
   register: pip
-  changed_when: "'Successfully installed' in pip.stdout"
+  changed_when: "'Successfully installed' in pip.stdout|default('')"
 
 - name: Debug packages
   debug:
     var: pipx_pkgs
-
-- name: Debug $PIPX_BIN_DIR
-  debug:
-    var: ansible_env.PIPX_BIN_DIR
-    verbosity: 1
 
 - name: Install pipx packages
   command: "{{ pipx_path }} install {{ item.name }}"

@@ -2,8 +2,8 @@
 # arch
 - name: Install development packages for building asdf/python
   apt:
-    update_cache: yes
-    cache_valid_time: "{{ 48 * 60 * 60 }}" # consider cache valid within 48 hours
+    update_cache: true
+    cache_valid_time: "{{ 48 * 60 * 60 }}"  # consider cache valid within 48 hours
     pkg: "{{ asdf_debian_packages }}"
     state: present
-  become: yes
+  become: true

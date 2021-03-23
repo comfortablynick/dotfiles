@@ -12,15 +12,14 @@
   tags:
     - nvim
 
-- name: Sync dotfiles
-  hosts: all
-  roles:
-    - dotfiles
-
 - name: Install asdf and plugins
   hosts: all
   roles:
-    - asdf
+    - role: asdf
+      vars:
+        asdf_plugins: "{{ asdf_plugins_all|d([]) }} + {{ asdf_plugins_dev|d([]) }}"
+        asdf_python_packages: "{{ asdf_python_packages_all|d([]) }} + {{ asdf_python_packages_dev|d([]) }}"
+        asdf_npm_packages: "{{ asdf_npm_packages_all|d([]) }} + {{ asdf_npm_packages_dev|d([]) }}"
   tags:
     - asdf
 
@@ -45,18 +44,25 @@
     - vim
 
 - name: Install tmux
-  hosts: jupiter
+  hosts: all
   roles:
     - tmux
   tags:
     - tmux
 
 - name: Install mosh
-  hosts: pollux
+  hosts: all
   roles:
     - mosh
   tags:
     - mosh
+
+- name: Install fish shell
+  hosts: titan
+  roles:
+    - fish_shell
+  tags:
+    - fish
 
 - import_playbook: rust.yml
   tags:

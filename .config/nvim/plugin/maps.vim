@@ -95,6 +95,7 @@ nnoremap <S-Tab>    <Cmd>bprevious<CR>
 nnoremap <Leader>w  <Cmd>update\|bwipeout<CR>
 nnoremap <Leader>u  <Cmd>update\|Bdelete<CR>
 nnoremap <Leader>q  <Cmd>Bdelete<CR>
+nnoremap <Leader>x  <Cmd>call window#close_term()<CR>
 nnoremap <Leader>xx <Cmd>BufOnly<CR>
 
 " Quickfix

@@ -6,6 +6,7 @@ let g:rooter_patterns = [
     \ '.clasp.json',
     \ '.git',
     \ '.git/',
+    \ '.projections.json',
     \ 'package-lock.json',
     \ 'package.json',
     \ 'tsconfig.json',

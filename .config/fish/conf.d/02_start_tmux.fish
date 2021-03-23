@@ -1,15 +1,12 @@
 # Start tmux session for interactive shells
 if status is-interactive
-    set -Ux MOSH_CONNECTION 0
-    # Detect whether we're in mosh or not
-    # if pgrep -x mosh-server >/dev/null
-    #     set MOSH_CONNECTION 1
-    # end
     set -gx SEP ''
     set -gx SUB '|'
     set -gx RSEP ''
     set -gx RSUB '|'
-    if type -qf tmux; and test -z "$TMUX"; and not set -q no_tmux_login
+    set -l no_tmux_login 0
+    test -f "$HOME/.no_tmux_login"; and set no_tmux_login 1
+    if type -qf tmux; and test -z "$TMUX"; and test $no_tmux_login -eq 0
         begin
             if not set -q no_tmux_next_login
                 set -l session_name def

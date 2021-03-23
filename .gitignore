@@ -88,6 +88,8 @@ vifminfo*
 /.iterm2_shell_integration.fish
 /.lesshst
 /.node_repl_history
+/.no_tmux_login
+/.no_tmux_next_login
 /package.json
 /package-lock.json
 /.python_history

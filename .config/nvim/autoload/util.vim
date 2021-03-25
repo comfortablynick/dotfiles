@@ -161,3 +161,10 @@ function util#jdump(object, ...)
     endif
     return l:dump
 endfunction
+
+" util#preserve() :: Preserve view when executing a command {{{1
+function util#preserve(command)
+    let l:saved_winview = winsaveview()
+    execute a:command
+    call winrestview(l:saved_winview)
+endfunction

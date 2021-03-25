@@ -28,6 +28,9 @@ noremap <F5> <Cmd>UndotreeToggle<CR>
 command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
 command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
 
+" StripWhiteSpace :: remove trailing whitespace {{{2
+command StripWhiteSpace call util#preserve('%s/\s\+$//e')
+
 " LGrep :: location list grep {{{2
 command -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 

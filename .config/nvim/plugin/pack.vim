@@ -19,6 +19,7 @@ function s:deferred_load() abort
         \ 'fzf',
         \ 'fzf.vim',
         \ 'targets.vim',
+        \ 'clever-f.vim',
         \ 'vim-exchange',
         \ 'vim-commentary',
         \ 'vim-unimpaired',

@@ -80,6 +80,7 @@ vifminfo*
 
 /.ansible_galaxy
 /.ansible/tmp/
+/.ansible/test/out
 /.bash_history
 /.bash-git-prompt
 /.bash_logout

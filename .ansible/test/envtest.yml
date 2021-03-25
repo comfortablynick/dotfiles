@@ -14,3 +14,23 @@
       debug:
         var: ansible_facts
         verbosity: 1
+
+
+- name: Set vars
+  hosts: all
+  vars: 
+    path:
+      - $HOME/bin
+      - $HOME/.local/bin
+      - $HOME/.cargo/bin
+      - $HOME/go/bin
+      - $HOME/noexist
+  tasks:
+    - name: Debug path vars
+      debug:
+        var: path
+
+    - name: Create file from template
+      template:
+        dest: ~/.ansible/test/out/posix.sh
+        src: ~/.ansible/test/posix.j2

@@ -25,10 +25,20 @@
       - $HOME/.cargo/bin
       - $HOME/go/bin
       - $HOME/noexist
+    env:
+      NVIM_PY3_DIR: "{{ '[ -d $HOME/.env/nvim3 ] && echo nvim3' | shell_eval() }}"
+    versions:
+      - 1.5.0
+      - 2.0.0
+      - 1.0.0
   tasks:
     - name: Debug path vars
       debug:
         var: path
+
+    - name: Debug env vars
+      debug:
+        var: env
 
     - name: Create file from template
       template:

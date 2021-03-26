@@ -101,10 +101,11 @@ function plugins#init() abort
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    Plug 'blankname/vim-fish',                         {'type': 'start'}
-    Plug 'habamax/vim-asciidoctor',                    {'type': 'start'}
-    Plug 'benknoble/gitignore-vim',                    {'type': 'start'}
-    call packager#local('~/git/todo.txt-vim',          {'type': 'start'})
+    Plug 'Glench/Vim-Jinja2-Syntax',          { 'type': 'start'}
+    Plug 'blankname/vim-fish',                { 'type': 'start'}
+    Plug 'habamax/vim-asciidoctor',           { 'type': 'start'}
+    Plug 'benknoble/gitignore-vim',           { 'type': 'start'}
+    call packager#local('~/git/todo.txt-vim', { 'type': 'start'})
 
     " Git {{{2
     Plug 'airblade/vim-gitgutter'

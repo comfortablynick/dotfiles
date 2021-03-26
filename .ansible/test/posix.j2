@@ -1,3 +1,9 @@
+# shellcheck shell=bash
+
 {% for item in path %}
 export PATH={{ item }}:$PATH
+{% endfor %}
+
+{% for key,value in env.items() %}
+export {{ key }}={{ value }}
 {% endfor %}

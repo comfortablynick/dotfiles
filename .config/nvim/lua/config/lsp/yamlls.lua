@@ -5,6 +5,7 @@ return function(on_attach)
     filetypes = {"yaml", "yaml.ansible"},
     settings = {
       yaml = {
+        format = {enable = true},
         schemas = {
           ["https://json.schemastore.org/ansible-role-2.9"] = ".ansible/roles/*/*.yml",
           ["https://json.schemastore.org/ansible-playbook"] = ".ansible/*.yml",

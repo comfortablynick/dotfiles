@@ -11,7 +11,11 @@ import sys
 from datetime import datetime
 from pprint import pformat
 from typing import Any, Iterator, List, MutableMapping, Optional
-from rtoml import loads
+
+try:
+    from rtoml import loads
+except ModuleNotFoundError:
+    from tomlkit import loads
 
 # Globals {{{1
 logging.basicConfig(level=logging.CRITICAL)

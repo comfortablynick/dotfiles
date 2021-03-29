@@ -179,7 +179,7 @@ def get_shell_vars(  # {{{1
             k = var.get("key")
             a = var.get("args", var_def.get("default_args"))
             eval = var.get("eval")
-            quote = var.get("quote")
+            do_quote = var.get("quote")
             test = var.get("if")
 
             if test is not None and do_shell_eval(test).returncode != 0:
@@ -191,8 +191,8 @@ def get_shell_vars(  # {{{1
             else:
                 v = str(var.get("val"))
 
-            if quote is not False and not eval:
-                if quote or RE_SPACE.search(v):
+            if do_quote is not False and not eval:
+                if do_quote or RE_SPACE.search(v):
                     v = repr(v)
 
             if eval:

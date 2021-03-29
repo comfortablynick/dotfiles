@@ -1,19 +1,17 @@
-# shellcheck shell=bash
-
 {% for item in path %}
 {% if item|is_dir() %}
-export PATH={{ item }}:$PATH
+fish_add_path {{ item }}
 {% endif %}
 {% endfor %}
 
 {% for key,value in env.items() %}
 {% if value %}
-export {{ key }}={{ value }}
+set -gx {{ key }} {{ value }}
 {% endif %}
 {% endfor %}
 
 {% for key,value in alias.items() %}
 {% if value %}
-alias {{ key }}={{ value }}
+abbr -g {{ key }} {{ value }}
 {% endif %}
 {% endfor %}

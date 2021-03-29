@@ -1,4 +1,4 @@
-# Defined in /var/folders/09/rfyz42rn67z2lg9jnw0gs9240000gn/T//fish.lGkF5F/fzf_open_file.fish @ line 2
+# Defined in /tmp/fish.8w6mcu/fzf_open_file.fish @ line 2
 function fzf_open_file --description 'List files and folders'
     set -l commandline (__fzf_parse_commandline)
     set -l dir $commandline[1]

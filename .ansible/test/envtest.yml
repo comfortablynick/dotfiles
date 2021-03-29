@@ -26,11 +26,17 @@
       - $HOME/go/bin
       - $HOME/noexist
     env:
-      NVIM_PY3_DIR: "{{ '[ -d $HOME/.env/nvim3 ] && echo nvim3' | shell_eval() }}"
-    versions:
-      - 1.5.0
-      - 2.0.0
-      - 1.0.0
+      FZF_DEFAULT_OPTS: "\"--ansi --border --reverse --height='$FZF_TMUX_HEIGHT'\""
+      NVIM_PY3_DIR: "{{ '$HOME/.env/nvim3'|if_is_dir() }}"
+      NOEXIST: ""
+    alias:
+      gs: git status
+      g: git
+      vid: $HOME/.config/nvim
+      e: eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file
+    bash_env:
+      PATH: >-
+        $(echo -n $PATH | awk -v RS=: -v ORS=: '!x[$0]++' | sed "s/\(.*\).\{1\}/\1/")
   tasks:
     - name: Debug path vars
       debug:
@@ -40,7 +46,12 @@
       debug:
         var: env
 
-    - name: Create file from template
+    - name: Create posix file from template
       template:
-        dest: ~/.ansible/test/out/posix.sh
+        dest: ~/.ansible/test/out/env.sh
         src: ~/.ansible/test/posix.j2
+
+    - name: Create fish file from template
+      template:
+        dest: ~/.ansible/test/out/env.fish
+        src: ~/.ansible/test/fish.j2

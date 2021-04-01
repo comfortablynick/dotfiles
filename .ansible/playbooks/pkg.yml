@@ -2,4 +2,6 @@
 - name: Install software on all hosts
   hosts: all
   roles:
-    - pkg
+    - role: pkg
+      vars:
+        pkg_python_packages: "{{ pkg_python_packages_all|d([]) + pkg_python_packages_dev|d([]) }}"

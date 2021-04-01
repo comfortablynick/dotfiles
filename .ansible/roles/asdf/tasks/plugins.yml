@@ -10,12 +10,12 @@
 
 # Plugin-specific tasks go here
 - name: Include tasks for nodejs
-  include_tasks: "plugins/nodejs.yml"
+  include_tasks: plugins/nodejs.yml
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
   when: '"nodejs" in item["name"]'
 
 - name: Include tasks for python
-  include_tasks: "plugins/python.yml"
+  include_tasks: plugins/python.yml
   loop: "{{ asdf_plugins|flatten(levels=1) }}"
   when: '"python" in item["name"]'
 
@@ -25,9 +25,11 @@
   args:
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
     chdir: "{{ asdf_home }}"
-  environment: "{{ item.0.environment|d(ansible_facts['env']) }}"
+  environment: "{{ item.0.environment|d(omit) }}"
   loop: "{{ asdf_plugins|subelements('versions', {'skip_missing': True}) }}"
 
+# TODO: debug this when changing version next time
+# Consider using `asdf which` and build dict of versions
 - name: Get current asdf package versions
   shell: >-
     asdf current {{ item.name }} |
@@ -41,12 +43,15 @@
   changed_when: false
   failed_when: false
 
+- name: Debug package versions
+  debug:
+    var: "{{ asdf_plugins_versions.results }}"
+    verbosity: 1
+
+# TODO: this doesn't work because variable isn't set properly in loop above
 - name: Set global asdf package versions
-  shell: >-
-    asdf global {{ item.item.name }}
-    {{ item.item.global|d(item.item.versions[0]) }}
-  args:
-    executable: "{{ asdf_install_shell|d(omit) }}"
-    chdir: "{{ asdf_home }}"
-  when: item.skipped is not defined and item.rc != 0
+  command: >-
+    "{{ asdf_bin }} global {{ item.item.name }}
+    {{ item.item.global|d(item.item.versions[0]) }}"
+  when: item.skipped is undefined and item.rc != 0
   loop: "{{ asdf_plugins_versions.results|flatten(levels=1) }}"

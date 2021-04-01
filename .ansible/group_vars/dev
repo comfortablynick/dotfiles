@@ -14,6 +14,7 @@ asdf_plugins_dev:
 
 asdf_python_packages_dev:
   - click
+  - github3.py
 
 asdf_npm_packages_dev:
   - bash-language-server
@@ -25,7 +26,7 @@ asdf_npm_packages_dev:
   - yaml-language-server
   - clasp
   - luafmt
-  - npm
+  - prettier
 
 rust_toolchains_dev:
   - nightly
@@ -51,6 +52,9 @@ pipx_packages_dev:
   - name: git+https://github.com/vimjas/vint
   - name: toml-sort
   - name: yamllint
+
+pkg_python_packages_dev:
+  - github3.py
 
 cargo_packages_dev:
   - name: just

@@ -1,51 +1,14 @@
 ---
 # tasks/pip.yml
+# - name: Check if pip3 installed
+#   stat:
+#     path: "{{ pkg_pip3_path }}"
+#   register: pip3
 
-- name: Check if pip2 installed
-  stat:
-    path: "{{ pip2_path }}"
-  register: pip2
-
-- name: Check if python3 installed
-  stat:
-    path: "{{ python3_path }}"
-  register: py3
-
-- name: Check if pip3 installed
-  stat:
-    path: "{{ pip3_path }}"
-  register: pip3
-
-- name: Install/update python2 pip packages
-  pip:
-    name: "{{ pip2_default_pkgs }}"
-    executable: "{{ pip2_path }}"
-    state: latest
-  when: pip2.stat.exists is defined and pip2.stat.exists
-  become: yes
-  ignore_errors: yes
-
+# Failing will help debug system pip3 location
 - name: Install/update python3 pip packages
   pip:
-    name: "{{ pip3_default_pkgs }}"
-    executable: "{{ pip3_path }}"
+    name: "{{ pkg_python_packages }}"
+    executable: "{{ pkg_pip3_path }}"
+    extra_args: --user
     state: latest
-  when: pip3.stat.exists is defined and pip3.stat.exists
-
-- name: Install python2 venv for neovim
-  pip:
-    name: pynvim
-    virtualenv: "{{ ansible_facts.user_dir }}/.env/nvim2"
-    virtualenv_python: "{{ python2_path }}"
-  when: pip2.stat.exists is defined and pip2.stat.exists
-
-- name: Install python3 venv for neovim
-  pip:
-    name: pynvim
-    virtualenv: "{{ ansible_facts.user_dir }}/.env/nvim3"
-    virtualenv_command: "{{ python3_path }} -m venv"
-  when: py3.stat.exists is defined and py3.stat.exists
-
-- name: asdf reshim
-  command: "{{ asdf_bin }} reshim"
-  changed_when: False

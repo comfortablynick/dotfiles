@@ -5,6 +5,7 @@
     - name: Combine packages
       set_fact:
         cargo_packages: "{{ cargo_packages_all + cargo_packages_dev|d([]) }}"
+
     - name: Loop through cargo packages
       debug:
         msg: |
@@ -12,3 +13,14 @@
           Binary:  {{ item.binary|d(item.name) }}
           Args:    {{ item.args|d('none') }}
       loop: "{{ cargo_packages }}"
+
+    - name: get latest release of a public repository
+      community.general.github_release:
+        user: Peltoche
+        repo: lsd
+        action: latest_release
+      register: latest
+
+    - name: Print latest release
+      debug:
+        var: latest.tag

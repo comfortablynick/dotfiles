@@ -18,7 +18,7 @@
   find:
     paths: [/etc/pacman.d]
     pattern: mirrorlist
-    age: "{{ mirrorlist_file_age }}"
+    age: "{{ pkg_pacman_mirrorlist_age }}"
     age_stamp: mtime
   register: mirrorlist_found
 
@@ -34,7 +34,7 @@
     - name: Replace mirrorlist with new file
       become: true
       copy:
-        src: "{{ new_mirrorlist_path }}"
+        src: "{{ pkg_pacman_new_mirrorlist_path }}"
         dest: /etc/pacman.d/mirrorlist
         backup: true
   when: mirrorlist_found['matched'] > 0

@@ -1,7 +1,7 @@
 ---
 # asdf defaults
-asdf_git_repo: "https://github.com/asdf-vm/asdf.git"
-asdf_version: "HEAD"
+asdf_git_repo: https://github.com/asdf-vm/asdf.git
+asdf_version: HEAD
 asdf_home: "{{ ansible_facts.user_dir }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
 asdf_bin: "{{ asdf_dir }}/bin/asdf"

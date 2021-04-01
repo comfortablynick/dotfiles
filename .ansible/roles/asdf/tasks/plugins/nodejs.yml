@@ -4,6 +4,7 @@
   template:
     src: .default-npm-packages.j2
     dest: "{{ asdf_home }}/.default-npm-packages"
+    mode: 0644
   when: asdf_npm_packages is defined
 
 - name: Check if node.js keyring exists
@@ -24,3 +25,4 @@
     creates: "{{ asdf_nodejs_keyring }}/pubring.gpg"
   environment:
     GNUPGHOME: "{{ asdf_nodejs_keyring }}"
+  changed_when: false

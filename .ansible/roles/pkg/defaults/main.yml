@@ -1,7 +1,6 @@
 ---
 # defaults file for pkg
-
-apt_default_packages:
+pkg_apt_default_packages:
   - aptitude
   - bc
   - curl
@@ -9,44 +8,19 @@ apt_default_packages:
   - unzip
   - python-setuptools
 
-pacman_default_packages:
+pkg_pacman_default_packages:
   - pacman-contrib
   - bc
   - curl
   - unzip
 
-aur_default_packages:
+pkg_aur_default_packages:
   - todotxt
 
-nodejs_default_pkgs:
-  - typescript-language-server
-  - bash-language-server
-  - clasp
-  - luafmt
-  - npm
-  - prettier
-  - tsserver
-  - yarn
+# system python3 packages
+# pkg_python_packages:
 
-pip2_default_pkgs:
-  - virtualenv
-  - pip
+pkg_pip3_path: /usr/bin/pip3
 
-pip3_default_pkgs:
-  - pip
-  - pipx
-  - ruamel.yaml
-  - rtoml
-  # pynvim for rnvimr plugin
-  - pynvim
-
-asdf_bin: "{{ ansible_facts.user_dir }}/.asdf/bin/asdf"
-asdf_shims_path: "{{ ansible_facts.user_dir }}/.asdf/shims"
-
-python2_path: /usr/bin/python2
-python3_path: "{{ asdf_shims_path }}/python3"
-pip2_path: /usr/bin/pip2
-pip3_path: "{{ asdf_shims_path }}/pip3"
-
-new_mirrorlist_path: /tmp/mirrorlist
-mirrorlist_file_age: "1w"
+pkg_pacman_new_mirrorlist_path: /tmp/mirrorlist
+pkg_pacman_mirrorlist_age: "1w"

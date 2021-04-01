@@ -19,15 +19,19 @@ asdf_python_packages_all:
   - rtoml
   - pipx
   - ruamel.yaml
+  - pynvim  # for rnvimr vim plugin
 
 asdf_npm_packages_all:
-  - neovim
+  - npm
   - yarn
+  - neovim
 
 pipx_packages_all:
   - name: neovim-remote
   - name: ranger-fm
   - name: speedtest-cli
+
+# pkg_python_packages_all:
 
 rust_toolchains_all:
   - stable

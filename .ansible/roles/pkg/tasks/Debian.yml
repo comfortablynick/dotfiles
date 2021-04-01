@@ -7,8 +7,9 @@
 #     state: present
 
 - name: Install default packages
-  become: yes
+  become: true
   apt:
-    name: "{{ apt_default_packages }}"
+    name: "{{ pkg_apt_default_packages }}"
     state: latest
-    update_cache: yes
+    update_cache: true
+  when: pkg_apt_default_packages is defined

@@ -27,7 +27,10 @@ asdf_npm_packages_dev:
   - luafmt
   - npm
 
-pipx_packages:
+rust_toolchains_dev:
+  - nightly
+
+pipx_packages_dev:
   - name: ansible --include-deps
   - name: black
   - name: cmakelang[YAML]

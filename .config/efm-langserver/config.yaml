@@ -2,6 +2,9 @@
 version: 2
 root-markers:
   - .git/
+  - .projections.json
+  - .tasks
+  - .ansible-lint
 
 tools:
   fish-shell: &fish-shell
@@ -43,14 +46,16 @@ tools:
 
   yaml-yamllint: &yaml-yamllint
     lint-command: 'yamllint -f parsable -'
+    lint-ignore-exit-code: true
     lint-stdin: true
+    lint-formats:
+      - '%f:%l:%c: [%t%*[^ ]] %m'
 
   yaml-ansible-lint: &yaml-ansible-lint
-    lint-command: 'ansible-lint -p'
+    lint-command: 'ansible-lint --nocolor -qqp ${INPUT}'
+    lint-ignore-exit-code: true
     lint-formats:
-      - '%f:%l: [E%n] %m'
-      - '%f:%l: [EANSIBLE%n] %m'
-      - '%f:%l: [ANSIBLE%n] %m'
+      - '%f:%l: %m'
 
   python-black: &python-black
     format-command: 'black --quiet -'
@@ -159,6 +164,7 @@ languages:
     - <<: *yaml-yamllint
 
   yaml.ansible:
+    - <<: *yaml-yamllint
     - <<: *yaml-ansible-lint
 
   toml:

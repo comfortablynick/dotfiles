@@ -1,42 +1,19 @@
 ---
 # main tasks file for rust
-
-- name: Include setup tasks
+- name: Rust | Include setup tasks
   include_tasks: setup.yml
 
-- name: Include tasks to clean installation
-  include_tasks: cleanup.yml
-  when: rust_install_clean
-
-- name: Install from installer
+- name: Rust | Install from installer
   include_tasks: installer.yml
   when:
-    - ((not rust_build_from_source) and
-      (rust_version_requirement not in rust_preinstall_version_r.stdout|d())) or
-      (rust_update)
+    - not rust_build_from_source
+    - not rust_stat_rustc is undefined
 
-- name: Install from source
+- name: Rust | Install from source
   include_tasks: source.yml
   when:
     - rust_build_from_source
-    - rust_version_requirement not in rust_preinstall_version_s.stdout
+    - not rust_stat_rustc.stat.exists
 
-- name: Ensure shell profiles are present
-  lineinfile:
-    dest: "{{ item[0].stat.path }}"
-    regexp: "{{ item[1].regex }}"
-    line: "{{ item[1].lineinfile }}"
-    state: present
-  with_nested:
-    - "{{ stat_shell_profiles.results }}"
-    - "{{ shell_exports }}"
-  when:
-    - shell_profiles is defined
-    - shell_exports is defined
-    - item[0].stat.exists
-
-- name: Include verification tasks
-  include_tasks: verify.yml
-
-- name: Include tasks for Cargo
+- name: Rust | Include tasks for Cargo
   include_tasks: cargo.yml

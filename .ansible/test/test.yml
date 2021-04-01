@@ -1,0 +1,14 @@
+---
+- name: Test tasks
+  hosts: all
+  tasks:
+    - name: Combine packages
+      set_fact:
+        cargo_packages: "{{ cargo_packages_all + cargo_packages_dev|d([]) }}"
+    - name: Loop through cargo packages
+      debug:
+        msg: |
+          Package: {{ item.name }}
+          Binary:  {{ item.binary|d(item.name) }}
+          Args:    {{ item.args|d('none') }}
+      loop: "{{ cargo_packages }}"

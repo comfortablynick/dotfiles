@@ -29,14 +29,16 @@ pipx_packages_all:
   - name: ranger-fm
   - name: speedtest-cli
 
+rust_toolchains_all:
+  - stable
+
 cargo_packages_all:
-  - name: cargo-update
-    binary: cargo-install-update
   - name: ripgrep
     binary: rg
   - name: fd-find
     binary: fd
   - name: exa
+    args: --git https://github.com/ogham/exa.git
   - name: lsd
   - name: sysinfo
     binary: sysinfo

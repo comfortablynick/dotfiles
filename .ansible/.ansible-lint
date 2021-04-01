@@ -1,0 +1,37 @@
+---
+# parseable: true
+# quiet: true
+# verbosity: 1
+
+# Enable checking of loop variable prefixes in roles
+# loop_var_prefix: "{role}_"
+
+# This makes linter to fully ignore rules/tags listed below
+skip_list:
+  - git-latest
+  - package-latest
+
+# Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
+# mentioned in the enable_list:
+# enable_list:
+#   - no-same-owner
+
+# Report only a subset of tags and fully ignore any others
+# tags:
+#   - var-spacing
+
+# This makes the linter display but not fail for rules/tags listed below:
+warn_list:
+  - skip_this_tag
+  - git-latest
+  - experimetal  # experimental is included in the implicit list
+  # - role-name
+
+
+# Define required Ansible's variables to satisfy syntax check
+# extra_vars:
+#   foo: bar
+#   multiline_string_variable: |
+#     line1
+#     line2
+#   complex_variable: ":{;\t$()"

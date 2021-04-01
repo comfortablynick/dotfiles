@@ -5,36 +5,7 @@
   changed_when: false
   register: rustup_bin_stat
 
-# - name: Rust | Check if rustup installed
-#   shell: which rustup
-#   register: rustup_install_location
-#   changed_when: false
-#   failed_when: false
-
-# - name: Rust | Install
-#   shell:
-#     curl https://sh.rustup.rs -sSf |
-#     sh -s -- --no-modify-path -y
-#     --default-toolchain {{ rust_default_toolchain }}
-#   args:
-#     warn: false
-#   changed_when: false
-#   when: rustup_install_location.rc != 0
-
-# - name: Rust | Set rustup location
-#   set_fact:
-#     key_value: ''
-#     rustup_bin: "{{ rustup_install_location.stdout|d(rustup_path) }}"
-
-- name: Rust | Install toolchain
-  command: "{{ rustup_bin }} toolchain install {{ item }}"
-  register: rustup_toolchain_install
-  changed_when: "'installed' in rustup_toolchain_install.stdout|d()"
-  loop: "{{ rust_toolchains }}"
-  # failed_when: rustup_bin|d()
-  when: item is defined
-
-- name: Rust | Install
+- name: Rust | Install rustup
   block:
     - name: Download rustup-init
       get_url:
@@ -50,4 +21,17 @@
       file:
         path: /tmp/rustup-init
         state: absent
-  when: not rustup_bin.stat.exists
+  when: not rustup_bin_stat.stat.exists
+
+- name: Rust | Rustup install toolchain
+  command: "{{ rustup_bin }} toolchain install {{ item }}"
+  register: rustup_toolchain_install
+  changed_when: "'installed' in rustup_toolchain_install.stdout|d()"
+  loop: "{{ rust_toolchains }}"
+  when: item is defined
+
+
+- name: Rust | Rustup update
+  command: "{{ rustup_bin }} update"
+  register: rust_rustup_update
+  changed_when: "'updated' in rust_rustup_update.stdout|d()"

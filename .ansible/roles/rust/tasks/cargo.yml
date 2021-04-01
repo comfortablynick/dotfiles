@@ -1,24 +1,23 @@
 ---
 - name: Rust | Install cargo binaries
-  command: "{{ cargo_bin }} install {{ item.name }} {{ item.args|d(omit) }}"
-  loop: "{{ cargo_items }}"
+  command: "{{ cargo_bin }} install {{ item.name }} {{ item.args|d() }}"
+  loop: "{{ cargo_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
   register: cargo_result
-  changed_when: "'Add --force to overwrite' not in cargo_result.stderr|d()"
-  failed_when: "'run the command again with --verbose' in cargo_result.stderr|d()"
+  changed_when: "'use --force to override' not in cargo_result.stderr|d()"
   when: item.name is defined
 
 - name: Rust | Verify binary installation
   stat:
     path: "{{ rust_user_dir }}/.cargo/bin/{{ item.binary|d(item.name) }}"
-  loop: "{{ cargo_items }}"
+  loop: "{{ cargo_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: item is defined
 
-- name: Rust | Check cargo-update is installed
-  stat:
-    path: "{{ rust_user_dir }}/.cargo/bin/cargo-install-update"
-  register: cargo_update
-
-- name: Rust | Update binaries
-  command: "{{ cargo_bin }} install-update -ag"
-  when: cargo_update.stat.executable
-  changed_when: "'Updated' in cargo_update.stdout|d()"
+- name: Rust | Download exa completions
+  get_url:
+    url: https://raw.githubusercontent.com/ogham/exa/master/completions/completions.fish
+    dest: "{{ ansible_facts.user_dir }}/.config/fish/completions/exa.fish"
+  when: "cargo_packages | selectattr('name', 'equalto', 'exa')"

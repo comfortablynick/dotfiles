@@ -1,7 +1,0 @@
----
-- name: Install pipx
-  hosts: all
-  roles:
-    - role: pipx
-      vars:
-        pipx_pkgs: "{{ pipx_packages_all }} + {{ pipx_packages | default([]) }}"

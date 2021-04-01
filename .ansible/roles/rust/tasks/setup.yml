@@ -1,103 +1,36 @@
 ---
 # setup tasks file for rust
+# - name: Rust | Formulate source string comparison requirements
+#   set_fact:
+#     key_value: ''
+#     rust_version_requirement: "rustc {{ rust_version }}"
+#   when:
+#     - rust_build_from_source
+#     - rust_version_requirement is undefined
 
-# Original {{{
-# - name: "Rust | Look for cURL"
-#   shell: which curl
-#   register: rust_which_curl
+# - name: Rust | Formulate installer string comparison requirements
+#   set_fact:
+#     key_value: ''
+#     rust_version_requirement: "Usage: rustc"
+#   when:
+#     - not rust_build_from_source
+#     - rust_version_requirement is not defined
+
+# - name: Rust | Looking for installer installation
+#   command: rustc
+#   register: rust_preinstall_version_r
 #   changed_when: false
 #   failed_when: false
-#
-# - name: "Rust | Look for gcc"
-#   shell: which gcc
-#   register: rust_which_gcc
+#   when: not rust_build_from_source
+
+# - name: Rust | Looking for source installation
+#   command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
+#   register: rust_preinstall_version_s
 #   changed_when: false
-#   failed_when: false
-#
-# - name: "Rust | Include OS-Specific tasks (CentOS)"
-#   include_tasks: tasks-CentOS.yml
-#   when:
-#     - ansible_distribution == "CentOS"
-#     - '"curl" not in rust_which_curl.stdout or "gcc" not in rust_which_gcc.stdout'
-#
-# - name: "Rust | Include OS-Specific tasks (Debian)"
-#   include_tasks: tasks-Debian.yml
-#   when:
-#     - ansible_os_family == "Debian"
-#     - '"curl" not in rust_which_curl.stdout or "gcc" not in rust_which_gcc.stdout'
-#
-# - name: "Rust | Include OS-Specific tasks (RedHat)"
-#   include_tasks: tasks-RedHat.yml
-#   when:
-#     - ansible_os_family == "RedHat"
-#     - ansible_distribution != "CentOS"
-#     - '"curl" not in rust_which_curl.stdout or "gcc" not in rust_which_gcc.stdout'
-#
-# - name: "Rust | Define user variable for ssh use"
-#   set_fact:
-#     rust_user: "{{ ansible_ssh_user }}"
-#   when: ansible_ssh_user is defined and rust_user is not defined
-#
-# - name: "Rust | Define user variable for non-ssh use"
-#   set_fact:
-#     rust_user: "{{ ansible_user_id }}"
-#   when: ansible_ssh_user is not defined and rust_user is not defined
-#
-# - name: "Rust | Get $HOME"
-#   shell: "echo $HOME"
-#   register: shell_home_dir
-#   changed_when: false
-#   when: rust_user_dir is not defined
-#
-# - name: "Rust | Set $HOME"
-#   set_fact:
-#     rust_user_dir: "{{ shell_home_dir.stdout }}"
-#   when: rust_user_dir is not defined
-#
-# - name: "Rust | Define shell exports"
-#   set_fact:
-#     shell_exports:
-#       - regex: 'export PATH="\$PATH:{{ rust_user_dir }}/.cargo/bin"'
-#         lineinfile: 'export PATH="$PATH:{{ rust_user_dir }}/.cargo/bin"'
-#   when: shell_exports is not defined
-# }}}
+#   when: rust_build_from_source
 
-- name: Rust | Formulate source string comparison requirements
-  set_fact:
-    key_value: ''
-    rust_version_requirement: "rustc {{ rust_version }}"
-  when:
-    - rust_build_from_source
-    - rust_version_requirement is not defined
-
-- name: Rust | Formulate installer string comparison requirements
-  set_fact:
-    key_value: ''
-    rust_version_requirement: "Usage: rustc"
-  when:
-    - not rust_build_from_source
-    - rust_version_requirement is not defined
-
-- name: Rust | Looking for installer installation
-  shell: rustc
-  register: rust_preinstall_version_r
-  changed_when: false
-  failed_when: false
-  when: not rust_build_from_source
-
-- name: Rust | Looking for source installation
-  command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
-  register: rust_preinstall_version_s
-  changed_when: false
-  when: rust_build_from_source
-
-- name: Rust | Detect configured shell profiles
+- name: Rust | Detect if rustc is installed
   stat:
-    path: "{{ rust_user_dir }}/{{ item }}"
+    path: "{{ rust_user_dir }}/.cargo/bin/rustc"
+  register: rust_stat_rustc
   changed_when: false
-  failed_when: false
-  loop: "{{ shell_profiles }}"
-  register: stat_shell_profiles
-  when:
-    - shell_profiles is defined
-    - stat_shell_profiles is not defined

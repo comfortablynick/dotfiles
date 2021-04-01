@@ -2,6 +2,7 @@
 # git download hub
 - name: Hub | Set arch string (Linux amd64)
   set_fact:
+    key_value: ''
     hub_arch: linux-amd64
   when:
     - ansible_facts['system'] == 'Linux'
@@ -9,6 +10,7 @@
 
 - name: Hub | Set arch string (Linux arm32)
   set_fact:
+    key_value: ''
     hub_arch: linux-arm
   when:
     - ansible_facts['system'] == 'Linux'
@@ -16,6 +18,7 @@
 
 - name: Hub | Set release url (Linux amd64)
   set_fact:
+    key_value: ''
     hub_release_url: https://github.com/github/hub/releases/download/v{{ hub_latest_version }}/hub-{{ hub_arch }}-{{ hub_latest_version }}.tgz
 
 - name: Hub | Create temp dl dir
@@ -24,21 +27,31 @@
     suffix: _hub
   register: hub_dl_dir
 
+- name: Hub | Set downloaded folder path
+  set_fact:
+    key_value: ''
+    hub_dl_path: "{{ hub_dl_dir.path }}/hub-{{ hub_arch }}-{{ hub_latest_version }}"
+
 - name: Hub | Get latest binary
   unarchive:
     src: "{{ hub_release_url }}"
     dest: "{{ hub_dl_dir.path }}"
     remote_src: true
+    creates: "{{ hub_dl_path }}"
 
 - name: Hub | Run install script
   command: ./install
   environment:
     PREFIX: "{{ hub_install_prefix }}"
   args:
-    chdir: "{{ hub_dl_dir.path }}/hub-{{ hub_arch }}-{{ hub_latest_version }}"
+    chdir: "{{ hub_dl_path }}"
+  register: hub_install_script
+  changed_when: hub_install_script.rc == 0
 
-- name: Hub | Remove temp dl dir
-  file:
-    path: "{{ hub_dl_dir.path }}"
-    state: absent
-  when: hub_dl_dir.path is defined
+- name: Cleanup
+  always:
+    - name: Hub | Remove temp dl dir
+      file:
+        path: "{{ hub_dl_dir.path }}"
+        state: absent
+      when: hub_dl_dir.path is defined

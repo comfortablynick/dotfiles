@@ -1,5 +1,4 @@
 ---
-
 - name: "Rust | Install dependencies"
   dnf:
     name:

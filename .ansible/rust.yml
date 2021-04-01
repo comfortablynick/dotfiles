@@ -1,8 +1,0 @@
-# vim:ft=yaml.ansible
----
-- name: Install rust
-  hosts: all
-  roles:
-    - rust
-  vars:
-    - rust_version: 1.50

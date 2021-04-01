@@ -6,18 +6,19 @@
     dest: "{{ rust_source_dir }}"
     version: "{{ rust_version }}"
     clone: true
+    force: true
+  register: rust_clone
+  changed_when: rust_clone.before != rust_clone.after
 
-- name: Rust | Build & Install
+- name: Rust | Build and Install
   command:
-    - ./x.py build
-    - ./x.py install cargo
+    - x.py build
+    - x.py install cargo
   args:
     chdir: "{{ rust_source_dir }}"
-  changed_when: false
 
 - name: Rust | Verify
   command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"
   register: installed_rust_version
   changed_when: false
   failed_when: new_rust_version not in installed_rust_version.stdout
-

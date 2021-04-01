@@ -5,11 +5,8 @@ rust_init_url: https://sh.rustup.rs
 rustup_bin: "{{ rust_user_dir }}/.cargo/bin/rustup"
 cargo_bin: "{{ rust_user_dir }}/.cargo/bin/cargo"
 
-rust_update: 2020-08-12 09:45:06 CDT
-rust_install_clean: false
-
 rust_build_from_source: false
-rust_source_dir: "{{ ansible_facts.user_dir }}/src/rust"
+rust_source_dir: "{{ rust_user_dir }}/src/rust"
 
 rust_toolchains:
   - stable

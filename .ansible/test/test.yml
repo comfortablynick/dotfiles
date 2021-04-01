@@ -14,13 +14,13 @@
           Args:    {{ item.args|d('none') }}
       loop: "{{ cargo_packages }}"
 
-    - name: get latest release of a public repository
-      community.general.github_release:
-        user: Peltoche
-        repo: lsd
-        action: latest_release
-      register: latest
-
-    - name: Print latest release
+    - name: Print facts
       debug:
-        var: latest.tag
+        var: ansible_facts
+        verbosity: 2
+
+    - name: Print arch
+      debug:
+        msg: |-
+          System: {{ ansible_facts.system }}
+          Arch:   {{ ansible_facts.architecture }}

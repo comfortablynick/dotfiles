@@ -1,0 +1,7 @@
+---
+# install tasks for lsd
+- name: Lsd | Copy binary to install dir
+  copy:
+    src: "{{ lsd_dl_path }}/lsd"
+    dest: "{{ lsd_prefix }}/bin/lsd"
+    mode: 0755

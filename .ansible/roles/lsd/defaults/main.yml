@@ -1,0 +1,4 @@
+---
+# defaults file for lsd
+lsd_home: "{{ ansible_facts.user_dir }}"
+lsd_prefix: "{{ lsd_home }}/.local"

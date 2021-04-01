@@ -31,7 +31,7 @@ pipx_packages_all:
   - name: ranger-fm
   - name: speedtest-cli
 
-# pkg_python_packages_all:
+pkg_python_packages_all: []
 
 rust_toolchains_all:
   - stable

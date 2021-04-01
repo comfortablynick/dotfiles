@@ -1,0 +1,57 @@
+---
+# download tasks for lsd
+# - name: Lsd | Download latest
+#   unarchive:
+#     remote_src: true
+#     src: "{{ item.browser_download_url }}"
+#     dest: "{{ lsd_home }}/src/{{ item.name }}"
+#     keep_newer: true
+#   loop: "{{ lsd_latest.json.assets }}"
+#   when: "'x86_64-unknown-linux-musl.tar.gz' in item.name"
+
+- name: lsd | Set arch string (Linux amd64)
+  set_fact:
+    key_value: ''
+    lsd_arch: x86_64-unknown-linux-musl
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture == 'x86_64'
+
+- name: lsd | Set arch string (Linux arm32)
+  set_fact:
+    key_value: ''
+    lsd_arch: arm-unknown-linux-gnueabihf
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture.startswith('arm')
+
+- name: lsd | Set arch string (Mac M1)
+  set_fact:
+    key_value: ''
+    lsd_arch: aarch64-unknown-linux-musl
+  when:
+    - ansible_facts.system == 'Darwin'
+    - ansible_facts.architecture == 'arm64'
+
+- name: lsd | Set release url
+  set_fact:
+    key_value: ''
+    lsd_release_url: https://github.com/Peltoche/lsd/releases/download/{{ lsd_latest_version }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}.tar.gz
+
+- name: lsd | Create temp dl dir
+  tempfile:
+    state: directory
+    suffix: _lsd
+  register: lsd_dl_dir
+
+- name: lsd | Set downloaded folder path
+  set_fact:
+    key_value: ''
+    lsd_dl_path: "{{ lsd_dl_dir.path }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}"
+
+- name: lsd | Get latest binary
+  unarchive:
+    src: "{{ lsd_release_url }}"
+    dest: "{{ lsd_dl_dir.path }}"
+    remote_src: true
+    creates: "{{ lsd_dl_path }}"

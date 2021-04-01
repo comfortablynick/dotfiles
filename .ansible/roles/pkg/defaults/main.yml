@@ -18,7 +18,7 @@ pkg_aur_default_packages:
   - todotxt
 
 # system python3 packages
-# pkg_python_packages:
+pkg_python_packages: []
 
 pkg_pip3_path: /usr/bin/pip3
 

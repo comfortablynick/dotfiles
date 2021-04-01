@@ -1,0 +1,5 @@
+---
+- name: Install lsd from github release
+  hosts: all
+  roles:
+    - lsd

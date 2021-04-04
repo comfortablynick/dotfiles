@@ -1,14 +1,9 @@
 ---
 # asdf shell tasks
-- name: Check whether fish completion dir exists
+- name: Check whether fish config dir exists
   stat:
     path: "{{ asdf_fish_config_dir }}"
   register: asdf_fish_config_dir_st
-
-- name: Check whether asdf.fish file exists
-  stat:
-    path: "{{ asdf_dir }}/completions/asdf.fish"
-  register: asdf_fish_completions_st
 
 - name: Copy fish completions
   copy:
@@ -17,4 +12,3 @@
     remote_src: true
   when:
     - asdf_fish_config_dir_st.stat.exists
-    - asdf_fish_completions_st.stat.exists

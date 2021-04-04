@@ -5,3 +5,25 @@
     src: "{{ lsd_dl_path }}/lsd"
     dest: "{{ lsd_prefix }}/bin/lsd"
     mode: 0755
+    remote_src: true
+
+- name: Lsd | Copy fish completions
+  copy:
+    src: "{{ lsd_dl_path }}/autocomplete/lsd.fish"
+    dest: "{{ lsd_home }}/.config/fish/completions/lsd.fish"
+    mode: 0644
+    remote_src: true
+
+- name: Lsd | Copy zsh completions
+  copy:
+    src: "{{ lsd_dl_path }}/autocomplete/_lsd"
+    dest: "{{ lsd_home }}/.config/zsh/completions/_lsd"
+    mode: 0644
+    remote_src: true
+
+- name: Lsd | Copy bash completions
+  copy:
+    src: "{{ lsd_dl_path }}/autocomplete/lsd.bash-completion"
+    dest: "{{ lsd_home }}/.config/bash/completions/lsd.bash"
+    mode: 0644
+    remote_src: true

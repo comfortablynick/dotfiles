@@ -1,14 +1,15 @@
 ---
 # master level playbook
-- import_playbook: asdf.yml
-- import_playbook: fish.yml
-- import_playbook: hub.yml
-- import_playbook: luals.yml
-- import_playbook: mosh.yml
-- import_playbook: nvim.yml
-- import_playbook: pipx.yml
-- import_playbook: pkg.yml
-- import_playbook: rust.yml
-- import_playbook: ssh.yml
-- import_playbook: tmux.yml
-- import_playbook: vim.yml
+- import_playbook: playbooks/asdf.yml
+- import_playbook: playbooks/fish.yml
+- import_playbook: playbooks/hub.yml
+- import_playbook: playbooks/luals.yml
+- import_playbook: playbooks/mosh.yml
+- import_playbook: playbooks/nvim.yml
+- import_playbook: playbooks/pipx.yml
+- import_playbook: playbooks/pkg.yml
+- import_playbook: playbooks/rust.yml
+- import_playbook: playbooks/ssh.yml
+- import_playbook: playbooks/tmux.yml
+- import_playbook: playbooks/vim.yml
+- import_playbook: playbooks/lsd.yml

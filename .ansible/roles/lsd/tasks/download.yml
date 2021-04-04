@@ -1,14 +1,4 @@
 ---
-# download tasks for lsd
-# - name: Lsd | Download latest
-#   unarchive:
-#     remote_src: true
-#     src: "{{ item.browser_download_url }}"
-#     dest: "{{ lsd_home }}/src/{{ item.name }}"
-#     keep_newer: true
-#   loop: "{{ lsd_latest.json.assets }}"
-#   when: "'x86_64-unknown-linux-musl.tar.gz' in item.name"
-
 - name: lsd | Set arch string (Linux amd64)
   set_fact:
     key_value: ''
@@ -24,14 +14,6 @@
   when:
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture.startswith('arm')
-
-- name: lsd | Set arch string (Mac M1)
-  set_fact:
-    key_value: ''
-    lsd_arch: aarch64-unknown-linux-musl
-  when:
-    - ansible_facts.system == 'Darwin'
-    - ansible_facts.architecture == 'arm64'
 
 - name: lsd | Set release url
   set_fact:

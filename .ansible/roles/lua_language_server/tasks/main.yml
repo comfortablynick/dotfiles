@@ -24,8 +24,8 @@
 
 - name: Show message if git does not have changes
   debug:
-    msg: No upstream changes to lua-language-server! Skipping build. Force with `force_build=true`
-  when: not git_changed and not force_build
+    msg: No upstream changes to lua-language-server! Skipping build. Force with `luals_force_build=true`
+  when: not git_changed and not luals_force_build
 
 - name: Build and install lua-language-server
   block:
@@ -38,4 +38,4 @@
       command: ./3rd/luamake/luamake rebuild
       args:
         chdir: "{{ source_dir }}"
-  when: git_changed or force_build
+  when: git_changed or luals_force_build

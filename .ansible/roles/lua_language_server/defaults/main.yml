@@ -1,4 +1,4 @@
 ---
 # defaults file for lua-language-server
-force_build: False
+luals_force_build: false
 source_dir: "{{ ansible_facts.user_dir }}/src/lua-language-server"

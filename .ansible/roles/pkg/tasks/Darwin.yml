@@ -1,0 +1,6 @@
+---
+# MacOS pkg tasks
+- name: Update hombrew and upgrade all packages
+  homebrew:
+    update_homebrew: true
+    upgrade_all: true

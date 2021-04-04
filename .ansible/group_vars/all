@@ -43,7 +43,6 @@ cargo_packages_all:
     binary: fd
   - name: exa
     args: --git https://github.com/ogham/exa.git
-  - name: lsd
   - name: sysinfo
     binary: sysinfo
     args: --git https://github.com/comfortablynick/sysinfo.git

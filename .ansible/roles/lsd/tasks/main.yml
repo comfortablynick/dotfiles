@@ -10,24 +10,23 @@
 
 - name: Lsd | Get installed version
   command: "lsd --version"
-  register: lsd_installed_version
+  register: lsd_installed
   changed_when: false
   failed_when: false
 
 - name: Lsd | Set version strings
   set_fact:
     key_value: ''
-    lsd_installed_version: "{{ lsd_installed_version.stdout.split(' ')[1] }}"
+    lsd_installed_version: "{% if lsd_installed.stdout is defined %}{{ lsd_installed.stdout.split(' ')[1] }}{% else %} none {% endif %}"
     lsd_latest_version: "{{ lsd_latest.json.tag_name }}"
     lsd_releases: "{{ lsd_latest.json.assets }}"
   changed_when: false
-  when: lsd_installed_version is defined
 
 - name: Lsd | Debug versions
   debug:
     msg: |
-      lsd installed vesion: {{ lsd_installed_version|d() }}
-      lsd latest version:   {{ lsd_latest_version|d() }}
+      lsd installed vesion: {{ lsd_installed_version }}
+      lsd latest version:   {{ lsd_latest_version }}
     verbosity: 1
 
 - name: Lsd | Include download tasks
@@ -40,4 +39,4 @@
         path: "{{ lsd_dl_dir.path }}"
         state: absent
       when: lsd_dl_dir.path is defined
-  when: lsd_latest_version|d(0) is version(lsd_installed_version|d(0), '>') or lsd_force|d(false)
+  when: lsd_installed.rc != 0 or (lsd_latest_version is version(lsd_installed_version, '>')) or lsd_force|d(false)

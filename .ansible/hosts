@@ -3,7 +3,6 @@
 jupiter
 titan
 mars
-io
 pollux
 
 [local]
@@ -16,5 +15,10 @@ mars
 [www]
 mars
 
-[wsl]
-io
+[linux]
+jupiter
+titan
+mars
+
+[macos]
+pollux

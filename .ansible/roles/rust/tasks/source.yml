@@ -12,10 +12,13 @@
 
 - name: Rust | Build and Install
   command:
+    cmd: "{{ item }}"
+    chdir: "{{ rust_source_dir }}"
+  loop:
     - x.py build
     - x.py install cargo
-  args:
-    chdir: "{{ rust_source_dir }}"
+  when: rust_clone.before != rust_clone.after
+  changed_when: true
 
 - name: Rust | Verify
   command: "{{ rust_user_dir }}/.cargo/bin/rustc --version"

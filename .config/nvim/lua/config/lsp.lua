@@ -243,7 +243,7 @@ function M.init()
   local local_configs = {
     bashls = true,
     cmake = false,
-    ccls = false,
+    ccls = true,
     diagnosticls = false,
     efm = true,
     gopls = true,

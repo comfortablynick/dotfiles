@@ -105,5 +105,5 @@ total-size: false
 
 # == Symlink arrow ==
 # Specifies how the symlink arrow display, chars in both ascii and utf8
-# Default: ⇒
-symlink-arrow: ->
+# Default: ⇒ ->
+symlink-arrow: ⇒

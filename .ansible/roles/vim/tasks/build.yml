@@ -13,13 +13,15 @@
     repo: https://github.com/vim/vim
     dest: "{{ vim_source_dir }}"
     depth: "1"
-    force: yes
+    force: true
   register: vim_git_clone
 
-- name: Show message if git does not have changes
+- name: Show commit hashes before/after pull
   debug:
-    msg: No upstream vim changes! Skipping build.
-  when: not vim_git_clone.changed
+    msg: |
+      Before  {{ vim_git_clone.before }}
+      After   {{ vim_git_clone.after }}
+    verbosity: 1
 
 - name: Build and install vim
   command: "{{ item }}"
@@ -42,4 +44,4 @@
           --enable-luainterp
     - make -j{{ make_concurrency }}
     - make install
-  when: vim_git_clone.changed or vim_force_build
+  when: (vim_git_clone.before != vim_git_clone.after) or vim_force_build

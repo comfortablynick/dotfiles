@@ -111,6 +111,7 @@ if !exists(':AsyncTask')
 endif
 call map#cabbr('ta', 'AsyncTask')
 nnoremap <Leader>r <Cmd>AsyncTask file-run<CR>
+nnoremap <Leader>b <Cmd>AsyncTask file-build<CR>
 
 " Git {{{1
 " GV :: git commit viewer {{{2

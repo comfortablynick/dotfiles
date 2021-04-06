@@ -1,15 +1,11 @@
 ---
-# debian hosts
-# - name: Add default repositories
-#   become: yes
-#   apt_repository:
-#     repo: ppa:neovim-ppa/unstable
-#     state: present
-
+# tasks for debian hosts
 - name: Install default packages
   become: true
   apt:
-    name: "{{ pkg_apt_default_packages }}"
+    name: "{{ pkg_apt_packages }}"
     state: latest
     update_cache: true
-  when: pkg_apt_default_packages is defined
+  when:
+    - pkg_apt_packages is defined
+    - pkg_apt_packages|length

@@ -1,5 +1,5 @@
 ---
-# arch hosts
+# tasks for arch hosts
 - name: Create aur module user
   block:
     - name: Create user aur_builder
@@ -10,11 +10,12 @@
       lineinfile:
         path: /etc/sudoers.d/11-install-aur_builder
         line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+        mode: 0644
         create: true
         validate: 'visudo -cf %s'
   become: true
 
-- name: Find out age of mirrorlist
+- name: Find out of date mirrorlist
   find:
     paths: [/etc/pacman.d]
     pattern: mirrorlist
@@ -29,15 +30,36 @@
       pacman:
         name: reflector
         state: present
-    - name: Run reflector
-      command: /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ new_mirrorlist_path }}
-    - name: Replace mirrorlist with new file
-      become: true
-      copy:
-        src: "{{ pkg_pacman_new_mirrorlist_path }}"
-        dest: /etc/pacman.d/mirrorlist
-        backup: true
-  when: mirrorlist_found['matched'] > 0
+    - name: Create temp file for new mirrorlist
+      tempfile:
+        state: file
+        suffix: pkg_mirrorlist
+      register: mirrorlist_temp
+    - name: Replace mirrorlist
+      block:
+        - name: Run reflector
+          command:
+            /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ mirrorlist_temp.path }}
+        - name: Backup mirrorlist
+          become: true
+          copy:
+            src: /etc/pacman.d/mirrorlist
+            dest: /etc/pacman.d/mirrorlist.bak
+            mode: 0644
+            force: true
+        - name: Replace mirrorlist with new file
+          become: true
+          copy:
+            src: "{{ mirrorlist_temp.path }}"
+            dest: /etc/pacman.d/mirrorlist
+            mode: 0644
+      always:
+        - name: Cleanup temp mirrorlist
+          file:
+            path: "{{ mirrorlist_temp.path }}"
+            state: absent
+      when: mirrorlist_temp is defined
+  when: mirrorlist_found['matched'] or pkg_force_update_mirrorlist|d(false)
 
 - name: Upgrade pacman packages
   become: true
@@ -46,9 +68,15 @@
     upgrade: true
   register: pacout
 
-- name: Update aur packages
+# - name: Update aur packages
+#   become: true
+#   become_user: aur_builder
+#   command: yay -Syu --noconfirm
+#   register: yayout
+#   changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'
+- name: Upgrade aur packages
   become: true
   become_user: aur_builder
-  command: yay -Syu --noconfirm
-  register: yayout
-  changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'
+  yay:
+    update_cache: true
+    upgrade: true

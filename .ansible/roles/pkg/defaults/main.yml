@@ -1,26 +1,14 @@
 ---
 # defaults file for pkg
-pkg_apt_default_packages:
-  - aptitude
-  - bc
-  - curl
-  - todotxt-cli
-  - unzip
-  - python-setuptools
+pkg_apt_packages: []
 
-pkg_pacman_default_packages:
-  - pacman-contrib
-  - bc
-  - curl
-  - unzip
+pkg_pacman_packages: []
 
-pkg_aur_default_packages:
-  - todotxt
+pkg_aur_packages: []
 
 # system python3 packages
 pkg_python_packages: []
 
 pkg_pip3_path: /usr/bin/pip3
 
-pkg_pacman_new_mirrorlist_path: /tmp/mirrorlist
 pkg_pacman_mirrorlist_age: "1w"

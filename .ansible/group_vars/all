@@ -1,5 +1,25 @@
 ---
 # all group vars
+
+pkg_apt_packages_all:
+  - aptitude
+  - bc
+  - curl
+  - todotxt-cli
+  - unzip
+  - python-setuptools
+
+pkg_pacman_packages_all:
+  - pacman-contrib
+  - bc
+  - curl
+  - unzip
+
+pkg_aur_packages_all:
+  - todotxt
+
+pkg_python_packages_all: []
+
 asdf_home: "{{ ansible_facts.user_dir }}"
 asdf_dir: "{{ asdf_home }}/.asdf"
 
@@ -30,8 +50,6 @@ pipx_packages_all:
   - name: neovim-remote
   - name: ranger-fm
   - name: speedtest-cli
-
-pkg_python_packages_all: []
 
 rust_toolchains_all:
   - stable

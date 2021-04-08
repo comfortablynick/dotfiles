@@ -1,7 +1,6 @@
 " vint: -ProhibitAutocmdWithNoGroup
 
-autocmd BufRead,BufNewFile .prettierrc,.yamllint,.ansible-lint setfiletype yaml
-" autocmd BufRead,BufNewFile */{tasks,roles,handlers}/*.{yaml,yml} call s:yaml_ansible()
+autocmd BufRead,BufNewFile .clang-format,.prettierrc,.yamllint,.ansible-lint setfiletype yaml
 autocmd BufNewFile,BufRead *.yml,*.yaml,*/{group,host}_vars/* if s:is_ansible() | set ft=yaml.ansible | endif
 
 

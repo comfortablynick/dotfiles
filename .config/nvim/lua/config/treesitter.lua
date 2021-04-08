@@ -2,7 +2,16 @@ local tsconfigs = nvim.packrequire("nvim-treesitter", "nvim-treesitter.configs")
 if not tsconfigs then return end
 
 tsconfigs.setup{
-  ensure_installed = {"lua", "go", "rust", "bash", "yaml", "toml", "python"},
+  ensure_installed = {
+    "lua",
+    "go",
+    "rust",
+    "bash",
+    "yaml",
+    "toml",
+    "python",
+    "c",
+  },
   highlight = {
     enable = true,
     -- disable = { "c", "rust" },

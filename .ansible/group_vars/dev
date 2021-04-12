@@ -58,6 +58,5 @@ pipx_packages_dev:
 
 cargo_packages_dev:
   - name: just
-  - name: zoxide
   - name: fastmod
   - name: ttdl

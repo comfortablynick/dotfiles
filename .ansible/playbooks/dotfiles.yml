@@ -1,0 +1,5 @@
+---
+- name: Clone or update dotfiles
+  hosts: all
+  roles:
+    - dotfiles

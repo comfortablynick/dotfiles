@@ -1,0 +1,34 @@
+---
+# tasks file for zoxide
+- name: Zoxide | Get latest release
+  uri:
+    url: https://api.github.com/repos/ajeetdsouza/zoxide/releases/latest
+    return_content: true
+  run_once: false
+  register: zoxide_latest
+  changed_when: false
+
+- name: Zoxide | Get installed version
+  command: "zoxide --version"
+  register: zoxide_installed
+  changed_when: false
+  failed_when: false
+
+- name: Zoxide | Set version strings
+  set_fact:
+    key_value: ''
+    zoxide_installed_version: "{% if zoxide_installed.stdout is defined %}{{ zoxide_installed.stdout.split(' ')[1] }}{% else %} none {% endif %}"
+    zoxide_latest_version: "{{ zoxide_latest.json.tag_name }}"
+    zoxide_releases: "{{ zoxide_latest.json.assets }}"
+  changed_when: false
+
+- name: Zoxide | Debug versions
+  debug:
+    msg: |
+      zoxide installed vesion: {{ zoxide_installed_version }}
+      zoxide latest version:   {{ zoxide_latest_version }}
+    verbosity: 1
+
+- name: Zoxide | Install from github release
+  include_tasks: download.yml
+  when: zoxide_installed.rc != 0 or (zoxide_latest_version is version(zoxide_installed_version, '>')) or zoxide_force|d(false)

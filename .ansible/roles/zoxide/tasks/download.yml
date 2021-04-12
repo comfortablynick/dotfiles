@@ -1,0 +1,27 @@
+---
+- name: Zoxide | Set arch string (Linux amd64)
+  set_fact:
+    key_value: ''
+    zoxide_arch: x86_64-unknown-linux-musl
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture == 'x86_64'
+
+- name: Zoxide | Set arch string (Linux arm32)
+  set_fact:
+    key_value: ''
+    zoxide_arch: armv7-unknown-linux-gnueabihf
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture.startswith('arm')
+
+- name: Zoxide | Set release url
+  set_fact:
+    key_value: ''
+    zoxide_release_url: https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_arch }}
+
+- name: Zoxide | Get latest binary
+  get_url:
+    url: "{{ zoxide_release_url }}"
+    dest: "{{ zoxide_prefix }}/bin/zoxide"
+    mode: 0755

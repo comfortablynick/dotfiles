@@ -1,0 +1,13 @@
+---
+# tasks file for dotfiles
+# TODO: add logic for cloning initally
+#  - clone to separate dir
+#  - move .git dir to $HOME
+- name: Dotfiles | Clone/update dotfiles repo
+  git:
+    repo: https://github.com/comfortablynick/dotfiles.git
+    dest: "{{ dotfiles_dir }}"
+    update: true
+    force: false
+    recursive: false
+    version: HEAD

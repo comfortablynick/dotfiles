@@ -1,0 +1,4 @@
+---
+# defaults file for dotfiles
+dotfiles_home: "{{ ansible_facts.user_dir }}"
+dotfiles_dir: "{{ dotfiles_home }}"

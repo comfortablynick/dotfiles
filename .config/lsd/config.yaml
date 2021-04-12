@@ -52,8 +52,9 @@ icons:
 
 # == Ignore Globs ==
 # A list of globs to ignore when listing.
-# ignore-globs:
-#   - .git
+ignore-globs:
+  - .git
+  - __mypy_cache__/
 
 # == Indicators ==
 # Whether to add indicator characters to certain listed files.

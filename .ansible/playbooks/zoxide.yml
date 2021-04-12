@@ -1,0 +1,5 @@
+---
+- name: Install zoxide from github release
+  hosts: linux
+  roles:
+    - zoxide

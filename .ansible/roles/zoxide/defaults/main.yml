@@ -1,0 +1,4 @@
+---
+# defaults file for zoxide
+zoxide_home: "{{ ansible_facts.user_dir }}"
+zoxide_prefix: "{{ zoxide_home }}/.local"

@@ -97,6 +97,7 @@ vifminfo*
 /package.json
 /package-lock.json
 /.python_history
+/.sudo_as_admin_successful
 /.tig_history
 /.todoist.*.json
 /.tool-versions

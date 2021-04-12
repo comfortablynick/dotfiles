@@ -25,14 +25,13 @@
   args:
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
     chdir: "{{ asdf_home }}"
-  environment: "{{ item.0.environment|d(omit) }}"
+  environment: "{{ item.0.environment|d({}) }}"
   loop: "{{ asdf_plugins|subelements('versions', {'skip_missing': True}) }}"
 
 # TODO: debug this when changing version next time
 # Consider using `asdf which` and build dict of versions
 - name: Get current asdf package versions
   shell: >-
-    set -o pipefail
     asdf current {{ item.name }} |
     grep -o '{{ item.global| d(item.versions[0]) }}'
   args:

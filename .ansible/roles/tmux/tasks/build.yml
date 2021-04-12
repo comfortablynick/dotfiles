@@ -14,6 +14,7 @@
       Before:      {{ tmux_git_clone.before }}
       After:       {{ tmux_git_clone.after }}
       Force build: {{ tmux_force_build }}
+    verbosity: 1
 
 - name: Build tmux and deps from source if changes
   block:
@@ -31,7 +32,8 @@
       block:
         - name: Download libevent
           unarchive:
-            src: https://github.com/libevent/libevent/releases/download/release-{{ tmux_libevent_version }}-stable/libevent-{{ tmux_libevent_version }}-stable.tar.gz
+            src: "https://github.com/libevent/libevent/releases/download/release-{{ tmux_libevent_version }}\
+            -stable/libevent-{{ tmux_libevent_version }}-stable.tar.gz"
             dest: "{{ tmux_source_dir }}"
             remote_src: true
 
@@ -65,8 +67,8 @@
       when: tmux_ncurses_stat.stat.isdir is not defined
 
     - name: Build and install tmux
-      command: "{{ item }}"
-      args:
+      command:
+        cmd: "{{ item }}"
         chdir: "{{ tmux_source_dir }}"
       loop:
         - sh autogen.sh

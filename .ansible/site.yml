@@ -1,5 +1,6 @@
 ---
 # master level playbook
+- import_playbook: playbooks/pkg.yml
 - import_playbook: playbooks/asdf.yml
 - import_playbook: playbooks/fish.yml
 - import_playbook: playbooks/hub.yml
@@ -7,7 +8,6 @@
 - import_playbook: playbooks/mosh.yml
 - import_playbook: playbooks/nvim.yml
 - import_playbook: playbooks/pipx.yml
-- import_playbook: playbooks/pkg.yml
 - import_playbook: playbooks/rust.yml
 - import_playbook: playbooks/ssh.yml
 - import_playbook: playbooks/tmux.yml

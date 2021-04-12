@@ -69,8 +69,6 @@
   register: pacout
 
 - name: Update aur packages
-  # become: true
-  # become_user: aur_builder
   command: yay -Su --aur --devel --noconfirm
   register: yayout
   changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'

@@ -1,8 +1,6 @@
 ---
 # neovim
 - name: Install neovim from aur
-  aur:
-    name:
-      - neovim-git
-  become: true
-  become_user: aur_builder
+  yay:
+    name: neovim-nightly-bin
+    state: latest

@@ -12,9 +12,3 @@
         msg: |-
           System: {{ ansible_facts.system }}
           Arch:   {{ ansible_facts.architecture }}
-    - name: Upgrade aur packages
-      become: true
-      become_user: aur_builder
-      yay:
-        update_cache: true
-        upgrade: true

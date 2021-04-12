@@ -1,5 +1,6 @@
-neovim
+npm
 yarn
+neovim
 bash-language-server
 markdownlint-cli
 pyright
@@ -9,4 +10,4 @@ vscode-json-languageserver
 yaml-language-server
 clasp
 luafmt
-npm
+prettier

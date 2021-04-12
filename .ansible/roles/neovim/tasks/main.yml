@@ -3,18 +3,3 @@
 
 - name: Install neovim
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
-
-- block:
-  - name: Install python3 neovim plugin
-    pip:
-      name: pynvim
-      state: latest
-      virtualenv: "{{ nvim_venv_dir }}/{{ nvim_py3_venv_name }}"
-      virtualenv_command: "{{ asdf_dir }}/shims/python3 -m venv"
-  - name: Install python2 neovim plugin
-    pip:
-      name: pynvim
-      state: latest
-      virtualenv: "{{ nvim_venv_dir }}/{{ nvim_py2_venv_name }}"
-      virtualenv_command: "{{ asdf_dir }}/shims/virtualenv"
-      virtualenv_python: "{{ asdf_dir }}/shims/python2"

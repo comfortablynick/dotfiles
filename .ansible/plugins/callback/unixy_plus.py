@@ -1,6 +1,8 @@
+# Copyright: (c) 2021, Nick Murphy <comfortablynick@gmail.com>
 # Copyright: (c) 2017, Allyson Bowles <@akatch>
 # Copyright: (c) 2012-2014, Michael DeHaan <michael.dehaan@gmail.com>
 # GNU General Public License v3.0+
+# type: ignore
 
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
@@ -10,15 +12,16 @@ from ansible import constants as C
 from ansible import context
 from ansible.module_utils._text import to_text
 from ansible.utils.color import colorize, hostcolor
-from ansible.plugins.callback.default import CallbackModule as CallbackModule_default
+# from ansible.plugins.callback.default import CallbackModule as CallbackBase
+from ansible.plugins.callback import CallbackBase
 
 
 __metaclass__ = type
 
 DOCUMENTATION = """
-    name: unixy
+    name: unixy_plus
     type: stdout
-    author: Allyson Bowles (@akatch)
+    author: Nick Murphy <comfortablynick@gmail.com>
     short_description: condensed Ansible output
     description:
       - Consolidated Ansible output in the style of LINUX/UNIX startup logs.
@@ -28,7 +31,8 @@ DOCUMENTATION = """
       - set as stdout in configuration
 """
 
-class CallbackModule(CallbackModule_default):
+
+class CallbackModule(CallbackBase):
 
     """
     Design goals:
@@ -47,6 +51,9 @@ class CallbackModule(CallbackModule_default):
     CALLBACK_VERSION = 2.0
     CALLBACK_TYPE = "stdout"
     CALLBACK_NAME = "community.general.unixy"
+    display_failed_stderr = True
+    display_skipped_hosts = True
+    display_ok_hosts = True
 
     def _run_is_verbose(self, result):
         return (

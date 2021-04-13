@@ -1,9 +1,6 @@
 ---
 # defaults file for neovim
 
-# The specific package name used to install neovim
-neovim_name: neovim
-
 # Debian
 Debian_neovim_ppa: ppa:neovim-ppa/unstable
 Debian_python_required_packages:
@@ -27,16 +24,9 @@ Debian_neovim_required_packages:
     - libuv1-dev
     - lua-luv-dev
 
-# Whether or not to install or remove neovim
-# choices: [ present, absent, latest ]
-install_state: latest
-
-# Whether or not to configure or remove configuration
-# choices: [ present, absent ]
-configure_state: present
-
 # Build from source
-neovim_source_dir: "{{ ansible_facts.user_dir }}/src/neovim"
+neovim_home: "{{ ansible_facts.user_dir }}"
+neovim_source_dir: "{{ neovim_home }}/src/neovim"
 neovim_cmake_build_type: Release
-neovim_install_prefix: "{{ ansible_facts.user_dir }}/.local"
+neovim_install_prefix: "{{ neovim_home }}/.local"
 neovim_force_build: false

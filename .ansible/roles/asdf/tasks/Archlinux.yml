@@ -1,8 +1,8 @@
 ---
 # asdf
 - name: Install development packages for building asdf/python
-  become: yes
   pacman:
-    update_cache: yes
     name: "{{ asdf_arch_packages }}"
     state: present
+    update_cache: true
+  become: true

@@ -1,1 +1,1 @@
-colorscheme PaperColor
+colorscheme gruvbox8

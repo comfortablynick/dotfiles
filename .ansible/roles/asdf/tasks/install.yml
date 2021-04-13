@@ -1,8 +1,8 @@
 ---
 # tasks for asdf
 
-- name: Install platform-specific dependencies # same as pyenv
-  include_tasks: "{{ ansible_facts['os_family'] }}.yml"
+- name: Install platform-specific dependencies
+  include_tasks: "{{ ansible_facts.os_family }}.yml"
 
 - name: Clone asdf repository
   git:

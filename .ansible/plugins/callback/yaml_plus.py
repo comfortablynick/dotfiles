@@ -76,7 +76,7 @@ class CallbackModule(Default):
 
     CALLBACK_VERSION = 2.0
     CALLBACK_TYPE = "stdout"
-    CALLBACK_NAME = "community.general.yaml"
+    CALLBACK_NAME = "yaml_plus"
 
     def __init__(self):
         super(CallbackModule, self).__init__()
@@ -128,10 +128,12 @@ class CallbackModule(Default):
 
         # if we already have stdout, we don't need stdout_lines
         if "stdout" in abridged_result and "stdout_lines" in abridged_result:
+            # abridged_result["stdout_lines"] = "<omitted>"
             del abridged_result["stdout_lines"]
 
         # if we already have stderr, we don't need stderr_lines
         if "stderr" in abridged_result and "stderr_lines" in abridged_result:
+            # abridged_result["stderr_lines"] = "<omitted>"
             del abridged_result["stderr_lines"]
 
         if abridged_result:

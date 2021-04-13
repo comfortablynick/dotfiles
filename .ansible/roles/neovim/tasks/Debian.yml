@@ -3,8 +3,8 @@
 - name: Install neovim python dependencies
   apt:
     name: "{{ Debian_python_required_packages }}"
-    state: "{{ install_state }}"
-  become: yes
+    state: present
+  become: true
 
 # Install neovim from ppa
 - name: Install from ppa
@@ -15,9 +15,9 @@
         state: present
     - name: Install neovim from ppa
       apt:
-        name: "{{ neovim_name }}"
-        state: "{{ install_state }}"
-  become: yes
+        name: neovim
+        state: latest
+  become: true
   when: not ansible_facts['architecture'].startswith('arm')
 
 - name: Install from source

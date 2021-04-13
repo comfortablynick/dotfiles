@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # Load man page in (n)vim if it exists
-man -f "$@" >/dev/null 2>&1 && $EDITOR -R +":set ft=man" <(man "$@")
+man -f "$@" &>/dev/null && $EDITOR -R +":set ft=man" <(man "$@")

@@ -17,11 +17,11 @@
         state: present
       when: ansible_facts['os_family'] == 'Debian'
     - name: Build and install neovim
-      command: "{{ item }}"
-      args:
+      command:
+        cmd: "{{ item }}"
         chdir: "{{ neovim_source_dir }}"
       loop:
         - make distclean
         - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
         - make CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
-  when: source_repo.before != source_repo.after or neovim_force_build
+  when: (source_repo.before != source_repo.after) or neovim_force_build

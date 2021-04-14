@@ -39,7 +39,7 @@ function plugins#init() abort
     Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
     Plug 'dense-analysis/ale'
     Plug 'sbdchd/neoformat'
-    Plug 'psf/black',                  {'branch': 'stable'}
+    Plug 'psf/black'
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
     Plug 'michaelb/sniprun',           {'do': './install.sh'}
@@ -119,6 +119,7 @@ function plugins#init() abort
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
     Plug 'norcalli/snippets.nvim'
+    Plug 'L3MON4D3/LuaSnip'
 
     " Language server/completion {{{2
     Plug 'neovim/nvim-lspconfig'

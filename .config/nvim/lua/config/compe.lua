@@ -75,7 +75,8 @@ local init = function()
   if compe == nil or
     vim.tbl_contains(complete_exclude_fts, vim.bo[bufnr].filetype) then return end
 
-  require"config.snippets"
+  -- require"config.snippets"
+  require"config.snips"
 
   compe.setup({
     enabled = true,
@@ -88,14 +89,19 @@ local init = function()
     allow_prefix_unmatch = false,
     documentation = true,
     source = {
+      calc = true,
       path = true,
       buffer = {menu = labels.Buffer},
       spell = true,
-      ultisnips = {menu = labels.UltiSnips},
-      snippets_nvim = {menu = labels["snippets.nvim"]},
       nvim_lsp = true,
       nvim_lua = true,
-      treesitter = {menu = labels.Treesitter},
+      tags = false,
+      treesitter = false, -- {menu = labels.Treesitter},
+      -- snippets
+      luasnip = true,
+      vsnip = false,
+      ultisnips = false, -- {menu = labels.UltiSnips},
+      snippets_nvim = false, -- {menu = labels["snippets.nvim"]},
     },
   }, bufnr)
 

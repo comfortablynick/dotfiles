@@ -226,62 +226,68 @@ endif
 let g:tmux_resizer_resize_count = get(g:, 'tmux_resizer_resize_count', 5)
 let g:tmux_resizer_vertical_resize_count = get(g:, 'tmux_resizer_vertical_resize_count', 10)
 
-function s:VimResize(direction) "{{{2
-  " Prevent resizing Vim upward when there is only a single window
-  if a:direction ==# 'j' && winnr('$') <= 1
-    return
-  endif
+let s:tmux_socket = split($TMUX, ',')[0]
 
-  " Prevent resizing Vim upward when down is pressed with all vsplit windows
-  if a:direction ==# 'k'
-    let l:all_windows_are_vsplit = 1
-    for l:window in range(1, winnr('$'))
-      if win_screenpos(l:window)[0] != 1
-        let l:all_windows_are_vsplit = 0
-      endif
-    endfor
-    if l:all_windows_are_vsplit
-      return
+function s:TmuxCommand(args)
+    let l:cmd = printf('tmux -S %s %s', s:tmux_socket, a:args)
+    return system(l:cmd)
+endfunction
+
+function window#vim_resize(direction) "{{{2
+    " Prevent resizing Vim upward when there is only a single window
+    let l:layout = winlayout()
+    " TODO: parsing `winlayout()` should be the best way
+    if a:direction ==# 'j' && l:layout[0] ==# 'leaf'
+        return
     endif
-  endif
 
-  " Resize Vim window toward given direction, like tmux
-  let l:current_window_is_last_window = winnr() == winnr('$')
-  if a:direction ==# 'h' || a:direction ==# 'k'
-    let l:modifier = l:current_window_is_last_window ? '+' : '-'
-  else
-    let l:modifier = l:current_window_is_last_window ? '-' : '+'
-  endif
+    " Prevent resizing Vim upward when down is pressed with all vsplit windows
+    if a:direction ==# 'k'
+        let l:all_windows_are_vsplit = v:true
+        for l:window in range(1, winnr('$'))
+            if win_screenpos(l:window)[0] != 1  " TODO: can be 2 if tabline
+                let l:all_windows_are_vsplit = v:false
+            endif
+        endfor
+        if l:all_windows_are_vsplit
+            return
+        endif
+    endif
 
-  if a:direction ==# 'h' || a:direction ==# 'l'
-    let l:command = 'vertical resize'
-    let l:window_resize_count = g:tmux_resizer_vertical_resize_count
-  else
-    let l:command = 'resize'
-    let l:window_resize_count = g:tmux_resizer_resize_count
-  endif
+    " Resize Vim window toward given direction, like tmux
+    let l:current_window_is_last_window = winnr() == winnr('$')
+    if a:direction ==# 'h' || a:direction ==# 'k'
+        let l:modifier = l:current_window_is_last_window ? '+' : '-'
+    else
+        let l:modifier = l:current_window_is_last_window ? '-' : '+'
+    endif
 
-  execute l:command l:modifier..l:window_resize_count
+    if a:direction ==# 'h' || a:direction ==# 'l'
+        let l:command = 'vertical resize'
+        let l:window_resize_count = g:tmux_resizer_vertical_resize_count
+    else
+        let l:command = 'resize'
+        let l:window_resize_count = g:tmux_resizer_resize_count
+    endif
+
+    execute l:command l:modifier..l:window_resize_count
 endfunction
 
 function window#tmux_aware_resize(direction) "{{{2
-  let l:previous_window_width = winwidth(0)
-  let l:previous_window_height = winheight(0)
+    let l:previous_window_width = winwidth(0)
+    let l:previous_window_height = winheight(0)
 
-  " Attempt to resize Vim window
-  call s:VimResize(a:direction)
+    " Attempt to resize Vim window
+    call window#vim_resize(a:direction)
 
-  let l:tmux = split($TMUX, ',')
-  " Call tmux if in session and vim window dimentions did not change
-  if l:previous_window_height == winheight(0) && l:previous_window_width == winwidth(0) && len(l:tmux)
-    if a:direction ==# 'h' || a:direction ==# 'l'
-      let l:resize_count = g:tmux_resizer_vertical_resize_count
-    else
-      let l:resize_count = g:tmux_resizer_resize_count
+    " Call tmux if in session and vim window dimentions did not change
+    if l:previous_window_height == winheight(0) && l:previous_window_width == winwidth(0)
+        if a:direction ==# 'h' || a:direction ==# 'l'
+            let l:resize_count = g:tmux_resizer_vertical_resize_count
+        else
+            let l:resize_count = g:tmux_resizer_resize_count
+        endif
+        let l:args = 'resize-pane -'..tr(a:direction, 'hjkl', 'LDUR')..' '..l:resize_count
+        call s:TmuxCommand(l:args)
     endif
-    let l:args = 'resize-pane -'..tr(a:direction, 'hjkl', 'LDUR')..' '..l:resize_count
-    let l:tmux_socket = split($TMUX, ',')[0]
-    let l:tmux_cmd = printf('tmux -S %s %s', l:tmux_socket, l:args)
-    call system(l:tmux_cmd)
-  endif
 endfunction

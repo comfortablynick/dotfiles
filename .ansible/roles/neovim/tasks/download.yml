@@ -1,0 +1,77 @@
+---
+- name: nvim | Get current version
+  command: nvim --version
+  register: neovim_current
+  changed_when: false
+
+- name: nvim | Query latest nightly
+  uri:
+    url: https://api.github.com/repos/neovim/neovim/releases/tags/nightly
+    return_content: true
+  run_once: false
+  register: neovim_latest
+  changed_when: false
+
+- name: nvim | Set version strings
+  set_fact:
+    key_value: ''
+    neovim_current_version: "{{ neovim_current.stdout_lines[0] | d() }}"
+    neovim_nightly_version: "{{ neovim_latest.json.name }}"
+    neovim_nightly_url: "{{ neovim_latest.json | json_query(query) | first }}"
+  vars:
+    query: "assets[?name=='nvim-linux64.tar.gz'].browser_download_url"
+
+- name: nvim | Print version strings
+  debug:
+    msg: |-
+      Current:   {{ neovim_current_version }}
+      Available: {{ neovim_nightly_version }}
+      URL:       {{ neovim_nightly_url }}
+    verbosity: 1
+
+- name: nvim | Download and install nightly
+  block:
+    - name: nvim | Create temp dl dir
+      tempfile:
+        state: directory
+        suffix: _nvim
+      register: nvim_dl_path
+
+    - name: nvim | Unzip download
+      unarchive:
+        src: https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+        dest: "{{ nvim_dl_path.path }}"
+        remote_src: true
+
+    - name: nvim | Set src path
+      set_fact:
+        key_value: ''
+        nvim_src_path: "{{ nvim_dl_path.path }}/nvim-linux64"
+
+    # install tasks for nvim
+    - name: nvim | Copy binary
+      copy:
+        src: "{{ nvim_src_path }}/bin/nvim"
+        dest: "{{ neovim_install_prefix }}/bin/nvim"
+        mode: 0755
+        remote_src: true
+
+    - name: nvim | Copy lib dir
+      copy:
+        src: "{{ nvim_src_path }}/lib/"
+        dest: "{{ neovim_install_prefix }}/lib"
+        mode: 0755
+        remote_src: true
+
+    - name: nvim | Copy share dir
+      copy:
+        src: "{{ nvim_src_path }}/share/"
+        dest: "{{ neovim_install_prefix }}/share"
+        mode: 0755
+        remote_src: true
+  always:
+    - name: nvim | Cleanup temp files
+      file:
+        path: "{{ nvim_dl_path.path }}"
+        state: absent
+  when: neovim_nightly_version != neovim_current_version

@@ -3,5 +3,11 @@
 - name: Install neovim
   include_tasks: "{{ ansible_facts.os_family }}.yml"
 
+- name: Download nightly bin from github
+  include_tasks: download.yml
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture == 'x86_64'
+
 - name: Update plugins
   include_tasks: plugins.yml

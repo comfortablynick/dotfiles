@@ -21,6 +21,7 @@ let g:vim_exists = executable('vim')
 if has('nvim')
     " Neovim Only
     set inccommand=split                                        " Live substitution
+    set undodir=~/.cache/nvim/undo//
     let g:python_host_prog = $NVIM_PY2_DIR 
     let g:python3_host_prog = $NVIM_PY3_DIR
     let &shadafile =
@@ -30,6 +31,7 @@ else
     " Vim Only
     set wildmenu
     set pyxversion=3
+    set undodir=~/.vim/undo//
     let g:python3_host_prog = 'python3'
 
     " Cursor shape (set to match Neovim default)
@@ -56,7 +58,6 @@ set autoread                                                    " Detect when a 
 set backup
 set undofile
 set backupdir=~/.vim/backup//
-set undodir=~/.vim/undo//
 
 let s:dirs = [&backupdir, &undodir]
 for s:dir in s:dirs

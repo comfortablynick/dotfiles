@@ -9,7 +9,6 @@
           Output from lookup('env', 'HOME') = {{ lookup('env', 'HOME') }}
           Output from ansible_facts['env']['HOME'] = {{ ansible_facts['env']['HOME'] }}
           Output from ansible_facts.user_dir = {{ ansible_facts.user_dir }}
-          Output from ansible_env.HOME = {{ ansible_env.HOME }}
     - name: Print ansible_facts
       debug:
         var: ansible_facts
@@ -18,7 +17,7 @@
 
 - name: Set vars
   hosts: all
-  vars: 
+  vars:
     path:
       - $HOME/bin
       - $HOME/.local/bin

@@ -9,7 +9,7 @@
   changed_when: false
 
 - name: Zoxide | Get installed version
-  command: "zoxide --version"
+  command: zoxide --version
   register: zoxide_installed
   changed_when: false
   failed_when: false

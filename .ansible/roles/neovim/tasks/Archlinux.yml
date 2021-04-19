@@ -1,6 +1,8 @@
 ---
-# neovim
-- name: Install neovim from aur
-  yay:
-    name: neovim-nightly-bin
-    state: latest
+# neovim arch tasks
+
+[]
+# - name: Install neovim from aur
+#   yay:
+#     name: neovim-nightly-bin
+#     state: latest

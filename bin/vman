@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
 
 # Load man page in (n)vim if it exists
-man -f "$@" &>/dev/null && $EDITOR -R +":set ft=man" <(man "$@")
+man_out=$(man "$@")
+man_status=$?
+
+if [[ $man_status -eq 0 ]]; then
+    $EDITOR -R +":set ft=man" <(echo "$man_out")
+else
+    echo -n "$man_out" >&2
+    exit $man_status
+fi

@@ -2,16 +2,16 @@ setlocal statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 setlocal foldmethod=marker
 
 " Execute line/selection
-nnoremap <silent><buffer> yxx     :execute trim(getline('.'))<CR>
-vnoremap <silent><buffer> <Enter> "xy:@x<CR>
+nnoremap <buffer> yxx       <Cmd>execute trim(getline('.'))<CR>
+vnoremap <buffer> <Enter>   "xy:@x<CR>
 " Close on `[,]q`
-nnoremap <silent><buffer> q :call buffer#quick_close()<CR>
-nnoremap <silent><buffer> <Leader>q :call buffer#quick_close()<CR>
+nnoremap <buffer> q         <Cmd>call buffer#quick_close()<CR>
+nnoremap <buffer> <Leader>  <Cmd>call buffer#quick_close()<CR>
 " Help TOC
-nnoremap <silent><buffer> <Leader>t :call <SID>show_toc()<CR>
-nnoremap <silent><buffer> gO :call <SID>show_toc()<CR>
+nnoremap <buffer> <Leader>o <Cmd>call <SID>show_toc()<CR>
+nnoremap <buffer> gO        <Cmd>call <SID>show_toc()<CR>
 
-nnoremap <silent><buffer> <Tab> :tabnext<CR>
+nnoremap <buffer> <Tab>     <Cmd>tabnext<CR>
 
 " loclist TOC for vim
 function s:show_toc()

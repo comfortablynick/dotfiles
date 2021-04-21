@@ -1,5 +1,5 @@
 ---
 # tasks for neovim plugins
-- name: Update neovim plugins
+- name: Neovim | Update plugins
   command:
     cmd: nvim --headless +PackUpdate +qall

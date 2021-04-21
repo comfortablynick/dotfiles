@@ -108,6 +108,17 @@ ls.snippets = {
     s({trig = "\""}, {t({"\""}), i(1), t({"\""}), i(0)}, neg, even_count, "\""),
     s({trig = "{;"}, {t({"{", "\t"}), i(1), t({"", "}"}), i(0)}),
   },
+  c = {
+    -- s({trig = "cmt"}, {
+    --   t({"/**"}),
+    --   i(2),
+    --   t({"", "After expanding the cursor is here ->"}),
+    --   i(1),
+    --   t({"", "After jumping once more the snippet is exited there ->"}),
+    --   i(0),
+    -- }),
+    s({trig = "cmt"}, {t({"/* "}), i(0), t{"", " *", " */"}}),
+  },
   java = {
     s({trig = "fn"}, {
       d(6, jdocsnip, {2, 4, 5}),

@@ -1,25 +1,22 @@
 ---
+[]
 # Install python dependencies
-- name: Install neovim python dependencies
-  apt:
-    name: "{{ Debian_python_required_packages }}"
-    state: present
-  become: true
+# - name: Install neovim python dependencies
+#   apt:
+#     name: "{{ Debian_python_required_packages }}"
+#     state: present
+#   become: true
 
 # Install neovim from ppa
-- name: Install from ppa
-  block:
-    - name: Add neovim ppa
-      apt_repository:
-        repo: "{{ Debian_neovim_ppa }}"
-        state: present
-    - name: Install neovim from ppa
-      apt:
-        name: neovim
-        state: latest
-  become: true
-  when: not ansible_facts['architecture'].startswith('arm')
-
-- name: Install from source
-  include_tasks: build.yml
-  when: ansible_facts['architecture'].startswith('arm')
+# - name: Install from ppa
+#   block:
+#     - name: Add neovim ppa
+#       apt_repository:
+#         repo: "{{ Debian_neovim_ppa }}"
+#         state: present
+#     - name: Install neovim from ppa
+#       apt:
+#         name: neovim
+#         state: latest
+#   become: true
+#   when: not ansible_facts['architecture'].startswith('arm')

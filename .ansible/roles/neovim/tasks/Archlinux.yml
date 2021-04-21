@@ -1,6 +1,5 @@
 ---
 # neovim arch tasks
-
 []
 # - name: Install neovim from aur
 #   yay:

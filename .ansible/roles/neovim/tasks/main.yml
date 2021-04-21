@@ -1,13 +1,20 @@
 ---
 # tasks file for neovim
-- name: Install neovim
+- name: Neovim | OS-specific tasks
   include_tasks: "{{ ansible_facts.os_family }}.yml"
 
-- name: Download nightly bin from github
+- name: Neovim | Download nightly bin from github
   include_tasks: download.yml
   when:
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture == 'x86_64'
 
-- name: Update plugins
-  include_tasks: plugins.yml
+- name: Neovim | Install from source
+  include_tasks: build.yml
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture.startswith('arm')
+
+# TODO: this seems to hang; how does topgrade do it?
+# - name: Neovim | Update plugins
+#   include_tasks: plugins.yml

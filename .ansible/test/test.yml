@@ -1,6 +1,6 @@
 ---
 - name: Test tasks
-  hosts: all
+  hosts: local
   tasks:
     - name: Print facts
       debug:
@@ -12,3 +12,52 @@
         msg: |-
           System: {{ ansible_facts.system }}
           Arch:   {{ ansible_facts.architecture }}
+
+    - name: Get latest tmux release
+      uri:
+        url: https://api.github.com/repos/tmux/tmux/releases/latest
+        return_content: true
+      run_once: false
+      register: tmux_latest
+      changed_when: false
+
+    - name: Get tmux installed version
+      command: tmux -V
+      register: tmux_current
+      changed_when: false
+
+    - name: Set version strings
+      set_fact:
+        key_value: ''
+        tmux_current_version: "{{ tmux_current.stdout_lines[0].split(' ')[1] | d() | replace('next-', '') }}"
+        tmux_latest_version: "{{ tmux_latest.json.name.split(' ')[1] | d() }}"
+        tmux_latest_url: "{{ tmux_latest.json.assets[0].browser_download_url }}"
+        tmux_current_beta: "{{ 'next' in tmux_current.stdout }}"
+
+    - name: Tmux | Download and install latest release
+      block:
+        - name: Tmux | Create temp dl dir
+          tempfile:
+            state: directory
+            suffix: _tmux
+          register: tmux_dl_path
+
+        - name: Tmux | Download latest release
+          unarchive:
+            src: "{{ tmux_latest_url }}"
+            dest: "{{ tmux_dl_path.path }}"
+            remote_src: true
+
+        - name: Tmux | Set src path
+          set_fact:
+            key_value: ''
+            tmux_src_path: "{{ tmux_dl_path.path }}/tmux-{{ tmux_latest_version }}"
+
+        - name: Tmux | Build from source tarball
+
+      # always:
+      #   - name: Tmux | Cleanup temp files
+      #     file:
+      #       path: "{{ tmux_dl_path.path }}"
+      #       state: absent
+      when: tmux_latest_version is version(tmux_current_version, '>') or tmux_force|d(false)

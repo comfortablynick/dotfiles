@@ -1,0 +1,51 @@
+---
+# build tmux dependencies tasks
+- name: Tmux | Build dependencies from source
+  block:
+    - name: Check libevent exists
+      stat:
+        path: "{{ tmux_libevent_path }}"
+      register: tmux_libevent_stat
+
+    - name: Check ncurses exists
+      stat:
+        path: "{{ tmux_ncurses_path }}"
+      register: tmux_ncurses_stat
+
+    - name: Download and build libevent
+      block:
+        - name: Download libevent
+          unarchive:
+            src: "https://github.com/libevent/libevent/releases/download/release-{{ tmux_libevent_version }}\
+            -stable/libevent-{{ tmux_libevent_version }}-stable.tar.gz"
+            dest: "{{ tmux_source_dir }}"
+            remote_src: true
+
+        - name: Build libevent
+          command: "{{ item }}"
+          args:
+            chdir: "{{ tmux_libevent_path }}"
+          loop:
+            - ./configure --prefix={{ tmux_install_prefix }}
+            - make -j{{ tmux_make_concurrency }}
+            - make install
+      when: tmux_libevent_stat.stat.isdir is not defined
+
+    - name: Download and build ncurses
+      block:
+        - name: Download ncurses
+          unarchive:
+            src:
+              https://ftp.gnu.org/pub/gnu/ncurses/ncurses-{{ tmux_ncurses_version }}.tar.gz
+            dest: "{{ tmux_source_dir }}"
+            remote_src: true
+
+        - name: Build ncurses
+          command: "{{ item }}"
+          args:
+            chdir: "{{ tmux_ncurses_path }}"
+          loop:
+            - ./configure --prefix={{ tmux_install_prefix }}
+            - make -j{{ tmux_make_concurrency }}
+            - make install
+      when: tmux_ncurses_stat.stat.isdir is not defined

@@ -100,6 +100,7 @@ set list                                                        " Show extra cha
 set listchars=tab:▸\ ,nbsp:␣,trail:·                            " Define chars for 'list'
 set title                                                       " Set window title
 let g:mapleader = ','
+let g:c_syntax_for_h = 1                                        " Treat .h files as c, not cpp
 
 " Completion {{{2
 " set completeopt=menuone,menu,no

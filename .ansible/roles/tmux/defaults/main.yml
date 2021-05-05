@@ -1,11 +1,12 @@
 ---
 # defaults file for tmux
-tmux_make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
+tmux_make_concurrency: "{{ ansible_facts.processor_vcpus }}"
+
+# tmux_version: "3.1"
+# tmux_release: "3.1-rc2"
 
 # building from source
-tmux_version: "3.1"
-tmux_release: "3.1-rc2"
-tmux_build_from_source: true
+tmux_build_from_master: false
 tmux_force_build: false
 tmux_source_dir: "{{ ansible_facts.user_dir }}/src/tmux"
 tmux_install_prefix: "{{ ansible_facts.user_dir }}/.local"

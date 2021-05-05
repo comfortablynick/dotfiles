@@ -6,8 +6,7 @@
 #   changed_when: False
 
 - name: Install tmux from source
-  include_tasks: build.yml
-  when: tmux_build_from_source
+  import_tasks: build.yml
 
 # - name: Set flag to true if upgrade needed
 #   set_fact:

@@ -4,4 +4,4 @@
   pacman:
     name: tmux
     state: latest
-  become: yes
+  become: true

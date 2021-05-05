@@ -8,10 +8,20 @@
 url="ipinfo.io"
 
 usage() {
-    echo "Usage: $(basename "$0") [-f field] [IP address]" 1>&2
-    echo " -f field	Only output specified field's info. Run script without -f to see available fields." 1>&2
-    echo " -w		Force use wget instead of curl" 1>&2
-    echo " -h		Show this help text." 1>&2
+    read -r -d '' usage <<EOF
+usage: $(basename "$0") [-h] [-w] [-f FIELD] [ip_addr]
+
+Wrapper around http://ipinfo.io service
+
+positional arguments:
+  ip_addr   Perform lookup on this address (defaults to host ip)
+
+optional arguments:
+  -f FIELD  Only output one of: ip,hostname,city,region,country,loc,org,postal,timezone
+  -w        Force use wget instead of curl
+  -h        Show this help text and exit
+EOF
+    echo "$usage" 1>&2
 }
 
 while getopts "f:hw" o; do
@@ -25,7 +35,7 @@ while getopts "f:hw" o; do
         ;;
     h)
         usage
-        exit 0
+        exit 1
         ;;
     *)
         usage
@@ -41,8 +51,8 @@ function is_valid_ip_address() {
 }
 
 # Specified IP address
-if [ -n "$*" ]; then
-    if [ "$(is_valid_ip_address "$@")" -eq 0 ]; then
+if [[ -n $* ]]; then
+    if [[ $(is_valid_ip_address "$@") -eq 0 ]]; then
         echo "Error: The IP address must be in IPv4 or IPv6 format" 1>&2
         exit 1
     fi
@@ -51,7 +61,7 @@ if [ -n "$*" ]; then
 fi
 
 # Specified field
-if [ -n "$f" ]; then
+if [[ -n $f ]]; then
     url="$url/$f"
 else
     # Make sure we get json obj and not the webpage

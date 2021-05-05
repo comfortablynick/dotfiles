@@ -22,7 +22,7 @@ let g:vista_fzf_opt = [
 let g:vista_echo_cursor = 1
 let g:vista_floating_delay = 1000
 let g:vista#renderer#enable_icon = 1
-let g:vista_close_on_jump = 1
+let g:vista_close_on_jump = 0
 let g:vista_sidebar_width = winwidth(0) > 200 ? 60 : 50
 
-nnoremap <Leader>V <Cmd>Vista!!<CR>
+nnoremap <Leader><Leader>v <Cmd>Vista!!<CR>

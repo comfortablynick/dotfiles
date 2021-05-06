@@ -135,7 +135,7 @@ while getopts ":qpskdhf:x:" opt; do
   esac
 done
 
-if [[ $DEBUG != 0 ]]; then
+if [[ $DEBUG -ne 0 ]]; then
     echo $VERSION
     uname -a 2> /dev/null
     cat /etc/issue 2> /dev/null
@@ -149,10 +149,9 @@ if [[ $CURL_BIN == "" ]]; then
 fi
 
 #Dependencies check
-which $BIN_DEPS > /dev/null
-if [[ $? != 0 ]]; then
+if ! which $BIN_DEPS >/dev/null; then
     for i in $BIN_DEPS; do
-        which $i > /dev/null ||
+        which $i >/dev/null ||
             NOT_FOUND="$i $NOT_FOUND"
     done
     echo -e "Error: Required program could not be found: $NOT_FOUND"
@@ -161,8 +160,7 @@ fi
 
 #Check if readlink is installed and supports the -m option
 #It's not necessary, so no problem if it's not installed
-which readlink > /dev/null
-if [[ $? == 0 && $(readlink -m "//test" 2> /dev/null) == "/test" ]]; then
+if which readlink >/dev/null && [[ $(readlink -m "//test" 2> /dev/null) == "/test" ]]; then
     HAVE_READLINK=1
 else
     HAVE_READLINK=0
@@ -171,13 +169,12 @@ fi
 #Forcing to use the builtin printf, if it's present, because it's better
 #otherwise the external printf program will be used
 #Note that the external printf command can cause character encoding issues!
-builtin printf "" 2> /dev/null
-if [[ $? == 0 ]]; then
+if builtin printf "" 2>/dev/null; then
     PRINTF="builtin printf"
     PRINTF_OPT="-v o"
 else
     PRINTF=$(which printf)
-    if [[ $? != 0 ]]; then
+    if [[ -z $PRINTF ]]; then
         echo -e "Error: Required program could not be found: printf"
     fi
     PRINTF_OPT=""
@@ -186,7 +183,7 @@ fi
 #Print the message based on $QUIET variable
 function print
 {
-    if [[ $QUIET == 0 ]]; then
+    if [[ $QUIET -eq 0 ]]; then
 	    echo -ne "$1";
     fi
 }
@@ -200,7 +197,7 @@ function utime
 #Remove temporary files
 function remove_temp_files
 {
-    if [[ $DEBUG == 0 ]]; then
+    if [[ $DEBUG -eq 0 ]]; then
         rm -fr "$RESPONSE_FILE"
         rm -fr "$CHUNK_FILE"
         rm -fr "$TEMP_FILE"
@@ -210,7 +207,7 @@ function remove_temp_files
 #Converts bytes to human readable format
 function convert_bytes
 {
-    if [[ $HUMAN_READABLE_SIZE == 1 && "$1" != "" ]]; then
+    if [[ $HUMAN_READABLE_SIZE -eq 1 ]] && [[ -n $1 ]]; then
 	    if (($1 > 1073741824));then
 	        echo $(($1/1073741824)).$(($1%1073741824/100000000))"G";
 	    elif (($1 > 1048576));then
@@ -229,22 +226,22 @@ function convert_bytes
 function file_size
 {
     #Generic GNU
-    SIZE=$(stat --format="%s" "$1" 2> /dev/null)
-    if [ $? -eq 0 ]; then
+    SIZE=$(stat --format="%s" "$1" 2>/dev/null)
+    if [[ -n $SIZE ]]; then
         echo $SIZE
         return
     fi
 
     #Some embedded linux devices
-    SIZE=$(stat -c "%s" "$1" 2> /dev/null)
-    if [ $? -eq 0 ]; then
+    SIZE=$(stat -c "%s" "$1" 2>/dev/null)
+    if [[ -n $SIZE ]]; then
         echo $SIZE
         return
     fi
 
     #BSD, OSX and other OSs
-    SIZE=$(stat -f "%z" "$1" 2> /dev/null)
-    if [ $? -eq 0 ]; then
+    SIZE=$(stat -f "%z" "$1" 2>/dev/null)
+    if [[ -n $SIZE ]]; then
         echo $SIZE
         return
     fi

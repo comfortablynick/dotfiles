@@ -33,7 +33,7 @@ call map#cabbr('api',  'Clap api')
 nnoremap <F6>      <Cmd>Clap task<CR>
 nnoremap <Leader>t <Cmd>Clap tags nvim_lsp<CR>
 nnoremap <Leader>h <Cmd>Clap command_history<CR>
-nnoremap <Leader>m <Cmd>Clap mru<CR>
+" nnoremap <Leader>m <Cmd>Clap mru<CR>
 
 " Functions {{{1
 " function plugins#clap#get_selected() :: Get selection sans icon {{{2

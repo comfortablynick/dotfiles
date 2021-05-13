@@ -350,19 +350,20 @@ function nvim.define_text_object(mapping, function_name) -- {{{2
                       (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
-
 -- Used {{{1
 function nvim.relative_name(path) -- {{{2
   -- Return path relative to config
   -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
-  local fp = vim.fn.expand(path or '%')
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W",
+                                                                          "_")
 end
 
-function nvim.module_name(path) --{{{2
+function nvim.module_name(path) -- {{{2
   -- Return module name of path or current file
-  local fp = vim.fn.expand(path or '%')
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub("%W", ".")
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub(
+           "%W", ".")
 end
 
 function nvim.source_current_buffer() -- {{{2
@@ -370,20 +371,20 @@ function nvim.source_current_buffer() -- {{{2
   loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
 
-function nvim.reload() --{{{2
+function nvim.reload() -- {{{2
   -- Remove module from `package.loaded` and source buffer to hot reload
   local bufname = api.nvim_buf_get_name(0)
   package.loaded[nvim.module_name(bufname)] = nil
   nvim.source_current_buffer()
 end
 
-function nvim.smart_tab() --{{{2
+function nvim.smart_tab() -- {{{2
   if vim.fn.pumvisible() ~= 0 then
     api.nvim_eval[[feedkeys("\<c-n>", "n")]]
     return
   end
-  local col = vim.fn.col('.') - 1
-  if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+  local col = vim.fn.col(".") - 1
+  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
     api.nvim_eval[[feedkeys("\<tab>", "n")]]
     return
   end
@@ -393,7 +394,7 @@ function nvim.smart_tab() --{{{2
   api.nvim_eval[[feedkeys("\<C-Space>")]]
 end
 
-function nvim.smart_s_tab() --{{{2
+function nvim.smart_s_tab() -- {{{2
   if vim.fn.pumvisible() ~= 0 then
     api.nvim_eval([[feedkeys("\<c-p>", "n")]])
     return
@@ -404,9 +405,7 @@ end
 -- warn :: echo warning message {{{2
 function nvim.warn(text)
   vim.validate{text = {text, "string"}}
-  vim.cmd"echohl WarningMsg"
-  vim.cmd("echo " .. string.format("%q", text))
-  vim.cmd"echohl None"
+  api.nvim_echo({{text, "WarningMsg"}}, false, {})
 end
 
 -- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
@@ -482,7 +481,7 @@ end
 -- If {fn} is a string, it is called as a method
 -- @param t (table) Values to feed to {fn}
 -- @param fn (function|string) Callback function
-function nvim.tbl_foreach(t, fn, ...) --{{{2
+function nvim.tbl_foreach(t, fn, ...) -- {{{2
   local iter = getiter(t)
   if type(fn) == "string" then
     for _, v in iter(t) do v[fn](v, ...) end

@@ -18,10 +18,40 @@
 - name: Zoxide | Set release url
   set_fact:
     key_value: ''
-    zoxide_release_url: https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_arch }}
+    zoxide_release_url: https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_arch }}.tar.gz
 
-- name: Zoxide | Get latest binary
-  get_url:
-    url: "{{ zoxide_release_url }}"
-    dest: "{{ zoxide_prefix }}/bin/zoxide"
-    mode: 0755
+- name: Zoxide | Download and install release
+  block:
+    - name: Zoxide | Create temp dl dir
+      tempfile:
+        state: directory
+        suffix: _zoxide
+      register: zoxide_dl_path
+
+    - name: Zoxide | Get latest binary
+      unarchive:
+        src: "{{ zoxide_release_url }}"
+        dest: "{{ zoxide_dl_path.path }}"
+        remote_src: true
+
+    - name: Zoxide | Set src path
+      set_fact:
+        key_value: ''
+        zoxide_src_path: "{{ zoxide_dl_path.path }}/zoxide-{{ zoxide_arch }}"
+
+    - name: Zoxide | Copy binary
+      copy:
+        src: "{{ zoxide_src_path }}/zoxide"
+        dest: "{{ zoxide_prefix }}/bin/zoxide"
+        mode: 0755
+
+    - name: Zoxide | Copy man pages
+      copy:
+        src: "{{ zoxide_src_path }}/man/"
+        dest: "{{ zoxide_prefix }}/share/man/man1"
+        mode: 0644
+  always:
+    - name: Zoxide | Cleanup temp path
+      file:
+        path: "{{ zoxide_dl_path.path }}"
+        state: absent

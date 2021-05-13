@@ -37,3 +37,5 @@
 	helper = lastpass -l comfortablynick@gmail.com
 [init]
 	defaultBranch = main
+[hub]
+	protocol = https

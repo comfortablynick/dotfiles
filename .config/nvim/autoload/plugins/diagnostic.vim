@@ -10,7 +10,7 @@ call sign_define('LspDiagnosticsInformationSign', {'text' : 'i', 'texthl' : 'Lsp
 call sign_define('LspDiagnosticsHintSign',        {'text' : '»', 'texthl' : 'LspDiagnosticsHint'})
 
 
-function! s:set_hi()
+function s:set_hi()
     highlight LspDiagnosticsError       ctermfg=Red guifg=#ff5f87
     highlight LspDiagnosticsWarning     ctermfg=178 guifg=#d78f00
     highlight LspDiagnosticsInformation ctermfg=178 guifg=#d78f00

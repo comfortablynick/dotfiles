@@ -39,7 +39,7 @@ function plugins#init() abort
     Plug 'kkoomen/vim-doge',           {'do': {-> doge#install(#{headless: 1})}}
     Plug 'dense-analysis/ale'
     Plug 'sbdchd/neoformat'
-    Plug 'psf/black'
+    " Plug 'psf/black'
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
     Plug 'michaelb/sniprun',           {'do': './install.sh'}

@@ -29,4 +29,5 @@ neovim_home: "{{ ansible_facts.user_dir }}"
 neovim_source_dir: "{{ neovim_home }}/src/neovim"
 neovim_cmake_build_type: Release
 neovim_install_prefix: "{{ neovim_home }}/.local"
-neovim_force_build: false
+neovim_force: false
+neovim_build: false

@@ -8,12 +8,13 @@
   when:
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture == 'x86_64'
+    - not neovim_build
 
 - name: Neovim | Install from source
   include_tasks: build.yml
   when:
     - ansible_facts.system == 'Linux'
-    - ansible_facts.architecture.startswith('arm')
+    - ansible_facts.architecture.startswith('arm') or neovim_build
 
 # TODO: this seems to hang; how does topgrade do it?
 # - name: Neovim | Update plugins

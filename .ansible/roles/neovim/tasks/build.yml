@@ -24,4 +24,4 @@
         - make distclean
         - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
         - make CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
-  when: (source_repo.before != source_repo.after) or neovim_force_build
+  when: (source_repo.before != source_repo.after) or neovim_force

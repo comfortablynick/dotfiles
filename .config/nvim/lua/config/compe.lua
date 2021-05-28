@@ -4,7 +4,7 @@ local api = vim.api
 vim.o.completeopt = "menuone,noselect"
 
 -- Avoid showing message extra message when using completion
-vim.cmd[[set shortmess+=c]]
+vim.opt.shortmess:append("c")
 
 local imap = function(key, result, opts)
   api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})

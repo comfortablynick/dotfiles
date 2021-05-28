@@ -5,7 +5,7 @@ local M = {}
 vim.o.completeopt = "menuone,noinsert,noselect"
 
 -- Avoid showing message extra message when using completion
-vim.cmd[[set shortmess+=c]]
+vim.opt.shortmess:append("c")
 
 -- local customize_lsp_label = {
 --   Function = " [function]",

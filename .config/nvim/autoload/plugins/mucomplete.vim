@@ -8,30 +8,30 @@ let g:mucomplete#enable_auto_at_startup = 1
 
 " Default chain presets
 " call mucomplete#add_user_mapping('chord', "\<C-R>=ChordComplete()\<CR>")
-let l:mu_default = ['list', 'path', 'ulti', 'omni', 'user', 'keyn']
-let l:mu_text_default = l:mu_default "+ ['dict', 'uspl']
+let s:mu_default = ['list', 'path', 'ulti', 'omni', 'user', 'keyn']
+let s:mu_text_default = s:mu_default "+ ['dict', 'uspl']
 
 let g:mucomplete#chains = {
-    \ 'default': l:mu_default,
+    \ 'default': s:mu_default,
     \ 'python': {
     \     'pythonString': [],
     \     'pythonComment': ['dict', 'uspl'],
     \   },
     \ 'markdown': {
-    \     'default': l:mu_text_default,
+    \     'default': s:mu_text_default,
     \   },
     \ 'asciidoctor': {
-    \     'default': l:mu_text_default,
+    \     'default': s:mu_text_default,
     \   },
     \ 'text': {
-    \     'default': l:mu_text_default,
+    \     'default': s:mu_text_default,
     \   },
     \ 'toml': {
-    \     'default': l:mu_text_default,
+    \     'default': s:mu_text_default,
     \   },
     \ 'vim': {
-    \     'default': l:mu_default,
+    \     'default': s:mu_default,
     \   },
     \ }
 
-imap <expr> <down> mucomplete#extend_fwd("\<down>")
+imap <expr> <Down> mucomplete#extend_fwd("\<Down>")

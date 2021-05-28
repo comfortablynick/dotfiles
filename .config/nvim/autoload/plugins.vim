@@ -1,4 +1,4 @@
-" Plugin definitions {{{1{{{
+" Plugin definitions {{{1
 let g:package_path = get(g:, 'package_path', expand('$XDG_DATA_HOME/nvim/site'))
 let g:packages = {}
 
@@ -43,6 +43,7 @@ function plugins#init() abort
     Plug 'skywind3000/asyncrun.vim'
     Plug 'skywind3000/asynctasks.vim', {'do': 'ln -sf $(pwd)/bin/asynctask ~/.local/bin'}
     Plug 'michaelb/sniprun',           {'do': './install.sh'}
+    Plug 'tpope/vim-dispatch'
 
     " Editing behavior {{{2
     Plug 'bfredl/nvim-miniyank'

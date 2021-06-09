@@ -55,6 +55,7 @@ pipx_packages_dev:
   - name: git+https://github.com/vimjas/vint
   - name: toml-sort
   - name: yamllint
+  - name: youtube-dl
 
 cargo_packages_dev:
   - name: just

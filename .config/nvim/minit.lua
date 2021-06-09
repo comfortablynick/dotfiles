@@ -1,4 +1,3 @@
-local api = vim.api
 local test_packpath = "/tmp/nvim-pack/site"
 local install_path = test_packpath .. "/pack/packer/start/packer.nvim"
 

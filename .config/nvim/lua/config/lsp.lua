@@ -218,7 +218,7 @@ local on_attach_cb = function(client)
     api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>",
                             {noremap = true})
   end
-  vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
+  vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable
   local name_replacements = {diagnosticls = "diag", sumneko_lua = "sumneko"}

@@ -61,4 +61,4 @@ cargo_packages_dev:
   - name: just
   - name: fastmod
   - name: ttdl
-  - name: watchexec
+  - name: watchexec-cli

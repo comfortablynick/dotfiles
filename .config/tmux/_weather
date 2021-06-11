@@ -1,27 +1,73 @@
-#!/bin/sh
+#!/usr/bin/env bash
+force=0
 
-cache_file=~/.tmux_weather
-cache_ttl=300
-weather_bin=$HOME/bin/wttr
-
-weather() {
-    if [ -f "$cache_file" ]; then
-        read -r existing <$cache_file
-        echo "$existing"
-
-        NOW=$(date +%s)
-        MOD=$(date -r "$cache_file" +%s)
-        if [ $((NOW - MOD)) -le $cache_ttl ]; then
-            return
-        fi
-    fi
-    if [ -x "$weather_bin" ]; then
-        # GEO=$(curl -s https://ipinfo.io | jq -r '.loc')
-        GEO=76207
-        $weather_bin $GEO 3 >$cache_file
-    else
-        echo "TMUX weather: \`$weather_bin' is not accessible"
-    fi
+print_help() {
+    echo "usage: ${BASH_SOURCE[0]} [-f|--force]" >/dev/stderr
 }
 
-weather
+get_tmux_option() {
+    local option_name option_value default_value
+    option_name=$1
+    default_value=$2
+    option_value=$(tmux show-options -gqv "$option_name")
+
+    echo -n "${option_value:-$default_value}"
+}
+
+set_tmux_option() {
+    tmux set-option -gq "$1" "$2"
+}
+
+get_weather() {
+    local location format units url
+    location=$(get_tmux_option @weather-location 76207)
+    format=$(get_tmux_option @weather-format 1)
+    units=$(get_tmux_option @weather-units u)
+
+    if [[ $units != m ]] && [[ $units != u ]]; then
+        units=u
+    fi
+    # Not sure what sed was for in original script
+    # curl -s "https://wttr.in/$location?$units&format=$format" | sed "s/[[:space:]]km/km/g"
+    url="wttr.in/$location?$units&format=$format"
+    curl -s "$url"
+}
+
+main() {
+    local update_interval current_time previous_update delta
+    update_interval=$((60 * $(get_tmux_option @weather-interval 15)))
+    current_time=$(date "+%s")
+    previous_update=$(get_tmux_option @weather-previous-update-time)
+    delta=$((current_time - previous_update))
+
+    if [[ -z $previous_update ]] || [[ $delta -ge $update_interval ]] || [[ $force -eq 1 ]]; then
+        local value
+        if value=$(get_weather); then
+            set_tmux_option @weather-previous-update-time "$current_time"
+            set_tmux_option @weather-previous-value "${value/ +/}"
+        fi
+    fi
+
+    echo -n "$(get_tmux_option @weather-previous-value)"
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -f | --force)
+            force=1
+            shift
+            ;;
+        -h | --help | -?)
+            print_help
+            exit 1
+            ;;
+        *)
+            echo "Unknown parameter passed: $1"
+            print_help
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+main

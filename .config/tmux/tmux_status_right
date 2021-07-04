@@ -77,9 +77,9 @@ if [[ $WIDTH -ge $SMALL ]]; then
     USER+="#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$USERNAME"
     UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP"
     UNAME+="#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOST"
-    # UNAME+=" #[]" # Easy way to allow space at end without bash eating it
+    UNAME+=" #[]" # Easy way to allow space at end without bash eating it
 fi
 
 # Allow bash to mangle extra spaces and avoid piping to tr
 # shellcheck disable=SC2086
-echo $UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME $WEATHER
+echo $UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME

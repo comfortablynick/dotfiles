@@ -18,6 +18,6 @@
 
 - name: Rust | Download exa completions
   get_url:
-    url: https://raw.githubusercontent.com/ogham/exa/master/completions/completions.fish
+    url: https://raw.githubusercontent.com/ogham/exa/master/completions/fish/exa.fish
     dest: "{{ ansible_facts.user_dir }}/.config/fish/completions/exa.fish"
   when: "cargo_packages | selectattr('name', 'equalto', 'exa')"

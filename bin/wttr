@@ -11,6 +11,10 @@
 get_loc() {
     if [[ -n $1 ]]; then
         loc=$1
+    elif hash ipinfo 2>/dev/null; then
+        local ip
+        ip=$(echo "$SSH_CLIENT" | cut -d ' ' -f 1)
+        loc=$(ipinfo "$ip" -f postal)
     else
         local host
         host=$(hostname)

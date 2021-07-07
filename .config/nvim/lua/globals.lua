@@ -22,11 +22,7 @@ end
 -- TODO: possibly include markdown tab logic
 local check_back_space = function()
   local col = vim.fn.col(".") - 1
-  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-    return true
-  else
-    return false
-  end
+  return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
 end
 
 -- Use (s-)tab to:

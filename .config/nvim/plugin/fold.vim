@@ -1,5 +1,4 @@
-nnoremap <silent><Space> :silent! exe 'normal! za'<CR>
-nnoremap <silent>za zA
+nnoremap <Space> <Cmd>silent! exe 'normal! zA'<CR>
 
 " Customized version of folded text, idea by
 " https://github.com/chrisbra/vim_dotfiles/blob/master/plugin/CustomFoldText.vim

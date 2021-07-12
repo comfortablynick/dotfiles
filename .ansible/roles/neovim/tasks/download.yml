@@ -59,14 +59,14 @@
     - name: Neovim | Copy lib dir
       copy:
         src: "{{ nvim_src_path }}/lib/"
-        dest: "{{ neovim_install_prefix }}/lib"
+        dest: "{{ neovim_install_prefix }}/lib/"
         mode: 0755
         remote_src: true
 
     - name: Neovim | Copy share dir
       copy:
         src: "{{ nvim_src_path }}/share/"
-        dest: "{{ neovim_install_prefix }}/share"
+        dest: "{{ neovim_install_prefix }}/share/"
         mode: 0755
         remote_src: true
   always:

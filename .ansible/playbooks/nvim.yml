@@ -3,3 +3,6 @@
   hosts: all
   roles:
     - neovim
+  tags:
+    - neovim
+    - nvim

@@ -456,7 +456,7 @@ function M.get_maps(mode, bufnr, width) -- {{{1
     if v.noremap == 1 then attrs = attrs .. "*" end
     if v.script == 1 then attrs = attrs .. "&" end
     if v.buffer > 0 then attrs = attrs .. "@" end
-    local lhs = v.lhs ~= " " and v.lhs or "<Space>"
+    local lhs = v.lhs:gsub("%s", "<Space>")
     local rhs = v.rhs ~= "" and v.rhs or "<Nop>"
     -- TODO: calculate width of clap window for rhs
     table.insert(maps, string.format("%-" .. widths.lhs .. "s %3s %s", lhs,

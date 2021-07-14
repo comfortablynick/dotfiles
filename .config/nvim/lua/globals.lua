@@ -11,7 +11,9 @@ function _G.p(val, ...)
     end
   end
   -- Just print if there's an error (bad format str, etc.)
-  if not pcall(wrapper, val, ...) then print(val, ...) end
+  if not pcall(wrapper, val, ...) then
+    print(val, ...)
+  end
 end
 
 -- Smart [S-]Tab {{{1
@@ -21,8 +23,8 @@ end
 
 -- TODO: possibly include markdown tab logic
 local check_back_space = function()
-  local col = vim.fn.col(".") - 1
-  return col == 0 or vim.fn.getline("."):sub(col, col):match("%s") ~= nil
+  local col = vim.fn.col "." - 1
+  return col == 0 or vim.fn.getline("."):sub(col, col):match "%s" ~= nil
 end
 
 -- Use (s-)tab to:
@@ -30,14 +32,14 @@ end
 --- jump to prev/next snippet's placeholder
 _G.smart_tab = function()
   if vim.fn.pumvisible() == 1 then
-    return t"<C-n>"
+    return t "<C-n>"
     -- TODO: why doesn't this work?
     -- elseif vim.F.npcall(vim.fn["Ultisnips#CanJumpForwards"]) == 1 then
     --   return t"<Plug>(UltiForward)"
-  elseif require"luasnip".expand_or_jumpable() then
-    return t"<Plug>luasnip-expand-or-jump"
+  elseif require("luasnip").expand_or_jumpable() then
+    return t "<Plug>luasnip-expand-or-jump"
   elseif check_back_space() then
-    return t"<Tab>"
+    return t "<Tab>"
   else
     return vim.fn["compe#complete"]()
   end
@@ -45,11 +47,11 @@ end
 
 _G.smart_s_tab = function()
   if vim.fn.pumvisible() == 1 then
-    return t"<C-p>"
-  elseif require"luasnip".jumpable(-1) then
-    return t"<Plug>luasnip-jump-prev"
+    return t "<C-p>"
+  elseif require("luasnip").jumpable(-1) then
+    return t "<Plug>luasnip-jump-prev"
   else
-    return t"<S-Tab>"
+    return t "<S-Tab>"
   end
 end
 
@@ -72,7 +74,9 @@ getmetatable("").__call = function(str, i, j)
     return string.sub(str, i, j)
   else
     local tbl = {}
-    for k, v in ipairs(i) do tbl[k] = string.sub(str, v, v) end
+    for k, v in ipairs(i) do
+      tbl[k] = string.sub(str, v, v)
+    end
     return table.concat(tbl)
   end
 end

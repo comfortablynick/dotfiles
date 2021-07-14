@@ -138,6 +138,10 @@ tools:
     format-command: 'lua-format -i'
     format-stdin: true
 
+  lua-stylua: &lua-stylua
+    format-command: 'stylua -'
+    format-stdin: true
+
   lua-luacheck: &lua-luacheck
     lint-command: 'luacheck --formatter=plain --codes --filename ${INPUT} -'
     lint-stdin: true
@@ -198,5 +202,6 @@ languages:
     - <<: *csv-csvlint
 
   lua:
-    - <<: *lua-lua-format
+    # - <<: *lua-lua-format
+    - <<: *lua-stylua
     - <<: *lua-luacheck

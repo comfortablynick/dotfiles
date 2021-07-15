@@ -17,8 +17,8 @@
 
 - name: luals | Build and install lua-language-server
   block:
-    - name: Generate build files
-      command: ninja -f ninja/linux.ninja
+    - name: Run install script
+      command: compile/install.sh
       args:
         chdir: "{{ source_dir }}/3rd/luamake"
 

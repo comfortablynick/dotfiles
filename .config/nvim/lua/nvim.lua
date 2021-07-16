@@ -7,7 +7,7 @@ local api = vim.api
 nvim = {}
 vim = vim or {}
 
--- Currently unused {{{1
+--[=[ Currently unused
 function nvim.mark_or_index(buf, input) -- {{{2
   -- An enhanced version of nvim_buf_get_mark which also accepts:
   -- - A number as input: which is taken as a line number.
@@ -360,6 +360,76 @@ function nvim.define_text_object(mapping, function_name) -- {{{2
   api.nvim_set_keymap("x", mapping, (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
+-- Iterator utils (luafun is probably faster) {{{2
+-- From: https://github.com/rxi/lume
+local getiter = function(x)
+  vim.validate { arg = { x, "table" } }
+  if vim.tbl_islist(x) then
+    return ipairs
+  else
+    return pairs
+  end
+end
+
+-- tbl_reduce :: applies `fn` cumulatively to values in table `t` {{{2
+-- Reduces array to a single value.
+function nvim.tbl_reduce(t, fn, first)
+  local started = first ~= nil
+  local acc = first
+  local iter = getiter(t)
+  for _, v in iter(t) do
+    if started then
+      acc = fn(acc, v)
+    else
+      acc = v
+      started = true
+    end
+  end
+  assert(started, "reduce of an empty table with no first value")
+  return acc
+end
+
+-- Calls {fn} on each value in table {t}
+-- If {fn} is a string, it is called as a method
+-- @param t (table) Values to feed to {fn}
+-- @param fn (function|string) Callback function
+function nvim.tbl_foreach(t, fn, ...) -- {{{2
+  local iter = getiter(t)
+  if type(fn) == "string" then
+    for _, v in iter(t) do
+      v[fn](v, ...)
+    end
+  else
+    for _, v in iter(t) do
+      fn(v, ...)
+    end
+  end
+  return t
+end
+
+-- unload :: unload lua module/namespace {{{2
+function nvim.unload(prefix)
+  local found = vim.tbl_map(function(s)
+    if s:find("^" .. prefix .. "[%./]?%w*$") then
+      return s
+    else
+      return nil
+    end
+  end, vim.tbl_keys(
+    package.loaded
+  ))
+  for _, v in pairs(found) do
+    package.loaded[v] = nil
+  end
+  return found
+  -- local prefix_with_dot = prefix .. "."
+  -- for k in pairs(package.loaded) do
+  --   -- if k == prefix or k:sub(1, #prefix_with_dot) == prefix_with_dot then
+  --   --   package.loaded[k] = nil
+  --   -- end
+  -- end
+end
+--]=]
 -- Used {{{1
 function nvim.relative_name(path) -- {{{2
   -- Return path relative to config
@@ -423,17 +493,6 @@ function nvim.unlet(var_name, var_scope)
   end)
 end
 
--- mcmd :: multiline `vim.cmd` {{{2
---
--- Execute block of excommands
--- @param command (string) Multiline command to execute
-function nvim.mcmd(command)
-  vim.validate { command = { command, "s" } }
-  for line in vim.gsplit(command, "\n", true) do
-    vim.cmd(line)
-  end
-end
-
 -- packrequire :: load pack + lua module and return module or nil {{{2
 function nvim.packrequire(packname, modname)
   vim.validate { packname = { packname, "string" } }
@@ -441,81 +500,9 @@ function nvim.packrequire(packname, modname)
   return vim.F.npcall(require, modname or packname)
 end
 
--- unload :: unload lua module/namespace {{{2
-function nvim.unload(prefix)
-  local found = vim.tbl_map(function(s)
-    if s:find("^" .. prefix .. "[%./]?%w*$") then
-      return s
-    else
-      return nil
-    end
-  end, vim.tbl_keys(
-    package.loaded
-  ))
-  for _, v in pairs(found) do
-    package.loaded[v] = nil
-  end
-  return found
-  -- local prefix_with_dot = prefix .. "."
-  -- for k in pairs(package.loaded) do
-  --   -- if k == prefix or k:sub(1, #prefix_with_dot) == prefix_with_dot then
-  --   --   package.loaded[k] = nil
-  --   -- end
-  -- end
-end
-
--- Iterator utils (luafun is probably faster) {{{2
--- From: https://github.com/rxi/lume
-local getiter = function(x)
-  vim.validate { arg = { x, "table" } }
-  if vim.tbl_islist(x) then
-    return ipairs
-  else
-    return pairs
-  end
-end
-
--- tbl_reduce :: applies `fn` cumulatively to values in table `t` {{{2
--- Reduces array to a single value.
-function nvim.tbl_reduce(t, fn, first)
-  local started = first ~= nil
-  local acc = first
-  local iter = getiter(t)
-  for _, v in iter(t) do
-    if started then
-      acc = fn(acc, v)
-    else
-      acc = v
-      started = true
-    end
-  end
-  assert(started, "reduce of an empty table with no first value")
-  return acc
-end
-
--- Calls {fn} on each value in table {t}
--- If {fn} is a string, it is called as a method
--- @param t (table) Values to feed to {fn}
--- @param fn (function|string) Callback function
-function nvim.tbl_foreach(t, fn, ...) -- {{{2
-  local iter = getiter(t)
-  if type(fn) == "string" then
-    for _, v in iter(t) do
-      v[fn](v, ...)
-    end
-  else
-    for _, v in iter(t) do
-      fn(v, ...)
-    end
-  end
-  return t
-end
-
--- Lazy load vim.api.nvim_{method} into nvim.{method} {{{2
+-- Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work {{{2
 setmetatable(nvim, {
   __index = function(_, k)
     return api["nvim_" .. k]
   end,
 })
-
--- vim:fdl=1:

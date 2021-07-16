@@ -4,8 +4,8 @@
 --
 -- Many items adapted from github.com/norcalli/nvim_utils
 local api = vim.api
+local npcall = vim.F.npcall
 nvim = {}
-vim = vim or {}
 
 --[=[ Currently unused
 function nvim.mark_or_index(buf, input) -- {{{2
@@ -466,7 +466,7 @@ function nvim.smart_tab() -- {{{2
     api.nvim_eval [[feedkeys("\<tab>", "n")]]
     return
   end
-  -- vim.F.npcall(fallback_cb)
+  -- npcall(fallback_cb)
   -- Trigger completion otherwise?
   -- source.triggerCompletion(true, manager)
   api.nvim_eval [[feedkeys("\<C-Space>")]]
@@ -496,8 +496,14 @@ end
 -- packrequire :: load pack + lua module and return module or nil {{{2
 function nvim.packrequire(packname, modname)
   vim.validate { packname = { packname, "string" } }
+  -- Skip any vim rtp stuff if lua module exists
+  local ok, pack = pcall(require, modname or packname)
+  if ok then
+    return pack
+  end
   vim.cmd("silent! packadd " .. packname)
-  return vim.F.npcall(require, modname or packname)
+  -- No need to check; just return nil if pcall fails
+  return npcall(require, modname or packname)
 end
 
 -- Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work {{{2

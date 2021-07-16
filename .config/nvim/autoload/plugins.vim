@@ -114,7 +114,8 @@ function plugins#init() abort
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim'
     Plug 'iberianpig/tig-explorer.vim'
-    Plug 'TimUntersberger/neogit', {'requires': ['nvim-lua/plenary.nvim']}
+    Plug 'TimUntersberger/neogit',
+        \ {'requires': ['nvim-lua/plenary.nvim', 'sindrets/diffview.nvim']}
 
     " Snippets {{{2
     Plug 'SirVer/ultisnips'
@@ -123,12 +124,13 @@ function plugins#init() abort
     Plug 'L3MON4D3/LuaSnip'
 
     " Language server/completion {{{2
-    Plug 'neovim/nvim-lspconfig', {'requires': [
+    Plug 'neovim/nvim-lspconfig',         {'requires': [
         \ 'nvim-lua/lsp-status.nvim',
         \ 'nvim-lua/lsp_extensions.nvim',
         \ 'glepnir/lspsaga.nvim',
+        \ 'kosayoda/nvim-lightbulb',
         \ ]}
-    Plug 'nvim-lua/completion-nvim', {'requires': ['steelsojka/completion-buffers']}
+    Plug 'nvim-lua/completion-nvim',      {'requires': ['steelsojka/completion-buffers']}
     Plug 'hrsh7th/nvim-compe'
     Plug 'lifepillar/vim-mucomplete'
 
@@ -144,6 +146,8 @@ function plugins#init() abort
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'antoinemadec/FixCursorHold.nvim'
+    Plug 'nvim-telescope/telescope.nvim',
+        \ {'requires': ['nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim']}
 
     " Training/Vim help {{{2
     Plug 'tjdevries/train.nvim'

@@ -1,50 +1,46 @@
 local gitsigns = nvim.packrequire("gitsigns.nvim", "gitsigns")
-local api = vim.api
 
-local init = function()
-  if not gitsigns then return end
-  gitsigns.setup{
-    signs = {
-      add = {hl = "DiffAdd", text = "│"},
-      change = {hl = "DiffChange", text = "│"},
-      delete = {hl = "DiffDelete", text = "_"},
-      topdelete = {hl = "DiffDelete", text = "‾"},
-      changedelete = {hl = "DiffChange", text = "~"},
-    },
-    keymaps = {},
-    on_attach = function(bufnr)
-      -- if vim.api.nvim_buf_get_name(bufnr):match(<PATTERN>) then
-      --   -- Don't attach to specific buffers whose name matches a pattern
-      --   return false
-      api.nvim_buf_set_keymap(bufnr, "n", "]c",
-                              [[&diff ? ']c' : "<Cmd>lua require'gitsigns'.next_hunk()<CR>"]],
-                              {noremap = true, expr = true})
-      api.nvim_buf_set_keymap(bufnr, "n", "[c",
-                              [[&diff ? '[c' : "<Cmd>lua require'gitsigns'.prev_hunk()<CR>"]],
-                              {noremap = true, expr = true})
-      api.nvim_buf_set_keymap(bufnr, "n", "ghs",
-                              "<Cmd>lua require'gitsigns'.stage_hunk()<CR>",
-                              {noremap = true})
-      api.nvim_buf_set_keymap(bufnr, "n", "ghu",
-                              "<Cmd>lua require'gitsigns'.undo_stage_hunk()<CR>",
-                              {noremap = true})
-      api.nvim_buf_set_keymap(bufnr, "n", "ghr",
-                              "<Cmd>lua require'gitsigns'.reset_hunk()<CR>",
-                              {noremap = true})
-      api.nvim_buf_set_keymap(bufnr, "n", "gs",
-                              "<Cmd>lua require'gitsigns'.preview_hunk()<CR>",
-                              {noremap = true})
-      api.nvim_buf_set_keymap(bufnr, "o", "ih",
-                              "<Cmd>lua require'gitsigns'.select_hunk()<CR>",
-                              {noremap = true})
-      api.nvim_buf_set_keymap(bufnr, "x", "ih",
-                              "<Cmd>lua require'gitsigns'.select_hunk()<CR>",
-                              {noremap = true})
-    end,
-    numhl = false,
-    watch_index = {interval = 1000},
-    sign_priority = 6,
-    status_formatter = nil,
-  }
+if not gitsigns then
+  return
 end
-return {init = init}
+gitsigns.setup {
+  signs = {
+    add = { hl = "DiffAdd", text = "│" },
+    change = { hl = "DiffChange", text = "│" },
+    delete = { hl = "DiffDelete", text = "_" },
+    topdelete = { hl = "DiffDelete", text = "‾" },
+    changedelete = { hl = "DiffChange", text = "~" },
+  },
+  keymaps = {
+    noremap = true,
+    buffer = true,
+
+    ["n ]c"] = { expr = true, "&diff ? ']c' : '<Cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'" },
+    ["n [c"] = { expr = true, "&diff ? '[c' : '<Cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'" },
+
+    ["n ghs"] = '<Cmd>lua require"gitsigns".stage_hunk()<CR>',
+    ["v ghs"] = '<Cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+    ["n ghu"] = '<Cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
+    ["n ghr"] = '<Cmd>lua require"gitsigns".reset_hunk()<CR>',
+    ["v ghr"] = '<Cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+    ["n ghR"] = '<Cmd>lua require"gitsigns".reset_buffer()<CR>',
+    ["n gs"] = '<Cmd>lua require"gitsigns".preview_hunk()<CR>',
+    ["n ghb"] = '<Cmd>lua require"gitsigns".blame_line(true)<CR>',
+
+    -- Text objects
+    ["o ih"] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
+    ["x ih"] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
+  },
+  on_attach = function(bufnr)
+    local exclude_fts = { "clap_input", "qf", "floaterm", "" }
+
+    -- Don't load completion
+    if vim.tbl_contains(exclude_fts, vim.bo[bufnr].filetype) then
+      return false
+    end
+  end,
+  numhl = false,
+  watch_index = { interval = 1000 },
+  sign_priority = 6,
+  status_formatter = nil,
+}

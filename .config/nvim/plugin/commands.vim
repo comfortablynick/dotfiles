@@ -238,7 +238,7 @@ if has('nvim')
     command! -nargs=+ -complete=file -bar Grep call s:grep.grep_for_string(<q-args>)
 
     " Option :: pretty print option info {{{2
-    command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<args>])
+    command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
 
     " Make :: async make {{{2
     " command! -bang -complete=file Make call s:tools.make()

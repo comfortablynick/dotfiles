@@ -102,11 +102,11 @@ function plugins#init() abort
     Plug 'vhdirk/vim-cmake'
     Plug 'cespare/vim-toml'
     Plug 'tbastos/vim-lua'
-    Plug 'Glench/Vim-Jinja2-Syntax',          { 'type': 'start'}
-    Plug 'blankname/vim-fish',                { 'type': 'start'}
-    Plug 'habamax/vim-asciidoctor',           { 'type': 'start'}
-    Plug 'benknoble/gitignore-vim',           { 'type': 'start'}
-    call packager#local('~/git/todo.txt-vim', { 'type': 'start'})
+    Plug 'Glench/Vim-Jinja2-Syntax',          {'type': 'start'}
+    Plug 'blankname/vim-fish',                {'type': 'start'}
+    Plug 'habamax/vim-asciidoctor',           {'type': 'start'}
+    Plug 'benknoble/gitignore-vim',           {'type': 'start'}
+    call packager#local('~/git/todo.txt-vim', {'type': 'start'})
 
     " Git {{{2
     Plug 'airblade/vim-gitgutter'
@@ -114,7 +114,7 @@ function plugins#init() abort
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim'
     Plug 'iberianpig/tig-explorer.vim'
-    Plug 'TimUntersberger/neogit'
+    Plug 'TimUntersberger/neogit', {'requires': ['nvim-lua/plenary.nvim']}
 
     " Snippets {{{2
     Plug 'SirVer/ultisnips'
@@ -123,13 +123,13 @@ function plugins#init() abort
     Plug 'L3MON4D3/LuaSnip'
 
     " Language server/completion {{{2
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'nvim-lua/lsp-status.nvim'
-    Plug 'nvim-lua/lsp_extensions.nvim'
-    Plug 'nvim-lua/completion-nvim'
+    Plug 'neovim/nvim-lspconfig', {'requires': [
+        \ 'nvim-lua/lsp-status.nvim',
+        \ 'nvim-lua/lsp_extensions.nvim',
+        \ 'glepnir/lspsaga.nvim',
+        \ ]}
+    Plug 'nvim-lua/completion-nvim', {'requires': ['steelsojka/completion-buffers']}
     Plug 'hrsh7th/nvim-compe'
-    Plug 'glepnir/lspsaga.nvim'
-    Plug 'steelsojka/completion-buffers'
     Plug 'lifepillar/vim-mucomplete'
 
     " Lua/nvim {{{2

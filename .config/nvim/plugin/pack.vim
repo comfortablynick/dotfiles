@@ -1,6 +1,6 @@
 let g:package_manager = 'vim-packager'
 
-let g:package_defer_time = 300
+let g:package_defer_time = 100
 
 " Package management
 command       PackInstall call plugins#init() | call packager#install()
@@ -44,6 +44,7 @@ function s:deferred_load() abort
             \ 'nvim-miniyank',
             \ 'FixCursorHold.nvim',
             \ 'nvim-bqf',
+            \ 'barbar.nvim',
             \ ]
     endif
 

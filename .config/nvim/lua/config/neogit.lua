@@ -1,4 +1,5 @@
 local neogit = nvim.packrequire "neogit"
+vim.cmd [[packadd diffview.nvim]]
 
 neogit.setup {
   disable_signs = false,
@@ -13,18 +14,15 @@ neogit.setup {
   },
   integrations = {
     -- Requires `sindrets/diffview.nvim` installed for full diff
-    diffview = false,
+    diffview = true,
   },
   -- override/add mappings
-  -- mappings = {
-  --   -- modify status buffer mappings
-  --   status = {
-  --     -- Adds a mapping with "B" as key that does the "BranchPopup" command
-  --     ["B"] = "BranchPopup",
-  --     -- Removes the default mapping of "s"
-  --     ["s"] = "",
-  --   },
-  -- },
+  mappings = {
+    -- modify status buffer mappings
+    status = {
+      ["<Space>"] = "Toggle",
+    },
+  },
 }
 
 return neogit

@@ -4,10 +4,10 @@ local api = vim.api
 vim.o.completeopt = "menuone,noselect"
 
 -- Avoid showing message extra message when using completion
-vim.opt.shortmess:append("c")
+vim.opt.shortmess:append "c"
 
 local imap = function(key, result, opts)
-  api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
+  api.nvim_buf_set_keymap(0, "i", key, result, opts or { silent = true })
 end
 
 vim.lsp.protocol.CompletionItemKind = {
@@ -67,16 +67,19 @@ local labels = {
 
 local init = function()
   local compe = vim.F.npcall(require, "compe")
-  if compe == nil then return end
+  if compe == nil then
+    return
+  end
   local bufnr = api.nvim_get_current_buf()
-  local complete_exclude_fts = {"clap_input", "qf", "floaterm", ""}
+  local complete_exclude_fts = { "clap_input", "qf", "floaterm", "" }
 
   -- Don't load completion
-  if compe == nil or
-    vim.tbl_contains(complete_exclude_fts, vim.bo[bufnr].filetype) then return end
+  if compe == nil or vim.tbl_contains(complete_exclude_fts, vim.bo[bufnr].filetype) then
+    return
+  end
 
   -- require"config.snippets"
-  require"config.snips"
+  require "config.snips"
 
   compe.setup({
     enabled = true,
@@ -91,7 +94,7 @@ local init = function()
     source = {
       calc = true,
       path = true,
-      buffer = {menu = labels.Buffer},
+      buffer = { menu = labels.Buffer },
       spell = true,
       nvim_lsp = true,
       nvim_lua = true,
@@ -105,13 +108,13 @@ local init = function()
     },
   }, bufnr)
 
-  imap("<C-Space>", "compe#complete()", {expr = true, silent = true})
+  imap("<C-Space>", "compe#complete()", { expr = true, silent = true })
   if vim.bo.filetype ~= "markdown" then
-    imap("<Tab>", "v:lua.smart_tab()", {expr = true})
-    imap("<S-Tab>", "v:lua.smart_s_tab()", {expr = true})
+    imap("<Tab>", "v:lua.smart_tab()", { expr = true })
+    imap("<S-Tab>", "v:lua.smart_s_tab()", { expr = true })
   end
-  imap("<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
-  imap("<C-e>", "compe#close('<C-e>')", {expr = true, silent = true})
+  imap("<CR>", "compe#confirm('<CR>')", { expr = true, silent = true })
+  imap("<C-e>", "compe#close('<C-e>')", { expr = true, silent = true })
 end
 
-return {init = init}
+return { init = init }

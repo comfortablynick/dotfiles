@@ -1,18 +1,18 @@
-local util = require"lspconfig/util"
+local util = require "lspconfig/util"
 
 return function(on_attach)
   return {
-    cmd = {"yaml-language-server", "--stdio"},
+    cmd = { "yaml-language-server", "--stdio" },
     on_attach = on_attach,
-    filetypes = {"yaml", "yaml.ansible"},
+    filetypes = { "yaml", "yaml.ansible" },
     root_dir = function(fname)
-      return
-        util.root_pattern(".git", ".yamllint", ".projections.json")(fname) or
-          util.find_git_ancestor(fname) or util.path.dirname(fname)
+      return util.root_pattern(".git", ".yamllint", ".projections.json")(fname)
+        or util.find_git_ancestor(fname)
+        or util.path.dirname(fname)
     end,
     settings = {
       yaml = {
-        format = {enable = true, printWidth = 100},
+        format = { enable = true, printWidth = 100 },
         schemas = {
           -- ["https://json.schemastore.org/ansible-role-2.9"] = "tasks/**/*.yml",
           ["https://json.schemastore.org/ansible-role-2.9.json"] = "**/roles/tasks/**/*.yml",

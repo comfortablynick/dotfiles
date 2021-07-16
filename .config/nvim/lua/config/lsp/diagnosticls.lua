@@ -1,8 +1,8 @@
 return function(on_attach)
   return {
-    cmd = {"diagnostic-languageserver", "--stdio"},
+    cmd = { "diagnostic-languageserver", "--stdio" },
     on_attach = on_attach,
-    filetypes = {"lua", "vim", "sh", "python", "toml"},
+    filetypes = { "lua", "vim", "sh", "python", "toml" },
     init_options = {
       filetypes = {
         lua = "luacheck",
@@ -11,7 +11,7 @@ return function(on_attach)
         python = "pydocstyle",
         toml = "taplo",
       },
-      formatFiletypes = {sh = "shfmt", lua = "luaformat", python = "black"},
+      formatFiletypes = { sh = "shfmt", lua = "luaformat", python = "black" },
       linters = {
         luacheck = {
           command = "luacheck",
@@ -28,7 +28,7 @@ return function(on_attach)
           formatLines = 1,
           formatPattern = {
             "([^:]+):(\\d+):(\\d+):\\s*(.*)$",
-            {file = 1, line = 2, column = 3, message = 4},
+            { file = 1, line = 2, column = 3, message = 4 },
           },
         },
         shellcheck = {
@@ -37,7 +37,7 @@ return function(on_attach)
           isStdout = true,
           isStderr = false,
           debounce = 100,
-          args = {"--format=gcc", "-"},
+          args = { "--format=gcc", "-" },
           offsetLine = 0,
           offsetColumn = 0,
           sourceName = "shellcheck",
@@ -49,37 +49,37 @@ return function(on_attach)
               column = 3,
               endline = 2,
               endColumn = 3,
-              message = {5},
+              message = { 5 },
               security = 4,
             },
           },
-          securities = {error = "error", warning = "warning", note = "info"},
+          securities = { error = "error", warning = "warning", note = "info" },
         },
         taplo = {
           command = "taplo",
-          args = {"lint", "-"},
+          args = { "lint", "-" },
           formatLines = 1,
-          formatPattern = {"(.*)", {message = 1}},
+          formatPattern = { "(.*)", { message = 1 } },
         },
         vint = {
           command = "vint",
           debounce = 100,
-          args = {"--enable-neovim", "-"},
+          args = { "--enable-neovim", "-" },
           offsetLine = 0,
           offsetColumn = 0,
           sourceName = "vint",
           formatLines = 1,
           formatPattern = {
             "[^:]+:(\\d+):(\\d+):\\s*(.*)(\\r|\\n)*$",
-            {line = 1, column = 2, message = 3},
+            { line = 1, column = 2, message = 3 },
           },
         },
       },
       formatters = {
         -- Use lua-format wrapper script
-        luaformat = {command = "lua_format", isStdout = true},
-        shfmt = {command = "shfmt", args = {"-i", vim.fn.shiftwidth(), "-"}},
-        black = {command = "black", args = {"quiet", "-"}},
+        luaformat = { command = "lua_format", isStdout = true },
+        shfmt = { command = "shfmt", args = { "-i", vim.fn.shiftwidth(), "-" } },
+        black = { command = "black", args = { "quiet", "-" } },
       },
     },
   }

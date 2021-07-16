@@ -1,7 +1,9 @@
 local tsconfigs = nvim.packrequire("nvim-treesitter", "nvim-treesitter.configs")
-if not tsconfigs then return end
+if not tsconfigs then
+  return
+end
 
-tsconfigs.setup{
+tsconfigs.setup {
   ensure_installed = {
     "lua",
     "go",
@@ -25,7 +27,7 @@ tsconfigs.setup{
       node_decremental = "grm",
     },
   },
-  indent = {enable = false},
+  indent = { enable = false },
 }
 
 vim.o.foldmethod = "expr"

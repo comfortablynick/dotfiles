@@ -3,9 +3,9 @@ local M = {}
 local api = vim.api
 local util = vim.lsp.util
 local npcall = vim.F.npcall
-local lsp = npcall(require, "lspconfig")
-local lsp_status = npcall(require, "lsp-status")
-local lsp_saga = npcall(require, "lspsaga")
+local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
+local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
+local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
 local lsps_attached = {}
 
 local configs = npcall(require, "lspconfig/configs")
@@ -14,12 +14,12 @@ local lsp_util = npcall(require, "lspconfig/util")
 if configs ~= nil then
   configs.taplo = {
     default_config = {
-      cmd = {"taplo-lsp", "run"},
-      filetypes = {"toml"},
+      cmd = { "taplo-lsp", "run" },
+      filetypes = { "toml" },
       root_dir = function(fname)
-        return
-          lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname) or
-            lsp_util.find_git_ancestor(fname) or lsp_util.path.dirname(fname)
+        return lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname)
+          or lsp_util.find_git_ancestor(fname)
+          or lsp_util.path.dirname(fname)
       end,
       settings = {},
     },
@@ -30,7 +30,7 @@ M.configs = {}
 
 if lsp_status ~= nil then
   lsp_status.register_progress()
-  lsp_status.config{
+  lsp_status.config {
     select_symbol = function(cursor_pos, symbol)
       if symbol.valueRange then
         local value_range = {
@@ -49,27 +49,27 @@ if lsp_status ~= nil then
   }
 end
 
-vim.fn.sign_define("LspDiagnosticsSignError",
-                   {text = "", numhl = "LspDiagnosticsDefaultError"})
-vim.fn.sign_define("LspDiagnosticsSignWarning",
-                   {text = "", numhl = "LspDiagnosticsDefaultWarning"})
-vim.fn.sign_define("LspDiagnosticsSignInformation",
-                   {text = "", numhl = "LspDiagnosticsDefaultInformation"})
-vim.fn.sign_define("LspDiagnosticsSignHint",
-                   {text = "", numhl = "LspDiagnosticsDefaultHint"})
+vim.fn.sign_define("LspDiagnosticsSignError", { text = "", numhl = "LspDiagnosticsDefaultError" })
+vim.fn.sign_define("LspDiagnosticsSignWarning", { text = "", numhl = "LspDiagnosticsDefaultWarning" })
+vim.fn.sign_define("LspDiagnosticsSignInformation", { text = "", numhl = "LspDiagnosticsDefaultInformation" })
+vim.fn.sign_define("LspDiagnosticsSignHint", { text = "", numhl = "LspDiagnosticsDefaultHint" })
 
 local custom_symbol_handler = function(_, _, result, _, bufnr)
-  if vim.tbl_isempty(result or {}) then return end
+  if vim.tbl_isempty(result or {}) then
+    return
+  end
 
   local items = util.symbols_to_items(result, bufnr)
   local items_by_name = {}
-  for _, item in ipairs(items) do items_by_name[item.text] = item end
+  for _, item in ipairs(items) do
+    items_by_name[item.text] = item
+  end
 
-  local opts = vim.fn["fzf#wrap"]({
+  local opts = vim.fn["fzf#wrap"] {
     source = vim.tbl_keys(items_by_name),
     sink = function() end,
-    options = {"--prompt", "Symbol > "},
-  })
+    options = { "--prompt", "Symbol > " },
+  }
   opts.sink = function(item)
     local selected = items_by_name[item]
     vim.fn.cursor(selected.lnum, selected.col)
@@ -79,47 +79,26 @@ end
 
 vim.lsp.handlers["textDocument/documentSymbol"] = custom_symbol_handler
 vim.lsp.handlers["workspace/symbol"] = custom_symbol_handler
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    virtual_text = {spacing = 2},
-    signs = true,
-    update_in_insert = false,
-  })
--- vim.lsp.handlers["textDocument/publishDiagnostics"] =
---   function(err, method, params, client_id, bufnr, config)
---     if err ~= nil then return end
---     local uri = params.uri
---
---     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
---       underline = true,
---       virtual_text = {spacing = 2},
---       signs = true,
---       update_in_insert = false,
---     })(err, method, params, client_id, bufnr, config)
---
---     bufnr = bufnr or vim.uri_to_bufnr(uri)
---
---     if bufnr == api.nvim_get_current_buf() then
---       vim.lsp.diagnostic.set_loclist{open_loclist = false}
---     end
---   end
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+  underline = true,
+  virtual_text = { spacing = 2 },
+  signs = true,
+  update_in_insert = false,
+})
 
 function M.set_hl()
-  local ns = api.nvim_create_namespace("hl-lsp")
+  local ns = api.nvim_create_namespace "hl-lsp"
 
   -- TODO: fix statusline functions to use new nvim api
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", {fg = "#ff5f87"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", {fg = "#d78f00"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", {fg = "#d78f00"})
-  api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", {fg = "#ff5f87", bold = true})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError",
-                  {fg = "#ff5f87", sp = "#ff5f87", undercurl = true})
-  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning",
-                  {fg = "#d78f00", sp = "#d78f00", undercurl = true})
-  api.nvim_set_hl(ns, "LspReferenceText", {link = "CursorColumn"})
-  api.nvim_set_hl(ns, "LspReferenceRead", {link = "LspReferenceText"})
-  api.nvim_set_hl(ns, "LspReferenceWrite", {link = "LspReferenceText"})
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", { fg = "#ff5f87" })
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", { fg = "#d78f00" })
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", { fg = "#d78f00" })
+  api.nvim_set_hl(ns, "LspDiagnosticsDefaultHint", { fg = "#ff5f87", bold = true })
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineError", { fg = "#ff5f87", sp = "#ff5f87", undercurl = true })
+  api.nvim_set_hl(ns, "LspDiagnosticsUnderlineWarning", { fg = "#d78f00", sp = "#d78f00", undercurl = true })
+  api.nvim_set_hl(ns, "LspReferenceText", { link = "CursorColumn" })
+  api.nvim_set_hl(ns, "LspReferenceRead", { link = "LspReferenceText" })
+  api.nvim_set_hl(ns, "LspReferenceWrite", { link = "LspReferenceText" })
   api.nvim__set_hl_ns(ns) -- This changed to unstable API
 end
 
@@ -129,18 +108,20 @@ end
 -- @return string
 function M.rename(new_name)
   local params = util.make_position_params()
-  new_name = new_name or
-               npcall(vim.fn.input, "New Name: ", vim.fn.expand("<cword>"))
-  if not (new_name and #new_name > 0) then return end
+  new_name = new_name or npcall(vim.fn.input, "New Name: ", vim.fn.expand "<cword>")
+  if not (new_name and #new_name > 0) then
+    return
+  end
   params.newName = new_name
   vim.lsp.buf_request(0, "textDocument/rename", params)
 end
 
 function M.attached_lsps()
   local bufnr = api.nvim_get_current_buf()
-  if not lsps_attached[bufnr] then return "" end
-  return "LSP[" .. table.concat(vim.tbl_values(lsps_attached[bufnr]), ",") ..
-           "]"
+  if not lsps_attached[bufnr] then
+    return ""
+  end
+  return "LSP[" .. table.concat(vim.tbl_values(lsps_attached[bufnr]), ",") .. "]"
 end
 
 -- Return table of useful client info
@@ -158,20 +139,21 @@ end
 
 local set_hl_autocmds = function()
   -- TODO: how to undo this if server detaches?
-  api.nvim_exec([[
+  vim.cmd [[
       au CursorHold <buffer> lua pcall(vim.lsp.buf.document_highlight)
       au CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       au InsertEnter <buffer> lua vim.lsp.buf.clear_references()
-      ]], false)
+      ]]
 end
 
 local nmap = function(key, result)
-  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>" .. result .. "<CR>",
-                          {noremap = true})
+  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>" .. result .. "<CR>", { noremap = true })
 end
 
 local on_attach_cb = function(client)
-  if lsp_status ~= nil then lsp_status.on_attach(client) end
+  if lsp_status ~= nil then
+    lsp_status.on_attach(client)
+  end
   local nmap_capability = function(lhs, method, capability_name)
     if client.resolved_capabilities[capability_name or method] then
       nmap(lhs, "lua vim.lsp.buf." .. method .. "()")
@@ -192,14 +174,10 @@ local on_attach_cb = function(client)
   nmap_capability("<F2>", "rename")
 
   nmap("gd", "lua vim.lsp.diagnostic.set_loclist{open = true}")
-  nmap("[d",
-       "lua vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
-  nmap("]d",
-       "lua vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
-  nmap("[D",
-       "lua vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
-  nmap("]D",
-       "lua vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
+  nmap("[d", "lua vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
+  nmap("]d", "lua vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
+  nmap("[D", "lua vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
+  nmap("]D", "lua vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
 
   if lsp_saga ~= nil then
     nmap("gh", "Lspsaga hover_doc")
@@ -214,15 +192,16 @@ local on_attach_cb = function(client)
   end
 
   if client.resolved_capabilities["document_formatting"] then
-    vim.cmd[[command! Format lua vim.lsp.buf.formatting()]]
-    api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>",
-                            {noremap = true})
+    vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
+    api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>", { noremap = true })
   end
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
   -- Add client name to variable
-  local name_replacements = {diagnosticls = "diag", sumneko_lua = "sumneko"}
-  if not lsps_attached[bufnr] then lsps_attached[bufnr] = {} end
+  local name_replacements = { diagnosticls = "diag", sumneko_lua = "sumneko" }
+  if not lsps_attached[bufnr] then
+    lsps_attached[bufnr] = {}
+  end
   local client_display_name = name_replacements[client.name] or client.name
   -- Don't duplicate name if we're reloading, etc.
   if not vim.tbl_contains(lsps_attached[bufnr], client_display_name) then
@@ -233,12 +212,17 @@ local on_attach_cb = function(client)
   if true and client.resolved_capabilities.document_highlight then
     set_hl_autocmds()
   end
+  if client.resolved_capabilities.code_action then
+    vim.cmd [[au CursorHold,CursorHoldI <buffer> lua nvim.packrequire'nvim-lightbulb'.update_lightbulb()]]
+  end
 end
 
 -- vim.lsp.set_log_level("debug")
 
 function M.init()
-  if not lsp then return end
+  if not lsp then
+    return
+  end
   -- Server configs {{{1
   local local_configs = {
     bashls = true,
@@ -259,31 +243,36 @@ function M.init()
 
   -- configs.taplo.setup{on_attach = on_attach_cb}
   for server, active in pairs(local_configs) do
-    if not active then goto continue end
+    if not active then
+      goto continue
+    end
     -- Load config from disk
     local cfg
     do
-      local def_cfg = {on_attach = on_attach_cb}
+      local def_cfg = { on_attach = on_attach_cb }
       local cfg_fn = npcall(require, "config.lsp." .. server)
       cfg = cfg_fn ~= nil and cfg_fn(on_attach_cb) or def_cfg
     end
     -- Check if defined cmd is executable
     if cfg.cmd ~= nil then
-      if vim.fn.executable(cfg.cmd[1]) ~= 1 then goto continue end
+      if vim.fn.executable(cfg.cmd[1]) ~= 1 then
+        goto continue
+      end
     end
     if lsp_status ~= nil then
-      cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {},
-                                        lsp_status.capabilities)
+      cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {}, lsp_status.capabilities)
     end
     lsp[server].setup(cfg)
     M.configs[server] = cfg
     ::continue::
   end
 end
-if configs ~= nil then configs.taplo.setup{on_attach = on_attach_cb} end
+if configs ~= nil then
+  configs.taplo.setup { on_attach = on_attach_cb }
+end
 
 -- Set and return module {{{1
-M.status = require"config.lsp.status".status
+M.status = require("config.lsp.status").status
 return M
 
 -- local mt = {}

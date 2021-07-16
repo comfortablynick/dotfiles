@@ -5,7 +5,7 @@ local M = {}
 vim.o.completeopt = "menuone,noinsert,noselect"
 
 -- Avoid showing message extra message when using completion
-vim.opt.shortmess:append("c")
+vim.opt.shortmess:append "c"
 
 -- local customize_lsp_label = {
 --   Function = " [function]",
@@ -68,16 +68,16 @@ local items_priority = {
 }
 
 local text_complete = {
-  {complete_items = {"path"}, triggered_only = {"/"}},
-  {complete_items = {"buffers"}},
+  { complete_items = { "path" }, triggered_only = { "/" } },
+  { complete_items = { "buffers" } },
 }
 
 local default_complete = {
   default = {
-    {complete_items = {"path"}, triggered_only = {"/"}},
-    {complete_items = {"lsp"}},
-    {complete_items = {"snippets.nvim", "UltiSnips"}},
-    {complete_items = {"buffers"}},
+    { complete_items = { "path" }, triggered_only = { "/" } },
+    { complete_items = { "lsp" } },
+    { complete_items = { "snippets.nvim", "UltiSnips" } },
+    { complete_items = { "buffers" } },
   },
   string = text_complete,
   comment = text_complete,
@@ -86,41 +86,42 @@ local default_complete = {
 -- Insert complete_items entry and return copy of table
 local add_complete_item = function(item, pos)
   local copy = vim.deepcopy(default_complete)
-  table.insert(copy.default, pos or #copy.default + 1, {complete_items = item})
+  table.insert(copy.default, pos or #copy.default + 1, { complete_items = item })
   return copy
 end
 
 local imap = function(key, result, opts)
-  api.nvim_buf_set_keymap(0, "i", key, result, opts or {silent = true})
+  api.nvim_buf_set_keymap(0, "i", key, result, opts or { silent = true })
 end
 
 M.lsp_labels = customize_lsp_label
 M.init = function()
   -- Don't load completion-nvim for these buffers
-  local complete_exclude_fts = {"clap_input", "qf"}
+  local complete_exclude_fts = { "clap_input", "qf" }
 
-  if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) or vim.bo.filetype ==
-    "" then return end
+  if vim.tbl_contains(complete_exclude_fts, vim.bo.filetype) or vim.bo.filetype == "" then
+    return
+  end
 
-  require"config.snippets"
+  require "config.snippets"
 
   local completion = vim.F.npcall(require, "completion")
-  if not completion then return end
+  if not completion then
+    return
+  end
 
   -- Custom sources
-  completion.addCompletionSource("fish",
-                                 require"config.completion.fish".complete_item)
-  completion.addCompletionSource("chordpro",
-                                 require"config.completion.chordpro".complete_item)
+  completion.addCompletionSource("fish", require("config.completion.fish").complete_item)
+  completion.addCompletionSource("chordpro", require("config.completion.chordpro").complete_item)
 
   -- Build complete chain
   local complete_chain = {
     default = default_complete,
-    fish = add_complete_item({"fish"}, 1),
+    fish = add_complete_item({ "fish" }, 1),
     -- chordpro = add_complete_item({"chordpro"}, 1),
   }
 
-  completion.on_attach{
+  completion.on_attach {
     chain_complete_list = complete_chain,
     customize_lsp_label = customize_lsp_label,
     -- items_priority = items_priority,

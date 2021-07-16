@@ -2,7 +2,7 @@ local messaging = vim.F.npcall(require, "lsp-status/messaging")
 
 if not messaging then
   local noop = function() end
-  return {_init = noop, status = noop}
+  return { _init = noop, status = noop }
 end
 
 local messages = messaging.messages
@@ -16,19 +16,22 @@ local config = {
   indicator_info = "🛈",
   indicator_hint = "❗",
   indicator_ok = "",
-  spinner_frames = {"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"},
+  spinner_frames = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
   status_symbol = " 🇻",
   select_symbol = nil,
 }
 
-local function init(_, _config) config =
-  vim.tbl_extend("force", config, _config) end
+local function init(_, _config)
+  config = vim.tbl_extend("force", config, _config)
+end
 
-local aliases = {pyls_ms = "MPLS"}
+local aliases = { pyls_ms = "MPLS" }
 
 local function statusline_lsp(bufnr)
   bufnr = bufnr or 0
-  if #vim.lsp.buf_get_clients(bufnr) == 0 then return "" end
+  if #vim.lsp.buf_get_clients(bufnr) == 0 then
+    return ""
+  end
 
   local buf_messages = messages()
   local status_parts = {}
@@ -41,16 +44,16 @@ local function statusline_lsp(bufnr)
     local _ = contents -- get rid of luacheck unused var msg
     if msg.progress then
       contents = msg.title
-      if msg.message then contents = contents .. " " .. msg.message end
+      if msg.message then
+        contents = contents .. " " .. msg.message
+      end
 
       if msg.percentage then
         contents = contents .. " (" .. msg.percentage .. ")"
       end
 
       if msg.spinner then
-        contents =
-          config.spinner_frames[(msg.spinner % #config.spinner_frames) + 1] ..
-            " " .. contents
+        contents = config.spinner_frames[(msg.spinner % #config.spinner_frames) + 1] .. " " .. contents
       end
     elseif msg.status then
       contents = msg.content
@@ -59,7 +62,7 @@ local function statusline_lsp(bufnr)
         filename = vim.fn.fnamemodify(filename, ":~:.")
         local space = math.min(60, math.floor(0.6 * vim.fn.winwidth(0)))
         if #filename > space then
-          filename = require"util".path.shorten(filename)
+          filename = require("util").path.shorten(filename)
         end
 
         contents = "(" .. filename .. ") " .. contents
@@ -71,10 +74,11 @@ local function statusline_lsp(bufnr)
     table.insert(msgs, client_name .. " " .. contents)
   end
 
-  local base_status = vim.trim(table.concat(status_parts, " ") .. " " ..
-                                 table.concat(msgs, " "))
-  if base_status ~= "" then return base_status end
+  local base_status = vim.trim(table.concat(status_parts, " ") .. " " .. table.concat(msgs, " "))
+  if base_status ~= "" then
+    return base_status
+  end
   return ""
 end
 
-return {_init = init, status = statusline_lsp}
+return { _init = init, status = statusline_lsp }

@@ -1,4 +1,4 @@
-local ls = require"luasnip"
+local ls = require "luasnip"
 local s = ls.s
 local sn = ls.sn
 local t = ls.t
@@ -22,21 +22,25 @@ local function even_count(ch)
   return ct % 2 == 0
 end
 
-local function neg(fn, ...) return not fn(...) end
+local function neg(fn, ...)
+  return not fn(...)
+end
 
 local function jdocsnip(args, old_state)
-  local nodes = {t({"/**", " * "}), i(1, {"A short Description"}), t({"", ""})}
+  local nodes = { t { "/**", " * " }, i(1, { "A short Description" }), t { "", "" } }
 
   -- These will be merged with the snippet; that way, should the snippet be updated,
   -- some user input eg. text can be referred to in the new snippet.
   local param_nodes = {}
 
-  if old_state then nodes[2] = i(1, old_state.descr:get_text()) end
+  if old_state then
+    nodes[2] = i(1, old_state.descr:get_text())
+  end
   param_nodes.descr = nodes[2]
 
   -- At least one param.
   if string.find(args[2][1], ", ") then
-    vim.list_extend(nodes, {t({" * ", ""})})
+    vim.list_extend(nodes, { t { " * ", "" } })
   end
 
   local insert = 2
@@ -51,8 +55,7 @@ local function jdocsnip(args, old_state)
       else
         inode = i(insert)
       end
-      vim.list_extend(nodes,
-                      {t({" * @param " .. arg .. " "}), inode, t({"", ""})})
+      vim.list_extend(nodes, { t { " * @param " .. arg .. " " }, inode, t { "", "" } })
       param_nodes["arg" .. arg] = inode
 
       insert = insert + 1
@@ -67,7 +70,7 @@ local function jdocsnip(args, old_state)
       inode = i(insert)
     end
 
-    vim.list_extend(nodes, {t({" * ", " * @return "}), inode, t({"", ""})})
+    vim.list_extend(nodes, { t { " * ", " * @return " }, inode, t { "", "" } })
     param_nodes.ret = inode
     insert = insert + 1
   end
@@ -80,13 +83,12 @@ local function jdocsnip(args, old_state)
     else
       ins = i(insert)
     end
-    vim.list_extend(nodes,
-                    {t({" * ", " * @throws " .. exc .. " "}), ins, t({"", ""})})
+    vim.list_extend(nodes, { t { " * ", " * @throws " .. exc .. " " }, ins, t { "", "" } })
     param_nodes.ex = ins
     insert = insert + 1
   end
 
-  vim.list_extend(nodes, {t({" */"})})
+  vim.list_extend(nodes, { t { " */" } })
 
   local snip = sn(nil, nodes)
   -- Error on attempting overwrite.
@@ -96,17 +98,13 @@ end
 
 ls.snippets = {
   all = {
-    s({trig = "("}, {t({"("}), i(1), t({")"}), i(0)}, neg, char_count_same,
-      "%(", "%)"),
-    s({trig = "{"}, {t({"{"}), i(1), t({"}"}), i(0)}, neg, char_count_same,
-      "%{", "%}"),
-    s({trig = "["}, {t({"["}), i(1), t({"]"}), i(0)}, neg, char_count_same,
-      "%[", "%]"),
-    s({trig = "<"}, {t({"<"}), i(1), t({">"}), i(0)}, neg, char_count_same, "<",
-      ">"),
-    s({trig = "'"}, {t({"'"}), i(1), t({"'"}), i(0)}, neg, even_count, "'"),
-    s({trig = "\""}, {t({"\""}), i(1), t({"\""}), i(0)}, neg, even_count, "\""),
-    s({trig = "{;"}, {t({"{", "\t"}), i(1), t({"", "}"}), i(0)}),
+    s({ trig = "(" }, { t { "(" }, i(1), t { ")" }, i(0) }, neg, char_count_same, "%(", "%)"),
+    s({ trig = "{" }, { t { "{" }, i(1), t { "}" }, i(0) }, neg, char_count_same, "%{", "%}"),
+    s({ trig = "[" }, { t { "[" }, i(1), t { "]" }, i(0) }, neg, char_count_same, "%[", "%]"),
+    s({ trig = "<" }, { t { "<" }, i(1), t { ">" }, i(0) }, neg, char_count_same, "<", ">"),
+    s({ trig = "'" }, { t { "'" }, i(1), t { "'" }, i(0) }, neg, even_count, "'"),
+    s({ trig = '"' }, { t { '"' }, i(1), t { '"' }, i(0) }, neg, even_count, '"'),
+    s({ trig = "{;" }, { t { "{", "\t" }, i(1), t { "", "}" }, i(0) }),
   },
   c = {
     -- s({trig = "cmt"}, {
@@ -117,35 +115,34 @@ ls.snippets = {
     --   t({"", "After jumping once more the snippet is exited there ->"}),
     --   i(0),
     -- }),
-    s({trig = "cmt"}, {t({"/* "}), i(0), t{"", " *", " */"}}),
+    s({ trig = "cmt" }, { t { "/* " }, i(0), t { "", " *", " */" } }),
   },
   java = {
-    s({trig = "fn"}, {
-      d(6, jdocsnip, {2, 4, 5}),
-      t({"", ""}),
-      c(1, {t({"public "}), t({"private "})}),
+    s({ trig = "fn" }, {
+      d(6, jdocsnip, { 2, 4, 5 }),
+      t { "", "" },
+      c(1, { t { "public " }, t { "private " } }),
       c(2, {
-        t({"void"}),
-        i(nil, {""}),
-        t({"String"}),
-        t({"char"}),
-        t({"int"}),
-        t({"double"}),
-        t({"boolean"}),
+        t { "void" },
+        i(nil, { "" }),
+        t { "String" },
+        t { "char" },
+        t { "int" },
+        t { "double" },
+        t { "boolean" },
       }),
-      t({" "}),
-      i(3, {"myFunc"}),
-      t({"("}),
+      t { " " },
+      i(3, { "myFunc" }),
+      t { "(" },
       i(4),
-      t({")"}),
-      c(5, {t({""}), sn(nil, {t({"", " throws "}), i(1)})}),
-      t({" {", "\t"}),
+      t { ")" },
+      c(5, { t { "" }, sn(nil, { t { "", " throws " }, i(1) }) }),
+      t { " {", "\t" },
       i(0),
-      t({"", "}"}),
+      t { "", "}" },
     }),
   },
   rust = {
-    ls.parser.parse_snippet({trig = "fn"},
-                            "/// $1\nfn $2($3) ${4:-> $5 }\\{\n\t$0\n\\}"),
+    ls.parser.parse_snippet({ trig = "fn" }, "/// $1\nfn $2($3) ${4:-> $5 }\\{\n\t$0\n\\}"),
   },
 }

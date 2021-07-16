@@ -46,8 +46,6 @@ command! -bang Fzm
 command! Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
 noremap <F3> <Cmd>Neoformat<CR>
 
-" Neogit :: lazy load neogit {{{2
-command! Neogit call plugins#lazy_run('Neogit', 'neogit')
 
 " Rooter :: Find project root {{{2
 command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
@@ -244,6 +242,9 @@ if has('nvim')
 
     " Make :: async make {{{2
     " command! -bang -complete=file Make call s:tools.make()
+
+    " Neogit :: lazy load neogit {{{2
+    command! -nargs=* Neogit lua require'config.neogit'.open(require'neogit.lib.util'.parse_command_args(<f-args>))<CR>
 endif
 
 " vim:fdl=1:

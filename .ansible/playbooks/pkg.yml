@@ -8,3 +8,6 @@
         pkg_aur_packages: "{{ pkg_aur_packages_all|d([]) + pkg_aur_packages_dev|d([]) }}"
         pkg_pacman_packages: "{{ pkg_pacman_packages_all|d([]) + pkg_pacman_packages_dev|d([]) }}"
         pkg_python_packages: "{{ pkg_python_packages_all|d([]) + pkg_python_packages_dev|d([]) }}"
+  tags:
+    - pkg
+    - package

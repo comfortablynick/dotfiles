@@ -3,3 +3,5 @@
   hosts: all
   roles:
     - mosh
+  tags:
+    - mosh

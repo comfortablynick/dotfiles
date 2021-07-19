@@ -40,7 +40,7 @@ endfunction
 
 function s:on_termopen()
     " startinsert
-    nnoremap <buffer> q <Cmd>Bdelete!<CR>
+    " nnoremap <buffer> q <Cmd>Bdelete!<CR>
     setlocal nonumber norelativenumber
     setlocal nobuflisted
     setlocal signcolumn=no

@@ -128,13 +128,13 @@ function plugins#init() abort
         \ 'nvim-lua/lsp-status.nvim',
         \ 'nvim-lua/lsp_extensions.nvim',
         \ 'glepnir/lspsaga.nvim',
-        \ 'kosayoda/nvim-lightbulb',
         \ ]}
     Plug 'nvim-lua/completion-nvim',      {'requires': ['steelsojka/completion-buffers']}
     Plug 'hrsh7th/nvim-compe'
     Plug 'lifepillar/vim-mucomplete'
 
     " Lua/nvim {{{2
+    Plug 'MunifTanjim/nui.nvim'
     Plug 'rktjmp/lush.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
@@ -174,7 +174,7 @@ function plugins#lazy_run(cmd, package, ...)
         echohl None
         return
     endif
-    let l:packages   = type(a:package) !=# v:t_list ? [a:package] : a:package
+    let l:packages   = type(a:package) isnot v:t_list ? [a:package] : a:package
     let l:args       = get(a:, 1, {})
     let l:before     = get(l:args, 'before', [])
     let l:after      = get(l:args, 'after', [])
@@ -183,7 +183,7 @@ function plugins#lazy_run(cmd, package, ...)
     let l:bang       = get(l:args, 'bang',  '')
     let l:extra_args = get(l:args, 'args',  '')
     " Exec before command(s)
-    if type(l:before) != v:t_list
+    if type(l:before) isnot v:t_list
         let l:before = [l:before]
     endif
     for l:before_cmd in l:before
@@ -196,20 +196,20 @@ function plugins#lazy_run(cmd, package, ...)
     endfor
 
     " Exec after command(s)
-    if type(l:after) !=# v:t_list
+    if type(l:after) isnot v:t_list
         let l:after = [l:after]
     endif
     for l:after_cmd in l:after
         execute l:after_cmd
     endfor
-    if type(a:cmd) ==# v:t_func
+    if type(a:cmd) is v:t_func
         return a:cmd()
     endif
-    if type(l:bang) ==# v:t_number
+    if type(l:bang) is v:t_number
         let l:bang = l:bang ==# 1 ? '!' : ''
     endif
 
-    if type(l:extra_args) ==# v:t_list
+    if type(l:extra_args) isnot v:t_list
         let l:extra_args = join(l:extra_args, ' ')
     endif
     " Build command

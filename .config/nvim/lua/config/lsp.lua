@@ -186,10 +186,11 @@ local on_attach_cb = function(client)
     nmap("]d", "Lspsaga diagnostic_jump_next")
     nmap("ga", "Lspsaga code_action")
     nmap("gS", "Lspsaga signature_help")
-    nmap("<F2>", "Lspsaga rename")
+    -- nmap("<F2>", "Lspsaga rename")
     nmap("<C-f>", "lua require'lspsaga.action'.smart_scroll_with_saga(1)")
     nmap("<C-b>", "lua require'lspsaga.action'.smart_scroll_with_saga(-1)")
   end
+    nmap("<F2>", "lua require'config.lsp.nui'.rename()")
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
@@ -211,9 +212,6 @@ local on_attach_cb = function(client)
   -- Set autocmds for highlighting if server supports it
   if true and client.resolved_capabilities.document_highlight then
     set_hl_autocmds()
-  end
-  if client.resolved_capabilities.code_action then
-    vim.cmd [[au CursorHold,CursorHoldI <buffer> lua nvim.packrequire'nvim-lightbulb'.update_lightbulb()]]
   end
 end
 
@@ -250,7 +248,7 @@ function M.init()
     local cfg
     do
       local def_cfg = { on_attach = on_attach_cb }
-      local cfg_fn = npcall(require, "config.lsp." .. server)
+      local cfg_fn = npcall(require, "config.lsp.server." .. server)
       cfg = cfg_fn ~= nil and cfg_fn(on_attach_cb) or def_cfg
     end
     -- Check if defined cmd is executable

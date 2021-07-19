@@ -209,7 +209,7 @@ function plugins#lazy_run(cmd, package, ...)
         let l:bang = l:bang ==# 1 ? '!' : ''
     endif
 
-    if type(l:extra_args) isnot v:t_list
+    if type(l:extra_args) is v:t_list
         let l:extra_args = join(l:extra_args, ' ')
     endif
     " Build command

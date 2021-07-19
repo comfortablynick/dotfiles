@@ -13,4 +13,4 @@ local popup = Popup {
   opacity = 1,
 }
 
-return { popup = popup }
+return popup

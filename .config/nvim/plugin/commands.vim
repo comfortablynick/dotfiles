@@ -20,9 +20,9 @@ command -nargs=1 -bang -complete=customlist,buffer#close_complete
     \ Bclose call buffer#close(<bang>0, <q-args>)
 
 " UndotreeToggle :: lazy load undotree when first called {{{2
-command! UndotreeToggle
-    \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
-noremap <F5> <Cmd>UndotreeToggle<CR>
+" command! UndotreeToggle
+"     \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
+" noremap <F5> <Cmd>UndotreeToggle<CR>
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
 command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
@@ -39,15 +39,15 @@ function s:grep(...)
 endfunction
 
 " Fzm :: lazy load fuzzymenu.vim {{{2
-command! -bang Fzm
-    \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
+" command! -bang Fzm
+"     \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
 
 " Neoformat :: lazy load neoformat {{{2
-command! Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
+" command! Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
 noremap <F3> <Cmd>Neoformat<CR>
 
 " Rooter :: Find project root {{{2
-command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
+" command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
 
 " h[g] :: Open help[grep] in new or existing tab {{{2
 call map#cabbr('h', function('window#tab_mod', ['help', 'help']))
@@ -83,11 +83,11 @@ call map#cabbr('make', 'silent make!')
 
 " AsyncRun/AsyncTasks {{{1
 " AsyncRun :: lazy load plugin {{{2
-command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-    \ call plugins#lazy_run(
-    \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
-    \   'asyncrun.vim'
-    \ )
+" command! -bang -nargs=+ -range=0 -complete=file AsyncRun
+"     \ call plugins#lazy_run(
+"     \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
+"     \   'asyncrun.vim'
+"     \ )
 call map#cabbr('R', 'AsyncRun')
 
 " Make :: async make {{{2
@@ -98,31 +98,31 @@ command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
 
 " AsyncTask :: task runner integrated with asyncrun {{{2
-if !exists(':AsyncTask')
-    " Lazy load if we haven't loaded the plugin
-    command -bang -nargs=* -range=0 AsyncTask
-        \ call plugins#lazy_run(
-        \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-        \ 'asynctasks.vim'
-        \ )
-endif
+" if !exists(':AsyncTask')
+"     " Lazy load if we haven't loaded the plugin
+"     command -bang -nargs=* -range=0 AsyncTask
+"         \ call plugins#lazy_run(
+"         \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
+"         \ 'asynctasks.vim'
+"         \ )
+" endif
 call map#cabbr('ta', 'AsyncTask')
 nnoremap <Leader>r <Cmd>AsyncTask file-run<CR>
 nnoremap <Leader>b <Cmd>AsyncTask file-build<CR>
 
 " Git {{{1
 " GV :: git commit viewer {{{2
-command! -bang -nargs=* -range=0 GV
-    \ call plugins#lazy_run('GV', 'gv.vim',
-    \   {'bang': '<bang>', 'args': '<args>'})
+" command! -bang -nargs=* -range=0 GV
+"     \ call plugins#lazy_run('GV', 'gv.vim',
+"     \   {'bang': '<bang>', 'args': '<args>'})
 
 " Gpush :: custom git push {{{2
 command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
 nnoremap <Leader>gp <Cmd>Gpush<CR>
 
 " Tig[Status] :: view tig in terminal {{{2
-command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
-command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
+" command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
+" command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
 call map#cabbr('ts', 'TigStatus')
 
 " LazyGit :: tui for git {{{2
@@ -131,7 +131,7 @@ command -bang -nargs=* LazyGit
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
-command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
+" command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
 command! -nargs=* -complete=file Startup
     \ call plugins#lazy_run(
     \   'StartupTime',
@@ -140,7 +140,7 @@ command! -nargs=* -complete=file Startup
     \ )
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
-command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
+" command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
 command! -nargs=* -complete=expression PP
     \ call plugins#lazy_run(
     \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
@@ -159,19 +159,19 @@ command! -nargs=* -bar -count=0 Scriptnames
     \| call qf#open(#{size: <count>, stay: v:false})
 
 " WhichKey[Visual] :: display key maps {{{2
-command! -nargs=1 WhichKey
-    \ call plugins#lazy_run(
-    \   'WhichKey',
-    \   'vim-which-key',
-    \   {'args': <q-args>, 'bang': '<bang>'}
-    \ )
+" command! -nargs=1 WhichKey
+"     \ call plugins#lazy_run(
+"     \   'WhichKey',
+"     \   'vim-which-key',
+"     \   {'args': <q-args>, 'bang': '<bang>'}
+"     \ )
 
-command! -nargs=1 WhichKeyVisual
-    \ call plugins#lazy_run(
-    \   'WhichKeyVisual',
-    \   'vim-which-key',
-    \   {'args': <q-args>, 'bang': '<bang>'}
-    \ )
+" command! -nargs=1 WhichKeyVisual
+"     \ call plugins#lazy_run(
+"     \   'WhichKeyVisual',
+"     \   'vim-which-key',
+"     \   {'args': <q-args>, 'bang': '<bang>'}
+"     \ )
 
 " Map WhichKey to g:mapleader
 execute 'nnoremap <Leader>      <Cmd>WhichKey "'..get(g:, 'mapleader', ',')..'"<CR>'
@@ -237,7 +237,7 @@ if has('nvim')
     " command! -bang -complete=file Make call s:tools.make()
 
     " Neogit :: lazy load neogit {{{2
-    command! -nargs=* Neogit lua require'config.neogit'.open(require'neogit.lib.util'.parse_command_args(<f-args>))<CR>
+    " command! -nargs=* Neogit lua require'config.neogit'.open(require'neogit.lib.util'.parse_command_args(<f-args>))<CR>
 endif
 
 " vim:fdl=1:

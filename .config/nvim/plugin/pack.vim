@@ -44,7 +44,6 @@ function s:deferred_load() abort
             \ 'nvim-miniyank',
             \ 'FixCursorHold.nvim',
             \ 'nvim-bqf',
-            \ 'barbar.nvim',
             \ ]
     endif
 

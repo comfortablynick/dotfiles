@@ -141,7 +141,7 @@ function plugins#init() abort
     Plug 'bfredl/nvim-luadev'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'romgrk/barbar.nvim'
+    Plug 'akinsho/nvim-bufferline.lua'
     Plug 'norcalli/profiler.nvim'
     Plug 'romgrk/todoist.nvim',             {'do': ':TodoistInstall'}
     Plug 'kevinhwang91/nvim-bqf'

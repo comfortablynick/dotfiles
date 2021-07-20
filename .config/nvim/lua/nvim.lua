@@ -497,8 +497,8 @@ end
 function nvim.packrequire(packname, modname)
   vim.validate { packname = { packname, "string" } }
   -- Skip any vim rtp stuff if lua module exists
-  local ok, pack = pcall(require, modname or packname)
-  if ok then
+  local pack = package.loaded[modname or packname]
+  if pack ~= nil then
     return pack
   end
   vim.cmd("silent! packadd " .. packname)

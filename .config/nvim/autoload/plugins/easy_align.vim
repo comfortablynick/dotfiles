@@ -2,7 +2,7 @@
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" nmap ga <Plug>(EasyAlign)
 
 let g:easy_align_ignore_groups = ['Comment', 'String']
 let g:easy_align_delimiters = {

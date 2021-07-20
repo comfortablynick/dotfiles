@@ -34,8 +34,8 @@ function s:is_empty_quote()
     return getline('.') =~# '\v^\s*(\s?\>)+\s*$'
 endfunction
 
-if has('nvim-0.5')
-    command Preview lua
+if has('nvim-0.5') && executable('glow')
+    command -buffer Preview lua
         \ require'window'.float_term(
         \ 'glow '..vim.fn.expand('%', ':p'),
         \ 0.4,

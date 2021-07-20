@@ -1,11 +1,11 @@
 local M = {}
-local fuzzy_score = require"completion.util".fuzzy_score
-local match = require"completion.matching"
+local fuzzy_score = require("completion.util").fuzzy_score
+local match = require "completion.matching"
 
 local function get_completion_items(prefix)
   local complete_items = {}
   -- define your total completion items
-  local items = {"[A]", "[B]", "[C]", "[A7sus4]",}
+  local items = { "[A]", "[B]", "[C]", "[A7sus4]" }
   -- find matches items and put them into complete_items
   for _, item in ipairs(items) do
     -- score_func is a fuzzy match scoring function
@@ -30,7 +30,9 @@ end
 local getCompletionItems = function(prefix)
   local items = vim.fn.Chords()
   local complete_items = {}
-  if prefix == "" then return complete_items end
+  if prefix == "" then
+    return complete_items
+  end
   for _, word in ipairs(items) do
     if vim.startswith(word:lower(), prefix:lower()) then
       match.matching(complete_items, prefix, {
@@ -47,6 +49,6 @@ local getCompletionItems = function(prefix)
 end
 
 -- M.complete_item = {item = getCompletionItems}
-M.complete_item = {item = get_completion_items}
+M.complete_item = { item = get_completion_items }
 
 return M

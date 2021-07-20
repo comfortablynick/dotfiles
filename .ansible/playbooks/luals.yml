@@ -3,3 +3,6 @@
   hosts: dev
   roles:
     - lua_language_server
+  tags:
+    - language-server
+    - luals

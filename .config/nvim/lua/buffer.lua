@@ -6,9 +6,9 @@ local M = {}
 -- TODO: add exception for help tabs
 function M.kill(target_buf, should_force)
   if not should_force and api.nvim_buf_get_option(target_buf, "modified") then
-    return api.nvim_err_writeln("Buffer is modified. Force required.")
+    return api.nvim_err_writeln "Buffer is modified. Force required."
   end
-  local delete_opts = {force = should_force == nil and false or should_force}
+  local delete_opts = { force = should_force == nil and false or should_force }
   if target_buf == 0 or target_buf == nil then
     target_buf = api.nvim_get_current_buf()
   end
@@ -26,15 +26,19 @@ function M.kill(target_buf, should_force)
   local windows = api.nvim_list_wins()
   for i = #windows, 1, -1 do
     local win = windows[i]
-    if api.nvim_win_get_buf(win) ~= target_buf then goto continue end
-    api.nvim_set_current_win(win)
-    local alt_buf = vim.fn.bufnr("#")
-    if alt_buf > 0 and api.nvim_buf_is_loaded(alt_buf) then
-      vim.cmd[[buffer #]]
-    else
-      vim.cmd[[bprevious]]
+    if api.nvim_win_get_buf(win) ~= target_buf then
+      goto continue
     end
-    if api.nvim_get_current_buf() ~= target_buf then goto continue end
+    api.nvim_set_current_win(win)
+    local alt_buf = vim.fn.bufnr "#"
+    if alt_buf > 0 and api.nvim_buf_is_loaded(alt_buf) then
+      vim.cmd [[buffer #]]
+    else
+      vim.cmd [[bprevious]]
+    end
+    if api.nvim_get_current_buf() ~= target_buf then
+      goto continue
+    end
     -- Create new buffer before deleting target
     nextbuf = api.nvim_create_buf(false, false)
     ::continue::
@@ -55,7 +59,9 @@ function M.only(force)
   -- I think there is a bug in nvim_list_bufs
   -- It doesn't update when bdelete is called
   for _, n in ipairs(api.nvim_list_bufs()) do
-    if n == cur then goto continue end
+    if n == cur then
+      goto continue
+    end
     -- To mitigate the above issue I have to check if buffer is loaded or not
     if api.nvim_buf_is_loaded(n) then
       -- If the iter buffer is modified one, then don't do anything
@@ -65,7 +71,7 @@ function M.only(force)
         -- `modifiable` check is needed as it will prevent closing file tree ie. NERD_tree
         -- elseif n ~= cur and
       elseif vim.bo[n].modifiable or del_non_modifiable then
-        api.nvim_buf_delete(n, {force = force})
+        api.nvim_buf_delete(n, { force = force })
         deleted = deleted + 1
       end
     end
@@ -78,12 +84,10 @@ function M.only(force)
     nvim.warn(status)
   else
     if deleted > 0 then
-      status = string.format("%s %d deleted buffer%s", status, deleted,
-                             deleted > 1 and "s" or "")
+      status = string.format("%s %d deleted buffer%s", status, deleted, deleted > 1 and "s" or "")
     end
     if modified > 0 then
-      status = string.format("%s %d modified buffer%s", status, modified,
-                             modified > 1 and "s" or "")
+      status = string.format("%s %d modified buffer%s", status, modified, modified > 1 and "s" or "")
     end
     print(status)
   end

@@ -4,10 +4,10 @@
 --
 -- Many items adapted from github.com/norcalli/nvim_utils
 local api = vim.api
+local npcall = vim.F.npcall
 nvim = {}
-vim = vim or {}
 
--- Currently unused {{{1
+--[=[ Currently unused
 function nvim.mark_or_index(buf, input) -- {{{2
   -- An enhanced version of nvim_buf_get_mark which also accepts:
   -- - A number as input: which is taken as a line number.
@@ -16,7 +16,7 @@ function nvim.mark_or_index(buf, input) -- {{{2
     -- TODO how to handle column? It would really depend on whether this was the opening mark or ending mark
     -- It also doesn't matter as long as the functions are respecting the mode for transformations
     assert(input ~= 0, "Line number must be >= 1 or <= -1 for last line(s)")
-    return {input, 0}
+    return { input, 0 }
   elseif type(input) == "table" then
     -- TODO Further validation?
     assert(#input == 2)
@@ -25,8 +25,7 @@ function nvim.mark_or_index(buf, input) -- {{{2
   elseif type(input) == "string" then
     return api.nvim_buf_get_mark(buf, input)
   end
-  assert(false, ("nvim_mark_or_index: Invalid input buf=%q, input=%q"):format(
-           buf, input))
+  assert(false, ("nvim_mark_or_index: Invalid input buf=%q, input=%q"):format(buf, input))
 end
 
 local VISUAL_MODE = {
@@ -48,14 +47,18 @@ function nvim.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   local finish = nvim.mark_or_index(buf, mark_b)
   local lines = api.nvim_buf_get_lines(buf, start[1] - 1, finish[1], false)
 
-  if mode == VISUAL_MODE.line then return lines end
+  if mode == VISUAL_MODE.line then
+    return lines
+  end
 
   if mode == VISUAL_MODE.char then
     -- Order is important. Truncate the end first, because these are not commutative
     if finish[2] ~= 2147483647 then
       lines[#lines] = lines[#lines]:sub(1, finish[2] + 1)
     end
-    if start[2] ~= 0 then lines[1] = lines[1]:sub(start[2] + 1) end
+    if start[2] ~= 0 then
+      lines[1] = lines[1]:sub(start[2] + 1)
+    end
     return lines
   end
 
@@ -66,7 +69,9 @@ function nvim.buf_get_region_lines(buf, mark_a, mark_b, mode) -- {{{2
   else
     lastcol = lastcol + 1
   end
-  for i, line in ipairs(lines) do lines[i] = line:sub(firstcol, lastcol) end
+  for i, line in ipairs(lines) do
+    lines[i] = line:sub(firstcol, lastcol)
+  end
   return lines
 end
 
@@ -127,22 +132,30 @@ function nvim.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
 
     -- If I take the result being nil as leaving it unmodified, then I can use it
     -- to skip the set part and reuse this just to get fed the input.
-    if result == nil then return end
+    if result == nil then
+      return
+    end
 
     -- Sane defaults, assume that they want to erase things if it is empty
-    if #result == 0 then result = {""} end
+    if #result == 0 then
+      result = { "" }
+    end
 
     -- Order is important. Truncate the end first, because these are not commutative
     -- TODO file a bug report about this, it's probably supposed to be -1
     if finish[2] ~= 2147483647 then
       result[#result] = result[#result] .. suffix
     end
-    if start[2] ~= 0 then result[1] = prefix .. result[1] end
+    if start[2] ~= 0 then
+      result[1] = prefix .. result[1]
+    end
   elseif mode == VISUAL_MODE.line then
     result = fn(lines, mode)
     -- If I take the result being nil as leaving it unmodified, then I can use it
     -- to skip the set part and reuse this just to get fed the input.
-    if result == nil then return end
+    if result == nil then
+      return
+    end
   elseif mode == VISUAL_MODE.block then
     local firstcol = start[2] + 1
     local lastcol = finish[2]
@@ -158,13 +171,17 @@ function nvim.buf_transform_region_lines(buf, mark_a, mark_b, mode, fn) -- {{{2
     result = fn(block, mode)
     -- If I take the result being nil as leaving it unmodified, then I can use it
     -- to skip the set part and reuse this just to get fed the input.
-    if result == nil then return end
+    if result == nil then
+      return
+    end
 
-    if #result == 0 then result = {""} end
+    if #result == 0 then
+      result = { "" }
+    end
     for i, line in ipairs(lines) do
       local result_index = (i - 1) % #result + 1
       local replacement = result[result_index]
-      lines[i] = table.concat{
+      lines[i] = table.concat {
         line:sub(1, firstcol - 1),
         replacement,
         line:sub(lastcol + 1),
@@ -190,7 +207,7 @@ end
 -- function LuaExprCallBack() {{{2
 -- VimL glue function for nvim_text_operator
 -- Calls the lua function whose name is g:lua_fn_name and forwards its arguments
-vim.cmd[[
+vim.cmd [[
 function! LuaExprCallback(...)
     return luaeval(g:lua_expr, a:000)
 endfunction
@@ -205,10 +222,9 @@ end
 
 function nvim.text_operator_transform_selection(fn, forced_visual_mode) -- {{{2
   return nvim.text_operator(function(visualmode)
-    nvim.buf_transform_region_lines(nil, "[", "]",
-                                    forced_visual_mode or visualmode, function(
-      lines
-    ) return fn(lines, visualmode) end)
+    nvim.buf_transform_region_lines(nil, "[", "]", forced_visual_mode or visualmode, function(lines)
+      return fn(lines, visualmode)
+    end)
   end)
 end
 
@@ -224,14 +240,16 @@ function nvim.visual_mode() -- {{{2
 end
 
 function nvim.transform_cword(fn) -- {{{2
-  nvim.text_operator_transform_selection(
-    function(lines) return {fn(lines[1])} end)
+  nvim.text_operator_transform_selection(function(lines)
+    return { fn(lines[1]) }
+  end)
   api.nvim_feedkeys("iw", "ni", false)
 end
 
 function nvim.transform_cWORD(fn) -- {{{2
-  nvim.text_operator_transform_selection(
-    function(lines) return {fn(lines[1])} end)
+  nvim.text_operator_transform_selection(function(lines)
+    return { fn(lines[1]) }
+  end)
   api.nvim_feedkeys("iW", "ni", false)
 end
 
@@ -267,12 +285,9 @@ function nvim.apply_mappings(mappings, default_options) -- {{{2
     if type(options.buffer) == "number" and options.buffer ~= 0 then
       bufnr = options.buffer
     end
-    local mode, mapping = key:match("^(.)(.+)$")
-    assert(mode,
-           "nvim_apply_mappings: invalid mode specified for keymapping " .. key)
-    assert(valid_modes[mode],
-           "nvim_apply_mappings: invalid mode specified for keymapping. mode=" ..
-             mode)
+    local mode, mapping = key:match "^(.)(.+)$"
+    assert(mode, "nvim_apply_mappings: invalid mode specified for keymapping " .. key)
+    assert(valid_modes[mode], "nvim_apply_mappings: invalid mode specified for keymapping. mode=" .. mode)
     mode = valid_modes[mode]
     local rhs = options[1]
     options[1] = nil
@@ -285,9 +300,7 @@ function nvim.apply_mappings(mappings, default_options) -- {{{2
         local key_function = rhs
         rhs = function()
           key_function()
-          vim.fn["repeat#set"](api.nvim_replace_termcodes(key_mapping, true,
-                                                          true, true),
-                               vim.v.count)
+          vim.fn["repeat#set"](api.nvim_replace_termcodes(key_mapping, true, true, true), vim.v.count)
         end
         options.dot_repeat = nil
       end
@@ -297,16 +310,16 @@ function nvim.apply_mappings(mappings, default_options) -- {{{2
           LUA_BUFFER_MAPPING[bufnr] = {}
           -- Clean up our resources.
           api.nvim_buf_attach(bufnr, false, {
-            on_detach = function() LUA_BUFFER_MAPPING[bufnr] = nil end,
+            on_detach = function()
+              LUA_BUFFER_MAPPING[bufnr] = nil
+            end,
           })
         end
         LUA_BUFFER_MAPPING[bufnr][escaped] = rhs
         if mode == "x" or mode == "v" then
-          key_mapping = (":<C-u>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(
-                          bufnr, escaped)
+          key_mapping = (":<C-u>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(bufnr, escaped)
         else
-          key_mapping = ("<Cmd>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(
-                          bufnr, escaped)
+          key_mapping = ("<Cmd>lua LUA_BUFFER_MAPPING[%d].%s()<CR>"):format(bufnr, escaped)
         end
       else
         LUA_MAPPING[escaped] = rhs
@@ -332,126 +345,25 @@ end
 function nvim.create_augroups(definitions) -- {{{2
   for group_name, definition in pairs(definitions) do
     vim.cmd("augroup " .. group_name)
-    vim.cmd("autocmd!")
+    vim.cmd "autocmd!"
     for _, def in ipairs(definition) do
-      local command = table.concat(vim.tbl_flatten{"autocmd", def}, " ")
+      local command = table.concat(vim.tbl_flatten { "autocmd", def }, " ")
       vim.cmd(command)
     end
-    vim.cmd("augroup END")
+    vim.cmd "augroup END"
   end
 end
 
 function nvim.define_text_object(mapping, function_name) -- {{{2
-  local options = {silent = true, noremap = true}
-  api.nvim_set_keymap("n", mapping,
-                      ("<Cmd>lua %s(%s)<CR>"):format(function_name, false),
-                      options)
-  api.nvim_set_keymap("x", mapping,
-                      (":lua %s(%s)<CR>"):format(function_name, true), options)
-end
-
--- Used {{{1
-function nvim.relative_name(path) -- {{{2
-  -- Return path relative to config
-  -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
-  local fp = vim.fn.expand(path or "%")
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W",
-                                                                          "_")
-end
-
-function nvim.module_name(path) -- {{{2
-  -- Return module name of path or current file
-  local fp = vim.fn.expand(path or "%")
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub(
-           "%W", ".")
-end
-
-function nvim.source_current_buffer() -- {{{2
-  -- luacheck: ignore loadstring
-  loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
-end
-
-function nvim.reload() -- {{{2
-  -- Remove module from `package.loaded` and source buffer to hot reload
-  local bufname = api.nvim_buf_get_name(0)
-  package.loaded[nvim.module_name(bufname)] = nil
-  nvim.source_current_buffer()
-end
-
-function nvim.smart_tab() -- {{{2
-  if vim.fn.pumvisible() ~= 0 then
-    api.nvim_eval[[feedkeys("\<c-n>", "n")]]
-    return
-  end
-  local col = vim.fn.col(".") - 1
-  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-    api.nvim_eval[[feedkeys("\<tab>", "n")]]
-    return
-  end
-  -- vim.F.npcall(fallback_cb)
-  -- Trigger completion otherwise?
-  -- source.triggerCompletion(true, manager)
-  api.nvim_eval[[feedkeys("\<C-Space>")]]
-end
-
-function nvim.smart_s_tab() -- {{{2
-  if vim.fn.pumvisible() ~= 0 then
-    api.nvim_eval([[feedkeys("\<c-p>", "n")]])
-    return
-  end
-  api.nvim_eval([[feedkeys("\<s-tab>", "n")]])
-end
-
--- warn :: echo warning message {{{2
-function nvim.warn(text)
-  vim.validate{text = {text, "string"}}
-  api.nvim_echo({{text, "WarningMsg"}}, false, {})
-end
-
--- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
-function nvim.unlet(var_name, var_scope)
-  pcall(function() vim[var_scope or "g"][var_name] = nil end)
-end
-
--- mcmd :: multiline `vim.cmd` {{{2
---
--- Execute block of excommands
--- @param command (string) Multiline command to execute
-function nvim.mcmd(command)
-  vim.validate{command = {command, "s"}}
-  for line in vim.gsplit(command, "\n", true) do vim.cmd(line) end
-end
-
--- packrequire :: load pack + lua module and return module or nil {{{2
-function nvim.packrequire(packname, modname)
-  vim.validate{packname = {packname, "string"}}
-  vim.cmd("silent! packadd " .. packname)
-  return vim.F.npcall(require, modname or packname)
-end
-
--- unload :: unload lua module/namespace {{{2
-function nvim.unload(prefix)
-  local found = vim.tbl_map(function(s)
-    if s:find("^" .. prefix .. "[%./]?%w*$") then
-      return s
-    else
-      return nil
-    end
-  end, vim.tbl_keys(package.loaded))
-  for _, v in pairs(found) do package.loaded[v] = nil end
-  return found
-  -- local prefix_with_dot = prefix .. "."
-  -- for k in pairs(package.loaded) do
-  --   -- if k == prefix or k:sub(1, #prefix_with_dot) == prefix_with_dot then
-  --   --   package.loaded[k] = nil
-  --   -- end
-  -- end
+  local options = { silent = true, noremap = true }
+  api.nvim_set_keymap("n", mapping, ("<Cmd>lua %s(%s)<CR>"):format(function_name, false), options)
+  api.nvim_set_keymap("x", mapping, (":lua %s(%s)<CR>"):format(function_name, true), options)
 end
 
 -- Iterator utils (luafun is probably faster) {{{2
 -- From: https://github.com/rxi/lume
 local getiter = function(x)
-  vim.validate{arg = {x, "table"}}
+  vim.validate { arg = { x, "table" } }
   if vim.tbl_islist(x) then
     return ipairs
   else
@@ -484,14 +396,119 @@ end
 function nvim.tbl_foreach(t, fn, ...) -- {{{2
   local iter = getiter(t)
   if type(fn) == "string" then
-    for _, v in iter(t) do v[fn](v, ...) end
+    for _, v in iter(t) do
+      v[fn](v, ...)
+    end
   else
-    for _, v in iter(t) do fn(v, ...) end
+    for _, v in iter(t) do
+      fn(v, ...)
+    end
   end
   return t
 end
 
--- Lazy load vim.api.nvim_{method} into nvim.{method} {{{2
-setmetatable(nvim, {__index = function(_, k) return api["nvim_" .. k] end})
+-- unload :: unload lua module/namespace {{{2
+function nvim.unload(prefix)
+  local found = vim.tbl_map(function(s)
+    if s:find("^" .. prefix .. "[%./]?%w*$") then
+      return s
+    else
+      return nil
+    end
+  end, vim.tbl_keys(
+    package.loaded
+  ))
+  for _, v in pairs(found) do
+    package.loaded[v] = nil
+  end
+  return found
+  -- local prefix_with_dot = prefix .. "."
+  -- for k in pairs(package.loaded) do
+  --   -- if k == prefix or k:sub(1, #prefix_with_dot) == prefix_with_dot then
+  --   --   package.loaded[k] = nil
+  --   -- end
+  -- end
+end
+--]=]
+-- Used {{{1
+function nvim.relative_name(path) -- {{{2
+  -- Return path relative to config
+  -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
+end
 
--- vim:fdl=1:
+function nvim.module_name(path) -- {{{2
+  -- Return module name of path or current file
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub("%W", ".")
+end
+
+function nvim.source_current_buffer() -- {{{2
+  -- luacheck: ignore loadstring
+  loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
+end
+
+function nvim.reload() -- {{{2
+  -- Remove module from `package.loaded` and source buffer to hot reload
+  local bufname = api.nvim_buf_get_name(0)
+  package.loaded[nvim.module_name(bufname)] = nil
+  nvim.source_current_buffer()
+end
+
+function nvim.smart_tab() -- {{{2
+  if vim.fn.pumvisible() ~= 0 then
+    api.nvim_eval [[feedkeys("\<c-n>", "n")]]
+    return
+  end
+  local col = vim.fn.col "." - 1
+  if col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
+    api.nvim_eval [[feedkeys("\<tab>", "n")]]
+    return
+  end
+  -- npcall(fallback_cb)
+  -- Trigger completion otherwise?
+  -- source.triggerCompletion(true, manager)
+  api.nvim_eval [[feedkeys("\<C-Space>")]]
+end
+
+function nvim.smart_s_tab() -- {{{2
+  if vim.fn.pumvisible() ~= 0 then
+    api.nvim_eval [[feedkeys("\<c-p>", "n")]]
+    return
+  end
+  api.nvim_eval [[feedkeys("\<s-tab>", "n")]]
+end
+
+-- warn :: echo warning message {{{2
+function nvim.warn(text)
+  vim.validate { text = { text, "string" } }
+  api.nvim_echo({ { text, "WarningMsg" } }, false, {})
+end
+
+-- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`) {{{2
+function nvim.unlet(var_name, var_scope)
+  pcall(function()
+    vim[var_scope or "g"][var_name] = nil
+  end)
+end
+
+-- packrequire :: load pack + lua module and return module or nil {{{2
+function nvim.packrequire(packname, modname)
+  vim.validate { packname = { packname, "string" } }
+  -- Skip any vim rtp stuff if lua module exists
+  local pack = package.loaded[modname or packname]
+  if pack ~= nil then
+    return pack
+  end
+  vim.cmd("silent! packadd " .. packname)
+  -- No need to check; just return nil if pcall fails
+  return npcall(require, modname or packname)
+end
+
+-- Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work {{{2
+setmetatable(nvim, {
+  __index = function(_, k)
+    return api["nvim_" .. k]
+  end,
+})

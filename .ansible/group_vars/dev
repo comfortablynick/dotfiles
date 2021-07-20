@@ -62,3 +62,4 @@ cargo_packages_dev:
   - name: fastmod
   - name: ttdl
   - name: watchexec-cli
+  - name: stylua --features lua52

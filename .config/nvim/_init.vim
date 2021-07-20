@@ -143,7 +143,7 @@ let g:window_width = &columns                                   " Initial window
 " Line numbers {{{2
 set number                                                      " Show linenumbers
 set relativenumber                                              " Show relative numbers (hybrid with `number` enabled)
-set numberwidth=2
+" set numberwidth=2
 
 " Disable Vim default plugins {{{2
 let g:loaded_gzip = 1
@@ -182,25 +182,22 @@ silent! packadd! vim-projectionist
 " Nvim/vim specific packages
 if has('nvim-0.5')
     " Nvim-only
-    " packadd! barbar.nvim
     silent! packadd! plenary.nvim
-    silent! packadd! nvim-lspconfig
-    silent! packadd! lsp-status.nvim
-    " silent! packadd! completion-nvim
-    " silent! packadd! completion-buffers
     silent! packadd! nvim-compe
-    silent! packadd! lspsaga.nvim
-    " silent! packadd! snippets.nvim
     silent! packadd! LuaSnip
+    silent! packadd! popup.nvim
+    silent! packadd! telescope.nvim
+    silent! packadd! nvim-bufferline.lua
 
     lua <<
     require"nvim"
     require"globals"
     require"config.treesitter"
     require"config.devicons"
-    require"config.gitsigns".init()
+    require"config.gitsigns"
     require"config.lsp".init()
     require"config.hop"
+    require"bufferline".setup{}
 .
 
     augroup vimrc
@@ -211,7 +208,7 @@ if has('nvim-0.5')
     augroup END
 
     if getenv('AK_PROFILER') == 1
-        " use: `env AK_PROFILER=1 nvim 2>&1 >/dev/null | bat`
+        " example: `AK_PROFILER=1 nvim 2>&1 >/dev/null` to print lua profile info to console
         packadd! profiler.nvim
         lua require'profiler'
     endif

@@ -1,12 +1,12 @@
 local api = vim.api
+local Popup = nvim.packrequire("nui.nvim", "nui.popup")
 local M = {}
 
 function M.get_usable_width(winnr) -- {{{1
   -- Calculate usable width of window
   -- Takes into account sign column, numberwidth, and foldwidth
   local width = api.nvim_win_get_width(winnr or 0)
-  local numberwidth = math.max(vim.wo.numberwidth,
-                               string.len(api.nvim_buf_line_count(0)) + 1)
+  local numberwidth = math.max(vim.wo.numberwidth, string.len(api.nvim_buf_line_count(0)) + 1)
   local numwidth = (vim.wo.number or vim.wo.relativenumber) and numberwidth or 0
   local foldwidth = vim.wo.foldcolumn
   local signwidth = 0
@@ -14,8 +14,7 @@ function M.get_usable_width(winnr) -- {{{1
   if vim.wo.signcolumn == "yes" then
     signwidth = 2
   elseif vim.wo.signcolumn == "auto" then
-    signs = vim.split(vim.fn.execute(("sign place buffer=%d"):format(
-                                       vim.fn.bufnr(""))), "\n")
+    signs = vim.split(vim.fn.execute(("sign place buffer=%d"):format(vim.fn.bufnr "")), "\n")
     signwidth = #signs > 3 and 2 or 0
   end
   return width - numwidth - foldwidth - signwidth
@@ -39,11 +38,10 @@ function M.get_decoration_width(winnr) -- {{{1
   if max_number > 0 then
     local actual_number_width = string.len(max_number) + 1
     local number_width = api.nvim_win_get_option(0, "numberwidth")
-    decoration_width = decoration_width +
-                         math.max(number_width, actual_number_width)
+    decoration_width = decoration_width + math.max(number_width, actual_number_width)
   end
   -- signs_
-  if vim.fn.has("signs") then
+  if vim.fn.has "signs" then
     local signcolumn = api.nvim_win_get_option(0, "signcolumn")
     local signcolumn_width = 2
     if vim.startswith(signcolumn, "yes") or vim.startswith(signcolumn, "auto") then
@@ -51,7 +49,7 @@ function M.get_decoration_width(winnr) -- {{{1
     end
   end
   -- folding
-  if vim.fn.has("folding") then
+  if vim.fn.has "folding" then
     local folding_width = api.nvim_win_get_option(0, "foldcolumn")
     decoration_width = decoration_width + folding_width
   end
@@ -60,33 +58,70 @@ end
 
 function M.float_term(command, scale_pct, border, title) -- {{{1
   -- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
-  vim.validate{
+  vim.validate {
     scale_pct = {
       scale_pct,
-      function(v) return v == nil or (v > 0 and v <= 1) end,
+      function(v)
+        return v == nil or (v > 0 and v <= 1)
+      end,
       "nil or between 0 and 1",
       true,
     },
-    border = {border, "b", true},
-    title = {title, "s", true},
+    border = { border, "b", true },
+    title = { title, "s", true },
   }
-  local width, height
-  do
-    -- calculate based on pct or leave it as nil
-    if scale_pct ~= nil then
-      local ui = api.nvim_list_uis()[1]
-      width = math.floor(ui.width * scale_pct)
-      height = math.floor(ui.height * scale_pct)
+
+  local scale = string.format("%s%%", scale_pct * 100)
+  -- local width, height
+  -- do
+  --   -- calculate based on pct or leave it as nil
+  --   if scale_pct ~= nil then
+  --     local ui = api.nvim_list_uis()[1]
+  --     width = math.floor(ui.width * scale_pct)
+  --     height = math.floor(ui.height * scale_pct)
+  --   end
+  -- end
+  -- M.create_centered_floating {
+  --   width = width,
+  --   height = height,
+  --   border = border or false,
+  --   title = title,
+  -- }
+  local border_style = (function()
+    if not border then
+      return { style = "none" }
+    else
+      return {
+        style = "rounded",
+        highlight = "FloatBorder",
+        text = { top = title or command or "", top_align = "left" },
+      }
     end
-  end
-  M.create_centered_floating{
-    width = width,
-    height = height,
-    border = border or false,
-    title = title,
+  end)()
+  local popup = Popup {
+    border = border_style,
+    position = "50%",
+    size = {
+      width = scale,
+      height = scale,
+    },
+    opacity = 0.8,
+    enter = true,
   }
+  popup:mount()
+  -- popup:on({ event.BufLeave }, function()
+  --   popup:unmount()
+  -- end, { once = true })
+
+  local exit_nmaps = { "<Esc>", "q", "<C-c>" }
+
+  for _, map in ipairs(exit_nmaps) do
+    popup:map("n", map, function()
+      popup:unmount()
+    end, { noremap = true })
+  end
   vim.fn.termopen(command)
-  vim.cmd"startinsert"
+  vim.cmd "startinsert"
 end
 
 function M.create_centered_floating(options) -- {{{1
@@ -96,23 +131,29 @@ function M.create_centered_floating(options) -- {{{1
   -- `border` Add border lines
   -- `hl` Highlight to use with NormalFloat: (default is "Pmenu", based on fzf)
   options = options or {}
-  vim.validate{options = {options, "table", true}}
-  vim.validate{
+  vim.validate { options = { options, "table", true } }
+  vim.validate {
     width = {
       options.width,
-      function(v) return v == nil or v > 0 end,
+      function(v)
+        return v == nil or v > 0
+      end,
       "nil or greater than 0",
     },
     height = {
       options.height,
-      function(v) return v == nil or v > 0 end,
+      function(v)
+        return v == nil or v > 0
+      end,
       "nil or greater than 0",
     },
-    border = {options.border, "boolean", true},
-    hl = {options.hl, "string", true},
+    border = { options.border, "boolean", true },
+    hl = { options.hl, "string", true },
     winblend = {
       options.winblend,
-      function(v) return v == nil or (v >= 1 and v <= 100) end,
+      function(v)
+        return v == nil or (v >= 1 and v <= 100)
+      end,
       "between 1 and 100",
     },
   }
@@ -122,8 +163,7 @@ function M.create_centered_floating(options) -- {{{1
     cols = ui.width
     lines = ui.height
   end
-  local width, height, title = options.width, options.height,
-                               options.title or ""
+  local width, height = options.width, options.height
   do
     local usable_w = M.get_usable_width(0)
     if not options.width or options.width < 1 then
@@ -142,25 +182,9 @@ function M.create_centered_floating(options) -- {{{1
     width = width,
     height = height,
     style = "minimal",
+    border = options.border and "rounded" or "none",
   }
-  -- Add border lines if applicable
-  local border_win, border_buf
-  if options.border then
-    -- Create border buffer, window
-    border_buf = api.nvim_create_buf(false, true)
-    if #title > 0 then title = " " .. title .. " " end
-    local border_top =
-      "╭" .. title .. string.rep("─", width - 2 - #title) .. "╮"
-    local border_mid = "│" .. string.rep(" ", width - 2) .. "│"
-    local border_bot = "╰" .. string.rep("─", width - 2) .. "╯"
-    local border_lines = {}
-    table.insert(border_lines, border_top)
-    vim.list_extend(border_lines,
-                    vim.split(string.rep(border_mid, height - 2, "\n"), "\n"))
-    table.insert(border_lines, border_bot)
-    api.nvim_buf_set_lines(border_buf, 0, -1, true, border_lines)
-    border_win = api.nvim_open_win(border_buf, true, win_opts)
-  end
+
   -- Create text buffer, window
   win_opts.row = win_opts.row + 1
   win_opts.height = win_opts.height - 2
@@ -172,29 +196,26 @@ function M.create_centered_floating(options) -- {{{1
   -- Set style
   options.hl = options.hl or "Pmenu"
   vim.wo[text_win].winhl = "NormalFloat:" .. options.hl
-  if options.winblend ~= nil then vim.wo[text_win].winblend = options.winblend end
-  if border_win ~= nil then
-    vim.wo[border_win].winhl = "NormalFloat:" .. options.hl
-    if options.winblend ~= nil then
-      vim.wo[border_win].winblend = options.winblend
-    end
+  if options.winblend ~= nil then
+    vim.wo[text_win].winblend = options.winblend
   end
 
-  -- Set autocmds
-  if border_buf ~= nil then
-    vim.cmd("autocmd BufWipeout <buffer> exe 'silent bwipeout!'" .. border_buf)
+  local exit_keys = { "<C-c>", "q", "<Esc>" }
+  for _, key in ipairs(exit_keys) do
+    api.nvim_buf_set_keymap(
+      text_buf,
+      "n",
+      key,
+      "<Cmd>lua vim.api.nvim_win_close(" .. text_win .. ", true)<CR>",
+      { noremap = true }
+    )
   end
-  api.nvim_buf_set_keymap(text_buf, "n", "<C-c>",
-                          "<Cmd>call nvim_win_close(" .. text_win ..
-                            ", v:true)<CR>", {noremap = true})
-  api.nvim_buf_set_keymap(text_buf, "n", "q", "<Cmd>call nvim_win_close(" ..
-                            text_win .. ", v:true)<CR>", {noremap = true})
   api.nvim_buf_set_option(text_buf, "bufhidden", "wipe")
   return text_buf
 end
 
 -- function M.percentage_range_window() --{{{1
-local default_win_opts = {winblend = 15, percentage = 0.9}
+local default_win_opts = { winblend = 15, percentage = 0.9 }
 
 local function default_opts(options)
   options = vim.tbl_extend("force", default_win_opts, options)
@@ -273,12 +294,12 @@ function M.percentage_range_window(col_range, row_range, options)
   vim.wo[win_id].cursorcolumn = false
   vim.wo[win_id].winblend = options.winblend
 
-  return {bufnr = bufnr, win_id = win_id}
+  return { bufnr = bufnr, win_id = win_id }
 end
 
 function M.floating_win(options) -- {{{1
-  vim.validate{options = {options, "table", true}}
-  local buf = M.create_centered_floating{
+  vim.validate { options = { options, "table", true } }
+  local buf = M.create_centered_floating {
     height = options.size_pct,
     width = options.size_pct,
   }
@@ -287,14 +308,51 @@ function M.floating_win(options) -- {{{1
   return buf
 end
 
-function M.floating_help(query) -- {{{1
-  local buf = M.create_centered_floating{width = 90, border = true}
-  api.nvim_set_current_buf(buf)
-  vim.bo.filetype = "help"
-  vim.bo.buftype = "help"
+-- function M.floating_help(query) -- {{{1
+--   local buf = M.create_centered_floating { width = 90, border = true }
+--   api.nvim_set_current_buf(buf)
+--   vim.bo.filetype = "help"
+--   vim.bo.buftype = "help"
+--   vim.cmd("help " .. query)
+--   api.nvim_buf_set_keymap(buf, "n", "<C-c>", ":call buffer#quick_close()<CR>", { silent = true, noremap = true })
+-- end
+
+function M.floating_help(query)
+  local event = require("nui.utils.autocmd").event
+  local popup = Popup {
+    border = {
+      style = "rounded",
+      highlight = "FloatBorder",
+      text = { top = ("[Help: %s]"):format(query), top_align = "left" },
+    },
+    position = "50%",
+    size = {
+      width = 85,
+      height = "60%",
+    },
+    opacity = 0.8,
+    enter = true,
+  }
+  popup:mount()
+
+  api.nvim_buf_set_option(popup.bufnr, "filetype", "help")
+  api.nvim_buf_set_option(popup.bufnr, "buftype", "help")
   vim.cmd("help " .. query)
-  api.nvim_buf_set_keymap(buf, "n", "<C-c>", ":call buffer#quick_close()<CR>",
-                          {silent = true, noremap = true})
+
+  -- Close window if we leave it
+  popup:on({ event.BufLeave }, function()
+    popup:unmount()
+  end, { once = true })
+
+  local exit_nmaps = { "<Esc>", "q", "<C-c>" }
+
+  for _, map in ipairs(exit_nmaps) do
+    popup:map("n", map, function()
+      popup:unmount()
+    end, { noremap = true })
+  end
+
+  return popup
 end
 
 function M.create_scratch(lines, mods, replace_existing) -- {{{1
@@ -314,8 +372,7 @@ function M.create_scratch(lines, mods, replace_existing) -- {{{1
   vim.bo.swapfile = false
   vim.bo.buftype = "nofile"
   vim.bo.bufhidden = "delete"
-  api.nvim_buf_set_keymap(buf, "n", "q", "<Cmd>bdelete!<CR>",
-                          {noremap = true, silent = true})
+  api.nvim_buf_set_keymap(buf, "n", "q", "<Cmd>bdelete!<CR>", { noremap = true, silent = true })
   api.nvim_buf_set_lines(buf, 0, -1, 0, lines or {})
 end
 

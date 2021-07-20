@@ -1,15 +1,25 @@
 -- From: https://github.com/norcalli/nvim-base16.lua
 local function highlight(group, guifg, guibg, ctermfg, ctermbg, attr, guisp)
-  local parts = {group}
-  if guifg then table.insert(parts, "guifg=#" .. guifg) end
-  if guibg then table.insert(parts, "guibg=#" .. guibg) end
-  if ctermfg then table.insert(parts, "ctermfg=" .. ctermfg) end
-  if ctermbg then table.insert(parts, "ctermbg=" .. ctermbg) end
+  local parts = { group }
+  if guifg then
+    table.insert(parts, "guifg=#" .. guifg)
+  end
+  if guibg then
+    table.insert(parts, "guibg=#" .. guibg)
+  end
+  if ctermfg then
+    table.insert(parts, "ctermfg=" .. ctermfg)
+  end
+  if ctermbg then
+    table.insert(parts, "ctermbg=" .. ctermbg)
+  end
   if attr then
     table.insert(parts, "gui=" .. attr)
     table.insert(parts, "cterm=" .. attr)
   end
-  if guisp then table.insert(parts, "guisp=#" .. guisp) end
+  if guisp then
+    table.insert(parts, "guisp=#" .. guisp)
+  end
 
   vim.cmd("highlight " .. table.concat(parts, " "))
 end
@@ -46,7 +56,7 @@ local function apply_base16_theme(theme, use_256_colorspace)
   end
 
   -- Neovim terminal colours
-  if vim.fn.has("nvim") then
+  if vim.fn.has "nvim" then
     vim.g.terminal_color_0 = "#" .. theme.base00
     vim.g.terminal_color_1 = "#" .. theme.base08
     vim.g.terminal_color_2 = "#" .. theme.base0B
@@ -106,8 +116,7 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("Exception", theme.base08, nil, cterm08, nil, nil, nil)
   highlight("FoldColumn", theme.base0C, theme.base01, cterm0C, cterm01, nil, nil)
   highlight("Folded", theme.base03, theme.base01, cterm03, cterm01, nil, nil)
-  highlight("IncSearch", theme.base01, theme.base09, cterm01, cterm09, "none",
-            nil)
+  highlight("IncSearch", theme.base01, theme.base09, cterm01, cterm09, "none", nil)
   highlight("Italic", nil, nil, nil, nil, "none", nil)
   highlight("Macro", theme.base08, nil, cterm08, nil, nil, nil)
   highlight("MatchParen", nil, theme.base03, nil, cterm03, nil, nil)
@@ -115,8 +124,7 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("MoreMsg", theme.base0B, nil, cterm0B, nil, nil, nil)
   highlight("Question", theme.base0D, nil, cterm0D, nil, nil, nil)
   highlight("Search", theme.base01, theme.base0A, cterm01, cterm0A, nil, nil)
-  highlight("Substitute", theme.base01, theme.base0A, cterm01, cterm0A, "none",
-            nil)
+  highlight("Substitute", theme.base01, theme.base0A, cterm01, cterm0A, "none", nil)
   highlight("SpecialKey", theme.base03, nil, cterm03, nil, nil, nil)
   highlight("TooLong", theme.base08, nil, cterm08, nil, nil, nil)
   highlight("Underlined", theme.base08, nil, cterm08, nil, nil, nil)
@@ -130,25 +138,19 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("NonText", theme.base03, nil, cterm03, nil, nil, nil)
   highlight("LineNr", theme.base03, theme.base01, cterm03, cterm01, nil, nil)
   highlight("SignColumn", theme.base03, theme.base01, cterm03, cterm01, nil, nil)
-  highlight("StatusLine", theme.base04, theme.base02, cterm04, cterm02, "none",
-            nil)
-  highlight("StatusLineNC", theme.base03, theme.base01, cterm03, cterm01,
-            "none", nil)
-  highlight("VertSplit", theme.base02, theme.base02, cterm02, cterm02, "none",
-            nil)
+  highlight("StatusLine", theme.base04, theme.base02, cterm04, cterm02, "none", nil)
+  highlight("StatusLineNC", theme.base03, theme.base01, cterm03, cterm01, "none", nil)
+  highlight("VertSplit", theme.base02, theme.base02, cterm02, cterm02, "none", nil)
   highlight("ColorColumn", nil, theme.base01, nil, cterm01, "none", nil)
   highlight("CursorColumn", nil, theme.base01, nil, cterm01, "none", nil)
   highlight("CursorLine", nil, theme.base01, nil, cterm01, "none", nil)
-  highlight("CursorLineNr", theme.base04, theme.base01, cterm04, cterm01, nil,
-            nil)
+  highlight("CursorLineNr", theme.base04, theme.base01, cterm04, cterm01, nil, nil)
   highlight("QuickFixLine", nil, theme.base01, nil, cterm01, "none", nil)
   highlight("PMenu", theme.base05, theme.base01, cterm05, cterm01, "none", nil)
   highlight("PMenuSel", theme.base01, theme.base05, cterm01, cterm05, nil, nil)
   highlight("TabLine", theme.base03, theme.base01, cterm03, cterm01, "none", nil)
-  highlight("TabLineFill", theme.base03, theme.base01, cterm03, cterm01, "none",
-            nil)
-  highlight("TabLineSel", theme.base0B, theme.base01, cterm0B, cterm01, "none",
-            nil)
+  highlight("TabLineFill", theme.base03, theme.base01, cterm03, cterm01, "none", nil)
+  highlight("TabLineSel", theme.base0B, theme.base01, cterm0B, cterm01, "none", nil)
 
   -- Standard syntax highlighting
   highlight("Boolean", theme.base09, nil, cterm09, nil, nil, nil)
@@ -208,11 +210,9 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("DiffText", theme.base0D, theme.base01, cterm0D, cterm01, nil, nil)
   highlight("DiffAdded", theme.base0B, theme.base00, cterm0B, cterm00, nil, nil)
   highlight("DiffFile", theme.base08, theme.base00, cterm08, cterm00, nil, nil)
-  highlight("DiffNewFile", theme.base0B, theme.base00, cterm0B, cterm00, nil,
-            nil)
+  highlight("DiffNewFile", theme.base0B, theme.base00, cterm0B, cterm00, nil, nil)
   highlight("DiffLine", theme.base0D, theme.base00, cterm0D, cterm00, nil, nil)
-  highlight("DiffRemoved", theme.base08, theme.base00, cterm08, cterm00, nil,
-            nil)
+  highlight("DiffRemoved", theme.base08, theme.base00, cterm08, cterm00, nil, nil)
 
   -- Git highlighting
   highlight("gitcommitOverflow", theme.base08, nil, cterm08, nil, nil, nil)
@@ -227,22 +227,15 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("gitcommitDiscardedType", theme.base0D, nil, cterm0D, nil, nil, nil)
   highlight("gitcommitBranch", theme.base09, nil, cterm09, nil, "bold", nil)
   highlight("gitcommitUntrackedFile", theme.base0A, nil, cterm0A, nil, nil, nil)
-  highlight("gitcommitUnmergedFile", theme.base08, nil, cterm08, nil, "bold",
-            nil)
-  highlight("gitcommitDiscardedFile", theme.base08, nil, cterm08, nil, "bold",
-            nil)
-  highlight("gitcommitSelectedFile", theme.base0B, nil, cterm0B, nil, "bold",
-            nil)
+  highlight("gitcommitUnmergedFile", theme.base08, nil, cterm08, nil, "bold", nil)
+  highlight("gitcommitDiscardedFile", theme.base08, nil, cterm08, nil, "bold", nil)
+  highlight("gitcommitSelectedFile", theme.base0B, nil, cterm0B, nil, "bold", nil)
 
   -- GitGutter highlighting
-  highlight("GitGutterAdd", theme.base0B, theme.base01, cterm0B, cterm01, nil,
-            nil)
-  highlight("GitGutterChange", theme.base0D, theme.base01, cterm0D, cterm01,
-            nil, nil)
-  highlight("GitGutterDelete", theme.base08, theme.base01, cterm08, cterm01,
-            nil, nil)
-  highlight("GitGutterChangeDelete", theme.base0E, theme.base01, cterm0E,
-            cterm01, nil, nil)
+  highlight("GitGutterAdd", theme.base0B, theme.base01, cterm0B, cterm01, nil, nil)
+  highlight("GitGutterChange", theme.base0D, theme.base01, cterm0D, cterm01, nil, nil)
+  highlight("GitGutterDelete", theme.base08, theme.base01, cterm08, cterm01, nil, nil)
+  highlight("GitGutterChangeDelete", theme.base0E, theme.base01, cterm0E, cterm01, nil, nil)
 
   -- HTML highlighting
   highlight("htmlBold", theme.base0A, nil, cterm0A, nil, nil, nil)
@@ -283,11 +276,9 @@ local function apply_base16_theme(theme, use_256_colorspace)
 
   -- Markdown highlighting
   highlight("markdownCode", theme.base0B, nil, cterm0B, nil, nil, nil)
-  highlight("markdownError", theme.base05, theme.base00, cterm05, cterm00, nil,
-            nil)
+  highlight("markdownError", theme.base05, theme.base00, cterm05, cterm00, nil, nil)
   highlight("markdownCodeBlock", theme.base0B, nil, cterm0B, nil, nil, nil)
-  highlight("markdownHeadingDelimiter", theme.base0D, nil, cterm0D, nil, nil,
-            nil)
+  highlight("markdownHeadingDelimiter", theme.base0D, nil, cterm0D, nil, nil, nil)
 
   -- NERDTree highlighting
   highlight("NERDTreeDirSlash", theme.base0D, nil, cterm0D, nil, nil, nil)
@@ -308,8 +299,7 @@ local function apply_base16_theme(theme, use_256_colorspace)
   -- Ruby highlighting
   highlight("rubyAttribute", theme.base0D, nil, cterm0D, nil, nil, nil)
   highlight("rubyConstant", theme.base0A, nil, cterm0A, nil, nil, nil)
-  highlight("rubyInterpolationDelimiter", theme.base0F, nil, cterm0F, nil, nil,
-            nil)
+  highlight("rubyInterpolationDelimiter", theme.base0F, nil, cterm0F, nil, nil, nil)
   highlight("rubyRegexp", theme.base0C, nil, cterm0C, nil, nil, nil)
   highlight("rubySymbol", theme.base0B, nil, cterm0B, nil, nil, nil)
   highlight("rubyStringDelimiter", theme.base0B, nil, cterm0B, nil, nil, nil)
@@ -322,12 +312,9 @@ local function apply_base16_theme(theme, use_256_colorspace)
   highlight("sassMixinName", theme.base0D, nil, cterm0D, nil, nil, nil)
 
   -- Signify highlighting
-  highlight("SignifySignAdd", theme.base0B, theme.base01, cterm0B, cterm01, nil,
-            nil)
-  highlight("SignifySignChange", theme.base0D, theme.base01, cterm0D, cterm01,
-            nil, nil)
-  highlight("SignifySignDelete", theme.base08, theme.base01, cterm08, cterm01,
-            nil, nil)
+  highlight("SignifySignAdd", theme.base0B, theme.base01, cterm0B, cterm01, nil, nil)
+  highlight("SignifySignChange", theme.base0D, theme.base01, cterm0D, cterm01, nil, nil)
+  highlight("SignifySignDelete", theme.base08, theme.base01, cterm08, cterm01, nil, nil)
 
   -- Spelling highlighting
   highlight("SpellBad", nil, nil, nil, nil, "undercurl", theme.base08)
@@ -2671,8 +2658,7 @@ return setmetatable({
     assert(#array == 16, "base16.theme_from_array: The array length must be 16")
     local result = {}
     for i, value in ipairs(array) do
-      assert(#value == 6,
-             "base16.theme_from_array: array values must be in 6 digit hex format, e.g. 'ffffff'")
+      assert(#value == 6, "base16.theme_from_array: array values must be in 6 digit hex format, e.g. 'ffffff'")
       local key = ("base%02X"):format(i - 1)
       result[key] = value
     end
@@ -2680,7 +2666,13 @@ return setmetatable({
   end,
   theme_names = function()
     local result = {}
-    for k in pairs(themes) do table.insert(result, k) end
+    for k in pairs(themes) do
+      table.insert(result, k)
+    end
     return result
   end,
-}, {__call = function(_, ...) apply_base16_theme(...) end})
+}, {
+  __call = function(_, ...)
+    apply_base16_theme(...)
+  end,
+})

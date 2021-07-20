@@ -1,4 +1,4 @@
-local base16 = require"theme.base16"
+local base16 = require "theme.base16"
 local theme_names = base16.theme_names()
 local M = {}
 

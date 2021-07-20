@@ -6,3 +6,6 @@
       vars:
         rust_toolchains: "{{ rust_toolchains_all }} + {{ rust_toolchains_dev|d([]) }}"
         cargo_packages: "{{ cargo_packages_all }} + {{ cargo_packages_dev|d([]) }}"
+  tags:
+    - rust
+    - cargo

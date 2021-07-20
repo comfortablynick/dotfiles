@@ -97,6 +97,7 @@ local packs = {
   "nvim-compe",
   "lspsaga.nvim",
   "LuaSnip",
+  "nvim-bufferline.lua",
 }
 
 for _, pack in ipairs(packs) do
@@ -107,9 +108,10 @@ require "nvim"
 require "globals"
 require "config.treesitter"
 require "config.devicons"
-require("config.gitsigns").init()
-require("config.lsp").init()
+require "config.gitsigns"
 require "config.hop"
+require("bufferline").setup {}
+require("config.lsp").init()
 
 vim.cmd [[
 augroup init_lua

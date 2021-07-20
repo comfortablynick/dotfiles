@@ -163,7 +163,7 @@ function M.create_centered_floating(options) -- {{{1
     cols = ui.width
     lines = ui.height
   end
-  local width, height, title = options.width, options.height, options.title or ""
+  local width, height = options.width, options.height
   do
     local usable_w = M.get_usable_width(0)
     if not options.width or options.width < 1 then
@@ -182,25 +182,9 @@ function M.create_centered_floating(options) -- {{{1
     width = width,
     height = height,
     style = "minimal",
+    border = options.border and "rounded" or "none",
   }
-  -- Add border lines if applicable
-  local border_win, border_buf
-  if options.border then
-    -- Create border buffer, window
-    border_buf = api.nvim_create_buf(false, true)
-    if #title > 0 then
-      title = " " .. title .. " "
-    end
-    local border_top = "╭" .. title .. string.rep("─", width - 2 - #title) .. "╮"
-    local border_mid = "│" .. string.rep(" ", width - 2) .. "│"
-    local border_bot = "╰" .. string.rep("─", width - 2) .. "╯"
-    local border_lines = {}
-    table.insert(border_lines, border_top)
-    vim.list_extend(border_lines, vim.split(string.rep(border_mid, height - 2, "\n"), "\n"))
-    table.insert(border_lines, border_bot)
-    api.nvim_buf_set_lines(border_buf, 0, -1, true, border_lines)
-    border_win = api.nvim_open_win(border_buf, true, win_opts)
-  end
+
   -- Create text buffer, window
   win_opts.row = win_opts.row + 1
   win_opts.height = win_opts.height - 2
@@ -215,31 +199,17 @@ function M.create_centered_floating(options) -- {{{1
   if options.winblend ~= nil then
     vim.wo[text_win].winblend = options.winblend
   end
-  if border_win ~= nil then
-    vim.wo[border_win].winhl = "NormalFloat:" .. options.hl
-    if options.winblend ~= nil then
-      vim.wo[border_win].winblend = options.winblend
-    end
-  end
 
-  -- Set autocmds
-  if border_buf ~= nil then
-    vim.cmd("autocmd BufWipeout <buffer> exe 'silent bwipeout!'" .. border_buf)
+  local exit_keys = { "<C-c>", "q", "<Esc>" }
+  for _, key in ipairs(exit_keys) do
+    api.nvim_buf_set_keymap(
+      text_buf,
+      "n",
+      key,
+      "<Cmd>lua vim.api.nvim_win_close(" .. text_win .. ", true)<CR>",
+      { noremap = true }
+    )
   end
-  api.nvim_buf_set_keymap(
-    text_buf,
-    "n",
-    "<C-c>",
-    "<Cmd>call nvim_win_close(" .. text_win .. ", v:true)<CR>",
-    { noremap = true }
-  )
-  api.nvim_buf_set_keymap(
-    text_buf,
-    "n",
-    "q",
-    "<Cmd>call nvim_win_close(" .. text_win .. ", v:true)<CR>",
-    { noremap = true }
-  )
   api.nvim_buf_set_option(text_buf, "bufhidden", "wipe")
   return text_buf
 end

@@ -111,7 +111,7 @@ require "config.treesitter"
 require "config.devicons"
 require "config.gitsigns"
 require "config.hop"
-require("bufferline").setup {}
+require "config.bufferline"
 require("config.lsp").init()
 
 vim.cmd [[

@@ -1,18 +1,25 @@
-local install_path = vim.fn.stdpath "data" .. "/site/pack/packer/opt/packer.nvim"
--- local install_path = vim.loop.os_tmpdir() .. "/packer.nvim"
+local util = require "util"
+local package_root = util.path.join(vim.fn.stdpath "data", "site", "pack")
+local compile_path = util.path.join(vim.fn.stdpath "data", "packer_compiled.lua")
+local install_path = util.path.join(package_root, "packer", "opt", "packer.nvim")
 
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
 end
 
--- local packer = nil
-package.loaded["packer"] = nil
+local packer = nil
+
 local function init()
-  -- if packer == nil then
-  vim.cmd "packadd packer.nvim"
-  packer = require "packer"
-  packer.init { disable_commands = true, opt_default = true }
-  -- end
+  if packer == nil then
+    packer = require "packer"
+    packer.init {
+      compile_path = compile_path,
+      package_root = package_root,
+      disable_commands = true,
+      opt_default = true,
+      display = { open_cmd = "topleft 80vnew \\[packer\\]" },
+    }
+  end
 
   local use = packer.use
   packer.reset()
@@ -94,10 +101,10 @@ local function init()
     "junegunn/fzf",
     run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
   }
+  use "junegunn/fzf.vim"
   use { "kevinhwang91/rnvimr", run = "pip3 install -U pynvim" }
   use { "liuchengxu/vista.vim", cmd = "Vista" }
-  use { "liuchengxu/vim-clap", run = ":Clap install-binary!" }
-  use "junegunn/fzf.vim"
+  use { "liuchengxu/vim-clap", run = ":call clap#installer#force_download()" }
   use { "laher/fuzzymenu.vim", cmd = "Fzm" }
   use { "mbbill/undotree", cmd = "UndotreeToggle" }
   use "preservim/nerdtree"

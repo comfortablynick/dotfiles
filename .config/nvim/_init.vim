@@ -187,7 +187,6 @@ if has('nvim-0.5')
     silent! packadd! LuaSnip
     silent! packadd! popup.nvim
     silent! packadd! telescope.nvim
-    silent! packadd! nvim-bufferline.lua
 
     lua <<
     require"nvim"
@@ -197,7 +196,7 @@ if has('nvim-0.5')
     require"config.gitsigns"
     require"config.lsp".init()
     require"config.hop"
-    require"bufferline".setup{}
+    require"config.bufferline"
 .
 
     augroup vimrc

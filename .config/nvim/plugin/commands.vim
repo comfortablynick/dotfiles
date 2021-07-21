@@ -1,3 +1,12 @@
+" Grep {{{1
+if executable('ugrep')
+    set grepprg=ugrep\ -RInkju.\ --tabs=1
+    set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
+elseif executable('rg')
+    set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+endif
+
 " General commands/aliases {{{1
 " S :: save if file has changed and re-run {{{2
 " Use asynctasks task runner to determine command based on filetype

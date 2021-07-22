@@ -7,7 +7,7 @@ local fn = vim.fn
 require "nvim"
 require "globals"
 
-vim.fn["plugins#set_source_handler"]()
+-- vim.fn["plugins#set_source_handler"]()
 
 -- Global variables
 g.python3_host_prog = env.NVIM_PY3_DIR
@@ -87,6 +87,16 @@ o.number = true
 o.relativenumber = true
 o.numberwidth = 2
 
+-- Netrw options
+vim.g.netrw_set_opts = 1
+vim.g.netrw_liststyle = 3
+vim.g.netrw_browse_split = 4
+vim.g.netrw_altv = 1
+vim.g.netrw_winsize = -30 -- Absolute
+vim.g.netrw_banner = 0
+vim.g.netrw_list_hide = vim.o.wildignore
+vim.g.netrw_sort_sequence = [[[\/]$,*]] -- Directories on the top, files below
+
 local packs = {
   "vim-doge",
   "vim-toml",
@@ -119,6 +129,9 @@ augroup init_lua
     autocmd!
     autocmd ColorScheme * lua require'config.lsp'.set_hl()
     autocmd BufEnter * lua require'config.compe'.init()
+    autocmd BufWritePost lua/plugins.lua lua nvim.reload()
+    autocmd BufWritePost lua/plugins.lua PackerInstall
+    autocmd BufWritePost lua/plugins.lua PackerCompile
 augroup END
 ]]
 
@@ -128,6 +141,7 @@ vim.cmd [[command! PackerSync packadd packer.nvim    | lua require'plugins'.sync
 vim.cmd [[command! PackerClean packadd packer.nvim   | lua require'plugins'.clean()]]
 vim.cmd [[command! PackerCompile packadd packer.nvim | lua require'plugins'.compile()]]
 vim.cmd [[command! PackerStatus packadd packer.nvim  | lua require'plugins'.status()]]
+vim.cmd [[command! -complete=packadd -nargs=+ PackerLoad packadd packer.nvim  | lua require'plugins'.loader(<q-args>)]]
 
 -- Profiling
 if env.AK_PROFILER == 1 then

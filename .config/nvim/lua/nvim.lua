@@ -407,7 +407,26 @@ function nvim.tbl_foreach(t, fn, ...) -- {{{2
   return t
 end
 
--- unload :: unload lua module/namespace {{{2
+--]=]
+-- Used {{{1
+function nvim.relative_name(path) -- {{{2
+  -- Return path relative to config
+  -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
+end
+
+function nvim.module_name(path) -- {{{2
+  -- Return module name of path or current file
+  local fp = vim.fn.expand(path or "%")
+  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub("%W", ".")
+end
+
+function nvim.source_current_buffer() -- {{{2
+  -- luacheck: ignore loadstring
+  loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
+end
+
 function nvim.unload(prefix)
   local found = vim.tbl_map(function(s)
     if s:find("^" .. prefix .. "[%./]?%w*$") then
@@ -428,25 +447,6 @@ function nvim.unload(prefix)
   --   --   package.loaded[k] = nil
   --   -- end
   -- end
-end
---]=]
--- Used {{{1
-function nvim.relative_name(path) -- {{{2
-  -- Return path relative to config
-  -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'
-  local fp = vim.fn.expand(path or "%")
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/", ""):gsub("%W", "_")
-end
-
-function nvim.module_name(path) -- {{{2
-  -- Return module name of path or current file
-  local fp = vim.fn.expand(path or "%")
-  return vim.fn.fnamemodify(fp, ":p:~:r"):gsub(".*config/nvim/lua/", ""):gsub("%W", ".")
-end
-
-function nvim.source_current_buffer() -- {{{2
-  -- luacheck: ignore loadstring
-  loadstring(table.concat(api.nvim_buf_get_lines(0, 0, -1, true), "\n"))()
 end
 
 function nvim.reload() -- {{{2

@@ -3,7 +3,6 @@ let g:use_explorer_coc = 'rnvimr'
 
 " Commands
 command! -nargs=0 NERDTreeToggle call plugins#lazy_run('NERDTreeToggle', 'nerdtree')
-command! -nargs=0 RnvimrToggle   call plugins#lazy_run('RnvimrToggle', 'rnvimr')
 command! -nargs=0 NetrwToggle    call explorer#toggle('netrw')
 
 function s:lf_current_file() abort

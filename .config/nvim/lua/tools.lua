@@ -2,6 +2,7 @@ local api = vim.api
 local uv = vim.loop
 local npcall = vim.F.npcall
 local util = require "util"
+local win = require "window"
 local M = {}
 
 function M.lf_select_current_file() -- {{{1
@@ -581,6 +582,40 @@ function M.test_iter(iter_ct) -- {{{1
       report(cmd, get_time() - start)
     end
   end
+end
+
+-- Helper function to create a floating window in which the output of
+-- `:StartupTime` will be displayed.
+function M.startuptime()
+  local width = vim.o.columns - 20
+  local height = vim.o.lines - 9
+  -- local bufnr = api.nvim_create_buf(false, true)
+
+  -- local winnr = api.nvim_open_win(bufnr, true, {
+  --   relative = "editor",
+  --   width = width,
+  --   height = height,
+  --   row = math.floor((vim.o.lines - height) / 2) - 1,
+  --   col = math.floor((vim.o.columns - width) / 2),
+  --   style = "minimal",
+  --   border = "rounded",
+  -- })
+  bufnr = win.create_centered_floating {
+    width = width,
+    height = height,
+    border = true,
+    winblend = 1,
+    fn = function()
+      vim.cmd "StartupTime"
+    end,
+  }
+
+  vim.bo[bufnr].bufhidden = "wipe"
+  vim.wo.cursorline = true
+
+  -- api.nvim_buf_set_keymap(bufnr, "n", "q", api.nvim_win_close(winnr, true), {
+  --   nowait = true,
+  -- })
 end
 
 -- Return module --{{{1

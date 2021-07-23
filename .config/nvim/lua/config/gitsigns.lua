@@ -1,8 +1,5 @@
-local gitsigns = nvim.packrequire("gitsigns.nvim", "gitsigns")
+local gitsigns = require "gitsigns"
 
-if not gitsigns then
-  return
-end
 gitsigns.setup {
   signs = {
     add = { hl = "DiffAdd", text = "│" },

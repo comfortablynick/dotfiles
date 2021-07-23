@@ -129,6 +129,7 @@ function M.create_centered_floating(options) -- {{{1
   -- =======
   -- `width`, `height` Integer (absolute) or float (ratio of window size)
   -- `border` Add border lines
+  -- `fn` Function to call in context of window (before exit keymaps are set)
   -- `hl` Highlight to use with NormalFloat: (default is "Pmenu", based on fzf)
   options = options or {}
   vim.validate { options = { options, "table", true } }
@@ -156,6 +157,7 @@ function M.create_centered_floating(options) -- {{{1
       end,
       "between 1 and 100",
     },
+    fn = { options.fn, "function", true },
   }
   local cols, lines
   do
@@ -198,6 +200,11 @@ function M.create_centered_floating(options) -- {{{1
   vim.wo[text_win].winhl = "NormalFloat:" .. options.hl
   if options.winblend ~= nil then
     vim.wo[text_win].winblend = options.winblend
+  end
+
+  -- Call fn if supplied
+  if options.fn ~= nil then
+    options.fn()
   end
 
   local exit_keys = { "<C-c>", "q", "<Esc>" }

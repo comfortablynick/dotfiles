@@ -8,11 +8,15 @@ end
 
 local packer = nil
 
-local runtime = function(plugin_name)
-  local filename = plugin_name .. ".vim"
-  local path = util.path.join("autoload", "plugins", filename)
-  return ([[vim.cmd("runtime %s")]]):format(path)
+-- Join arguments into a path to pass to :runtime
+-- runtime('autoload', 'plugins', 'ale') -> :runtime autoload/plugins/ale.vim
+local runtime = function(...)
+  local path = util.path.join(...)
+  return ([[vim.cmd("runtime %s.vim")]]):format(path)
 end
+
+-- Lazy load user autocmd
+local lazy_load_event = "User PackLoad"
 
 local function init()
   if packer == nil then
@@ -30,38 +34,6 @@ local function init()
 
   local use = packer.use
   packer.reset()
-  --[=[
-  use {
-    'myusername/example',        -- The plugin location string (only required param)
-    disable = boolean,           -- Mark a plugin as inactive
-    as = string,                 -- Specifies an alias under which to install the plugin
-    installer = function,        -- Specifies custom installer. See "custom installers" below.
-    updater = function,          -- Specifies custom updater. See "custom installers" below.
-    after = string or list,      -- Specifies plugins to load before this plugin. See "sequencing" below
-    rtp = string,                -- Specifies a subdirectory of the plugin to add to runtimepath.
-    opt = boolean,               -- Manually marks a plugin as optional.
-    branch = string,             -- Specifies a git branch to use
-    tag = string,                -- Specifies a git tag to use
-    commit = string,             -- Specifies a git commit to use
-    lock = boolean,              -- Skip this plugin in updates/syncs
-    run = string, function, or table, -- Post-update/install hook. See "update/install hooks".
-    requires = string or list,   -- Specifies plugin dependencies. See "dependencies".
-    rocks = string or list,      -- Specifies Luarocks dependencies for the plugin
-    config = string or function, -- Specifies code to run after this plugin is loaded.
-
-    -- The following keys all imply lazy-loading and imply opt = true
-    setup = string or function,  -- Specifies code to run before this plugin is loaded.
-    cmd = string or list,        -- Specifies commands which load this plugin.
-    ft = string or list,         -- Specifies filetypes which load this plugin.
-    keys = string or list,       -- Specifies maps which load this plugin. See "Keybindings".
-    event = string or list,      -- Specifies autocommand events which load this plugin.
-    fn = string or list          -- Specifies functions which load this plugin.
-    cond = string, function, or list of strings/functions,   -- Specifies a conditional test to load this plugin
-    module = string or list      -- Specifies Lua module names for require. When requiring a string which starts
-                                 -- with one of these module names, the plugin will be loaded.
-  }
-  --]=]
-
   use "wbthomason/packer.nvim"
 
   -- Plugin definitions
@@ -87,10 +59,10 @@ local function init()
   }
   use { "tpope/vim-eunuch", cmd = { "Delete", "Rename", "Chmod", "Move" } }
   use "moll/vim-bbye"
-  use "psliwka/vim-smoothie"
+  use { "psliwka/vim-smoothie", event = lazy_load_event }
 
   use { "kkoomen/vim-doge", run = ":call doge#install(#{headless: 1})}" }
-  use { "dense-analysis/ale", setup = runtime "ale", disable = true }
+  use { "dense-analysis/ale", setup = runtime("autoload", "plugins", "ale"), disable = true }
   use {
     "sbdchd/neoformat",
     cmd = "Neoformat",
@@ -131,7 +103,7 @@ local function init()
       vim.g.neoformat_enabled_lua = {}
     end,
   }
-  use { "skywind3000/asyncrun.vim", cmd = "AsyncRun", setup = runtime "asyncrun" }
+  use { "skywind3000/asyncrun.vim", cmd = "AsyncRun", setup = runtime("autoload", "plugins", "asyncrun") }
   use {
     "skywind3000/asynctasks.vim",
     run = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
@@ -186,10 +158,23 @@ local function init()
   use "tpope/vim-projectionist"
 
   -- Motions
-  use "tpope/vim-repeat"
-  use "tpope/vim-unimpaired"
+  use { "tpope/vim-repeat", event = lazy_load_event }
+  use { "tpope/vim-unimpaired", event = lazy_load_event }
   -- Lua impl of easymotion/sneak
-  use "phaazon/hop.nvim"
+  use {
+    "phaazon/hop.nvim",
+    cmd = { "HopWord", "HopChar1", "HopChar2" },
+    config = function()
+      local hop = require "hop"
+      hop.setup { winblend = 100 }
+    end,
+    setup = function()
+      local opts = { noremap = true }
+      vim.api.nvim_set_keymap("n", "<Leader>s", "<Cmd>HopWord<CR>", opts)
+      vim.api.nvim_set_keymap("n", "f", "<Cmd>HopChar1<CR>", opts)
+      vim.api.nvim_set_keymap("n", "s", "<Cmd>HopChar2<CR>", opts)
+    end,
+  }
 
   -- [f|F]{char} motion
   use {
@@ -198,34 +183,50 @@ local function init()
       vim.g.clever_f_smart_case = 1
       vim.g.clever_f_chars_match_any_signs = ":;"
     end,
-    event = "BufEnter",
+    -- event = lazy_load_event,
   }
 
   -- Text objects
-  use "wellle/targets.vim"
-  use "tommcdo/vim-exchange"
-  use { "machakann/vim-sandwich", setup = runtime "sandwich", event = "BufEnter" }
+  use { "wellle/targets.vim", event = lazy_load_event }
+  use { "tommcdo/vim-exchange", keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } }
+  use {
+    "machakann/vim-sandwich",
+    event = lazy_load_event,
+    config = function()
+      -- Make sandwich behave like vim-surround
+      vim.cmd [[runtime macros/sandwich/keymap/surround.vim]]
+      -- Select text surrounded by brackets or other object
+      vim.api.nvim_set_keymap("x", "is", "<Plug>(textobj-sandwich-query-i)", {})
+      vim.api.nvim_set_keymap("o", "is", "<Plug>(textobj-sandwich-query-i)", {})
+      vim.api.nvim_set_keymap("x", "as", "<Plug>(textobj-sandwich-query-a)", {})
+      vim.api.nvim_set_keymap("o", "as", "<Plug>(textobj-sandwich-query-a)", {})
+    end,
+  }
 
   -- Commenting
   use {
     "tpope/vim-commentary",
+    -- keys = { "<Plug>CommentaryLine", "<Plug>Commentary" },
+    event = lazy_load_event,
     setup = function()
       vim.api.nvim_set_keymap("x", "<Leader>c", "<Plug>Commentary", {})
       vim.api.nvim_set_keymap("n", "<Leader>c", "<Plug>Commentary", {})
       vim.api.nvim_set_keymap("o", "<Leader>c", "<Plug>Commentary", {})
       vim.api.nvim_set_keymap("n", "<Leader>c<Space>", "<Plug>CommentaryLine", {})
     end,
-    event = "BufEnter",
   }
 
   -- Explorer/finder utils
   use {
     "junegunn/fzf",
-    run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
+    event = lazy_load_event,
+    run = [[sh -c './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin ]]
+      .. [[&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1']],
   }
-  use "junegunn/fzf.vim"
+  use { "junegunn/fzf.vim", event = lazy_load_event }
   use {
     "kevinhwang91/rnvimr",
+    event = lazy_load_event,
     run = "pip3 install -U pynvim",
     cmd = "RnvimrToggle",
     setup = function()
@@ -257,8 +258,9 @@ local function init()
     "liuchengxu/vim-clap",
     run = ":call clap#installer#force_download()",
     cmd = "Clap",
+    requires = "liuchengxu/vista.vim",
     -- event = "BufEnter",
-    setup = runtime "clap",
+    setup = runtime("autoload", "plugins", "clap"),
   }
   use { "laher/fuzzymenu.vim", cmd = "Fzm" }
   use { "mbbill/undotree", cmd = "UndotreeToggle" }
@@ -287,7 +289,7 @@ local function init()
       vim.api.nvim_set_keymap("n", "<Leader>v", "<Plug>(PickerVsplit)", {})
     end,
   }
-  use { "voldikss/vim-floaterm", cmd = "Floaterm", setup = runtime "floaterm" }
+  use { "voldikss/vim-floaterm", cmd = "FloatermNew", setup = runtime("autoload", "plugins", "floaterm") }
 
   -- Vim development
   use { "tpope/vim-scriptease", cmd = "Messages" }
@@ -323,7 +325,7 @@ local function init()
   use { "~/git/todo.txt-vim", opt = false }
 
   -- Git
-  use "tpope/vim-fugitive"
+  use { "tpope/vim-fugitive", cmd = { "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } }
   use { "junegunn/gv.vim", cmd = "GV" }
   use { "iberianpig/tig-explorer.vim", cmd = { "Tig", "TigStatus" } }
   use {
@@ -333,8 +335,8 @@ local function init()
   }
 
   -- Snippets
-  use "SirVer/ultisnips"
-  use "honza/vim-snippets"
+  use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event }
+  use { "honza/vim-snippets", event = lazy_load_event }
   use "norcalli/snippets.nvim"
   use "L3MON4D3/LuaSnip"
 
@@ -349,30 +351,75 @@ local function init()
   }
   use { "nvim-lua/completion-nvim", requires = { "steelsojka/completion-buffers" } }
   use "hrsh7th/nvim-compe"
-  use "lifepillar/vim-mucomplete"
 
   -- Lua/nvim
+  -- TODO: use nui to test packer's 'load on require' lazy method
   use "MunifTanjim/nui.nvim"
   use "rktjmp/lush.nvim"
   use "norcalli/nvim-colorizer.lua"
-  use "lewis6991/gitsigns.nvim"
+  use {
+    "lewis6991/gitsigns.nvim",
+    event = "BufEnter",
+    config = function()
+      require "config.gitsigns"
+    end,
+  }
   use { "bfredl/nvim-luadev", cmd = "Luadev" }
   use "nvim-lua/plenary.nvim"
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
-  use "akinsho/nvim-bufferline.lua"
+  use {
+    "akinsho/nvim-bufferline.lua",
+    event = lazy_load_event,
+    config = function()
+      require("bufferline").setup {}
+    end,
+  }
   use "norcalli/profiler.nvim"
   use { "romgrk/todoist.nvim", run = ":TodoistInstall" }
-  use "kevinhwang91/nvim-bqf"
+  use { "kevinhwang91/nvim-bqf", event = lazy_load_event }
   use "antoinemadec/FixCursorHold.nvim"
-  use { "nvim-telescope/telescope.nvim", requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } } }
+  use {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },
+  }
 
   -- Training/Vim help
   use "tjdevries/train.nvim"
   use { "liuchengxu/vim-which-key", cmd = { "WhichKey", "WhichKeyVisual" } }
 
-  -- Tmux {{{2
-  use "christoomey/vim-tmux-navigator"
-  use "comfortablynick/vim-tmux-runner"
+  -- Tmux
+  use {
+    "christoomey/vim-tmux-navigator",
+    cmd = { "TmuxNavigateLeft", "TmuxNavigateRight", "TmuxNavigateDown", "TmuxNavigateUp", "TmuxNavigatePrevious" },
+    setup = function()
+      local opts = { noremap = true }
+      vim.g.tmux_navigator_no_mappings = 1
+      vim.api.nvim_set_keymap("n", "<C-h>", "<Cmd>TmuxNavigateLeft<CR>", opts)
+      vim.api.nvim_set_keymap("n", "<C-j>", "<Cmd>TmuxNavigateDown<CR>", opts)
+      vim.api.nvim_set_keymap("n", "<C-k>", "<Cmd>TmuxNavigateUp<CR>", opts)
+      vim.api.nvim_set_keymap("n", "<C-l>", "<Cmd>TmuxNavigateRight<CR>", opts)
+      vim.api.nvim_set_keymap("n", "<C-p>", "<Cmd>TmuxNavigatePrevious<CR>", opts)
+    end,
+  }
+  use {
+    "comfortablynick/vim-tmux-runner",
+    cmd = { "VtrSendCommandToRunner", "VtrOpenRunner" },
+    setup = function()
+      vim.g.VtrPercentage = 40
+      vim.g.VtrOrientation = "h"
+      vim.g.VtrInitialCommand = ""
+      vim.g.VtrGitCdUpOnOpen = 0
+      vim.g.VtrClearBeforeSend = 1
+      vim.g.VtrClearOnReorient = 1
+      vim.g.VtrClearOnReattach = 1
+      vim.g.VtrDetachedName = "VTR"
+      vim.g.VtrDisplayPaneNumbers = 1
+      vim.g.VtrStripLeadingWhitespace = 1
+      vim.g.VtrClearEmptyLines = 1
+      vim.g.VtrAppendNewline = 0
+    end,
+  }
 end
 
 local plugins = setmetatable({}, {

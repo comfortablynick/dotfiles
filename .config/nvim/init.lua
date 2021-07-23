@@ -98,7 +98,7 @@ vim.g.netrw_list_hide = vim.o.wildignore
 vim.g.netrw_sort_sequence = [[[\/]$,*]] -- Directories on the top, files below
 
 local packs = {
-  "vim-doge",
+  -- "vim-doge",
   "vim-toml",
   "vim-projectionist",
   "plenary.nvim",
@@ -115,13 +115,14 @@ for _, pack in ipairs(packs) do
   vim.cmd("silent! packadd! " .. pack)
 end
 
+vim.defer_fn(function()
+  vim.cmd [[doautocmd User PackLoad]]
+end, 200)
+
 require "nvim"
 require "globals"
 require "config.treesitter"
 require "config.devicons"
-require "config.gitsigns"
-require "config.hop"
-require "config.bufferline"
 require("config.lsp").init()
 
 vim.cmd [[

@@ -7,10 +7,6 @@ setlocal formatprg=lua-format
 setlocal makeprg=luacheck\ %\ --formatter=plain\ --codes
 setlocal errorformat=%f:%l:%c:\ (%t%*\\d)\ %m
 
-packadd nvim-luadev
-vmap <buffer><Enter> <Plug>(Luadev-Run)
-nmap <buffer>grl     <Plug>(Luadev-RunLine)
-
 " Preserve existing doge settings.
 if exists('b:doge_patterns')
     let b:doge_supported_doc_standards = get(b:, 'doge_supported_doc_standards', [])

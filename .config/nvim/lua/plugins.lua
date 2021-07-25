@@ -58,7 +58,7 @@ local function init()
     end,
   }
   use { "tpope/vim-eunuch", cmd = { "Delete", "Rename", "Chmod", "Move" } }
-  use "moll/vim-bbye"
+  use { "moll/vim-bbye", disable = true }
   use { "psliwka/vim-smoothie", event = lazy_load_event }
 
   use { "kkoomen/vim-doge", run = ":call doge#install(#{headless: 1})}" }
@@ -183,6 +183,7 @@ local function init()
       vim.g.clever_f_smart_case = 1
       vim.g.clever_f_chars_match_any_signs = ":;"
     end,
+    disable = true,
     -- event = lazy_load_event,
   }
 
@@ -235,7 +236,7 @@ local function init()
   }
   use {
     "liuchengxu/vista.vim",
-    cmd = "Vista",
+    event = lazy_load_event,
     setup = function()
       vim.g.vista_echo_cursor_strategy = "floating_win"
       vim.g["vista#executives"] = { "nvim_lsp", "ctags" }
@@ -263,7 +264,13 @@ local function init()
     setup = runtime("autoload", "plugins", "clap"),
   }
   use { "laher/fuzzymenu.vim", cmd = "Fzm" }
-  use { "mbbill/undotree", cmd = "UndotreeToggle" }
+  use {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    config = function()
+      vim.g.undotree_WindowLayout = 4
+    end,
+  }
   use {
     "preservim/nerdtree",
     cmd = { "NERDTree", "NERDTreeToggle" },
@@ -301,13 +308,6 @@ local function init()
   use "ryanoasis/vim-devicons"
   use {
     "kyazdani42/nvim-web-devicons",
-    config = function()
-      --TODO: troubleshoot how to set properly in lua
-      if vim.g.WebDevIconsUnicodeDecorateFileNodesExactSymbols == nil then
-        vim.g.WebDevIconsUnicodeDecorateFileNodesExactSymbols = {}
-      end
-      vim.g.WebDevIconsUnicodeDecorateFileNodesExactSymbols["todo.txt"] = "🗹"
-    end,
   }
 
   -- Colorschemes
@@ -364,7 +364,14 @@ local function init()
       require "config.gitsigns"
     end,
   }
-  use { "bfredl/nvim-luadev", cmd = "Luadev" }
+  use {
+    "bfredl/nvim-luadev",
+    ft = "lua",
+    config = function()
+      vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>(Luadev-Run)", {})
+      vim.api.nvim_buf_set_keymap(0, "n", "grl", "<Plug>(Luadev-RunLine)", {})
+    end,
+  }
   use "nvim-lua/plenary.nvim"
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
   use {

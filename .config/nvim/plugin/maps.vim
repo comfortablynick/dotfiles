@@ -35,16 +35,6 @@ nnoremap <Down> <Cmd>call search('\%'..virtcol('.')..'v\S', 'w')<CR>
 " Use kj to escape insert mode
 inoremap kj <Esc>`^
 
-" TODO: turn this into snippet
-let g:timefmts = [
-    \ '%Y-%m-%d %H:%M:%S',
-    \ '%a, %d %b %Y %H:%M:%S %z',
-    \ '%Y %b %d',
-    \ '%d-%b-%y',
-    \ '%a %b %d %T %Z %Y',
-    \ ]
-inoremap <silent><C-G><C-T> <C-R>=repeat(complete(col('.'),map(g:timefmts,{_,v->strftime(v)})),0)<CR>
-
 " Diff mode {{{2
 nnoremap <expr> <Leader>gg &diff ? "<Cmd>diffget //1\<CR>" : ""
 nnoremap <expr> <Leader>gh &diff ? "<Cmd>diffget //2\<CR>" : ""
@@ -99,6 +89,10 @@ nnoremap <Leader>xx <Cmd>BufOnly<CR>
 " Quickfix
 nnoremap cq <Cmd>call qf#toggle()<CR>
 
+" Fold
+nnoremap <Space> <Cmd>silent! exe 'normal! za'<CR>
+nnoremap za zA
+
 " Command line {{{1
 " %% -> cwd
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
@@ -108,56 +102,3 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 nnoremap <Leader>ff <Cmd>call buffer#restore_cursor_after('gggqG')<CR>
 " Indent buffer and restore cursor position
 nnoremap <Leader>fi <Cmd>call buffer#restore_cursor_after('gg=G')<CR>
-
-" Insert mode escape {{{2
-" This works well, but it creates undo points and sometimes results in lost work
-" Regular maps work well if timeoutlen is set low
-
-" let s:escape_string = 'kj'
-" let s:escape_timeout_ms = 100
-" let s:escape_start_key = s:escape_string[0]
-" let s:escape_end_key = s:escape_string[1]
-" let s:escape_sequence = "\<BS>\<Esc>`^"
-"
-" function s:escape_map_start(char)
-"     let s:escape_timestamp = reltime()
-"     return a:char
-" endfunction
-"
-" function s:escape_map_end(char)
-"     if !exists('s:escape_timestamp') | return a:char | endif
-"     let l:elapsed_ms = reltimefloat(reltime(s:escape_timestamp)) * 1000
-"     unlet s:escape_timestamp
-"     if l:elapsed_ms > s:escape_timeout_ms
-"         let b:escape_edited = 1
-"         return a:char
-"     endif
-"
-"     let l:line_check_empty = getline('.')
-"     if l:line_check_empty ==# s:escape_start_key | return s:escape_sequence | endif
-"
-"     let l:trimmed  = substitute(l:line_check_empty, '^\s*\(.\{-}\)\s*$', '\1', '')
-"     if l:trimmed ==# s:escape_start_key
-"         return "\<BS>\<C-w>\<Esc>"
-"     else
-"         return s:escape_sequence
-"     endif
-" endfunction
-"
-" " execute 'inoremap <expr>' s:escape_start_key '<SID>escape_map_start("'..s:escape_start_key..'")'
-" " execute 'inoremap <expr>' s:escape_end_key   '<SID>escape_map_end("'..  s:escape_end_key  ..'")'
-"
-" function s:escape_insert_char_pre()
-"     if v:char !=# s:escape_start_key && v:char !=# s:escape_end_key
-"         let b:escape_edited = 1
-"     endif
-" endfunction
-"
-" augroup insert_escape_maps
-"     autocmd!
-"     autocmd InsertCharPre *  call s:escape_insert_char_pre()
-"     autocmd InsertEnter   *  let b:escape_edited = &modified
-"     autocmd InsertLeave   *  if b:escape_edited == 0 | setl nomod | endif
-" augroup END
-
-" vim:fdl=1:

@@ -1,9 +1,7 @@
-nnoremap <Space> <Cmd>silent! exe 'normal! zA'<CR>
-
 " Customized version of folded text, idea by
 " https://github.com/chrisbra/vim_dotfiles/blob/master/plugin/CustomFoldText.vim
-" TODO: center comment string after end of fn definition, e.g., 'abort'
-function! CustomFoldText(string)
+" TODO: enter comment string after end of fn definition, e.g., 'abort'
+function fold#CustomFoldText(string)
     "get first non-blank line
     let l:fs = v:foldstart
     if getline(l:fs) =~? '^\s*$'
@@ -34,4 +32,4 @@ function! CustomFoldText(string)
     return l:line.l:expansion_str.l:fold_size_str.l:fold_pct_str.l:fold_level_str
 endfunction
 
-set foldtext=CustomFoldText('.')
+" set foldtext=fold#CustomFoldText('.')

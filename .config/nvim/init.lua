@@ -7,31 +7,38 @@ local fn = vim.fn
 require "nvim"
 require "globals"
 
--- vim.fn["plugins#set_source_handler"]()
-
 -- Global variables
 g.python3_host_prog = env.NVIM_PY3_DIR
 g.mapleader = ","
 g.c_syntax_for_h = 1
 g.window_width = o.columns
-
--- Disable default vim plugins
-g.loaded_gzip = 1
-g.loaded_tarPlugin = 1
-g.loaded_2html_plugin = 1
-g.loaded_zipPlugin = 1
-g.loaded_getscriptPlugin = 1
-g.loaded_html_plugin = 1
-g.loaded_rrhelper = 1
-g.loaded_tarPlugin = 1
-g.loaded_tutor_mode_plugin = 1
-g.loaded_vimballPlugin = 1
 g.vimsyn_embed = "lP"
 
--- Disable providers
-g.loaded_ruby_provider = 0
-g.loaded_perl_provider = 0
-g.loaded_python_provider = 0
+local disabled_built_ins = {
+  "gzip",
+  "zip",
+  "zipPlugin",
+  "tar",
+  "tarPlugin",
+  "getscript",
+  "getscriptPlugin",
+  "vimball",
+  "vimballPlugin",
+  "html_plugin",
+  "2html_plugin",
+  "logipat",
+  "rrhelper",
+  "spellfile_plugin",
+  "tutor_mode_plugin",
+}
+
+for _, plugin in ipairs(disabled_built_ins) do
+  g["loaded_" .. plugin] = 1
+end
+
+for _, provider in ipairs { "ruby", "perl", "python" } do
+  g["loaded_" .. provider .. "_provider"] = 0
+end
 
 -- Directories
 -- TODO: create if they don't exist
@@ -136,13 +143,21 @@ augroup init_lua
 augroup END
 ]]
 
-vim.cmd [[command! PackerInstall packadd packer.nvim | lua require'plugins'.install()]]
-vim.cmd [[command! PackerUpdate packadd packer.nvim  | lua require'plugins'.update()]]
-vim.cmd [[command! PackerSync packadd packer.nvim    | lua require'plugins'.sync()]]
-vim.cmd [[command! PackerClean packadd packer.nvim   | lua require'plugins'.clean()]]
-vim.cmd [[command! PackerCompile packadd packer.nvim | lua require'plugins'.compile()]]
-vim.cmd [[command! PackerStatus packadd packer.nvim  | lua require'plugins'.status()]]
-vim.cmd [[command! -complete=packadd -nargs=+ PackerLoad packadd packer.nvim  | lua require'plugins'.loader(<q-args>)]]
+local packer_cmds = {
+  PackerInstall = { "install()" },
+  PackerUpdate = { "update()" },
+  PackerSync = { "sync()" },
+  PackerClean = { "clean()" },
+  PackerCompile = { "compile()" },
+  PackerStatus = { "status()" },
+  PackerLoad = { "loader(<q-args>)", "-complete=packadd -nargs=+" },
+}
+
+local template = [[command! %s %s packadd packer.nvim | lua require("plugins").%s]]
+
+for k, v in pairs(packer_cmds) do
+  vim.cmd(template:format(v[2] or "", k, v[1]))
+end
 
 -- Profiling
 if env.AK_PROFILER == 1 then

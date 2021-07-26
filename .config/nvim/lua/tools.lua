@@ -589,17 +589,7 @@ end
 function M.startuptime()
   local width = vim.o.columns - 20
   local height = vim.o.lines - 9
-  -- local bufnr = api.nvim_create_buf(false, true)
 
-  -- local winnr = api.nvim_open_win(bufnr, true, {
-  --   relative = "editor",
-  --   width = width,
-  --   height = height,
-  --   row = math.floor((vim.o.lines - height) / 2) - 1,
-  --   col = math.floor((vim.o.columns - width) / 2),
-  --   style = "minimal",
-  --   border = "rounded",
-  -- })
   bufnr = win.create_centered_floating {
     width = width,
     height = height,
@@ -612,10 +602,6 @@ function M.startuptime()
 
   vim.bo[bufnr].bufhidden = "wipe"
   vim.wo.cursorline = true
-
-  -- api.nvim_buf_set_keymap(bufnr, "n", "q", api.nvim_win_close(winnr, true), {
-  --   nowait = true,
-  -- })
 end
 
 -- Return module --{{{1

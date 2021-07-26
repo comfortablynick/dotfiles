@@ -6,11 +6,18 @@ local M = {}
 -- Root finder utilities originally from nvim-lspconfig
 -- TODO: replace vim rooter
 function M.search_ancestors(startpath, func)
-  vim.validate { func = { func, "f" } }
+  vim.validate { func = { func, 'f' } }
   if func(startpath) then
     return startpath
   end
+  local guard = 100
   for path in M.path.iterate_parents(startpath) do
+    -- Prevent infinite recursion if our algorithm breaks
+    guard = guard - 1
+    if guard == 0 then
+      return
+    end
+
     if func(path) then
       return path
     end
@@ -182,15 +189,17 @@ M.path = (function()
 
   -- Iterate the path until we find the rootdir.
   local function iterate_parents(path)
-    path = uv.fs_realpath(path)
-    local function it(v)
-      if not v then
+    local function it(s, v)
+      if v and not is_fs_root(v) then
+        v = dirname(v)
+      else
         return
       end
-      if is_fs_root(v) then
+      if v and uv.fs_realpath(v) then
+        return v, path
+      else
         return
       end
-      return dirname(v), path
     end
     return it, path, path
   end

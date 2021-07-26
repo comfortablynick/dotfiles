@@ -28,11 +28,6 @@ command -bang BufOnly call buffer#only({'bang': <bang>0})
 command -nargs=1 -bang -complete=customlist,buffer#close_complete
     \ Bclose call buffer#close(<bang>0, <q-args>)
 
-" UndotreeToggle :: lazy load undotree when first called {{{2
-" command! UndotreeToggle
-"     \ call plugins#lazy_run('UndotreeToggle<bar>UndotreeFocus', 'undotree')
-" noremap <F5> <Cmd>UndotreeToggle<CR>
-
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
 command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
 command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
@@ -46,14 +41,6 @@ command -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
 function s:grep(...)
     return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
 endfunction
-
-" Fzm :: lazy load fuzzymenu.vim {{{2
-" command! -bang Fzm
-"     \ call plugins#lazy_run('Fzm', 'fuzzymenu.vim', {'bang': '<bang>'})
-
-" Neoformat :: lazy load neoformat {{{2
-" command! Neoformat call plugins#lazy_run('Neoformat', 'neoformat')
-noremap <F3> <Cmd>Neoformat<CR>
 
 " Rooter :: Find project root {{{2
 " command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
@@ -120,18 +107,10 @@ nnoremap <Leader>r <Cmd>AsyncTask file-run<CR>
 nnoremap <Leader>b <Cmd>AsyncTask file-build<CR>
 
 " Git {{{1
-" GV :: git commit viewer {{{2
-" command! -bang -nargs=* -range=0 GV
-"     \ call plugins#lazy_run('GV', 'gv.vim',
-"     \   {'bang': '<bang>', 'args': '<args>'})
-
 " Gpush :: custom git push {{{2
 command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
 nnoremap <Leader>gp <Cmd>Gpush<CR>
 
-" Tig[Status] :: view tig in terminal {{{2
-" command! Tig       call plugins#lazy_run('Tig', 'tig-explorer.vim')
-" command! TigStatus call plugins#lazy_run('TigStatus', 'tig-explorer.vim')
 call map#cabbr('ts', 'TigStatus')
 
 " LazyGit :: tui for git {{{2
@@ -167,30 +146,9 @@ command! -nargs=* -bar -count=0 Scriptnames
     \ call qf#scriptnames(<f-args>)
     \| call qf#open(#{size: <count>, stay: v:false})
 
-" WhichKey[Visual] :: display key maps {{{2
-" command! -nargs=1 WhichKey
-"     \ call plugins#lazy_run(
-"     \   'WhichKey',
-"     \   'vim-which-key',
-"     \   {'args': <q-args>, 'bang': '<bang>'}
-"     \ )
-
-" command! -nargs=1 WhichKeyVisual
-"     \ call plugins#lazy_run(
-"     \   'WhichKeyVisual',
-"     \   'vim-which-key',
-"     \   {'args': <q-args>, 'bang': '<bang>'}
-"     \ )
-
-" Map WhichKey to g:mapleader
-execute 'nnoremap <Leader>      <Cmd>WhichKey "'..get(g:, 'mapleader', ',')..'"<CR>'
-execute 'nnoremap <LocalLeader> <Cmd>WhichKey "'..get(g:, 'maplocalleader', '\\')..'"<CR>'
-
 " Pretty-printing {{{2
 " nvim: Using Lua vim.inspect()
-if has('nvim')
-    command -complete=expression -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
-endif
+command -complete=expression -nargs=1 LPrint echo v:lua.vim.inspect(<args>)
 
 " Using python pformat (handles lists better but does not convert all vim types
 command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
@@ -199,54 +157,49 @@ command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
 command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 
 " nvim-only {{{1
-if has('nvim')
-    " [H]elp :: floating help window {{{2
-    command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-    call map#cabbr('H', 'Help')
+" [H]elp :: floating help window {{{2
+command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
+call map#cabbr('H', 'Help')
 
-    " Colorizer :: run nvim-colorizer.lua {{{2
-    " command Colorizer call plugins#lazy_run('ColorizerToggle', 'nvim-colorizer.lua')
-    command Colorizer packadd nvim-colorizer.lua | lua require'colorizer'.attach_to_buffer{0, {mode = "foreground"}}
+" Colorizer :: run nvim-colorizer.lua {{{2
+" command Colorizer call plugins#lazy_run('ColorizerToggle', 'nvim-colorizer.lua')
+command Colorizer packadd nvim-colorizer.lua | lua require'colorizer'.attach_to_buffer{0, {mode = "foreground"}}
 
-    " LspDisable :: stop active lsp clients {{{2
-    command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
+" LspDisable :: stop active lsp clients {{{2
+command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 
-    " LspLog :: open lsp log {{{2
-    command LspLog edit `=v:lua.vim.lsp.get_log_path()`
+" LspLog :: open lsp log {{{2
+command LspLog edit `=v:lua.vim.lsp.get_log_path()`
 
-    " Lua {{{2
-    call map#cabbr('l', 'lua')
-    call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
+" Lua {{{2
+call map#cabbr('l', 'lua')
+call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
-    " Term :: Run async command in terminal buffer {{{2
-    command -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
+" Term :: Run async command in terminal buffer {{{2
+command -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
 
-    " Sh :: Run async command in shell and output to scratch buffer {{{2
-    command -complete=file -nargs=+ Sh lua require'tools'.sh{cmd = <q-args>}
+" Sh :: Run async command in shell and output to scratch buffer {{{2
+command -complete=file -nargs=+ Sh lua require'tools'.sh{cmd = <q-args>}
 
-    " Run :: lua version of AsyncRun {{{2
-    command -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
+" Run :: lua version of AsyncRun {{{2
+command -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
 
-    " MRU :: most recently used files {{{2
-    command -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>), '<mods>')
+" MRU :: most recently used files {{{2
+command -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>), '<mods>')
 
-    " Redir :: send output of <expr> to scratch window {{{2
-    " Usage:
-    "   :Redir hi .........show the full output of command ':hi' in a scratch window
-    "   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
-    command! -bang -nargs=1 -complete=command Redir lua require'tools'.redir{cmd = <q-args>, mods = '<mods>', bang = '<bang>'}
+" Redir :: send output of <expr> to scratch window {{{2
+" Usage:
+"   :Redir hi .........show the full output of command ':hi' in a scratch window
+"   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
+command! -bang -nargs=1 -complete=command Redir lua require'tools'.redir{cmd = <q-args>, mods = '<mods>', bang = '<bang>'}
 
-    " Grep :: async grep {{{2
-    command! -nargs=+ -complete=file -bar Grep lua require'grep'.grep_for_string(<q-args>)
+" Grep :: async grep {{{2
+command! -nargs=+ -complete=file -bar Grep lua require'grep'.grep_for_string(<q-args>)
 
-    " Option :: pretty print option info {{{2
-    command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
+" Option :: pretty print option info {{{2
+command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
 
-    " Make :: async make {{{2
-    " command! -bang -complete=file Make call s:tools.make()
-
-    " Neogit :: lazy load neogit {{{2
-    " command! -nargs=* Neogit lua require'config.neogit'.open(require'neogit.lib.util'.parse_command_args(<f-args>))<CR>
-endif
+" Make :: async make {{{2
+" command! -bang -complete=file Make call s:tools.make()
 
 " vim:fdl=1:

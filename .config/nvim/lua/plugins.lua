@@ -67,40 +67,7 @@ local function init()
     "sbdchd/neoformat",
     cmd = "Neoformat",
     setup = function()
-      vim.g.neoformat_try_formatprg = 1 -- Use formatprg if defined
-      vim.g.neoformat_run_all_formatters = 1 -- By default, stops after first formatter succeeds
-      vim.g.neoformat_basic_format_align = 1 -- Enable basic formatting
-      vim.g.neoformat_basic_format_retab = 1 -- Enable tab -> spaces
-      vim.g.neoformat_basic_format_trim = 1 -- Trim trailing whitespace
-      vim.g.neoformat_only_msg_on_error = 1 -- Quieter
-
-      -- Filetype-specific formatters
-      vim.g.neoformat_enabled_python = {
-        "black",
-        "isort",
-      }
-      vim.g.neoformat_enabled_typescript = { "prettier" }
-      vim.g.neoformat_enabled_javascript = { "prettier" }
-      vim.g.neoformat_typescript_prettier = {
-        exe = "prettier",
-        args = {
-          "--stdin",
-          "--stdin-filepath",
-          '"%:p"',
-        },
-        stdin = 1,
-      }
-
-      vim.g.neoformat_cmake_cmakeformat = {
-        exe = "cmake-format",
-        args = { "-c", "$HOME/.config/cmake/cmake-format.py" },
-      }
-      -- Same options for javascript
-      vim.g.neoformat_javascript_prettier = vim.g.neoformat_typescript_prettier
-
-      vim.g.neoformat_enabled_go = { "goimports" }
-      vim.g.neoformat_enabled_yaml = { "prettier" }
-      vim.g.neoformat_enabled_lua = {}
+      require "config.neoformat"
     end,
   }
   use { "skywind3000/asyncrun.vim", cmd = "AsyncRun", setup = runtime("autoload", "plugins", "asyncrun") }
@@ -236,37 +203,25 @@ local function init()
   }
   use {
     "liuchengxu/vista.vim",
-    event = lazy_load_event,
+    event = "BufEnter",
     setup = function()
-      vim.g.vista_echo_cursor_strategy = "floating_win"
-      vim.g["vista#executives"] = { "nvim_lsp", "ctags" }
-      vim.g.vista_default_executive = "ctags"
-      vim.g.vista_fzf_preview = { "right:50%" }
-      vim.g.vista_fzf_opt = {
-        "-m",
-        "--bind",
-        "left:preview-up," .. "right:preview-down," .. "ctrl-a:select-all," .. "?:toggle-preview",
-      }
-      vim.g.vista_echo_cursor = 1
-      vim.g.vista_floating_delay = 1000
-      vim.g["vista#renderer#enable_icon"] = 0
-      vim.g.vista_close_on_jump = 0
-      vim.g.vista_sidebar_width = 60
-      vim.api.nvim_set_keymap("n", "<Leader><Leader>v", "<Cmd>Vista!!<CR>", { noremap = true })
+      require "config.vista"
     end,
   }
   use {
     "liuchengxu/vim-clap",
     run = ":call clap#installer#force_download()",
-    cmd = "Clap",
     requires = "liuchengxu/vista.vim",
-    -- event = "BufEnter",
+    event = "BufEnter",
     setup = runtime("autoload", "plugins", "clap"),
   }
   use { "laher/fuzzymenu.vim", cmd = "Fzm" }
   use {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
+    setup = function()
+      vim.api.nvim_set_keymap("n", "<F5>", "<Cmd>UndotreeToggle<CR>", { noremap = true })
+    end,
     config = function()
       vim.g.undotree_WindowLayout = 4
     end,
@@ -349,7 +304,15 @@ local function init()
       { "glepnir/lspsaga.nvim" },
     },
   }
-  use { "nvim-lua/completion-nvim", requires = { "steelsojka/completion-buffers" } }
+  use { "nvim-lua/completion-nvim", requires = { "steelsojka/completion-buffers" }, disable = true }
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    cmd = { "Trouble", "TroubleToggle" },
+    config = function()
+      require("trouble").setup {}
+    end,
+  }
   use "hrsh7th/nvim-compe"
 
   -- Lua/nvim
@@ -393,7 +356,13 @@ local function init()
 
   -- Training/Vim help
   use "tjdevries/train.nvim"
-  use { "liuchengxu/vim-which-key", cmd = { "WhichKey", "WhichKeyVisual" } }
+  use {
+    "folke/which-key.nvim",
+    event = lazy_load_event,
+    config = function()
+      require "config.which-key"
+    end,
+  }
 
   -- Tmux
   use {

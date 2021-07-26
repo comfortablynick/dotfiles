@@ -1,5 +1,4 @@
 local api = vim.api
-local Popup = nvim.packrequire("nui.nvim", "nui.popup")
 local M = {}
 
 function M.get_usable_width(winnr) -- {{{1
@@ -71,57 +70,25 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
     title = { title, "s", true },
   }
 
-  local scale = string.format("%s%%", scale_pct * 100)
-  -- local width, height
-  -- do
-  --   -- calculate based on pct or leave it as nil
-  --   if scale_pct ~= nil then
-  --     local ui = api.nvim_list_uis()[1]
-  --     width = math.floor(ui.width * scale_pct)
-  --     height = math.floor(ui.height * scale_pct)
-  --   end
-  -- end
-  -- M.create_centered_floating {
-  --   width = width,
-  --   height = height,
-  --   border = border or false,
-  --   title = title,
-  -- }
-  local border_style = (function()
-    if not border then
-      return { style = "none" }
-    else
-      return {
-        style = "rounded",
-        highlight = "FloatBorder",
-        text = { top = title or command or "", top_align = "left" },
-      }
+  -- local scale = string.format("%s%%", scale_pct * 100)
+  local width, height
+  do
+    -- calculate based on pct or leave it as nil
+    if scale_pct ~= nil then
+      local ui = api.nvim_list_uis()[1]
+      width = math.floor(ui.width * scale_pct)
+      height = math.floor(ui.height * scale_pct)
     end
-  end)()
-  local popup = Popup {
-    border = border_style,
-    position = "50%",
-    size = {
-      width = scale,
-      height = scale,
-    },
-    opacity = 0.8,
-    enter = true,
-  }
-  popup:mount()
-  -- popup:on({ event.BufLeave }, function()
-  --   popup:unmount()
-  -- end, { once = true })
-
-  local exit_nmaps = { "<Esc>", "q", "<C-c>" }
-
-  for _, map in ipairs(exit_nmaps) do
-    popup:map("n", map, function()
-      popup:unmount()
-    end, { noremap = true })
   end
-  vim.fn.termopen(command)
-  vim.cmd "startinsert"
+  return M.create_centered_floating {
+    width = width,
+    height = height,
+    border = border or false,
+    fn = function()
+      vim.fn.termopen(command)
+      vim.cmd "startinsert"
+    end,
+  }
 end
 
 function M.create_centered_floating(options) -- {{{1
@@ -213,8 +180,8 @@ function M.create_centered_floating(options) -- {{{1
       text_buf,
       "n",
       key,
-      "<Cmd>lua vim.api.nvim_win_close(" .. text_win .. ", true)<CR>",
-      { noremap = true }
+      ("<Cmd>lua vim.api.nvim_win_close(%d, true)<CR>"):format(text_win),
+      { noremap = true, nowait = true }
     )
   end
   api.nvim_buf_set_option(text_buf, "bufhidden", "wipe")
@@ -304,62 +271,16 @@ function M.percentage_range_window(col_range, row_range, options)
   return { bufnr = bufnr, win_id = win_id }
 end
 
-function M.floating_win(options) -- {{{1
-  vim.validate { options = { options, "table", true } }
-  local buf = M.create_centered_floating {
-    height = options.size_pct,
-    width = options.size_pct,
+function M.floating_help(query) -- {{{1
+  return M.create_centered_floating {
+    width = 90,
+    border = true,
+    fn = function()
+      vim.bo.filetype = "help"
+      vim.bo.buftype = "help"
+      vim.cmd("help " .. query)
+    end,
   }
-  api.nvim_buf_set_lines(buf, 0, -1, false, options.lines or {})
-  api.nvim_buf_set_option(buf, "filetype", options.filetype or "")
-  return buf
-end
-
--- function M.floating_help(query) -- {{{1
---   local buf = M.create_centered_floating { width = 90, border = true }
---   api.nvim_set_current_buf(buf)
---   vim.bo.filetype = "help"
---   vim.bo.buftype = "help"
---   vim.cmd("help " .. query)
---   api.nvim_buf_set_keymap(buf, "n", "<C-c>", ":call buffer#quick_close()<CR>", { silent = true, noremap = true })
--- end
-
-function M.floating_help(query)
-  local event = require("nui.utils.autocmd").event
-  local popup = Popup {
-    border = {
-      style = "rounded",
-      highlight = "FloatBorder",
-      text = { top = ("[Help: %s]"):format(query), top_align = "left" },
-    },
-    position = "50%",
-    size = {
-      width = 85,
-      height = "60%",
-    },
-    opacity = 0.8,
-    enter = true,
-  }
-  popup:mount()
-
-  api.nvim_buf_set_option(popup.bufnr, "filetype", "help")
-  api.nvim_buf_set_option(popup.bufnr, "buftype", "help")
-  vim.cmd("help " .. query)
-
-  -- Close window if we leave it
-  popup:on({ event.BufLeave }, function()
-    popup:unmount()
-  end, { once = true })
-
-  local exit_nmaps = { "<Esc>", "q", "<C-c>" }
-
-  for _, map in ipairs(exit_nmaps) do
-    popup:map("n", map, function()
-      popup:unmount()
-    end, { noremap = true })
-  end
-
-  return popup
 end
 
 function M.create_scratch(lines, mods, replace_existing) -- {{{1

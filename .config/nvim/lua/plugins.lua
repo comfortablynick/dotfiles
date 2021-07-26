@@ -286,6 +286,9 @@ local function init()
   use {
     "TimUntersberger/neogit",
     cmd = "Neogit",
+    config = function()
+      require "config.neogit"
+    end,
     requires = { { "nvim-lua/plenary.nvim" }, { "sindrets/diffview.nvim" } },
   }
 

@@ -1,4 +1,4 @@
-local neogit = nvim.packrequire "neogit"
+local neogit = require "neogit"
 vim.cmd [[packadd diffview.nvim]]
 
 neogit.setup {
@@ -24,5 +24,3 @@ neogit.setup {
     },
   },
 }
-
-return neogit

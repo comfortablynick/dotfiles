@@ -1,20 +1,16 @@
 " Grep {{{1
-if executable('ugrep')
-    set grepprg=ugrep\ -RInkju.\ --tabs=1
-    set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
-elseif executable('rg')
-    set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
-    set grepformat=%f:%l:%c:%m,%f:%l:%m
-endif
+" if executable('ugrep')
+"     set grepprg=ugrep\ -RInkju.\ --tabs=1
+"     set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
+" elseif executable('rg')
+"     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
+"     set grepformat=%f:%l:%c:%m,%f:%l:%m
+" endif
 
 " General commands/aliases {{{1
 " S :: save if file has changed and re-run {{{2
 " Use asynctasks task runner to determine command based on filetype
 command S AsyncTask file-run
-
-" Light/Dark :: easily change background {{{2
-command Light set background=light
-command Dark  set background=dark
 
 " Bdelete[!] :: delete buffer without changing window layout {{{2
 " With [!], do not preserve window layout
@@ -34,16 +30,6 @@ command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q
 
 " StripWhiteSpace :: remove trailing whitespace {{{2
 command StripWhiteSpace call util#preserve('%s/\s\+$//e')
-
-" LGrep :: location list grep {{{2
-command -nargs=+ -complete=file_in_path -bar LGrep lgetexpr s:grep(<f-args>)
-
-function s:grep(...)
-    return system(join([&grepprg] + [expandcmd(join(a:000, ' '))], ' '))
-endfunction
-
-" Rooter :: Find project root {{{2
-" command! Rooter call plugins#lazy_run('Rooter', 'vim-rooter')
 
 " h[g] :: Open help[grep] in new or existing tab {{{2
 call map#cabbr('h', function('window#tab_mod', ['help', 'help']))
@@ -77,40 +63,16 @@ call map#cabbr('ehco', 'echo')
 call map#cabbr('grep', 'silent grep!')
 call map#cabbr('make', 'silent make!')
 
-" AsyncRun/AsyncTasks {{{1
-" AsyncRun :: lazy load plugin {{{2
-" command! -bang -nargs=+ -range=0 -complete=file AsyncRun
-"     \ call plugins#lazy_run(
-"     \   {-> asyncrun#run('<bang>', '', <q-args>, <count>, <line1>, <line2>)},
-"     \   'asyncrun.vim'
-"     \ )
-call map#cabbr('R', 'AsyncRun')
-
-" Make :: async make {{{2
-command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-
 " Grep :: async grep {{{2
 command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
-
-" AsyncTask :: task runner integrated with asyncrun {{{2
-" if !exists(':AsyncTask')
-"     " Lazy load if we haven't loaded the plugin
-"     command -bang -nargs=* -range=0 AsyncTask
-"         \ call plugins#lazy_run(
-"         \ {-> asynctasks#cmd('<bang>', <q-args>, <count>, <line1>, <line2>)},
-"         \ 'asynctasks.vim'
-"         \ )
-" endif
-call map#cabbr('ta', 'AsyncTask')
-nnoremap <Leader>r <Cmd>AsyncTask file-run<CR>
-nnoremap <Leader>b <Cmd>AsyncTask file-build<CR>
 
 " Git {{{1
 " Gpush :: custom git push {{{2
 command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
 nnoremap <Leader>gp <Cmd>Gpush<CR>
 
+" TigStatus {{{2
 call map#cabbr('ts', 'TigStatus')
 
 " LazyGit :: tui for git {{{2
@@ -119,7 +81,6 @@ command -bang -nargs=* LazyGit
 
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
-" command! -nargs=* -complete=file StartupTime call plugins#lazy_run('StartupTime', 'startuptime.vim')
 command! -nargs=* -complete=file Startup
     \ call plugins#lazy_run(
     \   'StartupTime',
@@ -128,7 +89,6 @@ command! -nargs=* -complete=file Startup
     \ )
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
-" command! Messages call plugins#lazy_run('Messages', 'vim-scriptease')
 command! -nargs=* -complete=expression PP
     \ call plugins#lazy_run(
     \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
@@ -160,10 +120,6 @@ command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 " [H]elp :: floating help window {{{2
 command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 call map#cabbr('H', 'Help')
-
-" Colorizer :: run nvim-colorizer.lua {{{2
-" command Colorizer call plugins#lazy_run('ColorizerToggle', 'nvim-colorizer.lua')
-command Colorizer packadd nvim-colorizer.lua | lua require'colorizer'.attach_to_buffer{0, {mode = "foreground"}}
 
 " LspDisable :: stop active lsp clients {{{2
 command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())

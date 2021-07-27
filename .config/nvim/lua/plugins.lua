@@ -82,6 +82,10 @@ local function init()
       vim.g.asynctasks_profile = "release"
       vim.g.asynctasks_term_pos = "right"
       vim.g.asynctasks_term_reuse = 1
+
+      vim.api.nvim_set_keymap("n", "<Leader>r", "<Cmd>AsyncTask file-run", { noremap = true })
+      vim.api.nvim_set_keymap("n", "<Leader>b", "<Cmd>AsyncTask file-build", { noremap = true })
+      vim.call("map#cabbr", "ta", "AsyncTask")
     end,
   }
   use { "michaelb/sniprun", run = "./install.sh" }
@@ -266,7 +270,35 @@ local function init()
   }
 
   -- Colorschemes
-  use "NLKNguyen/papercolor-theme"
+  use {
+    "NLKNguyen/papercolor-theme",
+    setup = function()
+      vim.g.PaperColor_Theme_Options = {
+        language = {
+          python = {
+            highlight_builtins = 1,
+          },
+          cpp = {
+            highlight_standard_library = 1,
+          },
+          c = {
+            highlight_builtins = 1,
+          },
+        },
+        theme = {
+          default = {
+            allow_bold = 1,
+            allow_italic = 1,
+          },
+          ["default.dark"] = {
+            override = {
+              vertsplit_bg = { "#808080", "244" },
+            },
+          },
+        },
+      }
+    end,
+  }
   use "lifepillar/vim-gruvbox8"
 
   -- Syntax/filetype
@@ -297,6 +329,7 @@ local function init()
   use { "honza/vim-snippets", event = lazy_load_event }
   use "norcalli/snippets.nvim"
   use "L3MON4D3/LuaSnip"
+  use "rafamadriz/friendly-snippets"
 
   -- Language server/completion
   use {
@@ -316,13 +349,14 @@ local function init()
       require("trouble").setup {}
     end,
   }
+  -- TODO: lazy load this using InsertCharPre?
   use "hrsh7th/nvim-compe"
 
   -- Lua/nvim
   -- TODO: use nui to test packer's 'load on require' lazy method
   use "MunifTanjim/nui.nvim"
   use "rktjmp/lush.nvim"
-  use "norcalli/nvim-colorizer.lua"
+  use { "norcalli/nvim-colorizer.lua", cmd = { "Colorizer", "ColorizerToggle" } }
   use {
     "lewis6991/gitsigns.nvim",
     event = "BufEnter",

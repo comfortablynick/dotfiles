@@ -34,6 +34,7 @@ return function(on_attach)
           end)(),
           maxPreload = 1000,
           preloadFileSize = 1000,
+          checkThirdParty = false,
         },
       },
     },

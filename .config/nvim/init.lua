@@ -78,6 +78,15 @@ o.list = true
 o.listchars = { tab = "▸ ", nbsp = "␣", trail = "·" }
 o.title = true
 
+-- Grep
+if fn.executable "ugrep" then
+  o.grepprg = "ugrep -RInkju. --tabs=1"
+  o.grepformat = { "%f:%l:%c:%m", "%f+%l+%c+%m", [[%-G%f\|%l\|%c\|%m]] }
+elseif fn.executable "rg" then
+  o.grepprg = "rg --vimgrep --hidden --no-ignore-vcs"
+  o.grepformat = { "%f:%l:%c:%m", "%f:%l:%m" }
+end
+
 o.dictionary:append "/usr/share/dict/words-insane"
 
 o.expandtab = true
@@ -114,6 +123,7 @@ local packs = {
   "nvim-compe",
   "lspsaga.nvim",
   "LuaSnip",
+  "friendly-snippets",
   "nvim-bufferline.lua",
   "vim-dirvish",
 }
@@ -164,3 +174,5 @@ if env.AK_PROFILER == 1 then
   vim.cmd "packadd! profiler.nvim"
   require "profiler"
 end
+
+vim.cmd [[silent! colorscheme gruvbox8]]

@@ -47,6 +47,23 @@ o.shadafile = fn.stdpath "data" .. "/shada/main.shada"
 o.backupdir = env.HOME .. "/.vim/backup//"
 g.package_path = fn.stdpath "data" .. "/site"
 
+-- Patterns to detect root dir
+g.root_patterns = {
+  "init.vim",
+  ".envrc",
+  ".clasp.json",
+  ".git",
+  ".git/",
+  ".projections.json",
+  "package-lock.json",
+  "package.json",
+  "tsconfig.json",
+  ".ansible/",
+  ".tasks",
+  "tasks.ini",
+  "justfile",
+}
+
 o.swapfile = false
 o.backup = true
 o.undofile = true
@@ -56,7 +73,6 @@ o.hidden = true
 o.termguicolors = true
 o.inccommand = "split"
 o.mouse = "a"
-o.winblend = 10
 o.history = 5000
 o.synmaxcol = 300
 o.showtabline = 2
@@ -69,14 +85,17 @@ o.showmatch = true
 o.updatetime = 700
 o.signcolumn = "yes"
 o.scrolloff = 10
-o.timeoutlen = 300
+o.timeoutlen = 800
 o.mouse = "a"
 o.conceallevel = 1
 o.virtualedit = { onemore = true }
-o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 o.list = true
 o.listchars = { tab = "▸ ", nbsp = "␣", trail = "·" }
 o.title = true
+
+o.wildmode = { "longest", "full" }
+o.wildoptions = { "pum" }
+o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 
 -- Grep
 if fn.executable "ugrep" then
@@ -94,8 +113,20 @@ o.smartindent = true
 o.tabstop = 4
 o.shiftwidth = 0
 o.smartcase = true
+o.formatoptions = o.formatoptions
+  - "a" -- Auto formatting
+  - "t" -- Wrap text
+  + "c" -- Wrap comments
+  + "q" -- Allow formatting comments w/ gq
+  - "o" -- Insert comment leader after o or O
+  + "r" -- Insert comment leader after <Enter>
+  + "n" -- Format numbered lists using 'formatlistpat'
+  + "j" -- Remove comment leader when joining lines
+  - "2" -- Use indent of 2nd line of paragraph
 
 -- Window options
+o.winblend = 10
+o.pumblend = 10
 o.cmdwinheight = 10
 o.splitright = true
 o.splitbelow = true

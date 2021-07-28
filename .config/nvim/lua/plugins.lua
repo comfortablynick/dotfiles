@@ -26,8 +26,14 @@ local function init()
       disable_commands = true,
       opt_default = true,
       display = {
-        -- open_cmd = "topleft 80vnew \\[packer\\]",
-        open_fn = require("packer.util").float,
+        open_cmd = "topleft 80vnew \\[packer\\]",
+        prompt_border = "double",
+        keybindings = {
+          quit = "q",
+          toggle_info = "<Space>",
+          diff = "<CR>",
+          prompt_revert = "r",
+        },
       },
     }
   end
@@ -39,22 +45,10 @@ local function init()
   -- Plugin definitions
   use {
     "airblade/vim-rooter",
-    cmd = "Rooter",
     setup = function()
       vim.g.rooter_silent_chdir = 1
       vim.g.rooter_manual_only = 1
-      vim.g.rooter_patterns = {
-        "init.vim",
-        ".envrc",
-        ".clasp.json",
-        ".git",
-        ".git/",
-        ".projections.json",
-        "package-lock.json",
-        "package.json",
-        "tsconfig.json",
-        "=.ansible/",
-      }
+      vim.g.rooter_patterns = vim.g.root_patterns
     end,
   }
   use { "tpope/vim-eunuch", cmd = { "Delete", "Rename", "Chmod", "Move" } }
@@ -89,7 +83,6 @@ local function init()
     end,
   }
   use { "michaelb/sniprun", run = "./install.sh" }
-  use "tpope/vim-dispatch"
 
   -- Editing behavior
   use {

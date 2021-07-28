@@ -1,12 +1,4 @@
 " Grep {{{1
-" if executable('ugrep')
-"     set grepprg=ugrep\ -RInkju.\ --tabs=1
-"     set grepformat=%f:%l:%c:%m,%f+%l+%c+%m,%-G%f\\\|%l\\\|%c\\\|%m
-" elseif executable('rg')
-"     set grepprg=rg\ --vimgrep\ --hidden\ --no-ignore-vcs
-"     set grepformat=%f:%l:%c:%m,%f:%l:%m
-" endif
-
 " General commands/aliases {{{1
 " S :: save if file has changed and re-run {{{2
 " Use asynctasks task runner to determine command based on filetype
@@ -50,6 +42,9 @@ call map#cabbr('ht', 'split \| terminal')
 
 " fff :: Insert comment with fold marker {{{2
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
+
+" Root :: Change to root dir using lua {{{2
+command Root silent lcd `=luaeval("require'util'.get_current_root()")`
 
 " Misc commonly mistyped commands {{{2
 command WQ wq
@@ -154,8 +149,5 @@ command! -nargs=+ -complete=file -bar Grep lua require'grep'.grep_for_string(<q-
 
 " Option :: pretty print option info {{{2
 command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
-
-" Make :: async make {{{2
-" command! -bang -complete=file Make call s:tools.make()
 
 " vim:fdl=1:

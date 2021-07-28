@@ -1,12 +1,13 @@
 -- Utility functions, not necessarily integral to vim
 local uv = vim.loop
 local ffi = vim.F.npcall(require, "ffi")
+local api = vim.api
 local M = {}
 
 -- Root finder utilities originally from nvim-lspconfig
 -- TODO: replace vim rooter
 function M.search_ancestors(startpath, func)
-  vim.validate { func = { func, 'f' } }
+  vim.validate { func = { func, "f" } }
   if func(startpath) then
     return startpath
   end
@@ -61,6 +62,10 @@ function M.find_package_json_ancestor(startpath)
       return path
     end
   end)
+end
+
+function M.get_current_root(bufnr)
+  return M.root_pattern(unpack(vim.g.root_patterns))(api.nvim_buf_get_name(bufnr))
 end
 
 function M.humanize_bytes(size)

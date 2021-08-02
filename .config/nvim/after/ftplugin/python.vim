@@ -7,7 +7,7 @@ let g:python_highlight_all=1
 let $PYTHONUNBUFFERED=1
 
 " Don't overwrite command if already defined
-silent! command -buffer Black call plugins#lazy_run('Black', 'black')
+silent! command -buffer Black call pack#lazy_run('Black', 'black')
 
 nnoremap <buffer><F3> <Cmd>call <SID>format_python()<CR>
 

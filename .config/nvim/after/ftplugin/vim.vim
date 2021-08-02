@@ -10,8 +10,8 @@ let g:vim_indent_cont = &tabstop                                " Indent \ newli
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 " Execute line
 nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
-nnoremap <silent><buffer> <C-]> :call plugins#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
-nnoremap <silent><buffer> <C-t> :call plugins#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
+nnoremap <silent><buffer> <C-]> :call pack#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
+nnoremap <silent><buffer> <C-t> :call pack#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
 " Turn maps into <Cmd> type
 " nnoremap <buffer> ycc <Cmd>s/\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)/\1\3\<Cmd\>\5<CR>\|:noh<CR>

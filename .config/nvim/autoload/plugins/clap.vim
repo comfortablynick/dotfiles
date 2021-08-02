@@ -18,22 +18,16 @@ command Filer   Clap filer
 command Base16  call plugins#clap#base16()
 command Globals Clap globals
 
-call map#cabbr('bs',   'Clap buffers')
-call map#cabbr('t',    'Clap tags nvim_lsp')
-call map#cabbr('scr',  'Clap scriptnames')
-call map#cabbr('mru',  'Clap mru')
 call map#cabbr('mapn', 'Clap map ++mode=n')
 call map#cabbr('mapi', 'Clap map ++mode=i')
 call map#cabbr('mapv', 'Clap map ++mode=v')
 call map#cabbr('mapo', 'Clap map ++mode=o')
 call map#cabbr('mapx', 'Clap map ++mode=x')
-call map#cabbr('api',  'Clap api')
 
 " Maps
 nnoremap <F6>      <Cmd>Clap task<CR>
 nnoremap <Leader>t <Cmd>Clap tags nvim_lsp<CR>
 nnoremap <Leader>h <Cmd>Clap command_history<CR>
-" nnoremap <Leader>m <Cmd>Clap mru<CR>
 
 " Functions {{{1
 " function plugins#clap#get_selected() :: Get selection sans icon {{{2

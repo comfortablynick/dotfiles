@@ -1,7 +1,7 @@
 local api = vim.api
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = "menuone,noselect"
+vim.opt.completeopt = { "menuone", "noselect" }
 
 -- Avoid showing message extra message when using completion
 vim.opt.shortmess:append "c"
@@ -103,7 +103,7 @@ local init = function()
       -- snippets
       luasnip = true,
       vsnip = false,
-      ultisnips = false, -- {menu = labels.UltiSnips},
+      ultisnips = {menu = labels.UltiSnips},
       snippets_nvim = false, -- {menu = labels["snippets.nvim"]},
     },
   }, bufnr)

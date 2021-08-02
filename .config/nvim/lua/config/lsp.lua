@@ -186,11 +186,10 @@ local on_attach_cb = function(client)
     nmap("]d", "Lspsaga diagnostic_jump_next")
     nmap("ga", "Lspsaga code_action")
     nmap("gS", "Lspsaga signature_help")
-    -- nmap("<F2>", "Lspsaga rename")
+    nmap("<F2>", "Lspsaga rename")
     nmap("<C-f>", "lua require'lspsaga.action'.smart_scroll_with_saga(1)")
     nmap("<C-b>", "lua require'lspsaga.action'.smart_scroll_with_saga(-1)")
   end
-    nmap("<F2>", "lua require'config.lsp.nui'.rename()")
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
@@ -269,17 +268,5 @@ if configs ~= nil then
   configs.taplo.setup { on_attach = on_attach_cb }
 end
 
--- Set and return module {{{1
 M.status = require("config.lsp.status").status
 return M
-
--- local mt = {}
---
--- local servers = {}
---
--- function mt:__index(k) -- luacheck: ignore
---   if servers[k] == nil then servers[k] = npcall(require, "config.lsp." .. k) end
---   return servers[k]
--- end
---
--- return setmetatable(M, mt)

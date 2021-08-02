@@ -4,7 +4,7 @@
 let s:task = {}
 
 function! s:task.source()
-    let l:list = plugins#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
+    let l:list = pack#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
     let l:source = []
     let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
     for l:item in l:list

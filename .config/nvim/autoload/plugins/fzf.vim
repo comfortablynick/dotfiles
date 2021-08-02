@@ -122,7 +122,7 @@ function s:fzf_asynctasks(fullscreen) "{{{2
         echo l:name
     endfunction
 
-    let l:list = plugins#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
+    let l:list = pack#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
     let l:source = []
     for l:item in l:list
         let l:source += [l:item['name'].'  <'.l:item['scope'].'>  : '.l:item['command']]

@@ -157,6 +157,7 @@ local packs = {
   "friendly-snippets",
   "nvim-bufferline.lua",
   "vim-dirvish",
+  "vim-clap",
 }
 
 for _, pack in ipairs(packs) do

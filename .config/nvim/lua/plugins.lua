@@ -26,7 +26,7 @@ local function init()
       disable_commands = true,
       opt_default = true,
       display = {
-        open_cmd = "topleft 80vnew \\[packer\\]",
+        open_cmd = "topleft 100vnew \\[packer\\]",
         prompt_border = "double",
         keybindings = {
           quit = "q",
@@ -56,7 +56,6 @@ local function init()
   use { "psliwka/vim-smoothie", event = lazy_load_event }
 
   use { "kkoomen/vim-doge", run = ":call doge#install(#{headless: 1})}" }
-  use { "dense-analysis/ale", setup = runtime("autoload", "plugins", "ale"), disable = true }
   use {
     "sbdchd/neoformat",
     cmd = "Neoformat",
@@ -207,12 +206,10 @@ local function init()
   }
   use {
     "liuchengxu/vim-clap",
-    run = ":call clap#installer#force_download()",
+    run = ":Clap install-binary",
     requires = "liuchengxu/vista.vim",
-    event = "BufEnter",
     setup = runtime("autoload", "plugins", "clap"),
   }
-  use { "laher/fuzzymenu.vim", cmd = "Fzm" }
   use {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
@@ -221,20 +218,6 @@ local function init()
     end,
     config = function()
       vim.g.undotree_WindowLayout = 4
-    end,
-  }
-  use {
-    "preservim/nerdtree",
-    cmd = { "NERDTree", "NERDTreeToggle" },
-    setup = function()
-      vim.g.NERDTreeHighlightCursorline = 1
-      vim.g.NERDTreeIgnore = {
-        [[\.pyc$]],
-        [[^__pycache__$]],
-        [[.vscode]],
-      }
-      vim.g.NERDTreeShowHidden = 1
-      vim.g.NERDTreeQuitOnOpen = 1
     end,
   }
   use "justinmk/vim-dirvish"
@@ -346,8 +329,6 @@ local function init()
   use "hrsh7th/nvim-compe"
 
   -- Lua/nvim
-  -- TODO: use nui to test packer's 'load on require' lazy method
-  use "MunifTanjim/nui.nvim"
   use "rktjmp/lush.nvim"
   use { "norcalli/nvim-colorizer.lua", cmd = { "Colorizer", "ColorizerToggle" } }
   use {

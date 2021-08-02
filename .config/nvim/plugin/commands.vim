@@ -77,7 +77,7 @@ command -bang -nargs=* LazyGit
 " Utilities {{{1
 " StartupTime :: lazy load startuptime.vim plugin {{{2
 command! -nargs=* -complete=file Startup
-    \ call plugins#lazy_run(
+    \ call pack#lazy_run(
     \   'StartupTime',
     \   'vim-startuptime',
     \   {'before': 'silent! delcommand StartupTime'}
@@ -85,7 +85,7 @@ command! -nargs=* -complete=file Startup
 
 " Scriptease :: lazy load vim-scriptease plugin {{{2
 command! -nargs=* -complete=expression PP
-    \ call plugins#lazy_run(
+    \ call pack#lazy_run(
     \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
     \ 'vim-scriptease'
     \ )

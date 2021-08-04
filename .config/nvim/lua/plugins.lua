@@ -301,7 +301,7 @@ local function init()
   }
 
   -- Snippets
-  use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event }
+  use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips") }
   use { "honza/vim-snippets", event = lazy_load_event }
   use "norcalli/snippets.nvim"
   use "L3MON4D3/LuaSnip"

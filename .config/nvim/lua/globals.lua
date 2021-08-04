@@ -34,8 +34,9 @@ _G.smart_tab = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
     -- TODO: why doesn't this work?
-    -- elseif vim.F.npcall(vim.fn["Ultisnips#CanJumpForwards"]) == 1 then
-    --   return t"<Plug>(UltiForward)"
+  elseif vim.F.npcall(vim.fn["Ultisnips#CanJumpForwards"]) == 1 then
+    --   return t "<Plug>(UltiForward)"
+    return vim.fn["UltiSnips#JumpForwards"]()
   elseif require("luasnip").expand_or_jumpable() then
     return t "<Plug>luasnip-expand-or-jump"
   elseif check_back_space() then

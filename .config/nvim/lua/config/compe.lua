@@ -7,7 +7,8 @@ vim.opt.completeopt = { "menuone", "noselect" }
 vim.opt.shortmess:append "c"
 
 local imap = function(key, result, opts)
-  api.nvim_buf_set_keymap(0, "i", key, result, opts or { silent = true })
+  local def_opts = { silent = true, expr = true }
+  api.nvim_buf_set_keymap(0, "i", key, result, vim.deepcopy(def_opts, opts, "force"))
 end
 
 vim.lsp.protocol.CompletionItemKind = {
@@ -38,32 +39,32 @@ vim.lsp.protocol.CompletionItemKind = {
   "⌂ [type]",
 }
 
-local labels = {
-  Buffer = " [buffer]",
-  -- Class = " [class]",
-  -- Color = " [color]",
-  -- Enum = " [enum]",
-  -- Field = "פּ [field]",
-  -- Folder = " [folder]",
-  -- Function = " [function]",
-  -- Interface = " [interface]",
-  -- Keyword = " [keyword]",
-  -- Method = " [method]",
-  -- Module = " [module]",
-  -- Operator = " [operator]",
-  -- Property = " [property]",
-  -- Reference = " [reference]",
-  -- Snippet = " [snippet]",
-  -- Struct = "פּ [struct]",
-  -- Text = " [text]",
-  -- TypeParameter = " [type]",
-  UltiSnips = " [UltiSnips]",
-  -- Unit = " [unit]",
-  -- Value = " [value]",
-  -- Variable = " [variable]",
-  ["snippets.nvim"] = " [nsnip]",
-  Treesitter = "פּ [TS]",
-}
+-- local labels = {
+--   Buffer = " [buffer]",
+--   -- Class = " [class]",
+--   -- Color = " [color]",
+--   -- Enum = " [enum]",
+--   -- Field = "פּ [field]",
+--   -- Folder = " [folder]",
+--   -- Function = " [function]",
+--   -- Interface = " [interface]",
+--   -- Keyword = " [keyword]",
+--   -- Method = " [method]",
+--   -- Module = " [module]",
+--   -- Operator = " [operator]",
+--   -- Property = " [property]",
+--   -- Reference = " [reference]",
+--   -- Snippet = " [snippet]",
+--   -- Struct = "פּ [struct]",
+--   -- Text = " [text]",
+--   -- TypeParameter = " [type]",
+--   UltiSnips = " [UltiSnips]",
+--   -- Unit = " [unit]",
+--   -- Value = " [value]",
+--   -- Variable = " [variable]",
+--   ["snippets.nvim"] = " [nsnip]",
+--   Treesitter = "פּ [TS]",
+-- }
 
 local init = function()
   local compe = vim.F.npcall(require, "compe")
@@ -78,7 +79,11 @@ local init = function()
     return
   end
 
-  -- require"config.snippets"
+  -- Load ultisnips if needed
+  if vim.g.did_plugin_ultisnips == nil then
+    vim.cmd [[packadd ultisnips]]
+  end
+
   require "config.snips"
 
   compe.setup({
@@ -92,29 +97,31 @@ local init = function()
     allow_prefix_unmatch = false,
     documentation = true,
     source = {
-      calc = true,
+      calc = false,
       path = true,
-      buffer = { menu = labels.Buffer },
-      spell = true,
+      buffer = true,
+      spell = { filetypes = { "markdown", "asciidoctor" } },
       nvim_lsp = true,
       nvim_lua = true,
       tags = false,
-      treesitter = false, -- {menu = labels.Treesitter},
+      treesitter = false,
       -- snippets
       luasnip = true,
       vsnip = false,
-      ultisnips = {menu = labels.UltiSnips},
-      snippets_nvim = false, -- {menu = labels["snippets.nvim"]},
+      ultisnips = true,
+      snippets_nvim = false,
     },
   }, bufnr)
 
-  imap("<C-Space>", "compe#complete()", { expr = true, silent = true })
+  imap("<C-Space>", "compe#complete()")
   if vim.bo.filetype ~= "markdown" then
-    imap("<Tab>", "v:lua.smart_tab()", { expr = true })
-    imap("<S-Tab>", "v:lua.smart_s_tab()", { expr = true })
+    imap("<Tab>", "v:lua.smart_tab()")
+    imap("<S-Tab>", "v:lua.smart_s_tab()")
   end
-  imap("<CR>", "compe#confirm('<CR>')", { expr = true, silent = true })
-  imap("<C-e>", "compe#close('<C-e>')", { expr = true, silent = true })
+  imap("<CR>", "compe#confirm('<CR>')")
+  imap("<C-e>", "compe#close('<C-e>')")
+  imap("<C-f>", "compe#scroll({'delta':  4})")
+  imap("<C-b>", "compe#scroll({'delta': -4})")
 end
 
 return { init = init }

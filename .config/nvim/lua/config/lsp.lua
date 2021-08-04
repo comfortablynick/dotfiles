@@ -150,7 +150,7 @@ local nmap = function(key, result)
   api.nvim_buf_set_keymap(0, "n", key, "<Cmd>" .. result .. "<CR>", { noremap = true })
 end
 
-local on_attach_cb = function(client)
+local on_attach_cb = function(client, bufnr)
   if lsp_status ~= nil then
     lsp_status.on_attach(client)
   end
@@ -160,7 +160,6 @@ local on_attach_cb = function(client)
     end
   end
 
-  local bufnr = api.nvim_get_current_buf()
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
@@ -222,6 +221,7 @@ function M.init()
   end
   -- Server configs {{{1
   local local_configs = {
+    ansiblels = true,
     bashls = true,
     cmake = false,
     ccls = true,

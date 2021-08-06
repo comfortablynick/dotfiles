@@ -100,24 +100,24 @@ function M.bench(iters, cb)
   end
   local end_time = M.epoch_ms()
   local elapsed_time = end_time - start_time
-  p("time elapsed for %d runs: %d ms", iters, elapsed_time)
+  print("time elapsed for %d runs: %d ms", iters, elapsed_time)
 end
-
----
--- Error handling
----
 
 -- Some path utilities
 -- From: https://github.com/neovim/nvim-lsp/blob/master/lua/nvim_lsp/util.lua
 M.path = (function()
+  local is_windows = _G.jit.os == "Windows"
+
+  local path_sep = is_windows and "\\" or "/"
+
   local function exists(filename)
     local stat = uv.fs_stat(filename)
     return stat and stat.type or false
   end
 
   local function basename(str)
-    local name = string.gsub(str, "(.*/)(.*)", "%2")
-    return name
+    local pat = "(.*" .. path_sep .. ")(.*)"
+    return str:gsub(pat, "%2")
   end
 
   local function is_dir(filename)
@@ -128,9 +128,11 @@ M.path = (function()
     return exists(filename) == "file"
   end
 
-  local is_windows = uv.os_uname().version:match "Windows"
-
-  local path_sep = is_windows and "\\" or "/"
+  -- Create folder with non existing parents
+  -- TODO: use traverse_parents to implement through luv?
+  local mkdir_p = function(path)
+    return os.execute((is_windows and "mkdir " .. path or "mkdir -p " .. path))
+  end
 
   local is_fs_root
   if is_windows then
@@ -194,7 +196,7 @@ M.path = (function()
 
   -- Iterate the path until we find the rootdir.
   local function iterate_parents(path)
-    local function it(s, v)
+    local function it(s, v) -- luacheck: ignore unused s
       if v and not is_fs_root(v) then
         v = dirname(v)
       else
@@ -248,6 +250,7 @@ const char *shorten_dir(const char *str)
     basename = basename,
     sep = path_sep,
     dirname = dirname,
+    mkdir_p = mkdir_p,
     join = path_join,
     traverse_parents = traverse_parents,
     iterate_parents = iterate_parents,

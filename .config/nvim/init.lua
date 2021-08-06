@@ -3,6 +3,7 @@ local env = vim.env
 local o = vim.opt
 local g = vim.g
 local fn = vim.fn
+local path = require("util").path
 
 require "nvim"
 require "globals"
@@ -40,12 +41,20 @@ for _, provider in ipairs { "ruby", "perl", "python" } do
   g["loaded_" .. provider .. "_provider"] = 0
 end
 
--- Directories
--- TODO: create if they don't exist
-o.undodir = env.XDG_CACHE_HOME .. "/nvim/undo//"
-o.shadafile = fn.stdpath "data" .. "/shada/main.shada"
-o.backupdir = env.HOME .. "/.vim/backup//"
-g.package_path = fn.stdpath "data" .. "/site"
+-- Directories/files (create if they don't exist)
+o.shadafile = path.join(fn.stdpath "data", "shada", "main.shada")
+
+local dirs = {
+  undodir = path.join(fn.stdpath "data", "undo"),
+  backupdir = path.join(fn.stdpath "data", "backup") .. "//",
+}
+
+for dirname, dir in pairs(dirs) do
+  if not path.exists(dir) then
+    path.mkdir_p(dir)
+  end
+  o[dirname] = dir
+end
 
 -- Patterns to detect root dir
 g.root_patterns = {

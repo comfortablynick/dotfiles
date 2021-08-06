@@ -3,7 +3,7 @@
 " \ \ / / | '_ ` _ \| '__/ __|
 "  \ V /| | | | | | | | | (__
 " (_)_/ |_|_| |_| |_|_|  \___|
-" 
+"
 " Cursor shape (set to match Neovim default)
 "
 " Number key
@@ -55,7 +55,7 @@ set showmode                                 " Show default mode text (e.g. -- I
 set shortmess+=c                             " Don't show 'Match x of x'
 set clipboard=unnamed                        " Use system clipboard
 set nocursorline                             " Show line under cursor's line (check autocmds)
-set noruler                                  " Line position (not needed if using a statusline plugin
+set ruler                                    " Show Line position (not needed if using a statusline plugin)
 set showmatch                                " Show matching pair of brackets (), [], {}
 set updatetime=700                           " Controls CursorHold timing and swap file write time
 set signcolumn=yes                           " Display signcolumn or use numbercolumn
@@ -126,5 +126,102 @@ let g:loaded_python_provider = 0
 
 silent! packadd! matchit " Nvim loads by default
 
+
+" Maps {{{1
+" General {{{2
+nnoremap U <C-r>
+nnoremap qq :x<CR>
+nnoremap qqq :q!<CR>
+nnoremap QQ ZQ
+nnoremap Y y$
+
+" Remap ; to : {{{2
+nnoremap ; :
+xnoremap ; :
+onoremap ; :
+nnoremap g: g;
+nnoremap @; @:
+nnoremap q; q:
+xnoremap q; q:
+
+" Run the last command
+nnoremap <Leader><Leader>c :<Up>
+
+" Clears hlsearch after doing a search, otherwise <CR>
+nnoremap <expr> <CR> {-> v:hlsearch ? ":nohlsearch\<CR>" : "\<CR>"}()
+tnoremap <buffer><silent> <Esc> <C-\><C-n><CR>:bw!<CR>
+
+" Use kj to escape insert mode
+inoremap kj <Esc>`^
+
+" Indent/outdent {{{2
+vnoremap <Tab>   <Cmd>normal! >gv<CR>
+vnoremap <S-Tab> <Cmd>normal! <gv<CR>
+
+" `CTRL+{h,j,k,l}` to navigate in normal mode {{{2
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+nnoremap <C-p> <C-w>p
+
+" Delete window to the left/below/above/to the right with d<C-h/j/k/l> {{{2
+nnoremap d<C-j> <C-w>j<C-w>c
+nnoremap d<C-k> <C-w>k<C-w>c
+nnoremap d<C-h> <C-w>h<C-w>c
+nnoremap d<C-l> <C-w>l<C-w>c
+
+" Override vim-impaired tagstack mapping {{{2
+nnoremap <silent> [t <Cmd>tabprevious<CR>
+nnoremap <silent> ]t <Cmd>tabnext<CR>
+
+" Buffer navigation {{{1
+nnoremap <Tab>      <Cmd>bnext<CR>
+nnoremap <S-Tab>    <Cmd>bprevious<CR>
+nnoremap <Leader>w  <Cmd>update\|bwipeout<CR>
+
+" Fold
+nnoremap <Space> <Cmd>silent! exe 'normal! za'<CR>
+nnoremap za zA
+
+" Command line {{{1
+" %% -> cwd
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
+
+" Plugins {{{1
+" Install vim-plug {{{2
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    " Automatically install plugins
+    augroup vim_plug
+        autocmd!
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    augroup END
+endif
+
+" Plugin list {{{2
+call plug#begin('~/.vim/plugged')
+
+Plug 'tpope/vim-commentary'
+Plug 'NLKNguyen/papercolor-theme'
+
+let g:PaperColor_Theme_Options = {
+    \   'theme': {
+    \     'default': {
+    \       'allow_bold': 1,
+    \       'allow_italic': 1,
+    \     }
+    \   }
+    \ }
+
+" List ends here; plugins become available
+call plug#end()
+
+" Filetype/Syntax {{{1
+colorscheme PaperColor
 filetype plugin on       " Allow loading .vim files for different filetypes
 syntax enable            " Syntax highlighting on
+
+" vim:fdm=marker fdl=1:

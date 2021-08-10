@@ -38,7 +38,7 @@ let g:sl  = #{
 " }}}
 
 " Set statusline
-set statusline=%!statusline#get()
+set statusline=%!v:lua.statusline.get()
 
 " SL :: toggle statusline items
 command! -nargs=? -complete=custom,statusline#complete_args SL call statusline#command(<f-args>)

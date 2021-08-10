@@ -22,7 +22,7 @@ fzf_grep_edit() {
     match=$(
         rg --color=always --line-number "$1" | devicon-lookup -c -p : |
             fzf-tmux --ansi --preview-window 'right:50%' --no-multi --delimiter : \
-            --preview 'bat --color=always --line-range {2}: $(echo {1} | cut -d" " -f2)'
+            --preview 'bat --color=always --highlight-line {2} {1..}'
     )
     file=$(echo "$match" | cut -d: -f1 | cut -d' ' -f2)
     if [ -n "$file" ]; then

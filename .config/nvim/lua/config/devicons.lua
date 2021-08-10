@@ -1,4 +1,4 @@
-local devicons = nvim.packrequire "nvim-web-devicons"
+local devicons = require "nvim-web-devicons"
 
 if not devicons then
   return nil

@@ -27,6 +27,7 @@ local disabled_built_ins = {
   "vimballPlugin",
   "html_plugin",
   "2html_plugin",
+  "tohtml_plugin",
   "logipat",
   "rrhelper",
   "spellfile_plugin",
@@ -164,7 +165,7 @@ local packs = {
   "lspsaga.nvim",
   "LuaSnip",
   "friendly-snippets",
-  "nvim-bufferline.lua",
+  "nvim-web-devicons",
   "vim-dirvish",
   "vim-clap",
 }
@@ -179,6 +180,7 @@ end, 200)
 
 require "nvim"
 require "globals"
+require "config.statusline"
 require "config.treesitter"
 require "config.devicons"
 require("config.lsp").init()

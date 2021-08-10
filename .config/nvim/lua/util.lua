@@ -259,4 +259,97 @@ const char *shorten_dir(const char *str)
   }
 end)()
 
+local function _comp(a, b)
+  if type(a) ~= type(b) then
+    return false
+  end
+  if type(a) == "table" then
+    for k, v in pairs(a) do
+      if not b[k] then
+        return false
+      end
+      if not _comp(v, b[k]) then
+        return false
+      end
+    end
+  else
+    if a ~= b then
+      return false
+    end
+  end
+  return true
+end
+
+--- Table Key-Value Intersection.
+---
+--- @return Returns a table that is the intersection of the provided tables. This is an
+---   intersection of key/value pairs. See table.n_intersection() for an intersection of values.
+---   Note that the resulting table may not be reliably traversable with ipairs() due to
+---   the fact that it preserves keys. If there is a gap in numerical indices, ipairs() will
+---   cease traversal.
+function M.tbl_intersection(...)
+  sets = { ... }
+  if #sets < 2 then
+    return false
+  end
+
+  local function intersect(set1, set2)
+    local result = {}
+    for key, val in pairs(set1) do
+      if set2[key] then
+        if _comp(val, set2[key]) then
+          result[key] = val
+        end
+      end
+    end
+    return result
+  end
+
+  local intersection = intersect(sets[1], sets[2])
+
+  for i, _ in ipairs(sets) do
+    if i > 2 then
+      intersection = intersect(intersection, sets[i])
+    end
+  end
+
+  return intersection
+end
+
+--- List Table Intersection.
+---
+--- @return Returns a numerically indexed table that is the intersection of the provided tables.
+---   This is an intersection of unique values. The order and keys of the input tables are
+---   not preserved.
+function M.list_intersection(...)
+  sets = { ... }
+  if #sets < 2 then
+    return false
+  end
+
+  local function intersect(set1, set2)
+    local intersection_keys = {}
+    local result = {}
+    for _, val1 in pairs(set1) do
+      for _, val2 in pairs(set2) do
+        if _comp(val1, val2) and not intersection_keys[val1] then
+          table.insert(result, val1)
+          intersection_keys[val1] = true
+        end
+      end
+    end
+    return result
+  end
+
+  local intersection = intersect(sets[1], sets[2])
+
+  for i, _ in ipairs(sets) do
+    if i > 2 then
+      intersection = intersect(intersection, sets[i])
+    end
+  end
+
+  return intersection
+end
+
 return M

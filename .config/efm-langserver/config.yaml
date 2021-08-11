@@ -9,8 +9,13 @@ root-markers:
 tools:
   fish-shell: &fish-shell
     lint-command: 'fish -n'
+    lint-ignore-exit-code: true
     lint-formats:
       - '%f (line %l): %m'
+
+  fish-indent: &fish-indent
+    format-command: 'fish_indent'
+    format-stdin: true
 
   vim-vint: &vim-vint
     lint-command: 'vint --enable-neovim --stdin-display-name ${INPUT} -'
@@ -153,6 +158,7 @@ tools:
 languages:
   fish:
     - <<: *fish-shell
+    - <<: *fish-indent
 
   vim:
     - <<: *vim-vint

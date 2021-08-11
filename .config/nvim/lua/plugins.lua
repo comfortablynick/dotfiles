@@ -156,6 +156,10 @@ local function init()
   use {
     "machakann/vim-sandwich",
     event = lazy_load_event,
+    setup = function()
+      vim.g.sandwich_no_default_key_mappings = true
+      vim.g.operator_sandwich_no_default_key_mappings = true
+    end,
     config = function()
       -- Make sandwich behave like vim-surround
       vim.cmd [[runtime macros/sandwich/keymap/surround.vim]]
@@ -352,7 +356,7 @@ local function init()
     "akinsho/nvim-bufferline.lua",
     event = "BufEnter",
     config = function()
-      require("bufferline").setup {}
+      require "config.bufferline"
     end,
   }
   use "norcalli/profiler.nvim"

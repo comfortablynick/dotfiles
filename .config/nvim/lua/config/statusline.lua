@@ -1,7 +1,9 @@
-local devicons = vim.F.npcall(require, "nvim-web-devicons")
 local api = vim.api
 local uv = vim.loop
+local npcall = vim.F.npcall
 local util = require "util"
+local devicons = npcall(require, "nvim-web-devicons")
+local lsp_status = npcall(require, "lsp-status")
 
 local M = {}
 
@@ -38,15 +40,14 @@ M.get = function()
     "%( %{v:lua.statusline.file_name()} %)",
     "%<",
     "%(%h%w%q%m%r %)",
-    "%(  %4*%{statusline#linter_errors()}%*%)",
-    "%( %5*%{statusline#linter_warnings()}%*%)",
-    "%( %6*%{statusline#linter_hints()}%*%)",
+    "%(  %4*%{v:lua.statusline.lsp_errors()}%*%)",
+    "%( %5*%{v:lua.statusline.lsp_warnings()}%*%)",
+    "%( %6*%{v:lua.statusline.lsp_hints()}%*%)",
     "%=",
-    "%( %{statusline#toggled()} ",
-    M.opts.sep,
-    "%)",
-    "%( %{statusline#mucomplete_method()} %)",
-    "%( %{statusline#job_status()} ",
+    -- "%( %{statusline#toggled()} ",
+    -- M.opts.sep,
+    -- "%)",
+    "%( %{v:lua.statusline.job_status()} ",
     M.opts.sep,
     "%)",
     "%( %{statusline#current_tag()}%)",
@@ -59,7 +60,7 @@ M.get = function()
 end
 
 local winwidth = function()
-  return api.nvim_list_uis()[1].width
+  return vim.fn.winwidth(0)
 end
 
 local excluded_filetype = function()
@@ -133,7 +134,7 @@ M.file_size = function()
   end
   local stat = uv.fs_stat(api.nvim_buf_get_name(0))
   if stat == nil or stat.type == "directory" then
-    return 0
+    return ""
   end
   return util.humanize_bytes(stat.size)
 end
@@ -155,6 +156,30 @@ M.file_name = function()
     return vim.fn.pathshorten(fname)
   end
   return fname
+end
+
+M.lsp_errors = function()
+  return npcall(lsp_status.status_errors) or ""
+end
+
+M.lsp_warnings = function()
+  return npcall(lsp_status.status_warnings) or ""
+end
+
+M.lsp_hints = function()
+  return npcall(lsp_status.status_hints) or ""
+end
+
+M.job_status = function()
+  if not active_file() then
+    return ""
+  end
+  local status = vim.g.asyncrun_status or vim.g.job_status or ""
+  if status ~= "" then
+    return "Job: " .. status
+  else
+    return ""
+  end
 end
 
 _G.statusline = M

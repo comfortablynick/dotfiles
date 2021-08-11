@@ -119,6 +119,7 @@ local function init()
     end,
   }
   use "tpope/vim-projectionist"
+  use { "tpope/vim-obsession", cmd = "Obsession" }
 
   -- Motions
   use { "tpope/vim-repeat", event = lazy_load_event }
@@ -126,7 +127,7 @@ local function init()
   -- Lua impl of easymotion/sneak
   use {
     "phaazon/hop.nvim",
-    cmd = { "HopWord", "HopChar1", "HopChar2" },
+    cmd = { "HopWord", "HopChar1", "HopChar2", "HopLine" },
     config = function()
       local hop = require "hop"
       hop.setup { winblend = 100 }
@@ -134,6 +135,7 @@ local function init()
     setup = function()
       local opts = { noremap = true }
       vim.api.nvim_set_keymap("n", "<Leader>s", "<Cmd>HopWord<CR>", opts)
+      vim.api.nvim_set_keymap("n", "<Leader>l", "<Cmd>HopLine<CR>", opts)
       vim.api.nvim_set_keymap("n", "f", "<Cmd>HopChar1<CR>", opts)
       vim.api.nvim_set_keymap("n", "s", "<Cmd>HopChar2<CR>", opts)
     end,

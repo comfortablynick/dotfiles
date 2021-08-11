@@ -1,6 +1,23 @@
 {
-  "plugin/*.vim": {"type": "plugin"},
-  "autoload/*.vim": {"type": "autoload"},
-  "doc/*.txt": {"type": "doc"},
-  "README.markdown": {"type": "doc"}
+  "ftplugin/*.vim": {
+    "type": "ftplugin"
+  },
+  "plugin/*.vim": {
+    "type": "plugin"
+  },
+  "autoload/*.vim": {
+    "type": "autoload"
+  },
+  "lua/*.lua": {
+    "type": "lua"
+  },
+  "lua/config/*.lua": {
+    "type": "lc"
+  },
+  "doc/*.txt": {
+    "type": "doc"
+  },
+  "README.markdown": {
+    "type": "doc"
+  }
 }

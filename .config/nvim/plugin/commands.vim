@@ -23,9 +23,9 @@ command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q
 " StripWhiteSpace :: remove trailing whitespace {{{2
 command StripWhiteSpace call util#preserve('%s/\s\+$//e')
 
-" h[g] :: Open help[grep] in new or existing tab {{{2
-call map#cabbr('h', function('window#tab_mod', ['help', 'help']))
-call map#cabbr('hg', function('window#tab_mod', ['helpgrep', 'help']))
+" he[g] :: Open help[grep] in new or existing tab {{{2
+call map#cabbr('he', function('window#tab_mod', ['help', 'help']))
+call map#cabbr('heg', function('window#tab_mod', ['helpgrep', 'help']))
 
 " vh :: Open help in vert split {{{2
 call map#cabbr('vh', 'vert help')

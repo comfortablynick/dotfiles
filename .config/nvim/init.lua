@@ -88,7 +88,10 @@ o.synmaxcol = 300
 o.showtabline = 2
 o.visualbell = true
 o.wrap = false
-o.shortmess:append { c = true }
+o.shortmess = o.shortmess
+  + "c" -- don't show completion menu messages
+  + "t" -- truncate file message if too long
+  + "T" -- truncate other messages in the middle
 o.clipboard = "unnamed"
 o.ruler = false
 o.showmatch = true
@@ -98,7 +101,7 @@ o.scrolloff = 10
 o.timeoutlen = 800
 o.mouse = "a"
 o.conceallevel = 1
-o.virtualedit = { onemore = true }
+o.virtualedit = "onemore"
 o.list = true
 o.listchars = { tab = "▸ ", nbsp = "␣", trail = "·" }
 o.title = true

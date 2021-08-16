@@ -8,7 +8,7 @@ local lsp = require "config.lsp"
 
 local M = {}
 
-M.opts = {
+local opts = {
   ignore = { "pine", "vfinder", "qf", "undotree", "diff", "coc-explorer" },
   sep = "┊",
   symbol = {
@@ -16,7 +16,7 @@ M.opts = {
     buffer = "❖",
     error_sign = "✘",
     git = "",
-    ["git-reverse"] = "",
+    git_reverse = "",
     hint_sign = "•",
     line_no = "",
     lines = "☰",
@@ -45,16 +45,13 @@ M.get = function()
     "%( %5*%{v:lua.statusline.lsp_warnings()}%*%)",
     "%( %6*%{v:lua.statusline.lsp_hints()}%*%)",
     "%=",
-    -- "%( %{statusline#toggled()} ",
-    -- M.opts.sep,
-    -- "%)",
     "%( %{v:lua.statusline.job_status()} ",
-    M.opts.sep,
+    opts.sep,
     "%)",
     "%( %-20.80{v:lua.statusline.lsp_status()}%)",
-    "%( %{statusline#file_type()} %)",
-    "%(%3* %{statusline#git_status()} %*%)",
-    "%(%2* %{statusline#line_info()}%*%)",
+    "%( %{v:lua.statusline.file_type()} %)",
+    "%(%3* %{v:lua.statusline.git_status()} %*%)",
+    "%(%2* %{v:lua.statusline.line_info()}%*%)",
   }
 end
 
@@ -86,12 +83,36 @@ local excluded_filetype = function()
   return not vim.tbl_isempty(util.list_intersection(exclude, names))
 end
 
+local empty = function(s)
+  return s == nil or s == ""
+end
+
 local active_win = function()
   return api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
 end
 
 local active_file = function()
   return active_win() and not excluded_filetype()
+end
+
+local valid_buf = function(bufnr)
+  if not bufnr or bufnr < 1 then return false end
+  local exists = api.nvim_buf_is_valid(bufnr)
+  return exists and vim.bo[bufnr].buflisted
+end
+
+local rpad = function(s)
+  if empty(s) then
+    return ""
+  end
+  return s .. " "
+end
+
+local pad = function(s)
+  if empty(s) then
+    return ""
+  end
+  return " " .. s .. " "
 end
 
 M.ft_icon = function()
@@ -102,22 +123,16 @@ M.ft_icon = function()
 end
 
 M.bufnr = function()
-  if not active_win() then
-    return ""
-  end
   local bufnr = api.nvim_get_current_buf()
-  if not vim.fn.buflisted(bufnr) then
+  if not active_win() or not valid_buf(bufnr) then
     return ""
   end
   return bufnr
 end
 
 M.bufnr_inactive = function()
-  if active_win() then
-    return ""
-  end
   local bufnr = api.nvim_get_current_buf()
-  if not vim.fn.buflisted(bufnr) then
+  if active_win() or not valid_buf(bufnr) then
     return ""
   end
   return bufnr
@@ -147,10 +162,48 @@ M.file_name = function()
     return "[Scratch]"
   end
   local fname = vim.fn.expand "%:~:."
-  if winwidth(0) < M.opts.width.min then
-    return vim.fn.pathshorten(fname)
+  if winwidth(0) < opts.width.min then
+    return util.path.shorten(fname)
   end
   return fname
+end
+
+M.file_type = function()
+  if not active_file() or devicons == nil or winwidth(0) < opts.width.med then
+    return ""
+  end
+  local ftsym = rpad(devicons.get_icon(vim.fn.expand "%", vim.fn.expand "%:e"))
+  return ftsym .. vim.bo.filetype
+end
+
+M.git_status = function()
+  if not active_file() or winwidth(0) < opts.width.med then
+    return ""
+  end
+  local branch = vim.b.gitsigns_head
+  if empty(branch) then
+    return ""
+  end
+  branch = branch:gsub("master", ""):gsub("main", "")
+  if not empty(branch) then
+    branch = branch .. pad(opts.symbol.branch)
+  end
+  local summary = rpad(vim.b.gitsigns_status)
+  local out = summary .. branch
+  if winwidth(0) >= opts.width.max then
+    out = out .. rpad(opts.symbol.git)
+  end
+  return out
+end
+
+M.line_info = function()
+  if not active_file() then
+    return ""
+  end
+  local tot_lines = api.nvim_buf_line_count(0)
+  local line, col = unpack(api.nvim_win_get_cursor(0))
+  local line_pct = line * 100 / tot_lines
+  return ("%d,%d %3d%%"):format(line, col + 1, line_pct)
 end
 
 M.lsp_errors = function()

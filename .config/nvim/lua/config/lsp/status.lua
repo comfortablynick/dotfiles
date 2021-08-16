@@ -1,10 +1,12 @@
-local messaging = vim.F.npcall(require, "lsp-status/messaging")
+local installed, lsp_status = pcall(require, "lsp-status")
 
-if not messaging then
+if not installed then
   local noop = function() end
   return { _init = noop, status = noop }
 end
 
+local util = require "util"
+local messaging = require "lsp-status/messaging"
 local messages = messaging.messages
 
 local config = {
@@ -39,7 +41,6 @@ local function statusline_lsp(bufnr)
   local msgs = {}
   for _, msg in ipairs(buf_messages) do
     local name = aliases[msg.name] or msg.name
-    local client_name = "LSP[" .. name .. "]"
     local contents = ""
     local _ = contents -- get rid of luacheck unused var msg
     if msg.progress then
@@ -60,9 +61,9 @@ local function statusline_lsp(bufnr)
       if msg.uri then
         local filename = vim.uri_to_fname(msg.uri)
         filename = vim.fn.fnamemodify(filename, ":~:.")
-        local space = math.min(60, math.floor(0.6 * vim.fn.winwidth(0)))
+        local space = math.min(60, math.floor(0.6 * vim.api.nvim_win_get_width(0)))
         if #filename > space then
-          filename = require("util").path.shorten(filename)
+          filename = util.path.shorten(filename)
         end
 
         contents = "(" .. filename .. ") " .. contents
@@ -71,7 +72,7 @@ local function statusline_lsp(bufnr)
       contents = msg.content
     end
 
-    table.insert(msgs, client_name .. " " .. contents)
+    table.insert(msgs, name .. " " .. contents)
   end
 
   local base_status = vim.trim(table.concat(status_parts, " ") .. " " .. table.concat(msgs, " "))
@@ -81,4 +82,11 @@ local function statusline_lsp(bufnr)
   return ""
 end
 
-return { _init = init, status = statusline_lsp }
+return {
+  _init = init,
+  status = statusline_lsp,
+  errors = lsp_status.status_errors,
+  warnings = lsp_status.status_warnings,
+  info = lsp_status.status_info,
+  hints = lsp_status.status_hints,
+}

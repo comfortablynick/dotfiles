@@ -1,9 +1,10 @@
 local api = vim.api
 local uv = vim.loop
 local npcall = vim.F.npcall
+local winwidth = api.nvim_win_get_width
 local util = require "util"
 local devicons = npcall(require, "nvim-web-devicons")
-local lsp_status = npcall(require, "lsp-status")
+local lsp = require "config.lsp"
 
 local M = {}
 
@@ -50,17 +51,11 @@ M.get = function()
     "%( %{v:lua.statusline.job_status()} ",
     M.opts.sep,
     "%)",
-    "%( %{statusline#current_tag()}%)",
-    "%( %-20.60{statusline#lsp_status()}%)",
-    "%( %{statusline#coc_status()} %)",
+    "%( %-20.80{v:lua.statusline.lsp_status()}%)",
     "%( %{statusline#file_type()} %)",
     "%(%3* %{statusline#git_status()} %*%)",
     "%(%2* %{statusline#line_info()}%*%)",
   }
-end
-
-local winwidth = function()
-  return vim.fn.winwidth(0)
 end
 
 local excluded_filetype = function()
@@ -152,22 +147,22 @@ M.file_name = function()
     return "[Scratch]"
   end
   local fname = vim.fn.expand "%:~:."
-  if winwidth() < M.opts.width.min then
+  if winwidth(0) < M.opts.width.min then
     return vim.fn.pathshorten(fname)
   end
   return fname
 end
 
 M.lsp_errors = function()
-  return npcall(lsp_status.status_errors) or ""
+  return lsp.errors() or ""
 end
 
 M.lsp_warnings = function()
-  return npcall(lsp_status.status_warnings) or ""
+  return lsp.warnings() or ""
 end
 
 M.lsp_hints = function()
-  return npcall(lsp_status.status_hints) or ""
+  return lsp.hints() or ""
 end
 
 M.job_status = function()
@@ -180,6 +175,13 @@ M.job_status = function()
   else
     return ""
   end
+end
+
+M.lsp_status = function()
+  if not active_file() then
+    return ""
+  end
+  return lsp.attached_lsps() .. " " .. lsp.status()
 end
 
 _G.statusline = M

@@ -27,9 +27,6 @@ command StripWhiteSpace call util#preserve('%s/\s\+$//e')
 call map#cabbr('he', function('window#tab_mod', ['help', 'help']))
 call map#cabbr('heg', function('window#tab_mod', ['helpgrep', 'help']))
 
-" vh :: Open help in vert split {{{2
-call map#cabbr('vh', 'vert help')
-
 " pyp :: Python3 print {{{2
 call map#cabbr('pyp', 'py3 print()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
@@ -57,6 +54,9 @@ call map#cabbr('ehco', 'echo')
 " Misc command abbreviations {{{2
 call map#cabbr('grep', 'silent grep!')
 call map#cabbr('make', 'silent make!')
+call map#cabbr('vh', 'vert help')
+call map#cabbr('hg', 'helpgrep')
+
 
 " Grep :: async grep {{{2
 command! -nargs=+ -complete=file_in_path -bar Grep

@@ -10,6 +10,7 @@ local lsps_attached = {}
 
 local configs = npcall(require, "lspconfig/configs")
 local lsp_util = npcall(require, "lspconfig/util")
+local status = require "config.lsp.status"
 
 if configs ~= nil then
   configs.taplo = {
@@ -215,6 +216,19 @@ end
 
 -- vim.lsp.set_log_level("debug")
 
+-- suppress error messages from lang servers
+-- from: github.com/siduck76/NvChad/blob/main/lua/plugins/lspconfig.lua
+vim.notify = function(msg, log_level, _)
+  if msg:match "exit code" then
+    return
+  end
+  if log_level == vim.log.levels.ERROR then
+    vim.api.nvim_err_writeln(msg)
+  else
+    vim.api.nvim_echo({ { msg } }, true, {})
+  end
+end
+
 function M.init()
   if not lsp then
     return
@@ -268,5 +282,9 @@ if configs ~= nil then
   configs.taplo.setup { on_attach = on_attach_cb }
 end
 
-M.status = require("config.lsp.status").status
+M.status = status.status
+M.errors = status.errors
+M.warnings = status.warnings
+M.info = status.info
+M.hints = status.hints
 return M

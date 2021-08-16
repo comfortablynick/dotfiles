@@ -171,6 +171,7 @@ local packs = {
   "nvim-web-devicons",
   "vim-dirvish",
   "vim-clap",
+  "vim-obsession",
 }
 
 for _, pack in ipairs(packs) do

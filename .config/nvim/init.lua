@@ -189,17 +189,19 @@ require "config.treesitter"
 require "config.devicons"
 require("config.lsp").init()
 
-vim.cmd [[
-augroup init_lua
-    autocmd!
-    autocmd ColorScheme * lua require'config.lsp'.set_hl()
-    autocmd ColorScheme * lua statusline.set_hl()
-    autocmd BufEnter * lua require'config.compe'.init()
-    autocmd BufWritePost lua/plugins.lua lua nvim.reload()
-    autocmd BufWritePost lua/plugins.lua PackerInstall
-    autocmd BufWritePost lua/plugins.lua PackerCompile
-augroup END
-]]
+do
+  local plugin_file = "lua/plugins.lua"
+  nvim.create_augroups {
+    init_lua = {
+      { "BufEnter", "*", "lua require 'config.compe'.init()" },
+      { "ColorScheme", "*", "lua require'config.lsp'.set_hl()" },
+      { "ColorScheme", "*", "lua statusline.set_hl()" },
+      { "BufWritePost", plugin_file, "lua nvim.reload()" },
+      { "BufWritePost", plugin_file, "PackerInstall" },
+      { "BufWritePost", plugin_file, "PackerCompile" },
+    },
+  }
+end
 
 local packer_cmds = {
   PackerInstall = { "install()" },

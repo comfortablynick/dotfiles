@@ -209,15 +209,15 @@ M.line_info = function()
 end
 
 M.lsp_errors = function()
-  return lsp.errors() or ""
+  return active_file() and lsp.errors() or ""
 end
 
 M.lsp_warnings = function()
-  return lsp.warnings() or ""
+  return active_file() and lsp.warnings() or ""
 end
 
 M.lsp_hints = function()
-  return lsp.hints() or ""
+  return active_file() and lsp.hints() or ""
 end
 
 M.job_status = function()

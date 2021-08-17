@@ -6,6 +6,7 @@ local npcall = vim.F.npcall
 local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
 local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
+local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
 
 local configs = npcall(require, "lspconfig/configs")
@@ -88,7 +89,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 })
 
 function M.set_hl()
-  local ns = api.nvim_create_namespace "hl-lsp"
+  local ns = api.nvim_create_namespace "nick"
 
   -- TODO: fix statusline functions to use new nvim api
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", { fg = "#ff5f87" })
@@ -100,7 +101,7 @@ function M.set_hl()
   api.nvim_set_hl(ns, "LspReferenceText", { link = "CursorColumn" })
   api.nvim_set_hl(ns, "LspReferenceRead", { link = "LspReferenceText" })
   api.nvim_set_hl(ns, "LspReferenceWrite", { link = "LspReferenceText" })
-  api.nvim__set_hl_ns(ns) -- This changed to unstable API
+  set_hl_ns(ns)
 end
 
 -- Standard rename functionality wrapper

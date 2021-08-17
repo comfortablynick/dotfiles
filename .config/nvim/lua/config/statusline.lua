@@ -96,7 +96,9 @@ local active_file = function()
 end
 
 local valid_buf = function(bufnr)
-  if not bufnr or bufnr < 1 then return false end
+  if not bufnr or bufnr < 1 then
+    return false
+  end
   local exists = api.nvim_buf_is_valid(bufnr)
   return exists and vim.bo[bufnr].buflisted
 end
@@ -237,4 +239,26 @@ M.lsp_status = function()
   return lsp.attached_lsps() .. " " .. lsp.status()
 end
 
+local syn_derive = function(ns, from, to, hl_map)
+  local hl = api.nvim_get_hl_by_name(from, true)
+  api.nvim_set_hl(ns, to, vim.tbl_extend("force", hl, hl_map or {}))
+end
+
+M.set_hl = function()
+  local stl = api.nvim_get_hl_by_name("StatusLine", true)
+  local ns = api.nvim_get_namespaces()["nick"]
+  syn_derive(ns, "StatusLine", "StatusLine", { reverse = true, bold = false })
+  syn_derive(ns, "IncSearch", "User1")
+  syn_derive(ns, "WildMenu", "User2", { bold = false })
+  syn_derive(ns, "Visual", "User3")
+  syn_derive(ns, "DiffDelete", "User4", { background = stl.foreground, reverse = false })
+  syn_derive(ns, "DiffText", "User5", { background = stl.foreground, reverse = false, bold = false })
+  -- TODO: derive User6 for hints
+  syn_derive(ns, "StatusLine", "User6", { background = "#ecff00", reverse = true, bold = true })
+  syn_derive(ns, "CursorLineNr", "User7")
+  api.nvim__set_hl_ns(ns)
+end
+
 _G.statusline = M
+
+vim.o.statusline = "%!v:lua.statusline.get()"

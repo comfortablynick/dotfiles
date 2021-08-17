@@ -193,6 +193,7 @@ vim.cmd [[
 augroup init_lua
     autocmd!
     autocmd ColorScheme * lua require'config.lsp'.set_hl()
+    autocmd ColorScheme * lua statusline.set_hl()
     autocmd BufEnter * lua require'config.compe'.init()
     autocmd BufWritePost lua/plugins.lua lua nvim.reload()
     autocmd BufWritePost lua/plugins.lua PackerInstall

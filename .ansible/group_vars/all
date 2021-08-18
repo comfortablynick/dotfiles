@@ -49,6 +49,8 @@ asdf_npm_packages_all:
 pipx_packages_all:
   - name: neovim-remote
   - name: ranger-fm
+    inject:
+      - pynvim
   - name: speedtest-cli
 
 rust_toolchains_all:

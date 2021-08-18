@@ -55,7 +55,7 @@ local function init()
   use { "moll/vim-bbye", disable = true }
   use { "psliwka/vim-smoothie", event = lazy_load_event }
 
-  use { "kkoomen/vim-doge", run = ":call doge#install(#{headless: 1})}" }
+  use { "kkoomen/vim-doge", run = ":call doge#install(#{headless: 1})}", ft = { "python" } }
   use {
     "sbdchd/neoformat",
     cmd = "Neoformat",

@@ -29,7 +29,7 @@ endif
 let b:doge_doc_standard = 'numpy_untyped'
 
 " Ensure we do not overwrite an existing doc standard.
-if !has_key(b:doge_patterns, 'numpy_untyped')
+if !has_key(b:doge_patterns, 'numpy_untyped') && has_key(b:doge_patterns, 'numpy')
     let b:doge_patterns['numpy_untyped'] = b:doge_patterns['numpy']
     let b:doge_patterns['numpy_untyped'][0]['parameters']['format'][0] = 
         \ '{name}'

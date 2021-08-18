@@ -1,17 +1,17 @@
-local keymap = {}
+local map = {}
 
 -- Have to use a global to handle re-requiring this file and losing all of the keymap.
 --  In the future, the C code will handle this.
 __KeyMapStore = __KeyMapStore or {}
-keymap._store = __KeyMapStore
+map._store = __KeyMapStore
 
-keymap._create = function(f)
-  table.insert(keymap._store, f)
-  return #keymap._store
+map._create = function(f)
+  table.insert(map._store, f)
+  return #map._store
 end
 
-keymap._execute = function(id)
-  keymap._store[id]()
+map._execute = function(id)
+  map._store[id]()
 end
 
 local make_mapper = function(mode, defaults, opts)
@@ -34,8 +34,8 @@ local make_mapper = function(mode, defaults, opts)
   elseif type(rhs) == "function" then
     assert(map_opts.noremap, "If `rhs` is a function, `opts.noremap` must be true")
 
-    local func_id = keymap._create(rhs)
-    mapping = string.format([[<cmd>lua vim.keymap._execute(%s)<CR>]], func_id)
+    local func_id = map._create(rhs)
+    mapping = string.format([[<cmd>lua vim.map._execute(%s)<CR>]], func_id)
   else
     error("Unexpected type for rhs:" .. tostring(rhs))
   end
@@ -57,36 +57,36 @@ end
 
 --- Helper function for ':map'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.map(opts)
+function map.map(opts)
   return make_mapper("", { noremap = false }, opts)
 end
 
 --- Helper function for ':noremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.noremap(opts)
+function map.noremap(opts)
   return make_mapper("", { noremap = true }, opts)
 end
 
 --- Helper function for ':nmap'.
 ---
 --- <pre>
----   vim.keymap.nmap { 'lhs', function() print("real lua function") end, silent = true }
+---   vim.map.nmap { 'lhs', function() print("real lua function") end, silent = true }
 --- </pre>
 --@param opts (table): A table with keys:
 ---     - [1] = left hand side: Must be a string
 ---     - [2] = right hand side: Can be a string OR a lua function to execute
 ---     - Other keys can be arguments to |:map|, such as "silent". See |nvim_set_keymap()|
 ---
-function keymap.nmap(opts)
+function map.nmap(opts)
   return make_mapper("n", { noremap = false }, opts)
 end
 
 --- Helper function for ':nnoremap'
 --- <pre>
----   vim.keymap.nmap { 'lhs', function() print("real lua function") end, silent = true }
+---   vim.map.nmap { 'lhs', function() print("real lua function") end, silent = true }
 --- </pre>
 --@param opts (table): A table with keys
 ---     - [1] = left hand side: Must be a string
@@ -94,130 +94,130 @@ end
 ---     - Other keys can be arguments to |:map|, such as "silent". See |nvim_set_keymap()|
 ---
 ---
-function keymap.nnoremap(opts)
+function map.nnoremap(opts)
   return make_mapper("n", { noremap = true }, opts)
 end
 
 --- Helper function for ':vmap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.vmap(opts)
+function map.vmap(opts)
   return make_mapper("v", { noremap = false }, opts)
 end
 
 --- Helper function for ':vnoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.vnoremap(opts)
+function map.vnoremap(opts)
   return make_mapper("v", { noremap = true }, opts)
 end
 
 --- Helper function for ':xmap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.xmap(opts)
+function map.xmap(opts)
   return make_mapper("x", { noremap = false }, opts)
 end
 
 --- Helper function for ':xnoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.xnoremap(opts)
+function map.xnoremap(opts)
   return make_mapper("x", { noremap = true }, opts)
 end
 
 --- Helper function for ':smap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.smap(opts)
+function map.smap(opts)
   return make_mapper("s", { noremap = false }, opts)
 end
 
 --- Helper function for ':snoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.snoremap(opts)
+function map.snoremap(opts)
   return make_mapper("s", { noremap = true }, opts)
 end
 
 --- Helper function for ':omap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.omap(opts)
+function map.omap(opts)
   return make_mapper("o", { noremap = false }, opts)
 end
 
 --- Helper function for ':onoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.onoremap(opts)
+function map.onoremap(opts)
   return make_mapper("o", { noremap = true }, opts)
 end
 
 --- Helper function for ':imap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.imap(opts)
+function map.imap(opts)
   return make_mapper("i", { noremap = false }, opts)
 end
 
 --- Helper function for ':inoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.inoremap(opts)
+function map.inoremap(opts)
   return make_mapper("i", { noremap = true }, opts)
 end
 
 --- Helper function for ':lmap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.lmap(opts)
+function map.lmap(opts)
   return make_mapper("l", { noremap = false }, opts)
 end
 
 --- Helper function for ':lnoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.lnoremap(opts)
+function map.lnoremap(opts)
   return make_mapper("l", { noremap = true }, opts)
 end
 
 --- Helper function for ':cmap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.cmap(opts)
+function map.cmap(opts)
   return make_mapper("c", { noremap = false }, opts)
 end
 
 --- Helper function for ':cnoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.cnoremap(opts)
+function map.cnoremap(opts)
   return make_mapper("c", { noremap = true }, opts)
 end
 
 --- Helper function for ':tmap'.
 ---
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.tmap(opts)
+function map.tmap(opts)
   return make_mapper("t", { noremap = false }, opts)
 end
 
 --- Helper function for ':tnoremap'
---@see |vim.keymap.nmap|
+--@see |vim.map.nmap|
 ---
-function keymap.tnoremap(opts)
+function map.tnoremap(opts)
   return make_mapper("t", { noremap = true }, opts)
 end
 
-vim.keymap = keymap
+vim.map = map
 
-return keymap
+return map

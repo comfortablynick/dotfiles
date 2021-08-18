@@ -430,7 +430,7 @@ function M.mru_files(n) -- {{{1
   return fn.iter(vim.v.oldfiles):filter(file_filter):map(shorten_path):take_n(n or 999):totable()
 end
 
-function M.get_maps(mode, bufnr, width) -- {{{1
+function M.get_maps(mode, bufnr, width) -- luacheck: no unused
   -- `nvim[_buf]_get_keymap`
   -- ================
   -- buffer  (num)

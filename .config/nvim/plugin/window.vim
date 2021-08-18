@@ -2,14 +2,12 @@
 
 augroup plugin_window
     autocmd!
-    " Neovim terminal
-    if has('nvim')
-        " Terminal starts in insert mode
-        autocmd TermOpen     * call s:on_termopen()
-        autocmd TermClose    * call feedkeys("\<C-\>\<C-n>")
-        autocmd ColorScheme  * call s:set_hl()
-        autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="Yank", timeout=750}
-    endif
+    " Terminal starts in insert mode
+    autocmd TermOpen     * call s:on_termopen()
+    autocmd TermClose    * call feedkeys("\<C-\>\<C-n>")
+    " Highlight on yank
+    " Looks best with color attribute gui=reverse
+    autocmd TextYankPost * lua vim.highlight.on_yank{ higroup = "TermCursor", timeout=750 }
 
     " Set cursorline depending on mode, if cursorline is enabled locally
     if &l:cursorline
@@ -30,14 +28,6 @@ augroup plugin_window
     autocmd QuitPre * silent call buffer#autoclose()
 augroup END
 
-function AllBufs()
-    let l:windows = []
-    for l:tab in range(1, tabpagenr('$'))
-        call add(l:windows, winlayout(l:tab))
-    endfor
-    return l:windows
-endfunction
-
 function s:on_termopen()
     " startinsert
     " nnoremap <buffer> q <Cmd>Bdelete!<CR>
@@ -54,11 +44,3 @@ function s:on_cmdwin_enter()
     setlocal number
     setlocal norelativenumber
 endfunction
-
-function s:set_hl()
-    highlight Yank cterm=reverse gui=reverse
-    " highlight clear CursorLine
-    " call syntax#derive('CursorLineNr', 'CursorLineNr', 'guifg=yellow', 'gui=none')
-endfunction
-
-call s:set_hl()

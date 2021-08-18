@@ -201,6 +201,8 @@ local function init()
     cmd = "RnvimrToggle",
     setup = function()
       vim.g.rnvimr_enable_picker = 1
+      vim.map.nnoremap { "<C-e>", "<Cmd>RnvimrToggle<CR>" }
+      vim.map.nnoremap { "<Leader>n", "<Cmd>RnvimrToggle<CR>" }
     end,
   }
   use {
@@ -326,9 +328,10 @@ local function init()
   use {
     "folke/trouble.nvim",
     requires = "kyazdani42/nvim-web-devicons",
-    cmd = { "Trouble", "TroubleToggle" },
+    event = lazy_load_event,
+    -- cmd = { "Trouble", "TroubleToggle" },
     config = function()
-      require("trouble").setup {}
+      require "config.trouble"
     end,
   }
   -- TODO: lazy load this using InsertCharPre?
@@ -370,6 +373,8 @@ local function init()
     cmd = "Telescope",
     requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },
   }
+  -- luv docs in vim help format
+  use { "nanotee/luv-vimdocs", opt = false }
 
   -- Training/Vim help
   use "tjdevries/train.nvim"

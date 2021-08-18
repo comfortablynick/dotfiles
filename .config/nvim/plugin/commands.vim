@@ -111,7 +111,6 @@ command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
 " Use custom json converter and shell out to `jq` to format
 command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 
-" nvim-only {{{1
 " [H]elp :: floating help window {{{2
 command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 call map#cabbr('H', 'Help')
@@ -149,5 +148,8 @@ command! -nargs=+ -complete=file -bar Grep lua require'grep'.grep_for_string(<q-
 
 " Option :: pretty print option info {{{2
 command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
+
+" Lf :: Select current file in lf browser {{{2
+command Lf     lua require'tools'.lf_select_current_file()
 
 " vim:fdl=1:

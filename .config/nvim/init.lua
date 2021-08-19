@@ -158,14 +158,13 @@ vim.g.netrw_list_hide = vim.o.wildignore
 vim.g.netrw_sort_sequence = [[[\/]$,*]] -- Directories on the top, files below
 
 local packs = {
-  -- "vim-doge",
   "vim-toml",
   "vim-projectionist",
   "plenary.nvim",
   "nvim-lspconfig",
   "lsp-status.nvim",
-  "nvim-compe",
   "lspsaga.nvim",
+  "nvim-compe",
   "LuaSnip",
   "friendly-snippets",
   "nvim-web-devicons",
@@ -184,6 +183,7 @@ end, 200)
 
 require "nvim"
 require "globals"
+require "map"
 require "config.statusline"
 require "config.treesitter"
 require "config.devicons"

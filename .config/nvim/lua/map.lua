@@ -8,10 +8,9 @@ local Callbacks = {}
 --- @param cb function the callback
 --- @return number id the handle of the callback
 function Callbacks.new(cb)
-	Callbacks[#Callbacks+1] = cb
-	return #Callbacks
+  Callbacks[#Callbacks + 1] = cb
+  return #Callbacks
 end
-
 
 --- Return an empty table with all necessary fields initialized.
 --- @return table
@@ -65,6 +64,8 @@ MetaMapper = {
   __newindex = function(self, lhs, rhs)
     local buffer = rawget(self, "buffer")
     local modes = rawget(self, "_modes")
+    local eval_str = "luaeval('vim.map.callbacks[%d]')()"
+    local cmd_str = "<Cmd>lua vim.map.callbacks[%d]()<CR>"
     modes = #modes > 0 and modes or { "" }
 
     if rhs then
@@ -79,8 +80,7 @@ MetaMapper = {
 
       if type(rhs) == "function" then
         local id = Callbacks.new(rhs)
-        rhs = opts.expr and "luaeval(vim.map.callbacks)[" .. id .. ']")()'
-          or '<Cmd>lua vim.map.callbacks[' .. id .. "]()<CR>"
+        rhs = opts.expr and eval_str:format(id) or cmd_str:format(id)
         opts.noremap = true
       end
 

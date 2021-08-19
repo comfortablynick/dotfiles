@@ -201,8 +201,8 @@ local function init()
     cmd = "RnvimrToggle",
     setup = function()
       vim.g.rnvimr_enable_picker = 1
-      vim.map.nnoremap { "<C-e>", "<Cmd>RnvimrToggle<CR>" }
-      vim.map.nnoremap { "<Leader>n", "<Cmd>RnvimrToggle<CR>" }
+      vim.map.n.nore["<C-e>"] = "<Cmd>RnvimrToggle<CR>"
+      vim.map.n.nore["<Leader>n"] = "<Cmd>RnvimrToggle<CR>"
     end,
   }
   use {

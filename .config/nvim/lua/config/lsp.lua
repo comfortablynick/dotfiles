@@ -171,7 +171,7 @@ local on_attach_cb = function(client, bufnr)
   nmap_capability("gS", "signature_help")
   nmap_capability("ga", "code_action")
   nmap_capability("gt", "type_definition")
-  nmap_capability("gr", "references")
+  -- nmap_capability("gr", "references") -- Use trouble.nvim
   nmap_capability("<F2>", "rename")
 
   nmap("gd", "lua vim.lsp.diagnostic.set_loclist{open = true}")

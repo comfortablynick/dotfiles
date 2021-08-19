@@ -1,223 +1,119 @@
-local map = {}
+-- Fluid keymapping interface
+-- From: https://github.com/Iron-E/nvim-cartographer
+local api = vim.api
 
--- Have to use a global to handle re-requiring this file and losing all of the keymap.
---  In the future, the C code will handle this.
-__KeyMapStore = __KeyMapStore or {}
-map._store = __KeyMapStore
+local Callbacks = {}
 
-map._create = function(f)
-  table.insert(map._store, f)
-  return #map._store
+--- Register a callback to be
+--- @param cb function the callback
+--- @return number id the handle of the callback
+function Callbacks.new(cb)
+	Callbacks[#Callbacks+1] = cb
+	return #Callbacks
 end
 
-map._execute = function(id)
-  map._store[id]()
+
+--- Return an empty table with all necessary fields initialized.
+--- @return table
+local function new()
+  return { _modes = {}, callbacks = Callbacks }
 end
 
-local make_mapper = function(mode, defaults, opts)
-  local args, map_args = {}, {}
-  for k, v in pairs(opts) do
-    if type(k) == "number" then
-      args[k] = v
+--- Make a deep copy of opts table
+--- @param tbl table the table to copy
+local function copy(tbl)
+  local new_tbl = new()
+
+  for key, val in pairs(tbl) do
+    if key ~= "_modes" then
+      new_tbl[key] = val
     else
-      map_args[k] = v
+      for i, mode in ipairs(tbl._modes) do
+        new_tbl._modes[i] = mode
+      end
     end
   end
 
-  local lhs = opts.lhs or args[1]
-  local rhs = opts.rhs or args[2]
-  local map_opts = vim.tbl_extend("force", defaults, map_args)
+  return new_tbl
+end
 
-  local mapping
-  if type(rhs) == "string" then
-    mapping = rhs
-  elseif type(rhs) == "function" then
-    assert(map_opts.noremap, "If `rhs` is a function, `opts.noremap` must be true")
+--- The fluent interface `:map`s. Used as a metatable.
+local MetaMapper
+MetaMapper = {
+  --- Set `key` to `true` if it was not already present
+  --- @param self table the collection of settings
+  --- @param key string the setting to set to `true`
+  --- @returns table self so that this function can be called again
+  __index = function(self, key)
+    self = copy(self)
 
-    local func_id = map._create(rhs)
-    mapping = string.format([[<cmd>lua vim.map._execute(%s)<CR>]], func_id)
-  else
-    error("Unexpected type for rhs:" .. tostring(rhs))
-  end
-
-  if not map_opts.buffer then
-    vim.api.nvim_set_keymap(mode, lhs, mapping, map_opts)
-  else
-    -- Clear the buffer after saving it
-    local buffer = map_opts.buffer
-    if buffer == true then
-      buffer = 0
+    if #key < 2 then -- set the mode
+      self._modes[#self._modes + 1] = key
+    elseif #key > 5 and key:sub(1, 1) == "b" then -- PERF: 'buffer' is the only 6-letter option starting with 'b'
+      self.buffer = #key > 6 and tonumber(key:sub(7)) or 0 -- NOTE: 0 is the current buffer
+    else -- the fluent interface
+      self[key] = true
     end
 
-    map_opts.buffer = nil
+    return setmetatable(self, MetaMapper)
+  end,
 
-    vim.api.nvim_buf_set_keymap(buffer, mode, lhs, mapping, map_opts)
-  end
-end
+  --- Set a `lhs` combination of keys to some `rhs`
+  --- @param self table the collection of settings and the mode
+  --- @param lhs string the left-hand side |key-notation| which will execute `rhs` after running this function
+  --- @param rhs string if `nil`, |:unmap| lhs. Otherwise, see |:map|.
+  __newindex = function(self, lhs, rhs)
+    local buffer = rawget(self, "buffer")
+    local modes = rawget(self, "_modes")
+    modes = #modes > 0 and modes or { "" }
 
---- Helper function for ':map'.
----
---@see |vim.map.nmap|
----
-function map.map(opts)
-  return make_mapper("", { noremap = false }, opts)
-end
+    if rhs then
+      local opts = {
+        expr = rawget(self, "expr"),
+        noremap = rawget(self, "nore"),
+        nowait = rawget(self, "nowait"),
+        script = rawget(self, "script"),
+        silent = rawget(self, "silent"),
+        unique = rawget(self, "unique"),
+      }
 
---- Helper function for ':noremap'
---@see |vim.map.nmap|
----
-function map.noremap(opts)
-  return make_mapper("", { noremap = true }, opts)
-end
+      if type(rhs) == "function" then
+        local id = Callbacks.new(rhs)
+        rhs = opts.expr and "luaeval(vim.map.callbacks)[" .. id .. ']")()'
+          or '<Cmd>lua vim.map.callbacks[' .. id .. "]()<CR>"
+        opts.noremap = true
+      end
 
---- Helper function for ':nmap'.
----
---- <pre>
----   vim.map.nmap { 'lhs', function() print("real lua function") end, silent = true }
---- </pre>
---@param opts (table): A table with keys:
----     - [1] = left hand side: Must be a string
----     - [2] = right hand side: Can be a string OR a lua function to execute
----     - Other keys can be arguments to |:map|, such as "silent". See |nvim_set_keymap()|
----
-function map.nmap(opts)
-  return make_mapper("n", { noremap = false }, opts)
-end
+      if buffer then
+        for _, mode in ipairs(modes) do
+          api.nvim_buf_set_keymap(buffer, mode, lhs, rhs, opts)
+        end
+      else
+        for _, mode in ipairs(modes) do
+          api.nvim_set_keymap(mode, lhs, rhs, opts)
+        end
+      end
+    else
+      if buffer then
+        for _, mode in ipairs(modes) do
+          api.nvim_buf_del_keymap(buffer, mode, lhs)
+        end
+      else
+        for _, mode in ipairs(modes) do
+          api.nvim_del_keymap(mode, lhs)
+        end
+      end
+    end
+  end,
+}
 
---- Helper function for ':nnoremap'
---- <pre>
----   vim.map.nmap { 'lhs', function() print("real lua function") end, silent = true }
---- </pre>
---@param opts (table): A table with keys
----     - [1] = left hand side: Must be a string
----     - [2] = right hand side: Can be a string OR a lua function to execute
----     - Other keys can be arguments to |:map|, such as "silent". See |nvim_set_keymap()|
----
----
-function map.nnoremap(opts)
-  return make_mapper("n", { noremap = true }, opts)
-end
-
---- Helper function for ':vmap'.
----
---@see |vim.map.nmap|
----
-function map.vmap(opts)
-  return make_mapper("v", { noremap = false }, opts)
-end
-
---- Helper function for ':vnoremap'
---@see |vim.map.nmap|
----
-function map.vnoremap(opts)
-  return make_mapper("v", { noremap = true }, opts)
-end
-
---- Helper function for ':xmap'.
----
---@see |vim.map.nmap|
----
-function map.xmap(opts)
-  return make_mapper("x", { noremap = false }, opts)
-end
-
---- Helper function for ':xnoremap'
---@see |vim.map.nmap|
----
-function map.xnoremap(opts)
-  return make_mapper("x", { noremap = true }, opts)
-end
-
---- Helper function for ':smap'.
----
---@see |vim.map.nmap|
----
-function map.smap(opts)
-  return make_mapper("s", { noremap = false }, opts)
-end
-
---- Helper function for ':snoremap'
---@see |vim.map.nmap|
----
-function map.snoremap(opts)
-  return make_mapper("s", { noremap = true }, opts)
-end
-
---- Helper function for ':omap'.
----
---@see |vim.map.nmap|
----
-function map.omap(opts)
-  return make_mapper("o", { noremap = false }, opts)
-end
-
---- Helper function for ':onoremap'
---@see |vim.map.nmap|
----
-function map.onoremap(opts)
-  return make_mapper("o", { noremap = true }, opts)
-end
-
---- Helper function for ':imap'.
----
---@see |vim.map.nmap|
----
-function map.imap(opts)
-  return make_mapper("i", { noremap = false }, opts)
-end
-
---- Helper function for ':inoremap'
---@see |vim.map.nmap|
----
-function map.inoremap(opts)
-  return make_mapper("i", { noremap = true }, opts)
-end
-
---- Helper function for ':lmap'.
----
---@see |vim.map.nmap|
----
-function map.lmap(opts)
-  return make_mapper("l", { noremap = false }, opts)
-end
-
---- Helper function for ':lnoremap'
---@see |vim.map.nmap|
----
-function map.lnoremap(opts)
-  return make_mapper("l", { noremap = true }, opts)
-end
-
---- Helper function for ':cmap'.
----
---@see |vim.map.nmap|
----
-function map.cmap(opts)
-  return make_mapper("c", { noremap = false }, opts)
-end
-
---- Helper function for ':cnoremap'
---@see |vim.map.nmap|
----
-function map.cnoremap(opts)
-  return make_mapper("c", { noremap = true }, opts)
-end
-
---- Helper function for ':tmap'.
----
---@see |vim.map.nmap|
----
-function map.tmap(opts)
-  return make_mapper("t", { noremap = false }, opts)
-end
-
---- Helper function for ':tnoremap'
---@see |vim.map.nmap|
----
-function map.tnoremap(opts)
-  return make_mapper("t", { noremap = true }, opts)
-end
-
-vim.map = map
-
-return map
+vim.map = setmetatable(new(), {
+  -- NOTE: For backwards compatability. `__index` is preferred.
+  __call = function(_)
+    return setmetatable(new(), MetaMapper)
+  end,
+  __index = function(_, key)
+    return setmetatable(new(), MetaMapper)[key]
+  end,
+  __newindex = MetaMapper.__newindex,
+})

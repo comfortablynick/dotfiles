@@ -554,33 +554,57 @@ function M.make() -- {{{1
   end
 end
 
-function M.test_iter(iter_ct) -- {{{1
-  local function get_time()
-    return vim.fn.reltimefloat(vim.fn.reltime())
-  end
-
-  local ITERATIONS = iter_ct or 10000000
-  local start
+function M.test_cmd(iter_ct)
+  local ITERATIONS = iter_ct or 1000000
 
   local report = function(cmd_string, time)
-    print(("%-20s %d iterations in %-.04f"):format(cmd_string, ITERATIONS, time))
+    print(("%-99s %d iterations in %-.04f"):format(cmd_string, ITERATIONS, time))
   end
 
   local compare = {
-    {
-      "vim.fn.pathshorten(vim.fn.expand'%')",
-      "vim.api.nvim_call_function('pathshorten', vim.api.nvim_call_function(expand, {'%'}))",
-    },
+    "vim.fn.pathshorten(vim.fn.expand'%')",
+    "vim.call('pathshorten', vim.fn.expand'%')",
+    "vim.api.nvim_call_function('pathshorten', {vim.api.nvim_call_function('expand', {'%'})})",
   }
 
-  for _, commands in ipairs(compare) do
-    for _, cmd in pairs(commands) do
-      start = get_time()
-      for _ = 1, ITERATIONS do
-        loadstring(cmd)
-      end
-      report(cmd, get_time() - start)
+  for _, cmd in ipairs(compare) do
+    local start = uv.hrtime()
+    for _ = 1, ITERATIONS do
+      loadstring(cmd)
     end
+    report(cmd, (uv.hrtime() - start) / 1e6)
+  end
+end
+
+function M.test_fn(iter_ct)
+  local report = function(cmd_string, time)
+    print(("%-40s %5.02f ms"):format(cmd_string, time))
+  end
+
+  local compare = {
+    ["vim.fn.pathshorten"] = function()
+      vim.fn.pathshorten(vim.fn.expand "%")
+    end,
+    ["vim.api.nvim_call_function"] = function()
+      api.nvim_call_function("pathshorten", { api.nvim_call_function("expand", { "%" }) })
+    end,
+    ["vim.call"] = function()
+      vim.call("pathshorten", vim.fn.expand "%")
+    end,
+  }
+
+  iter_ct = iter_ct or 1000000
+  local timer = uv.hrtime
+
+  print("Test of " .. iter_ct .. " iterations")
+  print "------------------------------"
+  for name, fn in pairs(compare) do
+    local start = timer()
+    for _ = 1, iter_ct do
+      fn()
+    end
+    local ms_elapsed = (timer() - start) / 1e6
+    report(name, ms_elapsed)
   end
 end
 

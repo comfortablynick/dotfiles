@@ -81,26 +81,16 @@ function M.humanize_bytes(size)
   end
 end
 
-function M.epoch_ms()
-  local s, ns = vim.loop.gettimeofday()
-  return s * 1000 + math.floor(ns / 1000)
-end
-
-function M.epoch_ns()
-  local s, ns = vim.loop.gettimeofday()
-  return s * 1000000 + ns
-end
-
 function M.bench(iters, cb)
-  assert(cb, "Must provide callback to benchmark")
-  local start_time = M.epoch_ms()
+  vim.validate { cb = { cb, "f" } }
+  local start_time = uv.hrtime()
   iters = iters or 100
   for _ = 1, iters do
     cb()
   end
-  local end_time = M.epoch_ms()
-  local elapsed_time = end_time - start_time
-  print("time elapsed for %d runs: %d ms", iters, elapsed_time)
+  local end_time = uv.hrtime()
+  local elapsed_time = (end_time - start_time) / 1e6
+  print(("time elapsed for %d runs: %d ms"):format(iters, elapsed_time))
 end
 
 -- Some path utilities

@@ -1,15 +1,14 @@
--- init.lua
-local env = vim.env
 local o = vim.opt
 local g = vim.g
 local fn = vim.fn
+local uv = vim.loop
 local path = require("util").path
 
 require "nvim"
 require "globals"
 
 -- Global variables
-g.python3_host_prog = env.NVIM_PY3_DIR
+g.python3_host_prog = uv.os_getenv "NVIM_PY3_DIR"
 g.mapleader = ","
 g.c_syntax_for_h = 1
 g.window_width = o.columns
@@ -220,7 +219,7 @@ for k, v in pairs(packer_cmds) do
 end
 
 -- Profiling
-if env.AK_PROFILER == 1 then
+if uv.os_getenv "AK_PROFILER" == 1 then
   vim.cmd "packadd! profiler.nvim"
   require "profiler"
 end

@@ -628,5 +628,16 @@ function M.startuptime()
   vim.wo.cursorline = true
 end
 
--- Return module --{{{1
+-- Load local vimrc using env var of paths set with direnv
+function M.load_lvimrc()
+  local sourced = vim.b.localrc_sourced or {}
+  local available = uv.os_getenv "LOCAL_VIMRC"
+  for path in vim.gsplit(available, ":", true) do
+    if not vim.tbl_contains(sourced, path) then
+      vim.cmd("source " .. path)
+      table.insert(sourced, path)
+    end
+  end
+  vim.b.localrc_sourced = sourced
+end
 return M

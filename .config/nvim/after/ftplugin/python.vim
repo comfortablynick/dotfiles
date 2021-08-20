@@ -3,20 +3,8 @@ setlocal autoindent
 setlocal foldmethod=marker
 setlocal formatprg=black\ -q\ -
 
-let g:python_highlight_all=1
-let $PYTHONUNBUFFERED=1
-
-" Don't overwrite command if already defined
-silent! command -buffer Black call pack#lazy_run('Black', 'black')
-
-nnoremap <buffer><F3> <Cmd>call <SID>format_python()<CR>
-
-function s:format_python()
-    Black
-    if get(g:, 'coc_enabled', 0)
-        call CocAction('runCommand', 'editor.action.organizeImport')
-    endif
-endfunction
+let g:python_highlight_all = 1
+let $PYTHONUNBUFFERED = 1
 
 " Preserve existing doge settings.
 let b:doge_patterns = get(b:, 'doge_patterns', {})

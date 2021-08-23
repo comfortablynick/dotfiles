@@ -391,13 +391,14 @@ local function init()
     "christoomey/vim-tmux-navigator",
     cmd = { "TmuxNavigateLeft", "TmuxNavigateRight", "TmuxNavigateDown", "TmuxNavigateUp", "TmuxNavigatePrevious" },
     setup = function()
-      local opts = { noremap = true }
+      local n = vim.map.n
+      -- local opts = { noremap = true }
       vim.g.tmux_navigator_no_mappings = 1
-      vim.api.nvim_set_keymap("n", "<C-h>", "<Cmd>TmuxNavigateLeft<CR>", opts)
-      vim.api.nvim_set_keymap("n", "<C-j>", "<Cmd>TmuxNavigateDown<CR>", opts)
-      vim.api.nvim_set_keymap("n", "<C-k>", "<Cmd>TmuxNavigateUp<CR>", opts)
-      vim.api.nvim_set_keymap("n", "<C-l>", "<Cmd>TmuxNavigateRight<CR>", opts)
-      vim.api.nvim_set_keymap("n", "<C-p>", "<Cmd>TmuxNavigatePrevious<CR>", opts)
+      n.nore["<C-h>"] = "<Cmd>TmuxNavigateLeft<CR>"
+      n.nore["<C-j>"] = "<Cmd>TmuxNavigateDown<CR>"
+      n.nore["<C-k>"] = "<Cmd>TmuxNavigateUp<CR>"
+      n.nore["<C-l>"] = "<Cmd>TmuxNavigateRight<CR>"
+      n.nore["<C-p>"] = "<Cmd>TmuxNavigatePrevious<CR>"
     end,
   }
   use {

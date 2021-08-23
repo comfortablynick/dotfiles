@@ -210,7 +210,7 @@ local on_attach_cb = function(client, bufnr)
   end
 
   -- Set autocmds for highlighting if server supports it
-  if true and client.resolved_capabilities.document_highlight then
+  if false and client.resolved_capabilities.document_highlight then
     set_hl_autocmds()
   end
 end

@@ -26,7 +26,7 @@ n.nore["q;"] = "q:"
 x.nore["q;"] = "q:"
 
 n.nore.expr["<CR>"] = function() -- Clears hlsearch after doing a search, otherwise <CR>
-  return tc(vim.v.hlsearch == 1 and ":nohlsearch<CR>" or "<CR>")
+  return tc(vim.v.hlsearch == 1 and "<Cmd>nohlsearch<CR>" or "<CR>")
 end
 
 n.nore["<Leader><Leader>c"] = ":<Up>"

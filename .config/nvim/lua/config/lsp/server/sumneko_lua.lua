@@ -5,7 +5,9 @@ return function(on_attach)
     -- Use wrapper script
     cmd = { "luals" },
     root_dir = function(fname)
-      return util.root_pattern(".git", "init.vim")(fname) or util.find_git_ancestor(fname) or util.path.dirname(fname)
+      return util.root_pattern(".git", ".stylua.toml", ".projections.json")(fname)
+        or util.find_git_ancestor(fname)
+        or util.path.dirname(fname)
     end,
     settings = {
       Lua = {

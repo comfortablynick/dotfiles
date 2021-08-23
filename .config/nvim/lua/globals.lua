@@ -1,18 +1,18 @@
 -- Global functions
--- p :: Debug print helper {{{1
--- If `val` is not a simple type, run it through inspect() first
--- Else treat as printf
-function _G.p(val, ...)
-  local wrapper = function(s, ...)
-    if type(val) == ("string" or "number") then
-      print(string.format(s, ...))
-    else
-      print(vim.inspect(s))
+-- p :: Debug print helper
+function _G.p(...)
+  if type(...) == ("string" or "number") then
+    print(...)
+  else
+    local objects = {}
+    local v
+    for i = 1, select("#", ...) do
+      v = select(i, ...)
+      table.insert(objects, vim.inspect(v))
     end
-  end
-  -- Just print if there's an error (bad format str, etc.)
-  if not pcall(wrapper, val, ...) then
-    print(val, ...)
+
+    print(table.concat(objects, "\n"))
+    return ...
   end
 end
 

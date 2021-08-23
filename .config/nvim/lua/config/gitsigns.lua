@@ -41,5 +41,4 @@ gitsigns.setup {
   sign_priority = 6,
   status_formatter = nil,
   current_line_blame = false,
-  use_decoration_api = true,
 }

@@ -1,11 +1,10 @@
 local api = vim.api
 local uv = vim.loop
-local npcall = vim.F.npcall
 local util = require "util"
 local win = require "window"
 local M = {}
 
-function M.lf_select_current_file() -- {{{1
+function M.lf_select_current_file()
   local filename = api.nvim_buf_get_name(0)
   local cmd = "FloatermNew lf"
   if uv.fs_stat(filename) ~= nil then
@@ -14,20 +13,20 @@ function M.lf_select_current_file() -- {{{1
   vim.cmd(cmd)
 end
 
-local qf_open = function(max_size) -- {{{1
+local qf_open = function(max_size)
   if not max_size then
     max_size = 0
   end
   local vim_qf_size = vim.g.quickfix_size or 20
   local items = #vim.fn.getqflist()
-  if items < 1 then
-    return
+  if items > 0 then
+    local qf_size = math.min(items, (max_size > 0) and max_size or vim_qf_size)
+    vim.cmd(("copen %d | wincmd k"):format(qf_size))
   end
-  local qf_size = math.min(items, (max_size > 0) and max_size or vim_qf_size)
-  vim.cmd(("copen %d | wincmd k"):format(qf_size))
+  return items
 end
 
-function M.async_grep(cmd_args) -- {{{1
+function M.async_grep(cmd_args) -- Async grep using &grepprg
   vim.validate { cmd_args = { cmd_args, "table" } }
   local grep = vim.o.grepprg
   local grep_args = vim.split(grep, " ")
@@ -35,25 +34,22 @@ function M.async_grep(cmd_args) -- {{{1
   vim.list_extend(grep_args, cmd_args)
   local qf_title = ("[AsyncGrep] %s %s"):format(grep_prg, table.concat(grep_args, " "))
 
-  local on_read = function(err, data)
+  local on_read = vim.schedule_wrap(function(err, data)
     assert(not err, err)
     vim.fn.setqflist({}, "a", { efm = vim.o.grepformat, title = qf_title, lines = data })
-  end
+  end)
 
-  local on_exit = function()
-    local result_ct = #vim.fn.getqflist()
-    if result_ct > 0 then
-      vim.cmd("cwindow " .. math.min(result_ct, 20))
-    else
+  local on_exit = vim.schedule_wrap(function()
+    if not qf_open(20) then
       nvim.warn "grep: no results found"
     end
-  end
+  end)
 
   vim.fn.setqflist({}, " ", { title = qf_title })
-  M.spawn(grep_prg, { args = grep_args }, vim.schedule_wrap(on_read), vim.schedule_wrap(on_exit))
+  M.spawn { cmd = grep_prg, args = grep_args, on_read = on_read, on_exit = on_exit }
 end
 
-function M.scandir(path) -- {{{1
+function M.scandir(path)
   local d = uv.fs_scandir(vim.fn.expand(path))
   local out = {}
   while true do
@@ -66,7 +62,7 @@ function M.scandir(path) -- {{{1
   print(vim.inspect(out))
 end
 
-function M.readdir(path) -- {{{1
+function M.readdir(path)
   local handle = uv.fs_opendir(vim.fn.expand(path), nil, 10)
   local out = {}
   while true do
@@ -82,7 +78,7 @@ function M.readdir(path) -- {{{1
   uv.fs_closedir(handle)
 end
 
-function M.set_executable(file) -- {{{1
+function M.set_executable(file) -- `chmod +x` using libuv (or just use vim-scriptease)
   file = file or api.nvim_buf_get_name(0)
   local get_perm_str = function(dec_mode)
     local mode = string.format("%o", dec_mode)
@@ -109,26 +105,30 @@ function M.set_executable(file) -- {{{1
   end
   local orig_mode = stat.mode
   local orig_mode_oct = string.sub(string.format("%o", orig_mode), 4)
-  M.spawn("chmod", { args = { "u+x", file } }, nil, function()
-    local new_mode = uv.fs_stat(file).mode
-    local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
-    local new_mode_str = get_perm_str(new_mode)
-    if orig_mode ~= new_mode then
-      print(
-        ("Permissions changed: %s (%s) -> %s (%s)"):format(
-          get_perm_str(orig_mode),
-          orig_mode_oct,
-          new_mode_str,
-          new_mode_oct
+  M.spawn {
+    cmd = "chmod",
+    args = { "u+x", file },
+    on_exit = function()
+      local new_mode = uv.fs_stat(file).mode
+      local new_mode_oct = string.sub(string.format("%o", new_mode), 4)
+      local new_mode_str = get_perm_str(new_mode)
+      if orig_mode ~= new_mode then
+        print(
+          ("Permissions changed: %s (%s) -> %s (%s)"):format(
+            get_perm_str(orig_mode),
+            orig_mode_oct,
+            new_mode_str,
+            new_mode_oct
+          )
         )
-      )
-    else
-      print(("Permissions not changed: %s (%s)"):format(new_mode_str, new_mode_oct))
-    end
-  end)
+      else
+        print(("Permissions not changed: %s (%s)"):format(new_mode_str, new_mode_oct))
+      end
+    end,
+  }
 end
 
-function M.get_history_clap() -- {{{1
+function M.get_history_clap()
   local hist_ct = vim.fn.histnr "cmd"
   local hist = {}
   for i = 1, hist_ct do
@@ -137,7 +137,7 @@ function M.get_history_clap() -- {{{1
   return hist
 end
 
-function M.get_history_fzf() -- {{{1
+function M.get_history_fzf()
   local hist_ct = vim.fn.histnr "cmd"
   local hist = {}
   -- for i = 1, hist_ct do
@@ -147,7 +147,7 @@ function M.get_history_fzf() -- {{{1
   return hist
 end
 
-function M.get_history() -- {{{1
+function M.get_history()
   local results = {}
   for k, v in string.gmatch(vim.fn.execute "history :", "(%d+)%s*([^\n]+)\n") do
     results[k] = "\x1b[38;5;205m" .. v .. "\x1b[m"
@@ -158,23 +158,31 @@ function M.get_history() -- {{{1
   return results
 end
 
-function M.r(cmd) -- {{{1
+function M.r(cmd) -- Test simpler impl by updating qflist in callback
   local args = vim.split(cmd, " ")
   local bin = table.remove(args, 1)
-  local on_read = function(err, data)
+  local on_read = vim.schedule_wrap(function(err, data)
     assert(not err, err)
     vim.fn.setqflist({}, "a", { title = "Command: " .. cmd, lines = data })
-  end
-  local on_close = qf_open
+  end)
+  local on_exit = vim.schedule_wrap(qf_open)
   vim.fn.setqflist({}, " ", { title = "Command: " .. cmd })
-  M.spawn(bin, { args = args }, vim.schedule_wrap(on_read), vim.schedule_wrap(on_close))
+  M.spawn { cmd = bin, args = args, on_read = on_read, on_exit = on_exit }
 end
 
-function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
+-- @param o table
+-- @field o.cmd     : Command string
+-- @field o.args    : List of args to pass to cmd
+-- @field o.env     : Array of env vars to set for cmd
+-- @field o.cwd     : String of working directory
+-- @field o.stdin   : String to pass to stdin
+-- @field o.on_read : Used for stdout and stderr (err, data)
+-- @field o.on_exit : Called on exit (code)
+function M.spawn(o) -- Run simple commands and output stdout/stderr
   local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
   local stderr = uv.new_pipe(false)
-  local args = { stdio = { stdin, stdout, stderr }, args = opts.args or {} }
+  local options = { stdio = { stdin, stdout, stderr }, args = o.args, env = o.env, cwd = o.cwd }
   local process
 
   local on_exit = function(code)
@@ -183,20 +191,20 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
       handle:close()
     end
     process:close()
-    if exit_cb ~= nil then
-      exit_cb(code)
+    if o.on_exit ~= nil then
+      o.on_exit(code)
     end
   end
 
-  process = uv.spawn(cmd, args, on_exit)
+  process = uv.spawn(o.cmd, options, on_exit)
 
   local on_read = function(err, data)
     if not data then
       return
     end
     local lines = vim.split(vim.trim(data), "\n")
-    if read_cb ~= nil then
-      read_cb(err, lines)
+    if o.on_read ~= nil then
+      o.on_read(err, lines)
     end
   end
 
@@ -204,8 +212,8 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
     io:read_start(on_read)
   end
 
-  if opts.stream then
-    stdin:write(opts.stream, function(err)
+  if o.stdin then
+    stdin:write(o.stdin, function(err)
       assert(not err, err)
       stdin:shutdown(function(error)
         assert(not error, error)
@@ -214,23 +222,21 @@ function M.spawn(cmd, opts, read_cb, exit_cb) -- {{{1
   end
 end
 
--- function M.redir() :: Redirect command output to scratch window
 -- @param o table
 -- @field o.cmd  : Vim ex command
 -- @field o.mods : Mods for scratch window
-function M.redir(o) -- {{{1
+function M.redir(o) -- Redirect command output to scratch window
   local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
-  require("window").create_scratch(lines, o.mods or "", o.bang == "!")
+  win.create_scratch(lines, o.mods or "", o.bang == "!")
 end
 
--- function M.sh() :: Spawn a new job and put output to scratch window {{{1
 -- @param o table
--- @field o.cmd string            : Command to run (will be split into args)
--- @field o.cwd string            : Current working directory (will be expanded by vim)
--- @field o.mods string           : Mods for scratch window
+-- @field o.cmd string     : Command to run (will be split into args)
+-- @field o.cwd string     : Current working directory (will be expanded by vim)
+-- @field o.mods string    : Mods for scratch window
 -- @field o.autoclose bool : Close scratch window if command returns 0
-function M.sh(o)
-  require("window").create_scratch({}, o.mods or "20")
+function M.sh(o) -- Spawn a new job and put output to scratch window
+  win.create_scratch({}, o.mods or "20")
   vim.wo.number = false
   local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)
@@ -249,7 +255,7 @@ function M.sh(o)
     assert(util.path.is_dir(options.cwd), "error: Invalid directory: " .. options.cwd)
   end
 
-  local update_chunk = function(err, chunk)
+  local update_chunk = vim.schedule_wrap(function(err, chunk)
     assert(not err, err)
     if chunk then
       output_buf = output_buf .. chunk
@@ -258,23 +264,23 @@ function M.sh(o)
         -- Scrub ANSI color codes
         lines[i] = line:gsub("\27%[[0-9;mK]+", "")
       end
-      api.nvim_buf_set_option(bufnr, "modifiable", true)
+      vim.bo[bufnr].modifiable = true
       api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-      api.nvim_buf_set_option(bufnr, "modifiable", false)
-      api.nvim_buf_set_option(bufnr, "modified", false)
+      vim.bo[bufnr].modifiable = false
+      vim.bo[bufnr].modified = false
       if api.nvim_win_is_valid(winnr) then
         api.nvim_win_set_cursor(winnr, { #lines, 0 })
       end
     end
-  end
+  end)
 
-  local on_exit = function(code, signal)
+  local on_exit = vim.schedule_wrap(function(code, signal)
     for _, io in ipairs { stdin, stdout, stderr } do
       io:read_stop()
       io:close()
     end
     handle:close()
-    vim.cmd [[au CursorMoved,CursorMovedI * ++once lua vim.defer_fn(function() nvim.unlet("job_status") end, 10000)]]
+    vim.cmd [[au CursorMoved,CursorMovedI * ++once lua vim.defer_fn(function() vim.g.job_status = nil end, 10000)]]
     if code == 0 and signal == 0 then
       vim.g.job_status = "Success"
       if o.autoclose then
@@ -295,8 +301,8 @@ function M.sh(o)
     if api.nvim_win_get_height(winnr) > #lines then
       api.nvim_win_set_height(winnr, #lines)
     end
-  end
-  handle = uv.spawn(vim.o.shell, options, vim.schedule_wrap(on_exit))
+  end)
+  handle = uv.spawn(vim.o.shell, options, on_exit)
 
   -- If the buffer closes, then kill our process.
   api.nvim_buf_attach(bufnr, false, {
@@ -308,20 +314,19 @@ function M.sh(o)
   })
 
   for _, io in ipairs { stdout, stderr } do
-    io:read_start(vim.schedule_wrap(update_chunk))
+    io:read_start(update_chunk)
   end
   stdin:write(o.cmd)
   stdin:write "\n"
   stdin:shutdown()
 end
 
--- function M.term_run() :: Execute script in terminal buffer {{{1
 -- @param o table
 -- @field o.cmd string     : Command to run (passed to &shell)
 -- @field o.cwd string     : Current working directory (will be expanded by vim)
 -- @field o.mods string    : Mods for scratch window
 -- @field o.autoclose bool : Close scratch window if command returns 0 (default true)
-function M.term_run(o)
+function M.term_run(o) -- Execute script in terminal buffer
   local options = {}
   if o.cwd then
     o.cwd = vim.fn.expand(o.cwd)
@@ -336,7 +341,7 @@ function M.term_run(o)
   local on_exit = function(_, code)
     if code == 0 then
       vim.g.job_status = "Success"
-      if o.autoclose == nil or o.autoclose == "1" or o.autoclose == true then
+      if o.autoclose == (nil or 1 or true) then
         api.nvim_buf_delete(bufnr, { force = true })
       end
     else
@@ -352,7 +357,7 @@ function M.term_run(o)
   vim.g.job_status = "Running"
 end
 
-local parse_raw_args = function(...) -- {{{1
+local parse_raw_args = function(...)
   -- TODO: differentiate between shell command params and vim command args, e.g. `--`
   local parsed = { cmd = {} }
   for _, arg in ipairs { ... } do
@@ -367,21 +372,20 @@ local parse_raw_args = function(...) -- {{{1
   return parsed
 end
 
--- function M.term_run_cmd() :: Parse command and args into M.term_run() {{{1
-function M.term_run_cmd(...)
+function M.term_run_cmd(...) -- Parse command and args into M.term_run()
   local parsed = parse_raw_args(...)
   M.term_run(parsed)
 end
 
-function M.async_run(cmd, bang) -- {{{1
+function M.async_run(cmd, bang) -- Simple lua impl of AsyncRun
   local results = {}
   local args = vim.split(cmd, " ")
   local command = table.remove(args, 1)
-  local on_read = function(err, lines)
+  local on_read = vim.schedule_wrap(function(err, lines)
     assert(not err, err)
     vim.fn.setqflist({}, "a", { title = cmd, lines = lines })
-  end
-  local on_exit = function(code)
+  end)
+  local on_exit = vim.schedule_wrap(function(code)
     if code ~= 0 then
       vim.g.job_status = "Failed"
     else
@@ -398,12 +402,10 @@ function M.async_run(cmd, bang) -- {{{1
       qf_open()
     end
     vim.defer_fn(function()
-      if vim.g.job_status then
-        vim.g.job_status = nil
-      end
+      vim.g.job_status = nil
     end, 10000)
-  end
-  M.spawn(command, { args = args }, vim.schedule_wrap(on_read), vim.schedule_wrap(on_exit))
+  end)
+  M.spawn { cmd = command, args = args, on_read = on_read, on_exit = on_exit }
   if vim.fn.getqflist({ title = "" }).title == cmd then
     vim.fn.setqflist({}, "r")
   else
@@ -412,7 +414,7 @@ function M.async_run(cmd, bang) -- {{{1
   vim.g.job_status = "Running"
 end
 
-function M.mru_files(n) -- {{{1
+function M.mru_files(n)
   local fn = require "fun"
   local exclude_patterns = {
     "nvim/.*/doc/.*%.txt", -- nvim help files (approximately)
@@ -494,66 +496,6 @@ function M.get_maps(mode, bufnr, width) -- luacheck: no unused
   return maps
 end
 
-function M.make() -- {{{1
-  -- TODO: Doesn't handle spaces properly in paths
-  -- Figure out some way other than dumb splitting by space
-  local makeprg = npcall(api.nvim_buf_get_option, 0, "makeprg") or vim.o.makeprg
-  local efm = npcall(api.nvim_buf_get_option, 0, "errorformat") or vim.o.errorformat
-  local stdout = uv.new_pipe(false)
-  local stderr = uv.new_pipe(false)
-  -- local expanded_cmd = vim.fn.expandcmd(makeprg)
-  local expanded_cmd = makeprg
-  local args = vim.split(expanded_cmd, " ")
-  local cmd = table.remove(args, 1)
-  local options = { stdio = { nil, stdout, stderr }, args = args }
-  local handle
-
-  local function has_non_whitespace(str)
-    return str:match "[^%s]"
-  end
-
-  local on_read = function(err, data)
-    assert(not err, err)
-    if not data then
-      return
-    end
-    local lines = vim.split(data, "\n")
-    vim.fn.setqflist({}, "a", {
-      title = expanded_cmd,
-      lines = vim.tbl_filter(has_non_whitespace, lines),
-      efm = efm,
-    })
-  end
-
-  local on_exit = function(code)
-    for _, io in ipairs { stdout, stderr } do
-      io:read_stop()
-      io:close()
-    end
-    handle:close()
-    if code ~= 0 then
-      vim.g.job_status = "Failed"
-    else
-      vim.g.job_status = "Success"
-    end
-    vim.defer_fn(function()
-      vim.cmd "autocmd CursorMoved,CursorMovedI * ++once unlet! g:job_status"
-    end, 10000)
-  end
-
-  if vim.fn.getqflist({ title = "" }).title == expanded_cmd then
-    vim.fn.setqflist({}, "r")
-  else
-    vim.fn.setqflist({}, " ")
-  end
-
-  handle = uv.spawn(cmd, options, vim.schedule_wrap(on_exit))
-  vim.g.job_status = "Running"
-  for _, io in ipairs { stdout, stderr } do
-    io:read_start(vim.schedule_wrap(on_read))
-  end
-end
-
 function M.test_cmd(iter_ct)
   local ITERATIONS = iter_ct or 1000000
 
@@ -608,9 +550,7 @@ function M.test_fn(iter_ct)
   end
 end
 
--- Helper function to create a floating window in which the output of
--- `:StartupTime` will be displayed.
-function M.startuptime()
+function M.startuptime() -- Create floating window and display :StartupTime
   local width = vim.o.columns - 20
   local height = vim.o.lines - 9
 
@@ -628,8 +568,7 @@ function M.startuptime()
   vim.wo.cursorline = true
 end
 
--- Load local vimrc using env var of paths set with direnv
-function M.load_lvimrc()
+function M.load_lvimrc() -- Load local vimrc using env var of paths set with direnv
   local sourced = vim.b.localrc_sourced or {}
   local available = uv.os_getenv "LOCAL_VIMRC"
   for path in vim.gsplit(available, ":", true) do

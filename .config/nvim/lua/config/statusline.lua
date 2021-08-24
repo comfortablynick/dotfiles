@@ -256,6 +256,11 @@ M.set_hl = function()
   -- TODO: derive User6 for hints
   syn_derive(ns, "StatusLine", "User6", { background = "#ecff00", reverse = true, bold = true })
   syn_derive(ns, "CursorLineNr", "User7")
+
+  -- Set these for themes that don't have it (like gruvbox8)
+  api.nvim_set_hl(ns, "DiffAdded", { foreground = "#b8bb26" })
+  api.nvim_set_hl(ns, "DiffChanged", { foreground = "#8ec07c" })
+  api.nvim_set_hl(ns, "DiffRemoved", { foreground = "#fb4934" })
   api.nvim__set_hl_ns(ns)
 end
 

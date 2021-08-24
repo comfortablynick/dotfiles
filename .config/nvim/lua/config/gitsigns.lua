@@ -8,6 +8,10 @@ gitsigns.setup {
     topdelete = { hl = "DiffDelete", text = "‾" },
     changedelete = { hl = "DiffChange", text = "~" },
   },
+  signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+  numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
   keymaps = {
     noremap = true,
     buffer = true,
@@ -36,9 +40,9 @@ gitsigns.setup {
       return false
     end
   end,
-  numhl = false,
   watch_index = { interval = 1000 },
   sign_priority = 6,
   status_formatter = nil,
   current_line_blame = false,
+  use_internal_diff = true,
 }

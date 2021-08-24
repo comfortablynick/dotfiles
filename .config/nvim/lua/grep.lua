@@ -1,10 +1,10 @@
-local Job = vim.F.npcall(require, "plenary.job")
+local installed, Job = pcall(require, "plenary.job")
 
-if not Job then
+if not installed then
   return
 end
 
-local grepper = {}
+local M = {}
 
 local get_job = function(str, cwd)
   local grep = vim.o.grepprg
@@ -35,12 +35,12 @@ local get_job = function(str, cwd)
   return job
 end
 
-grepper.grep_for_string = function(str, cwd)
+M.grep_for_string = function(str, cwd)
   local job = get_job(str, cwd)
   return job:sync()
 end
 
-grepper.replace_string = function(search, replace, opts)
+M.replace_string = function(search, replace, opts)
   opts = opts or {}
 
   local job = get_job(search, opts.cwd)
@@ -53,4 +53,4 @@ grepper.replace_string = function(search, replace, opts)
   return job:sync()
 end
 
-return grepper
+return M

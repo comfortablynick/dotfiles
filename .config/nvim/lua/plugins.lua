@@ -38,6 +38,10 @@ local function init()
     }
   end
 
+  -- Workaround for packer using $SHELL instead of &shell
+  -- When $SHELL == fish, posix syntax will fail in hooks
+  vim.env.SHELL = vim.o.shell
+
   local use = packer.use
   packer.reset()
   use "wbthomason/packer.nvim"
@@ -176,7 +180,6 @@ local function init()
   -- Commenting
   use {
     "tpope/vim-commentary",
-    -- keys = { "<Plug>CommentaryLine", "<Plug>Commentary" },
     event = lazy_load_event,
     setup = function()
       vim.api.nvim_set_keymap("x", "<Leader>c", "<Plug>Commentary", {})
@@ -190,8 +193,7 @@ local function init()
   use {
     "junegunn/fzf",
     event = lazy_load_event,
-    run = [[sh -c './install --bin && ln -sf $(pwd)/bin/* ~/.local/bin ]]
-      .. [[&& ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1']],
+    run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
   }
   use { "junegunn/fzf.vim", event = lazy_load_event }
   use {
@@ -365,7 +367,21 @@ local function init()
     end,
   }
   use "norcalli/profiler.nvim"
-  use { "romgrk/todoist.nvim", run = ":TodoistInstall" }
+  -- TODO: add 'UpdateRemotePlugins' to this once the table issue is fixed
+  use {
+    "romgrk/todoist.nvim",
+    run = "npm install",
+    setup = function()
+      vim.g.todoist = {
+        icons = {
+          unchecked = "  ",
+          checked = "  ",
+          loading = "  ",
+          error = "  ",
+        },
+      }
+    end,
+  }
   use { "kevinhwang91/nvim-bqf", event = lazy_load_event }
   use "antoinemadec/FixCursorHold.nvim"
   use {

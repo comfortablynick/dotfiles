@@ -196,6 +196,7 @@ do
       { "ColorScheme", "*", "lua require'config.lsp'.set_hl()" },
       { "ColorScheme", "*", "lua statusline.set_hl()" },
       { "BufWritePost", plugin_file, "lua nvim.reload()" },
+      { "BufWritePost", plugin_file, "PackerClean" },
       { "BufWritePost", plugin_file, "PackerInstall" },
       { "BufWritePost", plugin_file, "PackerCompile" },
     },

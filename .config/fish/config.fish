@@ -152,10 +152,10 @@ else if functions -q _pure_prompt
     set -g pure_threshold_command_duration 5 # Secs elapsed before exec time shown
 
 else
-    if type -qf starship
-        starship init fish --print-full-init | source
-        set fish_greeting
-    end
+    # if type -qf starship
+    #     starship init fish --print-full-init | source
+    #     set fish_greeting
+    # end
 end
 
 # End config {{{1

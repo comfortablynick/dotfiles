@@ -1,5 +1,5 @@
-# Don't print newline at start of the prompt
-add_newline = false
+format = "$all"
+add_newline = true
 scan_timeout = 10
 
 [hostname]
@@ -11,32 +11,28 @@ disabled = true
 [directory]
 style = "39"
 truncate_to_repo = false
+format = "[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
+symbol = ""
 style = "14"
+format = "[$symbol $branch]($style) "
 
 [git_status]
-style = "9"
-prefix = ""
-suffix = " "
-
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+modified = "Δ${count}"
+staged = "●"
 conflicted = "‼"
-
-modified.value = "Δ"
-modified.style = "220"
-modified_count.enabled = true
-modified_count.style = "220"
-
-staged.value = "●"
-staged.style = "green"
-staged_count.enabled = true
-staged_count.style = "green"
+style = "9"
+format = "[$all_status]($style) "
 
 [cmd_duration]
 style = "243"
 min_time = 0
 show_milliseconds = true
-prefix = ""
+format = "[$duration]($style)"
 
 # [nodejs]
 # disabled = true

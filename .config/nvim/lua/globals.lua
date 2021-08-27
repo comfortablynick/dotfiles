@@ -1,7 +1,12 @@
 -- Global functions
 -- p :: Debug print helper
 function _G.p(...)
-  if type(...) == ("string" or "number") then
+  local valid, input_type = pcall(type, ...)
+  -- Handle blank/invalid input without error
+  if not valid then
+    return
+  end
+  if input_type == ("string" or "number") then
     print(...)
   else
     local objects = {}

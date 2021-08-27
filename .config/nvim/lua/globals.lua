@@ -1,3 +1,5 @@
+local api = vim.api
+
 -- Global functions
 -- p :: Debug print helper
 function _G.p(...)
@@ -21,15 +23,15 @@ function _G.p(...)
   end
 end
 
--- Smart [S-]Tab {{{1
+-- Smart [S-]Tab
 local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
+  return api.nvim_replace_termcodes(str, true, true, true)
 end
 
 -- TODO: possibly include markdown tab logic
 local check_back_space = function()
-  local col = vim.fn.col "." - 1
-  return col == 0 or vim.fn.getline("."):sub(col, col):match "%s" ~= nil
+  local col = api.nvim_win_get_cursor(0)[2]
+  return col == 0 or api.nvim_get_current_line():sub(col, col):match "%s" ~= nil
 end
 
 -- Use (s-)tab to:
@@ -61,7 +63,7 @@ _G.smart_s_tab = function()
   end
 end
 
--- String indexing metamethods {{{1
+-- String indexing metamethods
 -- Example:
 -- a='abcdef'
 -- return a[4]       --> d

@@ -1,5 +1,6 @@
----
 # dev group vars
+# vim:ft=yaml.ansible
+---
 pkg_apt_packages_dev:
   - cmake
 
@@ -63,3 +64,6 @@ cargo_packages_dev:
   - name: ttdl
   - name: watchexec-cli
   - name: stylua --features lua52
+
+neovim_cmake_build_type: RelWithDebInfo
+neovim_build: true

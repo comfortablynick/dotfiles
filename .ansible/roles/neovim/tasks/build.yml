@@ -22,6 +22,9 @@
         chdir: "{{ neovim_source_dir }}"
       loop:
         - make distclean
-        - make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }}
-        - make CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
+        - make
+        - make install
+      environment:
+        CMAKE_BUILD_TYPE: "{{ neovim_cmake_build_type }}"
+        CMAKE_INSTALL_PREFIX: "{{ neovim_install_prefix }}"
   when: (source_repo.before != source_repo.after) or neovim_force

@@ -391,6 +391,7 @@ local function init()
   }
   -- luv docs in vim help format
   use { "nanotee/luv-vimdocs", opt = false }
+  use { "lewis6991/impatient.nvim", opt = false }
 
   -- Training/Vim help
   use "tjdevries/train.nvim"

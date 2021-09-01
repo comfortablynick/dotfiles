@@ -67,8 +67,8 @@ vim.lsp.protocol.CompletionItemKind = {
 -- }
 
 local init = function()
-  local compe = vim.F.npcall(require, "compe")
-  if compe == nil then
+  local installed, compe = pcall(require, "compe")
+  if not installed then
     return
   end
   local bufnr = api.nvim_get_current_buf()
@@ -84,7 +84,7 @@ local init = function()
     vim.cmd [[packadd ultisnips]]
   end
 
-  require "config.snips"
+  -- require "config.snips"
 
   compe.setup({
     enabled = true,

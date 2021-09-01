@@ -250,7 +250,7 @@ function M.init()
     taplo = false,
     tsserver = false,
     vimls = true,
-    yamlls = true,
+    yamlls = false,
   }
 
   -- configs.taplo.setup{on_attach = on_attach_cb}

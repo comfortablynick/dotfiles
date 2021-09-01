@@ -3,7 +3,7 @@
 " let g:clap_open_preview = 'never'
 let g:clap_preview_direction = 'UD'
 let g:clap_multi_selection_warning_silent = 1
-let g:clap_enable_icon = 1
+let g:clap_enable_icon = v:true
 let g:clap_preview_size = 10
 let g:clap_enable_background_shadow = v:true
 let g:clap_background_shadow_blend = 50
@@ -11,8 +11,11 @@ let g:clap_layout = #{
     \ relative: 'editor',
     \ }
 
+
+" Filter out help files
+let g:ClapProviderHistoryCustomFilter = {s -> s !~? '/doc/.*\.txt$'}
+
 " Commands
-" command! Buffers Clap buffers
 command Task    Clap task
 command Filer   Clap filer
 command Base16  call plugins#clap#base16()

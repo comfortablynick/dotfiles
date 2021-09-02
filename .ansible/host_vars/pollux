@@ -1,3 +1,4 @@
+---
 ansible_host: b8f40aadbf5d.sn.mynetname.net
 ansible_port: 5122
 ansible_user: nick

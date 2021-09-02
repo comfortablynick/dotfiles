@@ -1,6 +1,6 @@
 ---
-# neovim
-- name: Clone Neovim git repo
+# neovim build tasks
+- name: Neovim | Clone Neovim git repo
   git:
     repo: https://github.com/neovim/neovim.git
     dest: "{{ neovim_source_dir }}"
@@ -8,23 +8,24 @@
     accept_hostkey: true
   register: source_repo
 
-- name: Build neovim from source
+- name: Neovim | Build from source
   block:
-    - name: Install neovim build prerequisites
+    - name: Neovim | Install build prerequisites
       become: true
       apt:
         name: "{{ Debian_neovim_required_packages }}"
         state: present
       when: ansible_facts['os_family'] == 'Debian'
-    - name: Build and install neovim
+    - name: Neovim | Clean previous build artifacts
       command:
-        cmd: "{{ item }}"
+        cmd: make distclean
+        chdir: "{{ neovim_source_dir }}"
+      when: neovim_force
+    - name: Neovim | Build and install
+      command:
+        cmd: "{{ item }} CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}"
         chdir: "{{ neovim_source_dir }}"
       loop:
-        - make distclean
         - make
         - make install
-      environment:
-        CMAKE_BUILD_TYPE: "{{ neovim_cmake_build_type }}"
-        CMAKE_INSTALL_PREFIX: "{{ neovim_install_prefix }}"
   when: (source_repo.before != source_repo.after) or neovim_force

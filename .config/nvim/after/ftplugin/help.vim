@@ -6,7 +6,7 @@ nnoremap <buffer> yxx       <Cmd>execute trim(getline('.'))<CR>
 vnoremap <buffer> <Enter>   "xy:@x<CR>
 " Close on `[,]q`
 nnoremap <buffer> q         <Cmd>call buffer#quick_close()<CR>
-nnoremap <buffer> <Leader>  <Cmd>call buffer#quick_close()<CR>
+nnoremap <buffer> <Leader>q <Cmd>call buffer#quick_close()<CR>
 " Help TOC
 nnoremap <buffer> <Leader>o <Cmd>call <SID>show_toc()<CR>
 nnoremap <buffer> gO        <Cmd>call <SID>show_toc()<CR>

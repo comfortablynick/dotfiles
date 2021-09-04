@@ -1,5 +1,5 @@
 " vint: -ProhibitAutocmdWithNoGroup
-
+if pack#exists('ansible-vim') | finish | endif " Don't need this if ansible ftplugin is installed
 autocmd BufRead,BufNewFile .clang-format,.prettierrc,.yamllint,.ansible-lint setfiletype yaml
 autocmd BufNewFile,BufRead *.yml,*.yaml,*/{group,host}_vars/* if s:is_ansible() | set ft=yaml.ansible | endif
 

@@ -296,6 +296,14 @@ local function init()
   use { "habamax/vim-asciidoctor", opt = false }
   use { "benknoble/gitignore-vim", opt = false }
   use { "~/git/todo.txt-vim", opt = false }
+  use {
+    "pearofducks/ansible-vim",
+    opt = false,
+    run = "./UltiSnips/generate.sh",
+    config = function()
+      vim.g.ansible_extra_keywords_highlight = 1
+    end,
+  }
 
   -- Git
   use { "tpope/vim-fugitive", cmd = { "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } }

@@ -69,7 +69,7 @@ let $1 = 1$0
 endsnippet
 
 snippet fu "function" b
-function ${1:FunctionName}($2)
+function ${1:FunctionName}($2) abort
     $0
 endfunction
 endsnippet
@@ -79,7 +79,7 @@ function `!p
 relpath = PurePath(file_relative_path(True))
 parts = relpath.parts
 snip.rv = '#'.join(parts[1:]) + '#'
-`${1:name}($2)
+`${1:name}($2) abort
 	$0
 endfunction
 endsnippet

@@ -43,7 +43,7 @@ call plug#end()
 
 PlugClean! | PlugUpdate --sync | close
 
-let g:clap_preview_direction = 'UD'
+let g:clap_preview_direction = 'LR'
 
 let s:fname = { v -> split(v, ' ')[-1] }
 let g:clap_provider_scriptnames = {
@@ -61,4 +61,5 @@ let g:clap_provider_quick_open = {
     \ 'source':  ['~/.vimrc', '~/.bashrc', '~/.zshrc', '~/.envrc'],
     \ 'sink':    'e',
     \ 'on_move': {->clap#preview#file(g:clap.display.getcurline())},
+    \ 'on_move_async': {->clap#client#call_preview_file(v:null)},
     \ }

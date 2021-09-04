@@ -1,69 +1,59 @@
-" Clap setup {{{1
-" General settings
-" let g:clap_open_preview = 'never'
-let g:clap_preview_direction = 'UD'
+" General settings {{{1
+let g:clap_preview_direction = 'LR'
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = v:true
 let g:clap_preview_size = 10
 let g:clap_enable_background_shadow = v:true
 let g:clap_background_shadow_blend = 50
-let g:clap_layout = #{
-    \ relative: 'editor',
-    \ }
+let g:clap_layout = {'relative': 'editor'}
 
 
-" Filter out help files
+" Filters {{{2
 let g:ClapProviderHistoryCustomFilter = {s -> s !~? '/doc/.*\.txt$'}
 
-" Commands
+" Commands {{{2
 command Task    Clap task
 command Filer   Clap filer
 command Base16  call plugins#clap#base16()
 command Globals Clap globals
 
+" Abbreviations {{{2
 call map#cabbr('mapn', 'Clap map ++mode=n')
 call map#cabbr('mapi', 'Clap map ++mode=i')
 call map#cabbr('mapv', 'Clap map ++mode=v')
 call map#cabbr('mapo', 'Clap map ++mode=o')
 call map#cabbr('mapx', 'Clap map ++mode=x')
 
-" Maps
+" Maps {{{2
 nnoremap <F6>      <Cmd>Clap task<CR>
 nnoremap <Leader>t <Cmd>Clap tags nvim_lsp<CR>
 nnoremap <Leader>h <Cmd>Clap command_history<CR>
 
 " Functions {{{1
-" function plugins#clap#get_selected() :: Get selection sans icon {{{2
-function plugins#clap#get_selected()
-    let l:curline = g:clap.display.getcurline()
-    if g:clap_enable_icon
-        let l:curline = l:curline[4:]
-    endif
-    return l:curline
+function s:get_last_column(str) abort " :: Split string by \s and get last element {{{2
+    return split(a:str, ' ')[-1]
 endfunction
 
-" function plugins#clap#file_preview() :: File preview with icon support {{{2
-function plugins#clap#file_preview()
+function plugins#clap#get_selected() abort " :: Get last column from selection {{{2
+    return s:get_last_column(g:clap.display.getcurline())
+endfunction
+
+function plugins#clap#file_preview() abort " :: Preview current line {{{2
     let l:curline = plugins#clap#get_selected()
     return clap#preview#file(l:curline)
 endfunction
 
-" function plugins#clap#file_edit() :: File edit with icon support {{{2
-function plugins#clap#file_edit(selected)
-    let l:fname = g:clap_enable_icon ?
-        \ a:selected[4:] :
-        \ a:selected
-    execute 'edit' l:fname
+function plugins#clap#file_edit(sel) abort " :: Edit current selection {{{2
+    execute 'edit' s:get_last_column(a:sel)
 endfunction
 
-" function plugins#clap#base16() :: theme select {{{1
-function plugins#clap#base16()
+function plugins#clap#base16() abort " :: Theme select {{{2
     let g:clap_enable_background_shadow = v:false
     Clap base16
 endfunction
 
 " history (lua/Viml test) {{{1
-function plugins#clap#history() "{{{2
+function plugins#clap#history() abort "{{{2
     let l:hist = filter(
         \ map(range(1, histnr(':')), {v-> histget(':', - v)}),
         \ {v-> !empty(v)}

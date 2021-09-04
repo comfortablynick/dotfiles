@@ -25,9 +25,19 @@ function s:into_filename(sel) abort
 endfunction
 
 " let s:dot.on_move = {->plugins#clap#file_preview()}
-function s:dot.on_move() abort
-    return clap#preview#file(s:into_filename(g:clap.display.getcurline()))
-endfunction
+" " let s:dot.on_move_async = { -> clap#client#call_preview_file(v:null) }
+
+" function s:dot.on_move() abort
+"     return clap#preview#file(s:into_filename(g:clap.display.getcurline()))
+" endfunction
+
+" function s:dot.on_move_async() abort
+"     let l:fpath = s:into_filename(g:clap.display.getcurline())
+"     return clap#client#call_preview_file(v:null)
+" endfunction
+let s:dot.on_move = function('clap#provider#files#on_move_impl')
+let s:dot.on_move_async = function('clap#impl#on_move#async')
+let s:dot.support_open_action = v:true
 
 let s:dot.sink = {sel->plugins#clap#file_edit(sel)}
 

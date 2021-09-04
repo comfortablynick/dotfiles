@@ -6,12 +6,13 @@
 # 2. Interactively restart Ripgrep with reload action
 #    * Press alt-enter to switch to fzf-only filtering
 # 3. Open the file in editor
+# TODO: port to fish script so I can repaint the commandline
 RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
 CHANGE_KEY="ctrl-f"
 INITIAL_QUERY="${*:-}"
 IFS=: read -ra selected < <(
     FZF_DEFAULT_COMMAND="$RG_PREFIX $(printf %q "$INITIAL_QUERY")" \
-        fzf-tmux -p 50%,60% --ansi \
+        fzf-tmux -p 60%,80% --ansi \
         --color "hl:-1:underline,hl+:-1:underline:reverse" \
         --disabled --query "$INITIAL_QUERY" \
         --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \

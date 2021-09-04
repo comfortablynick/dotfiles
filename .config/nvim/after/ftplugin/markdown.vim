@@ -34,14 +34,15 @@ function s:is_empty_quote()
     return getline('.') =~# '\v^\s*(\s?\>)+\s*$'
 endfunction
 
-if has('nvim-0.5') && executable('glow')
+if executable('glow')
     command -buffer Preview lua
         \ require'window'.float_term(
         \ 'glow '..vim.fn.expand('%', ':p'),
-        \ 0.4,
-        \ true,
+        \ 0.5,
+        \ 'double',
         \ vim.fn.expand('%', ':.')
         \ )
+    " command -buffer Preview FloatermNew --autoclose=0 glow %
     nnoremap <buffer> gp <Cmd>Preview<CR>
 endif
 

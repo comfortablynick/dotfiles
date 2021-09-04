@@ -66,7 +66,7 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
       "nil or between 0 and 1",
       true,
     },
-    border = { border, "b", true },
+    border = { border, "s", true },
     title = { title, "s", true },
   }
 
@@ -88,6 +88,7 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
       vim.fn.termopen(command)
       vim.cmd "startinsert"
     end,
+    hl = "Normal",
   }
 end
 
@@ -115,7 +116,14 @@ function M.create_centered_floating(options) -- {{{1
       end,
       "nil or greater than 0",
     },
-    border = { options.border, "boolean", true },
+    border = {
+      options.border,
+      function(v)
+        local opts = { "single", "double", "shadow", "rounded", "solid", "none", nil }
+        return vim.tbl_contains(opts, v)
+      end,
+      "single|double|shadow|rounded|solid|none|nil",
+    },
     hl = { options.hl, "string", true },
     winblend = {
       options.winblend,
@@ -151,7 +159,7 @@ function M.create_centered_floating(options) -- {{{1
     width = width,
     height = height,
     style = "minimal",
-    border = options.border and "rounded" or "none",
+    border = options.border or "single",
   }
 
   -- Create text buffer, window

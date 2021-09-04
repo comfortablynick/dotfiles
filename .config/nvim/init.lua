@@ -3,7 +3,7 @@ local g = vim.g
 local fn = vim.fn
 local uv = vim.loop
 
-require "impatient" -- TODO: remove this once PR is merged
+pcall(require, "impatient") -- TODO: remove this once PR is merged
 require "nvim"
 require "globals"
 

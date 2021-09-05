@@ -124,7 +124,7 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_python_provider = 0
 
-silent! packadd! matchit " Nvim loads by default
+silent! packadd! matchit
 
 
 " Maps {{{1
@@ -193,12 +193,6 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    " Automatically install plugins
-    augroup vim_plug
-        autocmd!
-        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-    augroup END
 endif
 
 " Plugin list {{{2
@@ -219,8 +213,15 @@ let g:PaperColor_Theme_Options = {
 " List ends here; plugins become available
 call plug#end()
 
+" Install missing plugins and reload
+if !empty(filter(values(g:plugs), {_,v->!isdirectory(v.dir)}))
+    PlugInstall --sync
+    quit " Close vim-plug window
+    source $MYVIMRC
+endif
+
 " Filetype/Syntax {{{1
-colorscheme PaperColor
+silent! colorscheme PaperColor
 filetype plugin on       " Allow loading .vim files for different filetypes
 syntax enable            " Syntax highlighting on
 

@@ -1,5 +1,5 @@
 " General settings {{{1
-let g:clap_preview_direction = 'LR'
+let g:clap_preview_direction = 'UD'
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = v:true
 let g:clap_preview_size = 10
@@ -41,6 +41,11 @@ endfunction
 function plugins#clap#file_preview() abort " :: Preview current line {{{2
     let l:curline = plugins#clap#get_selected()
     return clap#preview#file(l:curline)
+endfunction
+
+function plugins#clap#file_preview_async() abort " :: Preview all lines in background {{{2
+    let l:curline = plugins#clap#get_selected()
+    return clap#client#call_preview_file({'fpath': l:curline})
 endfunction
 
 function plugins#clap#file_edit(sel) abort " :: Edit current selection {{{2

@@ -38,7 +38,7 @@ endif
 
 source `=g:vim_plug_file`
 call plug#begin(g:vim_plug_dir)
-Plug 'liuchengxu/vim-clap', { 'do': { -> clap#installer#force_download() } }
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
 call plug#end()
 
 PlugClean! | PlugUpdate --sync | close
@@ -46,20 +46,27 @@ PlugClean! | PlugUpdate --sync | close
 let g:clap_preview_direction = 'LR'
 
 let s:fname = { v -> split(v, ' ')[-1] }
+let s:on_move_async = {->clap#client#call_preview_file({'fpath': s:fname(g:clap.display.getcurline())})}
+
 let g:clap_provider_scriptnames = {
     \ 'id': 'scriptnames',
     \ 'description': 'View output of `:scriptnames`',
     \ 'source':  { -> split(execute('scriptnames'), '\n') },
-    \ 'on_move': { -> clap#preview#file(s:fname(g:clap.display.getcurline())) },
     \ 'sink':    { v -> execute('edit ' .. s:fname(v)) },
+    \ 'on_move_async': s:on_move_async,
     \ 'syntax':  'clap_scriptnames',
     \ }
 
+" let g:clap_provider_quick_open = {
+"     \ 'id': 'quick_open',
+"     \ 'description': 'Open dotfiles',
+"     \ 'source':  ['~/.vimrc', '~/.bashrc', '~/.zshrc', '~/.envrc'],
+"     \ 'sink':    'e',
+"     \ 'on_move': {->clap#preview#file(g:clap.display.getcurline())},
+"     \ 'on_move_async': {->clap#client#call_preview_file(v:null)},
+"     \ }
 let g:clap_provider_quick_open = {
-    \ 'id': 'quick_open',
-    \ 'description': 'Open dotfiles',
-    \ 'source':  ['~/.vimrc', '~/.bashrc', '~/.zshrc', '~/.envrc'],
-    \ 'sink':    'e',
-    \ 'on_move': {->clap#preview#file(g:clap.display.getcurline())},
-    \ 'on_move_async': {->clap#client#call_preview_file(v:null)},
+    \ 'source':  ['0 ~/.vimrc', '1 ~/.bashrc', '2 ~/.zshrc', '3 ~/.config/nvim/init.lua'],
+    \ 'sink':    { v -> execute('edit ' .. s:fname(v)) },
+    \ 'on_move_async': s:on_move_async,
     \ }

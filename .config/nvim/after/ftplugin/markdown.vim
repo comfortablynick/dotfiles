@@ -42,7 +42,6 @@ if executable('glow')
         \ 'double',
         \ vim.fn.expand('%', ':.')
         \ )
-    " command -buffer Preview FloatermNew --autoclose=0 glow %
     nnoremap <buffer> gp <Cmd>Preview<CR>
 endif
 

@@ -86,7 +86,6 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
     border = border or false,
     fn = function()
       vim.fn.termopen(command)
-      vim.cmd "startinsert"
     end,
     hl = "Normal",
   }

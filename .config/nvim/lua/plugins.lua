@@ -195,7 +195,7 @@ local function init()
     event = lazy_load_event,
     run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
   }
-  use { "junegunn/fzf.vim", event = lazy_load_event }
+  use { "junegunn/fzf.vim", event = lazy_load_event, config = runtime("autoload", "plugins", "fzf") }
   use {
     "kevinhwang91/rnvimr",
     event = lazy_load_event,

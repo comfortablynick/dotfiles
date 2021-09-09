@@ -195,7 +195,7 @@ local function init()
     event = lazy_load_event,
     run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
   }
-  use { "junegunn/fzf.vim", event = lazy_load_event, config = runtime("autoload", "plugins", "fzf") }
+  use { "junegunn/fzf.vim", event = lazy_load_event, setup = runtime("autoload", "plugins", "fzf") }
   use {
     "kevinhwang91/rnvimr",
     event = lazy_load_event,
@@ -241,7 +241,11 @@ local function init()
       vim.api.nvim_set_keymap("n", "<Leader>v", "<Plug>(PickerVsplit)", {})
     end,
   }
-  use { "voldikss/vim-floaterm", cmd = "FloatermNew", setup = runtime("autoload", "plugins", "floaterm") }
+  use {
+    "voldikss/vim-floaterm",
+    cmd = { "FloatermNew", "FloatermToggle" },
+    setup = runtime("autoload", "plugins", "floaterm"),
+  }
 
   -- Vim development
   use { "tpope/vim-scriptease", cmd = "Messages" }
@@ -306,7 +310,7 @@ local function init()
   }
 
   -- Git
-  use { "tpope/vim-fugitive", cmd = { "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } }
+  use { "tpope/vim-fugitive", cmd = { "G", "Gw", "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } }
   use { "junegunn/gv.vim", cmd = "GV" }
   use { "iberianpig/tig-explorer.vim", cmd = { "Tig", "TigStatus" } }
   use {

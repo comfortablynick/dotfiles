@@ -1,6 +1,9 @@
 " FZF Config {{{1
+" General {{{2
+let g:fzf_history_dir = stdpath('data') .. '/fzf'
+
 " Layout {{{2
-let g:fzf_prefer_tmux = get(g:, 'fzf_prefer_tmux', v:false)
+let g:fzf_prefer_tmux = get(g:, 'fzf_prefer_tmux', v:true)
 
 if exists('$TMUX') && g:fzf_prefer_tmux
     " See `man fzf-tmux` for available options
@@ -47,7 +50,7 @@ function s:fzf_rg(query, fullscreen) "{{{2
         \ '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
         \ '--color hl:68,hl+:110 --prompt="Rg> "'
     let l:rg = fzf#vim#with_preview(
-        \ fzf#wrap(l:rg, a:fullscreen),
+        \ fzf#wrap('rg', l:rg, a:fullscreen),
         \ a:fullscreen ? 'up:60%' : 'right:60%',
         \ '?'
         \ )
@@ -65,7 +68,7 @@ function s:fzf_rg_passthrough(query, fullscreen) "{{{2
         \    '--phony',
         \    '--query', a:query,
         \    '--bind',
-        \    'change:reload:'..l:reload_command,
+        \    'change:reload:' .. l:reload_command,
         \ ]}
     call fzf#vim#grep(
         \ l:initial_command,
@@ -82,7 +85,7 @@ function s:fzf_mru(fullscreen) "{{{2
     let l:mru['options'] = '--color hl:68,hl+:110 --prompt="MRU:> "'
 
     let l:mru = fzf#vim#with_preview(
-        \ fzf#wrap(l:mru, a:fullscreen),
+        \ fzf#wrap('mru', l:mru, a:fullscreen),
         \ a:fullscreen ? 'up:60%' : 'right:60%',
         \ '?',
         \ )
@@ -97,20 +100,22 @@ function s:fzf_globals(fullscreen) "{{{2
     let l:spec['source'] = l:globals
     let l:spec['sink'] = ''
     let l:spec['options'] = '--color hl:68,hl+:110 --prompt="Globals:> "'
-    call fzf#run(fzf#wrap(l:spec, a:fullscreen))
+    call fzf#run(fzf#wrap('globals', l:spec, a:fullscreen))
 endfunction
 
 function s:fzf_scriptnames(fullscreen) "{{{2
     " Use fzf.vim's preview script (it handles file names better)
-    let l:preview_cmd =  substitute(fzf#vim#with_preview()['options'][-1], '{}', '{2..-1}', '')
+    let l:preview_cmd =  substitute(fzf#vim#with_preview()['options'][1], '{}', '{2..-1}', '')
     let l:preview_pos = a:fullscreen ? 'up:60%' : 'right:60%'
     let l:spec = {}
     let l:spec['source'] = split(execute('scriptnames'), '\n')
     let l:spec['sink'] = {sel->execute('edit '..trim(split(sel, ' ')[-1]))}
-    let l:spec['options'] = '--preview-window '.l:preview_pos.' --preview "'.l:preview_cmd.'"'.
+    let l:spec['options'] = '--preview-window ' .. l:preview_pos .. 
+        \ ' --preview "' .. l:preview_cmd .. '"' ..
+        \ ' --bind ?:toggle-preview' ..
         \ ' --color hl:68,hl+:110 --prompt="Scriptnames:> "'
-
-    call fzf#run(fzf#wrap(l:spec, a:fullscreen))
+    let g:spec = l:spec
+    call fzf#run(fzf#wrap('scriptnames', l:spec, a:fullscreen))
 endfunction
 
 function s:fzf_asynctasks(fullscreen) "{{{2
@@ -134,7 +139,7 @@ function s:fzf_asynctasks(fullscreen) "{{{2
     " let l:tasks['sink'] = {sel -> s:sink(sel)}
     let l:tasks['sink'] = {sel->execute('echo '..sel)}
     let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks:> "'
-    call fzf#run(fzf#wrap(l:tasks, a:fullscreen))
+    call fzf#run(fzf#wrap('asynctasks', l:tasks, a:fullscreen))
 endfunction
 
 function s:fzf_spell() "{{{2

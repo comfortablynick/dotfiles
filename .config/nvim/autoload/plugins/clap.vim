@@ -23,6 +23,7 @@ call map#cabbr('mapi', 'Clap map ++mode=i')
 call map#cabbr('mapv', 'Clap map ++mode=v')
 call map#cabbr('mapo', 'Clap map ++mode=o')
 call map#cabbr('mapx', 'Clap map ++mode=x')
+call map#cabbr('scr',  'Clap scriptnames')
 
 " Maps {{{2
 nnoremap <F6>      <Cmd>Clap task<CR>

@@ -2,12 +2,14 @@ local o = vim.opt
 local g = vim.g
 local fn = vim.fn
 local uv = vim.loop
+local shell = "/bin/sh"
 
 pcall(require, "impatient") -- TODO: remove this once PR is merged
 require "nvim"
 require "globals"
 
 -- Global variables
+vim.env.SHELL = shell -- Some things use $SHELL rather than &shell
 g.python3_host_prog = uv.os_getenv "NVIM_PY3_DIR"
 g.mapleader = ","
 g.c_syntax_for_h = 1
@@ -63,7 +65,7 @@ o.swapfile = false
 o.backup = true
 o.undofile = true
 
-o.shell = "/bin/sh"
+o.shell = shell
 o.hidden = true
 o.termguicolors = true
 o.inccommand = "split"

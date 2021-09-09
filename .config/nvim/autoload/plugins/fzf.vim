@@ -1,8 +1,6 @@
-" FZF Config {{{1
-" General {{{2
+" Config {{{1
 let g:fzf_history_dir = stdpath('data') .. '/fzf'
 
-" Layout {{{2
 let g:fzf_prefer_tmux = get(g:, 'fzf_prefer_tmux', v:true)
 
 if exists('$TMUX') && g:fzf_prefer_tmux
@@ -13,7 +11,6 @@ else
     " let g:fzf_layout = {'down': '40%'}
 endif
 
-" Colors {{{2
 let g:fzf_colors = {
     \ 'fg':      ['fg', 'Normal'],
     \ 'bg':      ['bg', 'Clear'],
@@ -34,17 +31,17 @@ augroup fzf_config "{{{2
     autocmd FileType fzf silent! tunmap <buffer> <Esc>
 augroup END
 
-" Maps {{{2
 nnoremap z= <Cmd>call <SID>fzf_spell()<CR>
 
 " Functions {{{1
 function s:fzf_rg(query, fullscreen) "{{{2
-    let l:rg = {}
-    let l:rg['source'] = printf(
+    let l:cmd = printf(
         \ 'rg --column --line-number --no-heading --color=always --smart-case %s || true',
         \ shellescape(a:query)
         \ )
-    let l:rg['sink*'] = {val->s:grep_handler(val)}
+    let l:rg = {}
+    let l:rg['source'] = l:cmd
+    let l:rg['sink*'] = {val->s:grep_handler(val, l:cmd)}
     let l:rg['options'] = 
         \ '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
         \ '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
@@ -80,9 +77,9 @@ endfunction
 
 function s:fzf_mru(fullscreen) "{{{2
     let l:mru = {}
-    let l:mru['source'] = luaeval('require("tools").mru_files()')
-    let l:mru['sink'] = 'edit'
-    let l:mru['options'] = '--color hl:68,hl+:110 --prompt="MRU:> "'
+    let l:mru.source = luaeval('require("tools").mru_files()')
+    let l:mru.sink = 'edit'
+    let l:mru.options = '--color hl:68,hl+:110 --prompt="MRU> "'
 
     let l:mru = fzf#vim#with_preview(
         \ fzf#wrap('mru', l:mru, a:fullscreen),
@@ -94,28 +91,26 @@ endfunction
 
 function s:fzf_globals(fullscreen) "{{{2
     let l:globals = map(sort(keys(g:)), {_,v -> 'g:'..v})
-    " for l:item in g:
-    " endfor
     let l:spec = {}
-    let l:spec['source'] = l:globals
-    let l:spec['sink'] = ''
-    let l:spec['options'] = '--color hl:68,hl+:110 --prompt="Globals:> "'
+    let l:spec.source = l:globals
+    let l:spec.sink = ''
+    let l:spec.options = '--color hl:68,hl+:110 --prompt="Globals> "'
     call fzf#run(fzf#wrap('globals', l:spec, a:fullscreen))
 endfunction
 
 function s:fzf_scriptnames(fullscreen) "{{{2
-    " Use fzf.vim's preview script (it handles file names better)
+    let l:spec = {}
     let l:preview_cmd =  substitute(fzf#vim#with_preview()['options'][1], '{}', '{2..-1}', '')
     let l:preview_pos = a:fullscreen ? 'up:60%' : 'right:60%'
-    let l:spec = {}
-    let l:spec['source'] = split(execute('scriptnames'), '\n')
-    let l:spec['sink'] = {sel->execute('edit '..trim(split(sel, ' ')[-1]))}
-    let l:spec['options'] = '--preview-window ' .. l:preview_pos .. 
+    let l:spec.source = split(execute('scriptnames'), '\n')
+    let l:spec.sink = {sel->execute('edit '..trim(split(sel, ' ')[-1]))}
+    let l:spec.options = '--preview-window ' .. l:preview_pos .. 
         \ ' --preview "' .. l:preview_cmd .. '"' ..
+        \ ' --multi ' ..
         \ ' --bind ?:toggle-preview' ..
-        \ ' --color hl:68,hl+:110 --prompt="Scriptnames:> "'
-    let g:spec = l:spec
-    call fzf#run(fzf#wrap('scriptnames', l:spec, a:fullscreen))
+        \ ' --color hl:68,hl+:110 --prompt="Scriptnames> "'
+    let l:spec = fzf#wrap('scriptnames', l:spec, a:fullscreen)
+    call fzf#run(l:spec)
 endfunction
 
 function s:fzf_asynctasks(fullscreen) "{{{2
@@ -138,19 +133,16 @@ function s:fzf_asynctasks(fullscreen) "{{{2
     " let l:tasks['sink'] = {sel->execute('AsyncTask '..trim(fnameescape(split(sel, '<')[0])))}
     " let l:tasks['sink'] = {sel -> s:sink(sel)}
     let l:tasks['sink'] = {sel->execute('echo '..sel)}
-    let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks:> "'
+    let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks> "'
     call fzf#run(fzf#wrap('asynctasks', l:tasks, a:fullscreen))
 endfunction
 
 function s:fzf_spell() "{{{2
     let l:spec = {}
-    let l:col = wincol()
-    let l:row = winline()
-    let l:spec['source'] = spellsuggest(expand('<cword>'))
-    let l:spec['sink'] = {word -> execute('normal! "_ciw'.word)}
-    let l:spec['tmux'] = '-p20%,30% -x'.l:col.' -y'.l:row
-    let l:spec['window'] = {'width': 0.4, 'height': 0.3}
-    " let l:spec['options'] = '--reverse'
+    let l:spec.source = spellsuggest(expand('<cword>'))
+    let l:spec.sink = {word -> execute('normal! "_ciw'.word)}
+    let l:spec.tmux = '-p20%,30% -x' .. wincol() .. ' -y' .. winline()
+    let l:spec.window = {'width': 0.4, 'height': 0.3}
     return fzf#run(l:spec)
 endfunction
 
@@ -160,7 +152,7 @@ function s:grep_to_qf(line) "{{{2
         \ 'text': join(l:parts[3:], ':')}
 endfunction
 
-function s:grep_handler(lines) "{{{2
+function s:grep_handler(lines, name) "{{{2
     if len(a:lines) < 2 | return | endif
 
     let l:cmd = get({'ctrl-x': 'split',
@@ -171,26 +163,17 @@ function s:grep_handler(lines) "{{{2
     let l:first = l:list[0]
     execute l:cmd escape(l:first.filename, ' %#\')
     execute l:first.lnum
-    execute 'normal!' l:first.col.'|zz'
+    execute 'normal!' l:first.col .. '|zz'
 
-    if len(l:list) > 1
-        call setqflist(l:list)
+    if !empty(l:list)
+        call setqflist([], ' ', {'items': l:list, 'title': a:name})
         copen
         wincmd p
     endif
 endfunction
 
 function s:map_types_completion(a,l,p) "{{{2
-    return [
-        \ 'n',
-        \ 'i',
-        \ 'o',
-        \ 'x',
-        \ 'v',
-        \ 's',
-        \ 'c',
-        \ 't',
-        \ ]
+    return ['n', 'i', 'o', 'x', 'v', 's', 'c', 't']
 endfunction
 
 " Commands {{{1

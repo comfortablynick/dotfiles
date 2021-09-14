@@ -246,6 +246,13 @@ local function init()
     cmd = { "FloatermNew", "FloatermToggle" },
     setup = runtime("autoload", "plugins", "floaterm"),
   }
+  use {
+    "akinsho/toggleterm.nvim",
+    event = lazy_load_event,
+    config = function()
+      require "config.toggleterm"
+    end,
+  }
 
   -- Vim development
   use { "tpope/vim-scriptease", cmd = "Messages" }

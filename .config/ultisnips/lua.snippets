@@ -30,3 +30,10 @@ endsnippet
 snippet l "local x = 1" b
 local ${1:x} = ${0:1}
 endsnippet
+
+snippet pcfg "config file with pcall require"
+local installed, $1 = pcall(require, "$1")
+
+if not installed then return end
+$0
+endsnippet

@@ -1,4 +1,8 @@
-local gitsigns = require "gitsigns"
+local installed, gitsigns = pcall(require, "gitsigns")
+
+if not installed then
+  return
+end
 
 gitsigns.setup {
   signs = {
@@ -44,5 +48,5 @@ gitsigns.setup {
   sign_priority = 6,
   status_formatter = nil,
   current_line_blame = false,
-  use_internal_diff = true,
+  diff_opts = { internal = true },
 }

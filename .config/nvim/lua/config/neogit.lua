@@ -1,4 +1,9 @@
-local neogit = require "neogit"
+local installed, neogit = pcall(require, "neogit")
+
+if not installed then
+  return
+end
+
 vim.cmd [[packadd diffview.nvim]]
 
 neogit.setup {

@@ -1,5 +1,6 @@
-local snippets = vim.F.npcall(require, "snippets")
-if not snippets then
+local installed, snippets = pcall(require, "snippets")
+
+if not installed then
   return nil
 end
 

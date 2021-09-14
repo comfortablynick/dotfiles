@@ -1,6 +1,6 @@
-local devicons = require "nvim-web-devicons"
+local installed, devicons = pcall(require, "nvim-web-devicons")
 
-if not devicons then
+if not installed then
   return nil
 end
 

@@ -1,4 +1,8 @@
-local wk = require "which-key"
+local installed, wk = pcall(require, "which-key")
+
+if not installed then
+  return
+end
 
 wk.setup {
   window = { border = "double" },
@@ -41,4 +45,6 @@ wk.register({
   D = "Lsp preview definition",
   d = "Lsp diagnostics",
   s = "Show git hunk under cursor",
-}, { prefix = "g" })
+}, {
+  prefix = "g",
+})

@@ -1,3 +1,8 @@
+local installed, completion = pcall(require, "completion")
+if not installed then
+  return
+end
+
 local api = vim.api
 local M = {}
 
@@ -51,21 +56,21 @@ local customize_lsp_label = {
 }
 
 -- TODO: how does this work?
-local items_priority = {
-  Field = 5,
-  Function = 7,
-  Module = 7,
-  Variables = 7,
-  Method = 10,
-  Interfaces = 5,
-  Constant = 5,
-  Class = 5,
-  Keyword = 4,
-  UltiSnips = 2,
-  ["snippets.nvim"] = 1,
-  Buffers = 1,
-  File = 0,
-}
+-- local items_priority = {
+--   Field = 5,
+--   Function = 7,
+--   Module = 7,
+--   Variables = 7,
+--   Method = 10,
+--   Interfaces = 5,
+--   Constant = 5,
+--   Class = 5,
+--   Keyword = 4,
+--   UltiSnips = 2,
+--   ["snippets.nvim"] = 1,
+--   Buffers = 1,
+--   File = 0,
+-- }
 
 local text_complete = {
   { complete_items = { "path" }, triggered_only = { "/" } },
@@ -104,11 +109,6 @@ M.init = function()
   end
 
   require "config.snippets"
-
-  local completion = vim.F.npcall(require, "completion")
-  if not completion then
-    return
-  end
 
   -- Custom sources
   completion.addCompletionSource("fish", require("config.completion.fish").complete_item)

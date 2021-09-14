@@ -1,3 +1,8 @@
+local installed, compe = pcall(require, "compe")
+if not installed then
+  return
+end
+
 local api = vim.api
 
 -- Set completeopt to have a better completion experience
@@ -67,10 +72,6 @@ vim.lsp.protocol.CompletionItemKind = {
 -- }
 
 local init = function()
-  local installed, compe = pcall(require, "compe")
-  if not installed then
-    return
-  end
   local bufnr = api.nvim_get_current_buf()
   local complete_exclude_fts = { "clap_input", "qf", "floaterm", "" }
 

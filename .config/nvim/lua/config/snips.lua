@@ -1,5 +1,9 @@
-require("luasnip/loaders/from_vscode").load()
-local ls = require "luasnip"
+local installed, ls = pcall(require, "luasnip")
+
+if not installed then
+  return
+end
+
 local s = ls.s
 local sn = ls.sn
 local t = ls.t
@@ -86,7 +90,7 @@ local function jdocsnip(args, old_state)
     end
     vim.list_extend(nodes, { t { " * ", " * @throws " .. exc .. " " }, ins, t { "", "" } })
     param_nodes.ex = ins
-    insert = insert + 1
+    insert = insert + 1 -- luacheck: ignore unused insert
   end
 
   vim.list_extend(nodes, { t { " */" } })
@@ -147,3 +151,5 @@ ls.snippets = {
     ls.parser.parse_snippet({ trig = "fn" }, "/// $1\nfn $2($3) ${4:-> $5 }\\{\n\t$0\n\\}"),
   },
 }
+
+require("luasnip/loaders/from_vscode").load()

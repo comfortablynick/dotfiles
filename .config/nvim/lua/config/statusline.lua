@@ -76,6 +76,7 @@ local excluded_filetype = function()
     "coc-explorer",
     "output:///info",
     "nofile",
+    "man",
   }
   local bufname = api.nvim_buf_get_name(0)
   local bufname_tail = vim.fn.fnamemodify(bufname, ":t")

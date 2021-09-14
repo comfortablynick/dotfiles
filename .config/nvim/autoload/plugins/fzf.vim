@@ -40,9 +40,9 @@ function s:fzf_rg(query, fullscreen) "{{{2
         \ shellescape(a:query)
         \ )
     let l:rg = {}
-    let l:rg['source'] = l:cmd
-    let l:rg['sink*'] = {val->s:grep_handler(val, l:cmd)}
-    let l:rg['options'] = 
+    let l:rg.source = l:cmd
+    let l:rg.sinklist = {val->s:grep_handler(val, l:cmd)}
+    let l:rg.options = 
         \ '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
         \ '--multi --bind=ctrl-a:select-all,ctrl-d:deselect-all '.
         \ '--color hl:68,hl+:110 --prompt="Rg> "'
@@ -129,11 +129,11 @@ function s:fzf_asynctasks(fullscreen) "{{{2
     endfor
     let g:source = l:source
     let l:tasks = {}
-    let l:tasks['source'] = l:source
+    let l:tasks.source = l:source
     " let l:tasks['sink'] = {sel->execute('AsyncTask '..trim(fnameescape(split(sel, '<')[0])))}
     " let l:tasks['sink'] = {sel -> s:sink(sel)}
-    let l:tasks['sink'] = {sel->execute('echo '..sel)}
-    let l:tasks['options'] = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks> "'
+    let l:tasks.sink = {sel->execute('echo '..sel)}
+    let l:tasks.options = '+m --nth 1 --inline-info --tac --prompt="AsyncTasks> "'
     call fzf#run(fzf#wrap('asynctasks', l:tasks, a:fullscreen))
 endfunction
 

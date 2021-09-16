@@ -2,6 +2,9 @@
 -- From: https://github.com/Iron-E/nvim-cartographer
 local api = vim.api
 
+-- Optionally set which-key labels
+local wk_installed, wk = pcall(require, "which-key")
+
 local Callbacks = {}
 
 --- Register a callback to be
@@ -77,6 +80,16 @@ MetaMapper = {
         silent = rawget(self, "silent"),
         unique = rawget(self, "unique"),
       }
+
+      if type(rhs) == "table" then
+        rhs, label = unpack(rhs)
+
+        if wk_installed then
+          for _, mode in ipairs(modes) do
+            wk.register({ [lhs] = label }, { mode = mode })
+          end
+        end
+      end
 
       if type(rhs) == "function" then
         local id = Callbacks.new(rhs)

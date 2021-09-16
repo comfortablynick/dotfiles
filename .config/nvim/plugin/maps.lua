@@ -25,18 +25,21 @@ n.nore["@;"] = "@:"
 n.nore["q;"] = "q:"
 x.nore["q;"] = "q:"
 
-n.nore.expr["<CR>"] = function() -- Clears search hl and errmsg + CR
-  return tc("<Cmd>noh<CR><Bar><Cmd>echon<CR><CR>")
-end
+n.nore.expr["<CR>"] = {
+  function() -- Clears search hl and errmsg + CR
+    return tc "<Cmd>noh<CR><Bar><Cmd>echon<CR><CR>"
+  end,
+  "Clear + Return",
+}
 
-n.nore["<Leader><Leader>c"] = ":<Up>"
+n.nore["<Leader><Leader>c"] = { ":<Up>", "Last command" }
 
 -- Move up/down wrapped lines
 n.nore.k = "gk"
 n.nore.j = "gj"
 
-n.nore["<Up>"] = [[<Cmd>call search('\%'..virtcol('.')..'v\S', 'bw')<CR>]]
-n.nore["<Down>"] = [[<Cmd>call search('\%'..virtcol('.')..'v\S', 'w')<CR>]]
+n.nore["<Up>"] = { [[<Cmd>call search('\%'..virtcol('.')..'v\S', 'bw')<CR>]], "Previous non-blank row" }
+n.nore["<Down>"] = { [[<Cmd>call search('\%'..virtcol('.')..'v\S', 'w')<CR>]], "Next non-blank row" }
 
 -- Use kj to escape insert mode
 i.nore.kj = "<Esc>`^"
@@ -47,34 +50,34 @@ v.nore["<S-Tab>"] = "<Cmd>normal! <gv<CR>"
 
 -- Window navigation
 -- `CTRL+{h,j,k,l}` to navigate in normal mode
-n.nore["<C-h>"] = "<C-w>h"
-n.nore["<C-j>"] = "<C-w>j"
-n.nore["<C-k>"] = "<C-w>k"
-n.nore["<C-l>"] = "<C-w>l"
-n.nore["<C-p>"] = "<C-w>p"
+n.nore["<C-h>"] = { "<C-w>h", "Move to window left" }
+n.nore["<C-j>"] = { "<C-w>j", "Move to window below" }
+n.nore["<C-k>"] = { "<C-w>k", "Move to window above" }
+n.nore["<C-l>"] = { "<C-w>l", "Move to window right" }
+n.nore["<C-p>"] = { "<C-w>p", "Move to previous window" }
 
-n.noremap["<A-h>"] = "<Cmd>call window#tmux_aware_resize('h')<CR>"
-n.noremap["<A-j>"] = "<Cmd>call window#tmux_aware_resize('j')<CR>"
-n.noremap["<A-k>"] = "<Cmd>call window#tmux_aware_resize('k')<CR>"
-n.noremap["<A-l>"] = "<Cmd>call window#tmux_aware_resize('l')<CR>"
+n.nore["<A-h>"] = { "<Cmd>call window#tmux_aware_resize('h')<CR>", "Tmux-aware resize left" }
+n.nore["<A-j>"] = { "<Cmd>call window#tmux_aware_resize('j')<CR>", "Tmux-aware resize right" }
+n.nore["<A-k>"] = { "<Cmd>call window#tmux_aware_resize('k')<CR>", "Tmux-aware resize up" }
+n.nore["<A-l>"] = { "<Cmd>call window#tmux_aware_resize('l')<CR>", "Tmux-aware resize down" }
 
 -- Delete window to the left/below/above/to the right with d<C-h/j/k/l>
-n.nore["d<C-j>"] = "<C-w>j<C-w>c"
-n.nore["d<C-k>"] = "<C-w>k<C-w>c"
-n.nore["d<C-h>"] = "<C-w>h<C-w>c"
-n.nore["d<C-l>"] = "<C-w>l<C-w>c"
+n.nore["d<C-j>"] = { "<C-w>j<C-w>c", "Delete window below" }
+n.nore["d<C-k>"] = { "<C-w>k<C-w>c", "Delete window above" }
+n.nore["d<C-h>"] = { "<C-w>h<C-w>c", "Delete window left" }
+n.nore["d<C-l>"] = { "<C-w>l<C-w>c", "Delete window right" }
 
 -- Override vim-impaired tagstack mapping
-n.nore["[t"] = "<Cmd>tabprevious<CR>"
-n.nore["]t"] = "<Cmd>tabnext<CR>"
+n.nore["[t"] = { "<Cmd>tabprevious<CR>", "Previous tab" }
+n.nore["]t"] = { "<Cmd>tabnext<CR>", "Next tab" }
 
--- iBuffer navigation
-n.nore["<Tab>"] = "<Cmd>bnext<CR>"
-n.nore["<S-Tab>"] = "<Cmd>bprevious<CR>"
-n.nore["<Leader>w"] = "<Cmd>update\\|bwipeout<CR>"
-n.nore["<Leader>u"] = "<Cmd>update\\|Bdelete<CR>"
-n.nore["<Leader>q"] = "<Cmd>Bdelete<CR>"
-n.nore["<Leader>x"] = "<Cmd>call window#close_term()<CR>"
+-- Buffer navigation
+n.nore["<Tab>"] = { "<Cmd>bnext<CR>", "Next buffer" }
+n.nore["<S-Tab>"] = { "<Cmd>bprevious<CR>", "Previous buffer" }
+n.nore["<Leader>w"] = { "<Cmd>update\\|bwipeout<CR>", "Update + wipeout buffer" }
+n.nore["<Leader>u"] = { "<Cmd>update\\|Bdelete<CR>", "Update + delete buffer" }
+n.nore["<Leader>q"] = {"<Cmd>Bdelete<CR>", "Delete buffer"}
+n.nore["<Leader>x"] = {"<Cmd>call window#close_term()<CR>", "Close open terminal"}
 n.nore["<Leader>xx"] = "<Cmd>BufOnly<CR>"
 
 -- Quickfix
@@ -89,9 +92,9 @@ c.nore["%%"] = "<C-R>=fnameescape(expand('%:h')).'/'<CR>"
 
 -- Format/indent
 -- Format buffer and restore cursor position
-n.nore["<Leader>ff"] = "<Cmd>call buffer#restore_cursor_after('gggqG')<CR>"
+n.nore["<Leader>ff"] = { "<Cmd>call buffer#restore_cursor_after('gggqG')<CR>", "Format buffer with &formatprg" }
 -- Indent buffer and restore cursor position
-n.nore["<Leader>fi"] = "<Cmd>call buffer#restore_cursor_after('gg=G')<CR>"
+n.nore["<Leader>fi"] = { "<Cmd>call buffer#restore_cursor_after('gg=G')<CR>", "Format buffer with &indentexpr" }
 
 -- Diff mode
 -- TODO: try these when actually using diff mode

@@ -6,36 +6,25 @@ end
 
 wk.setup {
   window = { border = "double" },
+  operators = { gc = "Comments" },
+  show_help = false,
+  -- Not sure if this is needed
+  triggers_blacklist = { i = { "k", "j" } },
 }
 
 wk.register({
-  b = "Build file",
-  c = "Commentary",
-  e = "Fuzzy edit",
   f = {
-    name = "+format",
-    f = "Use fmtprg",
-    i = "Use indentexpr",
+    name = "format",
   },
   g = {
-    name = "+git",
+    name = "git",
     p = "Git push",
     g = "Diff mode: diffget 1",
     h = "Diff mode: diffget 2",
     l = "Diff mode: diffget 3",
   },
-  h = "Command history",
-  l = "Hop to line",
   n = "Toggle explorer",
-  q = "Delete buffer",
-  r = "Run file",
-  s = "Hop to word",
-  t = "Tags",
-  u = "Update + delete buffer",
-  v = "Fuzzy vsplit",
-  w = "Update + wipeout buffer",
-  x = "Close open terminal",
-  [","] = { name = "+misc", c = "Last command", v = "Vista toggle" },
+  [","] = { name = "+misc" },
 }, {
   prefix = "<leader>",
 })

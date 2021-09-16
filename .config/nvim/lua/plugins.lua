@@ -80,8 +80,8 @@ local function init()
       vim.g.asynctasks_term_pos = "right"
       vim.g.asynctasks_term_reuse = 1
 
-      vim.api.nvim_set_keymap("n", "<Leader>r", "<Cmd>AsyncTask file-run", { noremap = true })
-      vim.api.nvim_set_keymap("n", "<Leader>b", "<Cmd>AsyncTask file-build", { noremap = true })
+      vim.map.n.nore["<Leader>r"] = { "<Cmd>AsyncTask file-run", "Run file" }
+      vim.map.n.nore["<Leader>b"] = { "<Cmd>AsyncTask file-build", "Build file" }
       vim.call("map#cabbr", "ta", "AsyncTask")
     end,
   }
@@ -137,11 +137,10 @@ local function init()
       hop.setup { winblend = 100 }
     end,
     setup = function()
-      local opts = { noremap = true }
-      vim.api.nvim_set_keymap("n", "<Leader>s", "<Cmd>HopWord<CR>", opts)
-      vim.api.nvim_set_keymap("n", "<Leader>l", "<Cmd>HopLine<CR>", opts)
-      vim.api.nvim_set_keymap("n", "f", "<Cmd>HopChar1<CR>", opts)
-      vim.api.nvim_set_keymap("n", "s", "<Cmd>HopChar2<CR>", opts)
+      vim.map.n.nore["<Leader>s"] = { "<Cmd>HopWord<CR>", "Hop to word" }
+      vim.map.n.nore["<Leader>l"] = { "<Cmd>HopLine<CR>", "Hop to line" }
+      vim.map.n.nore.f = { "<Cmd>HopChar1<CR>", "Hop to char" }
+      vim.map.n.nore.s = { "<Cmd>HopChar2<CR>", "Hop to 2 chars" }
     end,
   }
 
@@ -182,10 +181,10 @@ local function init()
     "tpope/vim-commentary",
     event = lazy_load_event,
     setup = function()
-      vim.api.nvim_set_keymap("x", "<Leader>c", "<Plug>Commentary", {})
-      vim.api.nvim_set_keymap("n", "<Leader>c", "<Plug>Commentary", {})
-      vim.api.nvim_set_keymap("o", "<Leader>c", "<Plug>Commentary", {})
-      vim.api.nvim_set_keymap("n", "<Leader>c<Space>", "<Plug>CommentaryLine", {})
+      vim.map.x["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
+      vim.map.n["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
+      vim.map.o["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
+      vim.map.n["<Leader>c<Space>"] = { "<Plug>CommentaryLine", "Toggle line comment" }
     end,
   }
 
@@ -224,7 +223,7 @@ local function init()
     "mbbill/undotree",
     cmd = "UndotreeToggle",
     setup = function()
-      vim.api.nvim_set_keymap("n", "<F5>", "<Cmd>UndotreeToggle<CR>", { noremap = true })
+      vim.map.n.nore["<F5>"] = { "<Cmd>UndotreeToggle<CR>", "Toggle UndoTree" }
     end,
     config = function()
       vim.g.undotree_WindowLayout = 4
@@ -237,8 +236,8 @@ local function init()
     setup = function()
       vim.g.picker_custom_find_executable = "fd"
       vim.g.picker_custom_find_flags = "-t f -HL --color=never"
-      vim.api.nvim_set_keymap("n", "<Leader>e", "<Plug>(PickerEdit)", {})
-      vim.api.nvim_set_keymap("n", "<Leader>v", "<Plug>(PickerVsplit)", {})
+      vim.map.n["<Leader>e"] = { "<Plug>(PickerEdit)", "Fuzzy edit" }
+      vim.map.n["<Leader>v"] = { "<Plug>(PickerVsplit)", "Fuzzy vsplit edit" }
     end,
   }
   use {
@@ -372,8 +371,8 @@ local function init()
     "bfredl/nvim-luadev",
     ft = "lua",
     config = function()
-      vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>(Luadev-Run)", {})
-      vim.api.nvim_buf_set_keymap(0, "n", "grl", "<Plug>(Luadev-RunLine)", {})
+      vim.map.v.buffer["<Enter>"] = { "<Plug>(Luadev-Run)", "Run in REPL" }
+      vim.map.n.buffer.grl = { "<Plug>(Luadev-RunLine)", "Run line in REPL" }
     end,
   }
   use "nvim-lua/plenary.nvim"
@@ -428,13 +427,12 @@ local function init()
     cmd = { "TmuxNavigateLeft", "TmuxNavigateRight", "TmuxNavigateDown", "TmuxNavigateUp", "TmuxNavigatePrevious" },
     setup = function()
       local n = vim.map.n
-      -- local opts = { noremap = true }
       vim.g.tmux_navigator_no_mappings = 1
-      n.nore["<C-h>"] = "<Cmd>TmuxNavigateLeft<CR>"
-      n.nore["<C-j>"] = "<Cmd>TmuxNavigateDown<CR>"
-      n.nore["<C-k>"] = "<Cmd>TmuxNavigateUp<CR>"
-      n.nore["<C-l>"] = "<Cmd>TmuxNavigateRight<CR>"
-      n.nore["<C-p>"] = "<Cmd>TmuxNavigatePrevious<CR>"
+      n.nore["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
+      n.nore["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
+      n.nore["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
+      n.nore["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
+      n.nore["<C-p>"] = { "<Cmd>TmuxNavigatePrevious<CR>", "Vim/Tmux navigate previous" }
     end,
   }
   use {

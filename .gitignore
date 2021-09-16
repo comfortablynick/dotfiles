@@ -21,6 +21,7 @@ tags
 vifminfo*
 */asciinema/install-id
 /src
+Session.vim
 
 # Home dir repo ignores
 /Applications/

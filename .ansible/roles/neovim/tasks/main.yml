@@ -11,11 +11,14 @@
     - not neovim_build
 
 - name: Neovim | Install from source
-  include_tasks: build.yml
+  block:
+    - name: Neovim | Build
+      include_tasks: build.yml
+  rescue:
+    - name: Neovim | Clean + Build
+      include_tasks: build.yml
+      vars:
+        neovim_force: true
   when:
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture.startswith('arm') or neovim_build
-
-# TODO: this seems to hang; how does topgrade do it?
-# - name: Neovim | Update plugins
-#   include_tasks: plugins.yml

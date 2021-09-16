@@ -16,11 +16,13 @@
         name: "{{ Debian_neovim_required_packages }}"
         state: present
       when: ansible_facts['os_family'] == 'Debian'
+
     - name: Neovim | Clean previous build artifacts
       command:
         cmd: make distclean
         chdir: "{{ neovim_source_dir }}"
       when: neovim_force
+
     - name: Neovim | Build and install
       command:
         cmd: "{{ item }} CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}"
@@ -28,4 +30,20 @@
       loop:
         - make
         - make install
+
+    # Delete unused theme files (why not?)
+    - name: Neovim | Find factory theme files other than default
+      find:
+        paths: "{{ neovim_install_prefix }}/share/nvim/runtime/colors"
+        file_type: file
+        excludes:
+          - default.vim
+      register: found_files
+
+    - name: Neovim | Remove all but default theme
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ found_files['files'] }}"
+
   when: (source_repo.before != source_repo.after) or neovim_force

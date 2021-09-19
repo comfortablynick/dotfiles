@@ -93,4 +93,42 @@ function M.only(force)
   end
 end
 
+-- Some useful buffer tools
+-- from github.com/sindrets/dotfiles/blob/master/.config/nvim/lua/nvim-config/utils.lua
+function M.find_buf_with_pattern(pattern)
+  for _, id in ipairs(api.nvim_list_bufs()) do
+    local m = api.nvim_buf_get_name(id):match(pattern)
+    if m then
+      return id
+    end
+  end
+  return nil
+end
+
+function M.find_buf_with_var(var, value)
+  for _, id in ipairs(api.nvim_list_bufs()) do
+    local ok, v = pcall(api.nvim_buf_get_var, id, var)
+    if ok and v == value then
+      return id
+    end
+  end
+  return nil
+end
+
+function M.find_buf_with_option(option, value)
+  for _, id in ipairs(api.nvim_list_bufs()) do
+    local ok, v = pcall(api.nvim_buf_get_option, id, option)
+    if ok and v == value then
+      return id
+    end
+  end
+  return nil
+end
+
+function M.wipe_all_bufs()
+  for _, id in ipairs(api.nvim_list_bufs()) do
+    pcall(api.nvim_buf_delete, id, { force = false, unload = false })
+  end
+end
+
 return M

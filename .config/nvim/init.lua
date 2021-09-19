@@ -176,20 +176,32 @@ require "config.treesitter"
 require "config.devicons"
 require("config.lsp").init()
 
-do
-  local plugin_file = "lua/plugins.lua"
-  nvim.create_augroups {
-    init_lua = {
-      { "BufEnter", "*", "lua require 'config.compe'.init()" },
-      { "ColorScheme", "*", "lua require'config.lsp'.set_hl()" },
-      { "ColorScheme", "*", "lua statusline.set_hl()" },
-      { "BufWritePost", plugin_file, "lua nvim.reload()" },
-      { "BufWritePost", plugin_file, "PackerClean" },
-      { "BufWritePost", plugin_file, "PackerInstall" },
-      { "BufWritePost", plugin_file, "PackerCompile" },
-    },
+nvim.au.group("init_lua", function(grp)
+  grp.BufEnter = {
+    "*",
+    function()
+      require("config.compe").init()
+    end,
   }
-end
+  grp.ColorScheme = {
+    "*",
+    function()
+      require("config.lsp").set_hl()
+      statusline.set_hl()
+    end,
+  }
+  grp.BufWritePost = {
+    "lua/plugins.lua",
+    function()
+      local pack = require "plugins"
+
+      nvim.reload()
+      pack.clean()
+      pack.install()
+      pack.compile()
+    end,
+  }
+end)
 
 local packer_cmds = {
   PackerInstall = { "install()" },
@@ -201,7 +213,7 @@ local packer_cmds = {
   PackerLoad = { "loader(<q-args>)", "-complete=packadd -nargs=+" },
 }
 
-local template = [[command! %s %s packadd packer.nvim | lua require("plugins").%s]]
+local template = [[command! %s %s lua require("plugins").%s]]
 
 for k, v in pairs(packer_cmds) do
   vim.cmd(template:format(v[2] or "", k, v[1]))

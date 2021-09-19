@@ -7,6 +7,7 @@ stds.nvim = {
         "nvim",
         "p",
         "loadstring",
+        "statusline",
         string = {fields = {basename = {}}},
         table = {fields = {print = {}}},
     },

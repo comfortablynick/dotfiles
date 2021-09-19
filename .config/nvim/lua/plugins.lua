@@ -20,6 +20,7 @@ local lazy_load_event = "User PackLoad"
 
 local function init()
   if packer == nil then
+    vim.cmd "packadd packer.nvim"
     packer = require "packer"
     packer.init {
       package_root = package_root,

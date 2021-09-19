@@ -119,7 +119,7 @@ end
 function M.get_hl(name)
   local ok, hl = pcall(api.nvim_get_hl_by_name, name, true)
   if not ok then
-    return
+    return nil
   end
   for _, key in pairs { "foreground", "background", "special" } do
     if hl[key] then
@@ -128,6 +128,54 @@ function M.get_hl(name)
   end
   return hl
 end
+
+-- au :: autocmd interface
+-- from: https://reddit.com/r/neovim/comments/ppypwt/simple_autocmd_wrapper_in_lua/
+local function autocmd(this, event, spec)
+    local is_table = type(spec) == 'table'
+    local pattern = is_table and spec[1] or '*'
+    local action = is_table and spec[2] or spec
+    if type(action) == 'function' then
+        action = this.set(action)
+    end
+    local e = type(event) == 'table' and table.concat(event, ',') or event
+    vim.cmd('autocmd ' .. e .. ' ' .. pattern .. ' ' .. action)
+end
+
+local S = {
+    __au = {},
+}
+
+local X = setmetatable({}, {
+    __index = S,
+    __newindex = autocmd,
+    __call = autocmd,
+})
+
+function S.exec(id)
+    S.__au[id]()
+end
+
+function S.set(fn)
+    local id = string.format('%p', fn)
+    S.__au[id] = fn
+    return string.format('lua nvim.au.exec("%s")', id)
+end
+
+function S.group(grp, cmds)
+    vim.cmd('augroup ' .. grp)
+    vim.cmd('autocmd!')
+    if type(cmds) == 'function' then
+        cmds(X)
+    else
+        for _, au in ipairs(cmds) do
+            autocmd(S, au[1], { au[2], au[3] })
+        end
+    end
+    vim.cmd('augroup END')
+end
+
+M.au = X
 
 -- Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work
 setmetatable(M, {

@@ -1,6 +1,7 @@
 local util = require "util"
 local package_root = util.path.join(vim.fn.stdpath "data", "site", "pack")
 local install_path = util.path.join(package_root, "packer", "opt", "packer.nvim")
+local M = {}
 
 if not util.path.is_dir(install_path) then
   vim.fn.system { "git", "clone", "--depth", 1, "https://github.com/wbthomason/packer.nvim", install_path }
@@ -193,7 +194,11 @@ local function init()
   use {
     "junegunn/fzf",
     event = lazy_load_event,
-    run = "./install --bin && ln -sf $(pwd)/bin/* ~/.local/bin && ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
+    run = {
+      "./install --bin",
+      "ln -sf $(pwd)/bin/* ~/.local/bin",
+      "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
+    },
   }
   use { "junegunn/fzf.vim", event = lazy_load_event, setup = runtime("autoload", "plugins", "fzf") }
   use {
@@ -454,9 +459,35 @@ local function init()
       vim.g.VtrAppendNewline = 0
     end,
   }
+  nvim.au.group("lua_plugins", function(grp)
+    grp.FileType = {
+      "packer",
+      function()
+        vim.map.n.nore.J = "lua require'plugins'.goto_plugin(false)"
+        vim.map.n.nore.K = "lua require'plugins'.goto_plugin(true)"
+      end,
+    }
+  end)
 end
 
-local plugins = setmetatable({}, {
+local get_status_symbols = function()
+  local display = require("packer").config.display
+  local sym_str = ""
+  for k, v in pairs(display) do
+    if k:match "_sym" then
+      sym_str = sym_str .. v
+    end
+  end
+  return sym_str
+end
+
+M.goto_plugin = function(backward)
+  local flag = backward and "b" or ""
+  local cmd = string.format([[^\s[%s]\s.*$]], get_status_symbols())
+  return vim.fn.search(cmd, flag)
+end
+
+local plugins = setmetatable(M, {
   __index = function(_, key)
     init()
     return packer[key]

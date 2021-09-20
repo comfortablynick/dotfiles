@@ -37,10 +37,9 @@ endfunction
 if executable('glow')
     command -buffer Preview lua
         \ require'window'.float_term(
-        \ 'glow '..vim.fn.expand('%', ':p'),
-        \ 0.5,
-        \ 'double',
-        \ vim.fn.expand('%', ':.')
+        \ 'glow '..vim.api.nvim_buf_get_name(0),
+        \ 0.6,
+        \ 'double'
         \ )
     nnoremap <buffer> gp <Cmd>Preview<CR>
 endif

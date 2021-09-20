@@ -55,7 +55,7 @@ function M.get_decoration_width(winnr) -- {{{1
   return decoration_width
 end
 
-function M.float_term(command, scale_pct, border, title) -- {{{1
+function M.float_term(command, scale_pct, border) -- {{{1
   -- From: https://gist.github.com/norcalli/2a0bc2ab13c12d7c64efc7cdacbb9a4d
   vim.validate {
     scale_pct = {
@@ -67,7 +67,6 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
       true,
     },
     border = { border, "s", true },
-    title = { title, "s", true },
   }
 
   -- local scale = string.format("%s%%", scale_pct * 100)
@@ -83,7 +82,7 @@ function M.float_term(command, scale_pct, border, title) -- {{{1
   return M.create_centered_floating {
     width = width,
     height = height,
-    border = border or false,
+    border = border,
     fn = function()
       vim.fn.termopen(command)
     end,

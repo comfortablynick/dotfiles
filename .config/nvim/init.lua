@@ -176,20 +176,13 @@ require "config.treesitter"
 require "config.devicons"
 require("config.lsp").init()
 
+-- General autocmds
 nvim.au.group("init_lua", function(grp)
-  grp.BufEnter = {
-    "*",
-    function()
-      require("config.compe").init()
-    end,
-  }
-  grp.ColorScheme = {
-    "*",
-    function()
-      require("config.lsp").set_hl()
-      statusline.set_hl()
-    end,
-  }
+  -- Not sure if I actually need this?
+  -- autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
+  grp.BufEnter = function()
+    require("config.compe").init()
+  end
   grp.BufWritePost = {
     "lua/plugins.lua",
     function()
@@ -201,6 +194,55 @@ nvim.au.group("init_lua", function(grp)
       pack.compile()
     end,
   }
+  grp.CmdwinEnter = function()
+    local map = vim.map.n.nore.buffer
+    local quit = "<C-c><C-c>"
+    map["<Leader>q"] = quit
+    map["<Esc>"] = quit
+    map.cq = quit
+
+    vim.wo.number = true
+    vim.wo.relativenumber = false
+    vim.wo.signcolumn = "no"
+  end
+  grp.ColorScheme = function()
+    require("config.lsp").set_hl()
+    statusline.set_hl()
+  end
+  grp.TermOpen = function()
+    -- vim.cmd "startinsert"
+    vim.wo.number = false
+    vim.wo.relativenumber = false
+    vim.wo.signcolumn = "no"
+    vim.bo.buflisted = false
+  end
+  grp.TextYankPost = function()
+    -- Looks best with color attribute gui=reverse
+    vim.highlight.on_yank { higroup = "TermCursor", timeout = 750 }
+  end
+  grp.QuitPre = "silent call buffer#autoclose()"
+  if vim.wo.cursorline then
+    -- Toggle cursorline if window in focus
+    grp["WinEnter,InsertLeave"] = function()
+      vim.wo.cursorline = true
+    end
+    grp["WinLeave,InsertEnter"] = function()
+      vim.wo.cursorline = false
+    end
+  end
+  if vim.wo.relativenumber then
+    -- Toggle relativenumber if window in focus
+    grp["FocusGained,WinEnter,BufEnter,InsertLeave"] = function()
+      if vim.wo.number and vim.bo.buftype == "" then
+        vim.wo.relativenumber = true
+      end
+    end
+    grp["FocusLost,WinLeave,BufLeave,InsertEnter"] = function()
+      if vim.wo.number and vim.bo.buftype == "" then
+        vim.wo.relativenumber = false
+      end
+    end
+  end
 end)
 
 local packer_cmds = {

@@ -93,6 +93,12 @@ o.list = true
 o.listchars = { tab = "▸ ", nbsp = "␣", trail = "·" }
 o.title = true
 
+o.path = {
+  ".", -- Directory of current file
+  "", -- Current directory
+  "**", -- Recursive search
+}
+
 o.wildmode = { "longest", "full" }
 o.wildoptions = { "pum" }
 o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }

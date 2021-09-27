@@ -335,7 +335,7 @@ local function init()
   }
 
   -- Snippets
-  use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips") }
+  use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event }
   use { "honza/vim-snippets", event = lazy_load_event }
   use "norcalli/snippets.nvim"
   use "L3MON4D3/LuaSnip"
@@ -362,6 +362,10 @@ local function init()
   }
   -- TODO: lazy load this using InsertCharPre?
   use "hrsh7th/nvim-compe"
+  use {
+    "hrsh7th/cmp-nvim-lsp",
+    requires = { { "hrsh7th/cmp-buffer" }, { "hrsh7th/nvim-cmp" }, { "quangnguyen30192/cmp-nvim-ultisnips" } },
+  }
 
   -- Lua/nvim
   use "rktjmp/lush.nvim"

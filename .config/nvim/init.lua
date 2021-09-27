@@ -157,7 +157,11 @@ local packs = {
   "nvim-lspconfig",
   "lsp-status.nvim",
   "lspsaga.nvim",
-  "nvim-compe",
+  -- "nvim-compe",
+  "nvim-cmp",
+  "cmp-nvim-lsp",
+  "cmp-buffer",
+  "cmp-nvim-ultisnips",
   "LuaSnip",
   "friendly-snippets",
   "nvim-web-devicons",
@@ -186,9 +190,9 @@ require("config.lsp").init()
 nvim.au.group("init_lua", function(grp)
   -- Not sure if I actually need this?
   -- autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
-  grp.BufEnter = function()
-    require("config.compe").init()
-  end
+  -- grp.BufEnter = function()
+  --   require("config.compe").init()
+  -- end
   grp.BufWritePost = {
     "lua/plugins.lua",
     function()

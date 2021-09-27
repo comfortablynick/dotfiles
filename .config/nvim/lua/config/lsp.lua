@@ -12,6 +12,7 @@ local lsps_attached = {}
 local configs = npcall(require, "lspconfig/configs")
 local lsp_util = npcall(require, "lspconfig/util")
 local status = require "config.lsp.status"
+local cmp = require "config.cmp"
 
 if configs ~= nil then
   configs.taplo = {
@@ -273,6 +274,9 @@ function M.init()
     end
     if lsp_status ~= nil then
       cfg.capabilities = vim.tbl_extend("keep", cfg.capabilities or {}, lsp_status.capabilities)
+    end
+    if cmp ~= nil then
+      cfg.capabilities = cmp
     end
     lsp[server].setup(cfg)
     M.configs[server] = cfg

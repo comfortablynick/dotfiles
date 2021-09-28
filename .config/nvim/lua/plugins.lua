@@ -322,7 +322,7 @@ local function init()
   }
 
   -- Git
-  use { "tpope/vim-fugitive", cmd = { "G", "Gw", "Git", "Gstatus", "Gblame", "Gpush", "Gpull" } }
+  use { "tpope/vim-fugitive", cmd = { "G", "Gw", "Git" } }
   use { "junegunn/gv.vim", cmd = "GV" }
   use { "iberianpig/tig-explorer.vim", cmd = { "Tig", "TigStatus" } }
   use {

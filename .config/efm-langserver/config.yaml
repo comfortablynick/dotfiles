@@ -145,7 +145,7 @@ tools:
     format-stdin: true
 
   lua-stylua: &lua-stylua
-    format-command: 'stylua -'
+    format-command: 'stylua -s -'
     format-stdin: true
 
   lua-luacheck: &lua-luacheck

@@ -280,7 +280,7 @@ end
 function M.floating_help(query) -- {{{1
   return M.create_centered_floating {
     width = 90,
-    border = true,
+    border = "double",
     fn = function()
       vim.bo.filetype = "help"
       vim.bo.buftype = "help"

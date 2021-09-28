@@ -1,4 +1,3 @@
-local api = vim.api
 local map = vim.map
 local n = map.n
 local x = map.x
@@ -6,10 +5,6 @@ local o = map.o
 local i = map.i
 local v = map.v
 local c = map.c
-
-local tc = function(str)
-  return api.nvim_replace_termcodes(str, true, true, true)
-end
 
 n.nore.U = "<C-r>"
 n.nore.qq = "<Cmd>x<CR>"
@@ -25,12 +20,7 @@ n.nore["@;"] = "@:"
 n.nore["q;"] = "q:"
 x.nore["q;"] = "q:"
 
-n.nore.expr["<CR>"] = {
-  function() -- Clears search hl and errmsg + CR
-    return tc "<Cmd>noh<CR><Bar><Cmd>echon<CR><CR>"
-  end,
-  "Clear + Return",
-}
+n.nore["<CR>"] = { "<Cmd>noh<CR><Bar><Cmd>echon<CR><CR>", "Clear + Return" }
 
 n.nore["<Leader><Leader>c"] = { ":<Up>", "Last command" }
 
@@ -45,8 +35,8 @@ n.nore["<Down>"] = { [[<Cmd>call search('\%'..virtcol('.')..'v\S', 'w')<CR>]], "
 i.nore.kj = "<Esc>`^"
 
 -- Indent/outdent
-v.nore["<Tab>"] = "<Cmd>normal! >gv<CR>"
-v.nore["<S-Tab>"] = "<Cmd>normal! <gv<CR>"
+v.nore["<Tab>"] = { "<Cmd>normal! >gv<CR>", "Indent" }
+v.nore["<S-Tab>"] = { "<Cmd>normal! <gv<CR>", "Outdent" }
 
 -- Window navigation
 -- `CTRL+{h,j,k,l}` to navigate in normal mode
@@ -76,8 +66,8 @@ n.nore["<Tab>"] = { "<Cmd>bnext<CR>", "Next buffer" }
 n.nore["<S-Tab>"] = { "<Cmd>bprevious<CR>", "Previous buffer" }
 n.nore["<Leader>w"] = { "<Cmd>update\\|bwipeout<CR>", "Update + wipeout buffer" }
 n.nore["<Leader>u"] = { "<Cmd>update\\|Bdelete<CR>", "Update + delete buffer" }
-n.nore["<Leader>q"] = {"<Cmd>Bdelete<CR>", "Delete buffer"}
-n.nore["<Leader>x"] = {"<Cmd>call window#close_term()<CR>", "Close open terminal"}
+n.nore["<Leader>q"] = { "<Cmd>Bdelete<CR>", "Delete buffer" }
+n.nore["<Leader>x"] = { "<Cmd>call window#close_term()<CR>", "Close open terminal" }
 n.nore["<Leader>xx"] = "<Cmd>BufOnly<CR>"
 
 -- Quickfix

@@ -65,30 +65,6 @@ function M.reload()
   M.source_current_buffer()
 end
 
-function M.smart_tab()
-  if vim.fn.pumvisible() ~= 0 then
-    api.nvim_eval [[feedkeys("\<c-n>", "n")]]
-    return
-  end
-  local col = vim.fn.col "." - 1
-  if col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
-    api.nvim_eval [[feedkeys("\<tab>", "n")]]
-    return
-  end
-  -- npcall(fallback_cb)
-  -- Trigger completion otherwise?
-  -- source.triggerCompletion(true, manager)
-  api.nvim_eval [[feedkeys("\<C-Space>")]]
-end
-
-function M.smart_s_tab()
-  if vim.fn.pumvisible() ~= 0 then
-    api.nvim_eval [[feedkeys("\<c-p>", "n")]]
-    return
-  end
-  api.nvim_eval [[feedkeys("\<s-tab>", "n")]]
-end
-
 -- warn :: echo warning message
 function M.warn(text)
   vim.validate { text = { text, "string" } }

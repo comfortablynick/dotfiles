@@ -1,71 +1,88 @@
-local test_packpath = "/tmp/nvim-pack/site"
-local install_path = test_packpath .. "/pack/packer/start/packer.nvim"
+local api = vim.api
+local opt = vim.opt
+local fn = vim.fn
 
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.cmd("!git clone https://github.com/wbthomason/packer.nvim " ..
-            install_path)
-end
+local tmp_root = "/tmp/nvim/site"
+local pack_root = tmp_root .. "/pack"
+local packer_install_path = pack_root .. "/packer/start/packer.nvim"
+local packer_compiled = tmp_root .. "/packer_compiled_test.lua"
 
-vim.o.runtimepath =
-  "$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,/tmp/nvim-test"
-vim.o.packpath = vim.o.runtimepath .. "," .. test_packpath
-vim.o.completeopt = "menuone,noinsert,noselect"
-vim.cmd[[set shortmess+=c]]
-vim.cmd[[set omnifunc=v:lua.vim.lsp.omnifunc]]
-
--- Keymaps
--- api.nvim_set_keymap()
-
-p = function(...) print(vim.inspect(...)) end -- luacheck: ignore 131
-
-require"packer".startup{
-  function(use)
-    use{"wbthomason/packer.nvim"}
-    use{
-      "norcalli/snippets.nvim",
-      config = function()
-        local snippets = require"snippets"
-        snippets.use_suggested_mappings()
-      end,
-    }
-    use{"neovim/nvim-lspconfig", requires = {{"nvim-lua/completion-nvim"}}}
-  end,
-  config = {
-    package_root = "/tmp/nvim-pack/site/pack",
-    compile_path = "/tmp/nvim-test/plugin/packer_compiled.vim",
-  },
+_G.paths = {
+  tmp_root = tmp_root,
+  pack_root = pack_root,
+  packer_install_path = packer_install_path,
+  packer_compiled = packer_compiled,
 }
 
-local lspconfig = require"lspconfig"
-local completion = require"completion"
-
-local chain_complete_list = {
-  default = {
-    {complete_items = {'lsp', 'snippet'}},
-    {complete_items = {'path'}, triggered_only = {'/'}},
-    -- {complete_items = {'buffers'}},
-  },
-  string = {
-    {complete_items = {'path'}, triggered_only = {'/'}},
-  },
-  comment = {},
-}
-
-local on_attach_cb = function()
-  completion.on_attach{
-    enable_auto_paren = 0,
-    enable_auto_hover = 1,
-    enable_auto_signature = 1,
-    auto_change_source = 1,
-    enable_snippet = "snippets.nvim",
-    chain_complete_list = chain_complete_list,
+if fn.empty(fn.glob(packer_install_path)) > 0 then
+  packer_bootstrap = fn.system {
+    "git",
+    "clone",
+    "--depth",
+    1,
+    "https://github.com/wbthomason/packer.nvim",
+    packer_install_path,
   }
-
 end
 
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities.textDocument.completion.completionItem.snippetSupport = true
+opt.shadafile = tmp_root .. "/tmp.shada"
+opt.runtimepath = "$VIMRUNTIME"
+opt.packpath = tmp_root
+opt.completeopt = { "menuone", "noinsert", "noselect" }
+opt.shortmess:append "c"
+opt.shell = "/bin/sh"
+opt.termguicolors = true
 
--- Test configs
-lspconfig.sumneko_lua.setup{on_attach = on_attach_cb}
-lspconfig.vimls.setup{on_attach = on_attach_cb}
+-- Debug print
+_G.p = function(...)
+  print(vim.inspect(...))
+end
+
+-- Non-essential settings so I don't annoy myself
+do
+  local opts = { noremap = true }
+  api.nvim_set_keymap("n", ";", ":", opts)
+  api.nvim_set_keymap("x", ";", ":", opts)
+  api.nvim_set_keymap("o", ";", ":", opts)
+
+  api.nvim_set_keymap("n", "g:", ";", opts)
+  api.nvim_set_keymap("n", "@;", "@:", opts)
+  api.nvim_set_keymap("n", "q;", "q:", opts)
+  api.nvim_set_keymap("x", "q;", "q:", opts)
+
+  api.nvim_set_keymap("i", "kj", "<Esc>`^", opts)
+end
+
+opt.tabstop = 4
+opt.shiftwidth = 0
+opt.expandtab = true
+opt.number = true
+
+-- Put any plugin config that should be loaded after plugins are installed in here
+_G.load_config = function()
+  -- Colors
+  vim.cmd [[colorscheme PaperColor]]
+  require("lualine").setup { theme = "papercolor" }
+
+  -- Lualine
+end
+
+local packer = require "packer"
+
+packer.startup {
+  function(use)
+    use "wbthomason/packer.nvim"
+    use "hoob3rt/lualine.nvim"
+    use { "NLKNguyen/papercolor-theme", opt = true }
+    use "tpope/vim-scriptease"
+
+    if packer_bootstrap then
+      vim.notify "Installing packer.nvim and plugins"
+      packer.sync()
+      vim.cmd [[autocmd User PackerComplete ++once echo "Ready!" | lua load_config()]]
+    else
+      _G.load_config()
+    end
+  end,
+  config = { package_root = pack_root, compile_path = packer_compiled },
+}

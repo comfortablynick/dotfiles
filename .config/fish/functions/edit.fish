@@ -1,4 +1,3 @@
-# Defined in /var/folders/09/rfyz42rn67z2lg9jnw0gs9240000gn/T//fish.kkdRgW/edit.fish @ line 2
 function edit
     argparse --ignore-unknown f/finder= h/help -- $argv
     or return 1

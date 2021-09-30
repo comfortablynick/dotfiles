@@ -1,11 +1,8 @@
 function cat --description 'alias cat for best cat option installed'
-    set -l cats bat ccat gcat cat
-    set -l found
-    for cat in $cats
-        if type -qf $cat
-            set found $cat
-            break
+    for cat in bat ccat gcat cat
+        if command -q $cat
+            eval command $cat $argv
+            return
         end
     end
-    eval command $found $argv
 end

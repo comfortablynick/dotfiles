@@ -1,4 +1,3 @@
-# Defined in /tmp/fish.0yCmMa/kill_processes.fish @ line 2
 function kill_processes --description 'Kill processes'
 	set -l __kp__pid ''
 

@@ -16,16 +16,11 @@
 #                        (UU)
 # Startup {{{1
 # Non-interactive {{{2
-if not status --is-interactive
+if not status is-interactive
     exit 0
 end
 
 # Everything below is for interactive shells
-# Welcome message {{{2
-set_color $fish_color_autosuggestion
-set -l start_time (get_date)
-and echo -n 'Sourcing config.fish...  '
-
 # Packages {{{1
 # Fisher setup {{{2
 if not functions -q fisher
@@ -159,11 +154,3 @@ else
 end
 
 # End config {{{1
-# Print config.fish load time {{{2
-set -l end_time (get_date)
-# set -l elapsed (math \($end_time - $start_time\))
-# echo "Completed in $elapsed sec."
-set_color brblue
-echo Done
-set_color normal
-echo ''

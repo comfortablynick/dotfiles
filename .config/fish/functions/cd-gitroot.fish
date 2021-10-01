@@ -1,4 +1,3 @@
-# Defined in /tmp/fish.FeTOcs/cd-gitroot.fish @ line 2
 function cd-gitroot --description 'cd to current git root directory'
     argparse h/help -- $argv
     or return 1

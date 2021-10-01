@@ -1,4 +1,4 @@
-function humanize_duration -d "Humanize a time interval for display"
+function humanize_duration --description 'Humanize a time interval for display'
     command awk '
         function hmTime(time,   stamp) {
             split("h:m:s:ms", units, ":")

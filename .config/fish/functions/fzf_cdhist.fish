@@ -1,6 +1,5 @@
-# Defined in /tmp/fish.JWnAum/fzf_cdhist.fish @ line 2
 function fzf_cdhist --description 'cd to one of the previously visited locations'
-	if set -q argv[1]
+    if set -q argv[1]
         cd $argv
         return
     end
@@ -25,7 +24,7 @@ function fzf_cdhist --description 'cd to one of the previously visited locations
 
     # Pipe unique dirs to fzf
     string join \n $uniq_dirs |
-    eval (__fzfcmd)" +m --reverse --tiebreak=index --toggle-sort=ctrl-r $FZF_CD_OPTS" |
+    eval "fzf-tmux +m --reverse --tiebreak=index --toggle-sort=ctrl-r $FZF_CD_OPTS" |
     read -l result
     if test -n "$result"
         cd $result

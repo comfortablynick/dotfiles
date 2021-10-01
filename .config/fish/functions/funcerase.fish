@@ -1,4 +1,3 @@
-# Defined in /tmp/fish.nTnr9j/funcerase.fish @ line 2
 function funcerase --description 'erase function from shell and delete file in user functions dir'
     set -l name (string replace .fish '' $argv[1])
 

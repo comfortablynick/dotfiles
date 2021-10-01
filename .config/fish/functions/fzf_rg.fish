@@ -1,4 +1,4 @@
-function fzf-rg --description 'Search files using rg + fzf and open in nvim'
+function fzf_rg --description 'Search files using rg + fzf and open in nvim'
     set -l initial_query (string escape "$argv")
     set -l rg_cmd "rg --vimgrep --color=always --smart-case"
     set -l change_key ctrl-f
@@ -20,7 +20,7 @@ function fzf-rg --description 'Search files using rg + fzf and open in nvim'
         return
     end
 
-    set -l cursor (string escape "call cursor($files[2],$files[3])")
+    set -l cursor (string escape "norm!$files[2]G$files[3]|")
     commandline -r ""
     commandline -it -- "nvim $files[1] +$cursor"
     commandline -f execute

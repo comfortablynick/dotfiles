@@ -64,6 +64,7 @@ cargo_packages_dev:
   - name: ttdl
   - name: watchexec-cli
   - name: stylua --features lua52
+  - name: nu --features extra
 
 neovim_cmake_build_type: RelWithDebInfo
 neovim_build: true

@@ -2,17 +2,20 @@ function edit
     argparse --ignore-unknown f/finder= h/help -- $argv
     or return 1
 
-    set -l help_txt 'Usage: edit [-h/--help] [-f/--finder=FINDER] -- [finder options]'
-    set -a help_txt '\n\nEdit file in $EDITOR using supplied fuzzy finder or a default finder'
-    set -a help_txt '\n\nOptional arguments:\n'
-    set -a help_txt '\n-h, --help\tPrint this help message and exit'
-    set -a help_txt '\n-f, --finder\tOverride default finder with this executable'
-    set -a help_txt '\n\nFinder options:\n'
-    set -a help_txt '\nIf supplying a finder via -f, any arguments after -- will be given to the finder.'
-    set -a help_txt '\n'
-
     if set -q _flag_help
-        echo -e $help_txt
+        echo 'Usage: edit [-h/--help] [-f/--finder=FINDER] -- [finder options]
+
+Edit file in $EDITOR using supplied fuzzy finder or a default finder
+
+Optional arguments:
+
+-h, --help      Print this help message and exit
+-f, --finder    Override default finder with this executable
+
+Finder options:
+
+If supplying a finder via -f, any arguments after -- will be given to the finder.
+'
         return 1
     end
 
@@ -31,10 +34,9 @@ function edit
             return 1
         end
     else
-        set -l fuzzy_finders fzy rff fzf sk
         # Use the first executable fuzzy finder
-        for finder in $fuzzy_finders
-            if type -qf $finder
+        for finder in fzy rff fzf sk
+            if command -q $finder
                 set use_finder $finder
                 break
             end
@@ -45,9 +47,12 @@ function edit
         echo "Missing fuzzy finder; install fzy, fzf, etc. before running this command"
         return 1
     end
+    set -l files
+
     eval "$FZY_DEFAULT_COMMAND" | $use_finder | while read -l result
-        set files $files $result
+        set -a files $result
     end
+
     if test -z "$files"
         commandline -f repaint
         return

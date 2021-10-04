@@ -10,7 +10,8 @@ If PATH is specified, change directory to PATH instead of it.
 PATH is treated relative path in git root directory.
 
 Options:
--h, --help    display this help and exit' 1>&2
+-h, --help    display this help and exit
+' 1>&2
         return 1
     end
 

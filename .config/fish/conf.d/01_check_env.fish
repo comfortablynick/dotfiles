@@ -26,6 +26,8 @@ if status is-interactive
         set -U env_file_sourced 0
         set -U env_toml_sha "$env_sha"
     else
-        echo "01_check_env.fish error: no python interpreter found. Aborting!"
+        set_color $fish_color_error
+        echo "01_check_env.fish error: no python interpreter found. Aborting!" 1>&2
+        set_color normal
     end
 end

@@ -16,7 +16,7 @@ if status is-interactive
                 set_color yellow
                 echo "Note: 'no_tmux_next_login' flag was set for this login."
                 echo "TMUX will be used on next login unless flag is reset."
-                echo ""
+                echo
                 set_color normal
             end
         end

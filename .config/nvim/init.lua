@@ -105,10 +105,10 @@ o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 
 -- Grep
 if fn.executable "ugrep" then
-  o.grepprg = "ugrep -RInkju. --tabs=1"
+  o.grepprg = "ugrep -RInkju. --ignore-files --tabs=1"
   o.grepformat = { "%f:%l:%c:%m", "%f+%l+%c+%m", [[%-G%f\|%l\|%c\|%m]] }
 elseif fn.executable "rg" then
-  o.grepprg = "rg --vimgrep --hidden --no-ignore-vcs"
+  o.grepprg = "rg --vimgrep --hidden"
   o.grepformat = { "%f:%l:%c:%m", "%f:%l:%m" }
 end
 

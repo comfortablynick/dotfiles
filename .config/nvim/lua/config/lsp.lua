@@ -154,6 +154,7 @@ local nmap = function(key, result)
 end
 
 local on_attach_cb = function(client, bufnr)
+  bufnr = bufnr or 0
   if lsp_status ~= nil then
     lsp_status.on_attach(client)
   end

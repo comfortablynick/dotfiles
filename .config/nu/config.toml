@@ -1,1 +1,46 @@
-edit_mode = "vi"
+complete_from_path    = true
+ctrlc_exit            = false
+disable_table_indexes = false
+filesize_format       = "B"
+filesize_metric       = true
+nonzero_exit_errors   = true
+pivot_mode            = "auto"
+prompt                = "starship prompt"
+rm_always_trash       = true
+skip_welcome_message  = false
+startup               = [
+  "alias q = exit",
+  "alias d = lsd -lA",
+  "alias x = exa -laFG --group-directories-first --icons",
+  "def nuver [] {version | pivot key value}",
+]
+table_mode            = "other"
+
+[line_editor]
+auto_add_history        = true
+bell_style              = "audible"
+color_mode              = "enabled"
+completion_prompt_limit = 100
+completion_type         = "circular"
+edit_mode               = "vi"
+history_duplicates      = "ignoreconsecutive"
+history_ignore_space    = true
+keyseq_timeout_ms       = 500
+max_history_size        = 100000
+tab_stop                = 4
+
+[textview]
+colored_output           = true
+grid                     = false
+header                   = true
+line_numbers             = true
+pager                    = "less"
+paging_mode              = "QuitIfOneScreen"
+snip                     = true
+tab_width                = 4
+term_width               = "default"
+theme                    = "TwoDark"
+true_color               = true
+use_italics              = true
+wrapping_mode            = "NoWrapping"
+vcs_modification_markers = true

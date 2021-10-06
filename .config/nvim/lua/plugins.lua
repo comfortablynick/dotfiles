@@ -82,8 +82,8 @@ local function init()
       vim.g.asynctasks_term_pos = "right"
       vim.g.asynctasks_term_reuse = 1
 
-      vim.map.n.nore["<Leader>r"] = { "<Cmd>AsyncTask file-run", "Run file" }
-      vim.map.n.nore["<Leader>b"] = { "<Cmd>AsyncTask file-build", "Build file" }
+      vim.map.n.nore["<Leader>r"] = { "<Cmd>AsyncTask file-run<CR>", "Run file" }
+      vim.map.n.nore["<Leader>b"] = { "<Cmd>AsyncTask file-build<CR>", "Build file" }
       vim.call("map#cabbr", "ta", "AsyncTask")
     end,
   }

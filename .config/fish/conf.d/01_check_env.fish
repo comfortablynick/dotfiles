@@ -22,7 +22,7 @@ if status is-interactive
     set -l parse_env $HOME/bin/parse_env
     set -l env_file $HOME/.config/fish/env.fish
     if test -n "$py_path"
-        echo "$py_path $parse_env $toml_file $env_file -s fish" | source
+        $py_path $parse_env $toml_file $env_file -s fish
         set -U env_file_sourced 0
         set -U env_toml_sha "$env_sha"
     else

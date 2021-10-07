@@ -2,7 +2,7 @@
 # defaults file for vim
 make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
 
-vim_force_build: False
+vim_force_build: false
 vim_source_dir: "{{ ansible_facts.user_dir }}/src/vim"
 install_path: "{{ ansible_facts['user_dir'] }}/.local"
 

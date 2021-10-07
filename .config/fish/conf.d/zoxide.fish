@@ -1,4 +1,4 @@
 # zoxide hook
-if type -qf zoxide; and status is-interactive
+if command -q zoxide; and status is-interactive
     zoxide init fish | source
 end

@@ -6,6 +6,9 @@ local i = map.i
 local v = map.v
 local c = map.c
 
+-- Keep old commenting map out of muscle memory
+n["<Leader>c<Space>"] = { "gcc", "Comment line (gcc)" }
+
 n.nore.U = "<C-r>"
 n.nore.qq = "<Cmd>x<CR>"
 n.nore.qqq = "<Cmd>q!<CR>"
@@ -82,9 +85,9 @@ c.nore["%%"] = "<C-R>=fnameescape(expand('%:h')).'/'<CR>"
 
 -- Format/indent
 -- Format buffer and restore cursor position
-n.nore["<Leader>ff"] = { "<Cmd>call buffer#restore_cursor_after('gggqG')<CR>", "Format buffer with &formatprg" }
+n.nore["<Leader>ff"] = { "<Cmd>call buffer#restore_cursor_after('gggqG')<CR>", "Format buffer with 'formatprg'" }
 -- Indent buffer and restore cursor position
-n.nore["<Leader>fi"] = { "<Cmd>call buffer#restore_cursor_after('gg=G')<CR>", "Format buffer with &indentexpr" }
+n.nore["<Leader>fi"] = { "<Cmd>call buffer#restore_cursor_after('gg=G')<CR>", "Format buffer with 'indentexpr'" }
 
 -- Diff mode
 -- TODO: try these when actually using diff mode

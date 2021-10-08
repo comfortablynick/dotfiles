@@ -103,13 +103,13 @@ local function init()
     setup = function()
       vim.g.miniyank_maxitems = 50
       -- Replace built-in put with autoput
-      vim.api.nvim_set_keymap("n", "p", "<Plug>(miniyank-autoput)", {})
-      vim.api.nvim_set_keymap("n", "P", "<Plug>(miniyank-autoPut)", {})
+      vim.map.n.p = "<Plug>(miniyank-autoput)"
+      vim.map.n.P = "<Plug>(miniyank-autoPut)"
       -- Put most recent item in shared history
-      vim.api.nvim_set_keymap("n", "<Leader>p", "<Plug>(miniyank-startput)", {})
-      vim.api.nvim_set_keymap("n", "<Leader>P", "<Plug>(miniyank-startPut)", {})
-      vim.api.nvim_set_keymap("n", "<Leader>y", "<Plug>(miniyank-cycle)", {})
-      vim.api.nvim_set_keymap("n", "<Leader>Y", "<Plug>(miniyank-cycleback)", {})
+      vim.map.n["<Leader>p"] = "<Plug>(miniyank-startput)"
+      vim.map.n["<Leader>P"] = "<Plug>(miniyank-startPut)"
+      vim.map.n["<Leader>y"] = "<Plug>(miniyank-cycle)"
+      vim.map.n["<Leader>Y"] = "<Plug>(miniyank-cycleback)"
     end,
   }
   use {
@@ -117,7 +117,7 @@ local function init()
     cmd = { "LiveEasyAlign", "EasyAlign" },
     keys = { "<Plug>(EasyAlign)" },
     setup = function()
-      vim.api.nvim_set_keymap("x", "ga", "<Plug>(EasyAlign)", {})
+      vim.map.x.ga = "<Plug>(EasyAlign)"
       vim.g.easy_align_ignore_groups = { "Comment", "String" }
       vim.g.easy_align_delimiters = {
         ['"'] = { pattern = '"', ignore_groups = { "!Comment" }, ignore_unmatched = 0 },
@@ -171,22 +171,19 @@ local function init()
       -- Make sandwich behave like vim-surround
       vim.cmd [[runtime macros/sandwich/keymap/surround.vim]]
       -- Select text surrounded by brackets or other object
-      vim.api.nvim_set_keymap("x", "is", "<Plug>(textobj-sandwich-query-i)", {})
-      vim.api.nvim_set_keymap("o", "is", "<Plug>(textobj-sandwich-query-i)", {})
-      vim.api.nvim_set_keymap("x", "as", "<Plug>(textobj-sandwich-query-a)", {})
-      vim.api.nvim_set_keymap("o", "as", "<Plug>(textobj-sandwich-query-a)", {})
+      vim.map.x.is = "<Plug>(textobj-sandwich-query-i)"
+      vim.map.o.is = "<Plug>(textobj-sandwich-query-i)"
+      vim.map.x.as = "<Plug>(textobj-sandwich-query-a)"
+      vim.map.o.as = "<Plug>(textobj-sandwich-query-a)"
     end,
   }
 
   -- Commenting
   use {
-    "tpope/vim-commentary",
+    "numToStr/Comment.nvim",
     event = lazy_load_event,
-    setup = function()
-      vim.map.x["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
-      vim.map.n["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
-      vim.map.o["<Leader>c"] = { "<Plug>Commentary", "Toggle comment" }
-      vim.map.n["<Leader>c<Space>"] = { "<Plug>CommentaryLine", "Toggle line comment" }
+    config = function()
+      require "config.comment"
     end,
   }
 

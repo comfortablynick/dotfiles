@@ -304,6 +304,7 @@ local function init()
   use "vhdirk/vim-cmake"
   use "cespare/vim-toml"
   use "tbastos/vim-lua"
+  use "lervag/vimtex"
   use { "Glench/Vim-Jinja2-Syntax", opt = false }
   use { "blankname/vim-fish", opt = false }
   use { "habamax/vim-asciidoctor", opt = false }

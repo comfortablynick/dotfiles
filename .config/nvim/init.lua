@@ -168,6 +168,7 @@ local packs = {
   "vim-dirvish",
   "vim-clap",
   "vim-obsession",
+  "vimtex",
 }
 
 for _, pack in ipairs(packs) do

@@ -8,6 +8,22 @@
     accept_hostkey: true
   register: source_repo
 
+- name: Neovim | Get installed version
+  command: nvim --version
+  register: neovim_installed_version
+  changed_when: false
+
+- name: Neovim | Set version strings
+  set_fact:
+    neovim_installed_sha: "{{ neovim_installed_version.stdout_lines[0][-9:] }}"
+    neovim_master_sha: "{{ source_repo.after[:9] }}"
+
+- name: Neovim | Debug version strings
+  debug:
+    msg: |-
+      Neovim installed sha:  {{ neovim_installed_sha }}
+      Neovim repo clone sha: {{ neovim_master_sha }}
+
 - name: Neovim | Build from source
   block:
     - name: Neovim | Install build prerequisites
@@ -46,4 +62,4 @@
         state: absent
       loop: "{{ found_files['files'] }}"
 
-  when: (source_repo.before != source_repo.after) or neovim_force
+  when: (neovim_installed_sha != neovim_master_sha) or neovim_force

@@ -32,7 +32,7 @@
       ./configure \
           --prefix={{ install_path }}
           --with-features=huge
-          --with-x=yes
+          --with-x=no
           --disable-gui
           --enable-multibyte
           --enable-cscope

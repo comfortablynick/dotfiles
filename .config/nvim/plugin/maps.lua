@@ -8,6 +8,7 @@ local c = map.c
 
 -- Keep old commenting map out of muscle memory
 n["<Leader>c<Space>"] = { "gcc", "Comment line (gcc)" }
+v["<Leader>c"] = { "gc", "Comment selection" }
 
 n.nore.U = "<C-r>"
 n.nore.qq = "<Cmd>x<CR>"

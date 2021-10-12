@@ -7,7 +7,7 @@ DIR="$HOME/src/lua-language-server"
 run() {
     OS="$(uname -s | sed s/Darwin/macOS/)"
     cd "$DIR" || exit 1
-    "bin/$OS/lua-language-server" -E -e LANG=en ./main.lua
+    "bin/$OS/lua-language-server"
 }
 # (cd 3rd/luamake && git fetch && git rebase master && git submodule update --init --recursive)
 update() {

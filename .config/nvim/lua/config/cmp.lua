@@ -29,32 +29,16 @@ cmp.setup {
   mapping = {
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping(function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        if vim.fn["UltiSnips#CanExpandSnippet"]() == 1 then
-          return feedkeys("<C-R>=UltiSnips#ExpandSnippet()<CR>", "n")
-        end
-        feedkeys("<C-n>", "n")
-      elseif has_words_before() then
-        feedkeys("<CR>", "n")
-      else
-        fallback()
-      end
-    end, {
-      "i",
-      "s",
-    }),
+    ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"] = cmp.mapping.close(),
     ["<CR>"] = cmp.mapping.confirm { select = true },
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if vim.fn.complete_info()["selected"] == -1 and vim.fn["UltiSnips#CanExpandSnippet"]() == 1 then
-        feedkeys "<C-R>=UltiSnips#ExpandSnippet()<CR>"
+      if cmp.visible() then
+        cmp.select_next_item()
       elseif vim.fn["UltiSnips#CanJumpForwards"]() == 1 then
         feedkeys "<Esc>:call UltiSnips#JumpForwards()<CR>"
-      elseif vim.fn.pumvisible() == 1 then
-        feedkeys("<C-n>", "n")
       elseif has_words_before() then
-        feedkeys("<Tab>", "n")
+        cmp.select_next_item()
       else
         fallback()
       end
@@ -63,10 +47,10 @@ cmp.setup {
       "s",
     }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif vim.fn["UltiSnips#CanJumpBackwards"]() == 1 then
         return feedkeys "<C-R>=UltiSnips#JumpBackwards()<CR>"
-      elseif vim.fn.pumvisible() == 1 then
-        feedkeys("<C-p>", "n")
       else
         fallback()
       end

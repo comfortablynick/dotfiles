@@ -21,7 +21,9 @@ function fzf_rg --description 'Search files using rg + fzf and open in nvim'
     end
 
     set -l cursor (string escape "norm!$files[2]G$files[3]|")
-    commandline -r ""
+    # Start commandline with space so that we can re-use command right away
+    # but it will not persist in history
+    commandline -r " "
     commandline -it -- "nvim $files[1] +$cursor"
     commandline -f execute
 end

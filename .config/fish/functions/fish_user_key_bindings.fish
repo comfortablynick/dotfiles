@@ -11,4 +11,8 @@ function fish_user_key_bindings
     bind -M insert kj 'if commandline -P; commandline -f cancel; else; set fish_bind_mode default; commandline -f backward-char repaint-mode; end'
     bind -M insert \ce 'edit -f sweep -- -p $EDITOR'
     bind -M insert \cb forget
+
+    # Fzf additional bindings
+    bind \ct _fzf_search_directory
+    bind -M insert \ct _fzf_search_directory
 end

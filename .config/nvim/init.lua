@@ -90,7 +90,11 @@ o.mouse = "a"
 o.conceallevel = 1
 o.virtualedit = "onemore"
 o.list = true
-o.listchars = { tab = "▸ ", nbsp = "␣", trail = "·" }
+o.listchars = {
+  -- tab = "▸ ", -- Tabs
+  nbsp = "␣", -- Non-breaking space
+  trail = "·", -- Trailing space
+}
 o.title = true
 
 o.path = {

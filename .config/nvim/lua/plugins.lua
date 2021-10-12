@@ -362,7 +362,11 @@ local function init()
   use "hrsh7th/nvim-compe"
   use {
     "hrsh7th/cmp-nvim-lsp",
-    requires = { { "hrsh7th/cmp-buffer" }, { "hrsh7th/nvim-cmp" }, { "quangnguyen30192/cmp-nvim-ultisnips" } },
+    requires = {
+      { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/nvim-cmp" },
+      { "quangnguyen30192/cmp-nvim-ultisnips" },
+    },
   }
 
   -- Lua/nvim

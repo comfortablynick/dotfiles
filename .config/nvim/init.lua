@@ -91,7 +91,7 @@ o.conceallevel = 1
 o.virtualedit = "onemore"
 o.list = true
 o.listchars = {
-  -- tab = "▸ ", -- Tabs
+  tab = "▸ ", -- Tabs
   nbsp = "␣", -- Non-breaking space
   trail = "·", -- Trailing space
 }

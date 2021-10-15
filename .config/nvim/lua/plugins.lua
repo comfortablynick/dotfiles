@@ -390,7 +390,7 @@ local function init()
   use "nvim-lua/plenary.nvim"
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
   use {
-    "akinsho/nvim-bufferline.lua",
+    "akinsho/bufferline.nvim",
     event = "BufEnter",
     config = function()
       require "config.bufferline"

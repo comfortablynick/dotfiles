@@ -73,6 +73,7 @@ Session.vim
 /.Trash/
 /.tldrc/
 /.terminfo/
+/.texlive/
 /.vcpkg/
 /vim-test/
 /.vim/

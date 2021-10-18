@@ -11,9 +11,10 @@ from typing import List
 
 
 def process_tasks(raw_tasks: str, output_type: str, position: str) -> List[str]:
-    matches = re.findall(r"^\s+([\w\d-]+)(?:\s*#\s)?(.*$)", raw_tasks, flags=re.M)
+    matches = re.findall(r"^\s+(\S+).*?(?:#([^!].*))?$", raw_tasks, flags=re.M)
     output = []
     for cmd, comment in matches:
+        comment = comment.strip()
         block = dedent(
             f"""\
         [{cmd}]

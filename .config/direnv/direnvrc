@@ -1,6 +1,5 @@
 # vim:ft=sh:
 # shellcheck shell=bash
-PATH=$HOME/.asdf/bin:$PATH
 # shellcheck source=/dev/null
 source "$(asdf direnv hook asdf)"
 

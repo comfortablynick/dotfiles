@@ -72,7 +72,7 @@ tools:
     format-stdin: true
 
   python-flake8: &python-flake8
-    lint-command: 'flake8 --stdin-display-name ${INPUT} -'
+    lint-command: 'flake8 --max-line-length 88 --stdin-display-name ${INPUT} -'
     lint-ignore-exit-code: true
     lint-stdin: true
     lint-formats:

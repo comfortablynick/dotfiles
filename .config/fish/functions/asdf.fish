@@ -11,7 +11,7 @@ function asdf --description 'Wrapper for asdf to enable export of variables'
     switch "$command"
         case shell
             # source commands that need to export variables
-            source ($asdf_bin export-shell-version fish $argv)
+            $asdf_bin export-shell-version fish $argv | source
         case '*'
             # forward other commands to asdf script
             $asdf_bin $command $argv

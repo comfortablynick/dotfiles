@@ -67,6 +67,7 @@ cargo_packages_dev:
   - name: stylua --features lua52
   - name: nu --features extra
   - name: starship
+  - name: genact
 
 neovim_cmake_build_type: RelWithDebInfo
 neovim_build: true

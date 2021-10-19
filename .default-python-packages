@@ -1,3 +1,4 @@
+setuptools-rust
 rtoml
 pipx
 ruamel.yaml

@@ -26,8 +26,8 @@ asdf_dir: "{{ asdf_home }}/.asdf"
 asdf_plugins_all:
   - name: python
     versions:
-      - "3.9.2"
-    global: "3.9.2"
+      - "3.10.0"
+    global: "3.10.0"
     environment:
       PYTHON_CONFIGURE_OPTS: "--enable-shared"
   - name: direnv
@@ -36,6 +36,7 @@ asdf_plugins_all:
     global: "2.28.0"
 
 asdf_python_packages_all:
+  - setuptools-rust  # to guarantee rtoml will build
   - rtoml
   - pipx
   - ruamel.yaml

@@ -13,6 +13,32 @@
           System: {{ ansible_facts.system }}
           Arch:   {{ ansible_facts.architecture }}
 
+    - name: Check for line in .tool-versions
+      command: grep -i 'python 3' {{ ansible_facts.user_dir }}/.tool-versions
+      register: asdf_python_version
+      changed_when: false
+
+    - name: Get python version
+      
+
+    - name: Set python dir
+      set_fact:
+        asdf_python_bin_dir: "{{ asdf_dir }}/installs/python/{{ asdf_python_version.stdout|replace('python ', '') }}/bin"
+      when: asdf_python_version.stdout is defined
+
+    - name: Set python paths
+      set_fact:
+        pipx_pip3_path: "{{ asdf_python_bin_dir }}/pip3"
+        pipx_path: "{{ asdf_python_bin_dir }}/pipx"
+      when: asdf_python_bin_dir is defined
+
+    - name: Debug paths
+      debug:
+        msg: |
+          asdf python bin dir: {{ asdf_python_bin_dir|default('') }}
+          pipx pip3 path:      {{ pipx_pip3_path }}
+          pipx path:           {{ pipx_path }}
+
 # - name: Get latest tmux release
 #   uri:
 #     url: https://api.github.com/repos/tmux/tmux/releases/latest
@@ -61,3 +87,5 @@
 #       path: "{{ tmux_dl_path.path }}"
 #       state: absent
 # when: tmux_latest_version is version(tmux_current_version, '>') or tmux_force|d(false)
+
+# vim:ft=yaml.ansible:

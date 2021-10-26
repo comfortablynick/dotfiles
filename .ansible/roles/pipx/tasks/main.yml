@@ -7,13 +7,11 @@
 
 - name: Set python dir
   set_fact:
-    key_value: ''
     asdf_python_bin_dir: "{{ asdf_dir }}/installs/python/{{ asdf_python_version.stdout|replace('python ', '') }}/bin"
   when: asdf_python_version.stdout is defined
 
 - name: Set python paths
   set_fact:
-    key_value: ''
     pipx_pip3_path: "{{ asdf_python_bin_dir }}/pip3"
     pipx_path: "{{ asdf_python_bin_dir }}/pipx"
   when: asdf_python_bin_dir is defined

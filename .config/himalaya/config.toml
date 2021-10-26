@@ -1,0 +1,38 @@
+name = "Nick Murphy"
+downloads-dir = "~/.himalaya/downloads"
+default-page-size = 50
+# watch-cmds = ["mbsync -a"]
+
+# [gmail]
+# default = true
+# email = "p.durant@gmail.com"
+#
+# imap-host = "imap.gmail.com"
+# imap-port = 993
+# imap-login = "p.durant@gmail.com"
+# imap-passwd-cmd = "pass show gmail"
+#
+# smtp-host = "smtp.gmail.com"
+# smtp-port = 465
+# smtp-login = "p.durant@gmail.com"
+# smtp-passwd-cmd = "pass show gmail"
+
+[office365]
+default = true
+email = "nmurphy@vetcosolutions.com"
+default-page-size = 25
+downloads-dir = "~/.himalaya/downloads/office365"
+signature = "\nvetcosig"
+
+imap-host = "outlook.office365.com"
+imap-port = 993
+imap-login = "nmurphy@vetcosolutions.com"
+imap-passwd-cmd = "lpass show --password 'Exchange 365'"
+
+smtp-host = "smtp.office365.com"
+smtp-port = 587
+smtp-starttls = true
+smtp-login = "nmurphy@vetcosolutions.com"
+smtp-passwd-cmd = "lpass show --password 'Exchange 365'"
+
+# vim:ft=toml:

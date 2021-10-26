@@ -52,6 +52,7 @@ Session.vim
 /.fzf/
 /.gem/
 /.gnupg/
+/.iterm2/
 /.ipython/
 /.irssi/
 /.local/

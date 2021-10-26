@@ -42,6 +42,9 @@ if test -f "$env_file"; and test $env_file_sourced -eq 0
     source $env_file; and set env_file_sourced 1
 end
 
+# iterm2 integration {{{2
+test -e $HOME/.iterm2_shell_integration.fish; and source $HOME/.iterm2_shell_integration.fish
+
 # Themes {{{1
 # Fish git prompt {{{2
 # Settings {{{3

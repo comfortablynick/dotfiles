@@ -144,7 +144,9 @@ local function init()
       vim.map.n.nore.f = { "<Cmd>HopChar1<CR>", "Hop to char" }
       vim.map.n.nore.s = { "<Cmd>HopChar2<CR>", "Hop to 2 chars" }
     end,
+    disable = true,
   }
+  use { "ggandor/lightspeed.nvim", event = lazy_load_event }
 
   -- [f|F]{char} motion
   use {
@@ -335,6 +337,8 @@ local function init()
   -- Snippets
   use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event }
   use { "honza/vim-snippets", event = lazy_load_event }
+
+  -- Don't need the below if using ultisnips
   use "norcalli/snippets.nvim"
   use "L3MON4D3/LuaSnip"
   use "rafamadriz/friendly-snippets"
@@ -358,13 +362,11 @@ local function init()
       require "config.trouble"
     end,
   }
-  -- TODO: lazy load this using InsertCharPre?
-  use "hrsh7th/nvim-compe"
   use {
-    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/nvim-cmp",
     requires = {
+      { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-buffer" },
-      { "hrsh7th/nvim-cmp" },
       { "quangnguyen30192/cmp-nvim-ultisnips" },
     },
   }

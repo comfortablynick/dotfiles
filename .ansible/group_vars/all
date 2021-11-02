@@ -71,3 +71,4 @@ cargo_packages_all:
   - name: bat
   - name: git-delta
     binary: delta
+  - name: ouch

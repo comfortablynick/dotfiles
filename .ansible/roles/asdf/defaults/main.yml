@@ -46,5 +46,6 @@ asdf_arch_packages:
   - xz
   - tk
   - libffi
+  - libffi7
   - python-pyopenssl
   - git

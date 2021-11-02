@@ -3,6 +3,8 @@ if not tsconfigs then
   return
 end
 
+vim.cmd [[silent! packadd playground]]
+
 tsconfigs.setup {
   ensure_installed = {
     "lua",
@@ -13,10 +15,11 @@ tsconfigs.setup {
     "toml",
     "python",
     "c",
+    "query",
   },
   highlight = {
     enable = true,
-    -- disable = { "c", "rust" },
+    disable = { "yaml" },
   },
   incremental_selection = {
     enable = true,
@@ -61,6 +64,25 @@ tsconfigs.setup {
     },
   },
   indent = { enable = false },
+  -- treesitter playground
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25,
+    persist_queries = false, -- Whether the query persists across vim sessions
+    keybindings = {
+      toggle_query_editor = "o",
+      toggle_hl_groups = "i",
+      toggle_injected_languages = "t",
+      toggle_anonymous_nodes = "a",
+      toggle_language_display = "I",
+      focus_language = "f",
+      unfocus_language = "F",
+      update = "R",
+      goto_node = "<cr>",
+      show_help = "?",
+    },
+  },
 }
 
 vim.o.foldmethod = "expr"

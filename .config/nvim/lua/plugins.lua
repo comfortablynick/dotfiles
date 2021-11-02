@@ -391,6 +391,7 @@ local function init()
   }
   use "nvim-lua/plenary.nvim"
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
+  use { "nvim-treesitter/playground" }
   use {
     "akinsho/bufferline.nvim",
     event = "BufEnter",

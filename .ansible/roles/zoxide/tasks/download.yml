@@ -1,7 +1,6 @@
 ---
 - name: Zoxide | Set arch string (Linux amd64)
   set_fact:
-    key_value: ''
     zoxide_arch: x86_64-unknown-linux-musl
   when:
     - ansible_facts.system == 'Linux'
@@ -9,7 +8,6 @@
 
 - name: Zoxide | Set arch string (Linux arm32)
   set_fact:
-    key_value: ''
     zoxide_arch: armv7-unknown-linux-gnueabihf
   when:
     - ansible_facts.system == 'Linux'
@@ -17,8 +15,8 @@
 
 - name: Zoxide | Set release url
   set_fact:
-    key_value: ''
-    zoxide_release_url: https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_arch }}.tar.gz
+    zoxide_release_url:
+      https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_latest_version }}-{{ zoxide_arch }}.tar.gz
 
 - name: Zoxide | Download and install release
   block:
@@ -36,8 +34,7 @@
 
     - name: Zoxide | Set src path
       set_fact:
-        key_value: ''
-        zoxide_src_path: "{{ zoxide_dl_path.path }}/zoxide-{{ zoxide_arch }}"
+        zoxide_src_path: "{{ zoxide_dl_path.path }}"
 
     - name: Zoxide | Copy binary
       copy:
@@ -49,6 +46,24 @@
       copy:
         src: "{{ zoxide_src_path }}/man/"
         dest: "{{ zoxide_prefix }}/share/man/man1"
+        mode: 0644
+
+    - name: Zoxide | Copy fish completions
+      copy:
+        src: "{{ zoxide_src_path }}/completions/zoxide.fish"
+        dest: "{{ zoxide_home }}/.config/fish/completions"
+        mode: 0644
+
+    - name: Zoxide | Copy bash completions
+      copy:
+        src: "{{ zoxide_src_path }}/completions/zoxide.bash"
+        dest: "{{ zoxide_home }}/.config/bash/completions"
+        mode: 0644
+
+    - name: Zoxide | Copy zsh completions
+      copy:
+        src: "{{ zoxide_src_path }}/completions/_zoxide"
+        dest: "{{ zoxide_home }}/.config/zsh/completions"
         mode: 0644
   always:
     - name: Zoxide | Cleanup temp path

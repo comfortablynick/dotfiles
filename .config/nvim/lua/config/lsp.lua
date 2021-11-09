@@ -2,32 +2,16 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
-local npcall = vim.F.npcall
 local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
 local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
+require("null-ls").config {}
 
-local configs = npcall(require, "lspconfig/configs")
-local lsp_util = npcall(require, "lspconfig/util")
+
 local status = require "config.lsp.status"
 local cmp = require "config.cmp"
-
-if configs ~= nil then
-  configs.taplo = {
-    default_config = {
-      cmd = { "taplo-lsp", "run" },
-      filetypes = { "toml" },
-      root_dir = function(fname)
-        return lsp_util.root_pattern(".git", "taplo.toml", ".taplo.toml")(fname)
-          or lsp_util.find_git_ancestor(fname)
-          or lsp_util.path.dirname(fname)
-      end,
-      settings = {},
-    },
-  }
-end
 
 M.configs = {}
 
@@ -131,10 +115,10 @@ function M.rename()
   })
 
   local map_opts = { noremap = true, silent = true }
-  vim.api.nvim_buf_set_keymap(0, "i", "<Esc>", "<cmd>stopinsert | q!<CR>", map_opts)
-  vim.api.nvim_buf_set_keymap(0, "n", "<Esc>", "<cmd>stopinsert | q!<CR>", map_opts)
-  vim.api.nvim_buf_set_keymap(0, "i", "<CR>", "<cmd>stopinsert | lua _rename('" .. currName .. "')<CR>", map_opts)
-  vim.api.nvim_buf_set_keymap(0, "n", "<CR>", "<cmd>stopinsert | lua _rename('" .. currName .. "')<CR>", map_opts)
+  api.nvim_buf_set_keymap(0, "i", "<Esc>", "<cmd>stopinsert | q!<CR>", map_opts)
+  api.nvim_buf_set_keymap(0, "n", "<Esc>", "<cmd>stopinsert | q!<CR>", map_opts)
+  api.nvim_buf_set_keymap(0, "i", "<CR>", "<cmd>stopinsert | lua _rename('" .. currName .. "')<CR>", map_opts)
+  api.nvim_buf_set_keymap(0, "n", "<CR>", "<cmd>stopinsert | lua _rename('" .. currName .. "')<CR>", map_opts)
 
   local function handler(err, result, ctx, config)
     if err then
@@ -155,7 +139,7 @@ function M.rename()
 
   function _G._rename(curr)
     local newName = vim.trim(vim.fn.getline ".")
-    vim.api.nvim_win_close(win, true)
+    api.nvim_win_close(win, true)
     if #newName > 0 and newName ~= curr then
       local params = vim.lsp.util.make_position_params()
       params.newName = newName
@@ -272,9 +256,9 @@ vim.notify = function(msg, log_level, _)
     return
   end
   if log_level == vim.log.levels.ERROR then
-    vim.api.nvim_err_writeln(msg)
+    api.nvim_err_writeln(msg)
   else
-    vim.api.nvim_echo({ { msg } }, true, {})
+    api.nvim_echo({ { msg } }, true, {})
   end
 end
 
@@ -295,23 +279,24 @@ function M.init()
     pyright = true,
     rust_analyzer = true,
     sumneko_lua = true,
-    taplo = false,
-    tsserver = false,
+    taplo = true,
+    tsserver = true,
     vimls = true,
     yamlls = true,
+    ["null-ls"] = true,
   }
 
-  -- configs.taplo.setup{on_attach = on_attach_cb}
   for server, active in pairs(local_configs) do
     if not active then
       goto continue
     end
-    -- Load config from disk
-    local cfg
+    local cfg = { on_attach = on_attach_cb }
     do
-      local def_cfg = { on_attach = on_attach_cb }
-      local cfg_fn = npcall(require, "config.lsp.server." .. server)
-      cfg = cfg_fn ~= nil and cfg_fn(on_attach_cb) or def_cfg
+      local ok, cfg_fn = pcall(require, "config.lsp.server." .. server)
+      if ok and type(cfg_fn) == "function" then
+        -- Load config from disk
+        cfg = cfg_fn(on_attach_cb)
+      end
     end
     -- Check if defined cmd is executable
     if cfg.cmd ~= nil then
@@ -329,9 +314,6 @@ function M.init()
     M.configs[server] = cfg
     ::continue::
   end
-end
-if configs ~= nil then
-  configs.taplo.setup { on_attach = on_attach_cb }
 end
 
 M.status = status.status

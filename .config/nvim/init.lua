@@ -171,6 +171,7 @@ local packs = {
   "vim-clap",
   "vim-obsession",
   "vimtex",
+  "null-ls.nvim",
 }
 
 for _, pack in ipairs(packs) do

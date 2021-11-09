@@ -45,3 +45,7 @@ impl fmt::Display for ${1:obj} {
 	}
 }
 endsnippet
+
+snippet map_anyhow "map_err to anyhow macro" i
+map_err(|e| anyhow!(e))
+endsnippet

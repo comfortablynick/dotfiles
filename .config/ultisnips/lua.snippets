@@ -37,3 +37,13 @@ local installed, $1 = pcall(require, "$1")
 if not installed then return end
 $0
 endsnippet
+
+snippet lspconfig "configuration function"
+return function(on_attach)
+  return {
+    cmd = { $1 },
+    on_attach = on_attach,
+    filetypes = { $0 },
+  }
+end
+endsnippet

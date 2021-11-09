@@ -13,6 +13,8 @@ tsconfigs.setup {
     "bash",
     "yaml",
     "toml",
+    "typescript",
+    "javascript",
     "python",
     "c",
     "query",

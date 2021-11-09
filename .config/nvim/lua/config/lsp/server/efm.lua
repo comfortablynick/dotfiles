@@ -3,7 +3,12 @@ local util = require "lspconfig/util"
 return function(on_attach)
   return {
     cmd = { "efm-langserver" },
-    on_attach = on_attach,
+    on_attach = function(client, bufnr)
+      -- This may help with making sure requests don't get sent to efm-langserver
+      client.resolved_capabilities.rename = false
+      client.resolved_capabilities.hover = false
+      on_attach(client, bufnr)
+    end,
     filetypes = {
       "fish",
       "lua",
@@ -14,7 +19,6 @@ return function(on_attach)
       "markdown",
       "yaml",
       "yaml.ansible",
-      "toml",
     },
     init_options = { documentFormatting = true },
     root_dir = function(fname)

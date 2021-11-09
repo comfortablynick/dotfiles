@@ -370,6 +370,11 @@ local function init()
       { "quangnguyen30192/cmp-nvim-ultisnips" },
     },
   }
+  use {
+    "jose-elias-alvarez/null-ls.nvim",
+    requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  }
+  use { "jose-elias-alvarez/nvim-lsp-ts-utils", ft = "typescript" }
 
   -- Lua/nvim
   use "rktjmp/lush.nvim"

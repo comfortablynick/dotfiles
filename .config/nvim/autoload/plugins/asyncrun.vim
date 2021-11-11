@@ -72,6 +72,5 @@ endfunction
 
 " Tmux Runner {{{1
 function s:tmux_runner(opts)
-    packadd vim-tmux-runner
-    exe 'VtrSendCommandToRunner!' a:opts.cmd
+    execute 'VtrSendCommandToRunner!' a:opts.cmd
 endfunction

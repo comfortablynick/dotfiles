@@ -9,7 +9,6 @@ local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
 require("null-ls").config {}
 
-
 local status = require "config.lsp.status"
 local cmp = require "config.cmp"
 
@@ -283,7 +282,7 @@ function M.init()
     tsserver = true,
     vimls = true,
     yamlls = true,
-    ["null-ls"] = true,
+   ["null-ls"] = true,
   }
 
   for server, active in pairs(local_configs) do
@@ -293,7 +292,7 @@ function M.init()
     local cfg = { on_attach = on_attach_cb }
     do
       local ok, cfg_fn = pcall(require, "config.lsp.server." .. server)
-      if ok and type(cfg_fn) == "function" then
+      if ok then
         -- Load config from disk
         cfg = cfg_fn(on_attach_cb)
       end

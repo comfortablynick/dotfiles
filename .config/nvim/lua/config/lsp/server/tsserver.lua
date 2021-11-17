@@ -1,6 +1,5 @@
 -- require("null-ls").config {}
-require("lspconfig")["null-ls"].setup {}
-vim.g.tsserver = true
+-- require("lspconfig")["null-ls"].setup {}
 
 return function(on_attach)
   return {
@@ -49,7 +48,7 @@ return function(on_attach)
 
         -- filter diagnostics
         filter_out_diagnostics_by_severity = {},
-        filter_out_diagnostics_by_code = {},
+        filter_out_diagnostics_by_code = { 6133 },
 
         -- inlay hints
         auto_inlay_hints = true,

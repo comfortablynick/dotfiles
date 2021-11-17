@@ -14,13 +14,14 @@ pkg_python_packages_dev: []
 asdf_plugins_dev:
   - name: nodejs
     versions:
-      - "14.16.0"
-    global: "14.16.0"
+      - "lts"
+    global: "lts"
 
 asdf_python_packages_dev:
   - click
 
 asdf_npm_packages_dev:
+  - ansible-language-server
   - bash-language-server
   - markdownlint-cli
   - pyright
@@ -29,8 +30,11 @@ asdf_npm_packages_dev:
   - vscode-json-languageserver
   - yaml-language-server
   - clasp
-  - luafmt
   - prettier
+  - eslint
+  - prettier_d
+  - eslint_d
+  - vscode-langservers-extracted
 
 rust_toolchains_dev:
   - nightly

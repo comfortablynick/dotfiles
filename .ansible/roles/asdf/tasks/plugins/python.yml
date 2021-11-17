@@ -1,36 +1,35 @@
 ---
 # tasks for python plugin
-- name: Copy python defaults template
+- name: asdf python | Copy python defaults template
   template:
     src: .default-python-packages.j2
     dest: "{{ asdf_home }}/.default-python-packages"
     mode: 0644
   when: asdf_python_packages is defined
 
-- name: Get pip path
+- name: asdf python | Get pip path
   command: "{{ asdf_bin }} which pip"
   register: asdf_which_pip
   changed_when: false
 
-- name: Get python path
+- name: asdf python | Get python path
   command: "{{ asdf_bin }} which python"
   register: asdf_which_python
   changed_when: false
 
-- name: Set python paths
+- name: asdf python | Set python paths
   set_fact:
-    key_value: ''
     asdf_python_path: "{{ asdf_which_python.stdout }}"
     asdf_pip_path: "{{ asdf_which_pip.stdout }}"
 
-- name: Install/update python packages
+- name: asdf python | Install/update python packages
   pip:
     name: "{{ asdf_python_packages }}"
     executable: "{{ asdf_pip_path }}"
     state: latest
 
 # TODO: make sure this is re-done if global python version changes
-- name: Install python3 venv for neovim
+- name: asdf python | Install python3 venv for neovim
   pip:
     name: pynvim
     virtualenv: "{{ asdf_home }}/.env/nvim3"

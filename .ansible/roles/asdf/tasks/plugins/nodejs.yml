@@ -1,24 +1,24 @@
 ---
 # asdf nodejs tasks
-- name: Copy npm defaults template
+- name: asdf nodejs | Copy npm defaults template
   template:
     src: .default-npm-packages.j2
     dest: "{{ asdf_home }}/.default-npm-packages"
     mode: 0644
   when: asdf_npm_packages is defined
 
-- name: Check if node.js keyring exists
+- name: asdf nodejs | Check if node.js keyring exists
   stat:
     path: "{{ asdf_nodejs_keyring }}"
   register: keyring
 
-- name: Create keyring for Node.js keys
+- name: asdf nodejs | Create keyring for Node.js keys
   file:
     path: "{{ asdf_nodejs_keyring }}"
     state: directory
     mode: 0700
 
-- name: Import Node.js keys to keyring
+- name: asdf nodejs | Import Node.js keys to keyring
   command:
     bash -lc '{{ asdf_dir }}/plugins/nodejs/bin/import-release-team-keyring'
   args:
@@ -26,3 +26,20 @@
   environment:
     GNUPGHOME: "{{ asdf_nodejs_keyring }}"
   changed_when: false
+
+- name: asdf nodejs | Get npm path
+  command: "{{ asdf_bin }} which npm"
+  register: asdf_which_npm
+  changed_when: false
+
+- name: asdf nodejs | Set node paths
+  set_fact:
+    asdf_npm_path: "{{ asdf_which_npm.stdout }}"
+
+- name: asdf nodejs | Install/update npm packages
+  npm:
+    name: "{{ item }}"
+    executable: "{{ asdf_npm_path }}"
+    state: latest
+    global: true
+  loop: "{{ asdf_npm_packages }}"

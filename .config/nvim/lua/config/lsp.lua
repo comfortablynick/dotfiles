@@ -7,7 +7,12 @@ local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
-require("null-ls").config {}
+-- require("null-ls").config {
+--   debug = true,
+--   sources = {
+--     -- require("null-ls").builtins.completion.spell,
+--   },
+-- }
 
 local status = require "config.lsp.status"
 local cmp = require "config.cmp"
@@ -246,7 +251,7 @@ local on_attach_cb = function(client, bufnr)
   end
 end
 
--- vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level "debug"
 
 -- suppress error messages from lang servers
 -- from: github.com/siduck76/NvChad/blob/main/lua/plugins/lspconfig.lua
@@ -273,6 +278,7 @@ function M.init()
     ccls = true,
     diagnosticls = false,
     efm = true,
+    eslint = true,
     gopls = true,
     jsonls = true,
     pyright = true,
@@ -282,7 +288,7 @@ function M.init()
     tsserver = true,
     vimls = true,
     yamlls = true,
-   ["null-ls"] = true,
+    -- ["null-ls"] = true,
   }
 
   for server, active in pairs(local_configs) do

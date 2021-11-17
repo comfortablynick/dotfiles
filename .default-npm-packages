@@ -1,6 +1,7 @@
 npm
 yarn
 neovim
+ansible-language-server
 bash-language-server
 markdownlint-cli
 pyright
@@ -9,5 +10,7 @@ vim-language-server
 vscode-json-languageserver
 yaml-language-server
 clasp
-luafmt
 prettier
+eslint
+prettier_d
+eslint_d

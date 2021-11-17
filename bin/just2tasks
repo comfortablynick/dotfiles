@@ -2,15 +2,13 @@
 """Add justfile actions to .tasks file for AsyncTasks vim plugin."""
 
 import argparse
-import datetime
 import re
 import subprocess
 import sys
 from textwrap import dedent
-from typing import List
 
 
-def process_tasks(raw_tasks: str, output_type: str, position: str) -> List[str]:
+def process_tasks(raw_tasks: str, output_type: str, position: str) -> list[str]:
     matches = re.findall(r"^\s+(\S+).*?(?:#([^!].*))?$", raw_tasks, flags=re.M)
     output = []
     for cmd, comment in matches:
@@ -36,6 +34,7 @@ def main():
     parser = argparse.ArgumentParser(description="Parse justfile into tasks.ini format")
     parser.add_argument(
         "--output",
+        "-o",
         type=str,
         choices=["terminal", "quickfix"],
         default="terminal",
@@ -43,6 +42,7 @@ def main():
     )
     parser.add_argument(
         "--position",
+        "-p",
         type=str,
         choices=[
             "tab",
@@ -67,7 +67,7 @@ def main():
     args = parser.parse_args()
     header = [
         "; vim:set fenc=utf-8 ft=dosini:",
-        f"; written with just2tasks: {datetime.datetime.now().strftime('%c')}",
+        "; written with just2tasks",
         "",
     ]
     tasks = subprocess.run(["just", "-l"], capture_output=True)

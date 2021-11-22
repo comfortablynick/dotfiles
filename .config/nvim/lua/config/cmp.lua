@@ -63,6 +63,7 @@ cmp.setup {
     { name = "nvim_lsp" },
     { name = "ultisnips", keyword_length = 2 },
     { name = "buffer" },
+    { name = "path" },
   },
 }
 

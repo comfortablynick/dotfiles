@@ -15,7 +15,6 @@ return function(on_attach)
       "vim",
       "sh",
       "python",
-      "javascript",
       "markdown",
       "yaml",
       "yaml.ansible",

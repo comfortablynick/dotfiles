@@ -367,14 +367,11 @@ local function init()
     requires = {
       { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/cmp-path" },
       { "quangnguyen30192/cmp-nvim-ultisnips" },
     },
   }
-  use {
-    "jose-elias-alvarez/null-ls.nvim",
-    requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-  }
-  use { "jose-elias-alvarez/nvim-lsp-ts-utils", ft = "typescript" }
+  use { "jose-elias-alvarez/nvim-lsp-ts-utils" }
 
   -- Lua/nvim
   use "rktjmp/lush.nvim"

@@ -159,11 +159,13 @@ local packs = {
   "vim-projectionist",
   "plenary.nvim",
   "nvim-lspconfig",
+  "nvim-lsp-ts-utils",
   "lsp-status.nvim",
   "lspsaga.nvim",
   "nvim-cmp",
   "cmp-nvim-lsp",
   "cmp-buffer",
+  "cmp-path",
   "cmp-nvim-ultisnips",
   "friendly-snippets",
   "nvim-web-devicons",
@@ -171,7 +173,6 @@ local packs = {
   "vim-clap",
   "vim-obsession",
   "vimtex",
-  "null-ls.nvim",
 }
 
 for _, pack in ipairs(packs) do

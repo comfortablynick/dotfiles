@@ -1,6 +1,3 @@
--- require("null-ls").config {}
--- require("lspconfig")["null-ls"].setup {}
-
 return function(on_attach)
   return {
     init_options = require("nvim-lsp-ts-utils").init_options,

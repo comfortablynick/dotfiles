@@ -7,12 +7,6 @@ local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
--- require("null-ls").config {
---   debug = true,
---   sources = {
---     -- require("null-ls").builtins.completion.spell,
---   },
--- }
 
 local status = require "config.lsp.status"
 local cmp = require "config.cmp"
@@ -288,7 +282,6 @@ function M.init()
     tsserver = true,
     vimls = true,
     yamlls = true,
-    -- ["null-ls"] = true,
   }
 
   for server, active in pairs(local_configs) do

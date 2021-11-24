@@ -1,1 +1,1 @@
-setlocal formatoptions-=cro
+setlocal formatoptions-=c

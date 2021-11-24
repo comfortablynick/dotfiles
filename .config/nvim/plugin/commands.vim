@@ -11,10 +11,13 @@ command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
 " BufOnly[!] :: keep only current buffer (! forces close) {{{2
 command -bang BufOnly call buffer#only({'bang': <bang>0})
 
-" Bclose[!] :: close buffers with common options
+" Bclose[!] :: close buffers with common options {{{2
 " TODO: does this take the place of BufOnly?
 command -nargs=1 -bang -complete=customlist,buffer#close_complete
     \ Bclose call buffer#close(<bang>0, <q-args>)
+
+" CopyMode :: get rid of window decorations for easy copying from hterm {{{2
+command CopyMode set signcolumn=no nonumber norelativenumber
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
 command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete

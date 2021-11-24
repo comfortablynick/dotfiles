@@ -20,18 +20,48 @@ local feedkeys = function(key, mode)
   api.nvim_feedkeys(api.nvim_replace_termcodes(key, true, true, true), mode or "m", true)
 end
 
+-- stylua: ignore
+local lsp_symbols = {
+  Text            = "   Text ",
+  Method          = "   Method",
+  Function        = "   Function",
+  Constructor     = "   Constructor",
+  Field           = " ﴲ  Field",
+  Variable        = "[] Variable",
+  Class           = "   Class",
+  Interface       = " ﰮ  Interface",
+  Module          = "   Module",
+  Property        = " 襁 Property",
+  Unit            = "   Unit",
+  Value           = "   Value",
+  Enum            = " 練 Enum",
+  Keyword         = "   Keyword",
+  Snippet         = "   Snippet",
+  Color           = "   Color",
+  File            = "   File",
+  Reference       = "   Reference",
+  Folder          = "   Folder",
+  EnumMember      = "   EnumMember",
+  Constant        = " ﲀ  Constant",
+  Struct          = " ﳤ  Struct",
+  Event           = "   Event",
+  Operator        = "   Operator",
+  TypeParameter   = "   TypeParameter",
+}
+
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      vim.fn["UltiSnips#Anon"](args.body)
-    end,
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "ultisnips", keyword_length = 2 },
+    { name = "buffer" },
+    { name = "path" },
   },
   mapping = {
     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"] = cmp.mapping.close(),
-    ["<CR>"] = cmp.mapping.confirm { select = true },
+    ["<CR>"] = cmp.mapping.confirm { select = false },
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -59,11 +89,23 @@ cmp.setup {
       "s",
     }),
   },
-  sources = {
-    { name = "nvim_lsp" },
-    { name = "ultisnips", keyword_length = 2 },
-    { name = "buffer" },
-    { name = "path" },
+  formatting = {
+    format = function(entry, item)
+      item.kind = lsp_symbols[item.kind]
+      item.menu = ({
+        buffer = "[Buffer]",
+        nvim_lsp = "[LSP]",
+        ultisnips = "[UltiSnips]",
+        path = "[Path]",
+      })[entry.source.name]
+
+      return item
+    end,
+  },
+  snippet = {
+    expand = function(args)
+      vim.fn["UltiSnips#Anon"](args.body)
+    end,
   },
 }
 

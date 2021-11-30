@@ -1,12 +1,12 @@
-local ts_utils_installed, ts_utils = pcall(require, "nvim-lsp-ts-utils")
+local ok, ts_utils = pcall(require, "nvim-lsp-ts-utils")
 
 return function(on_attach)
-  -- if not installed then
-  --   return { on_attach = on_attach }
-  -- else
+  if not ok then
+    return { on_attach = on_attach }
+  end
   return {
     init_options = ts_utils.init_options,
-    on_attach = ts_utils_installed and function(client, bufnr)
+    on_attach = function(client, bufnr)
       -- Disable tsserver formatting to avoid prompts
       client.resolved_capabilities.document_formatting = false
       client.resolved_capabilities.document_range_formatting = false
@@ -59,6 +59,6 @@ return function(on_attach)
       ts_utils.setup_client(client)
 
       on_attach(client, bufnr)
-    end or { on_attach = on_attach },
+    end,
   }
 end

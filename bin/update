@@ -44,6 +44,8 @@ debian() {
         printf "Getting updates from %sapt%s...\n" "${colors[green]}" "${colors[reset]}"
         sudo apt update -y
         sudo apt full-upgrade -y
+        sudo apt autoclean
+        sudo apt autoremove
         printf "%sDone%s\n" "${colors[green]}" "${colors[reset]}"
         return
     fi
@@ -85,9 +87,8 @@ pipx-update() {
     fi
 }
 
-# update for all distros
-rust
-pipx-update
+# rust
+# pipx-update
 
 if [[ -r /etc/os-release ]]; then
     distro=$(awk -F'=' '"NAME" == $1 { gsub("\"", "", $2); print tolower($2); }' /etc/os-release)
@@ -95,7 +96,7 @@ if [[ -r /etc/os-release ]]; then
 fi
 
 case "$distro" in
-debian | ubuntu) debian ;;
-arch) arch ;;
-*) die 'unknown distro :(' ;;
+    debian | ubuntu) debian ;;
+    arch) arch ;;
+    *) die 'unknown distro :(' ;;
 esac

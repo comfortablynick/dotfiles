@@ -21,19 +21,19 @@ asdf_python_packages_dev:
   - click
 
 asdf_npm_packages_dev:
-  - ansible-language-server
+  # - ansible-language-server
   - bash-language-server
   - markdownlint-cli
   - pyright
   - typescript-language-server
   - vim-language-server
   - vscode-json-languageserver
-  - yaml-language-server
+  # - yaml-language-server
   - clasp
   - prettier
   - eslint
-  - prettier_d
-  - eslint_d
+  # - prettier_d
+  # - eslint_d
   - vscode-langservers-extracted
 
 rust_toolchains_dev:

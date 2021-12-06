@@ -308,7 +308,7 @@ function M.init()
     if cmp ~= nil then
       cfg.capabilities = cmp
     end
-    lsp[server].setup(cfg)
+    pcall(lsp[server].setup, cfg)
     M.configs[server] = cfg
     ::continue::
   end

@@ -179,6 +179,15 @@ local function init()
       vim.map.o.as = "<Plug>(textobj-sandwich-query-a)"
     end,
   }
+  use {
+    "AndrewRadev/switch.vim",
+    -- event = lazy_load_event,
+    keys = { "<Plug>(Switch)" },
+    setup = function()
+      vim.g.switch_mapping = ""
+      vim.map.n["g-"] = { "<Plug>(Switch)", "Switch item under cursor" }
+    end,
+  }
 
   -- Commenting
   use {

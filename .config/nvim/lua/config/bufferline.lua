@@ -4,6 +4,7 @@ if not installed then
   return
 end
 
+-- TODO: Make sure this matches latest settings schema
 bufferline.setup {
   options = {
     numbers = "none", -- "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string
@@ -29,7 +30,7 @@ bufferline.setup {
     max_name_length = 30,
     max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
     tab_size = 18,
-    diagnostics = "nvim_lsp", -- false | "nvim_lsp",
+    -- diagnostics = "nvim_lsp",
     -- Diagnostics indicator function
     -- Accepts args: { count, level, diagnostics_dict, context }
     -- Add the additional args if needed

@@ -4,7 +4,6 @@ local api = vim.api
 local util = vim.lsp.util
 local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
 local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
-local lsp_saga = nvim.packrequire("lspsaga.nvim", "lspsaga")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
 
@@ -204,23 +203,11 @@ local on_attach_cb = function(client, bufnr)
   -- nmap_capability("<F2>", "rename")
   nmap("<F2>", "lua require'config.lsp'.rename()<CR>")
 
-  nmap("gd", "lua vim.lsp.diagnostic.set_loclist{open = true}")
-  nmap("[d", "lua vim.lsp.diagnostic.goto_prev{popup_opts = {show_header = false}}")
-  nmap("]d", "lua vim.lsp.diagnostic.goto_next{popup_opts = {show_header = false}}")
-  nmap("[D", "lua vim.lsp.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
-  nmap("]D", "lua vim.lsp.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
-
-  if lsp_saga ~= nil then
-    nmap("gh", "Lspsaga hover_doc")
-    nmap("gD", "Lspsaga preview_definition")
-    nmap("[d", "Lspsaga diagnostic_jump_prev")
-    nmap("]d", "Lspsaga diagnostic_jump_next")
-    nmap("ga", "Lspsaga code_action")
-    nmap("gS", "Lspsaga signature_help")
-    -- nmap("<F2>", "Lspsaga rename")
-    nmap("<C-f>", "lua require'lspsaga.action'.smart_scroll_with_saga(1)")
-    nmap("<C-b>", "lua require'lspsaga.action'.smart_scroll_with_saga(-1)")
-  end
+  nmap("gd", "lua vim.diagnostic.setloclist{open = true}")
+  nmap("[d", "lua vim.diagnostic.goto_prev{popup_opts = {show_header = false}}")
+  nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}")
+  nmap("[D", "lua vim.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
+  nmap("]D", "lua vim.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]

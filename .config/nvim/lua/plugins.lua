@@ -358,7 +358,6 @@ local function init()
     requires = {
       { "nvim-lua/lsp-status.nvim" },
       { "nvim-lua/lsp_extensions.nvim" },
-      { "rinx/lspsaga.nvim" },
     },
   }
   use { "nvim-lua/completion-nvim", requires = { "steelsojka/completion-buffers" }, disable = true }

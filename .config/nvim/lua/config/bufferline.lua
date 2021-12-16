@@ -30,7 +30,7 @@ bufferline.setup {
     max_name_length = 30,
     max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
     tab_size = 18,
-    -- diagnostics = "nvim_lsp",
+    diagnostics = "nvim_lsp",
     -- Diagnostics indicator function
     -- Accepts args: { count, level, diagnostics_dict, context }
     -- Add the additional args if needed

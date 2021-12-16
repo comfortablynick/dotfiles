@@ -52,7 +52,7 @@ def main():
             "left",
             "right",
             "hide",
-            "tmux",
+            "tmux_split",
             "floaterm",
         ],
         default="right",

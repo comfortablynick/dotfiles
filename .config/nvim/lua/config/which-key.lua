@@ -30,9 +30,6 @@ wk.register({
 })
 
 wk.register({
-  a = "Lsp Code action",
-  D = "Lsp preview definition",
-  d = "Lsp diagnostics",
   s = "Show git hunk under cursor",
 }, {
   prefix = "g",

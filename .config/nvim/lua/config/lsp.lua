@@ -2,6 +2,7 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
+local nnoremap = vim.map.n.nore
 local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
 local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
@@ -175,8 +176,8 @@ local set_hl_autocmds = function()
       ]]
 end
 
-local nmap = function(key, result)
-  api.nvim_buf_set_keymap(0, "n", key, "<Cmd>" .. result .. "<CR>", { noremap = true })
+local nmap = function(key, result, description)
+  nnoremap.buf[key] = {"<Cmd>" .. result .. "<CR>", description}
 end
 
 local on_attach_cb = function(client, bufnr)
@@ -184,34 +185,30 @@ local on_attach_cb = function(client, bufnr)
   if lsp_status ~= nil then
     lsp_status.on_attach(client)
   end
-  local nmap_capability = function(lhs, method, capability_name)
+  local nmap_capability = function(lhs, method, capability_name, description)
     if client.resolved_capabilities[capability_name or method] then
-      nmap(lhs, "lua vim.lsp.buf." .. method .. "()")
+      nmap(lhs, "lua vim.lsp.buf." .. method .. "()", description)
     end
   end
 
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  nmap_capability("gtd", "definition", "goto_definition")
-  nmap_capability("gh", "hover")
-  nmap_capability("gi", "implementation")
-  nmap_capability("gS", "signature_help")
-  nmap_capability("ga", "code_action")
-  nmap_capability("gt", "type_definition")
-  -- nmap_capability("gr", "references") -- Use trouble.nvim
-  -- nmap_capability("<F2>", "rename")
-  nmap("<F2>", "lua require'config.lsp'.rename()<CR>")
+  nmap_capability("gtd", "definition", "goto_definition", "Lsp goto definition")
+  nmap_capability("gh", "hover", "Lsp hover")
+  nmap_capability("gi", "implementation", "Lsp implementation")
+  nmap_capability("gS", "signature_help", "Lsp signature help")
+  nmap_capability("ga", "code_action", "Lsp code actions")
+  nmap_capability("gt", "type_definition", "Lsp type definition")
 
-  nmap("gd", "lua vim.diagnostic.setloclist{open = true}")
-  nmap("[d", "lua vim.diagnostic.goto_prev{popup_opts = {show_header = false}}")
-  nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}")
-  nmap("[D", "lua vim.diagnostic.goto_prev{cursor_position = {-1, -1}, popup_opts = {show_header = false}}")
-  nmap("]D", "lua vim.diagnostic.goto_next{cursor_position = {0, 0}, popup_opts = {show_header = false}}")
+  nmap("<F2>", "lua require'config.lsp'.rename()", "Lsp rename")
+  nmap("gd", "lua vim.diagnostic.setloclist{open = true}", "Lsp diagnostics")
+  nmap("[d", "lua vim.diagnostic.goto_prev{popup_opts = {show_header = false}}", "Lsp goto prev diagnostic")
+  nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}", "Lsp goto next diagnostic")
 
   if client.resolved_capabilities["document_formatting"] then
     vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
-    api.nvim_buf_set_keymap(bufnr, "", "<F3>", "<Cmd>Format<CR>", { noremap = true })
+    nmap("<F3>", "Format", "Lsp format")
   end
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 

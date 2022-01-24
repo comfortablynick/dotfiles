@@ -23,6 +23,7 @@
     msg: |-
       Neovim installed sha:  {{ neovim_installed_sha }}
       Neovim repo clone sha: {{ neovim_master_sha }}
+    verbosity: 2
 
 - name: Neovim | Build from source
   block:
@@ -39,13 +40,15 @@
         chdir: "{{ neovim_source_dir }}"
       when: neovim_force
 
-    - name: Neovim | Build and install
+    - name: Neovim | Build
       command:
-        cmd: "{{ item }} CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}"
+        cmd: make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }}
         chdir: "{{ neovim_source_dir }}"
-      loop:
-        - make
-        - make install
+
+    - name: Neovim | Install
+      command:
+        cmd: make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
+        chdir: "{{ neovim_source_dir }}"
 
     # Delete unused theme files (why not?)
     - name: Neovim | Find factory theme files other than default

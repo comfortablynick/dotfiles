@@ -9,7 +9,7 @@ _zoxide() {
     for i in ${COMP_WORDS[@]}
     do
         case "${i}" in
-            zoxide)
+            "$1")
                 cmd="zoxide"
                 ;;
             add)
@@ -126,14 +126,6 @@ _zoxide() {
                 return 0
             fi
             case "${prev}" in
-                --interactive)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                -i)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
                 *)
                     COMPREPLY=()
                     ;;

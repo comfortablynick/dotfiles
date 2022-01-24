@@ -2,6 +2,7 @@ local o = vim.opt
 local g = vim.g
 local fn = vim.fn
 local uv = vim.loop
+local map = vim.keymap
 local shell = "/bin/sh"
 
 pcall(require, "impatient") -- TODO: remove this once PR is merged
@@ -209,11 +210,9 @@ nvim.au.group("init_lua", function(grp)
     end,
   }
   grp.CmdwinEnter = function()
-    local map = vim.map.n.nore.buffer
-    local quit = "<C-c><C-c>"
-    map["<Leader>q"] = quit
-    map["<Esc>"] = quit
-    map.cq = quit
+    for _, lhs in ipairs { "<Leader>q", "<Esc>", "cq" } do
+      map.set("n", lhs, "<C-c><C-c>", { buffer = true })
+    end
 
     vim.wo.number = true
     vim.wo.relativenumber = false

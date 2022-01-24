@@ -2,7 +2,6 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
-local nnoremap = vim.map.n.nore
 local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
 local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
@@ -177,7 +176,7 @@ local set_hl_autocmds = function()
 end
 
 local nmap = function(key, result, description)
-  nnoremap.buf[key] = {"<Cmd>" .. result .. "<CR>", description}
+  vim.map.n.buffer[key] = { "<Cmd>" .. result .. "<CR>", description }
 end
 
 local on_attach_cb = function(client, bufnr)
@@ -185,16 +184,18 @@ local on_attach_cb = function(client, bufnr)
   if lsp_status ~= nil then
     lsp_status.on_attach(client)
   end
-  local nmap_capability = function(lhs, method, capability_name, description)
+  local nmap_capability = function(lhs, method, description, capability_name)
     if client.resolved_capabilities[capability_name or method] then
       nmap(lhs, "lua vim.lsp.buf." .. method .. "()", description)
+      -- TODO: use this when which-key supports new vim.keymap.set callbacks
+      -- vim.keymap.set("n", lhs, vim.lsp.buf[method], { desc = description, buffer = bufnr })
     end
   end
 
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  nmap_capability("gtd", "definition", "goto_definition", "Lsp goto definition")
+  nmap_capability("gtd", "definition", "Lsp goto definition", "goto_definition")
   nmap_capability("gh", "hover", "Lsp hover")
   nmap_capability("gi", "implementation", "Lsp implementation")
   nmap_capability("gS", "signature_help", "Lsp signature help")

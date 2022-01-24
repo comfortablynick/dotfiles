@@ -82,8 +82,8 @@ local function init()
       vim.g.asynctasks_term_pos = "right"
       vim.g.asynctasks_term_reuse = 1
 
-      vim.map.n.nore["<Leader>r"] = { "<Cmd>AsyncTask file-run<CR>", "Run file" }
-      vim.map.n.nore["<Leader>b"] = { "<Cmd>AsyncTask file-build<CR>", "Build file" }
+      vim.map.n["<Leader>r"] = { "<Cmd>AsyncTask file-run<CR>", "Run file" }
+      vim.map.n["<Leader>b"] = { "<Cmd>AsyncTask file-build<CR>", "Build file" }
       vim.call("map#cabbr", "ta", "AsyncTask")
     end,
   }
@@ -139,10 +139,10 @@ local function init()
       hop.setup { winblend = 100 }
     end,
     setup = function()
-      vim.map.n.nore["<Leader>s"] = { "<Cmd>HopWord<CR>", "Hop to word" }
-      vim.map.n.nore["<Leader>l"] = { "<Cmd>HopLine<CR>", "Hop to line" }
-      vim.map.n.nore.f = { "<Cmd>HopChar1<CR>", "Hop to char" }
-      vim.map.n.nore.s = { "<Cmd>HopChar2<CR>", "Hop to 2 chars" }
+      vim.map.n["<Leader>s"] = { "<Cmd>HopWord<CR>", "Hop to word" }
+      vim.map.n["<Leader>l"] = { "<Cmd>HopLine<CR>", "Hop to line" }
+      vim.map.n.f = { "<Cmd>HopChar1<CR>", "Hop to char" }
+      vim.map.n.s = { "<Cmd>HopChar2<CR>", "Hop to 2 chars" }
     end,
     disable = true,
   }
@@ -216,8 +216,8 @@ local function init()
     cmd = "RnvimrToggle",
     setup = function()
       vim.g.rnvimr_enable_picker = 1
-      vim.map.n.nore["<C-e>"] = "<Cmd>RnvimrToggle<CR>"
-      vim.map.n.nore["<Leader>n"] = "<Cmd>RnvimrToggle<CR>"
+      vim.map.n["<C-e>"] = "<Cmd>RnvimrToggle<CR>"
+      vim.map.n["<Leader>n"] = "<Cmd>RnvimrToggle<CR>"
     end,
   }
   use {
@@ -237,7 +237,7 @@ local function init()
     "mbbill/undotree",
     cmd = "UndotreeToggle",
     setup = function()
-      vim.map.n.nore["<F5>"] = { "<Cmd>UndotreeToggle<CR>", "Toggle UndoTree" }
+      vim.map.n["<F5>"] = { "<Cmd>UndotreeToggle<CR>", "Toggle UndoTree" }
     end,
     config = function()
       vim.g.undotree_WindowLayout = 4
@@ -444,6 +444,7 @@ local function init()
     config = function()
       require "config.which-key"
     end,
+    -- disable = true,
   }
 
   -- Tmux
@@ -453,11 +454,11 @@ local function init()
     setup = function()
       local n = vim.map.n
       vim.g.tmux_navigator_no_mappings = 1
-      n.nore["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
-      n.nore["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
-      n.nore["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
-      n.nore["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
-      n.nore["<C-p>"] = { "<Cmd>TmuxNavigatePrevious<CR>", "Vim/Tmux navigate previous" }
+      n["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
+      n["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
+      n["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
+      n["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
+      n["<C-p>"] = { "<Cmd>TmuxNavigatePrevious<CR>", "Vim/Tmux navigate previous" }
     end,
   }
   use {
@@ -482,8 +483,8 @@ local function init()
     grp.FileType = {
       "packer",
       function()
-        vim.map.n.nore.J = "lua require'plugins'.goto_plugin(false)"
-        vim.map.n.nore.K = "lua require'plugins'.goto_plugin(true)"
+        vim.map.n.J = "lua require'plugins'.goto_plugin(false)"
+        vim.map.n.K = "lua require'plugins'.goto_plugin(true)"
       end,
     }
   end)

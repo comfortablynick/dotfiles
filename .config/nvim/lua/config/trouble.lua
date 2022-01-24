@@ -4,8 +4,8 @@ if not installed then
   return
 end
 
-vim.map.n.nore["<Leader>d"] = "<Cmd>TroubleToggle<CR>"
-vim.map.n.nore.gR = "<Cmd>Trouble lsp_references<CR>"
+vim.map.n["<Leader>d"] = "<Cmd>TroubleToggle<CR>"
+vim.map.n.gR = "<Cmd>Trouble lsp_references<CR>"
 
 trouble.setup {
   position = "bottom", -- position of the list can be: bottom, top, left, right

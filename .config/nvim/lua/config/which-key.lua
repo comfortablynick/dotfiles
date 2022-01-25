@@ -28,9 +28,3 @@ wk.register({
 }, {
   prefix = "<leader>",
 })
-
-wk.register({
-  s = "Show git hunk under cursor",
-}, {
-  prefix = "g",
-})

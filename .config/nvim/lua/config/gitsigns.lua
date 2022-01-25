@@ -16,33 +16,32 @@ gitsigns.setup {
   numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
   linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
   word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-  keymaps = {
-    noremap = true,
-    buffer = true,
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
 
-    ["n ]c"] = { expr = true, "&diff ? ']c' : '<Cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'" },
-    ["n [c"] = { expr = true, "&diff ? '[c' : '<Cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'" },
+    local bmap = vim.map["buffer" .. bufnr]
 
-    ["n ghs"] = '<Cmd>lua require"gitsigns".stage_hunk()<CR>',
-    ["v ghs"] = '<Cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-    ["n ghu"] = '<Cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
-    ["n ghr"] = '<Cmd>lua require"gitsigns".reset_hunk()<CR>',
-    ["v ghr"] = '<Cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-    ["n ghR"] = '<Cmd>lua require"gitsigns".reset_buffer()<CR>',
-    ["n gs"] = '<Cmd>lua require"gitsigns".preview_hunk()<CR>',
-    ["n ghb"] = '<Cmd>lua require"gitsigns".blame_line(true)<CR>',
+    -- Navigation
+    bmap.expr.n["]c"] = { "&diff ? ']c' : '<Cmd>Gitsigns next_hunk<CR>'", "Git next hunk" }
+    bmap.expr.n["[c"] = { "&diff ? '[c' : '<Cmd>Gitsigns prev_hunk<CR>'", "Git prev hunk" }
+
+    -- Actions
+    bmap.n.gs = { gs.preview_hunk, "Git show hunk" }
+    bmap.n.v.ghs = { gs.stage_hunk, "Git stage hunk" }
+    bmap.n.v.ghr = { gs.reset_hunk, "Git reset hunk" }
+    bmap.n.ghu = { gs.undo_stage_hunk, "Git undo staged hunk" }
+    bmap.n.ghS = { gs.stage_buffer, "Git stage buffer" }
+    bmap.n.ghR = { gs.stage_buffer, "Git reset buffer" }
+    bmap.n.ghb = {
+      function()
+        gs.blame_line { full = true }
+      end,
+      "Git blame line",
+    }
+    bmap.n.ghd = { gs.toggle_deleted, "Git toggle deleted" }
 
     -- Text objects
-    ["o ih"] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
-    ["x ih"] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
-  },
-  on_attach = function(bufnr)
-    local exclude_fts = { "clap_input", "qf", "floaterm", "" }
-
-    -- Don't load completion
-    if vim.tbl_contains(exclude_fts, vim.bo[bufnr].filetype) then
-      return false
-    end
+    bmap.o.x.ih = { ":<C-U>Gitsigns select_hunk<CR>", "Git select hunk" }
   end,
   watch_index = { interval = 1000 },
   sign_priority = 6,

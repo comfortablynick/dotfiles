@@ -227,7 +227,7 @@ end
 -- @field o.mods : Mods for scratch window
 function M.redir(o) -- Redirect command output to scratch window
   local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
-  win.create_scratch(lines, o.mods or "", o.bang == "!")
+  win.create_scratch(lines, o.mods or "", o.bang)
 end
 
 -- @param o table
@@ -391,7 +391,7 @@ function M.async_run(cmd, bang) -- Simple lua impl of AsyncRun
     else
       vim.g.job_status = "Success"
     end
-    if bang == "!" then
+    if bang then
       do
         local res = results[1]
         if res ~= nil then
@@ -416,6 +416,9 @@ end
 
 function M.mru_files(n)
   local fn = require "fun"
+  if n ~= nil then
+    n = tonumber(n)
+  end
   local exclude_patterns = {
     "nvim/.*/doc/.*%.txt", -- nvim help files (approximately)
     ".git", -- git dirs

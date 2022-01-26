@@ -66,10 +66,6 @@ command! -nargs=+ -complete=file_in_path -bar Grep
     \ AsyncRun -strip -program=grep <args>
 
 " Git {{{1
-" Gpush :: custom git push {{{2
-command Gpush lua require'tools'.term_run({cmd = "git push", mods = "10"})
-nnoremap <Leader>gp <Cmd>Gpush<CR>
-
 " TigStatus {{{2
 call map#cabbr('ts', 'TigStatus')
 
@@ -118,9 +114,6 @@ command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
 call map#cabbr('H', 'Help')
 
-" LspDisable :: stop active lsp clients {{{2
-command LspDisable lua vim.lsp.stop_client(vim.lsp.get_active_clients())
-
 " LspLog :: open lsp log {{{2
 command LspLog edit `=v:lua.vim.lsp.get_log_path()`
 
@@ -128,31 +121,7 @@ command LspLog edit `=v:lua.vim.lsp.get_log_path()`
 call map#cabbr('l', 'lua')
 call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
-" Term :: Run async command in terminal buffer {{{2
-command -complete=file -nargs=+ Term lua require'tools'.term_run_cmd(<f-args>)
-
-" Sh :: Run async command in shell and output to scratch buffer {{{2
-command -complete=file -nargs=+ Sh lua require'tools'.sh{cmd = <q-args>}
-
-" Run :: lua version of AsyncRun {{{2
-command -complete=file -bang -nargs=+ Run lua require'tools'.async_run(<q-args>, '<bang>')
-
-" MRU :: most recently used files {{{2
-command -nargs=? MRU lua require'window'.create_scratch(require'tools'.mru_files(<args>), '<mods>')
-
-" Redir :: send output of <expr> to scratch window {{{2
-" Usage:
-"   :Redir hi .........show the full output of command ':hi' in a scratch window
-"   :Redir !ls -al ....show the full output of command ':!ls -al' in a scratch window
-command! -bang -nargs=1 -complete=command Redir lua require'tools'.redir{cmd = <q-args>, mods = '<mods>', bang = '<bang>'}
-
-" Grep :: async grep {{{2
-command! -nargs=+ -complete=file -bar Grep lua require'grep'.grep_for_string(<q-args>)
-
 " Option :: pretty print option info {{{2
 command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
-
-" Lf :: Select current file in lf browser {{{2
-command Lf     lua require'tools'.lf_select_current_file()
 
 " vim:fdl=1:

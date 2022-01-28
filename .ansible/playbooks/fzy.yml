@@ -1,0 +1,5 @@
+---
+- name: Install fzy fuzzy finder
+  hosts: all
+  roles:
+    - fzy

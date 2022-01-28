@@ -1,0 +1,24 @@
+---
+# tasks file for fzy
+- name: Fzy | Clone git repo
+  git:
+    repo: https://github.com/jhawthorn/fzy
+    dest: "{{ fzy_source_dir }}"
+    force: true
+    accept_hostkey: true
+  register: source_repo
+
+- name: Fzy | Build and install from git master
+  block:
+    - name: Build fzy
+      command: make
+      args:
+        chdir: "{{ fzy_source_dir }}"
+
+    - name: Install fzy
+      command: make install
+      args:
+        chdir: "{{ fzy_source_dir }}"
+      environment:
+        PREFIX: "{{ fzy_install_prefix }}"
+  when: (source_repo.before != source_repo.after) or fzy_force_build

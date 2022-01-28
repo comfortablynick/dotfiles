@@ -1,0 +1,6 @@
+---
+# defaults file for fzy
+fzy_home: "{{ ansible_facts.user_dir }}"
+fzy_source_dir: "{{ fzy_home }}/src/fzy"
+fzy_install_prefix: "{{ fzy_home }}/.local"
+fzy_force_build: false

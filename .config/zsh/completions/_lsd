@@ -18,6 +18,7 @@ _lsd() {
 '*--color=[When to use terminal colours]: :(always auto never)' \
 '*--icon=[When to print the icons]: :(always auto never)' \
 '*--icon-theme=[Whether to use fancy or unicode icons]: :(fancy unicode)' \
+'--config-file=[Provide a custom lsd configuration file]' \
 '*--depth=[Stop recursing into directories after reaching specified depth]' \
 '*--size=[How to display size]: :(default short bytes)' \
 '*--date=[How to display date \[possible values: date, relative, +date-time-format\]]' \
@@ -39,11 +40,11 @@ _lsd() {
 '*--oneline[Display one entry per line]' \
 '(--tree)*-R[Recurse into directories]' \
 '(--tree)*--recursive[Recurse into directories]' \
-'-h[For ls compatibility purposes ONLY, currently set by default]' \
-'--human-readable[For ls compatibility purposes ONLY, currently set by default]' \
+'*-h[For ls compatibility purposes ONLY, currently set by default]' \
+'*--human-readable[For ls compatibility purposes ONLY, currently set by default]' \
 '(-R --recursive)*--tree[Recurse into directories and present the result as a tree]' \
-'(-a --all -A --almost-all --depth -R --recursive)-d[Display directories themselves, and not their contents (recursively when used with --tree)]' \
-'(-a --all -A --almost-all --depth -R --recursive)--directory-only[Display directories themselves, and not their contents (recursively when used with --tree)]' \
+'(--depth -R --recursive)-d[Display directories themselves, and not their contents (recursively when used with --tree)]' \
+'(--depth -R --recursive)--directory-only[Display directories themselves, and not their contents (recursively when used with --tree)]' \
 '*--total-size[Display the total size of directories]' \
 '*-t[Sort by time modified]' \
 '*--timesort[Sort by time modified]' \
@@ -55,7 +56,7 @@ _lsd() {
 '*--versionsort[Natural sort of (version) numbers within text]' \
 '*-r[Reverse the order of the sort]' \
 '*--reverse[Reverse the order of the sort]' \
-'--classic[Enable classic mode (no colors or icons)]' \
+'--classic[Enable classic mode (display output similar to ls)]' \
 '*--no-symlink[Do not display symlink target]' \
 '*-i[Display the index number of each file]' \
 '*--inode[Display the index number of each file]' \

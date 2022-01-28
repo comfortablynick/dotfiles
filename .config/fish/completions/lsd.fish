@@ -1,6 +1,7 @@
 complete -c lsd -n "__fish_use_subcommand" -l color -d 'When to use terminal colours' -r -f -a "always auto never"
 complete -c lsd -n "__fish_use_subcommand" -l icon -d 'When to print the icons' -r -f -a "always auto never"
 complete -c lsd -n "__fish_use_subcommand" -l icon-theme -d 'Whether to use fancy or unicode icons' -r -f -a "fancy unicode"
+complete -c lsd -n "__fish_use_subcommand" -l config-file -d 'Provide a custom lsd configuration file'
 complete -c lsd -n "__fish_use_subcommand" -l depth -d 'Stop recursing into directories after reaching specified depth'
 complete -c lsd -n "__fish_use_subcommand" -l size -d 'How to display size' -r -f -a "default short bytes"
 complete -c lsd -n "__fish_use_subcommand" -l date -d 'How to display date [possible values: date, relative, +date-time-format]'
@@ -24,7 +25,7 @@ complete -c lsd -n "__fish_use_subcommand" -s S -l sizesort -d 'Sort by size'
 complete -c lsd -n "__fish_use_subcommand" -s X -l extensionsort -d 'Sort by file extension'
 complete -c lsd -n "__fish_use_subcommand" -s v -l versionsort -d 'Natural sort of (version) numbers within text'
 complete -c lsd -n "__fish_use_subcommand" -s r -l reverse -d 'Reverse the order of the sort'
-complete -c lsd -n "__fish_use_subcommand" -l classic -d 'Enable classic mode (no colors or icons)'
+complete -c lsd -n "__fish_use_subcommand" -l classic -d 'Enable classic mode (display output similar to ls)'
 complete -c lsd -n "__fish_use_subcommand" -l no-symlink -d 'Do not display symlink target'
 complete -c lsd -n "__fish_use_subcommand" -s i -l inode -d 'Display the index number of each file'
 complete -c lsd -n "__fish_use_subcommand" -s L -l dereference -d 'When showing file information for a symbolic link, show information for the file the link references rather than for the link itself'

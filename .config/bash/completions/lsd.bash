@@ -20,7 +20,7 @@ _lsd() {
 
     case "${cmd}" in
         lsd)
-            opts=" -a -A -F -l -1 -R -h -d -t -S -X -v -r -i -L -V -I  --all --almost-all --classify --long --ignore-config --oneline --recursive --human-readable --tree --directory-only --total-size --timesort --sizesort --extensionsort --versionsort --reverse --classic --no-symlink --inode --dereference --help --version --color --icon --icon-theme --depth --size --date --sort --group-dirs --blocks --ignore-glob  <FILE>... "
+            opts=" -a -A -F -l -1 -R -h -d -t -S -X -v -r -i -L -V -I  --all --almost-all --classify --long --ignore-config --oneline --recursive --human-readable --tree --directory-only --total-size --timesort --sizesort --extensionsort --versionsort --reverse --classic --no-symlink --inode --dereference --help --version --color --icon --icon-theme --config-file --depth --size --date --sort --group-dirs --blocks --ignore-glob  <FILE>... "
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -37,6 +37,10 @@ _lsd() {
                     ;;
                 --icon-theme)
                     COMPREPLY=($(compgen -W "fancy unicode" -- "${cur}"))
+                    return 0
+                    ;;
+                --config-file)
+                    COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
                 --depth)

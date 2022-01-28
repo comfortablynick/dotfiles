@@ -162,6 +162,7 @@ local packs = {
   "nvim-lspconfig",
   "nvim-lsp-ts-utils",
   "lsp-status.nvim",
+  "fidget.nvim",
   "nvim-cmp",
   "cmp-nvim-lsp",
   "cmp-buffer",

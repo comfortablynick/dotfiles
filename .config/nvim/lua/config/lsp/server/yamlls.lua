@@ -1,3 +1,4 @@
+-- luacheck: no max line length
 local util = require "lspconfig/util"
 
 return function(on_attach)
@@ -13,10 +14,9 @@ return function(on_attach)
       yaml = {
         format = { enable = true, printWidth = 100 },
         schemas = {
-          ["https://json.schemastore.org/ansible-role-2.9"] = "tasks/**/*.yml",
-          ["https://json.schemastore.org/ansible-role-2.9.json"] = "**/roles/tasks/**/*.yml",
-          ["https://json.schemastore.org/ansible-playbook.json"] = ".ansible/playbooks/*.yml",
-          ["https://gist.githubusercontent.com/KROSF/c5435acf590acd632f71bb720f685895/raw/6f11aa982ad09a341e20fa7f4beed1a1b2a8f40e/taskfile.schema.json"] = "Taskfile.yml", -- luacheck: no max line length
+          ["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-tasks.json"] = "tasks/**/*.yml",
+          ["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-playbook.json"] = ".ansible/playbooks/*.yml",
+          ["https://gist.githubusercontent.com/KROSF/c5435acf590acd632f71bb720f685895/raw/6f11aa982ad09a341e20fa7f4beed1a1b2a8f40e/taskfile.schema.json"] = "Taskfile.yml",
         },
       },
     },

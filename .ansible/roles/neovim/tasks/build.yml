@@ -49,20 +49,4 @@
       command:
         cmd: make CMAKE_BUILD_TYPE={{ neovim_cmake_build_type }} CMAKE_INSTALL_PREFIX={{ neovim_install_prefix }} install
         chdir: "{{ neovim_source_dir }}"
-
-    # Delete unused theme files (why not?)
-    - name: Neovim | Find factory theme files other than default
-      find:
-        paths: "{{ neovim_install_prefix }}/share/nvim/runtime/colors"
-        file_type: file
-        excludes:
-          - default.vim
-      register: found_files
-
-    - name: Neovim | Remove all but default theme
-      file:
-        path: "{{ item.path }}"
-        state: absent
-      loop: "{{ found_files['files'] }}"
-
   when: (neovim_installed_sha != neovim_master_sha) or neovim_force

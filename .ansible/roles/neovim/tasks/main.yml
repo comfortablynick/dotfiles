@@ -22,3 +22,6 @@
   when:
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture.startswith('arm') or neovim_build
+
+- name: Neovim | Manage theme files
+  include_tasks: themes.yml

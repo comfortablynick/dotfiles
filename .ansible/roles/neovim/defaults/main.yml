@@ -31,3 +31,6 @@ neovim_cmake_build_type: Release
 neovim_install_prefix: "{{ neovim_home }}/.local"
 neovim_force: false
 neovim_build: false
+neovim_keep_theme_files:
+    - default.vim
+    - murphy.vim

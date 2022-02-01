@@ -1,0 +1,14 @@
+---
+# theme tasks for neovim
+- name: Neovim | Find default themes
+  find:
+    paths: "{{ neovim_install_prefix }}/share/nvim/runtime/colors"
+    file_type: file
+    excludes: "{{ neovim_keep_theme_files }}"
+  register: found_files
+
+- name: Neovim | Remove unwanted default themes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ found_files['files'] }}"

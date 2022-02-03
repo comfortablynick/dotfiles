@@ -1,26 +1,25 @@
-setlocal tabstop=4                                              " Treat spaces as tab
-setlocal formatoptions-=cro                                      " Don't insert comment marker automatically on O, o, <Enter>
+setlocal tabstop=4
+setlocal formatoptions-=cro
 setlocal foldexpr=VimFoldLevel()
 setlocal foldmethod=marker
 setlocal makeprg=vint\ %
-let g:vim_indent_cont = &tabstop                                " Indent \ newline escapes
+let g:vim_indent_cont = &tabstop
 
 " Maps
 " Execute visual selection
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
 " Execute line
-nnoremap <silent><buffer> yxx   :execute trim(getline('.'))<CR>
-nnoremap <silent><buffer> <C-]> :call pack#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
-nnoremap <silent><buffer> <C-t> :call pack#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
+nnoremap <buffer> yxx   <Cmd>execute trim(getline('.'))<CR>
+nnoremap <buffer> <C-]> <Cmd>call pack#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
+nnoremap <buffer> <C-t> <Cmd>call pack#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
 " Turn maps into <Cmd> type
-" nnoremap <buffer> ycc <Cmd>s/\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)/\1\3\<Cmd\>\5<CR>\|:noh<CR>
-nnoremap <buffer> ycc <Cmd>call setline('.', substitute(getline('.'), '\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)', '\1\3\<Cmd\>\5', ''))<CR>
+nnoremap <buffer> ycc
+    \ <Cmd>call setline('.', substitute(getline('.'), '\(^.\+\)\(<silent>\s*\)\(.\+\)\(:\)\(.\+$\)', '\1\3\<Cmd\>\5', ''))<CR>
 
-if has('nvim')
-    nnoremap <silent><buffer> glo
-        \ :call v:lua.require('config.lsp').rename('l:'..expand('<cword>'))<CR>
-endif
+" Change variable under cursor to local type
+nnoremap <buffer> glo
+    \ <Cmd>call v:lua.require('config.lsp').simple_rename('l:'..expand('<cword>'))<CR>
 
 function VimFoldLevel()
     let l:marker = split(&foldmarker, ',')[0]

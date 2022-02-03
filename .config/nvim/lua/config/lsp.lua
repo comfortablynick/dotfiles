@@ -72,7 +72,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 })
 
 function M.set_hl()
-  local ns = api.nvim_create_namespace "nick"
+  -- local ns = api.nvim_create_namespace "nick"
+  local ns = 0
 
   -- TODO: fix statusline functions to use new nvim api
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", { fg = "#ff5f87" })
@@ -143,6 +144,34 @@ function M.rename()
       params.newName = newName
       vim.lsp.buf_request(0, rename, params, handler)
     end
+  end
+end
+
+function M.simple_rename(newName)
+  local rename = "textDocument/rename"
+  local currName = vim.fn.expand "<cword>"
+
+  local function handler(err, result, ctx, config)
+    if err then
+      vim.notify(("Error running lsp query '%s': %s"):format(rename, err), vim.log.levels.ERROR)
+    end
+    local new
+    if result and result.changes then
+      local msg = ""
+      for f, c in pairs(result.changes) do
+        new = c[1].newText
+        msg = msg .. ("%d changes -> %s"):format(#c, f:gsub("file://", ""):gsub(vim.fn.getcwd(), ".")) .. "\n"
+        msg = msg:sub(1, #msg - 1)
+        vim.notify(msg, vim.log.levels.INFO, { title = ("Rename: %s -> %s"):format(currName, new) })
+      end
+    end
+    vim.lsp.handlers[rename](err, result, ctx, config)
+  end
+
+  if #newName > 0 and newName ~= currName then
+    local params = vim.lsp.util.make_position_params()
+    params.newName = newName
+    vim.lsp.buf_request(0, rename, params, handler)
   end
 end
 

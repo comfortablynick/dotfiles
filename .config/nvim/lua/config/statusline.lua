@@ -247,7 +247,7 @@ end
 
 M.set_hl = function()
   local stl = api.nvim_get_hl_by_name("StatusLine", true)
-  local ns = api.nvim_get_namespaces()["nick"]
+  local ns = 0 -- use default :highlight namespace
   syn_derive(ns, "StatusLine", "StatusLine", { reverse = true, bold = false })
   syn_derive(ns, "IncSearch", "User1")
   syn_derive(ns, "WildMenu", "User2", { bold = false })

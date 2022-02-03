@@ -15,11 +15,11 @@ vim.map.n["<Leader>gp"] = { "<Cmd>Gpush<CR>", "Git push" }
 
 cmd("MRU", function(opts) -- :: Display most recently used files in scratch buffer
   require("window").create_scratch(require("tools").mru_files(opts.args), opts.mods)
-end, { nargs = "?" })
+end, { nargs = "?", desc = "Display most recently used files in scratch buffer" })
 
 cmd("Sh", function(opts) -- :: Run async cmd and output to scratch buffer
   require("tools").sh { cmd = opts.args }
-end, { complete = "file", nargs = "+" })
+end, { complete = "file", nargs = "+", desc = "Run async cmd and output to scratch buffer"})
 
 cmd("Term", function(opts) -- :: Run async command in terminal buffer
   require("tools").term_run_cmd(unpack(vim.split(opts.args, " ")))
@@ -36,3 +36,5 @@ end, { complete = "command", nargs = 1, bang = true })
 cmd("Grep", function(opts) -- :: Async grep
   require("grep").grep_for_string(opts.args)
 end, { complete = "file", nargs = "+" })
+
+cmd("Synstack", "echo syntax#synstack()")

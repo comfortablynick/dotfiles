@@ -53,6 +53,7 @@ command Wqa wqa
 command W w
 
 call map#cabbr('ehco', 'echo')
+call map#cabbr('q@', 'q!')
 
 " Misc command abbreviations {{{2
 call map#cabbr('grep', 'silent grep!')

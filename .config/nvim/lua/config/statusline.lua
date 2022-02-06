@@ -210,15 +210,15 @@ M.line_info = function()
 end
 
 M.lsp_errors = function()
-  return active_file() and lsp.errors() or ""
+  return active_file() and npcall(lsp.errors) or ""
 end
 
 M.lsp_warnings = function()
-  return active_file() and lsp.warnings() or ""
+  return active_file() and npcall(lsp.warnings) or ""
 end
 
 M.lsp_hints = function()
-  return active_file() and lsp.hints() or ""
+  return active_file() and npcall(lsp.hints) or ""
 end
 
 M.job_status = function()
@@ -237,7 +237,9 @@ M.lsp_status = function()
   if not active_file() then
     return ""
   end
-  return lsp.attached_lsps() .. " " .. lsp.status()
+  local attached = lsp.attached_lsps()
+  if attached == nil then return "" end
+  return attached .. " " .. (lsp.status() or "")
 end
 
 local syn_derive = function(ns, from, to, hl_map)

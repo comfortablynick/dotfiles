@@ -1,0 +1,58 @@
+---
+# git download gh
+- name: Gh | Set arch string (Linux amd64)
+  set_fact:
+    gh_arch: linux_amd64
+  when:
+    - ansible_facts['system'] == 'Linux'
+    - ansible_facts['architecture'] == 'x86_64'
+
+- name: Gh | Set arch string (Linux arm32)
+  set_fact:
+    gh_arch: linux_armv6
+  when:
+    - ansible_facts['system'] == 'Linux'
+    - ansible_facts['architecture'].startswith('arm')
+
+- name: Gh | Set release url
+  set_fact:
+    gh_release_url: https://github.com/cli/cli/releases/download/v{{ gh_latest_version }}/gh_{{ gh_latest_version }}_{{ gh_arch }}.tar.gz
+
+- name: Gh | Download and install
+  block:
+    - name: Gh | Create temp dl dir
+      tempfile:
+        state: directory
+        suffix: _gh
+      register: gh_dl_dir
+
+    - name: Gh | Set downloaded folder path
+      set_fact:
+        gh_dl_path: "{{ gh_dl_dir.path }}/gh_{{ gh_latest_version }}_{{ gh_arch }}"
+
+    - name: Gh | Get latest binary
+      unarchive:
+        src: "{{ gh_release_url }}"
+        dest: "{{ gh_dl_dir.path }}"
+        remote_src: true
+        creates: "{{ gh_dl_path }}"
+
+    - name: Gh | Copy bin dir to install dir
+      copy:
+        src: "{{ gh_dl_path }}/bin/"
+        dest: "{{ gh_install_prefix }}/bin"
+        mode: 0755
+        remote_src: true
+
+    - name: Gh | Copy share dir to install dir
+      copy:
+        src: "{{ gh_dl_path }}/share/"
+        dest: "{{ gh_install_prefix }}/share"
+        mode: 0755
+        remote_src: true
+  always:
+    - name: Gh | Remove temp dl dir
+      file:
+        path: "{{ gh_dl_dir.path }}"
+        state: absent
+      when: gh_dl_dir.path is defined

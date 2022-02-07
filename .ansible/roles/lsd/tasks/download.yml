@@ -1,7 +1,6 @@
 ---
 - name: lsd | Set arch string (Linux amd64)
   set_fact:
-    key_value: ''
     lsd_arch: x86_64-unknown-linux-musl
   when:
     - ansible_facts.system == 'Linux'
@@ -9,7 +8,6 @@
 
 - name: lsd | Set arch string (Linux arm32)
   set_fact:
-    key_value: ''
     lsd_arch: arm-unknown-linux-gnueabihf
   when:
     - ansible_facts.system == 'Linux'
@@ -17,7 +15,6 @@
 
 - name: lsd | Set release url
   set_fact:
-    key_value: ''
     lsd_release_url: https://github.com/Peltoche/lsd/releases/download/{{ lsd_latest_version }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}.tar.gz
 
 - name: lsd | Create temp dl dir
@@ -28,7 +25,6 @@
 
 - name: lsd | Set downloaded folder path
   set_fact:
-    key_value: ''
     lsd_dl_path: "{{ lsd_dl_dir.path }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}"
 
 - name: lsd | Get latest binary

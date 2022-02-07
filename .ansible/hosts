@@ -1,12 +1,8 @@
 # Ansible inventory
-
 jupiter
-# titan
+titan
 mars
 pollux
-
-[local]
-jupiter
 
 [dev]
 jupiter
@@ -17,8 +13,11 @@ mars
 
 [linux]
 jupiter
-# titan
+titan
 mars
 
 [macos]
 pollux
+
+[rpi]
+titan

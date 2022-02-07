@@ -16,7 +16,6 @@
 
 - name: Zoxide | Set version strings
   set_fact:
-    key_value: ''
     zoxide_installed_version: "{% if zoxide_installed.stdout is defined %}{{ zoxide_installed.stdout.split(' ')[1] }}{% else %} none {% endif %}"
     zoxide_latest_version: "{{ zoxide_latest.json.tag_name }}"
     zoxide_releases: "{{ zoxide_latest.json.assets }}"

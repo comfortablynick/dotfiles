@@ -14,7 +14,6 @@
 
 - name: Neovim | Set version strings
   set_fact:
-    key_value: ''
     neovim_current_version: "{{ neovim_current.stdout_lines[0] | d() }}"
     neovim_nightly_version: "{{ neovim_latest.json.name }}"
     neovim_nightly_url: "{{ neovim_latest.json | json_query(query) | first }}"
@@ -45,7 +44,6 @@
 
     - name: Neovim | Set src path
       set_fact:
-        key_value: ''
         nvim_src_path: "{{ nvim_dl_path.path }}/nvim-linux64"
 
     # install tasks for nvim

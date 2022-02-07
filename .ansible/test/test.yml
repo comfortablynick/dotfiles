@@ -54,7 +54,6 @@
 
 # - name: Set version strings
 #   set_fact:
-#     key_value: ''
 #     tmux_current_version: "{{ tmux_current.stdout_lines[0].split(' ')[1] | d() | replace('next-', '') }}"
 #     tmux_latest_version: "{{ tmux_latest.json.name.split(' ')[1] | d() }}"
 #     tmux_latest_url: "{{ tmux_latest.json.assets[0].browser_download_url }}"
@@ -76,7 +75,6 @@
 
 #     - name: Tmux | Set src path
 #       set_fact:
-#         key_value: ''
 #         tmux_src_path: "{{ tmux_dl_path.path }}/tmux-{{ tmux_latest_version }}"
 
 #     - name: Tmux | Build from source tarball

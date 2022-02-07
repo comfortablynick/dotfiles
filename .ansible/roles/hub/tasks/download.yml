@@ -2,7 +2,6 @@
 # git download hub
 - name: Hub | Set arch string (Linux amd64)
   set_fact:
-    key_value: ''
     hub_arch: linux-amd64
   when:
     - ansible_facts['system'] == 'Linux'
@@ -10,7 +9,6 @@
 
 - name: Hub | Set arch string (Linux arm32)
   set_fact:
-    key_value: ''
     hub_arch: linux-arm
   when:
     - ansible_facts['system'] == 'Linux'
@@ -18,7 +16,6 @@
 
 - name: Hub | Set release url (Linux amd64)
   set_fact:
-    key_value: ''
     hub_release_url: https://github.com/github/hub/releases/download/v{{ hub_latest_version }}/hub-{{ hub_arch }}-{{ hub_latest_version }}.tgz
 
 - name: Hub | Create temp dl dir
@@ -29,7 +26,6 @@
 
 - name: Hub | Set downloaded folder path
   set_fact:
-    key_value: ''
     hub_dl_path: "{{ hub_dl_dir.path }}/hub-{{ hub_arch }}-{{ hub_latest_version }}"
 
 - name: Hub | Get latest binary

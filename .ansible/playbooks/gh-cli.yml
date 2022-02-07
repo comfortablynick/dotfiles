@@ -1,0 +1,8 @@
+---
+- name: Install gh-cli
+  hosts: all
+  roles:
+    - gh-cli
+  tags:
+    - gh-cli
+    - gh

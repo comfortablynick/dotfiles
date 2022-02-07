@@ -2,7 +2,6 @@
 # setup tasks file for rust
 # - name: Rust | Formulate source string comparison requirements
 #   set_fact:
-#     key_value: ''
 #     rust_version_requirement: "rustc {{ rust_version }}"
 #   when:
 #     - rust_build_from_source
@@ -10,7 +9,6 @@
 
 # - name: Rust | Formulate installer string comparison requirements
 #   set_fact:
-#     key_value: ''
 #     rust_version_requirement: "Usage: rustc"
 #   when:
 #     - not rust_build_from_source

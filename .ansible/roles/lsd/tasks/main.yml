@@ -16,7 +16,6 @@
 
 - name: Lsd | Set version strings
   set_fact:
-    key_value: ''
     lsd_installed_version: "{% if lsd_installed.stdout is defined %}{{ lsd_installed.stdout.split(' ')[1] }}{% else %} none {% endif %}"
     lsd_latest_version: "{{ lsd_latest.json.tag_name }}"
     lsd_releases: "{{ lsd_latest.json.assets }}"

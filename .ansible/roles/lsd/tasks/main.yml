@@ -4,7 +4,7 @@
   uri:
     url: https://api.github.com/repos/Peltoche/lsd/releases/latest
     return_content: true
-  run_once: false
+  run_once: true
   register: lsd_latest
   changed_when: false
 
@@ -16,17 +16,10 @@
 
 - name: Lsd | Set version strings
   set_fact:
-    lsd_installed_version: "{% if lsd_installed.stdout is defined %}{{ lsd_installed.stdout.split(' ')[1] }}{% else %} none {% endif %}"
+    lsd_installed_version: "{% if lsd_installed.stdout|length > 1 %}{{ lsd_installed.stdout.split(' ')[1] }}{% else %}0.0.1{% endif %}"
     lsd_latest_version: "{{ lsd_latest.json.tag_name }}"
     lsd_releases: "{{ lsd_latest.json.assets }}"
   changed_when: false
-
-- name: Lsd | Debug versions
-  debug:
-    msg: |
-      lsd installed vesion: {{ lsd_installed_version }}
-      lsd latest version:   {{ lsd_latest_version }}
-    verbosity: 1
 
 - name: Lsd | Include download tasks
   block:

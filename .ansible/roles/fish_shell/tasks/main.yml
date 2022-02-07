@@ -1,6 +1,6 @@
 ---
 # tasks file for fish_shell
-- name: Clone Neovim git repo
+- name: Fish shell | Clone git repo
   git:
     repo: https://github.com/fish-shell/fish-shell
     dest: "{{ fish_source_dir }}"
@@ -8,7 +8,7 @@
     accept_hostkey: true
   register: source_repo
 
-- name: Build fish from git master
+- name: Fish shell | Build from git master
   block:
     - name: Remove existing build dir if exists
       file:

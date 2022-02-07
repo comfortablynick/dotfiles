@@ -8,6 +8,7 @@ pkg_apt_packages_all:
   - todotxt-cli
   - unzip
   - python-setuptools
+  - libssl-dev
 
 pkg_pacman_packages_all:
   - pacman-contrib
@@ -71,4 +72,3 @@ cargo_packages_all:
   - name: bat
   - name: git-delta
     binary: delta
-  - name: ouch

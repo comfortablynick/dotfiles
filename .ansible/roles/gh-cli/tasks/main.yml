@@ -1,0 +1,25 @@
+---
+# tasks for gh
+- name: Gh | Get latest release
+  uri:
+    url: https://api.github.com/repos/cli/cli/releases/latest
+    return_content: true
+  run_once: true
+  register: gh_latest
+  changed_when: false
+
+- name: Gh | Get installed version in default location
+  command: "{{ gh_install_prefix }}/bin/gh --version"
+  register: gh_installed
+  changed_when: false
+  failed_when: false
+
+- name: Gh | Set installed version strings
+  set_fact:
+    gh_installed_version: "{% if gh_installed.stdout|length > 1 %}{{ gh_installed.stdout.split(' ')[2] }}{% else %}0.0.1{% endif %}"
+    gh_latest_version: "{{ gh_latest.json.tag_name[1:] }}"
+  changed_when: false
+
+- name: Gh | Download
+  include_tasks: download.yml
+  when: (gh_latest_version is version(gh_installed_version, '>')) or gh_installed.rc != 0

@@ -74,6 +74,7 @@ cargo_packages_dev:
   - name: genact
   - name: taplo-lsp
   - name: taplo-cli
+  - name: ouch
 
 neovim_cmake_build_type: RelWithDebInfo
 neovim_build: true

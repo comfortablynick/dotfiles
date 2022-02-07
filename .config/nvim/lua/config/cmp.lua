@@ -50,6 +50,12 @@ local lsp_symbols = {
 }
 
 cmp.setup {
+  enabled = function()
+    local ok = true
+    ok = ok and vim.bo.ft ~= "clap_input"
+    ok = ok and vim.bo.bt ~= "prompt"
+    return ok
+  end,
   sources = {
     { name = "nvim_lsp" },
     { name = "ultisnips", keyword_length = 2 },

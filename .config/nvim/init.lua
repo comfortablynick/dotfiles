@@ -247,12 +247,12 @@ nvim.au.group("init_lua", function(grp)
   if vim.wo.relativenumber then
     -- Toggle relativenumber if window in focus
     grp["FocusGained,WinEnter,BufEnter,InsertLeave"] = function()
-      if vim.wo.number and vim.bo.buftype == "" then
+      if vim.wo.number and vim.bo.buftype == "" and not vim.b.no_toggle_line_numbers then
         vim.wo.relativenumber = true
       end
     end
     grp["FocusLost,WinLeave,BufLeave,InsertEnter"] = function()
-      if vim.wo.number and vim.bo.buftype == "" then
+      if vim.wo.number and vim.bo.buftype == "" and not vim.b.no_toggle_line_numbers then
         vim.wo.relativenumber = false
       end
     end

@@ -28,6 +28,7 @@ set backup
 set undofile
 set backupdir=~/.vim/backup//
 set wildmenu
+set wildoptions=pum
 set pyxversion=3
 set undodir=~/.vim/undo//
 
@@ -200,6 +201,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-commentary'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'justinmk/vim-dirvish'
 
 let g:PaperColor_Theme_Options = {
     \   'theme': {

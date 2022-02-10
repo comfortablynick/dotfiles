@@ -249,7 +249,7 @@ local function init()
     keys = { "<Plug>(PickerEdit)", "<Plug>(PickerVsplit)" },
     setup = function()
       vim.g.picker_custom_find_executable = "fd"
-      vim.g.picker_custom_find_flags = "-t f -HL --color=never"
+      vim.g.picker_custom_find_flags = "-t f -HL --strip-cwd-prefix"
       vim.map.n["<Leader>e"] = { "<Plug>(PickerEdit)", "Fuzzy edit" }
       vim.map.n["<Leader>v"] = { "<Plug>(PickerVsplit)", "Fuzzy vsplit edit" }
     end,
@@ -353,6 +353,13 @@ local function init()
   use "rafamadriz/friendly-snippets"
 
   -- Language server/completion
+  use {
+    "ZhiyuanLck/smart-pairs",
+    event = "InsertEnter",
+    config = function()
+      require("pairs"):setup()
+    end,
+  }
   use {
     "neovim/nvim-lspconfig",
     requires = {

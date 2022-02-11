@@ -220,12 +220,13 @@ M.path = (function()
 
     if ffi then
       ffi.cdef [[
-const char *shorten_dir(const char *str)
+void shorten_dir(const char *str)
 ]]
 
       return (function()
         local c_str = ffi.new("const char[?]", #path + 1, path)
-        return ffi.string(ffi.C.shorten_dir(c_str))
+        ffi.C.shorten_dir(c_str)
+        return ffi.string(c_str)
       end)()
     else
       return path

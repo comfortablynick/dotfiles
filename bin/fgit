@@ -18,7 +18,7 @@ color() {
 }
 
 # utility functions
-fgit::die() { [ -n "$1" ] && fgit::err "$1" && exit 1; }
+fgit::die() { [ -n "$1" ] && fgit::err "$1"; exit 1; }
 fgit::err() { color red "$@" >&2; }
 fgit::inside_work_tree() { git rev-parse --is-inside-work-tree >/dev/null; }
 
@@ -173,13 +173,13 @@ parse_cmd() {
             break
             ;;
         '')
-            fgit::err "error: command needed"
             fgit::help
-            break
+            exit 1
             ;;
         *)
-            fgit::die "command '$1' not found"
-            exit
+            fgit::err "command '$1' not found"
+            fgit::help
+            exit 1
             ;;
         esac
     done

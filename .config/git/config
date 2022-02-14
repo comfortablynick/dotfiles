@@ -4,9 +4,18 @@
 [alias]
     fzf = "!f() { /home/nick/src/git-fzf/git-fzf.sh $@ }; f"
 [core]
-    # pager = diff-so-fancy | less --tabs=4 -RFX
-    pager = delta --plus-color="#012800" --minus-color="#340001" --theme='Monokai Extended'
     untrackedCache = true
+    pager = delta
+[delta]
+    features = pretty
+[delta "pretty"]
+    file-style = omit
+    hunk-header-style = file line-number syntax
+    zero-style = dim syntax
+    line-numbers = true
+    syntax-theme = zenburn
+[delta "side-by-side"]
+    side-by-side = true
 [color]
     ui = true
 [color "diff-highlight"]
@@ -21,21 +30,18 @@
     old = red bold
     new = green bold
     whitespace = red reverse
-
 [merge]
     tool = vimdiff
     conflictstyle = diff3
-
 [mergetool]
         prompt = false
-
 [mergetool "vimdiff"]
         cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [pull]
-	rebase = false
+    rebase = false
 [credential]
-	helper = lastpass -l comfortablynick@gmail.com
+    helper = lastpass -l comfortablynick@gmail.com
 [init]
-	defaultBranch = main
+    defaultBranch = main
 [hub]
-	protocol = https
+    protocol = https

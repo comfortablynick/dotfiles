@@ -9,8 +9,10 @@
 [delta]
     features = pretty
 [delta "pretty"]
+    dark = true
     file-style = omit
     hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = yellow box
     zero-style = dim syntax
     line-numbers = true
     syntax-theme = zenburn

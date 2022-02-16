@@ -5,13 +5,11 @@ let s:qf_size = {lines -> min([max([1, lines]), get(g:, 'quickfix_size', s:quick
 let s:is_loc_open = {-> get(getloclist(0, {'winid':0}), 'winid', 0)}
 
 " Show :scriptnames in quickfix list and optionally filter
-function qf#scriptnames(...)
+function qf#scriptnames(search_term = '')
     call setqflist([], ' ', {'items': util#scriptnames(), 'title': 'Scriptnames'})
-    if len(a:000) > 0
+    if !empty(a:search_term)
         if !exists(':Cfilter') | packadd cfilter | endif
-        for l:arg in a:000
-            execute 'Cfilter' l:arg
-        endfor
+        execute 'Cfilter' a:search_term
     endif
 endfunction
 

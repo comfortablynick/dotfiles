@@ -5,6 +5,7 @@ if not cmp_installed then
   return
 end
 
+local kind = cmp.lsp.CompletionItemKind
 local api = vim.api
 
 local has_words_before = function()
@@ -68,6 +69,13 @@ cmp.setup {
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"] = cmp.mapping.close(),
     ["<CR>"] = cmp.mapping.confirm { select = false },
+    -- ["<CR>"] = cmp.mapping(function()
+    --   if cmp.visible() then
+    --     cmp.mapping.confirm { select = false }
+    --   else
+    --     require("pairs.enter").type()
+    --   end
+    -- end),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -114,6 +122,14 @@ cmp.setup {
     end,
   },
 }
+
+cmp.event:on("confirm_done", function(event)
+  local item = event.entry:get_completion_item()
+  local parensDisabled = item.data and item.data.funcParensDisabled or false
+  if not parensDisabled and (item.kind == kind.Method or item.kind == kind.Function) then
+    require("pairs.bracket").type_left("(")
+  end
+end)
 
 local cmp_lsp_installed, cmp_lsp = pcall(require, "cmp_nvim_lsp")
 

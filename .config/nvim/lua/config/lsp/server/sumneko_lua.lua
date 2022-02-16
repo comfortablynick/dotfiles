@@ -1,7 +1,12 @@
 local util = require "lspconfig/util"
 return function(on_attach)
   return {
-    on_attach = on_attach,
+    on_attach = function(client, bufnr)
+      -- Disable formatting to avoid prompts
+      client.resolved_capabilities.document_formatting = false
+      client.resolved_capabilities.document_range_formatting = false
+      on_attach(client, bufnr)
+    end,
     -- Use wrapper script
     cmd = { "luals" },
     root_dir = function(fname)
@@ -17,6 +22,9 @@ return function(on_attach)
           enable = false,
           globals = { "vim", "nvim", "p", "after_each", "before_each", "it" },
           disable = { "redefined-local" },
+        },
+        hint = {
+          enable = true,
         },
         workspace = {
           library = (function()

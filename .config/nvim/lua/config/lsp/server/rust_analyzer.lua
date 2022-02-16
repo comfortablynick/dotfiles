@@ -1,6 +1,6 @@
 return function(on_attach)
-  local rust_on_attach = function(client)
-    on_attach(client)
+  local rust_on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
     vim.cmd(
       [[au InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost <buffer> lua ]]
         .. [[nvim.packrequire('lsp_extensions.nvim', 'lsp_extensions').inlay_hints]]

@@ -21,9 +21,11 @@
       command: compile/install.sh
       args:
         chdir: "{{ source_dir }}/3rd/luamake"
+      changed_when: true
 
     - name: Build server
       command: ./3rd/luamake/luamake rebuild
       args:
         chdir: "{{ source_dir }}"
+      changed_when: true
   when: (git_clone.before != git_clone.after) or luals_force_build

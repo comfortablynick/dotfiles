@@ -357,7 +357,7 @@ local function init()
     "ZhiyuanLck/smart-pairs",
     event = "InsertEnter",
     config = function()
-      require("pairs"):setup()
+      require "config.smart-pairs"
     end,
   }
   use {

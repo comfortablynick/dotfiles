@@ -1,5 +1,6 @@
 compiler fish
 
+setlocal keywordprg=:tab\ Man " This is simpler if fish has been added to MANPATH
 setlocal shiftwidth=4 
 setlocal formatoptions-=c
 setlocal formatoptions-=r

@@ -7,6 +7,9 @@ end
 local fb = require "pairs.fallback"
 
 pairs:setup {
+  default_opts = {
+    ["*"] = { ignore_after = [[\S]] },
+  },
   enter = {
     enable_mapping = true,
     enable_cond = function()

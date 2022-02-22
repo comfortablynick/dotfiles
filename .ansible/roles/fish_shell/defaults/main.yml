@@ -2,4 +2,4 @@
 # defaults file for fish_shell
 
 fish_source_dir: "{{ ansible_facts.user_dir }}/src/fish-shell"
-fish_install_prefix: "/usr/local"
+fish_install_prefix: /usr/local

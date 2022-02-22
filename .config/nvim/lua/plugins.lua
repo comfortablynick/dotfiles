@@ -332,7 +332,13 @@ local function init()
 
   -- Git
   use { "tpope/vim-fugitive", cmd = { "G", "Gw", "Git" } }
-  use { "junegunn/gv.vim", cmd = "GV" }
+  use {
+    "junegunn/gv.vim",
+    cmd = "GV",
+    config = function()
+      vim.cmd [[packadd vim-fugitive]]
+    end,
+  }
   use { "iberianpig/tig-explorer.vim", cmd = { "Tig", "TigStatus" } }
   use {
     "TimUntersberger/neogit",

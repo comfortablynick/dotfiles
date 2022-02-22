@@ -8,6 +8,21 @@
     accept_hostkey: true
   register: source_repo
 
+- name: Fish shell | Get installed version
+  command: "{{ fish_install_prefix }}/bin/fish --version"
+  register: fish_installed_version
+  changed_when: false
+
+- name: Fish shell | Debug missing install
+  debug:
+    msg: Current fish install not found at '{{ fish_install_prefix }}/bin/fish'!
+  when: fish_installed_version.rc != 0
+
+- name: Fish shell | Set version strings
+  set_fact:
+    fish_installed_sha: "{% if fish_installed_version.stdout|length > 1 %}{{ fish_installed_version.stdout[-9:] }}{% else %}0{% endif %}"
+    fish_master_sha: "{{ source_repo.after[:9] }}"
+
 - name: Fish shell | Build from git master
   block:
     - name: Remove existing build dir if exists
@@ -19,6 +34,7 @@
       file:
         path: "{{ fish_source_dir }}/build"
         state: directory
+        mode: 0755
 
     - name: Build fish
       command: "{{ item }}"
@@ -27,10 +43,12 @@
       loop:
         - cmake -DCMAKE_INSTALL_PREFIX={{ fish_install_prefix }} ..
         - make
+      changed_when: true
 
     - name: Install fish
       command: make install
       args:
         chdir: "{{ fish_source_dir }}/build"
       become: true
-  when: (source_repo.before != source_repo.after) or fish_force_build
+      changed_when: true
+  when: (fish_installed_sha != fish_master_sha) or fish_force_build

@@ -8,7 +8,7 @@
   uri:
     url: https://api.github.com/repos/neovim/neovim/releases/tags/nightly
     return_content: true
-  run_once: false
+  run_once: true
   register: neovim_latest
   changed_when: false
 

@@ -4,7 +4,7 @@
   uri:
     url: https://api.github.com/repos/ajeetdsouza/zoxide/releases/latest
     return_content: true
-  run_once: false
+  run_once: true
   register: zoxide_latest
   changed_when: false
 

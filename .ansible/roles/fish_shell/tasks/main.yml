@@ -11,6 +11,7 @@
 - name: Fish shell | Get installed version
   command: "{{ fish_install_prefix }}/bin/fish --version"
   register: fish_installed_version
+  failed_when: false
   changed_when: false
 
 - name: Fish shell | Debug missing install
@@ -52,3 +53,10 @@
       become: true
       changed_when: true
   when: (fish_installed_sha != fish_master_sha) or fish_force_build
+
+- name: Fish shell | Add fish to /etc/shells
+  lineinfile:
+    path: /etc/shells
+    line: "{{ fish_install_prefix }}/bin/fish"
+    state: present
+  become: true

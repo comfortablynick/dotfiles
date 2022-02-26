@@ -1,0 +1,5 @@
+---
+- name: Install fd from github release
+  hosts: linux
+  roles:
+    - fd

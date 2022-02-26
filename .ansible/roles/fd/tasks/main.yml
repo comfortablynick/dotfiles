@@ -1,0 +1,33 @@
+---
+# tasks file for fd
+- name: Fd | Get latest release
+  uri:
+    url: https://api.github.com/repos/sharkdp/fd/releases/latest
+    return_content: true
+  run_once: true
+  register: fd_latest
+  changed_when: false
+
+- name: Fd | Get installed version
+  command: "{{ fd_prefix }}/bin/fd --version"
+  register: fd_installed
+  changed_when: false
+  failed_when: false
+
+- name: Fd | Set version strings
+  set_fact:
+    fd_installed_version: "{% if fd_installed.stdout|length > 1 %}{{ fd_installed.stdout.split(' ')[1] }}{% else %}0.0.1{% endif %}"
+    fd_latest_version: "{{ fd_latest.json.tag_name | regex_replace('^v', '') }}"
+    fd_releases: "{{ fd_latest.json.assets }}"
+  changed_when: false
+
+- name: Fd | Debug versions
+  debug:
+    msg: |
+      fd installed vesion: {{ fd_installed_version }}
+      fd latest version:   {{ fd_latest_version }}
+    verbosity: 1
+
+- name: Fd | Install from github release
+  include_tasks: download.yml
+  when: fd_installed.rc != 0 or (fd_latest_version is version(fd_installed_version, '>')) or fd_force|d(false)

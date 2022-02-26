@@ -1,5 +1,7 @@
 ---
 - name: Install fish shell
-  hosts: titan
+  hosts:
+    - titan
+    - mars
   roles:
     - fish_shell

@@ -61,8 +61,6 @@ rust_toolchains_all:
 cargo_packages_all:
   - name: ripgrep
     binary: rg
-  - name: fd-find
-    binary: fd
   - name: exa
     args: --git https://github.com/ogham/exa.git
   - name: sysinfo

@@ -1,0 +1,4 @@
+---
+# defaults file for fd
+fd_home: "{{ ansible_facts.user_dir }}"
+fd_prefix: "{{ fd_home }}/.local"

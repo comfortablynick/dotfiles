@@ -47,22 +47,19 @@ If supplying a finder via -f, any arguments after -- will be given to the finder
         echo "Missing fuzzy finder; install fzy, fzf, etc. before running this command"
         return 1
     end
-    set -l files
 
-    eval "$FZY_DEFAULT_COMMAND" | $use_finder | while read -l result
-        set -a files $result
-    end
+    # eval "$FZY_DEFAULT_COMMAND" | $use_finder | while read -l result
+    #     set -a files $result
+    # end
+    set files (eval "$FZY_DEFAULT_COMMAND" | $use_finder)
 
     if test -z "$files"
         commandline -f repaint
         return
     end
-    commandline -r ""
 
-    for file in $files
-        commandline -it -- "$EDITOR "
-        commandline -it -- (string escape $file)
-        commandline -it ' '
-    end
+    commandline -tr "$EDITOR "
+    commandline -tr (string escape -- $files | string join ' ')
+    commandline -f repaint
     commandline -f execute
 end

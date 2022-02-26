@@ -5,6 +5,7 @@
 - import_playbook: playbooks/asdf.yml
 - import_playbook: playbooks/fish.yml
 - import_playbook: playbooks/fzy.yml
+- import_playbook: playbooks/fd.yml
 - import_playbook: playbooks/hub.yml
 - import_playbook: playbooks/luals.yml
 - import_playbook: playbooks/mosh.yml

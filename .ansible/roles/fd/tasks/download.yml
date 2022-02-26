@@ -1,0 +1,77 @@
+---
+- name: Fd | Set arch string (Linux amd64)
+  set_fact:
+    fd_arch: x86_64-unknown-linux-musl
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture == 'x86_64'
+
+- name: Fd | Set arch string (Linux arm32)
+  set_fact:
+    fd_arch: arm-unknown-linux-musleabihf
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture.startswith('arm')
+
+- name: Fd | Set release url
+  set_fact:
+    fd_release_url:
+      https://github.com/sharkdp/fd/releases/download/v{{ fd_latest_version }}/fd-v{{ fd_latest_version }}-{{ fd_arch }}.tar.gz
+
+- name: Fd | Download and install release
+  block:
+    - name: Fd | Create temp dl dir
+      tempfile:
+        state: directory
+        suffix: _fd
+      register: fd_dl_path
+
+    - name: Fd | Get latest binary
+      unarchive:
+        src: "{{ fd_release_url }}"
+        dest: "{{ fd_dl_path.path }}"
+        remote_src: true
+
+    - name: Fd | Set src path
+      set_fact:
+        fd_src_path: "{{ fd_dl_path.path }}/fd-v{{ fd_latest_version }}-{{ fd_arch }}"
+
+    - name: Fd | Copy binary
+      copy:
+        src: "{{ fd_src_path }}/fd"
+        dest: "{{ fd_prefix }}/bin/fd"
+        mode: 0755
+        remote_src: true
+
+    - name: Fd | Copy man pages
+      copy:
+        src: "{{ fd_src_path }}/fd.1"
+        dest: "{{ fd_prefix }}/share/man/man1"
+        mode: 0644
+        remote_src: true
+
+    - name: Fd | Copy fish completions
+      copy:
+        src: "{{ fd_src_path }}/autocomplete/fd.fish"
+        dest: "{{ fd_home }}/.config/fish/completions"
+        mode: 0644
+        remote_src: true
+
+    - name: Fd | Copy bash completions
+      copy:
+        src: "{{ fd_src_path }}/autocomplete/fd.bash"
+        dest: "{{ fd_home }}/.config/bash/completions"
+        mode: 0644
+        remote_src: true
+
+    - name: Fd | Copy zsh completions
+      copy:
+        src: "{{ fd_src_path }}/autocomplete/_fd"
+        dest: "{{ fd_home }}/.config/zsh/completions"
+        mode: 0644
+        remote_src: true
+  always:
+    - name: Fd | Cleanup temp path
+      file:
+        path: "{{ fd_dl_path.path }}"
+        state: absent

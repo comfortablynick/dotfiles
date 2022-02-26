@@ -4,7 +4,7 @@
   uri:
     url: https://api.github.com/repos/github/hub/releases/latest
     return_content: true
-  run_once: false
+  run_once: true
   register: hub_latest
   changed_when: false
 

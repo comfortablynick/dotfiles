@@ -103,9 +103,10 @@ def output_to_pager(text: List[str], syntax: Optional[str] = None) -> None:
             stdin=subprocess.PIPE,
             stdout=sys.stdout,
         )
-        for line in text:
-            pager.stdin.write(line.encode())
-        pager.stdin.close()
+        if pager.stdin is not None:
+            for line in text:
+                pager.stdin.write(line.encode())
+            pager.stdin.close()
         pager.wait()
     except KeyboardInterrupt:
         pass
@@ -150,7 +151,8 @@ def get_shell_vars(  # {{{1
         "fish": {
             "abbr": {"format": "abbr {args} {key} {val} {cmt}", "default_args": "-U"},
             "alias": {
-                "format": "function {key} {args}; {val}; end; and funcsave {key} {cmt}",
+                "format": "function {key} {args}; {val}; end;"
+                + " and funcsave {key} &>/dev/null {cmt}",
             },
             "env": {"format": "set {args} {key} {val} {cmt}", "default_args": "-Ux"},
             "path": {"format": "fish_add_path {args} {val} {cmt}"},

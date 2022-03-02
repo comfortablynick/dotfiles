@@ -265,7 +265,7 @@ elif [[ $USE_GITPR_GIT_PROMPT -eq 1 ]]; then
     }
 
 # Starship prompt {{{2
-elif [[ $USE_STARSHIP_PROMPT -eq 1 ]]; then
+elif [[ $USE_STARSHIP_PROMPT -eq 1 ]] && command -v starship; then
     eval "$(starship init bash)"
 
 # Default git color prompt {{{2

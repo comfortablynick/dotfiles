@@ -1,0 +1,7 @@
+---
+ansible_host: 155.138.255.239
+ansible_port: 50222
+ansible_user: nick
+ansible_shell_executable: /bin/bash
+
+pkg_aur_helper: paru

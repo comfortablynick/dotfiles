@@ -11,4 +11,3 @@
     force: false
     recursive: false
     version: HEAD
-  failed_when: false

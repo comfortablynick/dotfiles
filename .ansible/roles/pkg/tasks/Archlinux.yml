@@ -26,10 +26,10 @@
 - name: Update mirrorlist
   block:
     - name: Install reflector
-      become: true
       pacman:
         name: reflector
         state: present
+      become: true
     - name: Create temp file for new mirrorlist
       tempfile:
         state: file
@@ -40,19 +40,22 @@
         - name: Run reflector
           command:
             /usr/bin/python3 -m Reflector --verbose -p http -p https --latest 20 --sort rate --country "United States" --save {{ mirrorlist_temp.path }}
+          changed_when: true
         - name: Backup mirrorlist
-          become: true
           copy:
             src: /etc/pacman.d/mirrorlist
             dest: /etc/pacman.d/mirrorlist.bak
             mode: 0644
             force: true
-        - name: Replace mirrorlist with new file
+            remote_src: true
           become: true
+        - name: Replace mirrorlist with new file
           copy:
             src: "{{ mirrorlist_temp.path }}"
             dest: /etc/pacman.d/mirrorlist
             mode: 0644
+            remote_src: true
+          become: true
       always:
         - name: Cleanup temp mirrorlist
           file:
@@ -62,20 +65,56 @@
   when: mirrorlist_found['matched'] or pkg_force_update_mirrorlist|d(false)
 
 - name: Upgrade pacman packages
-  become: true
   pacman:
     update_cache: true
     upgrade: true
+  become: true
   register: pacout
 
-- name: Update aur packages
-  command: yay -Su --aur --devel --noconfirm
-  register: yayout
-  changed_when: 'yayout.stdout is defined and "there is nothing to do" not in yayout.stdout'
+- name: Install pacman packages
+  pacman:
+    name: "{{ pkg_pacman_packages }}"
+    state: present
+  become: true
 
-# - name: Upgrade aur packages
-#   become: true
-#   become_user: aur_builder
-#   yay:
-#     update_cache: true
-#     upgrade: true
+- name: Check if aur helper exists
+  stat:
+    path: /usr/bin/{{ pkg_aur_helper }}
+  register: aur_helper_stat
+
+- name: Clone and build aur helper
+  block:
+    - name: Clone aur helper
+      git:
+        repo: https://aur.archlinux.org/{{ pkg_aur_helper }}-bin.git
+        dest: "{{ pkg_aur_helper_srcdir }}/{{ pkg_aur_helper }}"
+        update: true
+
+    - name: Build and install aur helper
+      command:
+        chdir: "{{ pkg_aur_helper_srcdir }}/{{ pkg_aur_helper }}"
+        cmd: makepkg -si --noconfirm
+        creates: /usr/bin/{{ pkg_aur_helper }}
+  always:
+    - name: Cleanup aur helper src
+      file:
+        path: "{{ pkg_aur_helper_srcdir }}/{{ pkg_aur_helper }}"
+        state: absent
+  when: not aur_helper_stat.stat.exists
+
+- name: Install packages from aur using aur helper
+  pacman:
+    name: "{{ pkg_aur_packages }}"
+    state: present
+    executable: "{{ pkg_aur_helper }}"
+    extra_args: -a --devel
+  become: true
+  become_user: aur_builder
+
+- name: Upgrade packages from aur using aur helper
+  pacman:
+    upgrade: true
+    executable: "{{ pkg_aur_helper }}"
+    extra_args: -a --devel
+  become: true
+  become_user: aur_builder

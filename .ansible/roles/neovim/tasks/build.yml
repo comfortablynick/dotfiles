@@ -12,10 +12,11 @@
   command: nvim --version
   register: neovim_installed_version
   changed_when: false
+  failed_when: false
 
 - name: Neovim | Set version strings
   set_fact:
-    neovim_installed_sha: "{{ neovim_installed_version.stdout_lines[0][-9:] }}"
+    neovim_installed_sha: "{% if neovim_installed_version.stdout|length > 1 %}{{ neovim_installed_version.stdout_lines[0][-9:] }}{% else %}0{% endif %}"
     neovim_master_sha: "{{ source_repo.after[:9] }}"
 
 - name: Neovim | Debug version strings

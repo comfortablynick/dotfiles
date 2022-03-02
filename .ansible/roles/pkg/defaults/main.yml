@@ -1,5 +1,8 @@
 ---
 # defaults file for pkg
+pkg_home: "{{ ansible_facts.user_dir }}"
+pkg_aur_helper_srcdir: "{{ pkg_home }}/src"
+
 pkg_apt_packages: []
 
 pkg_pacman_packages: []

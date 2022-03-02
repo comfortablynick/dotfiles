@@ -22,20 +22,19 @@
       import_tasks: deps.yml
 
     - name: Tmux | Build from source
-      block:
-        - name: Build and install tmux
-          command:
-            cmd: "{{ item }}"
-            chdir: "{{ tmux_source_dir }}"
-          loop:
-            - sh autogen.sh
-            - >-
-              ./configure --prefix={{ tmux_install_prefix }}
-                CPPFLAGS="-I{{ tmux_install_prefix }}/include -I{{ tmux_install_prefix }}/include/ncurses"
-                LDFLAGS="-L{{ tmux_install_prefix }}/lib"
-            - make -j{{ tmux_make_concurrency }}
-            - make install
+      command:
+        cmd: "{{ item }}"
+        chdir: "{{ tmux_source_dir }}"
+      loop:
+        - sh autogen.sh
+        - >-
+          ./configure --prefix={{ tmux_install_prefix }}
+            CPPFLAGS="-I{{ tmux_install_prefix }}/include -I{{ tmux_install_prefix }}/include/ncurses"
+            LDFLAGS="-L{{ tmux_install_prefix }}/lib"
+        - make -j{{ tmux_make_concurrency }}
+        - make install
       when: (tmux_git_clone.before != tmux_git_clone.after) or tmux_force_build
+      changed_when: true
   when: tmux_build_from_master
 
 - name: Tmux | Build latest release tarball
@@ -49,13 +48,14 @@
       changed_when: false
 
     - name: Tmux | Get installed version
-      command: tmux -V
+      command: "{{ tmux_install_prefix }}/bin/tmux -V"
       register: tmux_current
       changed_when: false
+      failed_when: false
 
     - name: Tmux | Set version strings
       set_fact:
-        tmux_current_version: "{{ tmux_current.stdout_lines[0].split(' ')[1] | d() | replace('next-', '') }}"
+        tmux_current_version: "{% if tmux_current.stdout|length > 1 %}{{ tmux_current.stdout.split(' ')[1] }}{% else %}0.0.1{% endif %}"
         tmux_latest_version: "{{ tmux_latest.json.name.split(' ')[1] | d() }}"
         tmux_latest_url: "{{ tmux_latest.json.assets[0].browser_download_url }}"
         tmux_current_beta: "{{ 'next' in tmux_current.stdout }}"
@@ -92,6 +92,7 @@
                 LDFLAGS="-L{{ tmux_install_prefix }}/lib"
             - make -j{{ tmux_make_concurrency }}
             - make install
+          changed_when: true
       always:
         - name: Tmux | Cleanup temp files
           file:

@@ -3,5 +3,6 @@
   hosts:
     - titan
     - mars
+    - uranus
   roles:
     - fish_shell

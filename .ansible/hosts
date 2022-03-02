@@ -3,10 +3,12 @@ jupiter
 titan
 mars
 pollux
+uranus
 
 [dev]
 jupiter
 mars
+uranus
 
 [www]
 mars
@@ -15,6 +17,7 @@ mars
 jupiter
 titan
 mars
+uranus
 
 [macos]
 pollux

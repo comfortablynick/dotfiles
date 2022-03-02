@@ -1,7 +1,7 @@
 ---
 # vim:ft=yaml.ansible:
 - name: Test environment variables
-  hosts: all
+  hosts: jupiter
   tasks:
     - name: Debug env output
       debug:
@@ -16,7 +16,7 @@
 
 
 - name: Set vars
-  hosts: all
+  hosts: jupiter
   vars:
     path:
       - $HOME/bin
@@ -32,7 +32,12 @@
       gs: git status
       g: git
       vid: $HOME/.config/nvim
-      e: eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file
+      e: "eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file"
+    aliases:
+      - key: gs
+        val: git status
+      - key: e
+        val: "eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file"
     bash_env:
       PATH: >-
         $(echo -n $PATH | awk -v RS=: -v ORS=: '!x[$0]++' | sed "s/\(.*\).\{1\}/\1/")
@@ -49,8 +54,10 @@
       template:
         dest: ~/.ansible/test/out/env.sh
         src: ~/.ansible/test/posix.j2
+        mode: 0644
 
     - name: Create fish file from template
       template:
         dest: ~/.ansible/test/out/env.fish
         src: ~/.ansible/test/fish.j2
+        mode: 0644

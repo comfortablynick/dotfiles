@@ -1,4 +1,4 @@
 ---
 ansible_host: localhost
 ansible_connection: local
-pkg_aur_helper: yay
+pkg_aur_helper: paru

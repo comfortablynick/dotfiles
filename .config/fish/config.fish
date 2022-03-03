@@ -31,16 +31,16 @@ end
 
 # Environment {{{1
 # Load from env file {{{2
-set -l env_file $HOME/.config/fish/env.fish
-set -q env_file_sourced
-or set -U env_file_sourced 0
-
-if test -f "$env_file"; and test $env_file_sourced -eq 0
-    set_color $fish_color_autosuggestion
-    echo "Reading env from $env_file..."
-    set_color normal
-    source $env_file; and set env_file_sourced 1
-end
+# set -l env_file $HOME/.config/fish/env.fish
+# set -q env_file_sourced
+# or set -U env_file_sourced 0
+#
+# if test -f "$env_file"; and test $env_file_sourced -eq 0
+#     set_color $fish_color_autosuggestion
+#     echo "Reading env from $env_file..."
+#     set_color normal
+#     source $env_file; and set env_file_sourced 1
+# end
 
 # iterm2 integration {{{2
 test -e $HOME/.iterm2_shell_integration.fish; and source $HOME/.iterm2_shell_integration.fish

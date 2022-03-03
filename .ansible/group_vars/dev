@@ -14,8 +14,8 @@ pkg_python_packages_dev: []
 asdf_plugins_dev:
   - name: nodejs
     versions:
-      - "lts"
-    global: "lts"
+      - lts
+    global: lts
 
 asdf_python_packages_dev:
   - click

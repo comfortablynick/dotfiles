@@ -7,7 +7,8 @@ pkg_apt_packages_dev:
 pkg_pacman_packages_dev:
   - cmake
 
-pkg_aur_packages_dev: []
+pkg_aur_packages_dev:
+  - python-sphinx # used to build manpages for fish
 
 pkg_python_packages_dev: []
 

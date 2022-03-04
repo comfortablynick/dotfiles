@@ -8,7 +8,7 @@
 
 PATH="$(path_remove "$(dirname "$0")")"
 COLS="$(tput cols)"
-HOST="$(hostname -s)"
+HOST="$(uname -n)"
 CFG_DIR="$XDG_CONFIG_HOME/htop"
 COMPACT_COLS=150
 

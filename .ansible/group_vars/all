@@ -18,6 +18,7 @@ pkg_pacman_packages_all:
 
 pkg_aur_packages_all:
   - todotxt
+  - ugrep
 
 pkg_python_packages_all: []
 

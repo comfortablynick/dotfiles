@@ -1,7 +1,7 @@
 ---
 # defaults file for rust
 rust_user_dir: "{{ ansible_facts.user_dir }}"
-rust_init_url: https://sh.rustup.rs
+rustup_init_url: https://sh.rustup.rs
 rustup_bin: "{{ rust_user_dir }}/.cargo/bin/rustup"
 cargo_bin: "{{ rust_user_dir }}/.cargo/bin/cargo"
 

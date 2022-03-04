@@ -13,9 +13,8 @@
         dest: /tmp/rustup-init
         mode: 0755
     - name: Install rust
-      command: /tmp/rustup-init --no-modify-path -y --default-toolchain {{ rust_default_toolchain }}
-      args:
-        creates: '{{ rustup_home }}'
+      command:
+        cmd: /tmp/rustup-init --no-modify-path -y --default-toolchain {{ rust_default_toolchain }}
   always:
     - name: cleanup
       file:

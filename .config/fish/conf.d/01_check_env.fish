@@ -1,8 +1,7 @@
 # Check env.toml file for changes compared with previous checksum
 set -gx CURRENT_SHELL fish
-set env_file "$HOME/.config/fish/env.fish"
-test -f "$env_file"; and source "$env_file"
-exit
+# set env_file "$HOME/.config/fish/env.fish"
+# test -f "$env_file"; and source "$env_file"
 if status is-interactive
     set -l toml_file $HOME/env.toml
     set -l env_sha (string split ' ' ($HOME/bin/sha1 $toml_file))[1]
@@ -22,10 +21,9 @@ if status is-interactive
     end
 
     set -l parse_env $HOME/bin/parse_env
-    set -l env_file $HOME/.config/fish/env.fish
+    set -l env_file $HOME/.config/fish/conf.d/01_env.fish
     if test -n "$py_path"
         $py_path $parse_env $toml_file $env_file -s fish
-        set -U env_file_sourced 0
         set -U env_toml_sha "$env_sha"
     else
         set_color $fish_color_error

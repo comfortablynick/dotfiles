@@ -1,6 +1,14 @@
 ---
+- name: Rust | Create local cargo temp file
+  file:
+    path: "{{ rust_cargo_tmp_dir }}"
+    state: directory
+    mode: 0755
+
 - name: Rust | Install cargo binaries
   command: "{{ cargo_bin }} install {{ item.name }} {{ item.args|d() }}"
+  environment:
+    TMPDIR: "{{ rust_cargo_tmp_dir }}"
   loop: "{{ cargo_packages }}"
   loop_control:
     label: "{{ item.name }}"
@@ -10,7 +18,7 @@
 
 - name: Rust | Verify binary installation
   stat:
-    path: "{{ rust_user_dir }}/.cargo/bin/{{ item.binary|d(item.name) }}"
+    path: "{{ rust_cargo_dir }}/bin/{{ item.binary|d(item.name) }}"
   loop: "{{ cargo_packages }}"
   loop_control:
     label: "{{ item.name }}"
@@ -19,5 +27,5 @@
 - name: Rust | Download exa completions
   get_url:
     url: https://raw.githubusercontent.com/ogham/exa/master/completions/fish/exa.fish
-    dest: "{{ ansible_facts.user_dir }}/.config/fish/completions/exa.fish"
+    dest: "{{ rust_user_dir }}/.config/fish/completions/exa.fish"
   when: "cargo_packages | selectattr('name', 'equalto', 'exa')"

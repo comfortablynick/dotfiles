@@ -10,17 +10,17 @@
 
 - name: Hub | Get installed version in default location
   command: "{{ hub_install_prefix }}/bin/hub --version"
-  register: hub_installed_version
+  register: hub_installed
   changed_when: false
   failed_when: false
 
 - name: Hub | Set version strings
   set_fact:
-    hub_installed_version: "{{ hub_installed_version.stdout_lines[1].split(' ')[2] }}"
+    # hub_installed_version: "{{ hub_installed_version.stdout_lines[1].split(' ')[2] }}"
+    hub_installed_version: "{% if hub_installed.stdout_lines|length %}{{ hub_installed.stdout_lines[1].split(' ')[2] }}{% else %}0.0.1{% endif %}"
     hub_latest_version: "{{ hub_latest.json.tag_name[1:] }}"
     hub_releases: "{{ hub_latest.json.assets }}"
   changed_when: false
-  when: hub_installed_version is defined
 
 - name: Hub | Debug versions
   debug:

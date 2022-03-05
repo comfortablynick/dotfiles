@@ -8,7 +8,10 @@ pkg_pacman_packages_dev:
   - cmake
 
 pkg_aur_packages_dev:
-  - python-sphinx # used to build manpages for fish
+  - python-sphinx  # used to build manpages for fish
+  - tig
+  - lastpass-cli
+  - ninja
 
 pkg_python_packages_dev: []
 

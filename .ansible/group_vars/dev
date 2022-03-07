@@ -23,6 +23,8 @@ pkg_aur_packages_dev:
   - dash  # faster posix shell
   - dashbinsh  # link sh -> dash
   - efm-langserver
+  - rust-analyzer
+  - sccache  # caches rust builds
 
 pkg_python_packages_dev: []
 

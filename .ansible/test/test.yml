@@ -1,17 +1,14 @@
 ---
 - name: Test tasks
-  hosts: jupiter
+  hosts: all
+  vars:
+    asdf_dir: "{{ ansible_facts.user_dir }}/.asdf"
+
   tasks:
     - name: Print facts
       debug:
         var: ansible_facts
         verbosity: 2
-
-    - name: Print arch
-      debug:
-        msg: |-
-          System: {{ ansible_facts.system }}
-          Arch:   {{ ansible_facts.architecture }}
 
     - name: Check for line in .tool-versions
       command: grep -i 'python 3' {{ ansible_facts.user_dir }}/.tool-versions
@@ -31,12 +28,36 @@
         pipx_path: "{{ asdf_python_bin_dir }}/pipx"
       when: asdf_python_bin_dir is defined
 
+    - name: asdf nodejs | Get node path
+      command: "{{ asdf_dir }}/bin/asdf which node"
+      register: asdf_which_node
+      changed_when: false
+
+    - name: Get which node
+      command: which node
+      register: which_node
+      environment:
+        PATH: "{{ asdf_which_node.stdout|dirname }}:{{ ansible_facts.env.PATH }}"
+      changed_when: false
+
+    - name: Echo PATH cmd
+      command: echo $PATH
+      register: echo_path_cmd
+      changed_when: false
+
+    - name: Echo PATH shell
+      shell: echo $PATH
+      register: echo_path_shell
+      changed_when: false
+
     - name: Debug paths
       debug:
         msg: |
-          asdf python bin dir: {{ asdf_python_bin_dir|default('') }}
-          pipx pip3 path:      {{ pipx_pip3_path }}
-          pipx path:           {{ pipx_path }}
-
+          asdf python bin dir:    {{ asdf_python_bin_dir|default('') }}
+          asdf node bin dir:      {{ asdf_which_node.stdout|dirname }}
+          node:                   {{ which_node.stdout }}
+          ansible_facts.env.PATH: {{ ansible_facts.env.PATH|split(':') }}
+          echo_path_cmd:          {{ echo_path_cmd.stdout|split(':') }}
+          echo_path_shell:        {{ echo_path_shell.stdout|split(':') }}
 
 # vim:ft=yaml.ansible:

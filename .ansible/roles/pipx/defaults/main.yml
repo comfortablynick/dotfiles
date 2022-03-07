@@ -2,3 +2,4 @@
 # defaults file for pipx
 pipx_pip3_path: pip3
 pipx_path: pipx
+asdf_dir: "{{ ansible_facts.user_dir }}/.asdf"

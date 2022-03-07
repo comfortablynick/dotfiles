@@ -32,9 +32,15 @@
   register: asdf_which_npm
   changed_when: false
 
+- name: asdf nodejs | Get node path
+  command: "{{ asdf_bin }} which node"
+  register: asdf_which_node
+  changed_when: false
+
 - name: asdf nodejs | Set node paths
   set_fact:
     asdf_npm_path: "{{ asdf_which_npm.stdout }}"
+    asdf_node_path: "{{ asdf_which_node.stdout }}"
 
 - name: asdf nodejs | Install/update npm packages
   npm:
@@ -43,3 +49,5 @@
     state: latest
     global: true
   loop: "{{ asdf_npm_packages }}"
+  environment:
+    PATH: "{{ asdf_node_path|dirname }}:{{ ansible_facts.env.PATH }}"

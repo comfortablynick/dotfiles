@@ -8,10 +8,21 @@ pkg_pacman_packages_dev:
   - cmake
 
 pkg_aur_packages_dev:
+  - go
   - python-sphinx  # used to build manpages for fish
   - tig
   - lastpass-cli
   - ninja
+  - lf
+  - asciidoc
+  - parallel
+  - glow
+  - shellcheck-bin
+  - shfmt
+  - skim
+  - dash  # faster posix shell
+  - dashbinsh  # link sh -> dash
+  - efm-langserver
 
 pkg_python_packages_dev: []
 

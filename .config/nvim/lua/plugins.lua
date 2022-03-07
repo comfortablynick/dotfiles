@@ -353,11 +353,6 @@ local function init()
   use { "SirVer/ultisnips", setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event }
   use { "honza/vim-snippets", event = lazy_load_event }
 
-  -- Don't need the below if using ultisnips
-  use "norcalli/snippets.nvim"
-  -- use "L3MON4D3/LuaSnip"
-  use "rafamadriz/friendly-snippets"
-
   -- Language server/completion
   use {
     "ZhiyuanLck/smart-pairs",

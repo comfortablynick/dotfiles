@@ -355,7 +355,7 @@ local function init()
 
   -- Don't need the below if using ultisnips
   use "norcalli/snippets.nvim"
-  use "L3MON4D3/LuaSnip"
+  -- use "L3MON4D3/LuaSnip"
   use "rafamadriz/friendly-snippets"
 
   -- Language server/completion

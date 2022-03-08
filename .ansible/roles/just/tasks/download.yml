@@ -25,11 +25,10 @@
 
 - name: just | Set downloaded folder path
   set_fact:
-    just_dl_path: "{{ just_dl_dir.path }}/just-{{ just_latest_version }}-{{ just_arch }}"
+    just_dl_path: "{{ just_dl_dir.path }}"
 
 - name: just | Get latest binary
   unarchive:
     src: "{{ just_release_url }}"
-    dest: "{{ just_dl_dir.path }}"
+    dest: "{{ just_dl_path }}"
     remote_src: true
-    creates: "{{ just_dl_path }}"

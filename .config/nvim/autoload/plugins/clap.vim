@@ -6,6 +6,7 @@ let g:clap_preview_size = 10
 let g:clap_enable_background_shadow = v:true
 let g:clap_background_shadow_blend = 50
 let g:clap_layout = {'relative': 'editor'}
+let g:clap_provider_tags_force_vista = v:true " May not be needed permanently?
 
 
 " Filters {{{2

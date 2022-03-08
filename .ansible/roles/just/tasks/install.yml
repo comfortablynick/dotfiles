@@ -1,0 +1,26 @@
+---
+# install tasks for just
+- name: Just | Copy binary to install dir
+  copy:
+    src: "{{ just_dl_path }}/just"
+    dest: "{{ just_prefix }}/bin/just"
+    mode: 0755
+    remote_src: true
+
+- name: Just | Download fish completions
+  get_url:
+    url: https://github.com/casey/just/raw/master/completions/just.fish
+    dest: "{{ just_home }}/.config/fish/completions/just.fish"
+    mode: 0644
+
+- name: Just | Downlaod zsh completions
+  get_url:
+    url: https://github.com/casey/just/raw/master/completions/just.zsh
+    dest: "{{ just_home }}/.config/zsh/completions/_just"
+    mode: 0644
+
+- name: Just | Download bash completions
+  get_url:
+    url: https://github.com/casey/just/raw/master/completions/just.bash
+    dest: "{{ just_home }}/.config/bash/completions/just.bash"
+    mode: 0644

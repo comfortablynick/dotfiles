@@ -1,0 +1,4 @@
+---
+# defaults file for just
+just_home: "{{ ansible_facts.user_dir }}"
+just_prefix: "{{ just_home }}/.local"

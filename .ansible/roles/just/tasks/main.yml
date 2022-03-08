@@ -1,0 +1,34 @@
+---
+# tasks file for just
+- name: Just | Get latest release
+  uri:
+    url: https://api.github.com/repos/casey/just/releases/latest
+    return_content: true
+  run_once: true
+  register: just_latest
+  changed_when: false
+
+- name: Just | Get installed version
+  command: just --version
+  register: just_installed
+  changed_when: false
+  failed_when: false
+
+- name: Just | Set version strings
+  set_fact:
+    just_installed_version: "{% if just_installed.stdout|length > 1 %}{{ just_installed.stdout.split(' ')[1] }}{% else %}0{% endif %}"
+    just_latest_version: "{{ just_latest.json.tag_name }}"
+    just_releases: "{{ just_latest.json.assets }}"
+  changed_when: false
+
+- name: Just | Include download tasks
+  block:
+    - include_tasks: download.yml
+    - include_tasks: install.yml
+  always:
+    - name: Just | Clean up downloaded files
+      file:
+        path: "{{ just_dl_dir.path }}"
+        state: absent
+      when: just_dl_dir.path is defined
+  when: just_installed.rc != 0 or (just_latest_version is version(just_installed_version, '>')) or just_force|d(false)

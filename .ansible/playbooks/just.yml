@@ -1,0 +1,5 @@
+---
+- name: Install just from github release
+  hosts: linux
+  roles:
+    - just

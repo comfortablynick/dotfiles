@@ -48,9 +48,6 @@ If supplying a finder via -f, any arguments after -- will be given to the finder
         return 1
     end
 
-    # eval "$FZY_DEFAULT_COMMAND" | $use_finder | while read -l result
-    #     set -a files $result
-    # end
     set files (eval "$FZY_DEFAULT_COMMAND" | $use_finder)
 
     if test -z "$files"

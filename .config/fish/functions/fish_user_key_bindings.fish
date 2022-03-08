@@ -6,6 +6,7 @@ function fish_user_key_bindings
     bind \cz fzf_rg
     bind _ beginning-of-line
     bind \cb forget
+    bind \en 'fish_commandline_prepend nvim; commandline -f execute'
 
     # Insert mode
     bind -M insert \cf forward-char # accept suggestion
@@ -13,6 +14,7 @@ function fish_user_key_bindings
     bind -M insert \ce edit
     bind -M insert \cz fzf_rg
     bind -M insert \cb forget
+    bind -M insert \en 'fish_commandline_prepend nvim; commandline -f execute'
 
     # Fzf additional bindings
     bind \ct _fzf_search_directory

@@ -16,8 +16,8 @@ pairs:setup {
       return not require("cmp").visible()
     end,
     enable_fallback = fb.enter,
-    indent = {
-      ["*"] = 4,
-    },
+  },
+  indent = {
+    ["*"] = 4,
   },
 }

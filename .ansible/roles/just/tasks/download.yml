@@ -1,0 +1,35 @@
+---
+- name: just | Set arch string (Linux amd64)
+  set_fact:
+    just_arch: x86_64-unknown-linux-musl
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture == 'x86_64'
+
+- name: just | Set arch string (Linux arm32)
+  set_fact:
+    just_arch: armv7-unknown-linux-musleabihf
+  when:
+    - ansible_facts.system == 'Linux'
+    - ansible_facts.architecture.startswith('arm')
+
+- name: just | Set release url
+  set_fact:
+    just_release_url: https://github.com/casey/just/releases/download/{{ just_latest_version }}/just-{{ just_latest_version }}-{{ just_arch }}.tar.gz
+
+- name: just | Create temp dl dir
+  tempfile:
+    state: directory
+    suffix: _just
+  register: just_dl_dir
+
+- name: just | Set downloaded folder path
+  set_fact:
+    just_dl_path: "{{ just_dl_dir.path }}/just-{{ just_latest_version }}-{{ just_arch }}"
+
+- name: just | Get latest binary
+  unarchive:
+    src: "{{ just_release_url }}"
+    dest: "{{ just_dl_dir.path }}"
+    remote_src: true
+    creates: "{{ just_dl_path }}"

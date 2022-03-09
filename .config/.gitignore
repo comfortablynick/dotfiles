@@ -17,8 +17,5 @@
 /gh/hosts.yml
 /gh/state.yml
 
-/fish/functions/gv.fish
-/fish/functions/exa.fish
-
 /.xmake
 /nvim/plugin/packer_compiled.lua

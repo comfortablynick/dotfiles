@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2086
 # Calculate tmux status bar on right side
-# TODO: there _has_ to be a better way of doing this
 
 HOSTNAME=$(uname -n)
 USERNAME=${USER:-$(whoami)}
@@ -13,73 +13,67 @@ MEDIUM_LARGE=150
 LARGE=200
 
 # Separators
-SP=' '
 RSUB="${RSUB:-|}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
-# TMUX_MEM_CPU=$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load
+# TMUX_MEM_CPU="$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load"
+UP=$("$HOME/.config/tmux/_uptime")
 
 # Status commands
-if [[ -x $SYSINFO ]]; then
-    memusage_cmd='memory'
-    loadavg_cmd='load'
-    uptime_cmd='uptime -p'
-    temp_cmd='temp 2>/dev/null'
-    # cpu_usage_cmd='cpu -i 2 2>/dev/null'
-    if [[ $WIDTH -lt $MEDIUM_LARGE ]]; then
-        memusage_cmd='memory -u'
-        loadavg_cmd='load -n 1'
-    fi
-    MEMUSAGE=$(eval "$SYSINFO" "$memusage_cmd")
-    LOADAVG=$(eval "$SYSINFO" "$loadavg_cmd")
-    UP=$(eval "$SYSINFO" "$uptime_cmd")
-    CPUTEMP=$(eval "$SYSINFO" "$temp_cmd")
-    # CPUUSAGE="$(eval "$SYSINFO" "$cpu_usage_cmd")"
+if [[ -x $TMUX_MEM_CPU ]]; then
+    SYSLOAD=$($TMUX_MEM_CPU --colors --interval 2)
 else
-    if [[ -x $TMUX_TOP ]]; then
-        MEMUSAGE=$("$TMUX_TOP" m)
-        LOADAVG=$("$TMUX_TOP" l)
-    # elif [[ -x $TMUX_MEM_CPU ]]; then
-    #     MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
+    if [[ -x $SYSINFO ]]; then
+        memusage_cmd='memory'
+        loadavg_cmd='load'
+        uptime_cmd='uptime -p'
+        temp_cmd='temp 2>/dev/null'
+        # cpu_usage_cmd='cpu -i 2 2>/dev/null'
+        if [[ $WIDTH -lt $MEDIUM_LARGE ]]; then
+            memusage_cmd='memory -u'
+            loadavg_cmd='load -n 1'
+        fi
+        MEMUSAGE=$($SYSINFO $memusage_cmd)
+        LOADAVG=$($SYSINFO $loadavg_cmd)
+        UP=$($SYSINFO $uptime_cmd)
+        CPUTEMP=$($SYSINFO $temp_cmd)
+        # CPUUSAGE=$($SYSINFO $cpu_usage_cmd)
     else
-        MEMUSAGE=$("$HOME/.config/tmux/_memusage" 2>/dev/null)
-        LOADAVG=$("$HOME/.config/tmux/_loadavg")
+        if [[ -x $TMUX_TOP ]]; then
+            MEMUSAGE=$("$TMUX_TOP" m)
+            LOADAVG=$("$TMUX_TOP" l)
+        # elif [[ -x $TMUX_MEM_CPU ]]; then
+        #     MEMUSAGE=$(eval "$TMUX_MEM_CPU" -g 0 -m 0 -i 2)
+        else
+            MEMUSAGE=$("$HOME/.config/tmux/_memusage" 2>/dev/null)
+            LOADAVG=$("$HOME/.config/tmux/_loadavg")
+        fi
     fi
-    UP=$("$HOME/.config/tmux/_uptime")
+    SYSLOAD="$MEMUSAGE $LOADAVG"
 fi
-
-SYSLOAD="$MEMUSAGE $LOADAVG"
-WEATHER="$("$HOME/.config/tmux/_weather")$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
 
 if [[ -n $CPUTEMP ]]; then
     SYSLOAD="$SYSLOAD $CPUTEMP"
 fi
 
 if [[ $WIDTH -gt $MEDIUM ]]; then
-    # Unused {{{
-    # CPUTEMP="#[fg=green,bg=default,nobold,noitalics,nounderscore]$CPUTEMP"
-    # DATE="#[fg=colour236,bg=${date_colour:-default},nobold,noitalics,nounderscore]"
-    # DATE+="$RSEP#[fg=colour247,bg=colour236,nobold,noitalics,nounderscore]$SP$(date +'%D')"
-    # TIME="#[fg=colour241,bg=colour236,nobold,noitalics,nounderscore]$RSUB"
-    # }}}
-    TIME+="#[fg=colour252,bg=colour236,noitalics,nounderscore]$SP$(date +'%R')"
+    TIME+="#[fg=colour252,bg=colour236,noitalics,nounderscore] $(date +'%R')"
     LOAD="#[fg=colour10,bg=default,nobold,noitalics,nounderscore]$SYSLOAD"
 
     if [[ $WIDTH -gt $LARGE ]] || [[ $TABS -lt 5 ]]; then
         UPTIME="#[fg=yellow,bg=default,nobold,noitalics,nounderscore]$UP"
-        UPTIME+="$SP#[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
+        UPTIME+=" #[fg=colour241,bg=default,nobold,noitalics,nounderscore]$RSUB"
     fi
 fi
 
 if [[ $WIDTH -ge $SMALL ]]; then
     USER="#[fg=colour31,bg=colour236,nobold,noitalics,nounderscore]$RSEP"
-    USER+="#[fg=colour231,bg=colour31,bold,noitalics,nounderscore]$SP$USERNAME"
+    USER+="#[fg=colour231,bg=colour31,bold,noitalics,nounderscore] $USERNAME"
     UNAME="#[fg=colour252,bg=colour31,nobold,noitalics,nounderscore]$RSEP"
-    UNAME+="#[fg=colour16,bg=colour252,bold,noitalics,nounderscore]$SP$HOST"
+    UNAME+="#[fg=colour16,bg=colour252,bold,noitalics,nounderscore] $HOST"
     UNAME+=" #[]" # Easy way to allow space at end without bash eating it
 fi
 
 # Allow bash to mangle extra spaces and avoid piping to tr
-# shellcheck disable=SC2086
 echo $UPTIME $MEM_CPU $LOAD $DATE $TIME $USER $UNAME

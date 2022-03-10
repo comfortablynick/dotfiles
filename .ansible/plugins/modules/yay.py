@@ -1,17 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # type: ignore
 
 # Copyright (c) 2021 Nick Muprphy <comfortablynick@gmail.com>
 # Originally (c) 2014 Austin Hyde
 # MIT License (MIT)
+# Updated to work with paru or yay
 # TODO: handle other yay options like --devel and -a
 
 import os
 from ansible.module_utils.basic import AnsibleModule
 
 
-def yay_in_path(module):
-    rc, _, _ = module.run_command("which yay", check_rc=False)
+def yay_in_path(module, executable):
+    rc, _, _ = module.run_command(f"which {executable}", check_rc=False)
     return rc == 0
 
 
@@ -29,7 +30,7 @@ def get_version(yay_output):
     return None
 
 
-def query_package(module, pkg, state):
+def query_package(module, pkg):
     """
     Query the package status in both the local system and the repository.
     Returns three booleans to indicate:
@@ -37,7 +38,8 @@ def query_package(module, pkg, state):
       * If the package is up-to-date
       * Whether online information was available
     """
-    local_check_cmd = "yay -Qi %s" % pkg
+    executable = module.params["executable"]
+    local_check_cmd = f"{executable} -Qi {pkg}"
     local_check_rc, local_check_stdout, _ = module.run_command(
         local_check_cmd, check_rc=False
     )
@@ -46,7 +48,7 @@ def query_package(module, pkg, state):
 
     local_version = get_version(local_check_stdout)
 
-    repo_check_cmd = "yay -Si %s" % pkg
+    repo_check_cmd = f"{executable} -Si {pkg}"
     repo_check_rc, repo_check_stdout, repo_check_stderr = module.run_command(
         repo_check_cmd, check_rc=False
     )
@@ -60,8 +62,8 @@ def query_package(module, pkg, state):
         return True, True, True
 
 
-def update_package_db(module):
-    rc, _, stderr = module.run_command("yay -Sy", check_rc=False)
+def update_package_db(module, executable):
+    rc, _, stderr = module.run_command(f"{executable} -Sy", check_rc=False)
 
     if rc == 0 and stderr == "":
         return False, "Package DB up-to-date"
@@ -71,9 +73,9 @@ def update_package_db(module):
         module.fail_json(msg="could not update package db: %s" % stderr)
 
 
-def upgrade(module):
+def upgrade(module, executable):
     check_rc, check_stdout, check_stderr = module.run_command(
-        "yay -Qqu", check_rc=False
+        f"{executable} -Qqu", check_rc=False
     )
 
     if check_rc == 0 and check_stderr == "" and module.check_mode:
@@ -82,7 +84,7 @@ def upgrade(module):
         )
     elif check_rc == 0 and check_stderr == "" and not module.check_mode:
         upgrade_rc, _, upgrade_stderr = module.run_command(
-            "yay -Su --noconfirm",
+            f"{executable} -Su --noconfirm",
             check_rc=False,
         )
 
@@ -102,7 +104,7 @@ def get_sudo_user(module):
     user = os.environ.get("SUDO_USER") or os.environ.get("USER")
 
     if not user:
-        rc, stdout, _ = module.run_command("logname", check_rc=True)
+        _, stdout, _ = module.run_command("logname", check_rc=True)
         user = stdout
 
     return user
@@ -112,7 +114,7 @@ def check_packages(module, pkgs, state):
     would_be_changed = []
 
     for pkg in pkgs:
-        installed, updated, _ = query_package(module, pkg, state)
+        installed, updated, _ = query_package(module, pkg)
         if (
             (state in ["present", "latest"] and not installed)
             or (state == "latest" and not updated)
@@ -134,12 +136,13 @@ def install_packages(module, pkgs, state):
     num_installed = 0
     package_err = []
     message = ""
+    executable = module.params["executable"]
 
     sudo_user = get_sudo_user(module)
-    cmd = "sudo -u %s yay --noconfirm -S %s"
+    cmd = f"sudo -u %s {executable} --noconfirm -S %s"
 
     for pkg in pkgs:
-        installed, updated, latest_error = query_package(module, pkg, state)
+        installed, updated, latest_error = query_package(module, pkg)
         if latest_error and state == "latest":
             package_err.append(pkg)
 
@@ -167,7 +170,7 @@ def install_packages(module, pkgs, state):
         return False, "All packages were already installed. %s" % message
 
 
-def remove_packages(module, pkgs, recurse, state):
+def remove_packages(module, pkgs, recurse):
     num_removed = 0
 
     arg = "R"
@@ -179,7 +182,7 @@ def remove_packages(module, pkgs, recurse, state):
     cmd = "pacman -%s --noconfirm %s"
 
     for pkg in pkgs:
-        installed, _, _ = query_package(module, pkg, state)
+        installed, _, _ = query_package(module, pkg)
         if not installed:
             continue
 
@@ -213,23 +216,24 @@ def main():
                 aliases=["update-cache"],
                 type="bool",
             ),
+            executable=dict(default="yay"),
         ),
         required_one_of=[["name", "update_cache", "upgrade"]],
         supports_check_mode=True,
     )
 
-    if not yay_in_path(module):
-        module.fail_json(msg="could not locate yay executable")
+    p = module.params
+
+    if not yay_in_path(module, p["executable"]):
+        module.fail_json(msg=f"could not locate {p['executable']} executable")
 
     if not pacman_in_path(module):
         module.fail_json(msg="could not locate pacman executable")
 
-    p = module.params
-
     changed = False
     messages = []
     if p["update_cache"] and not module.check_mode:
-        updated, update_message = update_package_db(module)
+        updated, update_message = update_package_db(module, p["executable"])
         changed = changed or updated
         messages.append(update_message)
 
@@ -238,7 +242,7 @@ def main():
         messages.append("Would have updated the package cache")
 
     if p["upgrade"]:
-        upgraded, upgrade_message = upgrade(module)
+        upgraded, upgrade_message = upgrade(module, p["executable"])
         changed = changed or upgraded
         messages.append(upgrade_message)
 
@@ -263,7 +267,6 @@ def main():
                     module,
                     p["name"],
                     p["recurse"],
-                    p["state"],
                 )
 
             changed = changed or packages_changed

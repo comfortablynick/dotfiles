@@ -102,19 +102,34 @@
         state: absent
   when: not aur_helper_stat.stat.exists
 
-- name: Install packages from aur using aur helper
-  pacman:
-    name: "{{ pkg_aur_packages }}"
-    state: present
+# - name: Install packages from aur using aur helper
+#   pacman:
+#     name: "{{ pkg_aur_packages }}"
+#     state: present
+#     executable: "{{ pkg_aur_helper }}"
+#     extra_args: -a --devel
+#   become: true
+#   become_user: aur_builder
+
+# - name: Upgrade packages from aur using aur helper
+#   pacman:
+#     upgrade: true
+#     executable: "{{ pkg_aur_helper }}"
+#     extra_args: -a --devel
+#   become: true
+#   become_user: aur_builder
+
+- name: Upgrade aur packages
+  yay:
+    update_cache: true
+    upgrade: true
     executable: "{{ pkg_aur_helper }}"
-    extra_args: -a --devel
   become: true
   become_user: aur_builder
 
-- name: Upgrade packages from aur using aur helper
-  pacman:
-    upgrade: true
+- name: Install aur packages
+  yay:
+    name: "{{ pkg_aur_packages }}"
     executable: "{{ pkg_aur_helper }}"
-    extra_args: -a --devel
   become: true
   become_user: aur_builder

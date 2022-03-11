@@ -22,11 +22,8 @@ function fzf_cdhist --description 'cd to one of the previously visited locations
         end
     end
 
-    # Pipe unique dirs to fzf
-    string join \n $uniq_dirs |
-    eval "fzf-tmux +m --reverse --tiebreak=index --toggle-sort=ctrl-r $FZF_CD_OPTS" |
-    read -l result
-    if test -n "$result"
+    set result (string join \n $uniq_dirs | eval "_fzf_wrapper +m --reverse --tiebreak=index --toggle-sort=ctrl-r $FZF_CD_OPTS")
+    if test -d "$result"
         cd $result
     end
     commandline -f repaint

@@ -3,12 +3,12 @@ function fzf_rg --description 'Search files using rg + fzf and open in nvim'
     set -l rg_cmd "rg --vimgrep --color=always --smart-case"
     set -l change_key ctrl-f
 
-    FZF_DEFAULT_COMMAND="$rg_cmd $initial_query" fzf-tmux -p 80%,80% --ansi \
+    FZF_DEFAULT_COMMAND="$rg_cmd $initial_query" _fzf_wrapper -p 80%,80% --ansi \
         --color "hl:-1:underline,hl+:-1:underline:reverse" \
         --disabled --query "$argv" \
         --bind "change:reload:sleep 0.1; $rg_cmd {q} || true" \
         --bind "$change_key:unbind(change,$change_key)+change-prompt(2. fzf> )+enable-search+clear-query" \
-        --header "Press $change_key to switch to fzf" \
+        --header "Press $change_key to switch to fuzzy finder" \
         --prompt '1. rg> ' \
         --delimiter : \
         --preview 'bat --color=always {1} --highlight-line {2}' \

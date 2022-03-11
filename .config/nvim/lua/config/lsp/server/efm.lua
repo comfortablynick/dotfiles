@@ -16,6 +16,7 @@ return function(on_attach)
       "sh",
       "python",
       "markdown",
+      "toml",
       "yaml",
       "yaml.ansible",
     },

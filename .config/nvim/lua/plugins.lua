@@ -331,7 +331,11 @@ local function init()
   }
 
   -- Git
-  use { "tpope/vim-fugitive", cmd = { "G", "Gw", "Git", "Glog", "Gclog" } }
+  use {
+    "tpope/vim-fugitive",
+    -- cmd = { "G", "Gw", "Git", "Glog", "Gclog" },
+    event = lazy_load_event,
+  }
   use {
     "junegunn/gv.vim",
     cmd = "GV",

@@ -150,23 +150,24 @@ def get_shell_vars(  # {{{1
     var_defs = {
         "fish": {
             "abbr": {"format": "abbr {args} {key} {val} {cmt}", "default_args": "-g"},
-            "alias": {
-                "format": "function {key} {args}; {val}; end {cmt}"
-            },
+            "alias": {"format": "function {key} {args}; {val}; end {cmt}"},
             "env": {"format": "set {args} {key} {val} {cmt}", "default_args": "-gx"},
-            "path": {"format": "fish_add_path {args} {val} {cmt}", "default_args": "-P"},
+            "path": {
+                "format": "test -d {val}; and fish_add_path {args} {val} {cmt}",
+                "default_args": "-P",
+            },
         },
         "bash": {
             "abbr": {"format": "alias {key}={val} {cmt}"},
             "alias": {"format": "alias {key}={val} {cmt}"},
             "env": {"format": "export {key}={val} {cmt}"},
-            "path": {"format": "export PATH={val}:$PATH {cmt}"},
+            "path": {"format": "[[ -d {val} ]] && export PATH={val}:$PATH {cmt}"},
         },
         "zsh": {
             "abbr": {"format": "alias {key}={val} {cmt}"},
             "alias": {"format": "alias {key}={val} {cmt}"},
             "env": {"format": "export {key}={val} {cmt}"},
-            "path": {"format": "export PATH={val}:$PATH {cmt}"},
+            "path": {"format": "[[ -d {val} ]] && export PATH={val}:$PATH {cmt}"},
         },
     }
     all_vars = []
@@ -208,10 +209,6 @@ def get_shell_vars(  # {{{1
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
-
-            if var_type == "path" and not os.path.isdir(os.path.expandvars(str(v))):
-                LOG.warning("'%s' is not a valid directory", v)
-                continue
 
             desc = var.get("desc")
             c = f"# {desc}" if print_comments and desc else ""

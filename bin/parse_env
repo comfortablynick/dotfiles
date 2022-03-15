@@ -154,7 +154,7 @@ def get_shell_vars(  # {{{1
             "env": {"format": "set {args} {key} {val} {cmt}", "default_args": "-gx"},
             "path": {
                 "format": "test -d {val}; and fish_add_path {args} {val} {cmt}",
-                "default_args": "-P",
+                "default_args": "-g",
             },
         },
         "bash": {

@@ -53,6 +53,7 @@ pipx_packages_all:
     inject:
       - pynvim
   - name: speedtest-cli
+  - name: thefuck
 
 rust_toolchains_all:
   - stable

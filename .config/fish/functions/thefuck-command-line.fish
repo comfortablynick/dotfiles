@@ -1,6 +1,8 @@
-function thefuck-command-line
-  env THEFUCK_REQUIRE_CONFIRMATION=0 thefuck $history[1] 2> /dev/null | read fuck
-  [ -z $fuck ]; and return
-  history delete $history[1] -eC
-  commandline -r $fuck
+function thefuck-command-line -d 'Bind to a key to automatically populate fixed command'
+    set -x THEFUCK_REQUIRE_CONFIRMATION 0
+    set fuck (thefuck $history[1] 2>/dev/null)
+    if test -n $fuck
+        history delete $history[1] -eC
+        commandline -r $fuck
+    end
 end

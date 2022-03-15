@@ -1,3 +1,4 @@
+.ansible-console_history
 fish_universal_variables
 fish_variables*
 .envrc

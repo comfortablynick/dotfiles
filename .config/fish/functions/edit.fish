@@ -50,9 +50,9 @@ If supplying a finder via -f, any arguments after -- will be given to the finder
 
     set files (eval "$FZY_DEFAULT_COMMAND" | $use_finder)
 
-    if test -z "$files"
+    if test -z $files
         commandline -f repaint
-        return
+        return 1
     end
 
     commandline -tr "$EDITOR "

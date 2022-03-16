@@ -18,14 +18,12 @@ Flags:
         echo (set_color brred)'error: '(set_color -o brblue)'must log in to lpass cli first'(set_color normal) 1>&2
         return 1
     end
-    lpass ls | fzf-tmux -1 -q "$argv" | read -l result
-    if test -z "$result"
-        return 1
-    end
+    set result (lpass ls | _fzf_wrapper -1 -q "$argv")
+    test -z $result; and return 1
     set result (string replace -r -a '.+\[id: (\d+)\]' '$1' -- $result)
     set -l lpass_args
     if set -q _flag_password
         set lpass_args --password
     end
-    and lpass show $lpass_args $result
+    lpass show $lpass_args $result
 end

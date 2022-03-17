@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # type: ignore
 
-# Copyright (c) 2021 Nick Muprphy <comfortablynick@gmail.com>
+# Copyright (c) 2022 Nick Muprphy <comfortablynick@gmail.com>
 # Originally (c) 2014 Austin Hyde
 # MIT License (MIT)
 # Updated to work with paru or yay

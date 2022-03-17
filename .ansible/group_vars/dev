@@ -59,8 +59,8 @@ rust_toolchains_dev:
 pipx_packages_dev:
   # - name: ansible --include-deps
   - name: black
-  - name: cmakelang[YAML]
   - name: cmakelang
+    source: cmakelang[YAML]
   - name: cmakelint
   - name: legit
   - name: flake8
@@ -74,7 +74,8 @@ pipx_packages_dev:
   - name: pydocstyle
   - name: pycodestyle
   - name: topydo
-  - name: git+https://github.com/vimjas/vint
+  - name: vim-vint
+    source: git+https://github.com/vimjas/vint
   - name: toml-sort
   - name: yamllint
   - name: youtube-dl

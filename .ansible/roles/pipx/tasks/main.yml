@@ -16,13 +16,6 @@
     pipx_path: "{{ asdf_python_bin_dir }}/pipx"
   when: asdf_python_bin_dir is defined
 
-- name: Debug paths
-  debug:
-    msg: |
-      asdf python bin dir: {{ asdf_python_bin_dir|default('') }}
-      pipx pip3 path:      {{ pipx_pip3_path }}
-      pipx path:           {{ pipx_path }}
-
 - name: Install pipx
   pip:
     name: pipx
@@ -34,21 +27,27 @@
 - name: Debug packages
   debug:
     var: pipx_pkgs
+    verbosity: 1
 
 - name: Install pipx packages
-  command: "{{ pipx_path }} install {{ item.name }}"
+  community.general.pipx:
+    name: "{{ item.name }}"
+    source: "{{ item.source|d(omit) }}"
+    state: install
+    executable: "{{ pipx_path }}"
   loop: "{{ pipx_pkgs }}"
-  register: pipx
-  changed_when: "'--force' not in pipx.stdout"
-  failed_when: pipx.rc > 1
 
 - name: Inject pipx dependencies
-  command: "{{ pipx_path }} inject {{ item.name }} {{ item.inject|join(' ') }}"
+  community.general.pipx:
+    name: "{{ item.name }}"
+    source: "{{ item.source|d(omit) }}"
+    state: inject
+    inject_packages: "{{ item.inject }}"
+    executable: "{{ pipx_path }}"
   loop: "{{ pipx_pkgs }}"
   when: item.inject is defined
-  changed_when: false  # no way to detect if this is a change or not
 
-- name: Upgrade pipx packages
-  command: "{{ pipx_path }} upgrade-all"
-  register: pipx_upgrade
-  changed_when: "'Versions did not change' not in pipx_upgrade.stdout"
+- name: Inject pipx dependencies
+  community.general.pipx:
+    state: upgrade_all
+    executable: "{{ pipx_path }}"

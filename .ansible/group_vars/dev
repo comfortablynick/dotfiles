@@ -92,6 +92,7 @@ cargo_packages_dev:
   - name: taplo-lsp
   - name: taplo-cli
   - name: ouch
+  - name: cargo-edit
 
 neovim_cmake_build_type: RelWithDebInfo
 neovim_build: true

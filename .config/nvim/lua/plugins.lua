@@ -364,6 +364,7 @@ local function init()
     config = function()
       require "config.smart-pairs"
     end,
+    disable = true,
   }
   use {
     "neovim/nvim-lspconfig",

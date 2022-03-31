@@ -64,7 +64,8 @@ function M.find_package_json_ancestor(startpath)
   end)
 end
 
-function M.get_current_root(bufnr)
+function M.get_current_root()
+  local bufnr = api.nvim_get_current_buf()
   return M.root_pattern(unpack(vim.g.root_patterns))(api.nvim_buf_get_name(bufnr))
 end
 

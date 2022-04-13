@@ -96,7 +96,7 @@ if [[ -r /etc/os-release ]]; then
 fi
 
 case "$distro" in
-    debian | ubuntu) debian ;;
+    debian | ubuntu | raspbian) debian ;;
     arch) arch ;;
     *) die 'unknown distro :(' ;;
 esac

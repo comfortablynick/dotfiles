@@ -18,7 +18,11 @@ function __fish_todo_option
     complete -f -c todo -n "__fish_seen_subcommand_from $subcommand" $argv
 end
 
+complete -c todo -n __fish_use_subcommand -x -s h -d 'Print help information'
+complete -c todo -n __fish_use_subcommand -x -s v -d 'Print version'
+
 # Subcommands
+# complete -c todo -n __fish_use_subcommand -xa 'add a' -d 'add todo item'
 __fish_todo_subcommand 'add a' -r -d 'add todo item'
 __fish_todo_subcommand addm -r -d 'add multiple todo items'
 __fish_todo_subcommand addto -r -d 'add todo to any file located in todo.txt dir'

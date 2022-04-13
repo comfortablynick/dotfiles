@@ -17,3 +17,4 @@
 - import_playbook: playbooks/vim.yml
 - import_playbook: playbooks/lsd.yml
 - import_playbook: playbooks/zoxide.yml
+- import_playbook: playbooks/just.yml

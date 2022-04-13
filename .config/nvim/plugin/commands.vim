@@ -63,8 +63,8 @@ call map#cabbr('hg', 'helpgrep')
 
 
 " Grep :: async grep {{{2
-command! -nargs=+ -complete=file_in_path -bar Grep
-    \ AsyncRun -strip -program=grep <args>
+" command! -nargs=+ -complete=file_in_path -bar Grep
+"     \ AsyncRun -strip -program=grep <args>
 
 " Git {{{1
 " TigStatus {{{2

@@ -109,10 +109,10 @@ o.wildoptions = { "pum" }
 o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 
 -- Grep
-if fn.executable "ugrep" then
+if fn.executable "ugrep" == 1 then
   o.grepprg = "ugrep -RInkju. --ignore-files --tabs=1"
   o.grepformat = { "%f:%l:%c:%m", "%f+%l+%c+%m", [[%-G%f\|%l\|%c\|%m]] }
-elseif fn.executable "rg" then
+elseif fn.executable "rg" == 1 then
   o.grepprg = "rg --vimgrep --hidden"
   o.grepformat = { "%f:%l:%c:%m", "%f:%l:%m" }
 end

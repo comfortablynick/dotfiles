@@ -1,5 +1,5 @@
 local cmd = function(name, command, opts)
-  vim.api.nvim_add_user_command(name, command, opts or {})
+  vim.api.nvim_create_user_command(name, command, opts or {})
 end
 
 cmd("LspDisable", function()
@@ -19,7 +19,7 @@ end, { nargs = "?", desc = "Display most recently used files in scratch buffer" 
 
 cmd("Sh", function(opts) -- :: Run async cmd and output to scratch buffer
   require("tools").sh { cmd = opts.args }
-end, { complete = "file", nargs = "+", desc = "Run async cmd and output to scratch buffer"})
+end, { complete = "file", nargs = "+", desc = "Run async cmd and output to scratch buffer" })
 
 cmd("Term", function(opts) -- :: Run async command in terminal buffer
   require("tools").term_run_cmd(unpack(vim.split(opts.args, " ")))
@@ -30,7 +30,7 @@ cmd("Run", function(opts) -- :: Simple lua version of AsyncRun
 end, { complete = "shellcmd", nargs = "+", bang = true })
 
 cmd("Redir", function(opts) -- :: Redirect output of command to scratch buffer
-  require("tools").redir{cmd = opts.args, mods = opts.mods, bang = opts.bang}
+  require("tools").redir { cmd = opts.args, mods = opts.mods, bang = opts.bang }
 end, { complete = "command", nargs = 1, bang = true })
 
 cmd("Grep", function(opts) -- :: Async grep

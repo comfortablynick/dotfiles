@@ -89,7 +89,6 @@ cargo_packages_dev:
   - name: nu --features extra
   - name: starship
   - name: genact
-  - name: taplo-lsp
   - name: taplo-cli
   - name: ouch
   - name: cargo-edit

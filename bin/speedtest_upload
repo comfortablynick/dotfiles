@@ -1,0 +1,45 @@
+#!/bin/sh
+
+airtable_api_key="key3vXRXODpX47BKV"
+airtable_url="https://api.airtable.com/v0/appzvVjqjEI9Qtkpi/tblC6Qa0brtLo8tmf"
+
+echo "⚡️ Starting speedtest..."
+
+result=$(speedtest -f json)
+
+echo "📶 Result:"
+echo "$result" | jq
+
+timestamp=$(echo $result | jq ".timestamp")
+down=$(echo $result | jq ".download.bandwidth")
+up=$(echo $result | jq ".upload.bandwidth")
+ping=$(echo $result | jq ".ping.latency")
+result_url=$(echo $result | jq ".result.url")
+external_ip=$(echo $result | jq ".interface.externalIp")
+server_name=$(echo $result | jq ".server.name")
+server_location=$(echo $result | jq ".server.location")
+
+echo "📊 Starting upload to AirTable..."
+
+curl --location --request POST "$airtable_url" \
+--header "Authorization: Bearer $airtable_api_key" \
+--header 'Content-Type: application/json' \
+--data-raw "{
+    \"records\": [
+        {
+            \"fields\": {
+                \"Date\": $timestamp,
+                \"Source IP\": $external_ip,
+                \"Server Name\": $server_name,
+                \"Server Location\": $server_location,
+                \"Down\": $down,
+                \"Up\": $up,
+                \"Ping (ms)\": $ping,
+                \"Result URL\": $result_url
+            }
+        }
+    ]
+}"
+
+echo ""
+echo "✅ Uploaded to AirTable"

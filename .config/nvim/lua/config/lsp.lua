@@ -190,7 +190,7 @@ function M.clients()
     table.insert(servers, {
       name = client.name,
       id = client.id,
-      capabilities = client.resolved_capabilities,
+      capabilities = client.server_capabilities,
     })
   end
   return servers
@@ -215,7 +215,7 @@ local on_attach_cb = function(client, bufnr)
     lsp_status.on_attach(client)
   end
   local nmap_capability = function(lhs, method, description, capability_name)
-    if client.resolved_capabilities[capability_name or method] then
+    if client.server_capabilities[capability_name or method] then
       nmap(lhs, "lua vim.lsp.buf." .. method .. "()", description)
       -- TODO: use this when which-key supports new vim.keymap.set callbacks
       -- vim.keymap.set("n", lhs, vim.lsp.buf[method], { desc = description, buffer = bufnr })
@@ -225,19 +225,19 @@ local on_attach_cb = function(client, bufnr)
   local ft = vim.bo[bufnr].ft
   vim.g["vista_" .. ft .. "_executive"] = "nvim_lsp"
 
-  nmap_capability("gtd", "definition", "Lsp goto definition", "goto_definition")
-  nmap_capability("gh", "hover", "Lsp hover")
-  nmap_capability("gi", "implementation", "Lsp implementation")
-  nmap_capability("gS", "signature_help", "Lsp signature help")
-  nmap_capability("ga", "code_action", "Lsp code actions")
-  nmap_capability("gt", "type_definition", "Lsp type definition")
+  nmap_capability("gtd", "definition", "Lsp goto definition", "definitionProvider")
+  nmap_capability("gh", "hover", "Lsp hover", "hoverProvider")
+  nmap_capability("gi", "implementation", "Lsp implementation", "implementationProvider")
+  nmap_capability("gS", "signature_help", "Lsp signature help", "signatureHelpProvider")
+  nmap_capability("ga", "code_action", "Lsp code actions", "codeActionProvider")
+  nmap_capability("gt", "type_definition", "Lsp type definition", "typeDefinitionProvider")
 
   nmap("<F2>", "lua require'config.lsp'.rename()", "Lsp rename")
   nmap("gd", "lua vim.diagnostic.setloclist{open = true}", "Lsp diagnostics")
   nmap("[d", "lua vim.diagnostic.goto_prev{popup_opts = {show_header = false}}", "Lsp goto prev diagnostic")
   nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}", "Lsp goto next diagnostic")
 
-  if client.resolved_capabilities["document_formatting"] then
+  if client.server_capabilities.documentFormattingProvider then
     vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
     nmap("<F3>", "Format", "Lsp format")
   end
@@ -255,7 +255,7 @@ local on_attach_cb = function(client, bufnr)
   end
 
   -- Set autocmds for highlighting if server supports it
-  if false and client.resolved_capabilities.document_highlight then
+  if false and client.server_capabilities.documentHighlightProvider then
     set_hl_autocmds()
   end
 end

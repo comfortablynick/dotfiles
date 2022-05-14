@@ -5,8 +5,8 @@ return function(on_attach)
     cmd = { "taplo", "lsp", "stdio" },
     on_attach = function(client, bufnr)
       -- Turn off formatting for now; doesn't respect taplo.toml
-      client.resolved_capabilities.document_formatting = false
-      client.resolved_capabilities.document_range_formatting = false
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
       on_attach(client, bufnr)
     end,
     filetypes = { "toml" },

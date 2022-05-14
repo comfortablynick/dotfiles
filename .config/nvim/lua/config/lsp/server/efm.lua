@@ -5,8 +5,8 @@ return function(on_attach)
     cmd = { "efm-langserver" },
     on_attach = function(client, bufnr)
       -- This may help with making sure requests don't get sent to efm-langserver
-      client.resolved_capabilities.rename = false
-      client.resolved_capabilities.hover = false
+      client.server_capabilities.renameProvider = false
+      client.server_capabilities.hoverProvider = false
       on_attach(client, bufnr)
     end,
     filetypes = {

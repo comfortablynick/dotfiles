@@ -1,6 +1,6 @@
 #!/bin/sh
 
-airtable_api_key="key3vXRXODpX47BKV"
+airtable_api_key=$(lpass show --password airtable_api_key)
 airtable_url="https://api.airtable.com/v0/appzvVjqjEI9Qtkpi/tblC6Qa0brtLo8tmf"
 
 echo "⚡️ Starting speedtest..."

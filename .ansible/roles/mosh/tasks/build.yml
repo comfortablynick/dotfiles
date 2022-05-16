@@ -1,0 +1,57 @@
+---
+# build tasks for mosh
+- name: Remove existing mosh clone
+  file:
+    path: "{{ mosh_source_dir }}"
+    state: absent
+  when: mosh_force_build
+
+- name: Clone mosh master
+  git:
+    repo: https://github.com/mobile-shell/mosh
+    dest: "{{ mosh_source_dir }}"
+    depth: "1"
+    force: true
+  register: mosh_git_clone
+
+- name: Show commit hashes before/after pull
+  debug:
+    msg: |
+      Before  {{ mosh_git_clone.before }}
+      After   {{ mosh_git_clone.after }}
+
+- name: Install/update mosh and dependencies
+  block:
+    - name: Install apt dependencies
+      apt:
+        name: "{{ Debian_required_packages }}"
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install arch dependencies
+      pacman:
+        name: "{{ Arch_required_packages }}"
+        state: latest
+      become: true
+      when: ansible_facts['os_family'] == 'Archlinux'
+
+    - name: Build and install mosh
+      command: "{{ item }}"
+      args:
+        chdir: "{{ mosh_source_dir }}"
+      loop:
+        - sh autogen.sh
+        - >-
+          ./configure --prefix={{ install_path }}
+            CPPFLAGS="-I{{ install_path }}/include -I{{ install_path }}/include/ncurses"
+            LDFLAGS="-L{{ install_path }}/lib"
+        - make -j{{ make_concurrency }}
+        - make install
+      changed_when: true
+  when: mosh_git_clone.before != mosh_git_clone.after or mosh_force_build
+
+- name: Show no changes message
+  debug:
+    msg: No upstream mosh changes! Skipping build.
+  when: mosh_git_clone.before == mosh_git_clone.after and not mosh_force_build

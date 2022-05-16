@@ -1,0 +1,6 @@
+---
+# Install tasks for Mosh
+- name: Mosh | Install with homebrew
+  homebrew:
+    name: mosh
+    path: /opt/homebrew/bin

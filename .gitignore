@@ -23,6 +23,7 @@ vifminfo*
 */asciinema/install-id
 /src
 Session.vim
+wg*.conf
 
 # Home dir repo ignores
 /Applications/

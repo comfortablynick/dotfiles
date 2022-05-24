@@ -169,6 +169,15 @@ def get_shell_vars(  # {{{1
             "env": {"format": "export {key}={val} {cmt}"},
             "path": {"format": "[[ -d {val} ]] && export PATH={val}:$PATH {cmt}"},
         },
+        "nu": {
+            "abbr": {"format": "alias {key} = {val} {cmt}"},
+            "alias": {"format": "alias {key} = {val} {cmt}"},
+            "env": {"format": "let-env {key} = {val} {cmt}"},
+            "path": {
+                "format": "{val} | path exists && let-env PATH = "
+                + "($env.PATH | split row (char esep) | prepend {val} {cmt}"
+            },
+        },
     }
     all_vars = []
     for var in get_env_objs(toml):
@@ -193,9 +202,18 @@ def get_shell_vars(  # {{{1
             else:
                 v = str(var.get("val"))
 
-            if shell == "fish" and var_type == "alias":
+            if shell in ["fish", "nu"] and var_type == "alias":
                 # This will be a function in fish; we don't want quoting
                 do_quote = False
+
+            if shell == "nu":
+                # Paths need to be quoted to be piped
+                # v = RE_ENV_VAR.sub("$env.", str(v))
+                v = os.path.expandvars(v)
+
+                if var_type in ["env", "path"]:
+                    # v = repr(v)
+                    do_quote = True
 
             if do_quote is not False and not eval:
                 if do_quote or RE_SPACE.search(v):
@@ -209,6 +227,10 @@ def get_shell_vars(  # {{{1
             if shell == "fish":
                 v = RE_CMD.sub("(", str(v))
                 v = RE_AND.sub("; and ", str(v))
+
+            if shell == "nu":
+                v = RE_CMD.sub("(", str(v))
+                # v = RE_AND.sub(";", str(v))
 
             desc = var.get("desc")
             c = f"# {desc}" if print_comments and desc else ""
@@ -265,10 +287,10 @@ def build_parser() -> argparse.ArgumentParser:  # {{{1
     parser.add_argument(
         "-s",
         dest="shell",
-        choices=["fish", "bash", "zsh"],
-        help="Shell syntax for output [fish,bash,zsh] (default: $SHELL)",
+        choices=["fish", "bash", "nu", "zsh"],
+        help="Shell syntax for output [fish,bash,nu,zsh] (default: $CURRENT_SHELL)",
         metavar="SHELL",
-        default=os.path.basename(os.getenv("SHELL", default="/bin/bash")),
+        default=os.path.basename(os.getenv("CURRENT_SHELL", default="/bin/bash")),
     )
     parser.add_argument(
         "-v",

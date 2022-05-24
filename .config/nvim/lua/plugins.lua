@@ -329,6 +329,7 @@ local function init()
       vim.g.ansible_extra_keywords_highlight = 1
     end,
   }
+  use { "LhKipp/nvim-nu", opt = false, run = ":TSInstall nu" }
 
   -- Git
   use {

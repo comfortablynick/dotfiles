@@ -238,7 +238,7 @@ local on_attach_cb = function(client, bufnr)
   nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}", "Lsp goto next diagnostic")
 
   if client.server_capabilities.documentFormattingProvider then
-    vim.cmd [[command! Format lua vim.lsp.buf.formatting()]]
+    vim.cmd [[command! Format lua vim.lsp.buf.format{async = true}]]
     nmap("<F3>", "Format", "Lsp format")
   end
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"

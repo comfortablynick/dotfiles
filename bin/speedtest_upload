@@ -10,14 +10,15 @@ result=$(speedtest -f json)
 echo "📶 Result:"
 echo "$result" | jq
 
-timestamp=$(echo $result | jq ".timestamp")
-down=$(echo $result | jq ".download.bandwidth")
-up=$(echo $result | jq ".upload.bandwidth")
-ping=$(echo $result | jq ".ping.latency")
-result_url=$(echo $result | jq ".result.url")
-external_ip=$(echo $result | jq ".interface.externalIp")
-server_name=$(echo $result | jq ".server.name")
-server_location=$(echo $result | jq ".server.location")
+timestamp=$(echo "$result" | jq ".timestamp")
+hostname=$(uname -n)
+down=$(echo "$result" | jq ".download.bandwidth")
+up=$(echo "$result" | jq ".upload.bandwidth")
+ping=$(echo "$result" | jq ".ping.latency")
+result_url=$(echo "$result" | jq ".result.url")
+external_ip=$(echo "$result" | jq ".interface.externalIp")
+server_name=$(echo "$result" | jq ".server.name")
+server_location=$(echo "$result" | jq ".server.location")
 
 echo "📊 Starting upload to AirTable..."
 
@@ -30,6 +31,7 @@ curl --location --request POST "$airtable_url" \
             \"fields\": {
                 \"Date\": $timestamp,
                 \"Source IP\": $external_ip,
+                \"Hostname\": $hostname,
                 \"Server Name\": $server_name,
                 \"Server Location\": $server_location,
                 \"Down\": $down,

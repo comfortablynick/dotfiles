@@ -15,6 +15,7 @@ pkg_pacman_packages_all:
   - bc
   - curl
   - unzip
+  - python-jmespath  # Needed for ansible json_query
 
 pkg_aur_packages_all:
   - todotxt

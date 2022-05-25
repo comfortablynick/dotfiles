@@ -1,12 +1,12 @@
 ---
 # tasks file for fish_shell
-- name: Fish shell | Clone git repo
-  git:
-    repo: https://github.com/fish-shell/fish-shell
-    dest: "{{ fish_source_dir }}"
-    force: true
-    accept_hostkey: true
-  register: source_repo
+# - name: Fish shell | Clone git repo
+#   git:
+#     repo: https://github.com/fish-shell/fish-shell
+#     dest: "{{ fish_source_dir }}"
+#     force: true
+#     accept_hostkey: true
+#   register: source_repo
 
 - name: Fish shell | Get installed version
   command: "{{ fish_install_prefix }}/bin/fish --version"
@@ -19,18 +19,42 @@
     msg: Current fish install not found at '{{ fish_install_prefix }}/bin/fish'!
   when: fish_installed_version.rc != 0
 
-- name: Fish shell | Set version strings
+- name: Fish | Query latest nightly
+  uri:
+    url: https://api.github.com/repos/fish-shell/fish-shell/releases/latest
+    return_content: true
+  run_once: true
+  register: fish_latest
+  changed_when: false
+
+- name: Fish | Set version strings
   set_fact:
-    fish_installed_sha: "{% if fish_installed_version.stdout|length > 1 %}{{ fish_installed_version.stdout[-9:] }}{% else %}0{% endif %}"
-    fish_master_sha: "{{ source_repo.after[:9] }}"
+    fish_installed_version: "{% if fish_installed_version.stdout|length > 1 %}{{ fish_installed_version.stdout[-9:] }}{% else %}0{% endif %}"
+    fish_latest_version: "{{ fish_latest.json.tag_name }}"
+    fish_latest_url: "{{ fish_latest.json | json_query(query) | first }}"
+  vars:
+    query: "assets[?contains(name, 'tar.xz')==`true`].browser_download_url"
 
-- name: Fish shell | Build from git master
+- name: Fish | Download source tarball
   block:
-    - name: Remove existing build dir if exists
-      file:
-        path: "{{ fish_source_dir }}/build"
-        state: absent
+    - name: Fish | Create temp dl dir
+      tempfile:
+        state: directory
+        suffix: _fish
+      register: fish_dl_path
 
+    - name: Fish | Unzip download
+      unarchive:
+        src: "{{ fish_latest_url }}"
+        dest: "{{ fish_dl_path.path }}"
+        remote_src: true
+
+    - name: Fish | Set src path
+      set_fact:
+        fish_source_dir: "{{ fish_dl_path.path }}/fish-{{ fish_latest_version }}"
+
+- name: Fish shell | Build from source
+  block:
     - name: Make build dir
       file:
         path: "{{ fish_source_dir }}/build"
@@ -42,17 +66,22 @@
       args:
         chdir: "{{ fish_source_dir }}/build"
       loop:
-        - cmake -DCMAKE_INSTALL_PREFIX={{ fish_install_prefix }} ..
-        - make
+        - cmake -G Ninja -DCMAKE_INSTALL_PREFIX={{ fish_install_prefix }} ..
+        - ninja
       changed_when: true
 
     - name: Install fish
-      command: make install
+      command: ninja install
       args:
         chdir: "{{ fish_source_dir }}/build"
       become: true
       changed_when: true
-  when: (fish_installed_sha != fish_master_sha) or fish_force_build
+  always:
+    - name: Fish | Cleanup temp files
+      file:
+        path: "{{ fish_dl_path.path }}"
+        state: absent
+  when: (fish_installed_version != fish_latest_version) or fish_force_build
 
 - name: Fish shell | Add fish to /etc/shells
   lineinfile:

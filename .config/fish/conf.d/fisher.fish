@@ -1,4 +1,4 @@
-if not status is-interactive; or set -q _fisher_path_initialized
+if set -q _fisher_path_initialized
     exit
 end
 set -g _fisher_path_initialized

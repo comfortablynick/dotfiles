@@ -7,6 +7,16 @@
       - --configdir
   register: python3_config_dir
   changed_when: false
+  when: ansible_facts.system == 'Linux'
+
+- name: Get python3 config dir
+  command:
+    argv:
+      - /opt/homebrew/bin/python3-config
+      - --configdir
+  register: python3_config_dir
+  changed_when: false
+  when: ansible_facts.system == 'Darwin'
 
 - name: Clone vim master
   git:

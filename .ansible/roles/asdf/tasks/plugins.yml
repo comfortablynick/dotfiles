@@ -1,5 +1,11 @@
 ---
 # asdf plugins
+- name: asdf | Debug all plugins list
+  debug:
+    msg: |
+      {{ asdf_plugins|flatten(levels=1)|to_nice_yaml(indent=2) }}
+    verbosity: 1
+
 - name: asdf | Install asdf plugins
   command:
     cmd: "{{ asdf_bin }} plugin-add {{ item.name }} {{ item.repository|d() }}"

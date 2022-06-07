@@ -31,7 +31,7 @@ complete -c fd -l no-ignore-vcs -d 'Do not respect .gitignore files'
 complete -c fd -l ignore-vcs
 complete -c fd -l no-ignore-parent -d 'Do not respect .(git|fd)ignore files in parent directories'
 complete -c fd -l no-global-ignore-file -d 'Do not respect the global ignore file'
-complete -c fd -s u -l unrestricted -d 'Alias for \'--no-ignore\', and \'--hidden\' when given twice'
+complete -c fd -s u -l unrestricted -d 'Unrestricted search, alias for \'--no-ignore --hidden\''
 complete -c fd -s s -l case-sensitive -d 'Case-sensitive search (default: smart case)'
 complete -c fd -s i -l ignore-case -d 'Case-insensitive search (default: smart case)'
 complete -c fd -s g -l glob -d 'Glob-based search (default: regular expression)'

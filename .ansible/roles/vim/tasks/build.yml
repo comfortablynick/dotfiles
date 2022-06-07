@@ -1,22 +1,15 @@
 ---
-# vim
-- name: Get python3 config dir
-  command:
-    argv:
-      - /usr/bin/python3-config
-      - --configdir
-  register: python3_config_dir
-  changed_when: false
-  when: ansible_facts.system == 'Linux'
+# vim build tasks
+- name: Load OS-specific vars
+  include_vars: "{{ ansible_facts.system }}.yml"
 
 - name: Get python3 config dir
   command:
     argv:
-      - /opt/homebrew/bin/python3-config
+      - "{{ python3_config_path }}"
       - --configdir
   register: python3_config_dir
   changed_when: false
-  when: ansible_facts.system == 'Darwin'
 
 - name: Clone vim master
   git:
@@ -26,11 +19,12 @@
     force: true
   register: vim_git_clone
 
-- name: Show commit hashes before/after pull
+- name: Debug print
   debug:
     msg: |
-      Before  {{ vim_git_clone.before }}
-      After   {{ vim_git_clone.after }}
+      Before:  {{ vim_git_clone.before }}
+      After:   {{ vim_git_clone.after }}
+      Python3 config dir: {{ python3_config_dir.stdout }}
     verbosity: 1
 
 - name: Build and install vim

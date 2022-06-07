@@ -1,0 +1,3 @@
+---
+# vim linux vars
+python3_config_path: /usr/bin/python3-config

@@ -1,0 +1,3 @@
+---
+# vim macos vars
+python3_config_path: /opt/homebrew/bin/python3-config

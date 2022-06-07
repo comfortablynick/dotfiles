@@ -4,4 +4,4 @@
   apt:
     name: "{{ Arch_vim_required_packages }}"
     state: present
-  become: yes
+  become: true

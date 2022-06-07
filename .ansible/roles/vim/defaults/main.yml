@@ -3,6 +3,7 @@
 make_concurrency: "{{ ansible_facts['processor_vcpus'] }}"
 
 vim_force_build: false
+vim_upgrade: true
 vim_source_dir: "{{ ansible_facts.user_dir }}/src/vim"
 install_path: "{{ ansible_facts['user_dir'] }}/.local"
 

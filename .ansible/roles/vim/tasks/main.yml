@@ -1,8 +1,4 @@
 ---
-- name: Set flag to true if upgrade needed
-  set_fact:
-    vim_upgrade: True
-
 - debug:
     msg: Forcing vim build/install
   when: vim_force_build and not vim_upgrade

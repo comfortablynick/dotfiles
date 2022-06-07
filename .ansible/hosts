@@ -1,5 +1,4 @@
 # Ansible inventory
-jupiter
 titan
 mars
 pollux
@@ -7,7 +6,6 @@ uranus
 nova
 
 [dev]
-jupiter
 mars
 uranus
 
@@ -15,7 +13,6 @@ uranus
 mars
 
 [linux]
-jupiter
 titan
 mars
 uranus

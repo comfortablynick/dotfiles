@@ -111,7 +111,6 @@ if functions -q __bobthefish_colors
     end
 
     # pure {{{2
-
 else if functions -q _pure_prompt
     set -g pure_symbol_prompt "❯"
     set -g pure_symbol_git_unpulled_commits '↓' # "⇣"
@@ -138,11 +137,28 @@ else if functions -q _pure_prompt
     set -g pure_separate_prompt_on_error false # Show addl char if error
     set -g pure_threshold_command_duration 5 # Secs elapsed before exec time shown
 
+    # tide {{{2
+else if functions -q _tide_init_install
+    set -l remove_items aws java php chruby kubectl toolbox terraform
+
+    # Remove `user@host` if in tmux session
+    if test -n "$TMUX"
+        set -a remove_items context
+    end
+
+    for item in $remove_items
+        contains -i $item $tide_right_prompt_items | read -l idx
+        and set -e $tide_right_prompt_items[$idx]
+    end
+
+    set -g tide_cmd_duration_decimals 3
+    set -g tide_cmd_duration_threshold 1000
 else
-    # if type -qf starship
-    #     starship init fish --print-full-init | source
-    #     set fish_greeting
-    # end
+    # starship {{{2
+    if type -qf starship
+        starship init fish --print-full-init | source
+        set fish_greeting
+    end
 end
 
 # End config {{{1

@@ -70,41 +70,17 @@ autoload -Uz bashcompinit && bashcompinit                       # Bash completio
 # Environment variables {{{2
 export LANG=en_US.UTF-8
 export UPDATE_ZSH_DAYS=7
-export ZSH_THEME="powerlevel10k"
+export ZSH_THEME=powerlevel10k
+export ZSH_PLUGIN_MANAGER=zinit
 
-# if [[ $MOSH_CONNECTION -eq 0 ]] && (( $+commands[delta] )); then
-#     export GIT_PAGER="delta --dark"
-# fi
 export ZDOTDIR=${HOME}
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=${HOME}/.config}
 export XDG_DATA_HOME=${XDG_DATA_HOME:=${HOME}/.local/share}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:=${HOME}/.cache}
 export ZSH_CACHE_DIR=${XDG_CACHE_HOME}/zsh
 
-[[ ! -d ${ZSH_CACHE_DIR} ]] && command mkdir -p ${ZSH_CACHE_DIR}
+if [[ ! -d ${ZSH_CACHE_DIR} ]] command mkdir -p ${ZSH_CACHE_DIR}
 
-
-# Config snippets {{{2
-for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
-for config (${XDG_CONFIG_HOME}/zsh/conf.d/*.zsh) source $config
-
-fpath=(${XDG_CONFIG_HOME}/zsh/completions
-    ${XDG_CONFIG_HOME}/zsh/functions
-    ${XDG_CONFIG_HOME}/shell/functions
-    $fpath)
-
-# Autoload functions {{{2
-autoload -Uz remove_last_history_entry
-autoload -Uz direnv
-autoload -Uz fh
-autoload -Uz cf
-autoload -Uz mc
-autoload -Uz cd
-autoload -Uz lo
-
-# chpwd functions {{{3
-autoload -Uz list_all
-chpwd_functions+=("list_all")
 
 # Shell opts {{{1
 # General {{{2
@@ -136,6 +112,7 @@ bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
+bindkey '^F' end-of-line
 bindkey -M viins "kj" vi-cmd-mode
 
 autoload -Uz edit-command-line # ! in vi cmd mode opens prompt in $EDITOR
@@ -148,50 +125,91 @@ bindkey '^E' fzy-edit
 
 # Plugins {{{1
 # zinit {{{2
-export ZINIT_HOME=${HOME}/.zinit
-typeset -A ZINIT=(
-   HOME_DIR          ${ZINIT_HOME}
-   BIN_DIR           ${ZINIT_HOME}/bin
-   PLUGINS_DIR       ${ZINIT_HOME}/plugins
-   COMPLETIONS_DIR   ${ZINIT_HOME}/completions
-   SNIPPETS_DIR      ${ZINIT_HOME}/snippets
-   COMPINIT_OPTS     -C
-   ZCOMPDUMP_PATH    ${ZSH_CACHE_DIR}/zcompdump-${ZSH_VERSION}
-)
+if [[ ${ZSH_PLUGIN_MANAGER} = "zinit" ]]; then
+    export ZINIT_HOME=${XDG_DATA_HOME:-${HOME}/.local/share}/zinit
+    typeset -A ZINIT=(
+       HOME_DIR          ${ZINIT_HOME}
+       BIN_DIR           ${ZINIT_HOME}/bin
+       PLUGINS_DIR       ${ZINIT_HOME}/plugins
+       COMPLETIONS_DIR   ${ZINIT_HOME}/completions
+       SNIPPETS_DIR      ${ZINIT_HOME}/snippets
+       COMPINIT_OPTS     -C
+       ZCOMPDUMP_PATH    ${ZSH_CACHE_DIR}/zcompdump-${ZSH_VERSION}
+    )
 
-ZINIT_SCRIPT=${ZINIT[BIN_DIR]}/zinit.zsh
+    ZINIT_SCRIPT=${ZINIT[BIN_DIR]}/zinit.zsh
 
-### Added by Zinit's installer
-if [[ ! -f ${ZINIT_SCRIPT} ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing DHARMA Initiative Plugin Manager (zdharma/zinit)…%f"
-    command mkdir -p "${ZINIT[HOME_DIR]}" && command chmod g-rwX "${ZINIT[HOME_DIR]}" && \
-        command git clone https://github.com/zdharma/zinit "${ZINIT[BIN_DIR]}" && \
-            print -P "%F{33}▓▒░ %F{34}Installation successful.%f" || \
-            print -P "%F{160}▓▒░ The clone has failed.%f"
+    ### Added by Zinit's installer
+    if [[ ! -f ${ZINIT_SCRIPT} ]]; then
+        print -P "%F{33}▓▒░ %F{220}Installing ZINIT…%f"
+        command mkdir -p "${ZINIT[HOME_DIR]}" && \
+        command git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT[BIN_DIR]}" && \
+                print -P "%F{33}▓▒░ %F{34}Installation successful.%f" || \
+                print -P "%F{160}▓▒░ The clone has failed.%f"
+    fi
+    source ${ZINIT_SCRIPT}
+    autoload -Uz _zinit
+    (( ${+_comps} )) && _comps[zinit]=_zinit
+    ### End of Zinit installer's chunk
+
+    zinit load zdharma-continuum/history-search-multi-word
+    # zinit light zsh-users/zsh-autosuggestions
+    zinit snippet https://github.com/junegunn/fzf/blob/master/shell/completion.zsh
+    zinit snippet https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+
+    # zinit light zdharma-continuum/fast-syntax-highlighting
+
+    # zinit ice depth=1; zinit light romkatv/powerlevel10k
+    zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
+    zinit light romkatv/powerlevel10k
+
+    # zinit ice atpull'zinit creinstall -q "$PWD"'
+    # zinit light zsh-users/zsh-completions
+
+    zinit wait lucid for \
+     atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+        zdharma-continuum/fast-syntax-highlighting \
+     blockf \
+        zsh-users/zsh-completions \
+     atload"!_zsh_autosuggest_start" \
+        zsh-users/zsh-autosuggestions
+
+    # zinit ice wait"1" atload'zstyle ":fzf-tab:*" fzf-command fzf-tmux' lucid
+    # zinit light Aloxaf/fzf-tab
+
+    # # Use my fork of trapd00r plugin
+    # zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+    #     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
+    #     atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}"'
+    #     zinit light comfortablynick/LS_COLORS
 fi
-source ${ZINIT_SCRIPT}
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-### End of Zinit installer's chunk
 
-zinit light zsh-users/zsh-autosuggestions
-zinit snippet https://github.com/junegunn/fzf/blob/master/shell/completion.zsh
-zinit snippet https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+# zi {{{2
+if [[ ${ZSH_PLUGIN_MANAGER} = "zi" ]]; then
+    zi_home=${XDG_DATA_HOME:-${HOME}/.local/share}/zi
+    zi_script="${zi_home}/bin/zi.zsh"
 
-zinit ice if'[[ $ZSH_THEME = powerlevel10k ]]'
-zinit light romkatv/powerlevel10k
+    if [[ ! -f ${zi_script} ]]; then
+        print -P "%F{33}▓▒░ %F{220}Installing ZI…%f"
+        command mkdir -p ${zi_home}
+        command git clone https://github.com/z-shell/zi.git "${zi_home}/bin" && \
+                print -P "%F{33}▓▒░ %F{34}Installation successful.%f" || \
+                print -P "%F{160}▓▒░ The clone has failed.%f"
+    fi
+    source ${zi_script}
+    autoload -Uz _zi
+    (( ${+_comps} )) && _comps[zi]=_zi
 
-# zinit ice atpull'zinit creinstall -q "$PWD"'
-# zinit light zsh-users/zsh-completions
+    zi load zdharma-continuum/history-search-multi-word
+    zi light zsh-users/zsh-autosuggestions
+    zi light zdharma-continuum/fast-syntax-highlighting
 
-# zinit ice wait"1" atload'zstyle ":fzf-tab:*" fzf-command fzf-tmux' lucid
-# zinit light Aloxaf/fzf-tab
+    zi snippet https://github.com/junegunn/fzf/blob/master/shell/completion.zsh
+    zi snippet https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
 
-# # Use my fork of trapd00r plugin
-# zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
-#     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
-#     atload'zstyle ":completion:*:default" list-colors "${(s.:.)LS_COLORS}"'
-#     zinit light comfortablynick/LS_COLORS
+    zi ice depth=1
+    zi light romkatv/powerlevel10k
+fi
 
 # Theme / appearance options {{{1
 # Alien minimal {{{2
@@ -209,22 +227,6 @@ if [[ $ZSH_THEME = "alien-minimal" ]]; then
     export AM_PY_SYM='Py:'
     export AM_ENABLE_VI_PROMPT=1
 fi
-
-# Alien {{{2
-# if [ "$ZSH_THEME" = "alien" ]; then
-#     export ALIEN_SECTIONS_LEFT=(
-#       exit
-#       battery
-#       user
-#       path
-#       vcs_branch
-#       vcs_status
-#       vcs_dirty
-#       ssh
-#       venv
-#       prompt
-#   )
-# fi
 
 # starship {{{2
 if [[ $ZSH_THEME = "starship" ]]; then
@@ -245,6 +247,29 @@ export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
 export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
+
+# Source files {{{1
+# Config snippets {{{2
+for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
+for config (${XDG_CONFIG_HOME}/zsh/conf.d/*.zsh) source $config
+
+fpath=(${XDG_CONFIG_HOME}/zsh/completions
+    ${XDG_CONFIG_HOME}/zsh/functions
+    ${XDG_CONFIG_HOME}/shell/functions
+    $fpath)
+
+# Autoload functions {{{2
+autoload -Uz remove_last_history_entry
+autoload -Uz direnv
+autoload -Uz fh
+autoload -Uz cf
+autoload -Uz mc
+autoload -Uz cd
+autoload -Uz lo
+
+# chpwd functions {{{3
+autoload -Uz list_all
+chpwd_functions+=("list_all")
 
 # Shell startup {{{1
 # Debug end {{{2

@@ -1,10 +1,10 @@
 remove_last_history_entry() {
     # This sub-function checks if the argument passed is a number.
     # Thanks to @yabt on stackoverflow for this :).
-    is_int() ( return $(test "$@" -eq "$@" > /dev/null 2>&1); )
+    is_int() ( return $(test "$@" -eq "$@" &>/dev/null); )
 
     # Set history file's location
-    history_file="${HOME}/.zsh_history"
+    history_file="${HISTFILE}"
     history_temp_file="${history_file}.tmp"
     line_cout=$(wc -l $history_file)
 
@@ -30,7 +30,7 @@ remove_last_history_entry() {
     fc -W # write current shell's history to the history file.
 
     # Get the files contents minus the last entry(head -n -1 does that)
-    cat $history_file | head -n "${lines_to_remove}" &> $history_temp_file
+    command cat $history_file | head -n "${lines_to_remove}" &> $history_temp_file
     mv "$history_temp_file" "$history_file" > /dev/null 2>&1
 
     fc -R # read history file.

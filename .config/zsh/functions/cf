@@ -28,4 +28,3 @@ cf() {
     [[ ${#dir} -ne 0 ]] || return 0
     builtin cd "$dir"
 }
-# vim:ft=zsh:

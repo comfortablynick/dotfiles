@@ -6,4 +6,3 @@ mc() {
         echo "ERROR usage: $0 [DIR]"
     fi
 }
-# vim:ft=zsh:

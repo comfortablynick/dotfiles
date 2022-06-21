@@ -35,4 +35,3 @@ remove_last_history_entry() {
 
     fc -R # read history file.
 }
-# vim:ft=zsh:

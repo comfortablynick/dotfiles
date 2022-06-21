@@ -11,4 +11,3 @@ function lo() {
       printf("%3s %5s %5s %s %5s %5s %6s %s %s %s\n", $2, $3, $4, $6, $7, $8, $5, $9,$10, $11);
     }'
 }
-# vim:ft=zsh:

@@ -99,7 +99,7 @@ snippet filetype_detect "filetype detection boilerplate" b
 
 autocmd BufRead,BufNewFile ${1:filename_pattern} call s:set_filetype()
 
-function! s:set_filetype() abort
+function s:set_filetype() abort
     if &filetype !=# '${2:filetype}'
         set filetype=$2
     endif

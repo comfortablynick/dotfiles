@@ -20,7 +20,7 @@ _lsd() {
 
     case "${cmd}" in
         lsd)
-            opts=" -a -A -F -l -1 -R -h -d -t -S -X -v -r -i -L -V -I  --all --almost-all --classify --long --ignore-config --oneline --recursive --human-readable --tree --directory-only --total-size --timesort --sizesort --extensionsort --versionsort --reverse --classic --no-symlink --inode --dereference --help --version --color --icon --icon-theme --config-file --depth --size --date --sort --group-dirs --blocks --ignore-glob  <FILE>... "
+            opts=" -a -A -F -l -1 -R -h -d -t -S -X -v -U -r -i -L -Z -V -I  --all --almost-all --classify --long --ignore-config --oneline --recursive --human-readable --tree --directory-only --total-size --timesort --sizesort --extensionsort --versionsort --no-sort --reverse --group-directories-first --classic --no-symlink --inode --dereference --context --header --help --version --color --icon --icon-theme --config-file --depth --permission --size --date --sort --group-dirs --blocks --ignore-glob --hyperlink  <FILE>... "
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -47,6 +47,10 @@ _lsd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
+                --permission)
+                    COMPREPLY=($(compgen -W "rwx octal" -- "${cur}"))
+                    return 0
+                    ;;
                 --size)
                     COMPREPLY=($(compgen -W "default short bytes" -- "${cur}"))
                     return 0
@@ -56,7 +60,7 @@ _lsd() {
                     return 0
                     ;;
                 --sort)
-                    COMPREPLY=($(compgen -W "size time version extension" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "size time version extension none" -- "${cur}"))
                     return 0
                     ;;
                 --group-dirs)
@@ -64,7 +68,7 @@ _lsd() {
                     return 0
                     ;;
                 --blocks)
-                    COMPREPLY=($(compgen -W "permission user group size date name inode links" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "permission user group context size date name inode links" -- "${cur}"))
                     return 0
                     ;;
                 --ignore-glob)
@@ -73,6 +77,10 @@ _lsd() {
                     ;;
                     -I)
                     COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --hyperlink)
+                    COMPREPLY=($(compgen -W "always auto never" -- "${cur}"))
                     return 0
                     ;;
                 *)

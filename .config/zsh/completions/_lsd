@@ -20,13 +20,15 @@ _lsd() {
 '*--icon-theme=[Whether to use fancy or unicode icons]: :(fancy unicode)' \
 '--config-file=[Provide a custom lsd configuration file]' \
 '*--depth=[Stop recursing into directories after reaching specified depth]' \
+'*--permission=[How to display permissions]: :(rwx octal)' \
 '*--size=[How to display size]: :(default short bytes)' \
 '*--date=[How to display date \[possible values: date, relative, +date-time-format\]]' \
-'*--sort=[sort by WORD instead of name]: :(size time version extension)' \
+'*--sort=[sort by WORD instead of name]: :(size time version extension none)' \
 '*--group-dirs=[Sort the directories then the files]: :(none first last)' \
-'*--blocks=[Specify the blocks that will be displayed and in what order]: :(permission user group size date name inode links)' \
+'*--blocks=[Specify the blocks that will be displayed and in what order]: :(permission user group context size date name inode links)' \
 '*-I+[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]' \
 '*--ignore-glob=[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]' \
+'*--hyperlink=[Attach hyperlink to filenames]: :(always auto never)' \
 '*-a[Do not ignore entries starting with .]' \
 '*--all[Do not ignore entries starting with .]' \
 '*-A[Do not list implied . and ..]' \
@@ -54,14 +56,20 @@ _lsd() {
 '*--extensionsort[Sort by file extension]' \
 '*-v[Natural sort of (version) numbers within text]' \
 '*--versionsort[Natural sort of (version) numbers within text]' \
+'*-U[Do not sort. List entries in directory order]' \
+'*--no-sort[Do not sort. List entries in directory order]' \
 '*-r[Reverse the order of the sort]' \
 '*--reverse[Reverse the order of the sort]' \
+'--group-directories-first[Groups the directories at the top before the files. Same as --group-dirs=first]' \
 '--classic[Enable classic mode (display output similar to ls)]' \
 '*--no-symlink[Do not display symlink target]' \
 '*-i[Display the index number of each file]' \
 '*--inode[Display the index number of each file]' \
 '*-L[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
 '*--dereference[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
+'-Z[Print security context (label) of each file]' \
+'--context[Print security context (label) of each file]' \
+'--header[Display block headers]' \
 '--help[Prints help information]' \
 '-V[Prints version information]' \
 '--version[Prints version information]' \

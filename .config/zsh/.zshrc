@@ -253,13 +253,7 @@ fpath=(${XDG_CONFIG_HOME}/zsh/completions
     $fpath)
 
 # Autoload functions {{{2
-autoload -Uz remove_last_history_entry
-autoload -Uz direnv
-autoload -Uz fh
-autoload -Uz cf
-autoload -Uz mc
-autoload -Uz cd
-autoload -Uz lo
+autoload -Uz $ZDOTDIR/functions/*
 
 # chpwd functions {{{3
 autoload -Uz list_all

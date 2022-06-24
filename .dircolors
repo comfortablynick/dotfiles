@@ -691,47 +691,47 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 *id_ed25519            38;5;192;3
 # 1}}}
 # emulators {{{1
-.32x                  38;5;213
-.cdi                  38;5;213
-.fm2                  38;5;213
-.rom                  38;5;213
-.sav                  38;5;213
-.st                   38;5;213
-  # atari
-.a00                  38;5;213
-.a52                  38;5;213
-.A64                  38;5;213
-.a64                  38;5;213
-.a78                  38;5;213
-.adf                  38;5;213
-.atr                  38;5;213
-  # nintendo
-.gb                   38;5;213
-.gba                  38;5;213
-.gbc                  38;5;213
-.gel                  38;5;213
-.gg                   38;5;213
-.ggl                  38;5;213
-.ipk                  38;5;213 # Nintendo (DS Packed Images)
-.j64                  38;5;213
-.nds                  38;5;213
-.nes                  38;5;213
-  # Sega
-.sms                  38;5;213
+# .32x                  38;5;213
+# .cdi                  38;5;213
+# .fm2                  38;5;213
+# .rom                  38;5;213
+# .sav                  38;5;213
+# .st                   38;5;213
+#   # atari
+# .a00                  38;5;213
+# .a52                  38;5;213
+# .A64                  38;5;213
+# .a64                  38;5;213
+# .a78                  38;5;213
+# .adf                  38;5;213
+# .atr                  38;5;213
+#   # nintendo
+# .gb                   38;5;213
+# .gba                  38;5;213
+# .gbc                  38;5;213
+# .gel                  38;5;213
+# .gg                   38;5;213
+# .ggl                  38;5;213
+# .ipk                  38;5;213 # Nintendo (DS Packed Images)
+# .j64                  38;5;213
+# .nds                  38;5;213
+# .nes                  38;5;213
+#   # Sega
+# .sms                  38;5;213
 # }}}
 #   Texas Instruments Calculator files {{{1
-# for more see http://tibasicdev.wikidot.com/file-extensions
-.8xp                  38;5;121
-.8eu                  38;5;121
-.82p                  38;5;121
-.83p                  38;5;121
-.8xe                  38;5;121
+# # for more see http://tibasicdev.wikidot.com/file-extensions
+# .8xp                  38;5;121
+# .8eu                  38;5;121
+# .82p                  38;5;121
+# .83p                  38;5;121
+# .8xe                  38;5;121
 # }}}
 # 3D printing {{{1
-.stl                  38;5;216
-.dwg                  38;5;216
-.ply                  38;5;216
-.wrl                  38;5;216
+# .stl                  38;5;216
+# .dwg                  38;5;216
+# .ply                  38;5;216
+# .wrl                  38;5;216
 # }}}
 # unsorted {{{1
 #

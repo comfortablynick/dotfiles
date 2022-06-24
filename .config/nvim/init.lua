@@ -2,6 +2,7 @@ local o = vim.opt
 local g = vim.g
 local fn = vim.fn
 local uv = vim.loop
+local api = vim.api
 local map = vim.keymap
 local shell = "/bin/sh"
 
@@ -193,24 +194,27 @@ require "config.devicons"
 require("config.lsp").init()
 
 -- General autocmds
-nvim.au.group("init_lua", function(grp)
-  -- Not sure if I actually need this?
-  -- autocmd TermClose * call feedkeys("\<C-\>\<C-n>")
-  -- grp.BufEnter = function()
-  --   require("config.compe").init()
-  -- end
-  grp.BufWritePost = {
-    "lua/plugins.lua",
-    function()
-      local pack = require "plugins"
+-- nvim.au.group("init_lua", function(grp)
+local aug = api.nvim_create_augroup("init_lua", { clear = true })
 
-      nvim.reload()
-      pack.clean()
-      pack.install()
-      pack.compile()
-    end,
-  }
-  grp.CmdwinEnter = function()
+api.nvim_create_autocmd("BufWritePost", {
+  group = aug,
+  pattern = "lua/plugins.lua",
+  desc = "Run packer commands",
+  callback = function()
+    local pack = require "plugins"
+
+    nvim.reload()
+    pack.clean()
+    pack.install()
+    pack.compile()
+  end,
+})
+
+api.nvim_create_autocmd("CmdwinEnter", {
+  group = aug,
+  desc = "Custom cmdwin settings",
+  callback = function()
     for _, lhs in ipairs { "<Leader>q", "<Esc>", "cq" } do
       map.set("n", lhs, "<C-c><C-c>", { buffer = true })
     end
@@ -218,46 +222,81 @@ nvim.au.group("init_lua", function(grp)
     vim.wo.number = true
     vim.wo.relativenumber = false
     vim.wo.signcolumn = "no"
-  end
-  grp.ColorScheme = function()
+  end,
+})
+
+api.nvim_create_autocmd("ColorScheme", {
+  group = aug,
+  desc = "Set statusline highlights",
+  callback = function()
     require("config.lsp").set_hl()
     statusline.set_hl()
-  end
-  grp.TermOpen = function()
+  end,
+})
+
+api.nvim_create_autocmd("TermOpen", {
+  group = aug,
+  desc = "Set options for terminal windows",
+  callback = function()
     -- vim.cmd "startinsert"
     vim.wo.number = false
     vim.wo.relativenumber = false
     vim.wo.signcolumn = "no"
     vim.bo.buflisted = false
-  end
-  grp.TextYankPost = function()
+  end,
+})
+
+api.nvim_create_autocmd("TextYankPost", {
+  group = aug,
+  desc = "Highlight yanked text",
+  callback = function()
     -- Looks best with color attribute gui=reverse
     vim.highlight.on_yank { higroup = "TermCursor", timeout = 750 }
-  end
-  grp.QuitPre = "silent call buffer#autoclose()"
-  if vim.wo.cursorline then
-    -- Toggle cursorline if window in focus
-    grp["WinEnter,InsertLeave"] = function()
+  end,
+})
+
+api.nvim_create_autocmd(
+  "QuitPre",
+  { group = aug, desc = "Autoclose unneeded buffers", command = "silent call buffer#autoclose()" }
+)
+
+if vim.wo.cursorline then
+  api.nvim_create_autocmd({ "WinEnter", "InsertLeave" }, {
+    group = aug,
+    desc = "Toggle cursorline if window in focus",
+    callback = function()
       vim.wo.cursorline = true
-    end
-    grp["WinLeave,InsertEnter"] = function()
+    end,
+  })
+  api.nvim_create_autocmd({ "WinLeave", "InsertEnter" }, {
+    group = aug,
+    desc = "Toggle cursorline if window not in focus",
+    callback = function()
       vim.wo.cursorline = false
-    end
-  end
-  if vim.wo.relativenumber then
-    -- Toggle relativenumber if window in focus
-    grp["FocusGained,WinEnter,BufEnter,InsertLeave"] = function()
+    end,
+  })
+end
+
+if vim.wo.relativenumber then
+  api.nvim_create_autocmd({ "FocusGained", "WinEnter", "BufEnter", "InsertLeave" }, {
+    group = aug,
+    desc = "Toggle relativenumber if window in focus",
+    callback = function()
       if vim.wo.number and vim.bo.buftype == "" and not vim.b.no_toggle_line_numbers then
         vim.wo.relativenumber = true
       end
-    end
-    grp["FocusLost,WinLeave,BufLeave,InsertEnter"] = function()
+    end,
+  })
+  api.nvim_create_autocmd({ "FocusLost", "WinLeave", "BufLeave", "InsertEnter" }, {
+    group = aug,
+    desc = "Toggle relativenumber if window not in focus",
+    callback = function()
       if vim.wo.number and vim.bo.buftype == "" and not vim.b.no_toggle_line_numbers then
         vim.wo.relativenumber = false
       end
-    end
-  end
-end)
+    end,
+  })
+end
 
 local packer_cmds = {
   PackerInstall = { "install()" },

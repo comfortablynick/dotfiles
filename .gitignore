@@ -86,6 +86,7 @@ wg*.conf
 
 /.ansible_galaxy
 /.ansible/tmp/
+/.ansible/galaxy_cache/
 /.ansible/test/out
 /.bash_history
 /.bash-git-prompt

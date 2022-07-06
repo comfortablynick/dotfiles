@@ -2,8 +2,8 @@
 /clifm/
 /coc/
 /configstore/
-/gitui/
 /jesseduffield/
+/kak/plugins/
 /keybase/
 /fonts/
 /iterm2/
@@ -18,6 +18,7 @@
 /hub
 /gh/hosts.yml
 /gh/state.yml
+/lazygit/state.yml
 
 /.xmake
 /nvim/plugin/packer_compiled.lua

@@ -16,7 +16,8 @@
 - name: Zoxide | Set release url
   set_fact:
     zoxide_release_url:
-      https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_latest_version }}-{{ zoxide_arch }}.tar.gz
+      # there's no 'v' before the version number inside the file name
+      https://github.com/ajeetdsouza/zoxide/releases/download/{{ zoxide_latest_version }}/zoxide-{{ zoxide_latest_version[1:] }}-{{ zoxide_arch }}.tar.gz
 
 - name: Zoxide | Download and install release
   block:

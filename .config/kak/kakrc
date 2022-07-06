@@ -6,7 +6,7 @@ set-option global grepcmd 'rg --vimgrep'
 set-option global ui_options ncurses_status_on_top=true
 set-option global scrolloff 15,0
 
-colorscheme gruvbox
+colorscheme gruvbox-dark
 
 add-highlighter global/ show-matching
 add-highlighter global/ dynregex '%reg{/}' 0:+u
@@ -81,6 +81,8 @@ map-sequence kj %{
     number-toggle-update '-relative'
 }
 
+# remap : to ;
+map global normal \; :
 map global normal '#' :comment-line<ret>
 
 map global user -docstring 'next lint error' n ':lint-next-error<ret>'
@@ -150,15 +152,13 @@ define-command delete-buffers-matching -params 1 %{
 }
 
 # Load plug.kak
-
 evaluate-commands %sh{
-    if  [ ! -d "$kak_config/plugins/plug.kak" ]; then
-    	mkdir -p "$kak_config/plugins"
-    	git clone https://github.com/andreyorst/plug.kak.git "$kak_config/plugins/plug.kak"
-    fi
+    plugins="$kak_config/plugins"
+    mkdir -p "$plugins"
+    [ ! -e "$plugins/plug.kak" ] && \
+        git clone -q https://github.com/andreyorst/plug.kak.git "$plugins/plug.kak"
+    printf "%s\n" "source '$plugins/plug.kak/rc/plug.kak'"
 }
-source "%val{config}/plugins/plug.kak/rc/plug.kak"
-
 plug "andreyorst/plug.kak" noload
 plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
 plug "evanrelf/number-toggle.kak" config %{

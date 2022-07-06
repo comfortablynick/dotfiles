@@ -2,7 +2,7 @@ local util = require "lspconfig/util"
 
 return function(on_attach)
   return {
-    cmd = { "taplo", "lsp", "stdio" },
+    cmd = { "taplo-lsp", "run" },
     on_attach = function(client, bufnr)
       -- Turn off formatting for now; doesn't respect taplo.toml
       client.server_capabilities.documentFormattingProvider = false

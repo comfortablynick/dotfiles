@@ -316,6 +316,7 @@ local function init()
   use "cespare/vim-toml"
   use "tbastos/vim-lua"
   use "lervag/vimtex"
+  use { "ron-rs/ron.vim", opt = false }
   use { "Glench/Vim-Jinja2-Syntax", opt = false }
   use { "blankname/vim-fish", opt = false }
   use { "habamax/vim-asciidoctor", opt = false }

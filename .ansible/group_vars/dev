@@ -6,6 +6,7 @@ pkg_apt_packages_dev:
 
 pkg_pacman_packages_dev:
   - cmake
+  - tealdeer  # rust tldr client
 
 pkg_aur_packages_dev:
   - go

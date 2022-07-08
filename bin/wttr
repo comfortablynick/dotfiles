@@ -1,45 +1,48 @@
-#!/usr/bin/env bash
-# Print weather from wttr.in
-# TODO: use ipinfo to get location from ip
+#! /usr/bin/env bash
+# Modified version of example bash script from wttr
+# If you source this file, it will set WTTR_PARAMS as well as show weather.
 
-# Formats:
-#       ?format=1       One line output of temp
-#       ?format=2       One line output of temp/wind
-#       ?format=3       Same as 1 with loc
-#       ?format=4       Same as 2 with loc
+# WTTR_PARAMS is space-separated URL parameters, many of which are single characters that can be
+# lumped together. For example, "F q m" behaves the same as "Fqm".
+if [[ -z $WTTR_PARAMS ]]; then
+    # Form localized URL parameters for curl
+    if [[ -t 1 ]] && [[ "$(tput cols)" -lt 125 ]]; then
+        WTTR_PARAMS+='n'
+    fi 2>/dev/null
+    for _token in $(locale LC_MEASUREMENT); do
+        case $_token in
+            1) WTTR_PARAMS+='m' ;;
+            2) WTTR_PARAMS+='u' ;;
+        esac
+    done 2>/dev/null
+    unset _token
+    export WTTR_PARAMS
+fi
 
 get_loc() {
-    if [[ -n $1 ]]; then
-        loc=$1
-    elif hash ipinfo 2>/dev/null; then
+    declare -n loc=$1
+    if hash ipinfo 2>/dev/null; then
         local ip
-        ip=$(echo "$SSH_CLIENT" | cut -d ' ' -f 1)
-        loc=$(ipinfo "$ip" -f postal)
-    else
-        local host
-        host=$(hostname)
-        [[ $host == jupiter ]] && loc=76207 || loc=75067
+        ip=$(echo "$SSH_CONNECTION" | cut -d ' ' -f 1)
+        # shellcheck disable=SC2034
+        loc=$(ipinfo "${ip:-"myip"}" -f postal | tail -1)
     fi
 }
 
-get_fmt() {
-    [[ -n $1 ]] && fmtstr="?format=$1"
-}
-
-main() {
-    local loc fmtstr url weather
-    get_loc "$1"
-    get_fmt "$2"
-    url="wttr.in/$loc$fmtstr"
-    echo "$url"
-    weather=$(curl -s "$url")
-
-    if [[ -n $fmtstr ]]; then
-        # Remove space and positive temp sign "+" in one-line output
-        echo "${weather/ +/}"
-    else
-        echo "$weather"
+wttr() {
+    local location="${1// /+}"
+    if [[ -z $location ]]; then
+        get_loc location
     fi
+    command shift
+    local args=""
+    for p in $WTTR_PARAMS "$@"; do
+        args+=" --data-urlencode $p "
+    done
+    # shellcheck disable=SC2086
+    curl -fGsS -H "Accept-Language: ${LANG%_*}" $args --compressed "wttr.in/${location}"
+    echo "$args"
+    echo "$location"
 }
 
-main "$@"
+wttr "$@"

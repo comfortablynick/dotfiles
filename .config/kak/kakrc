@@ -162,6 +162,7 @@ evaluate-commands %sh{
 plug "andreyorst/plug.kak" noload
 plug "https://gitlab.com/Screwtapello/kakoune-state-save.git"
 plug "evanrelf/number-toggle.kak" config %{
+    require-module "number-toggle"
     set-option global number_toggle_params -hlcursor -separator ' '
 }
 plug "andreyorst/smarttab.kak" defer smarttab %{
@@ -175,7 +176,7 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
     # these languages will use `smarttab' behavior
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
-
+plug "andreyorst/fzf.kak"
 
 hook global ModuleLoaded smarttab %{
     set-option global softtabstop 4

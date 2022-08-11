@@ -320,4 +320,4 @@ if uv.os_getenv "AK_PROFILER" == 1 then
   require "profiler"
 end
 
-vim.cmd [[silent! colorscheme gruvbox8]]
+vim.cmd [[silent! colorscheme gruvbox]]

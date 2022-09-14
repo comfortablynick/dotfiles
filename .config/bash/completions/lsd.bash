@@ -9,10 +9,9 @@ _lsd() {
     for i in ${COMP_WORDS[@]}
     do
         case "${i}" in
-            lsd)
+            "$1")
                 cmd="lsd"
                 ;;
-            
             *)
                 ;;
         esac
@@ -20,13 +19,12 @@ _lsd() {
 
     case "${cmd}" in
         lsd)
-            opts=" -a -A -F -l -1 -R -h -d -t -S -X -v -U -r -i -L -Z -V -I  --all --almost-all --classify --long --ignore-config --oneline --recursive --human-readable --tree --directory-only --total-size --timesort --sizesort --extensionsort --versionsort --no-sort --reverse --group-directories-first --classic --no-symlink --inode --dereference --context --header --help --version --color --icon --icon-theme --config-file --depth --permission --size --date --sort --group-dirs --blocks --ignore-glob --hyperlink  <FILE>... "
+            opts="-V -a -A -F -l -1 -R -h -d -t -S -X -v -U -r -I -i -L -Z --help --version --all --almost-all --color --icon --icon-theme --classify --long --ignore-config --config-file --oneline --recursive --human-readable --tree --depth --directory-only --permission --size --total-size --date --timesort --sizesort --extensionsort --versionsort --sort --no-sort --reverse --group-dirs --group-directories-first --blocks --classic --no-symlink --ignore-glob --inode --dereference --context --hyperlink --header <FILE>..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi
             case "${prev}" in
-                
                 --color)
                     COMPREPLY=($(compgen -W "always auto never" -- "${cur}"))
                     return 0
@@ -75,7 +73,7 @@ _lsd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                    -I)
+                -I)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
@@ -90,7 +88,6 @@ _lsd() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        
     esac
 }
 

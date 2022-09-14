@@ -206,7 +206,7 @@ local function init()
       end,
     },
     ["liuchengxu/vim-clap"] = {
-      run = ":Clap install-binary",
+      run = ":call clap#installer#force_download()",
       requires = "liuchengxu/vista.vim",
       setup = runtime("autoload", "plugins", "clap"),
     },

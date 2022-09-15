@@ -29,13 +29,13 @@
 
 - name: Fish | Set version strings
   set_fact:
-    fish_installed_version: "{% if fish_installed_version.stdout|length > 1 %}{{ fish_installed_version.stdout[-9:] }}{% else %}0{% endif %}"
+    fish_installed_version: "{% if fish_installed_version.stdout|length > 1 %}{{ fish_installed_version.stdout[14:] }}{% else %}0{% endif %}"
     fish_latest_version: "{{ fish_latest.json.tag_name }}"
-    fish_latest_url: "{{ fish_latest.json | json_query(query) | first }}"
+    fish_latest_url: "{{ fish_latest.json|json_query(query)|first }}"
   vars:
     query: "assets[?contains(name, 'tar.xz')==`true`].browser_download_url"
 
-- name: Fish | Download source tarball
+- name: Fish | Download source tarball and build
   block:
     - name: Fish | Create temp dl dir
       tempfile:
@@ -53,8 +53,6 @@
       set_fact:
         fish_source_dir: "{{ fish_dl_path.path }}/fish-{{ fish_latest_version }}"
 
-- name: Fish shell | Build from source
-  block:
     - name: Make build dir
       file:
         path: "{{ fish_source_dir }}/build"

@@ -48,7 +48,7 @@ return function(on_attach)
 
         -- filter diagnostics
         filter_out_diagnostics_by_severity = {},
-        filter_out_diagnostics_by_code = { 6133 },
+        filter_out_diagnostics_by_code = { 6133, 80001 },
 
         -- inlay hints
         auto_inlay_hints = true,

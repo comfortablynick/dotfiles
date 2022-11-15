@@ -137,4 +137,4 @@ if not cmp_lsp_installed then
   return
 end
 
-return cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+return cmp_lsp.default_capabilities()

@@ -27,14 +27,14 @@ pkg_python_packages_all: []
 asdf_plugins_all:
   - name: python
     versions:
-      - "3.10.0"
-    global: "3.10.0"
+      - "3.11.0"
+    global: "3.11.0"
     environment:
       PYTHON_CONFIGURE_OPTS: "--enable-shared"
   - name: direnv
     versions:
-      - "2.30.3"
-    global: "2.30.3"
+      - "2.32.1"
+    global: "2.32.1"
 
 asdf_python_packages_all:
   - setuptools-rust  # to guarantee rtoml will build

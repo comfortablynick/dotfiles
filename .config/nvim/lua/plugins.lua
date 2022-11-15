@@ -406,7 +406,6 @@ local function init()
       end,
     },
     ["kevinhwang91/nvim-bqf"] = { event = lazy_load_event },
-    ["antoinemadec/FixCursorHold.nvim"] = {},
     ["nvim-telescope/telescope.nvim"] = {
       cmd = "Telescope",
       requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },

@@ -8,8 +8,8 @@ _fd() {
 
     for i in ${COMP_WORDS[@]}
     do
-        case "${i}" in
-            "$1")
+        case "${cmd},${i}" in
+            ",$1")
                 cmd="fd"
                 ;;
             *)
@@ -19,7 +19,7 @@ _fd() {
 
     case "${cmd}" in
         fd)
-            opts="-h -V -H -I -u -s -i -g -F -a -l -L -p -0 -d -t -e -x -X -E -c -j -S -1 -q -o --help --version --hidden --no-hidden --no-ignore --ignore --no-ignore-vcs --ignore-vcs --no-ignore-parent --no-global-ignore-file --unrestricted --case-sensitive --ignore-case --glob --regex --fixed-strings --absolute-path --relative-path --list-details --follow --no-follow --full-path --print0 --max-depth --maxdepth --min-depth --exact-depth --prune --type --extension --exec --exec-batch --batch-size --exclude --ignore-file --color --threads --size --max-buffer-time --changed-within --changed-before --max-results --quiet --show-errors --base-directory --path-separator --search-path --strip-cwd-prefix --owner --one-file-system <pattern> <path>..."
+            opts="-H -I -u -s -i -g -F -a -l -L -p -0 -d -E -t -e -S -o -x -X -c -j -1 -q -h -V --hidden --no-hidden --no-ignore --ignore --no-ignore-vcs --ignore-vcs --no-ignore-parent --no-global-ignore-file --unrestricted --case-sensitive --ignore-case --glob --regex --fixed-strings --absolute-path --relative-path --list-details --follow --no-follow --full-path --print0 --max-depth --min-depth --exact-depth --exclude --prune --type --extension --size --changed-within --changed-before --owner --exec --exec-batch --batch-size --ignore-file --color --threads --max-buffer-time --max-results --quiet --show-errors --base-directory --path-separator --search-path --strip-cwd-prefix --one-file-system --gen-completions --help --version [pattern] [path]..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -33,10 +33,6 @@ _fd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                --maxdepth)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
                 --min-depth)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
@@ -45,12 +41,20 @@ _fd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
+                --exclude)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -E)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
                 --type)
-                    COMPREPLY=($(compgen -W "f file d directory l symlink x executable e empty s socket p pipe" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "file directory symlink executable empty socket pipe" -- "${cur}"))
                     return 0
                     ;;
                 -t)
-                    COMPREPLY=($(compgen -W "f file d directory l symlink x executable e empty s socket p pipe" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "file directory symlink executable empty socket pipe" -- "${cur}"))
                     return 0
                     ;;
                 --extension)
@@ -58,6 +62,30 @@ _fd() {
                     return 0
                     ;;
                 -e)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --size)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -S)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --changed-within)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --changed-before)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --owner)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -o)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
@@ -81,24 +109,16 @@ _fd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                --exclude)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                -E)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
                 --ignore-file)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
                 --color)
-                    COMPREPLY=($(compgen -W "never auto always" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "auto always never" -- "${cur}"))
                     return 0
                     ;;
                 -c)
-                    COMPREPLY=($(compgen -W "never auto always" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "auto always never" -- "${cur}"))
                     return 0
                     ;;
                 --threads)
@@ -109,23 +129,7 @@ _fd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                --size)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                -S)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
                 --max-buffer-time)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                --changed-within)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                --changed-before)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
@@ -145,12 +149,8 @@ _fd() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
-                --owner)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                -o)
-                    COMPREPLY=($(compgen -f "${cur}"))
+                --gen-completions)
+                    COMPREPLY=($(compgen -W "bash elvish fish powershell zsh" -- "${cur}"))
                     return 0
                     ;;
                 *)

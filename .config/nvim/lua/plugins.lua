@@ -349,7 +349,6 @@ local function init()
         { "j-hui/fidget.nvim" },
       },
     },
-    ["nvim-lua/completion-nvim"] = { requires = { "steelsojka/completion-buffers" }, disable = true },
     ["folke/trouble.nvim"] = {
       requires = "kyazdani42/nvim-web-devicons",
       event = lazy_load_event,
@@ -380,6 +379,11 @@ local function init()
       config = function()
         vim.map.v.buffer["<Enter>"] = { "<Plug>(Luadev-Run)", "Run in REPL" }
         vim.map.n.buffer.grl = { "<Plug>(Luadev-RunLine)", "Run line in REPL" }
+      end,
+    },
+    ["rcarriga/nvim-notify"] = {
+      setup = function()
+        vim.notify = require "notify"
       end,
     },
     ["nvim-lua/plenary.nvim"] = {},
@@ -422,16 +426,24 @@ local function init()
       -- disable = true,
     },
     -- Tmux
-    ["christoomey/vim-tmux-navigator"] = {
-      cmd = { "TmuxNavigateLeft", "TmuxNavigateRight", "TmuxNavigateDown", "TmuxNavigateUp", "TmuxNavigatePrevious" },
+    ["alexghergh/nvim-tmux-navigation"] = {
+      cmd = {
+        "NvimTmuxNavigateLeft",
+        "NvimTmuxNavigateRight",
+        "NvimTmuxNavigateDown",
+        "NvimTmuxNavigateUp",
+        "NvimTmuxNavigateLastActive",
+      },
       setup = function()
         local n = vim.map.n
-        vim.g.tmux_navigator_no_mappings = 1
-        n["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
-        n["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
-        n["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
-        n["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
-        n["<C-p>"] = { "<Cmd>TmuxNavigatePrevious<CR>", "Vim/Tmux navigate previous" }
+        n["<C-h>"] = { "<Cmd>NvimTmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
+        n["<C-j>"] = { "<Cmd>NvimTmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
+        n["<C-k>"] = { "<Cmd>NvimTmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
+        n["<C-l>"] = { "<Cmd>NvimTmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
+        n["<C-p>"] = { "<Cmd>NvimTmuxNavigateLastActive<CR>", "Vim/Tmux navigate to last active window" }
+      end,
+      config = function()
+        require "nvim-tmux-navigation"
       end,
     },
     ["comfortablynick/vim-tmux-runner"] = {

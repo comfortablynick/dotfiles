@@ -97,7 +97,7 @@ end
 -- Some path utilities
 -- From: https://github.com/neovim/nvim-lsp/blob/master/lua/nvim_lsp/util.lua
 M.path = (function()
-  local is_windows = _G.jit.os == "Windows"
+  local is_windows = uv.os_uname().sysname == "Windows"
 
   local path_sep = is_windows and "\\" or "/"
 

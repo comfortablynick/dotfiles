@@ -1,6 +1,7 @@
 local api = vim.api
 local opt = vim.opt
 local fn = vim.fn
+local map = vim.keymap
 
 local tmp_root = "/tmp/nvim/site"
 local pack_root = tmp_root .. "/pack"
@@ -40,17 +41,16 @@ end
 
 -- Non-essential settings so I don't annoy myself
 do
-  local opts = { noremap = true }
-  api.nvim_set_keymap("n", ";", ":", opts)
-  api.nvim_set_keymap("x", ";", ":", opts)
-  api.nvim_set_keymap("o", ";", ":", opts)
+  map.set("n", ";", ":")
+  map.set("x", ";", ":")
+  map.set("o", ";", ":")
 
-  api.nvim_set_keymap("n", "g:", ";", opts)
-  api.nvim_set_keymap("n", "@;", "@:", opts)
-  api.nvim_set_keymap("n", "q;", "q:", opts)
-  api.nvim_set_keymap("x", "q;", "q:", opts)
+  map.set("n", "g:", ";")
+  map.set("n", "@;", "@:")
+  map.set("n", "q;", "q:")
+  map.set("x", "q;", "q:")
 
-  api.nvim_set_keymap("i", "kj", "<Esc>`^", opts)
+  map.set("i", "kj", "<Esc>`^")
 end
 
 opt.tabstop = 4
@@ -59,7 +59,9 @@ opt.expandtab = true
 opt.number = true
 
 -- Put any plugin config that should be loaded after plugins are installed in here
-_G.load_config = function()
+local load_config = function()
+  print "Ready!"
+
   -- Colors
   vim.cmd [[colorscheme PaperColor]]
   require("lualine").setup { theme = "papercolor" }
@@ -79,9 +81,10 @@ packer.startup {
     if packer_bootstrap then
       vim.notify "Installing packer.nvim and plugins"
       packer.sync()
-      vim.cmd [[autocmd User PackerComplete ++once echo "Ready!" | lua load_config()]]
+      local grp = api.nvim_create_augroup("minit", { clear = true })
+      api.nvim_create_autocmd("User PackerComplete", { group = grp, callback = load_config, once = true })
     else
-      _G.load_config()
+      load_config()
     end
   end,
   config = { package_root = pack_root, compile_path = packer_compiled },

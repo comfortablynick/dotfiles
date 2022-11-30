@@ -162,6 +162,7 @@ local packs = {
   "plenary.nvim",
   "nvim-lspconfig",
   "nvim-lsp-ts-utils",
+  "nvim-notify",
   "lsp-status.nvim",
   "fidget.nvim",
   "nvim-cmp",
@@ -197,6 +198,24 @@ require("config.lsp").init()
 -- nvim.au.group("init_lua", function(grp)
 local aug = api.nvim_create_augroup("init_lua", { clear = true })
 
+local reloaded_id = nil
+api.nvim_create_autocmd("BufWritePost", {
+  group = aug,
+  pattern = "*.lua",
+  callback = function(event)
+    ---@type string
+    local file = event.match
+    local mod = file:match "/lua/(.*)%.lua"
+    if mod then
+      mod = mod:gsub("/", ".")
+    end
+    if mod then
+      package.loaded[mod] = nil
+      reloaded_id = vim.notify("Reloaded " .. mod, vim.log.levels.INFO, { title = "nvim", replace = reloaded_id })
+    end
+  end,
+})
+
 api.nvim_create_autocmd("BufWritePost", {
   group = aug,
   pattern = "lua/plugins.lua",
@@ -204,7 +223,7 @@ api.nvim_create_autocmd("BufWritePost", {
   callback = function()
     local pack = require "plugins"
 
-    nvim.reload()
+    -- nvim.reload()
     pack.clean()
     pack.install()
     pack.compile()
@@ -299,20 +318,19 @@ if vim.wo.relativenumber then
 end
 
 local packer_cmds = {
-  PackerInstall = { "install()" },
-  PackerUpdate = { "update()" },
-  PackerSync = { "sync()" },
-  PackerClean = { "clean()" },
-  PackerCompile = { "compile()" },
-  PackerStatus = { "status()" },
-  PackerLoad = { "loader(<q-args>)", "-complete=packadd -nargs=+" },
+  PackerInstall = require("plugins").install,
+  PackerUpdate = require("plugins").update,
+  PackerSync = require("plugins").sync,
+  PackerClean = require("plugins").clean,
+  PackerCompile = require("plugins").compile,
+  PackerStatus = require("plugins").status,
 }
 
-local template = [[command! %s %s lua require("plugins").%s]]
-
 for k, v in pairs(packer_cmds) do
-  vim.cmd(template:format(v[2] or "", k, v[1]))
+  api.nvim_create_user_command(k, v, {})
 end
+
+-- api.nvim_create_autocmd("BufWritePost", { pattern = "lua/plugins.lua" })
 
 -- Profiling
 if uv.os_getenv "AK_PROFILER" == 1 then

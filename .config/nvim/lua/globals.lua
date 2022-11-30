@@ -2,25 +2,51 @@ local api = vim.api
 
 -- Global functions
 -- p :: Debug print helper
-function _G.p(...)
-  local valid, input_type = pcall(type, ...)
-  -- Handle blank/invalid input without error
-  if not valid then
-    return
-  end
-  if input_type == ("string" or "number") then
-    print(...)
-  else
-    local objects = {}
-    local v
-    for i = 1, select("#", ...) do
-      v = select(i, ...)
-      table.insert(objects, vim.inspect(v))
-    end
+-- Now use built-in vim.pretty_print
+_G.p = vim.pretty_print
 
-    print(table.concat(objects, "\n"))
-    return ...
+-- function _G.p(...)
+--   local valid, input_type = pcall(type, ...)
+--   -- Handle blank/invalid input without error
+--   if not valid then
+--     return
+--   end
+--   if input_type == ("string" or "number") then
+--     print(...)
+--   else
+--     local objects = {}
+--     local v
+--     for i = 1, select("#", ...) do
+--       v = select(i, ...)
+--       table.insert(objects, vim.inspect(v))
+--     end
+--
+--     print(table.concat(objects, "\n"))
+--     return ...
+--   end
+-- end
+
+-- d :: Debug object using nvim-notify
+function _G.d(...)
+  local info = debug.getinfo(2, "S")
+  local source = info.source:sub(2)
+  source = vim.loop.fs_realpath(source) or source
+  source = vim.fn.fnamemodify(source, ":~:.") .. ":" .. info.linedefined
+  local what = { ... }
+  if vim.tbl_islist(what) and vim.tbl_count(what) <= 1 then
+    what = what[1]
   end
+  local msg = vim.inspect(vim.deepcopy(what))
+  require("notify").notify(msg, vim.log.levels.INFO, {
+    title = "Debug: " .. source,
+    on_open = function(win)
+      vim.wo[win].conceallevel = 3
+      vim.wo[win].concealcursor = ""
+      vim.wo[win].spell = false
+      local buf = vim.api.nvim_win_get_buf(win)
+      vim.treesitter.start(buf, "lua")
+    end,
+  })
 end
 
 -- Smart [S-]Tab

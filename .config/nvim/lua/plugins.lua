@@ -240,7 +240,7 @@ local function init()
       end,
     },
     -- Vim development
-    ["tpope/vim-scriptease"] = { cmd = "Messages" },
+    ["tpope/vim-scriptease"] = { cmd = { "Messages", "Verbose", "Time" } },
     ["mhinz/vim-lookup"] = {},
     ["tweekmonster/startuptime.vim"] = { cmd = "StartupTime" },
     ["dstein64/vim-startuptime"] = {},

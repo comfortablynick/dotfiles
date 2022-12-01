@@ -278,18 +278,19 @@ function M.percentage_range_window(col_range, row_range, options)
 end
 
 function M.floating_help(query) -- {{{1
+  query = query ~= "" and query or nil
   return M.create_centered_floating {
     width = 90,
     border = "double",
     fn = function()
       vim.bo.filetype = "help"
       vim.bo.buftype = "help"
-      vim.cmd("help " .. query)
+      vim.cmd.help(query)
     end,
   }
 end
 
-function M.create_scratch(lines, mods, replace_existing) -- {{{1
+function M.create_scratch(lines, mods, replace_existing)
   if replace_existing then
     for _, win in ipairs(api.nvim_list_wins()) do
       if pcall(api.nvim_win_get_var, win, "scratch") then

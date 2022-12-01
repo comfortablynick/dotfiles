@@ -6,6 +6,12 @@ local api = vim.api
 local map = vim.keymap
 local shell = "/bin/sh"
 
+-- Profiling
+if uv.os_getenv "AK_PROFILER" == "1" then
+  vim.cmd "packadd! profiler.nvim"
+  require "profiler"
+end
+
 pcall(require, "impatient") -- TODO: remove this once PR is merged
 require "nvim"
 require "globals"
@@ -111,7 +117,7 @@ o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 
 -- Grep
 if fn.executable "ugrep" == 1 then
-  o.grepprg = "ugrep -RInkju. --ignore-files --tabs=1"
+  o.grepprg = "ugrep -RInkju --ignore-files --tabs=1"
   o.grepformat = { "%f:%l:%c:%m", "%f+%l+%c+%m", [[%-G%f\|%l\|%c\|%m]] }
 elseif fn.executable "rg" == 1 then
   o.grepprg = "rg --vimgrep --hidden"
@@ -170,7 +176,6 @@ local packs = {
   "cmp-buffer",
   "cmp-path",
   "cmp-nvim-ultisnips",
-  "friendly-snippets",
   "nvim-web-devicons",
   "vim-dirvish",
   "vim-clap",
@@ -179,11 +184,11 @@ local packs = {
 }
 
 for _, pack in ipairs(packs) do
-  vim.cmd("silent! packadd! " .. pack)
+  vim.cmd.packadd { pack, bang = true, mods = { emsg_silent = true } }
 end
 
 vim.defer_fn(function()
-  vim.cmd [[doautocmd User PackLoad]]
+  api.nvim_exec_autocmds("User", { pattern = "PackLoad" })
 end, 200)
 
 require "nvim"
@@ -195,13 +200,13 @@ require "config.devicons"
 require("config.lsp").init()
 
 -- General autocmds
--- nvim.au.group("init_lua", function(grp)
 local aug = api.nvim_create_augroup("init_lua", { clear = true })
 
 local reloaded_id = nil
 api.nvim_create_autocmd("BufWritePost", {
   group = aug,
-  pattern = "*.lua",
+  pattern = "*nvim/**.lua",
+  desc = "Reload config files",
   callback = function(event)
     ---@type string
     local file = event.match
@@ -213,6 +218,7 @@ api.nvim_create_autocmd("BufWritePost", {
       package.loaded[mod] = nil
       reloaded_id = vim.notify("Reloaded " .. mod, vim.log.levels.INFO, { title = "nvim", replace = reloaded_id })
     end
+    -- nvim.reload()
   end,
 })
 
@@ -330,12 +336,5 @@ for k, v in pairs(packer_cmds) do
   api.nvim_create_user_command(k, v, {})
 end
 
--- api.nvim_create_autocmd("BufWritePost", { pattern = "lua/plugins.lua" })
 
--- Profiling
-if uv.os_getenv "AK_PROFILER" == 1 then
-  vim.cmd "packadd! profiler.nvim"
-  require "profiler"
-end
-
-vim.cmd [[silent! colorscheme gruvbox]]
+vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }

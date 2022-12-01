@@ -63,7 +63,7 @@ local load_config = function()
   print "Ready!"
 
   -- Colors
-  vim.cmd [[colorscheme PaperColor]]
+  vim.cmd.colorscheme "PaperColor"
   require("lualine").setup { theme = "papercolor" }
 
   -- Lualine

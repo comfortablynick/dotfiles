@@ -43,9 +43,6 @@ call map#cabbr('ht', 'split \| terminal')
 " fff :: Insert comment with fold marker {{{2
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
-" Root :: Change to root dir using lua {{{2
-command Root silent lcd `=luaeval("require'util'.get_current_root()")`
-
 " Misc commonly mistyped commands {{{2
 command WQ wq
 command Wq wq
@@ -111,15 +108,9 @@ command -complete=expression -nargs=1 PPrint echo util#pformat(<args>)
 " Use custom json converter and shell out to `jq` to format
 command -complete=expression -nargs=1 JPrint echo util#json_format(<args>)
 
-" [H]elp :: floating help window {{{2
-command -complete=help -nargs=? Help lua require'window'.floating_help(<q-args>)
-call map#cabbr('H', 'Help')
-
 " Lua {{{2
 call map#cabbr('l', 'lua')
-call map#cabbr('lp', 'lua p()<Left><C-R>=map#eatchar(''\s'')<CR>')
-
-" Option :: pretty print option info {{{2
-command -nargs=1 -complete=option Option echo luaeval('vim.inspect(vim.api.nvim_get_option_info(_A[1]))', [<q-args>])
+call map#cabbr('lp', 'lua =<C-R>=map#eatchar(''\s'')<CR>')
+call map#cabbr('ld', 'lua d()<Left><C-R>=map#eatchar(''\s'')<CR>')
 
 " vim:fdl=1:

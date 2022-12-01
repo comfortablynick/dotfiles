@@ -35,6 +35,21 @@ end, { complete = "command", nargs = 1, bang = true })
 
 cmd("Grep", function(opts) -- :: Async grep
   require("grep").grep_for_string(opts.args)
-end, { complete = "file", nargs = "+" })
+end, { complete = "file", nargs = "+", desc = "Async grep and show results in quickfix" })
 
-cmd("Synstack", "echo syntax#synstack()")
+cmd("Synstack", "echo syntax#synstack()", { desc = "Show syntax stack under cursor" })
+
+cmd("Option", function(opts)
+  vim.pretty_print(vim.api.nvim_get_option_info(opts.args))
+end, { complete = "option", nargs = 1, desc = "Pretty print option info from api" })
+
+cmd("Help", function(opts)
+  require("window").floating_help(opts.args)
+end, { complete = "help", nargs = "?", desc = "Display help item in floating window" })
+vim.fn["map#cabbr"]("H", "Help")
+
+cmd("Root", function(opts)
+  local root = require("util").get_current_root()
+  vim.cmd.lcd { root, mods = { silent = true } }
+end, { desc = "Change to root dir" })
+

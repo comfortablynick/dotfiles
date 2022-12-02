@@ -1,7 +1,5 @@
 setlocal tabstop=4
 setlocal formatoptions-=cro
-setlocal foldexpr=VimFoldLevel()
-setlocal foldmethod=marker
 setlocal makeprg=vint\ %
 let g:vim_indent_cont = &tabstop
 
@@ -37,13 +35,5 @@ function VimFoldLevel()
     if l:line =~# '{{{\d*$'
         return '>1'
     endif
-    " let fdl = matchstr(line, '{{{')
-    " if !empty(fdl)
-    "     let fl = matchstr(line, '{{{\d')
-    "     if fl > 0
-    "         return fl
-    "     endif
-    "     return '>1'
-    " endif
     return '='
 endfunction

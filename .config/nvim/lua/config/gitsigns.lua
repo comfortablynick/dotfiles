@@ -22,8 +22,18 @@ gitsigns.setup {
     local bmap = vim.map["buffer" .. bufnr]
 
     -- Navigation
-    bmap.expr.n["]c"] = { "&diff ? ']c' : '<Cmd>Gitsigns next_hunk<CR>'", "Git next hunk" }
-    bmap.expr.n["[c"] = { "&diff ? '[c' : '<Cmd>Gitsigns prev_hunk<CR>'", "Git prev hunk" }
+    vim.keymap.set(
+      "n",
+      "]c",
+      "&diff ? '[c' : '<Cmd>Gitsigns next_hunk<CR>'",
+      { expr = true, buffer = bufnr, desc = "Git next hunk", replace_keycodes = false }
+    )
+    vim.keymap.set(
+      "n",
+      "[c",
+      "&diff ? '[c' : '<Cmd>Gitsigns prev_hunk<CR>'",
+      { expr = true, buffer = bufnr, desc = "Git prev hunk", replace_keycodes = false }
+    )
 
     -- Actions
     bmap.n.gs = { gs.preview_hunk, "Git show hunk" }

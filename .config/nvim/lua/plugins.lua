@@ -142,9 +142,20 @@ local function init()
         vim.g.clever_f_chars_match_any_signs = ":;"
       end,
       disable = true,
-      -- event = lazy_load_event,
     },
-    ["ggandor/lightspeed.nvim"] = { event = lazy_load_event },
+    ["ggandor/lightspeed.nvim"] = { event = lazy_load_event, disable = true },
+    ["ggandor/leap.nvim"] = {
+      event = lazy_load_event,
+      config = function()
+        require("leap").add_default_mappings()
+      end,
+    },
+    ["ggandor/flit.nvim"] = {
+      event = lazy_load_event,
+      config = function()
+        require("flit").setup()
+      end,
+    },
     ["wellle/targets.vim"] = { event = lazy_load_event },
     ["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
     -- Text objects
@@ -200,7 +211,7 @@ local function init()
       end,
     },
     ["liuchengxu/vista.vim"] = {
-      event = "BufEnter",
+      event = lazy_load_event,
       setup = function()
         require "config.vista"
       end,
@@ -369,7 +380,7 @@ local function init()
     -- Lua/nvim
     ["norcalli/nvim-colorizer.lua"] = { cmd = { "Colorizer", "ColorizerToggle" } },
     ["lewis6991/gitsigns.nvim"] = {
-      event = "BufEnter",
+      event = lazy_load_event,
       config = function()
         require "config.gitsigns"
       end,
@@ -387,7 +398,12 @@ local function init()
       end,
     },
     ["nvim-lua/plenary.nvim"] = {},
-    ["nvim-treesitter/nvim-treesitter"] = { run = ":TSUpdate" },
+    ["nvim-treesitter/nvim-treesitter"] = {
+      run = function()
+        local ts_update = require("nvim-treesitter.install").update { with_sync = true }
+        ts_update()
+      end,
+    },
     ["nvim-treesitter/playground"] = {},
     ["akinsho/bufferline.nvim"] = {
       event = "BufEnter",
@@ -423,7 +439,6 @@ local function init()
       config = function()
         require "config.which-key"
       end,
-      -- disable = true,
     },
     -- Tmux
     ["alexghergh/nvim-tmux-navigation"] = {

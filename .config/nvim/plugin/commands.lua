@@ -53,3 +53,16 @@ cmd("Root", function(opts)
   vim.cmd.lcd { root, mods = { silent = true } }
 end, { desc = "Change to root dir" })
 
+cmd("S", "AsyncTask file-run", { desc = "Use asynctasks task runner to determine command based on filetype" })
+
+cmd("CopyMode", function(opts)
+  vim.opt.signcolumn = "no"
+  vim.opt.number = false
+  vim.opt.relativenumber = false
+end, { desc = "Get rid of window decorations for easy coping from hterm" })
+
+-- Misc commonly mistyped commands
+cmd("WQ", "wq")
+cmd("Wq", "wq")
+cmd("Wqa", "wqa")
+cmd("W", "w")

@@ -1,9 +1,3 @@
-" Grep {{{1
-" General commands/aliases {{{1
-" S :: save if file has changed and re-run {{{2
-" Use asynctasks task runner to determine command based on filetype
-command S AsyncTask file-run
-
 " Bdelete[!] :: delete buffer without changing window layout {{{2
 " With [!], do not preserve window layout
 command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
@@ -15,9 +9,6 @@ command -bang BufOnly call buffer#only({'bang': <bang>0})
 " TODO: does this take the place of BufOnly?
 command -nargs=1 -bang -complete=customlist,buffer#close_complete
     \ Bclose call buffer#close(<bang>0, <q-args>)
-
-" CopyMode :: get rid of window decorations for easy copying from hterm {{{2
-command CopyMode set signcolumn=no nonumber norelativenumber
 
 " Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
 command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
@@ -43,12 +34,6 @@ call map#cabbr('ht', 'split \| terminal')
 " fff :: Insert comment with fold marker {{{2
 inoreabbrev fff <C-R>=syntax#foldmarker()<CR><C-R>=map#eatchar('\s')<CR>
 
-" Misc commonly mistyped commands {{{2
-command WQ wq
-command Wq wq
-command Wqa wqa
-command W w
-
 call map#cabbr('ehco', 'echo')
 call map#cabbr('q@', 'q!')
 
@@ -57,11 +42,6 @@ call map#cabbr('grep', 'silent grep!')
 call map#cabbr('make', 'silent make!')
 call map#cabbr('vh', 'vert help')
 call map#cabbr('hg', 'helpgrep')
-
-
-" Grep :: async grep {{{2
-" command! -nargs=+ -complete=file_in_path -bar Grep
-"     \ AsyncRun -strip -program=grep <args>
 
 " Git {{{1
 " TigStatus {{{2

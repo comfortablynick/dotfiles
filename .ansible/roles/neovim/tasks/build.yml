@@ -28,6 +28,11 @@
 
 - name: Neovim | Build from source
   block:
+    - name: Neovim | Remove runtime directory
+      file:
+        path: "{{ neovim_install_prefix }}/share/nvim/runtime/"
+        state: absent
+
     - name: Neovim | Install build prerequisites
       become: true
       apt:

@@ -104,6 +104,7 @@ o.listchars = {
   trail = "·", -- Trailing space
 }
 o.title = true
+o.splitkeep = "screen"
 
 o.path = {
   ".", -- Directory of current file
@@ -151,6 +152,7 @@ o.splitbelow = true
 o.number = true
 o.relativenumber = true
 o.numberwidth = 2
+o.cursorline = false
 
 -- Netrw options
 vim.g.netrw_set_opts = 1
@@ -203,7 +205,7 @@ require("config.lsp").init()
 local aug = api.nvim_create_augroup("init_lua", { clear = true })
 
 local reloaded_id = nil
-api.nvim_create_autocmd("BufWritePost", {
+api.nvim_create_autocmd("BufWritePost", { -- :: Reload lua conifg files
   group = aug,
   pattern = "*nvim/**.lua",
   desc = "Reload config files",
@@ -222,7 +224,7 @@ api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
-api.nvim_create_autocmd("BufWritePost", {
+api.nvim_create_autocmd("BufWritePost", { -- :: Run packer commands
   group = aug,
   pattern = "lua/plugins.lua",
   desc = "Run packer commands",
@@ -236,7 +238,7 @@ api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
-api.nvim_create_autocmd("CmdwinEnter", {
+api.nvim_create_autocmd("CmdwinEnter", { -- :: Custom Cmdwin settings
   group = aug,
   desc = "Custom cmdwin settings",
   callback = function()
@@ -250,16 +252,16 @@ api.nvim_create_autocmd("CmdwinEnter", {
   end,
 })
 
-api.nvim_create_autocmd("ColorScheme", {
+api.nvim_create_autocmd("ColorScheme", { -- :: Set custom highlights
   group = aug,
-  desc = "Set statusline highlights",
+  desc = "Set custom highlights",
   callback = function()
     require("config.lsp").set_hl()
     statusline.set_hl()
   end,
 })
 
-api.nvim_create_autocmd("TermOpen", {
+api.nvim_create_autocmd("TermOpen", { -- :: Set options for terminal windows
   group = aug,
   desc = "Set options for terminal windows",
   callback = function()
@@ -271,7 +273,7 @@ api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
-api.nvim_create_autocmd("TextYankPost", {
+api.nvim_create_autocmd("TextYankPost", { -- :: Highlight yanked test
   group = aug,
   desc = "Highlight yanked text",
   callback = function()
@@ -280,20 +282,20 @@ api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-api.nvim_create_autocmd(
+api.nvim_create_autocmd( -- :: Autoclose unneeded buffers
   "QuitPre",
   { group = aug, desc = "Autoclose unneeded buffers", command = "silent call buffer#autoclose()" }
 )
 
 if vim.wo.cursorline then
-  api.nvim_create_autocmd({ "WinEnter", "InsertLeave" }, {
+  api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter", "InsertLeave" }, {
     group = aug,
     desc = "Toggle cursorline if window in focus",
     callback = function()
       vim.wo.cursorline = true
     end,
   })
-  api.nvim_create_autocmd({ "WinLeave", "InsertEnter" }, {
+  api.nvim_create_autocmd({ "FocusLost", "BufLeave", "WinLeave", "InsertEnter" }, {
     group = aug,
     desc = "Toggle cursorline if window not in focus",
     callback = function()
@@ -335,6 +337,5 @@ local packer_cmds = {
 for k, v in pairs(packer_cmds) do
   api.nvim_create_user_command(k, v, {})
 end
-
 
 vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }

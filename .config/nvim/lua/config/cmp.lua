@@ -64,7 +64,7 @@ cmp.setup {
     { name = "path" },
   },
   mapping = {
-    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"] = cmp.mapping.close(),
@@ -122,6 +122,24 @@ cmp.setup {
     end,
   },
 }
+
+-- Use buffer source for `/`.
+cmp.setup.cmdline("/", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = "buffer", options = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+  },
+})
+
+-- Use cmdline & path source for ':'.
+cmp.setup.cmdline(":", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = "path" },
+  }, {
+    { name = "cmdline" },
+  }),
+})
 
 -- cmp.event:on("confirm_done", function(event)
 --   local item = event.entry:get_completion_item()

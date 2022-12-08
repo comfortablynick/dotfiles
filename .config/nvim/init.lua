@@ -177,6 +177,7 @@ local packs = {
   "cmp-nvim-lsp",
   "cmp-buffer",
   "cmp-path",
+  "cmp-cmdline",
   "cmp-nvim-ultisnips",
   "nvim-web-devicons",
   "vim-dirvish",

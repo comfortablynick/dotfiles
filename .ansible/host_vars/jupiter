@@ -1,7 +1,0 @@
----
-ansible_host: remote.vetcosolutions.com
-ansible_port: 5122
-ansible_user: nick
-ansible_shell_executable: /bin/bash
-
-pkg_aur_helper: yay

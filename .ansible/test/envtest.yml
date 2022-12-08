@@ -1,7 +1,7 @@
 ---
 # vim:ft=yaml.ansible:
 - name: Test environment variables
-  hosts: jupiter
+  hosts: uranus
   tasks:
     - name: Debug env output
       debug:
@@ -16,7 +16,7 @@
 
 
 - name: Set vars
-  hosts: jupiter
+  hosts: uranus
   vars:
     path:
       - $HOME/bin

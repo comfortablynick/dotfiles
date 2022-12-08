@@ -185,7 +185,7 @@ command -bang -nargs=1 -complete=customlist,s:map_types_completion Map
 "   :Rg - Start fzf with hidden preview window that can be enabled with `?` key
 "   :RG - Execute rg with every change in search term (no fuzzy filter)
 "     ! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
+" command! -bang -nargs=* Rg call s:fzf_rg(<q-args>, <bang>0)
 command -bang -nargs=* RG call s:fzf_rg_passthrough(<q-args>, <bang>0)
 
 " Ag :: grep with preview window {{{2
@@ -199,11 +199,11 @@ command! -bang -nargs=* Ag
     \ )
 
 " Files :: files list with preview window {{{2
-command! -bang -nargs=* -complete=dir Files
-    \ call fzf#vim#files(<q-args>,
-    \ <bang>0 ? fzf#vim#with_preview('up:60%')
-    \ : fzf#vim#with_preview('right:60%', '?'),
-    \ <bang>0)
+" command! -bang -nargs=* -complete=dir Files
+"     \ call fzf#vim#files(<q-args>,
+"     \ <bang>0 ? fzf#vim#with_preview('up:60%')
+"     \ : fzf#vim#with_preview('right:60%', '?'),
+"     \ <bang>0)
 
 " Mru :: most recently used files {{{2
 command -bang Mru call s:fzf_mru(<bang>0)

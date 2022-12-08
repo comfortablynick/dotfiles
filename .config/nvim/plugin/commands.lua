@@ -11,7 +11,7 @@ cmd("Lf", require("tools").lf_select_current_file)
 cmd("Gpush", function() -- :: Custom git push
   require("tools").term_run { cmd = "git push", mods = "10" }
 end)
-vim.map.n["<Leader>gp"] = { "<Cmd>Gpush<CR>", "Git push" }
+vim.keymap.set("n", "<Leader>gp", "<Cmd>Gpush<CR>", { desc = "Git push" })
 
 cmd("MRU", function(opts) -- :: Display most recently used files in scratch buffer
   require("window").create_scratch(require("tools").mru_files(opts.args), opts.mods)
@@ -66,3 +66,13 @@ cmd("WQ", "wq")
 cmd("Wq", "wq")
 cmd("Wqa", "wqa")
 cmd("W", "w")
+
+cmd(
+  "Rg",
+  -- Call telescope with the first argument (if nil, it's just empty no crash)
+  function(args)
+    require("telescope.builtin").grep_string { search = args.fargs[1] }
+  end,
+  -- Take 0 or 1 arg
+  { nargs = "?", desc = "Grep using Telescope" }
+)

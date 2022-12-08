@@ -13,4 +13,5 @@ vim.g["vista#renderer#enable_icon"] = 0
 vim.g.vista_close_on_jump = 0
 vim.g.vista_sidebar_width = 60
 
-vim.map.n["<Leader><Leader>v"] = { "<Cmd>Vista!!<CR>", "Vista toggle" }
+vim.keymap.set("n", "<Leader><Leader>v", "<Cmd>Vista!!<CR>", { desc = "Vista toggle" })
+

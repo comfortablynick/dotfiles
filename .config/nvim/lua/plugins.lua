@@ -9,19 +9,12 @@ end
 
 local packer = nil
 
--- Join arguments into a path to pass to :runtime
--- runtime('autoload', 'plugins', 'ale') -> :runtime autoload/plugins/ale.vim
-local runtime = function(...)
-  local path = util.path.join(...)
-  return ([[vim.cmd("runtime %s.vim")]]):format(path)
-end
-
 -- Lazy load user autocmd
 local lazy_load_event = "User PackLoad"
 
 local function init()
   if packer == nil then
-    vim.cmd "packadd packer.nvim"
+    vim.cmd.packadd "packer.nvim"
     packer = require "packer"
     packer.init {
       package_root = package_root,
@@ -57,7 +50,6 @@ local function init()
       end,
     },
     ["tpope/vim-eunuch"] = { cmd = { "Delete", "Rename", "Chmod", "Move" } },
-    ["moll/vim-bbye"] = { disable = true },
     ["psliwka/vim-smoothie"] = { event = lazy_load_event },
     ["kkoomen/vim-doge"] = { run = ":call doge#install(#{headless: 1})}", ft = { "python" } },
     ["sbdchd/neoformat"] = {
@@ -66,7 +58,12 @@ local function init()
         require "config.neoformat"
       end,
     },
-    ["skywind3000/asyncrun.vim"] = { cmd = "AsyncRun", setup = runtime("autoload", "plugins", "asyncrun") },
+    ["skywind3000/asyncrun.vim"] = {
+      cmd = "AsyncRun",
+      setup = function()
+        vim.cmd.runtime "autoload/plugins/asyncrun.vim"
+      end,
+    },
     ["skywind3000/asynctasks.vim"] = {
       run = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
       cmd = "AsyncTask",
@@ -78,9 +75,9 @@ local function init()
         vim.g.asynctasks_term_pos = "right"
         vim.g.asynctasks_term_reuse = 1
 
-        vim.map.n["<Leader>r"] = { "<Cmd>AsyncTask file-run<CR>", "Run file" }
-        vim.map.n["<Leader>b"] = { "<Cmd>AsyncTask file-build<CR>", "Build file" }
-        vim.call("map#cabbr", "ta", "AsyncTask")
+        vim.keymap.set("n", "<Leader>r", "<Cmd>AsyncTask file-run<CR>", { desc = "Run file with AsyncTask" })
+        vim.keymap.set("n", "<Leader>b", "<Cmd>AsyncTask file-build<CR>", { desc = "Build file with AsyncTask" })
+        vim.fn["map#cabbr"]("ta", "AsyncTask")
       end,
     },
     ["michaelb/sniprun"] = { run = "./install.sh" },
@@ -97,20 +94,20 @@ local function init()
       setup = function()
         vim.g.miniyank_maxitems = 50
         -- Replace built-in put with autoput
-        vim.map.n.p = "<Plug>(miniyank-autoput)"
-        vim.map.n.P = "<Plug>(miniyank-autoPut)"
+        vim.keymap.set("n", "p", "<Plug>(miniyank-autoput)")
+        vim.keymap.set("n", "P", "<Plug>(miniyank-autoPut)")
         -- Put most recent item in shared history
-        vim.map.n["<Leader>p"] = "<Plug>(miniyank-startput)"
-        vim.map.n["<Leader>P"] = "<Plug>(miniyank-startPut)"
-        vim.map.n["<Leader>y"] = "<Plug>(miniyank-cycle)"
-        vim.map.n["<Leader>Y"] = "<Plug>(miniyank-cycleback)"
+        vim.keymap.set("n", "<Leader>p", "<Plug>(miniyank-startput)")
+        vim.keymap.set("n", "<Leader>P", "<Plug>(miniyank-startPut)")
+        vim.keymap.set("n", "<Leader>y", "<Plug>(miniyank-cycle)")
+        vim.keymap.set("n", "<Leader>Y", "<Plug>(miniyank-cycleback)")
       end,
     },
     ["junegunn/vim-easy-align"] = {
       cmd = { "LiveEasyAlign", "EasyAlign" },
       keys = { "<Plug>(EasyAlign)" },
       setup = function()
-        vim.map.x.ga = "<Plug>(EasyAlign)"
+        vim.keymap.set("x", "ga", "<Plug>(EasyAlign)")
         vim.g.easy_align_ignore_groups = { "Comment", "String" }
         vim.g.easy_align_delimiters = {
           ['"'] = { pattern = '"', ignore_groups = { "!Comment" }, ignore_unmatched = 0 },
@@ -122,28 +119,6 @@ local function init()
     -- Motions
     ["tpope/vim-repeat"] = { event = lazy_load_event },
     ["tpope/vim-unimpaired"] = { event = lazy_load_event },
-    ["phaazon/hop.nvim"] = { -- Lua impl of easymotion/sneak
-      cmd = { "HopWord", "HopChar1", "HopChar2", "HopLine" },
-      config = function()
-        local hop = require "hop"
-        hop.setup { winblend = 100 }
-      end,
-      setup = function()
-        vim.map.n["<Leader>s"] = { "<Cmd>HopWord<CR>", "Hop to word" }
-        vim.map.n["<Leader>l"] = { "<Cmd>HopLine<CR>", "Hop to line" }
-        vim.map.n.f = { "<Cmd>HopChar1<CR>", "Hop to char" }
-        vim.map.n.s = { "<Cmd>HopChar2<CR>", "Hop to 2 chars" }
-      end,
-      disable = true,
-    },
-    ["rhysd/clever-f.vim"] = { -- [f|F]{char} motion
-      setup = function()
-        vim.g.clever_f_smart_case = 1
-        vim.g.clever_f_chars_match_any_signs = ":;"
-      end,
-      disable = true,
-    },
-    ["ggandor/lightspeed.nvim"] = { event = lazy_load_event, disable = true },
     ["ggandor/leap.nvim"] = {
       event = lazy_load_event,
       config = function()
@@ -167,20 +142,19 @@ local function init()
       end,
       config = function()
         -- Make sandwich behave like vim-surround
-        vim.cmd [[runtime macros/sandwich/keymap/surround.vim]]
+        vim.cmd.runtime "macros/sandwich/keymap/surround.vim"
         -- Select text surrounded by brackets or other object
-        vim.map.x.is = "<Plug>(textobj-sandwich-query-i)"
-        vim.map.o.is = "<Plug>(textobj-sandwich-query-i)"
-        vim.map.x.as = "<Plug>(textobj-sandwich-query-a)"
-        vim.map.o.as = "<Plug>(textobj-sandwich-query-a)"
+        vim.keymap.set("x", "is", "<Plug>(textobj-sandwich-query-i)")
+        vim.keymap.set("o", "is", "<Plug>(textobj-sandwich-query-i)")
+        vim.keymap.set("x", "as", "<Plug>(textobj-sandwich-query-a)")
+        vim.keymap.set("o", "as", "<Plug>(textobj-sandwich-query-a)")
       end,
     },
     ["AndrewRadev/switch.vim"] = {
-      -- event = lazy_load_event,
       keys = { "<Plug>(Switch)" },
       setup = function()
         vim.g.switch_mapping = ""
-        vim.map.n["g-"] = { "<Plug>(Switch)", "Switch item under cursor" }
+        vim.keymap.set("n", "g-", "<Plug>(Switch)", { desc = "Switch item under cursor" })
       end,
     },
     -- Commenting
@@ -199,15 +173,20 @@ local function init()
         "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
       },
     },
-    ["junegunn/fzf.vim"] = { event = lazy_load_event, setup = runtime("autoload", "plugins", "fzf") },
+    ["junegunn/fzf.vim"] = {
+      event = lazy_load_event,
+      setup = function()
+        vim.cmd.runtime "autoload/plugins/fzf.vim"
+      end,
+    },
     ["kevinhwang91/rnvimr"] = {
       event = lazy_load_event,
       run = "pip3 install -U pynvim",
       cmd = "RnvimrToggle",
       setup = function()
         vim.g.rnvimr_enable_picker = 1
-        vim.map.n["<C-e>"] = "<Cmd>RnvimrToggle<CR>"
-        vim.map.n["<Leader>n"] = "<Cmd>RnvimrToggle<CR>"
+        vim.keymap.set("n", "<C-e>", "<Cmd>RnvimrToggle<CR>", { desc = "Toggle Rnvimr" })
+        vim.keymap.set("n", "<Leader>n", "<Cmd>RnvimrToggle<CR>", { desc = "Toggle Rnvimr" })
       end,
     },
     ["liuchengxu/vista.vim"] = {
@@ -219,12 +198,14 @@ local function init()
     ["liuchengxu/vim-clap"] = {
       run = ":call clap#installer#force_download()",
       requires = "liuchengxu/vista.vim",
-      setup = runtime("autoload", "plugins", "clap"),
+      setup = function()
+        vim.cmd.runtime "autoload/plugins/clap.vim"
+      end,
     },
     ["mbbill/undotree"] = {
       cmd = "UndotreeToggle",
       setup = function()
-        vim.map.n["<F5>"] = { "<Cmd>UndotreeToggle<CR>", "Toggle UndoTree" }
+        vim.keymap.set("n", "<F5>", "<Cmd>UndotreeToggle<CR>", { desc = "Toggle UndoTree" })
       end,
       config = function()
         vim.g.undotree_WindowLayout = 4
@@ -236,13 +217,15 @@ local function init()
       setup = function()
         vim.g.picker_custom_find_executable = "fd"
         vim.g.picker_custom_find_flags = "-t f -HL --strip-cwd-prefix"
-        vim.map.n["<Leader>e"] = { "<Plug>(PickerEdit)", "Fuzzy edit" }
-        vim.map.n["<Leader>v"] = { "<Plug>(PickerVsplit)", "Fuzzy vsplit edit" }
+        vim.keymap.set("n", "<Leader>e", "<Plug>(PickerEdit)", { desc = "Fuzzy edit" })
+        vim.keymap.set("n", "<Leader>v", "<Plug>(PickerVsplit)", { desc = "Fuzzy vsplit edit" })
       end,
     },
     ["voldikss/vim-floaterm"] = {
       cmd = { "FloatermNew", "FloatermToggle" },
-      setup = runtime("autoload", "plugins", "floaterm"),
+      setup = function()
+        vim.cmd.runtime "autoload/plugins/floaterm.vim"
+      end,
     },
     ["akinsho/toggleterm.nvim"] = {
       event = lazy_load_event,
@@ -344,7 +327,22 @@ local function init()
       requires = { { "nvim-lua/plenary.nvim" }, { "sindrets/diffview.nvim" } },
     },
     -- Snippets
-    ["SirVer/ultisnips"] = { setup = runtime("autoload", "plugins", "ultisnips"), event = lazy_load_event },
+    ["SirVer/ultisnips"] = {
+      setup = function()
+        vim.g.UltiSnipsExpandTrigger = "<C-s>"
+        vim.g.UltiSnipsJumpForwardTrigger = "<C-k>"
+        vim.g.UltiSnipsJumpBackwardTrigger = "<C-h>"
+        vim.g.UltiSnipsSnippetDirectories = { "~/.config/ultisnips" }
+        vim.g.UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = "~/.config/ultisnips"
+        vim.g.snips_author = "Nick Murphy"
+        vim.g.snips_email = "comfortablynick@gmail.com"
+        vim.g.snips_github = "https://github.com/comfortablynick"
+
+        vim.fn["map#cabbr"]("es", "UltiSnipsEdit")
+        vim.keymap.set("i", "<Plug>(UltiForward)", "<C-R>=UltiSnips#JumpForwards()<CR>")
+      end,
+      event = lazy_load_event,
+    },
     ["honza/vim-snippets"] = { event = lazy_load_event },
     ["ZhiyuanLck/smart-pairs"] = {
       event = "InsertEnter",
@@ -372,6 +370,7 @@ local function init()
         { "hrsh7th/cmp-nvim-lsp" },
         { "hrsh7th/cmp-buffer" },
         { "hrsh7th/cmp-path" },
+        { "hrsh7th/cmp-cmdline" },
         { "quangnguyen30192/cmp-nvim-ultisnips" },
       },
     },
@@ -388,8 +387,8 @@ local function init()
     ["bfredl/nvim-luadev"] = {
       ft = "lua",
       config = function()
-        vim.map.v.buffer["<Enter>"] = { "<Plug>(Luadev-Run)", "Run in REPL" }
-        vim.map.n.buffer.grl = { "<Plug>(Luadev-RunLine)", "Run line in REPL" }
+        vim.keymap.set("v", "<Enter>", "<Plug>(Luadev-Run)", { desc = "Run in REPL", buffer = true })
+        vim.keymap.set("n", "grl", "<Plug>(Luadev-RunLine)", { desc = "Run line in REPL", buffer = true })
       end,
     },
     ["rcarriga/nvim-notify"] = {
@@ -450,12 +449,16 @@ local function init()
         "NvimTmuxNavigateLastActive",
       },
       setup = function()
-        local n = vim.map.n
-        n["<C-h>"] = { "<Cmd>NvimTmuxNavigateLeft<CR>", "Vim/Tmux navigate left" }
-        n["<C-j>"] = { "<Cmd>NvimTmuxNavigateDown<CR>", "Vim/Tmux navigate down" }
-        n["<C-k>"] = { "<Cmd>NvimTmuxNavigateUp<CR>", "Vim/Tmux navigate up" }
-        n["<C-l>"] = { "<Cmd>NvimTmuxNavigateRight<CR>", "Vim/Tmux navigate right" }
-        n["<C-p>"] = { "<Cmd>NvimTmuxNavigateLastActive<CR>", "Vim/Tmux navigate to last active window" }
+        vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
+        vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })
+        vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Vim/Tmux navigate up" })
+        vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Vim/Tmux navigate right" })
+        vim.keymap.set(
+          "n",
+          "<C-p>",
+          "<Cmd>NvimTmuxNavigateLastActive<CR>",
+          { desc = "Vim/Tmux navigate to last active window" }
+        )
       end,
       config = function()
         require "nvim-tmux-navigation"
@@ -483,33 +486,6 @@ local function init()
   for repo, config in pairs(plugins) do
     use(vim.tbl_extend("force", { repo }, config))
   end
-
-  nvim.au.group("lua_plugins", function(grp)
-    grp.FileType = {
-      "packer",
-      function()
-        vim.map.n.J = "lua require'plugins'.goto_plugin(false)"
-        vim.map.n.K = "lua require'plugins'.goto_plugin(true)"
-      end,
-    }
-  end)
-end
-
-local get_status_symbols = function()
-  local display = require("packer").config.display
-  local sym_str = ""
-  for k, v in pairs(display) do
-    if k:match "_sym" then
-      sym_str = sym_str .. v
-    end
-  end
-  return sym_str
-end
-
-M.goto_plugin = function(backward)
-  local flag = backward and "b" or ""
-  local cmd = string.format([[^\s[%s]\s.*$]], get_status_symbols())
-  return vim.fn.search(cmd, flag)
 end
 
 local plugins = setmetatable(M, {

@@ -196,7 +196,6 @@ end, 200)
 
 require "nvim"
 require "globals"
-require "map"
 require "config.statusline"
 require "config.treesitter"
 require "config.devicons"

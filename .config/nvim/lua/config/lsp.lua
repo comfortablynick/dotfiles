@@ -205,8 +205,8 @@ local set_hl_autocmds = function()
       ]]
 end
 
-local nmap = function(key, result, description)
-  vim.map.n.buffer[key] = { "<Cmd>" .. result .. "<CR>", description }
+local nmap = function(lhs, rhs, description)
+  vim.keymap.set("n", lhs, "<Cmd>" .. rhs .. "<CR>", { desc = description, buffer = true })
 end
 
 local on_attach_cb = function(client, bufnr)

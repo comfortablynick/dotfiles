@@ -4,8 +4,8 @@ if not installed then
   return
 end
 
-vim.map.n["<Leader>d"] = "<Cmd>TroubleToggle<CR>"
-vim.map.n.gR = "<Cmd>Trouble lsp_references<CR>"
+vim.keymap.set("n", "<Leader>d", "<Cmd>TroubleToggle<CR>", { desc = "Toggle Trouble" })
+vim.keymap.set("n", "gR", "<Cmd>Trouble lsp_references<CR>", { desc = "Lsp references" })
 
 trouble.setup {
   position = "bottom", -- position of the list can be: bottom, top, left, right

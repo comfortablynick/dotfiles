@@ -19,8 +19,6 @@ gitsigns.setup {
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
 
-    local bmap = vim.map["buffer" .. bufnr]
-
     -- Navigation
     vim.keymap.set(
       "n",
@@ -36,22 +34,19 @@ gitsigns.setup {
     )
 
     -- Actions
-    bmap.n.gs = { gs.preview_hunk, "Git show hunk" }
-    bmap.n.v.ghs = { gs.stage_hunk, "Git stage hunk" }
-    bmap.n.v.ghr = { gs.reset_hunk, "Git reset hunk" }
-    bmap.n.ghu = { gs.undo_stage_hunk, "Git undo staged hunk" }
-    bmap.n.ghS = { gs.stage_buffer, "Git stage buffer" }
-    bmap.n.ghR = { gs.stage_buffer, "Git reset buffer" }
-    bmap.n.ghb = {
-      function()
-        gs.blame_line { full = true }
-      end,
-      "Git blame line",
-    }
-    bmap.n.ghd = { gs.toggle_deleted, "Git toggle deleted" }
+    vim.keymap.set("n", "gs", gs.preview_hunk, { desc = "Git show hunk", buffer = bufnr })
+    vim.keymap.set({ "n", "v" }, "ghs", gs.stage_hunk, { desc = "Git stage hunk", buffer = bufnr })
+    vim.keymap.set({ "n", "v" }, "ghr", gs.reset_hunk, { desc = "Git reset hunk", buffer = bufnr })
+    vim.keymap.set("n", "ghu", gs.undo_stage_hunk, { desc = "Git undo staged hunk", buffer = bufnr })
+    vim.keymap.set("n", "ghS", gs.stage_buffer, { desc = "Git stage buffer", buffer = bufnr })
+    vim.keymap.set("n", "ghR", gs.stage_buffer, { desc = "Git reset buffer", buffer = bufnr })
+    vim.keymap.set("n", "ghb", function()
+      gs.blame_line { full = true }
+    end, { desc = "Git blame line", buffer = bufnr })
+    vim.keymap.set("n", "ghd", gs.toggle_deleted, { desc = "Git toggle deleted", buffer = bufnr })
 
     -- Text objects
-    bmap.o.x.ih = { ":<C-U>Gitsigns select_hunk<CR>", "Git select hunk" }
+    vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git select hunk", buffer = bufnr })
   end,
   watch_gitdir = { interval = 1000 },
   sign_priority = 6,

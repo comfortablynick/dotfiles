@@ -3,7 +3,7 @@ if not tsconfigs then
   return
 end
 
-vim.cmd [[silent! packadd playground]]
+vim.cmd.packadd { "playground", mods = { emsg_silent = true } }
 
 tsconfigs.setup {
   ensure_installed = {
@@ -26,7 +26,7 @@ tsconfigs.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_nelection = "gnn",
+      init_selection = "gnn",
       node_incremental = "grn",
       scope_incremental = "grc",
       node_decremental = "grm",

@@ -1,22 +1,7 @@
--- Additions to the "api" (common nvim helpers)
--- Also api methods can be called from here without leading `nvim_`
--- Ex: vim.api.nvim_buf_get_lines() == nvim.buf_get_lines()
+-- Nvim helpers, available globally
 local api = vim.api
 local npcall = vim.F.npcall
 local M = {}
-
--- Adapted from github.com/norcalli/nvim_utils
-function M.create_augroups(definitions)
-  for group_name, definition in pairs(definitions) do
-    vim.cmd("augroup " .. group_name)
-    vim.cmd "autocmd!"
-    for _, def in ipairs(definition) do
-      local command = table.concat(vim.tbl_flatten { "autocmd", def }, " ")
-      vim.cmd(command)
-    end
-    vim.cmd "augroup END"
-  end
-end
 
 function M.relative_name(path)
   -- Return path relative to config
@@ -43,9 +28,7 @@ function M.unload(prefix)
     else
       return nil
     end
-  end, vim.tbl_keys(
-    package.loaded
-  ))
+  end, vim.tbl_keys(package.loaded))
   for _, v in pairs(found) do
     package.loaded[v] = nil
   end
@@ -65,39 +48,35 @@ function M.reload()
   M.source_current_buffer()
 end
 
--- warn :: echo warning message
-function M.warn(text)
+function M.warn(text) -- :: echo warning message
   vim.validate { text = { text, "string" } }
   api.nvim_echo({ { text, "WarningMsg" } }, false, {})
 end
 
--- unlet :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`)
-function M.unlet(var_name, var_scope)
+function M.unlet(var_name, var_scope) -- :: unlet variable even if it doesn't exist (equivalent to `unlet! g:var`)
   pcall(function()
     vim[var_scope or "g"][var_name] = nil
   end)
 end
 
--- packrequire :: load pack + lua module and return module or nil
-function M.packrequire(packname, modname)
+function M.packrequire(packname, modname) -- :: load pack + lua module and return module or nil
   vim.validate { packname = { packname, "string" } }
   -- Skip any vim rtp stuff if lua module exists
   local pack = package.loaded[modname or packname]
   if pack ~= nil then
     return pack
   end
-  vim.cmd("silent! packadd " .. packname)
+  vim.cmd.packadd { packname, mods = { emsg_silent = true } }
   -- No need to check; just return nil if pcall fails
   return npcall(require, modname or packname)
 end
 
--- get_hl :: return highlight def with hex values
-function M.get_hl(name)
+function M.get_hl(name) -- :: return highlight def with hex values
   local ok, hl = pcall(api.nvim_get_hl_by_name, name, true)
   if not ok then
     return nil
   end
-  for _, key in pairs { "foreground", "background", "special" } do
+  for _, key in ipairs { "foreground", "background", "special" } do
     if hl[key] then
       hl[key] = string.format("#%06x", hl[key])
     end
@@ -105,56 +84,15 @@ function M.get_hl(name)
   return hl
 end
 
--- au :: autocmd interface
--- from: https://reddit.com/r/neovim/comments/ppypwt/simple_autocmd_wrapper_in_lua/
-local function autocmd(this, event, spec)
-    local is_table = type(spec) == 'table'
-    local pattern = is_table and spec[1] or '*'
-    local action = is_table and spec[2] or spec
-    if type(action) == 'function' then
-        action = this.set(action)
-    end
-    local e = type(event) == 'table' and table.concat(event, ',') or event
-    vim.cmd('autocmd ' .. e .. ' ' .. pattern .. ' ' .. action)
+function M.has(...) -- :: return bool from vim.fn.has()
+  return vim.fn.has(...) == 1
 end
 
-local S = {
-    __au = {},
-}
-
-local X = setmetatable({}, {
-    __index = S,
-    __newindex = autocmd,
-    __call = autocmd,
-})
-
-function S.exec(id)
-    S.__au[id]()
+function M.executable(...) -- :: return bool from vim.fn.executable()
+  return vim.fn.executable(...) == 1
 end
 
-function S.set(fn)
-    local id = string.format('%p', fn)
-    S.__au[id] = fn
-    return string.format('lua nvim.au.exec("%s")', id)
-end
-
-function S.group(grp, cmds)
-    vim.cmd('augroup ' .. grp)
-    vim.cmd('autocmd!')
-    if type(cmds) == 'function' then
-        cmds(X)
-    else
-        for _, au in ipairs(cmds) do
-            autocmd(S, au[1], { au[2], au[3] })
-        end
-    end
-    vim.cmd('augroup END')
-end
-
-M.au = X
-
--- Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work
-setmetatable(M, {
+setmetatable(M, { -- :: Lazy load vim.api.nvim_{method} into nvim.{method} for easier cmdline work
   __index = function(_, k)
     return api["nvim_" .. k]
   end,

@@ -40,7 +40,7 @@ function M.get_decoration_width(winnr) -- {{{1
     decoration_width = decoration_width + math.max(number_width, actual_number_width)
   end
   -- signs_
-  if vim.fn.has "signs" then
+  if nvim.has "signs" then
     local signcolumn = api.nvim_win_get_option(0, "signcolumn")
     local signcolumn_width = 2
     if vim.startswith(signcolumn, "yes") or vim.startswith(signcolumn, "auto") then
@@ -48,7 +48,7 @@ function M.get_decoration_width(winnr) -- {{{1
     end
   end
   -- folding
-  if vim.fn.has "folding" then
+  if nvim.has "folding" then
     local folding_width = api.nvim_win_get_option(0, "foldcolumn")
     decoration_width = decoration_width + folding_width
   end

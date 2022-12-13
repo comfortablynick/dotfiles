@@ -313,7 +313,7 @@ function M.init()
     end
     -- Check if defined cmd is executable
     if cfg.cmd ~= nil then
-      if vim.fn.executable(cfg.cmd[1]) ~= 1 then
+      if not nvim.executable(cfg.cmd[1]) then
         goto continue
       end
     end

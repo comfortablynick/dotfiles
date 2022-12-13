@@ -37,7 +37,7 @@ function _G.d(...)
     what = what[1]
   end
   local msg = vim.inspect(vim.deepcopy(what))
-  require("notify").notify(msg, vim.log.levels.INFO, {
+  vim.notify(msg, vim.log.levels.INFO, {
     title = "Debug: " .. source,
     on_open = function(win)
       vim.wo[win].conceallevel = 3

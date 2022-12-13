@@ -20,18 +20,20 @@ gitsigns.setup {
     local gs = package.loaded.gitsigns
 
     -- Navigation
-    vim.keymap.set(
-      "n",
-      "]c",
-      "&diff ? '[c' : '<Cmd>Gitsigns next_hunk<CR>'",
-      { expr = true, buffer = bufnr, desc = "Git next hunk", replace_keycodes = false }
-    )
-    vim.keymap.set(
-      "n",
-      "[c",
-      "&diff ? '[c' : '<Cmd>Gitsigns prev_hunk<CR>'",
-      { expr = true, buffer = bufnr, desc = "Git prev hunk", replace_keycodes = false }
-    )
+    vim.keymap.set("n", "]c", function()
+      if vim.wo.diff then
+        return "]c"
+      end
+        gs.next_hunk()
+      return "<Ignore>"
+    end, { expr = true, buffer = bufnr, desc = "Git next hunk" })
+    vim.keymap.set("n", "[c", function()
+      if vim.wo.diff then
+        return "[c"
+      end
+        gs.prev_hunk()
+      return "<Ignore>"
+    end, { expr = true, buffer = bufnr, desc = "Git prev hunk" })
 
     -- Actions
     vim.keymap.set("n", "gs", gs.preview_hunk, { desc = "Git show hunk", buffer = bufnr })

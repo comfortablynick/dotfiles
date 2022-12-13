@@ -1,6 +1,5 @@
 local o = vim.opt
 local g = vim.g
-local fn = vim.fn
 local uv = vim.loop
 local api = vim.api
 local map = vim.keymap
@@ -117,10 +116,10 @@ o.wildoptions = { "pum" }
 o.wildignore:append { "__pycache__", ".mypy_cache", ".git" }
 
 -- Grep
-if fn.executable "ugrep" == 1 then
+if nvim.executable "ugrep" then
   o.grepprg = "ugrep -RInkju --ignore-files --tabs=1"
   o.grepformat = { "%f:%l:%c:%m", "%f+%l+%c+%m", [[%-G%f\|%l\|%c\|%m]] }
-elseif fn.executable "rg" == 1 then
+elseif nvim.executable "rg" then
   o.grepprg = "rg --vimgrep --hidden"
   o.grepformat = { "%f:%l:%c:%m", "%f:%l:%m" }
 end

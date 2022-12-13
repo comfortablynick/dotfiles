@@ -34,13 +34,15 @@ function CompleteChords(findstart, base)
     endif
 endfunction
 
+lua require"cmp".register_source("chordpro", require"config.cmp.chordpro")
+
 " Map <C-x><C-m> for our custom completion
-inoremap <buffer> <C-x><C-m><C-r>=ChordComplete()<CR>
+" inoremap <buffer> <C-x><C-m><C-r>=ChordComplete()<CR>
 
 " Make subsequent <C-m> presses after <C-x><C-m> go to the next entry (just like
 " other <C-x>* mappings)
-inoremap <buffer> <expr> <C-m>
-    \ pumvisible() ?  "\<C-n>" : "\<C-m>"
+" inoremap <buffer> <expr> <C-m>
+"     \ pumvisible() ?  "\<C-n>" : "\<C-m>"
 
 " Complete function for addresses; we match the name & address
 function ChordComplete()
@@ -81,7 +83,7 @@ function ChordComplete()
     return ''
 endfun
 
-setlocal completefunc=CompleteChords
+" setlocal completefunc=CompleteChords
 " setlocal omnifunc=CompleteChords
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')

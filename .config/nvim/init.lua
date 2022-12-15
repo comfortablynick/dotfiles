@@ -186,15 +186,13 @@ local packs = {
 }
 
 for _, pack in ipairs(packs) do
-  vim.cmd.packadd { pack, bang = true, mods = { emsg_silent = true } }
+  vim.cmd("packadd! " .. pack)
 end
 
 vim.defer_fn(function()
   api.nvim_exec_autocmds("User", { pattern = "PackLoad" })
 end, 200)
 
-require "nvim"
-require "globals"
 require "config.statusline"
 require "config.treesitter"
 require "config.devicons"
@@ -337,4 +335,4 @@ for k, v in pairs(packer_cmds) do
   api.nvim_create_user_command(k, v, {})
 end
 
-vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }
+vim.cmd "silent! colorscheme gruvbox"

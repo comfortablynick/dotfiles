@@ -1,8 +1,3 @@
-local api = vim.api
-local opt = vim.opt
-local fn = vim.fn
-local map = vim.keymap
-
 local tmp_root = "/tmp/nvim/site"
 local pack_root = tmp_root .. "/pack"
 local packer_install_path = pack_root .. "/packer/start/packer.nvim"
@@ -15,8 +10,8 @@ _G.paths = {
   packer_compiled = packer_compiled,
 }
 
-if fn.empty(fn.glob(packer_install_path)) > 0 then
-  packer_bootstrap = fn.system {
+if vim.fn.empty(vim.fn.glob(packer_install_path)) > 0 then
+  packer_bootstrap = vim.fn.system {
     "git",
     "clone",
     "--depth",
@@ -26,47 +21,32 @@ if fn.empty(fn.glob(packer_install_path)) > 0 then
   }
 end
 
-opt.shadafile = tmp_root .. "/tmp.shada"
-opt.runtimepath = "$VIMRUNTIME"
-opt.packpath = tmp_root
-opt.completeopt = { "menuone", "noinsert", "noselect" }
-opt.shortmess:append "c"
-opt.shell = "/bin/sh"
-opt.termguicolors = true
-
--- Debug print
-_G.p = function(...)
-  print(vim.inspect(...))
-end
+vim.opt.shadafile = tmp_root .. "/tmp.shada"
+vim.opt.runtimepath = "$VIMRUNTIME"
+vim.opt.packpath = tmp_root
+vim.opt.completeopt = { "menuone", "noinsert", "noselect" }
+vim.opt.shortmess:append "c"
+vim.opt.shell = "/bin/sh"
+vim.opt.termguicolors = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 0
+vim.opt.expandtab = true
+vim.opt.number = true
 
 -- Non-essential settings so I don't annoy myself
-do
-  map.set("n", ";", ":")
-  map.set("x", ";", ":")
-  map.set("o", ";", ":")
-
-  map.set("n", "g:", ";")
-  map.set("n", "@;", "@:")
-  map.set("n", "q;", "q:")
-  map.set("x", "q;", "q:")
-
-  map.set("i", "kj", "<Esc>`^")
-end
-
-opt.tabstop = 4
-opt.shiftwidth = 0
-opt.expandtab = true
-opt.number = true
+vim.keymap.set("n", ";", ":")
+vim.keymap.set("x", ";", ":")
+vim.keymap.set("o", ";", ":")
+vim.keymap.set("n", "g:", ";")
+vim.keymap.set("n", "@;", "@:")
+vim.keymap.set("n", "q;", "q:")
+vim.keymap.set("x", "q;", "q:")
+vim.keymap.set("i", "kj", "<Esc>`^")
 
 -- Put any plugin config that should be loaded after plugins are installed in here
 local load_config = function()
-  print "Ready!"
-
-  -- Colors
-  vim.cmd.colorscheme "PaperColor"
+  vim.cmd "silent! colorscheme PaperColor"
   require("lualine").setup { theme = "papercolor" }
-
-  -- Lualine
 end
 
 local packer = require "packer"
@@ -81,8 +61,8 @@ packer.startup {
     if packer_bootstrap then
       vim.notify "Installing packer.nvim and plugins"
       packer.sync()
-      local grp = api.nvim_create_augroup("minit", { clear = true })
-      api.nvim_create_autocmd("User PackerComplete", { group = grp, callback = load_config, once = true })
+      local grp = vim.api.nvim_create_augroup("minit", { clear = true })
+      vim.api.nvim_create_autocmd("User PackerComplete", { group = grp, callback = load_config, once = true })
     else
       load_config()
     end

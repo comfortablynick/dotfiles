@@ -264,7 +264,7 @@ M.set_hl = function()
   api.nvim_set_hl(ns, "DiffAdded", { foreground = "#b8bb26" })
   api.nvim_set_hl(ns, "DiffChanged", { foreground = "#8ec07c" })
   api.nvim_set_hl(ns, "DiffRemoved", { foreground = "#fb4934" })
-  api.nvim__set_hl_ns(ns)
+  api.nvim_set_hl_ns(ns)
 end
 
 _G.statusline = M

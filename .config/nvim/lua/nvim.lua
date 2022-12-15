@@ -66,7 +66,7 @@ function M.packrequire(packname, modname) -- :: load pack + lua module and retur
   if pack ~= nil then
     return pack
   end
-  vim.cmd.packadd { packname, mods = { emsg_silent = true } }
+  vim.cmd.packadd(packname)
   -- No need to check; just return nil if pcall fails
   return npcall(require, modname or packname)
 end

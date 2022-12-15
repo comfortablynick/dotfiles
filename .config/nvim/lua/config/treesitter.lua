@@ -3,7 +3,7 @@ if not tsconfigs then
   return
 end
 
-vim.cmd.packadd { "playground", mods = { emsg_silent = true } }
+vim.cmd "packadd playground"
 
 tsconfigs.setup {
   ensure_installed = {

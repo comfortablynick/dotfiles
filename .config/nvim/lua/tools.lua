@@ -554,19 +554,11 @@ function M.test_fn(iter_ct)
 end
 
 function M.startuptime() -- Create floating window and display :StartupTime
-  local width = vim.o.columns - 20
-  local height = vim.o.lines - 9
-
   bufnr = win.create_centered_floating {
-    width = width,
-    height = height,
-    border = true,
+    border = "double",
     winblend = 1,
-    fn = function()
-      vim.cmd "StartupTime"
-    end,
+    fn = vim.cmd.StartupTime,
   }
-
   vim.bo[bufnr].bufhidden = "wipe"
   vim.wo.cursorline = true
 end
@@ -576,7 +568,7 @@ function M.load_lvimrc() -- Load local vimrc using env var of paths set with dir
   local available = uv.os_getenv "LOCAL_VIMRC"
   for path in vim.gsplit(available, ":", true) do
     if not vim.tbl_contains(sourced, path) then
-      vim.cmd("source " .. path)
+      vim.cmd.source(path)
       table.insert(sourced, path)
     end
   end

@@ -171,6 +171,7 @@ local plugins = {
     end,
   },
   ["liuchengxu/vim-clap"] = {
+    cmd = "Clap",
     build = ":call clap#installer#force_download()",
     dependencies = { "liuchengxu/vista.vim" },
     init = function()

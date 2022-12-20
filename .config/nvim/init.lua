@@ -186,7 +186,7 @@ local packs = {
 }
 
 for _, pack in ipairs(packs) do
-  vim.cmd("packadd! " .. pack)
+  vim.cmd("silent! packadd! " .. pack)
 end
 
 vim.defer_fn(function()

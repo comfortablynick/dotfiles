@@ -201,39 +201,39 @@ require("config.lsp").init()
 -- General autocmds
 local aug = api.nvim_create_augroup("init_lua", { clear = true })
 
-local reloaded_id = nil
-api.nvim_create_autocmd("BufWritePost", { -- :: Reload lua conifg files
-  group = aug,
-  pattern = "*nvim/**.lua",
-  desc = "Reload config files",
-  callback = function(event)
-    ---@type string
-    local file = event.match
-    local mod = file:match "/lua/(.*)%.lua"
-    if mod then
-      mod = mod:gsub("/", ".")
-    end
-    if mod then
-      package.loaded[mod] = nil
-      reloaded_id = vim.notify("Reloaded " .. mod, vim.log.levels.INFO, { title = "nvim", replace = reloaded_id })
-    end
-    -- nvim.reload()
-  end,
-})
+-- local reloaded_id = nil
+-- api.nvim_create_autocmd("BufWritePost", { -- :: Reload lua conifg files
+--   group = aug,
+--   pattern = "*nvim/**.lua",
+--   desc = "Reload config files",
+--   callback = function(event)
+--     ---@type string
+--     local file = event.match
+--     local mod = file:match "/lua/(.*)%.lua"
+--     if mod then
+--       mod = mod:gsub("/", ".")
+--     end
+--     if mod then
+--       package.loaded[mod] = nil
+--       reloaded_id = vim.notify("Reloaded " .. mod, vim.log.levels.INFO, { title = "nvim", replace = reloaded_id })
+--     end
+--     -- nvim.reload()
+--   end,
+-- })
 
-api.nvim_create_autocmd("BufWritePost", { -- :: Run packer commands
-  group = aug,
-  pattern = "lua/plugins.lua",
-  desc = "Run packer commands",
-  callback = function()
-    local pack = require "plugins"
-
-    -- nvim.reload()
-    pack.clean()
-    pack.install()
-    pack.compile()
-  end,
-})
+-- api.nvim_create_autocmd("BufWritePost", { -- :: Run packer commands
+--   group = aug,
+--   pattern = "lua/plugins.lua",
+--   desc = "Run packer commands",
+--   callback = function()
+--     local pack = require "plugins"
+--
+--     -- nvim.reload()
+--     pack.clean()
+--     pack.install()
+--     pack.compile()
+--   end,
+-- })
 
 api.nvim_create_autocmd("CmdwinEnter", { -- :: Custom Cmdwin settings
   group = aug,

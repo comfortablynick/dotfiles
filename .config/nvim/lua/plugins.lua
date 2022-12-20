@@ -1,7 +1,7 @@
 local M = {}
 
 -- Lazy load user autocmd
-local lazy_load_event = "User PackLoad"
+local lazy_load_event = "VeryLazy"
 
 -- Workaround for packer using $SHELL instead of &shell
 -- When $SHELL == fish, posix syntax will fail in hooks
@@ -18,7 +18,13 @@ local plugins = {
   },
   ["tpope/vim-eunuch"] = { cmd = { "Delete", "Rename", "Chmod", "Move" } },
   ["psliwka/vim-smoothie"] = { event = lazy_load_event },
-  ["kkoomen/vim-doge"] = { run = ":call doge#install(#{headless: 1})}", ft = { "python" } },
+  ["kkoomen/vim-doge"] = {
+    build = function()
+      -- vim.cmd [[call doge#install(#{headless: 1})}]]
+      vim.fn["doge#install"] { headless = 1 }
+    end,
+    ft = { "python" },
+  },
   ["sbdchd/neoformat"] = {
     cmd = "Neoformat",
     init = function()
@@ -32,7 +38,7 @@ local plugins = {
     end,
   },
   ["skywind3000/asynctasks.vim"] = {
-    run = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
+    build = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
     cmd = "AsyncTask",
     init = function()
       vim.g.asynctasks_extra_config = {
@@ -47,7 +53,7 @@ local plugins = {
       vim.fn["map#cabbr"]("ta", "AsyncTask")
     end,
   },
-  ["michaelb/sniprun"] = { run = "./install.sh" },
+  ["michaelb/sniprun"] = { build = "./install.sh" },
   -- Editing behavior
   ["bfredl/nvim-miniyank"] = {
     keys = {
@@ -99,7 +105,7 @@ local plugins = {
     end,
   },
   ["wellle/targets.vim"] = { event = lazy_load_event },
-  ["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
+  --["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
   -- Text objects
   ["machakann/vim-sandwich"] = {
     event = lazy_load_event,
@@ -134,11 +140,7 @@ local plugins = {
   -- Explorer/finder utils
   ["junegunn/fzf"] = {
     event = lazy_load_event,
-    run = {
-      "./install --bin",
-      "ln -sf $(pwd)/bin/* ~/.local/bin",
-      "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
-    },
+    build = "./install --bin; ln -sf $(pwd)/bin/* ~/.local/bin; ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
   },
   ["ibhagwan/fzf-lua"] = {
     event = lazy_load_event,
@@ -154,7 +156,7 @@ local plugins = {
   },
   ["kevinhwang91/rnvimr"] = {
     event = lazy_load_event,
-    run = "pip3 install -U pynvim",
+    build = "pip3 install -U pynvim",
     cmd = "RnvimrToggle",
     init = function()
       vim.g.rnvimr_enable_picker = 1
@@ -169,7 +171,7 @@ local plugins = {
     end,
   },
   ["liuchengxu/vim-clap"] = {
-    run = ":call clap#installer#force_download()",
+    build = ":call clap#installer#force_download()",
     dependencies = { "liuchengxu/vista.vim" },
     init = function()
       vim.cmd.runtime "autoload/plugins/clap.vim"
@@ -184,12 +186,13 @@ local plugins = {
       vim.g.undotree_WindowLayout = 4
     end,
   },
-  ["justinmk/vim-dirvish"] = {},
+  ["justinmk/vim-dirvish"] = { lazy = false },
   ["srstevenson/vim-picker"] = {
     keys = { "<Plug>(PickerEdit)", "<Plug>(PickerVsplit)" },
     init = function()
       vim.g.picker_custom_find_executable = "fd"
       vim.g.picker_custom_find_flags = "-t f -HL --strip-cwd-prefix"
+
       vim.keymap.set("n", "<Leader>e", "<Plug>(PickerEdit)", { desc = "Fuzzy edit" })
       vim.keymap.set("n", "<Leader>v", "<Plug>(PickerVsplit)", { desc = "Fuzzy vsplit edit" })
     end,
@@ -264,32 +267,28 @@ local plugins = {
     end,
   },
   -- Syntax/filetype
-  ["vhdirk/vim-cmake"] = {},
-  ["cespare/vim-toml"] = {},
-  ["tbastos/vim-lua"] = {},
-  ["lervag/vimtex"] = {},
+  ["vhdirk/vim-cmake"] = { lazy = false },
+  ["cespare/vim-toml"] = { lazy = false },
+  ["lervag/vimtex"] = { lazy = false },
   ["ron-rs/ron.vim"] = { lazy = false },
   ["Glench/Vim-Jinja2-Syntax"] = { lazy = false },
   ["blankname/vim-fish"] = { lazy = false },
   ["habamax/vim-asciidoctor"] = { lazy = false },
   ["benknoble/gitignore-vim"] = { lazy = false },
-  ["~/git/todo.txt-vim"] = { lazy = false },
+  -- ["~/git/todo.txt-vim"] = { lazy = false },
   ["pearofducks/ansible-vim"] = {
     lazy = false,
-    run = "./UltiSnips/generate.sh",
+    build = "./UltiSnips/generate.sh",
     config = function()
       vim.g.ansible_extra_keywords_highlight = 1
     end,
   },
-  ["LhKipp/nvim-nu"] = { lazy = false, run = ":TSInstall nu" },
+  ["LhKipp/nvim-nu"] = { lazy = false, build = ":silent TSInstall nu" },
   ["tpope/vim-fugitive"] = {
     event = lazy_load_event,
   },
   ["junegunn/gv.vim"] = {
     cmd = "GV",
-    config = function()
-      vim.cmd [[packadd vim-fugitive]]
-    end,
   },
   ["iberianpig/tig-explorer.vim"] = { cmd = { "Tig", "TigStatus" } },
   ["TimUntersberger/neogit"] = {
@@ -317,13 +316,6 @@ local plugins = {
     event = lazy_load_event,
   },
   ["honza/vim-snippets"] = { event = lazy_load_event },
-  ["ZhiyuanLck/smart-pairs"] = {
-    event = "InsertEnter",
-    config = function()
-      require "config.smart-pairs"
-    end,
-    disable = true,
-  },
   ["neovim/nvim-lspconfig"] = {
     dependencies = {
       "nvim-lua/lsp-status.nvim",
@@ -333,7 +325,7 @@ local plugins = {
   },
   ["folke/trouble.nvim"] = {
     dependencies = { "kyazdani42/nvim-web-devicons" },
-    event = lazy_load_event,
+    cmd = { "Trouble", "TroubleToggle" },
     config = function()
       require "config.trouble"
     end,
@@ -365,13 +357,14 @@ local plugins = {
     end,
   },
   ["rcarriga/nvim-notify"] = {
-    init = function()
+    event = lazy_load_event,
+    config = function()
       vim.notify = require "notify"
     end,
   },
   ["nvim-lua/plenary.nvim"] = {},
   ["nvim-treesitter/nvim-treesitter"] = {
-    run = function()
+    build = function()
       local ts_update = require("nvim-treesitter.install").update { with_sync = true }
       ts_update()
     end,
@@ -385,7 +378,7 @@ local plugins = {
   },
   ["norcalli/profiler.nvim"] = {},
   ["romgrk/todoist.nvim"] = { -- TODO: add 'UpdateRemotePlugins' to this once the table issue is fixed
-    run = "npm install",
+    build = "npm install",
     init = function()
       vim.g.todoist = {
         icons = {
@@ -403,7 +396,6 @@ local plugins = {
     dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
   },
   ["nanotee/luv-vimdocs"] = { lazy = false }, -- luv docs in vim help format
-  ["lewis6991/impatient.nvim"] = { lazy = false },
   -- Training/Vim help
   ["tjdevries/train.nvim"] = {},
   ["folke/which-key.nvim"] = {

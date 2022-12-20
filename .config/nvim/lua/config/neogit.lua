@@ -4,8 +4,6 @@ if not installed then
   return
 end
 
-vim.cmd [[packadd diffview.nvim]]
-
 neogit.setup {
   disable_signs = false,
   disable_context_highlighting = false,

@@ -4,26 +4,6 @@ local ffi = vim.F.npcall(require, "ffi")
 local api = vim.api
 local M = {}
 
-function M.require(mod)
-  local ok, ret = M.try(require, mod)
-  return ok and ret
-end
-
-function M.try(fn, ...)
-  local args = { ... }
-
-  return xpcall(function()
-    return fn(unpack(args))
-  end, function(err)
-    local lines = {}
-    table.insert(lines, err)
-    table.insert(lines, debug.traceback("", 3))
-
-    M.error(table.concat(lines, "\n"))
-    return err
-  end)
-end
-
 -- Root finder utilities originally from nvim-lspconfig
 function M.search_ancestors(startpath, func)
   vim.validate { func = { func, "f" } }

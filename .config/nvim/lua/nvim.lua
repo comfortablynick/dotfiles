@@ -3,6 +3,26 @@ local api = vim.api
 local npcall = vim.F.npcall
 local M = {}
 
+function M.require(mod)
+  local ok, ret = M.try(require, mod)
+  return ok and ret
+end
+
+function M.try(fn, ...)
+  local args = { ... }
+
+  return xpcall(function()
+    return fn(unpack(args))
+  end, function(err)
+    local lines = {}
+    table.insert(lines, err)
+    table.insert(lines, debug.traceback("", 3))
+
+    M.error(table.concat(lines, "\n"))
+    return err
+  end)
+end
+
 function M.relative_name(path)
   -- Return path relative to config
   -- E.g. ~/.config/nvim/lua/file.lua -> 'lua_file'

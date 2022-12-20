@@ -335,4 +335,4 @@ for k, v in pairs(packer_cmds) do
   api.nvim_create_user_command(k, v, {})
 end
 
-vim.cmd "silent! colorscheme gruvbox"
+vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }

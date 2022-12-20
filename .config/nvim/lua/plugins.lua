@@ -173,7 +173,12 @@ local function init()
         "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
       },
     },
-    ["ibhagwan/fzf-lua"] = { event = lazy_load_event },
+    ["ibhagwan/fzf-lua"] = {
+      event = lazy_load_event,
+      config = function()
+        require "config.fzf"
+      end,
+    },
     ["junegunn/fzf.vim"] = {
       event = lazy_load_event,
       setup = function()

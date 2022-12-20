@@ -18,6 +18,8 @@ tsconfigs.setup {
     "python",
     "c",
     "query",
+    "markdown",
+    "markdown_inline",
   },
   highlight = {
     enable = true,

@@ -211,10 +211,10 @@ local plugins = {
     end,
   },
   -- Vim development
-  ["tpope/vim-scriptease"] = { cmd = { "Messages", "Verbose", "Time" } },
+  ["tpope/vim-scriptease"] = { cmd = { "Messages", "Verbose", "Time", "PP" } },
   ["mhinz/vim-lookup"] = {},
-  ["tweekmonster/startuptime.vim"] = { cmd = "StartupTime" },
-  ["dstein64/vim-startuptime"] = {},
+  ["tweekmonster/startuptime.vim"] = { cmd = "Startup" },
+  ["dstein64/vim-startuptime"] = { cmd = "StartupTime" },
   -- Editor appearance
   ["ryanoasis/vim-devicons"] = {},
   ["kyazdani42/nvim-web-devicons"] = {},
@@ -370,7 +370,7 @@ local plugins = {
       ts_update()
     end,
   },
-  ["nvim-treesitter/playground"] = {},
+  ["nvim-treesitter/playground"] = { cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
   ["akinsho/bufferline.nvim"] = {
     event = "BufEnter",
     config = function()

@@ -66,6 +66,7 @@ function M.reload()
   local bufname = api.nvim_buf_get_name(0)
   package.loaded[M.module_name(bufname)] = nil
   M.source_current_buffer()
+  vim.notify(bufname .. " reloaded")
 end
 
 function M.warn(text) -- :: echo warning message

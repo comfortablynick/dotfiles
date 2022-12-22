@@ -5,7 +5,6 @@ local api = vim.api
 local M = {}
 
 -- Root finder utilities originally from nvim-lspconfig
--- TODO: replace vim rooter
 function M.search_ancestors(startpath, func)
   vim.validate { func = { func, "f" } }
   if func(startpath) then

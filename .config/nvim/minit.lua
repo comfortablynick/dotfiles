@@ -1,37 +1,59 @@
-local tmp_root = "/tmp/nvim/site"
-local pack_root = tmp_root .. "/pack"
-local packer_install_path = pack_root .. "/packer/start/packer.nvim"
-local packer_compiled = tmp_root .. "/packer_compiled_test.lua"
+local root = "/tmp/nvim-repro"
 
-_G.paths = {
-  tmp_root = tmp_root,
-  pack_root = pack_root,
-  packer_install_path = packer_install_path,
-  packer_compiled = packer_compiled,
-}
-
-if vim.fn.empty(vim.fn.glob(packer_install_path)) > 0 then
-  packer_bootstrap = vim.fn.system {
-    "git",
-    "clone",
-    "--depth",
-    1,
-    "https://github.com/wbthomason/packer.nvim",
-    packer_install_path,
-  }
+-- set stdpaths to use .repro
+for _, name in ipairs { "config", "data", "state", "cache" } do
+  vim.env[("XDG_%s_HOME"):format(name:upper())] = root .. "/" .. name
 end
 
-vim.opt.shadafile = tmp_root .. "/tmp.shada"
-vim.opt.runtimepath = "$VIMRUNTIME"
-vim.opt.packpath = tmp_root
-vim.opt.completeopt = { "menuone", "noinsert", "noselect" }
-vim.opt.shortmess:append "c"
-vim.opt.shell = "/bin/sh"
-vim.opt.termguicolors = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 0
-vim.opt.expandtab = true
-vim.opt.number = true
+-- bootstrap lazy
+local lazypath = root .. "/plugins/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--single-branch",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
+  }
+end
+vim.opt.runtimepath:prepend(lazypath)
+
+-- install plugins
+local plugins = {
+  -- do not remove the colorscheme!
+  "folke/tokyonight.nvim",
+  -- add any other pugins here
+  {
+    "alexghergh/nvim-tmux-navigation",
+    lazy = true,
+    cmd = {
+      "NvimTmuxNavigateLeft",
+      "NvimTmuxNavigateRight",
+      "NvimTmuxNavigateDown",
+      "NvimTmuxNavigateUp",
+      "NvimTmuxNavigateLastActive",
+    },
+    init = function()
+      vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
+      vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })
+      vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Vim/Tmux navigate up" })
+      vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Vim/Tmux navigate right" })
+      vim.keymap.set(
+        "n",
+        "<C-p>",
+        "<Cmd>NvimTmuxNavigateLastActive<CR>",
+        { desc = "Vim/Tmux navigate to last active window" }
+      )
+    end,
+    config = function()
+      require "nvim-tmux-navigation"
+    end,
+  },
+}
+require("lazy").setup(plugins, {
+  root = root .. "/plugins",
+})
 
 -- Non-essential settings so I don't annoy myself
 vim.keymap.set("n", ";", ":")
@@ -43,29 +65,7 @@ vim.keymap.set("n", "q;", "q:")
 vim.keymap.set("x", "q;", "q:")
 vim.keymap.set("i", "kj", "<Esc>`^")
 
--- Put any plugin config that should be loaded after plugins are installed in here
-local load_config = function()
-  vim.cmd "silent! colorscheme PaperColor"
-  require("lualine").setup { theme = "papercolor" }
-end
+vim.opt.termguicolors = true
 
-local packer = require "packer"
-
-packer.startup {
-  function(use)
-    use "wbthomason/packer.nvim"
-    use "hoob3rt/lualine.nvim"
-    use { "NLKNguyen/papercolor-theme", opt = true }
-    use "tpope/vim-scriptease"
-
-    if packer_bootstrap then
-      vim.notify "Installing packer.nvim and plugins"
-      packer.sync()
-      local grp = vim.api.nvim_create_augroup("minit", { clear = true })
-      vim.api.nvim_create_autocmd("User PackerComplete", { group = grp, callback = load_config, once = true })
-    else
-      load_config()
-    end
-  end,
-  config = { package_root = pack_root, compile_path = packer_compiled },
-}
+-- do not remove the colorscheme!
+vim.cmd [[colorscheme tokyonight]]

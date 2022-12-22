@@ -1,9 +1,7 @@
-local tsconfigs = nvim.packrequire("nvim-treesitter", "nvim-treesitter.configs")
+local tsconfigs = require("nvim-treesitter.configs")
 if not tsconfigs then
   return
 end
-
-vim.cmd "packadd playground"
 
 tsconfigs.setup {
   ensure_installed = {

@@ -2,8 +2,8 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
-local lsp = nvim.packrequire("nvim-lspconfig", "lspconfig")
-local lsp_status = nvim.packrequire("lsp-status.nvim", "lsp-status")
+local lsp = require("lspconfig")
+local lsp_status = require("lsp-status")
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
 

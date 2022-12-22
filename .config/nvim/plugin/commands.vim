@@ -52,21 +52,6 @@ command -bang -nargs=* LazyGit
     \ call floaterm#run('new', <bang>0, '--width=0.9', '--height=0.6', 'lazygit')
 
 " Utilities {{{1
-" StartupTime :: lazy load startuptime.vim plugin {{{2
-command! -nargs=* -complete=file Startup
-    \ call pack#lazy_run(
-    \   'StartupTime',
-    \   'vim-startuptime',
-    \   {'before': 'silent! delcommand StartupTime'}
-    \ )
-
-" Scriptease :: lazy load vim-scriptease plugin {{{2
-command! -nargs=* -complete=expression PP
-    \ call pack#lazy_run(
-    \ 'echo scriptease#dump('..<q-args>..', #{width: 60})',
-    \ 'vim-scriptease'
-    \ )
-
 " Redir :: send output of <expr> to scratch window {{{2
 " Usage:
 "   :Redir hi .........show the full output of command ':hi' in a scratch window

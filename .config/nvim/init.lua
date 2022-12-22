@@ -5,16 +5,6 @@ local api = vim.api
 local map = vim.keymap
 local shell = "/bin/sh"
 
--- Profiling
-if uv.os_getenv "AK_PROFILER" == "1" then
-  vim.cmd "packadd! profiler.nvim"
-  require "profiler"
-end
-
-pcall(require, "impatient") -- TODO: remove this once PR is merged
-require "nvim"
-require "globals"
-
 -- Global variables
 vim.env.SHELL = shell -- Some things use $SHELL rather than &shell
 g.python3_host_prog = uv.os_getenv "NVIM_PY3_DIR"
@@ -49,6 +39,10 @@ end
 for _, provider in ipairs { "ruby", "perl", "python" } do
   g["loaded_" .. provider .. "_provider"] = 0
 end
+
+require "config.lazy"
+require "nvim"
+require "globals"
 
 -- Patterns to detect root dir
 g.root_patterns = {
@@ -163,77 +157,12 @@ vim.g.netrw_banner = 0
 vim.g.netrw_list_hide = vim.o.wildignore
 vim.g.netrw_sort_sequence = [[[\/]$,*]] -- Directories on the top, files below
 
-local packs = {
-  "vim-toml",
-  "vim-projectionist",
-  "plenary.nvim",
-  "nvim-lspconfig",
-  "nvim-lsp-ts-utils",
-  "nvim-notify",
-  "lsp-status.nvim",
-  "fidget.nvim",
-  "nvim-cmp",
-  "cmp-nvim-lsp",
-  "cmp-buffer",
-  "cmp-path",
-  "cmp-cmdline",
-  "cmp-nvim-ultisnips",
-  "nvim-web-devicons",
-  "vim-dirvish",
-  "vim-clap",
-  "vim-obsession",
-  "vimtex",
-}
-
-for _, pack in ipairs(packs) do
-  vim.cmd("silent! packadd! " .. pack)
-end
-
-vim.defer_fn(function()
-  api.nvim_exec_autocmds("User", { pattern = "PackLoad" })
-end, 200)
-
 require "config.statusline"
 require "config.treesitter"
-require "config.devicons"
 require("config.lsp").init()
 
 -- General autocmds
 local aug = api.nvim_create_augroup("init_lua", { clear = true })
-
-local reloaded_id = nil
-api.nvim_create_autocmd("BufWritePost", { -- :: Reload lua conifg files
-  group = aug,
-  pattern = "*nvim/**.lua",
-  desc = "Reload config files",
-  callback = function(event)
-    ---@type string
-    local file = event.match
-    local mod = file:match "/lua/(.*)%.lua"
-    if mod then
-      mod = mod:gsub("/", ".")
-    end
-    if mod then
-      package.loaded[mod] = nil
-      reloaded_id = vim.notify("Reloaded " .. mod, vim.log.levels.INFO, { title = "nvim", replace = reloaded_id })
-    end
-    -- nvim.reload()
-  end,
-})
-
-api.nvim_create_autocmd("BufWritePost", { -- :: Run packer commands
-  group = aug,
-  pattern = "lua/plugins.lua",
-  desc = "Run packer commands",
-  callback = function()
-    local pack = require "plugins"
-
-    -- nvim.reload()
-    pack.clean()
-    pack.install()
-    pack.compile()
-  end,
-})
 
 api.nvim_create_autocmd("CmdwinEnter", { -- :: Custom Cmdwin settings
   group = aug,
@@ -322,17 +251,6 @@ if vim.wo.relativenumber then
   })
 end
 
-local packer_cmds = {
-  PackerInstall = require("plugins").install,
-  PackerUpdate = require("plugins").update,
-  PackerSync = require("plugins").sync,
-  PackerClean = require("plugins").clean,
-  PackerCompile = require("plugins").compile,
-  PackerStatus = require("plugins").status,
-}
-
-for k, v in pairs(packer_cmds) do
-  api.nvim_create_user_command(k, v, {})
-end
-
 vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }
+require "config.maps"
+require "config.commands"

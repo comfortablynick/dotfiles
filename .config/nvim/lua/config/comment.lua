@@ -4,6 +4,10 @@ if not installed then
   return
 end
 
+-- Keep old commenting map out of muscle memory
+vim.keymap.set("n", "<Leader>c<Space>", "gcc", { desc = "Comment line (gcc)", remap = true })
+vim.keymap.set("v", "<Leader>c", "gc", { desc = "Comment selection", remap = true })
+
 comment.setup {
   ---Add a space b/w comment and the line
   padding = true,

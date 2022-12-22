@@ -26,7 +26,6 @@ command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
 " Floaterm Runner {{{1
 function s:floaterm_runner(opts)
-    packadd vim-floaterm
     let g:ft_opts = a:opts
     let l:cmd = 'FloatermNew '
     let l:cmd ..= ' --wintype=float'

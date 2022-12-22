@@ -83,3 +83,15 @@ map.set(
 -- Easy insertion of a trailing ; or , from insert mode
 map.set("i", ";;", "<Esc>A;<Esc>")
 map.set("i", ",,", "<Esc>A,<Esc>")
+
+-- nvim-tmux-navigate
+vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
+vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })
+vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Vim/Tmux navigate up" })
+vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Vim/Tmux navigate right" })
+vim.keymap.set(
+  "n",
+  "<C-p>",
+  "<Cmd>NvimTmuxNavigateLastActive<CR>",
+  { desc = "Vim/Tmux navigate to last active window" }
+)

@@ -8,7 +8,6 @@ local lazy_load_event = "VeryLazy"
 vim.env.SHELL = vim.o.shell
 
 local plugins = {
-  ["wbthomason/packer.nvim"] = {},
   ["airblade/vim-rooter"] = {
     init = function()
       vim.g.rooter_silent_chdir = 1
@@ -20,7 +19,6 @@ local plugins = {
   ["psliwka/vim-smoothie"] = { event = lazy_load_event },
   ["kkoomen/vim-doge"] = {
     build = function()
-      -- vim.cmd [[call doge#install(#{headless: 1})}]]
       vim.fn["doge#install"] { headless = 1 }
     end,
     ft = { "python" },
@@ -249,7 +247,6 @@ local plugins = {
   },
   ["lifepillar/vim-gruvbox8"] = {},
   ["ellisonleao/gruvbox.nvim"] = {
-    lazy = false,
     config = function()
       require("gruvbox").setup {
         undercurl = true,
@@ -414,18 +411,6 @@ local plugins = {
       "NvimTmuxNavigateUp",
       "NvimTmuxNavigateLastActive",
     },
-    init = function()
-      vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
-      vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })
-      vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Vim/Tmux navigate up" })
-      vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Vim/Tmux navigate right" })
-      vim.keymap.set(
-        "n",
-        "<C-p>",
-        "<Cmd>NvimTmuxNavigateLastActive<CR>",
-        { desc = "Vim/Tmux navigate to last active window" }
-      )
-    end,
     config = function()
       require "nvim-tmux-navigation"
     end,

@@ -1,4 +1,4 @@
-local tsconfigs = require("nvim-treesitter.configs")
+local tsconfigs = require "nvim-treesitter.configs"
 if not tsconfigs then
   return
 end
@@ -44,6 +44,7 @@ tsconfigs.setup {
         ["ic"] = "@class.inner",
       },
     },
+    matchup = { enable = true },
     move = {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist

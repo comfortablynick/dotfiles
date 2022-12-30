@@ -1,5 +1,5 @@
 -- bootstrap from github
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
     "git",
@@ -16,10 +16,21 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
   install = { missing = false, colorscheme = { "gruvbox" } },
-  checker = { enabled = true },
+  checker = { enabled = false, nofity = false },
+  change_detection = { enabled = true, nofity = true },
+  custom_keys = {
+    ["<localleader>g"] = function(plugin)
+      require("lazy.util").open_cmd({ "tig" }, {
+        cwd = plugin.dir,
+        terminal = true,
+        close_on_exit = true,
+        enter = true,
+      })
+    end,
+  },
   performance = {
     rtp = {
-      reset = true
+      reset = true,
     },
   },
   debug = false,

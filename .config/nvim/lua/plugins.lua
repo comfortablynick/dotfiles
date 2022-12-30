@@ -51,6 +51,13 @@ local plugins = {
       vim.fn["map#cabbr"]("ta", "AsyncTask")
     end,
   },
+  ["stevearc/overseer.nvim"] = {
+    event = lazy_load_event,
+    dependencies = "stevearc/dressing.nvim",
+    config = function()
+      require "config.overseer"
+    end,
+  },
   ["michaelb/sniprun"] = { build = "./install.sh" },
   -- Editing behavior
   ["bfredl/nvim-miniyank"] = {
@@ -94,6 +101,9 @@ local plugins = {
     event = lazy_load_event,
     config = function()
       require("leap").add_default_mappings()
+      -- I don't want the visual mode mappings
+      vim.keymap.del({ "x", "o" }, "x")
+      vim.keymap.del({ "x", "o" }, "X")
     end,
   },
   ["ggandor/flit.nvim"] = {
@@ -103,7 +113,7 @@ local plugins = {
     end,
   },
   ["wellle/targets.vim"] = { event = lazy_load_event },
-  --["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
+  ["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
   -- Text objects
   ["machakann/vim-sandwich"] = {
     event = lazy_load_event,
@@ -138,7 +148,11 @@ local plugins = {
   -- Explorer/finder utils
   ["junegunn/fzf"] = {
     event = lazy_load_event,
-    build = "./install --bin; ln -sf $(pwd)/bin/* ~/.local/bin; ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
+    build = {
+      "./install --bin",
+      "ln -sf $(pwd)/bin/* ~/.local/bin",
+      "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
+    },
   },
   ["ibhagwan/fzf-lua"] = {
     event = lazy_load_event,

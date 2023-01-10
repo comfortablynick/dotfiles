@@ -21,7 +21,16 @@ tsconfigs.setup {
   },
   highlight = {
     enable = true,
-    disable = { "yaml" },
+    disable = function(lang, buf)
+      if lang == "vim" then
+        local bufname = vim.api.nvim_buf_get_name(buf)
+        return string.match(bufname, "%[Command Line%]")
+      end
+      if lang == "yaml" then
+        return true
+      end
+      return false
+    end,
   },
   incremental_selection = {
     enable = true,

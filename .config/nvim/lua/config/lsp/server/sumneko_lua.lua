@@ -1,5 +1,6 @@
 local util = require "lspconfig/util"
 return function(on_attach)
+  require("neodev").setup { lspconfig = false }
   return {
     on_attach = function(client, bufnr)
       -- Disable formatting to avoid prompts
@@ -14,6 +15,7 @@ return function(on_attach)
         or util.find_git_ancestor(fname)
         or util.path.dirname(fname)
     end,
+    before_init = require("neodev.lsp").before_init,
     settings = {
       Lua = {
         runtime = { version = "LuaJIT", path = vim.split(package.path, ";") },

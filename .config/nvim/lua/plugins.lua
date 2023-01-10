@@ -113,7 +113,14 @@ local plugins = {
     end,
   },
   ["wellle/targets.vim"] = { event = lazy_load_event },
-  ["tommcdo/vim-exchange"] = { keys = { { "n", "cx" }, { "x", "X" }, { "n", "cxc" }, { "n", "cxx" } } },
+  ["tommcdo/vim-exchange"] = {
+    keys = {
+      "cx",
+      "cxx",
+      "cxc",
+      -- { "x", "X" },
+    },
+  },
   -- Text objects
   ["machakann/vim-sandwich"] = {
     event = lazy_load_event,
@@ -333,8 +340,10 @@ local plugins = {
       "nvim-lua/lsp-status.nvim",
       "nvim-lua/lsp_extensions.nvim",
       "j-hui/fidget.nvim",
+      "folke/neodev.nvim",
     },
   },
+  ["folke/neodev.nvim"] = {},
   ["folke/trouble.nvim"] = {
     dependencies = { "kyazdani42/nvim-web-devicons" },
     cmd = { "Trouble", "TroubleToggle" },

@@ -1,4 +1,4 @@
-local util = require "lspconfig/util"
+local util = require "lspconfig.util"
 return function(on_attach)
   require("neodev").setup { lspconfig = false }
   return {
@@ -18,7 +18,7 @@ return function(on_attach)
     before_init = require("neodev.lsp").before_init,
     settings = {
       Lua = {
-        runtime = { version = "LuaJIT", path = vim.split(package.path, ";") },
+        runtime = { version = "LuaJIT", path = vim.split(package.path, ";"), pathStrict = true },
         completion = { keywordSnippet = "Disable" },
         diagnostics = {
           enable = false,

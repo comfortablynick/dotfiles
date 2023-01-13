@@ -32,16 +32,19 @@ let g:vim_plug_file = g:temp_dir .. 'plug.vim'
 let g:vim_plug_dir  = g:temp_dir .. 'plugged'
 
 if !filereadable(g:vim_plug_file)
+    let s:bootstrap = v:true
     call system(['curl', '-fLo', g:vim_plug_file, '--create-dirs',
         \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'])
 endif
 
 source `=g:vim_plug_file`
 call plug#begin(g:vim_plug_dir)
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+Plug 'liuchengxu/vim-clap', { 'do': ':call clap#installer#force_download()' }
 call plug#end()
 
-PlugClean! | PlugUpdate --sync | close
+if exists('s:bootstrap')
+    PlugClean! | PlugUpdate --sync | close
+endif
 
 let g:clap_preview_direction = 'LR'
 

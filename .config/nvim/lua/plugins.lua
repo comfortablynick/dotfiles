@@ -231,7 +231,6 @@ local plugins = {
   },
   -- Vim development
   ["tpope/vim-scriptease"] = { cmd = { "Messages", "Verbose", "Time", "PP" } },
-  ["mhinz/vim-lookup"] = {},
   ["tweekmonster/startuptime.vim"] = { cmd = "Startup" },
   ["dstein64/vim-startuptime"] = { cmd = "StartupTime" },
   -- Editor appearance

@@ -6,10 +6,9 @@ let g:vim_indent_cont = &tabstop
 " Maps
 " Execute visual selection
 vnoremap <silent><buffer> <Enter> "xy:@x<CR>
+
 " Execute line
 nnoremap <buffer> yxx   <Cmd>execute trim(getline('.'))<CR>
-nnoremap <buffer> <C-]> <Cmd>call pack#lazy_run({-> lookup#lookup()}, 'vim-lookup')<CR>
-nnoremap <buffer> <C-t> <Cmd>call pack#lazy_run({-> lookup#pop()}, 'vim-lookup')<CR>
 
 " Turn maps into <Cmd> type
 nnoremap <buffer> ycc

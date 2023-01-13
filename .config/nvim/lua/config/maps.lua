@@ -79,6 +79,8 @@ map.set(
   "<Cmd>call buffer#restore_cursor_after('gg=G')<CR>",
   { desc = "Format buffer with 'indentexpr'" }
 )
+map.set("x", ">", ">gv", { desc = "Keep selection when indenting" })
+map.set("x", "<", "<gv", { desc = "Keep selection when dedenting" })
 
 -- Easy insertion of a trailing ; or , from insert mode
 map.set("i", ";;", "<Esc>A;<Esc>")

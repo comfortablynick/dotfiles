@@ -1,8 +1,6 @@
 local o = vim.opt
 local g = vim.g
 local uv = vim.loop
-local api = vim.api
-local map = vim.keymap
 local shell = "/bin/sh"
 
 -- Global variables

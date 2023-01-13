@@ -1,10 +1,12 @@
 -- General autocmds
 local api = vim.api
 local map = vim.keymap
-local aug = api.nvim_create_augroup("init_lua", { clear = true })
+local uv = vim.loop
+local aug = api.nvim_create_augroup("config_autocmds", { clear = true })
 
-api.nvim_create_autocmd("BufReadPost", { -- :: Go to last loc when opening a buffer
+api.nvim_create_autocmd("BufReadPost", { -- :: Restore cursor when opening buffer
   group = aug,
+  desc = "Restore cursor when opening buffer",
   callback = function()
     local ignore_filetypes = { "gitcommit", "gitrebase", "svn", "hgcommit" }
     local ignore_buftypes = { "quickfix", "nofile", "help" }
@@ -17,6 +19,35 @@ api.nvim_create_autocmd("BufReadPost", { -- :: Go to last loc when opening a buf
     local lcount = api.nvim_buf_line_count(0)
     if mark[1] > 0 and mark[1] <= lcount then
       pcall(api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+})
+
+api.nvim_create_autocmd("BufNewFile", { -- :: Init .envrc file
+  group = aug,
+  desc = "Init .envrc file",
+  callback = function()
+    api.nvim_buf_set_lines(0, 0, 0, true, { "# shellcheck shell=sh", "use asdf" })
+  end,
+})
+
+api.nvim_create_autocmd("BufWritePost", { -- :: Allow direnv file after editing
+  group = aug,
+  desc = "Allow direnv file after editing",
+  pattern = ".envrc",
+  callback = function()
+    if vim.fn.executable "direnv" then
+      vim.cmd [[silent !direnv allow %]]
+    end
+  end,
+})
+
+api.nvim_create_autocmd("FileType", { -- :: Load local .vimrc
+  group = aug,
+  desc = "Load local .vimrc",
+  callback = function()
+    if uv.os_getenv "LOCAL_VIMRC" then
+      require("tools").load_lvimrc()
     end
   end,
 })

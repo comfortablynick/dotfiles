@@ -161,4 +161,23 @@ else
     end
 end
 
+# Abbbreviations {{{1
+# Commands {{{2
+abbr -a dotdot --regex '^\.\.+$' --function multicd
+abbr -a !! --position anywhere --function last_history_item
+abbr -a pd prevd
+abbr -a nd nextd
+abbr -a p ' fzf_cdhst'
+
+# Fish {{{2
+abbr -a funced 'funced -s'
+abbr -a fcf '$EDITOR $XDG_CONFIG_HOME/fish/config.fish'
+abbr -a dl ' history delete $history[1] -eC'
+abbr -a ppath 'set -S path'
+
+# Dirs {{{2
+abbr -a fc '$EDITOR $XDG_CONFIG_HOME/fish'
+
+abbr -a z c
+
 # End config {{{1

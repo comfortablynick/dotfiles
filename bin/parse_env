@@ -149,7 +149,7 @@ def get_shell_vars(  # {{{1
     """
     var_defs = {
         "fish": {
-            "abbr": {"format": "abbr {args} {key} {val} {cmt}", "default_args": "-g"},
+            "abbr": {"format": "abbr {args} {key} {val} {cmt}", "default_args": "-a"},
             "alias": {"format": "function {key} {args}; {val}; end {cmt}"},
             "env": {"format": "set {args} {key} {val} {cmt}", "default_args": "-gx"},
             "path": {

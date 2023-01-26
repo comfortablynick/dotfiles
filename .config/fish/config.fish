@@ -147,12 +147,11 @@ else if functions -q _tide_init_install
     end
 
     for item in $remove_items
-        contains -i $item $tide_right_prompt_items | read -l idx
-        and set -e $tide_right_prompt_items[$idx]
+        _tide_find_and_remove $item $tide_right_prompt_items
     end
 
-    set -g tide_cmd_duration_decimals 3
-    set -g tide_cmd_duration_threshold 1000
+    set -U tide_cmd_duration_decimals 3
+    set -U tide_cmd_duration_threshold 0
 else
     # starship {{{2
     if type -qf starship
@@ -177,7 +176,5 @@ abbr -a ppath 'set -S path'
 
 # Dirs {{{2
 abbr -a fc '$EDITOR $XDG_CONFIG_HOME/fish'
-
-abbr -a z c
 
 # End config {{{1

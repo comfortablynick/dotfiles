@@ -90,13 +90,22 @@ function M.float_term(command, scale_pct, border) -- {{{1
   }
 end
 
-function M.create_centered_floating(options) -- {{{1
-  -- options
-  -- =======
-  -- `width`, `height` Integer (absolute) or float (ratio of window size)
-  -- `border` Add border lines
-  -- `fn` Function to call in context of window (before exit keymaps are set)
-  -- `hl` Highlight to use with NormalFloat: (default is "Pmenu", based on fzf)
+---Create centered floating window
+---@class _WindowOptions
+---@field width number? Integer (absolute) or float (ratio of window size)
+---@field height number? Integer (absolute) or float (ratio of window size)
+---@field fn function? Fn to call in context of window before keymaps are set
+---@field border string? Type of border
+---|"'single'"
+---|"'double'"
+---|"'shadow'"
+---|"'rounded'"
+---|"'solid'"
+---|"'none'"
+---@field hl string? Highlight to use with `NormalFloat:` (default is `Pmenu`)
+---
+---@return number # Buffer handle, or 0 on error
+function M.create_centered_floating(options)
   options = options or {}
   vim.validate { options = { options, "table", true } }
   vim.validate {
@@ -117,8 +126,8 @@ function M.create_centered_floating(options) -- {{{1
     border = {
       options.border,
       function(v)
-        local opts = { "single", "double", "shadow", "rounded", "solid", "none", nil }
-        return vim.tbl_contains(opts, v)
+        local opts = { "single", "double", "shadow", "rounded", "solid", "none" }
+        return vim.tbl_contains(opts, v) or v == nil
       end,
       "single|double|shadow|rounded|solid|none|nil",
     },
@@ -221,12 +230,12 @@ end
 --- Create window that takes up certain percentags of the current screen.
 ---
 --- Works regardless of current buffers, tabs, splits, etc.
--- @param col_range number | Table:
---                  If number, then center the window taking up this percentage of the screen.
---                  If table, first index should be start, second_index should be end
--- @param row_range number | Table:
---                  If number, then center the window taking up this percentage of the screen.
---                  If table, first index should be start, second_index should be end
+---@param col_range number | Table
+---If number, then center the window taking up this percentage of the screen.
+---If table, first index should be start, second_index should be end
+---@param row_range number | Table
+---If number, then center the window taking up this percentage of the screen.
+---If table, first index should be start, second_index should be end
 function M.percentage_range_window(col_range, row_range, options)
   options = vim.tbl_extend("force", default_win_opts, options or {})
 
@@ -277,7 +286,9 @@ function M.percentage_range_window(col_range, row_range, options)
   return { bufnr = bufnr, win_id = win_id }
 end
 
-function M.floating_help(query) -- {{{1
+---Open help in floating centered window
+---@param query string Query passed to `:help`
+function M.floating_help(query)
   query = query ~= "" and query or nil
   return M.create_centered_floating {
     width = 90,

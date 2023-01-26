@@ -7,6 +7,7 @@ local devicons = npcall(require, "nvim-web-devicons")
 local lsp = require "config.lsp"
 
 local M = {}
+_G.statusline = M
 
 local opts = {
   ignore = { "pine", "vfinder", "qf", "undotree", "diff", "coc-explorer" },
@@ -238,7 +239,9 @@ M.lsp_status = function()
     return ""
   end
   local attached = lsp.attached_lsps()
-  if attached == nil then return "" end
+  if attached == nil then
+    return ""
+  end
   return attached .. " " .. (lsp.status() or "")
 end
 
@@ -267,6 +270,34 @@ M.set_hl = function()
   api.nvim_set_hl_ns(ns)
 end
 
-_G.statusline = M
+---@return {name:string, text:string, texthl:string}[]
+M.get_signs = function()
+  local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+  return vim.tbl_map(function(sign)
+    return vim.fn.sign_getdefined(sign.name)[1]
+  end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
+end
 
-vim.o.statusline = "%!v:lua.statusline.get()"
+M.column = function()
+  local sign, git_sign
+  for _, s in ipairs(M.get_signs()) do
+    if s.name:find "GitSign" then
+      git_sign = s
+    else
+      sign = s
+    end
+  end
+  local components = {
+    sign and ("%#" .. sign.texthl .. "#" .. sign.text .. "%*") or " ",
+    [[%=]],
+    [[%{&nu?(&rnu&&v:relnum?v:relnum:v:lnum):''} ]],
+    git_sign and ("%#" .. git_sign.texthl .. "#" .. git_sign.text .. "%*") or "  ",
+  }
+  return table.concat(components, "")
+end
+
+-- vim.opt.statuscolumn = [[%!v:lua.statusline.column()]]
+
+vim.opt.statusline = [[%!v:lua.statusline.get()]]
+
+return M

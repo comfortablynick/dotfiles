@@ -48,14 +48,14 @@ cmd("Help", function(opts)
 end, { complete = "help", nargs = "?", desc = "Display help item in floating window" })
 vim.fn["map#cabbr"]("H", "Help")
 
-cmd("Root", function(opts)
+cmd("Root", function()
   local root = require("util").get_current_root()
   vim.cmd.lcd { root, mods = { silent = true } }
 end, { desc = "Change to root dir" })
 
 cmd("S", "AsyncTask file-run", { desc = "Use asynctasks task runner to determine command based on filetype" })
 
-cmd("CopyMode", function(opts)
+cmd("CopyMode", function()
   vim.opt.signcolumn = "no"
   vim.opt.number = false
   vim.opt.relativenumber = false

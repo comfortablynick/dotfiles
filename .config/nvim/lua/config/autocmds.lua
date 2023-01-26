@@ -24,6 +24,7 @@ api.nvim_create_autocmd("BufReadPost", { -- :: Restore cursor when opening buffe
 })
 
 api.nvim_create_autocmd("BufNewFile", { -- :: Init .envrc file
+  pattern = ".envrc",
   group = aug,
   desc = "Init .envrc file",
   callback = function()

@@ -68,6 +68,9 @@ function M.get_current_root()
   return M.root_pattern(unpack(vim.g.root_patterns))(api.nvim_buf_get_name(bufnr))
 end
 
+---Convert bytes into a string with suffix
+---@param size number Size in bytes
+---@return string
 function M.humanize_bytes(size)
   local div = 1024
   if size < div then
@@ -271,13 +274,14 @@ local function _comp(a, b)
   return true
 end
 
---- Table Key-Value Intersection.
+---Table Key-Value Intersection.
 ---
---- @return Returns a table that is the intersection of the provided tables. This is an
----   intersection of key/value pairs. See table.n_intersection() for an intersection of values.
----   Note that the resulting table may not be reliably traversable with ipairs() due to
----   the fact that it preserves keys. If there is a gap in numerical indices, ipairs() will
----   cease traversal.
+---Returns a table that is the intersection of the provided tables. This is an
+---intersection of key/value pairs. See table.n_intersection() for an intersection of values.
+---Note that the resulting table may not be reliably traversable with ipairs() due to
+---the fact that it preserves keys. If there is a gap in numerical indices, ipairs() will
+---cease traversal.
+---@return table
 function M.tbl_intersection(...)
   sets = { ... }
   if #sets < 2 then
@@ -307,11 +311,12 @@ function M.tbl_intersection(...)
   return intersection
 end
 
---- List Table Intersection.
+---List Table Intersection.
 ---
---- @return Returns a numerically indexed table that is the intersection of the provided tables.
----   This is an intersection of unique values. The order and keys of the input tables are
----   not preserved.
+---Returns a numerically indexed table that is the intersection of the provided tables.
+---This is an intersection of unique values. The order and keys of the input tables are
+---not preserved.
+---@return table
 function M.list_intersection(...)
   sets = { ... }
   if #sets < 2 then

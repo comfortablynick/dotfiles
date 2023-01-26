@@ -82,10 +82,6 @@ map.set(
 map.set("x", ">", ">gv", { desc = "Keep selection when indenting" })
 map.set("x", "<", "<gv", { desc = "Keep selection when dedenting" })
 
--- Easy insertion of a trailing ; or , from insert mode
-map.set("i", ";;", "<Esc>A;<Esc>")
-map.set("i", ",,", "<Esc>A,<Esc>")
-
 -- nvim-tmux-navigate
 vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
 vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })

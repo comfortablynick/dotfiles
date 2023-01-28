@@ -51,7 +51,7 @@ return function(on_attach)
         filter_out_diagnostics_by_code = { 6133, 80001 },
 
         -- inlay hints
-        auto_inlay_hints = true,
+        auto_inlay_hints = false, -- handled by lsp-inlayhints
         inlay_hints_highlight = "Comment",
       }
 

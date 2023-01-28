@@ -61,6 +61,10 @@ cmd("CopyMode", function()
   vim.opt.relativenumber = false
 end, { desc = "Get rid of window decorations for easy coping from hterm" })
 
+cmd("Only", function(opts)
+  vim.fn["buffer#only"] { bang = opts.bang }
+end, { desc = "Delete all buffers but the current one" })
+
 -- Misc commonly mistyped commands
 cmd("WQ", "wq")
 cmd("Wq", "wq")

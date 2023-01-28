@@ -13,26 +13,19 @@ require "config.fidget"
 
 M.configs = {}
 
--- if lsp_status ~= nil then
---   lsp_status.register_progress()
---   lsp_status.config {
---     select_symbol = function(cursor_pos, symbol)
---       if symbol.valueRange then
---         local value_range = {
---           ["start"] = {
---             character = 0,
---             line = vim.fn.byte2line(symbol.valueRange[1]),
---           },
---           ["end"] = {
---             character = 0,
---             line = vim.fn.byte2line(symbol.valueRange[2]),
---           },
---         }
---         return require("lsp-status.util").in_range(cursor_pos, value_range)
---       end
---     end,
---   }
--- end
+api.nvim_create_augroup("LspAttach_inlayhints", {})
+api.nvim_create_autocmd("LspAttach", {
+  group = "LspAttach_inlayhints",
+  callback = function(args)
+    if not (args.data and args.data.client_id) then
+      return
+    end
+
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    require("lsp-inlayhints").on_attach(client, bufnr)
+  end,
+})
 
 vim.fn.sign_define("LspDiagnosticsSignError", { text = "", numhl = "LspDiagnosticsDefaultError" })
 vim.fn.sign_define("LspDiagnosticsSignWarning", { text = "", numhl = "LspDiagnosticsDefaultWarning" })

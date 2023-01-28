@@ -342,6 +342,11 @@ local plugins = {
       "folke/neodev.nvim",
     },
   },
+  ["lvimuser/lsp-inlayhints.nvim"] = {
+    config = function()
+      require "config.lsp-inlayhints"
+    end,
+  },
   ["folke/neodev.nvim"] = {},
   ["folke/trouble.nvim"] = {
     dependencies = { "kyazdani42/nvim-web-devicons" },

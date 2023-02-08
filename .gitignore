@@ -62,6 +62,7 @@ wg*.conf
 /.luarocks/
 /.mono/
 /.mutt/
+/.nb/
 /.npm/
 /.nvm/
 /.nuget/
@@ -98,6 +99,7 @@ wg*.conf
 /.htaccess
 /.iterm2_shell_integration.fish
 /.lesshst
+/.nbrc
 /.node_repl_history
 /.no_tmux_login
 /.no_tmux_next_login

@@ -11,7 +11,7 @@ _G.statusline = M
 
 local opts = {
   ignore = { "pine", "vfinder", "qf", "undotree", "diff", "coc-explorer" },
-  sep = "┊",
+  sep = "|",
   symbol = {
     branch = "",
     buffer = "❖",

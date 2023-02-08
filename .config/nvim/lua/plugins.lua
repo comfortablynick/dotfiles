@@ -115,10 +115,9 @@ local plugins = {
   ["wellle/targets.vim"] = { event = lazy_load_event },
   ["tommcdo/vim-exchange"] = {
     keys = {
-      "cx",
-      "cxx",
-      "cxc",
-      -- { "x", "X" },
+      { "cxx" },
+      { "cxc" },
+      { "cx" },
     },
   },
   -- Text objects
@@ -420,7 +419,6 @@ local plugins = {
     cmd = "Telescope",
     dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
   },
-  ["nanotee/luv-vimdocs"] = { lazy = false }, -- luv docs in vim help format
   -- Training/Vim help
   ["tjdevries/train.nvim"] = {},
   ["folke/which-key.nvim"] = {

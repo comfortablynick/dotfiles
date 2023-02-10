@@ -2,6 +2,7 @@
 local uv = vim.loop
 local ffi = vim.F.npcall(require, "ffi")
 local api = vim.api
+local Job = require "plenary.job"
 local M = {}
 
 -- Root finder utilities originally from nvim-lspconfig
@@ -74,7 +75,7 @@ end
 function M.humanize_bytes(size)
   local div = 1024
   if size < div then
-    return tostring(size)
+    return tostring(size) .. "b"
   end
   for _, unit in ipairs { "", "k", "M", "G", "T", "P", "E", "Z" } do
     if size < div then
@@ -346,6 +347,27 @@ function M.list_intersection(...)
   end
 
   return intersection
+end
+
+---Run a system command using plenary job module
+---Based on github.com/ThePrimeagen/harpoon/blob/master/lua/harpoon/utils.lua
+---
+---@param cmd table Command to run
+---@param cwd? string Directory to run command in
+---@return number,table,table # (ret code, stdout, stderr)
+function M.get_os_command_output(cmd, cwd)
+  vim.validate { cmd = { cmd, "table" } }
+  local command = table.remove(cmd, 1)
+  local stderr = {}
+  local stdout, ret = Job:new({
+    command = command,
+    args = cmd,
+    cwd = cwd,
+    on_stderr = function(_, data)
+      table.insert(stderr, data)
+    end,
+  }):sync()
+  return ret, stdout, stderr
 end
 
 return M

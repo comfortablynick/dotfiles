@@ -30,7 +30,7 @@ return inlay_hints.setup {
     -- padding from the left if max_len_align is true
     max_len_align_padding = 1,
     -- highlight group
-    highlight = "LspInlayHint",
+    highlight = "NonText",
     -- virt_text priority
     priority = 0,
   },

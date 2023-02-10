@@ -40,7 +40,7 @@ local plugins = {
     cmd = "AsyncTask",
     init = function()
       vim.g.asynctasks_extra_config = {
-        "~/.config/nvim/tasks.ini",
+        vim.fn.stdpath("config") .. "/tasks.ini",
       }
       vim.g.asynctasks_profile = "release"
       vim.g.asynctasks_term_pos = "right"
@@ -264,23 +264,9 @@ local plugins = {
       }
     end,
   },
-  ["lifepillar/vim-gruvbox8"] = {},
   ["ellisonleao/gruvbox.nvim"] = {
     config = function()
-      require("gruvbox").setup {
-        undercurl = true,
-        underline = true,
-        bold = true,
-        italic = true,
-        strikethrough = true,
-        invert_selection = false,
-        invert_signs = false,
-        invert_tabline = false,
-        invert_intend_guides = false,
-        inverse = true, -- invert background for search, diffs, statuslines and errors
-        contrast = "", -- can be "hard", "soft" or empty string
-        overrides = {},
-      }
+      require "config.gruvbox"
     end,
   },
   -- Syntax/filetype
@@ -363,8 +349,15 @@ local plugins = {
       "quangnguyen30192/cmp-nvim-ultisnips",
     },
   },
+  ["altermo/ultimate-autopair.nvim"] = {
+    event = { "InsertEnter", "CmdlineEnter" },
+    config = function()
+      require("ultimate-autopair").setup {
+        --Config goes here
+      }
+    end,
+  },
   ["jose-elias-alvarez/nvim-lsp-ts-utils"] = {},
-  ["rktjmp/lush.nvim"] = {},
   -- Lua/nvim
   ["norcalli/nvim-colorizer.lua"] = { cmd = { "Colorizer", "ColorizerToggle" } },
   ["lewis6991/gitsigns.nvim"] = {

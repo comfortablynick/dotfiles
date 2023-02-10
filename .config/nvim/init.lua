@@ -162,4 +162,4 @@ require "config.autocmds"
 require "config.maps"
 require "config.commands"
 
-vim.cmd.colorscheme { "gruvbox", mods = { emsg_silent = true } }
+pcall(vim.cmd.colorscheme, "gruvbox")

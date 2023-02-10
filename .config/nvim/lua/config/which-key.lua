@@ -13,18 +13,14 @@ wk.setup {
 }
 
 wk.register({
+  c = { name = "comment" },
   f = {
     name = "format",
   },
   g = {
     name = "git",
-    p = "Git push",
-    g = "Diff mode: diffget 1",
-    h = "Diff mode: diffget 2",
-    l = "Diff mode: diffget 3",
   },
-  n = "Toggle explorer",
-  [","] = { name = "+misc" },
+  [","] = { name = "misc" },
 }, {
   prefix = "<leader>",
 })

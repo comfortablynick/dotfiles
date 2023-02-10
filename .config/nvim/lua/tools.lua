@@ -170,14 +170,14 @@ function M.r(cmd) -- Test simpler impl by updating qflist in callback
   M.spawn { cmd = bin, args = args, on_read = on_read, on_exit = on_exit }
 end
 
--- @param o table
--- @field o.cmd     : Command string
--- @field o.args    : List of args to pass to cmd
--- @field o.env     : Array of env vars to set for cmd
--- @field o.cwd     : String of working directory
--- @field o.stdin   : String to pass to stdin
--- @field o.on_read : Used for stdout and stderr (err, data)
--- @field o.on_exit : Called on exit (code)
+---@param o table
+---@field o.cmd     : Command string
+---@field o.args    : List of args to pass to cmd
+---@field o.env     : Array of env vars to set for cmd
+---@field o.cwd     : String of working directory
+---@field o.stdin   : String to pass to stdin
+---@field o.on_read : Used for stdout and stderr (err, data)
+---@field o.on_exit : Called on exit (code)
 function M.spawn(o) -- Run simple commands and output stdout/stderr
   local stdin = uv.new_pipe(false)
   local stdout = uv.new_pipe(false)

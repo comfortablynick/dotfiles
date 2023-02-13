@@ -212,7 +212,6 @@ local plugins = {
       vim.g.picker_custom_find_executable = "fd"
       vim.g.picker_custom_find_flags = "-t f -HL --strip-cwd-prefix"
 
-      vim.keymap.set("n", "<Leader>e", "<Plug>(PickerEdit)", { desc = "Fuzzy edit" })
       vim.keymap.set("n", "<Leader>v", "<Plug>(PickerVsplit)", { desc = "Fuzzy vsplit edit" })
     end,
   },

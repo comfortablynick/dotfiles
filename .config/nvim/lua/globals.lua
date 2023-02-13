@@ -1,30 +1,24 @@
-local api = vim.api
-
 -- Global functions
+local api = vim.api
+local plenary_exists, plenary_reload = pcall(require, "plenary.reload")
+
+local reloader = require
+if plenary_exists then
+  reloader = plenary_reload.reload_module
+end
+
+_G.RELOAD = function(...)
+  return reloader(...)
+end
+
+_G.R = function(name)
+  _G.RELOAD(name)
+  return require(name)
+end
+
 -- p :: Debug print helper
 -- Now use built-in vim.pretty_print
 _G.p = vim.pretty_print
-
--- function _G.p(...)
---   local valid, input_type = pcall(type, ...)
---   -- Handle blank/invalid input without error
---   if not valid then
---     return
---   end
---   if input_type == ("string" or "number") then
---     print(...)
---   else
---     local objects = {}
---     local v
---     for i = 1, select("#", ...) do
---       v = select(i, ...)
---       table.insert(objects, vim.inspect(v))
---     end
---
---     print(table.concat(objects, "\n"))
---     return ...
---   end
--- end
 
 -- d :: Debug object using nvim-notify
 function _G.d(...)

@@ -285,7 +285,7 @@ function M.init()
     jsonls = true,
     pyright = true,
     rust_analyzer = true,
-    sumneko_lua = true,
+    lua_ls = true,
     taplo = true,
     tsserver = true,
     vimls = true,

@@ -93,3 +93,6 @@ vim.keymap.set(
   "<Cmd>NvimTmuxNavigateLastActive<CR>",
   { desc = "Vim/Tmux navigate to last active window" }
 )
+
+-- Telescope
+vim.keymap.set("n", "<Leader>e", "<Cmd>Telescope find_files<CR>", { desc = "Telescope fuzzy find" })

@@ -227,8 +227,6 @@ local on_attach_cb = function(client, bufnr)
 
   nmap("<F2>", "lua require'config.lsp'.rename()", "Lsp rename")
   nmap("gd", "lua vim.diagnostic.setloclist{open = true}", "Lsp diagnostics")
-  nmap("[d", "lua vim.diagnostic.goto_prev{popup_opts = {show_header = false}}", "Lsp goto prev diagnostic")
-  nmap("]d", "lua vim.diagnostic.goto_next{popup_opts = {show_header = false}}", "Lsp goto next diagnostic")
 
   if client.server_capabilities.documentFormattingProvider then
     vim.cmd [[command! Format lua vim.lsp.buf.format{async = true}]]

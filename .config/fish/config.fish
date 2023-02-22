@@ -162,6 +162,7 @@ end
 
 # Abbbreviations {{{1
 # Commands {{{2
+abbr -a c cdf
 abbr -a dotdot --regex '^\.\.+$' --function multicd
 abbr -a !! --position anywhere --function last_history_item
 abbr -a pd prevd

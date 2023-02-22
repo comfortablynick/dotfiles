@@ -3,7 +3,7 @@ let g:clap_preview_direction = 'UD'
 let g:clap_multi_selection_warning_silent = 1
 let g:clap_enable_icon = v:true
 let g:clap_preview_size = 10
-let g:clap_enable_background_shadow = v:true
+let g:clap_enable_background_shadow = v:false
 let g:clap_background_shadow_blend = 50
 let g:clap_layout = {'relative': 'editor'}
 let g:clap_provider_tags_force_vista = v:true " May not be needed permanently?
@@ -15,7 +15,6 @@ let g:ClapProviderHistoryCustomFilter = {s -> s !~? '/doc/.*\.txt$'}
 " Commands {{{2
 command Task    Clap task
 command Filer   Clap filer
-command Base16  call plugins#clap#base16()
 command Globals Clap globals
 
 " Abbreviations {{{2
@@ -52,11 +51,6 @@ endfunction
 
 function plugins#clap#file_edit(sel) abort " :: Edit current selection {{{2
     execute 'edit' s:get_last_column(a:sel)
-endfunction
-
-function plugins#clap#base16() abort " :: Theme select {{{2
-    let g:clap_enable_background_shadow = v:false
-    Clap base16
 endfunction
 
 " history (lua/Viml test) {{{1

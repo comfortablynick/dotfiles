@@ -40,7 +40,7 @@ local plugins = {
     cmd = "AsyncTask",
     init = function()
       vim.g.asynctasks_extra_config = {
-        vim.fn.stdpath("config") .. "/tasks.ini",
+        vim.fn.stdpath "config" .. "/tasks.ini",
       }
       vim.g.asynctasks_profile = "release"
       vim.g.asynctasks_term_pos = "right"
@@ -96,7 +96,15 @@ local plugins = {
   ["tpope/vim-obsession"] = { cmd = "Obsession" },
   -- Motions
   ["tpope/vim-repeat"] = { event = lazy_load_event },
-  ["tpope/vim-unimpaired"] = { event = lazy_load_event },
+  ["echasnovski/mini.bracketed"] = {
+    event = lazy_load_event,
+    version = false,
+    config = function()
+      require("mini.bracketed").setup {
+        comment = { suffix = "n" },
+      }
+    end,
+  },
   ["ggandor/leap.nvim"] = {
     event = lazy_load_event,
     config = function()
@@ -352,7 +360,11 @@ local plugins = {
     event = { "InsertEnter", "CmdlineEnter" },
     config = function()
       require("ultimate-autopair").setup {
-        --Config goes here
+        default_pairs = {
+          ft = {
+            TelescopePrompt = { disable = true },
+          },
+        },
       }
     end,
   },

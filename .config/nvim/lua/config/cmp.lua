@@ -5,7 +5,6 @@ if not cmp_installed then
   return
 end
 
-local kind = cmp.lsp.CompletionItemKind
 local api = vim.api
 
 local has_words_before = function()

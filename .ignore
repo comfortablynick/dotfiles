@@ -17,4 +17,5 @@ node_modules/
 .vim/
 go/
 .projections.json
+.root
 lazy-lock.json

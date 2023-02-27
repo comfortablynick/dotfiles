@@ -101,7 +101,8 @@ local plugins = {
     version = false,
     config = function()
       require("mini.bracketed").setup {
-        comment = { suffix = "n" },
+        comment = { suffix = "x" },
+        treesitter = { suffix = "n" },
       }
     end,
   },
@@ -116,9 +117,7 @@ local plugins = {
   },
   ["ggandor/flit.nvim"] = {
     event = lazy_load_event,
-    config = function()
-      require("flit").setup()
-    end,
+    config = true,
   },
   ["wellle/targets.vim"] = { event = lazy_load_event },
   ["tommcdo/vim-exchange"] = {

@@ -27,7 +27,7 @@ map.set("v", "<Tab>", "<Cmd>normal! >gv<CR>", { desc = "Indent" })
 map.set("v", "<S-Tab>", "<Cmd>normal! <gv<CR>", { desc = "Outdent" })
 
 do -- option toggling similar to vim-unimpaired
-  local toggle_prefix = "y"
+  local toggle_prefix = "yo"
   local map_toggle = function(lhs, rhs, desc)
     map.set("n", toggle_prefix .. lhs, rhs, { desc = desc })
   end

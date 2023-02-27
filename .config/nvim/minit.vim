@@ -39,7 +39,10 @@ endif
 
 source `=g:vim_plug_file`
 call plug#begin(g:vim_plug_dir)
+
 Plug 'liuchengxu/vim-clap', { 'do': ':call clap#installer#force_download()' }
+Plug 'NLKNguyen/papercolor-theme'
+
 call plug#end()
 
 if exists('s:bootstrap')
@@ -73,3 +76,5 @@ let g:clap_provider_quick_open = {
     \ 'sink':    { v -> execute('edit ' .. s:fname(v)) },
     \ 'on_move_async': s:on_move_async,
     \ }
+
+colorscheme PaperColor

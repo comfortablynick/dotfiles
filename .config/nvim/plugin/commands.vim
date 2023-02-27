@@ -19,6 +19,7 @@ command StripWhiteSpace call util#preserve('%s/\s\+$//e')
 
 " he[g] :: Open help[grep] in new or existing tab {{{2
 call map#cabbr('he', function('window#tab_mod', ['help', 'help']))
+call map#cabbr('th', function('window#tab_mod', ['help', 'help']))
 call map#cabbr('heg', function('window#tab_mod', ['helpgrep', 'help']))
 
 " pyp :: Python3 print {{{2

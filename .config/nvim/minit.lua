@@ -50,6 +50,24 @@ local plugins = {
       require "nvim-tmux-navigation"
     end,
   },
+
+  {
+    "liuchengxu/vim-clap",
+    cmd = "Clap",
+    build = ":call clap#installer#force_download()",
+    dependencies = { "liuchengxu/vista.vim" },
+    init = function()
+      -- vim.cmd.runtime "autoload/plugins/clap.vim"
+	vim.g.clap_preview_direction = 'UD'
+	vim.g.clap_multi_selection_warning_silent = 1
+	vim.g.clap_enable_icon = true
+	vim.g.clap_preview_size = 10
+	vim.g.clap_enable_background_shadow = false
+	vim.g.clap_background_shadow_blend = 50
+	vim.g.clap_layout = {relative = 'editor'}
+	vim.g.clap_provider_tags_force_vista = true
+    end,
+  },
 }
 require("lazy").setup(plugins, {
   root = root .. "/plugins",
@@ -68,4 +86,4 @@ vim.keymap.set("i", "kj", "<Esc>`^")
 vim.opt.termguicolors = true
 
 -- do not remove the colorscheme!
-vim.cmd [[colorscheme tokyonight]]
+vim.cmd [[colorscheme tokyonight-night]]

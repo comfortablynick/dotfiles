@@ -20,8 +20,6 @@ let g:asyncrun_rootmarks = [
     \ 'go.mod',
     \ ]
 
-call map#cabbr('R', 'AsyncRun')
-
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 
 " Floaterm Runner {{{1

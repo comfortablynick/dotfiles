@@ -48,7 +48,7 @@ inoremap <buffer> <C-]> <Cmd>call <SID>indent(1)<CR>
 inoremap <buffer> <C-[> <Cmd>call <SID>indent(0)<CR>
 imap <buffer><expr> <Tab>   <SID>is_empty_list_item() ? "<Cmd>call <SID>indent(1)<CR>" : v:lua.smart_tab()
 imap <buffer><S-Tab> <Plug>(completion_smart_s_tab)
-" imap <buffer><expr> <S-Tab> "<Cmd>call <SID>indent(0)<CR>"
+nnoremap <buffer> <Leader><Leader>h <Cmd>Telescope heading<CR>
 
 function s:jump_to_heading(direction, count)
     let l:col = virtcol('.')

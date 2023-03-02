@@ -62,7 +62,7 @@ bufferline.setup {
     -- -- Separator style
     -- -- can also be a table containing 2 custom separators
     -- -- [focused and unfocused]. eg: { '|', '|' }
-    -- separator_style = "slant" | "thick" | "thin" | { 'any', 'any' },
+    separator_style = "slant", -- | "thick" | "thin" | { 'any', 'any' },
     -- enforce_regular_tabs = false | true,
     -- always_show_bufferline = true | false,
     -- sort_by = 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)

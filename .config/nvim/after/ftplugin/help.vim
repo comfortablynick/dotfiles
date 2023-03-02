@@ -7,13 +7,11 @@ vnoremap <buffer> <Enter>   "xy:@x<CR>
 " Close on `[,]q`
 nnoremap <buffer> q         <Cmd>call buffer#quick_close()<CR>
 nnoremap <buffer> <Leader>q <Cmd>call buffer#quick_close()<CR>
-" Help TOC
-nnoremap <buffer> <Leader>o <Cmd>call <SID>show_toc()<CR>
-nnoremap <buffer> gO        <Cmd>call <SID>show_toc()<CR>
 
 nnoremap <buffer> <Tab>     <Cmd>tabnext<CR>
+nnoremap <buffer> <Leader>o <Cmd>Telescope heading<CR>
 
-" loclist TOC for vim
+" loclist TOC (only needed for vim)
 function s:show_toc()
     let l:bufname = bufname('%')
     let l:info = getloclist(0, {'winid': 1})

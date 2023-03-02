@@ -6,6 +6,7 @@ stds.nvim = {
         "unpack",
         "nvim",
         "p",
+        "d",
         "loadstring",
         "statusline",
         string = {fields = {basename = {}}},

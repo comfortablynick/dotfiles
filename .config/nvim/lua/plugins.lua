@@ -128,7 +128,12 @@ local plugins = {
     },
   },
   -- Text objects
+  ["kylechui/nvim-surround"] = {
+    event = lazy_load_event,
+    config = true,
+  },
   ["machakann/vim-sandwich"] = {
+    enabled = false,
     event = lazy_load_event,
     init = function()
       vim.g.sandwich_no_default_key_mappings = true
@@ -275,6 +280,9 @@ local plugins = {
       require "config.gruvbox"
     end,
   },
+  ["loctvl842/monokai-pro.nvim"] = {
+    opts = { filter = "pro" }, -- spectrum
+  },
   -- Syntax/filetype
   ["vhdirk/vim-cmake"] = { lazy = false },
   ["cespare/vim-toml"] = { lazy = false },
@@ -419,9 +427,19 @@ local plugins = {
   },
   ["kevinhwang91/nvim-bqf"] = { event = lazy_load_event },
   ["nvim-telescope/telescope.nvim"] = {
+    init = function()
+      vim.keymap.set("n", "<Leader><Leader>t", "<Cmd>Telescope<CR>", { desc = "Open Telescope" })
+    end,
+    config = function()
+      require "config.telescope"
+    end,
     cmd = "Telescope",
     dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
   },
+  ["nvim-telescope/telescope-fzf-native.nvim"] = {
+    build = "make",
+  },
+  ["crispgm/telescope-heading.nvim"] = {},
   -- Training/Vim help
   ["tjdevries/train.nvim"] = {},
   ["folke/which-key.nvim"] = {

@@ -4,7 +4,10 @@
 let s:task = {}
 
 function! s:task.source()
-    let l:list = pack#lazy_run({-> asynctasks#list('')}, 'asynctasks.vim')
+    if exists('*asynctasks#list') == 0
+        Lazy load asynctasks.vim
+    endif
+    let l:list = asynctasks#list('')
     let l:source = []
     let l:longest_name = max(map(copy(l:list), {_,v->len(v['name'])})) + 2
     for l:item in l:list

@@ -132,6 +132,12 @@ local plugins = {
     event = lazy_load_event,
     config = true,
   },
+  ["chrisgrieser/nvim-various-textobjs"] = {
+    event = lazy_load_event,
+    config = function()
+      require("various-textobjs").setup { useDefaultKeymaps = true }
+    end,
+  },
   ["machakann/vim-sandwich"] = {
     enabled = false,
     event = lazy_load_event,

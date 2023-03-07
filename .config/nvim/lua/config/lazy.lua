@@ -18,15 +18,22 @@ require("lazy").setup("plugins", {
   install = { missing = false, colorscheme = { "gruvbox" } },
   checker = { enabled = false, nofity = false },
   change_detection = { enabled = true, nofity = true },
-  custom_keys = {
-    ["<localleader>g"] = function(plugin)
-      require("lazy.util").open_cmd({ "tig" }, {
-        cwd = plugin.dir,
-        terminal = true,
-        close_on_exit = true,
-        enter = true,
-      })
-    end,
+  ui = {
+    border = "rounded",
+    size = { width = 0.5, height = 0.8 },
+    custom_keys = {
+      ["<LocalLeader>d"] = function(plugin)
+        d(plugin)
+      end,
+      ["<LocalLeader>g"] = function(plugin)
+        require("lazy.util").float_term({ "tig" }, {
+          cwd = plugin.dir,
+          terminal = true,
+          close_on_exit = true,
+          enter = true,
+        })
+      end,
+    },
   },
   performance = {
     rtp = {

@@ -3,9 +3,10 @@ let g:lua_syntax_nofold = 1
 " Override vim ftplugin and set not to add comment leader on new line
 setlocal tabstop=2 shiftwidth=0
 setlocal formatoptions-=cro
-setlocal formatprg=lua-format
+setlocal formatprg=stylua
 setlocal makeprg=luacheck\ %\ --formatter=plain\ --codes
 setlocal errorformat=%f:%l:%c:\ (%t%*\\d)\ %m
+setlocal keywordprg=:help " Most likely I want to look at vim docs
 
 " Preserve existing doge settings.
 if exists('b:doge_patterns')

@@ -123,7 +123,7 @@ function s:fzf_asynctasks(fullscreen) "{{{2
     endfunction
 
     if exists('*asynctasks#list') == 0
-        Lazy load asynctasks.vim
+        Load asynctasks.vim
     endif
     let l:list = asynctasks#list('')
     let l:source = []

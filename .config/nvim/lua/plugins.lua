@@ -446,6 +446,7 @@ local plugins = {
     build = "make",
   },
   ["crispgm/telescope-heading.nvim"] = {},
+  ["LinArcX/telescope-scriptnames.nvim"] = { dir = "~/git/telescope-scriptnames.nvim" },
   -- Training/Vim help
   ["tjdevries/train.nvim"] = {},
   ["folke/which-key.nvim"] = {
@@ -491,4 +492,26 @@ for repo, config in pairs(plugins) do
   table.insert(M, tbl)
 end
 
+M.load = function(plugin)
+  vim.validate { plugin = { plugin, "s" } }
+  return require("lazy").load { plugins = { plugin } }
+end
+
+-- Load :: Create command as generic interface to Lazy. Makes it easier in case plugin mgr is changed later
+vim.api.nvim_create_user_command("Load", function(opts)
+  require("plugins").load(opts.args)
+end, {
+  nargs = 1,
+  desc = "Load plugin",
+  complete = function(_)
+    return vim.tbl_map(
+      function(e)
+        return e.name
+      end,
+      vim.tbl_filter(function(e)
+        return not e._.loaded
+      end, require("lazy").plugins())
+    )
+  end,
+})
 return M

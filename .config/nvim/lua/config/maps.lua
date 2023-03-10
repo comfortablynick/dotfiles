@@ -116,16 +116,19 @@ map.set("x", ">", ">gv", { desc = "Keep selection when indenting" })
 map.set("x", "<", "<gv", { desc = "Keep selection when dedenting" })
 
 -- nvim-tmux-navigate
-vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { desc = "Vim/Tmux navigate left" })
-vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { desc = "Vim/Tmux navigate down" })
-vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { desc = "Vim/Tmux navigate up" })
-vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { desc = "Vim/Tmux navigate right" })
-vim.keymap.set(
-  "n",
-  "<C-p>",
-  "<Cmd>NvimTmuxNavigateLastActive<CR>",
-  { desc = "Vim/Tmux navigate to last active window" }
-)
+map.set("n", "<C-h>", function()
+  require("nvim-tmux-navigation").NvimTmuxNavigateLeft()
+end, { desc = "Vim/Tmux navigate left" })
+map.set("n", "<C-j>", function()
+  require("nvim-tmux-navigation").NvimTmuxNavigateDown()
+end, { desc = "Vim/Tmux navigate down" })
+map.set("n", "<C-k>", function()
+  require("nvim-tmux-navigation").NvimTmuxNavigateUp()
+end, { desc = "Vim/Tmux navigate up" })
+map.set("n", "<C-l>", function()
+  require("nvim-tmux-navigation").NvimTmuxNavigateRight()
+end, { desc = "Vim/Tmux navigate right" })
+map.set("n", "<C-p>", function()
+  require("nvim-tmux-navigation").NvimTmuxNavigateLastActive()
+end, { desc = "Vim/Tmux navigate to last active window" })
 
--- Telescope
-vim.keymap.set("n", "<Leader>e", "<Cmd>Telescope find_files<CR>", { desc = "Telescope fuzzy find" })

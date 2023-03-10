@@ -16,10 +16,11 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
   install = { missing = false, colorscheme = { "gruvbox" } },
-  checker = { enabled = false, nofity = false },
+  diff = { cmd = "diffview.nvim" },
+  checker = { enabled = false, nofity = false, concurrency = 1 },
   change_detection = { enabled = true, nofity = true },
   ui = {
-    border = "rounded",
+    border = "none",
     size = { width = 0.5, height = 0.8 },
     custom_keys = {
       ["<LocalLeader>d"] = function(plugin)

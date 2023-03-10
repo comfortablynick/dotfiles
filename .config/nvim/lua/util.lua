@@ -224,11 +224,12 @@ M.path = (function()
 
     if ffi then
       ffi.cdef [[
-void shorten_dir(const char *str)
+typedef unsigned char char_u;
+void shorten_dir(char_u *str);
 ]]
 
       return (function()
-        local c_str = ffi.new("const char[?]", #path + 1, path)
+        local c_str = ffi.new("char[?]", #path + 1, path)
         ffi.C.shorten_dir(c_str)
         return ffi.string(c_str)
       end)()

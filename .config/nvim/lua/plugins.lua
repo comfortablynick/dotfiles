@@ -8,13 +8,6 @@ local lazy_load_event = "VeryLazy"
 vim.env.SHELL = vim.o.shell
 
 local plugins = {
-  ["airblade/vim-rooter"] = {
-    init = function()
-      vim.g.rooter_silent_chdir = 1
-      vim.g.rooter_manual_only = 1
-      vim.g.rooter_patterns = vim.g.root_patterns
-    end,
-  },
   ["tpope/vim-eunuch"] = { cmd = { "Delete", "Rename", "Chmod", "Move" } },
   ["psliwka/vim-smoothie"] = { event = lazy_load_event },
   ["kkoomen/vim-doge"] = {
@@ -52,6 +45,7 @@ local plugins = {
     end,
   },
   ["stevearc/overseer.nvim"] = {
+    enabled = false,
     event = lazy_load_event,
     dependencies = "stevearc/dressing.nvim",
     config = function()
@@ -92,7 +86,7 @@ local plugins = {
       }
     end,
   },
-  ["tpope/vim-projectionist"] = {},
+  ["tpope/vim-projectionist"] = { event = lazy_load_event },
   ["tpope/vim-obsession"] = { cmd = "Obsession" },
   -- Motions
   ["tpope/vim-repeat"] = { event = lazy_load_event },
@@ -119,17 +113,43 @@ local plugins = {
     event = lazy_load_event,
     config = true,
   },
+  -- Text objects
   ["wellle/targets.vim"] = { event = lazy_load_event },
-  ["tommcdo/vim-exchange"] = {
-    lazy = true,
+  ["gbprod/substitute.nvim"] = {
+    enabled = true,
+    config = true,
     keys = {
-      { "cxx" },
-      { "cxc" },
-      { "cx" },
-      { "X", mode = "x"  },
+      {
+        "cx",
+        function()
+          require("substitute.exchange").operator()
+        end,
+        desc = "Exchange operator",
+      },
+      {
+        "cxx",
+        function()
+          require("substitute.exchange").line()
+        end,
+        desc = "Exchange line",
+      },
+      {
+        "cxc",
+        function()
+          require("substitute.exchange").cancel()
+        end,
+        desc = "Exchange cancel",
+      },
+      {
+        "E",
+        function()
+          require("substitute.exchange").visual()
+        end,
+        mode = "x",
+        desc = "Exchange selection",
+      },
     },
   },
-  -- Text objects
   ["kylechui/nvim-surround"] = {
     event = lazy_load_event,
     config = true,
@@ -140,28 +160,12 @@ local plugins = {
       require("various-textobjs").setup { useDefaultKeymaps = true }
     end,
   },
-  ["machakann/vim-sandwich"] = {
-    enabled = false,
-    event = lazy_load_event,
-    init = function()
-      vim.g.sandwich_no_default_key_mappings = true
-      vim.g.operator_sandwich_no_default_key_mappings = true
-    end,
-    config = function()
-      -- Make sandwich behave like vim-surround
-      vim.cmd.runtime "macros/sandwich/keymap/surround.vim"
-      -- Select text surrounded by brackets or other object
-      vim.keymap.set("x", "is", "<Plug>(textobj-sandwich-query-i)")
-      vim.keymap.set("o", "is", "<Plug>(textobj-sandwich-query-i)")
-      vim.keymap.set("x", "as", "<Plug>(textobj-sandwich-query-a)")
-      vim.keymap.set("o", "as", "<Plug>(textobj-sandwich-query-a)")
-    end,
-  },
   ["AndrewRadev/switch.vim"] = {
-    keys = { "<Plug>(Switch)" },
+    keys = {
+      { "g-", "<Plug>(Switch)", desc = "Switch item under cursor" },
+    },
     init = function()
       vim.g.switch_mapping = ""
-      vim.keymap.set("n", "g-", "<Plug>(Switch)", { desc = "Switch item under cursor" })
     end,
   },
   -- Commenting
@@ -192,16 +196,6 @@ local plugins = {
       vim.cmd.runtime "autoload/plugins/fzf.vim"
     end,
   },
-  ["kevinhwang91/rnvimr"] = {
-    event = lazy_load_event,
-    build = "pip3 install -U pynvim",
-    cmd = "RnvimrToggle",
-    init = function()
-      vim.g.rnvimr_enable_picker = 1
-      vim.keymap.set("n", "<C-e>", "<Cmd>RnvimrToggle<CR>", { desc = "Toggle Rnvimr" })
-      vim.keymap.set("n", "<Leader>n", "<Cmd>RnvimrToggle<CR>", { desc = "Toggle Rnvimr" })
-    end,
-  },
   ["liuchengxu/vista.vim"] = {
     event = lazy_load_event,
     init = function()
@@ -218,9 +212,9 @@ local plugins = {
   },
   ["mbbill/undotree"] = {
     cmd = "UndotreeToggle",
-    init = function()
-      vim.keymap.set("n", "<F5>", "<Cmd>UndotreeToggle<CR>", { desc = "Toggle UndoTree" })
-    end,
+    keys = {
+      { "<F5>", "<Cmd>UndotreeToggle<CR>", desc = "Toggle UndoTree" },
+    },
     config = function()
       vim.g.undotree_WindowLayout = 4
     end,
@@ -232,17 +226,22 @@ local plugins = {
       vim.g.picker_custom_find_executable = "fd"
       vim.g.picker_custom_find_flags = "-t f -HL --strip-cwd-prefix"
 
+      vim.keymap.set("n", "<Leader>e", "<Plug>(PickerEdit)", { desc = "Fuzzy edit" })
       vim.keymap.set("n", "<Leader>v", "<Plug>(PickerVsplit)", { desc = "Fuzzy vsplit edit" })
     end,
   },
   ["voldikss/vim-floaterm"] = {
     cmd = { "FloatermNew", "FloatermToggle" },
+    keys = {
+      { "<F7>", "<Cmd>FloatermToggle<CR>", desc = "Floaterm toggle" },
+    },
     init = function()
-      vim.cmd.runtime "autoload/plugins/floaterm.vim"
+      require "config.floaterm"
     end,
   },
   ["akinsho/toggleterm.nvim"] = {
-    event = lazy_load_event,
+    cmd = "ToggleTerm",
+    keys = { { "<F8>", desc = "Toggle terminal" } },
     config = function()
       require "config.toggleterm"
     end,
@@ -288,9 +287,6 @@ local plugins = {
       require "config.gruvbox"
     end,
   },
-  ["loctvl842/monokai-pro.nvim"] = {
-    opts = { filter = "pro" }, -- spectrum
-  },
   -- Syntax/filetype
   ["vhdirk/vim-cmake"] = { lazy = false },
   ["cespare/vim-toml"] = { lazy = false },
@@ -321,22 +317,15 @@ local plugins = {
     config = function()
       require "config.neogit"
     end,
-    dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      { "sindrets/diffview.nvim", cmd = { "DiffviewOpen", "DiffviewFileHistory" } },
+    },
   },
   -- Snippets
   ["SirVer/ultisnips"] = {
     init = function()
-      vim.g.UltiSnipsExpandTrigger = "<C-s>"
-      vim.g.UltiSnipsJumpForwardTrigger = "<C-k>"
-      vim.g.UltiSnipsJumpBackwardTrigger = "<C-h>"
-      vim.g.UltiSnipsSnippetDirectories = { "~/.config/ultisnips" }
-      vim.g.UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit = "~/.config/ultisnips"
-      vim.g.snips_author = "Nick Murphy"
-      vim.g.snips_email = "comfortablynick@gmail.com"
-      vim.g.snips_github = "https://github.com/comfortablynick"
-
-      vim.fn["map#cabbr"]("es", "UltiSnipsEdit")
-      vim.keymap.set("i", "<Plug>(UltiForward)", "<C-R>=UltiSnips#JumpForwards()<CR>")
+      require "config.ultisnips"
     end,
     event = lazy_load_event,
   },
@@ -420,19 +409,6 @@ local plugins = {
     end,
   },
   ["norcalli/profiler.nvim"] = {},
-  ["romgrk/todoist.nvim"] = { -- TODO: add 'UpdateRemotePlugins' to this once the table issue is fixed
-    build = "npm install",
-    init = function()
-      vim.g.todoist = {
-        icons = {
-          unchecked = "  ",
-          checked = "  ",
-          loading = "  ",
-          error = "  ",
-        },
-      }
-    end,
-  },
   ["kevinhwang91/nvim-bqf"] = { event = lazy_load_event },
   ["nvim-telescope/telescope.nvim"] = {
     cmd = "Telescope",
@@ -445,6 +421,7 @@ local plugins = {
         desc = "Show workspace symbols in Telescope",
       },
       { "<Leader>s", "<Cmd>Telescope live_grep<CR>", desc = "Live grep with Telescope" },
+      { "<C-e>", "<Cmd>Telescope find_files<CR>", desc = "Telescope fuzzy find" },
     },
     config = function()
       require "config.telescope"
@@ -466,16 +443,7 @@ local plugins = {
   },
   -- Tmux
   ["alexghergh/nvim-tmux-navigation"] = {
-    cmd = {
-      "NvimTmuxNavigateLeft",
-      "NvimTmuxNavigateRight",
-      "NvimTmuxNavigateDown",
-      "NvimTmuxNavigateUp",
-      "NvimTmuxNavigateLastActive",
-    },
-    config = function()
-      require "nvim-tmux-navigation"
-    end,
+    config = true,
   },
   ["comfortablynick/vim-tmux-runner"] = {
     cmd = { "VtrSendCommandToRunner", "VtrOpenRunner" },

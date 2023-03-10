@@ -121,10 +121,12 @@ local plugins = {
   },
   ["wellle/targets.vim"] = { event = lazy_load_event },
   ["tommcdo/vim-exchange"] = {
+    lazy = true,
     keys = {
       { "cxx" },
       { "cxc" },
       { "cx" },
+      { "X", mode = "x"  },
     },
   },
   -- Text objects
@@ -433,13 +435,20 @@ local plugins = {
   },
   ["kevinhwang91/nvim-bqf"] = { event = lazy_load_event },
   ["nvim-telescope/telescope.nvim"] = {
-    init = function()
-      vim.keymap.set("n", "<Leader><Leader>t", "<Cmd>Telescope<CR>", { desc = "Open Telescope" })
-    end,
+    cmd = "Telescope",
+    keys = {
+      { "<Leader><Leader>t", "<Cmd>Telescope<CR>", desc = "Open Telescope" },
+      { "<Leader><Leader>d", "<Cmd>Telescope lsp_document_symbols<CR>", desc = "Show document symbols in Telescope" },
+      {
+        "<Leader><Leader>w",
+        "<Cmd>Telescope lsp_workspace_symbols<CR>",
+        desc = "Show workspace symbols in Telescope",
+      },
+      { "<Leader>s", "<Cmd>Telescope live_grep<CR>", desc = "Live grep with Telescope" },
+    },
     config = function()
       require "config.telescope"
     end,
-    cmd = "Telescope",
     dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
   },
   ["nvim-telescope/telescope-fzf-native.nvim"] = {

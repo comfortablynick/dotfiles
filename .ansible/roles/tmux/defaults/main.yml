@@ -6,6 +6,10 @@ tmux_make_concurrency: "{{ ansible_facts.processor_vcpus }}"
 # tmux_release: "3.1-rc2"
 
 # building from source
+tmux_build_from_source:
+  - Debian
+  - Darwin
+
 tmux_build_from_master: false
 tmux_force_build: false
 tmux_source_dir: "{{ ansible_facts.user_dir }}/src/tmux"

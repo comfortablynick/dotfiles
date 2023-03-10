@@ -2,6 +2,8 @@
 # tmux
 - name: Install tmux
   pacman:
-    name: tmux
+    name: tmux-git
     state: latest
+    executable: "{{ pkg_aur_helper }}"
   become: true
+  become_user: aur_builder

@@ -1,5 +1,6 @@
-local tsconfigs = require "nvim-treesitter.configs"
-if not tsconfigs then
+local installed, tsconfigs = pcall(require, "nvim-treesitter.configs")
+
+if not installed then
   return
 end
 
@@ -51,6 +52,7 @@ tsconfigs.setup {
         ["if"] = "@function.inner",
         ["ac"] = "@class.outer",
         ["ic"] = "@class.inner",
+        ["in"] = "@number.inner",
       },
     },
     matchup = { enable = true },

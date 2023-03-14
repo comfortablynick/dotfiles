@@ -2,10 +2,14 @@
 local M = {}
 local api = vim.api
 local util = vim.lsp.util
-local lsp = require "lspconfig"
+local lsp = vim.F.npcall(require, "lspconfig")
 local lsp_status = require "lsp-status"
 local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
 local lsps_attached = {}
+
+if lsp == nil then
+  return
+end
 
 local status = require "config.lsp.status"
 local cmp = require "config.cmp"

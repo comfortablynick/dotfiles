@@ -2,7 +2,7 @@
 local uv = vim.loop
 local ffi = vim.F.npcall(require, "ffi")
 local api = vim.api
-local Job = require "plenary.job"
+local Job = vim.F.npcall(require, "plenary.job")
 local M = {}
 
 -- Root finder utilities originally from nvim-lspconfig

@@ -95,7 +95,9 @@ o.listchars = {
   trail = "·", -- Trailing space
 }
 o.title = true
-o.splitkeep = "screen"
+if nvim.has "nvim-0.9" then
+  o.splitkeep = "screen"
+end
 
 o.path = {
   ".", -- Directory of current file

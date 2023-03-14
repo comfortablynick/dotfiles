@@ -3,13 +3,8 @@ local M = {}
 -- Lazy load user autocmd
 local lazy_load_event = "VeryLazy"
 
--- Workaround for packer using $SHELL instead of &shell
--- When $SHELL == fish, posix syntax will fail in hooks
-vim.env.SHELL = vim.o.shell
-
 local plugins = {
   ["tpope/vim-eunuch"] = { cmd = { "Delete", "Rename", "Chmod", "Move" } },
-  ["psliwka/vim-smoothie"] = { event = lazy_load_event },
   ["kkoomen/vim-doge"] = {
     build = function()
       vim.fn["doge#install"] { headless = 1 }
@@ -114,7 +109,12 @@ local plugins = {
     config = true,
   },
   -- Text objects
-  ["wellle/targets.vim"] = { event = lazy_load_event },
+  ["echasnovski/mini.ai"] = {
+    event = lazy_load_event,
+    config = function()
+      require("mini.ai").setup()
+    end,
+  },
   ["gbprod/substitute.nvim"] = {
     enabled = true,
     config = true,
@@ -319,7 +319,7 @@ local plugins = {
     end,
     dependencies = {
       "nvim-lua/plenary.nvim",
-      { "sindrets/diffview.nvim", cmd = { "DiffviewOpen", "DiffviewFileHistory" } },
+      { "sindrets/diffview.nvim", cmd = { "DiffviewOpen", "DiffviewFileHistory" }, config = true },
     },
   },
   -- Snippets
@@ -402,6 +402,7 @@ local plugins = {
     end,
   },
   ["nvim-treesitter/playground"] = { cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
+  ["nvim-treesitter/nvim-treesitter-textobjects"] = { lazy = false },
   ["akinsho/bufferline.nvim"] = {
     event = "BufEnter",
     config = function()

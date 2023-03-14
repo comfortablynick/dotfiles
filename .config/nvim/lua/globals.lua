@@ -82,29 +82,3 @@ _G.smart_s_tab = function()
     return t "<S-Tab>"
   end
 end
-
--- String indexing metamethods
--- Example:
--- a='abcdef'
--- return a[4]       --> d
--- return a(3,5)     --> cde
--- return a{1,-4,5}  --> ace
-getmetatable("").__index = function(str, i)
-  if type(i) == "number" then
-    return string.sub(str, i, i)
-  else
-    return string[i]
-  end
-end
-
-getmetatable("").__call = function(str, i, j)
-  if type(i) ~= "table" then
-    return string.sub(str, i, j)
-  else
-    local tbl = {}
-    for k, v in ipairs(i) do
-      tbl[k] = string.sub(str, v, v)
-    end
-    return table.concat(tbl)
-  end
-end

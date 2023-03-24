@@ -1,17 +1,4 @@
-" Bdelete[!] :: delete buffer without changing window layout {{{2
-" With [!], do not preserve window layout
-command -bang -nargs=? -complete=buffer Bdelete call buffer#sayonara(<bang>0)
-
-" BufOnly[!] :: keep only current buffer (! forces close) {{{2
-command -bang BufOnly call buffer#only({'bang': <bang>0})
-
-" Bclose[!] :: close buffers with common options {{{2
-" TODO: does this take the place of BufOnly?
-command -nargs=1 -bang -complete=customlist,buffer#close_complete
-    \ Bclose call buffer#close(<bang>0, <q-args>)
-
-" Scratch[ify] :: convert to scratch buffer or create scratch window {{{2
-command Scratchify setlocal nobuflisted noswapfile buftype=nofile bufhidden=delete
+" Scratch :: create scratch window {{{2
 command -nargs=* -complete=command Scratch call window#open_scratch(<q-mods>, <q-args>)
 
 " StripWhiteSpace :: remove trailing whitespace {{{2

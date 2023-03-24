@@ -40,7 +40,7 @@ end, { complete = "file", nargs = "+", desc = "Async grep and show results in qu
 cmd("Synstack", "echo syntax#synstack()", { desc = "Show syntax stack under cursor" })
 
 cmd("Option", function(opts)
-  vim.pretty_print(vim.api.nvim_get_option_info(opts.args))
+  vim.print(vim.api.nvim_get_option_info(opts.args))
 end, { complete = "option", nargs = 1, desc = "Pretty print option info from api" })
 
 cmd("Help", function(opts)
@@ -61,7 +61,7 @@ cmd("CopyMode", function()
   vim.opt.relativenumber = false
 end, { desc = "Get rid of window decorations for easy coping from hterm" })
 
-cmd("Only", function(opts)
+cmd("BufOnly", function(opts)
   vim.fn["buffer#only"] { bang = opts.bang }
 end, { desc = "Delete all buffers but the current one" })
 
@@ -80,3 +80,23 @@ cmd(
   -- Take 0 or 1 arg
   { nargs = "?", desc = "Grep using Telescope" }
 )
+
+-- Buffer management
+cmd("Only", function(opts)
+  require("buffer").only(opts.bang)
+end, { bang = true, desc = "Keep only the current buffer (! forces close)" })
+
+cmd("Bdelete", function(opts)
+  vim.fn["buffer#sayonara"](opts.bang)
+end, { bang = true, desc = "Delete buffer without changing window layout (! do not preserve layout)" })
+
+cmd("Bclose", function(opts)
+  vim.fn["buffer#close"](opts.args)
+end, { bang = true, nargs = 1, complete = vim.fn["buffer#close_complete"] })
+
+cmd("Scratchify", function()
+  vim.bo.buflisted = false
+  vim.bo.swapfile = false
+  vim.bo.buftype = "nofile"
+  vim.bo.bufhidden = true
+end, { desc = "Convert to scratch buffer" })

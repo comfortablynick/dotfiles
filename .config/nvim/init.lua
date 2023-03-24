@@ -5,10 +5,10 @@ local shell = "/bin/sh"
 
 -- Global variables
 vim.env.SHELL = shell -- Some things use $SHELL rather than &shell
+g.term_shell = "fish"
 g.python3_host_prog = uv.os_getenv "NVIM_PY3_DIR"
 g.mapleader = ","
 g.c_syntax_for_h = 1
-g.window_width = o.columns
 g.vimsyn_embed = "lP"
 
 local disabled_built_ins = {

@@ -8,13 +8,11 @@ local ui = vim.api.nvim_list_uis()[1]
 
 -- nvim-toggleterm trial to see about replacing floaterm
 toggleterm.setup {
-  -- size can be a number or function which is passed the current terminal
-  size = 50,
-  function(term)
+  size = function(term)
     if term.direction == "horizontal" then
-      return 15
+      return ui.height * 0.2
     elseif term.direction == "vertical" then
-      return ui.width * 0.7
+      return ui.width * 0.3
     end
   end,
   open_mapping = [[<F8>]],
@@ -25,16 +23,16 @@ toggleterm.setup {
   start_in_insert = true,
   insert_mappings = true, -- whether or not the open mapping applies in insert mode
   persist_size = true,
-  direction = "vertical",
+  direction = "float",
   close_on_exit = true, -- close the terminal window when the process exits
-  shell = vim.o.shell, -- change the default shell
+  shell = vim.g.term_shell,
   -- This field is only relevant if direction is set to 'float'
   float_opts = {
     -- The border key is *almost* the same as 'nvim_win_open'
     -- see :h nvim_win_open for details on borders however
     -- the 'curved' border is a custom border type
     -- not natively supported but implemented in this plugin.
-    border = "double",
+    border = "curved",
     width = math.floor(ui.width * 0.5),
     height = math.floor(ui.height * 0.5),
     winblend = 3,

@@ -6,11 +6,11 @@ local M = {}
 
 function M.lf_select_current_file()
   local filename = api.nvim_buf_get_name(0)
-  local cmd = "FloatermNew lf"
+  local cmd = "lf"
   if uv.fs_stat(filename) ~= nil then
-    cmd = cmd .. (" -command 'select %s'"):format(filename)
+    cmd = cmd .. (" -command select %s"):format(filename)
   end
-  vim.cmd(cmd)
+  require'toggleterm'.exec(cmd)
 end
 
 local qf_open = function(max_size)

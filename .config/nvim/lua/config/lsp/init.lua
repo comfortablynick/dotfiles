@@ -4,8 +4,6 @@ local api = vim.api
 local util = vim.lsp.util
 local lsp = vim.F.npcall(require, "lspconfig")
 local lsp_status = require "lsp-status"
-local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
-local lsps_attached = {}
 
 if lsp == nil then
   return
@@ -69,10 +67,12 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 })
 
 function M.set_hl()
+  local set_hl_ns = api.nvim__set_hl_ns or api.nvim_set_hl_ns
   -- local ns = api.nvim_create_namespace "nick"
   local ns = 0
 
   -- TODO: fix statusline functions to use new nvim api
+  -- TODO: are these doing anything?
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultError", { fg = "#ff5f87" })
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultWarning", { fg = "#d78f00" })
   api.nvim_set_hl(ns, "LspDiagnosticsDefaultInformation", { fg = "#d78f00" })
@@ -172,14 +172,6 @@ function M.simple_rename(newName)
   end
 end
 
-function M.attached_lsps()
-  local bufnr = api.nvim_get_current_buf()
-  if not lsps_attached[bufnr] then
-    return ""
-  end
-  return "LSP[" .. table.concat(vim.tbl_values(lsps_attached[bufnr]), ",") .. "]"
-end
-
 -- Return table of useful client info
 function M.clients()
   local servers = {}
@@ -237,17 +229,6 @@ local on_attach_cb = function(client, bufnr)
     nmap("<F3>", "Format", "Lsp format")
   end
   vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-
-  -- Add client name to variable
-  local name_replacements = { diagnosticls = "diag", sumneko_lua = "sumneko" }
-  if not lsps_attached[bufnr] then
-    lsps_attached[bufnr] = {}
-  end
-  local client_display_name = name_replacements[client.name] or client.name
-  -- Don't duplicate name if we're reloading, etc.
-  if not vim.tbl_contains(lsps_attached[bufnr], client_display_name) then
-    table.insert(lsps_attached[bufnr], client_display_name)
-  end
 
   -- Set autocmds for highlighting if server supports it
   if false and client.server_capabilities.documentHighlightProvider then

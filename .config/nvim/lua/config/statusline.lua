@@ -49,7 +49,7 @@ M.get = function()
     "%( %{v:lua.statusline.job_status()} ",
     opts.sep,
     "%)",
-    "%( %-20.80{v:lua.statusline.lsp_status()}%)",
+    "%( %-20.80{v:lua.statusline.lsp_clients()}%)",
     "%( %{v:lua.statusline.file_type()} %)",
     "%(%3* %{v:lua.statusline.git_status()} %*%)",
     "%(%2* %{v:lua.statusline.line_info()}%*%)",
@@ -234,15 +234,18 @@ M.job_status = function()
   end
 end
 
-M.lsp_status = function()
-  if not active_file() then
+M.lsp_clients = function()
+  local clients = vim.lsp.buf_get_clients()
+  if vim.tbl_isempty(clients) then
     return ""
   end
-  local attached = lsp.attached_lsps()
-  if attached == nil then
-    return ""
+
+  local lsps = {}
+
+  for _, client in pairs(clients) do
+    table.insert(lsps, client.name)
   end
-  return attached .. " " .. (lsp.status() or "")
+  return "LSP[" .. table.concat(lsps, ",") .. "]"
 end
 
 local syn_derive = function(ns, from, to, hl_map)

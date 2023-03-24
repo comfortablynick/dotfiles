@@ -17,8 +17,7 @@ _G.R = function(name)
 end
 
 -- p :: Debug print helper
--- Now use built-in vim.pretty_print
-_G.p = vim.pretty_print
+_G.p = vim.print
 
 -- d :: Debug object using nvim-notify
 function _G.d(...)

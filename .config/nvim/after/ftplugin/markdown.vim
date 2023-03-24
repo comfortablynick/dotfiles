@@ -35,12 +35,7 @@ function s:is_empty_quote()
 endfunction
 
 if executable('glow')
-    command -buffer Preview lua
-        \ require'window'.float_term(
-        \ 'glow '..vim.api.nvim_buf_get_name(0),
-        \ 0.6,
-        \ 'double'
-        \ )
+    command -buffer Preview lua require'toggleterm'.exec("glow -p "..vim.api.nvim_buf_get_name(0))
     nnoremap <buffer> gp <Cmd>Preview<CR>
 endif
 

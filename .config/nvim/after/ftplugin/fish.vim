@@ -2,9 +2,7 @@ compiler fish
 
 setlocal keywordprg=:tab\ Man " This is simpler if fish has been added to MANPATH
 setlocal shiftwidth=4 
-setlocal formatoptions-=c
-setlocal formatoptions-=r
-setlocal formatoptions-=o
+setlocal formatoptions-=cro
 setlocal errorformat=%E%f\ (line\ %l):\ %m
 setlocal errorformat+=%C%m
 " setlocal errorformat+=%-G%.%#
@@ -13,7 +11,6 @@ setlocal errorformat+=%Z%p^
 " setlocal errorformat+=%E
 " setlocal errorformat+=%E%m
 setlocal foldmethod=marker
-" call plugins#packadd('ale')
 
 " Error example
 " || 00_start_tmux.fish (line 2): Missing end to balance this if statement

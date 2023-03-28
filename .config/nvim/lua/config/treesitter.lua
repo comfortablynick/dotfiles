@@ -6,6 +6,7 @@ end
 
 tsconfigs.setup {
   ensure_installed = {
+    "fish",
     "lua",
     "go",
     "rust",

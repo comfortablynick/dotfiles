@@ -1,3 +1,5 @@
+pcall(vim.loader.enable)
+
 local o = vim.opt
 local g = vim.g
 local uv = vim.loop

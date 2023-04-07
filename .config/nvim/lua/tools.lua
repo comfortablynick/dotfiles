@@ -10,7 +10,7 @@ function M.lf_select_current_file()
   if uv.fs_stat(filename) ~= nil then
     cmd = cmd .. (" -command select %s"):format(filename)
   end
-  require'toggleterm'.exec(cmd)
+  require("toggleterm").exec(cmd)
 end
 
 local qf_open = function(max_size)
@@ -222,12 +222,30 @@ function M.spawn(o) -- Run simple commands and output stdout/stderr
   end
 end
 
--- @param o table
--- @field o.cmd  : Vim ex command
--- @field o.mods : Mods for scratch window
-function M.redir(o) -- Redirect command output to scratch window
-  local lines = vim.split(api.nvim_exec(o.cmd, true), "\n")
-  win.create_scratch(lines, o.mods or "", o.bang)
+---Redirect command to scratch window
+---@param cmd any Ex command or list of strings to redirect
+---@param mods string Mods to apply to window
+---@param bang bool Replace exisitng scratch window
+function M.redir(cmd, mods, bang)
+  local lines = (function()
+    if type(cmd) == "table" then
+      return cmd
+    end
+    if vim.startswith(cmd, "!") then
+      local _, out = util.get_os_command_output(vim.split(cmd:sub(2), " "))
+      return out
+    end
+    return vim.split(api.nvim_exec2(cmd, { output = true }).output, "\n")
+  end)()
+  win.create_scratch(lines, mods or "", bang or false)
+end
+
+function M.scriptnames(filter)
+  local files =
+    vim.split(vim.api.nvim_exec2("scriptnames", { output = true }).output, "%s*%d+%:%s*", { trimempty = true })
+  return vim.tbl_map(function(e)
+    return vim.fn.expand(e)
+  end, files)
 end
 
 -- @param o table
@@ -554,13 +572,13 @@ function M.test_fn(iter_ct)
 end
 
 function M.startuptime() -- Create floating window and display :StartupTime
+  require("plugins").load "startuptime.vim"
   bufnr = win.create_centered_floating {
     border = "double",
-    winblend = 1,
-    fn = vim.cmd.StartupTime,
+    width = 0.5,
+    fn = vim.fn["startuptime#profile"],
   }
   vim.bo[bufnr].bufhidden = "wipe"
-  vim.wo.cursorline = true
 end
 
 function M.load_lvimrc() -- Load local vimrc using env var of paths set with direnv

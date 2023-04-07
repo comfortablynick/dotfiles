@@ -33,9 +33,13 @@ toggleterm.setup {
     -- the 'curved' border is a custom border type
     -- not natively supported but implemented in this plugin.
     border = "curved",
-    width = math.floor(ui.width * 0.5),
-    height = math.floor(ui.height * 0.5),
-    winblend = 3,
+    width = function()
+      return math.floor(ui.width * 0.5)
+    end,
+    height = function()
+      return math.floor(ui.height * 0.5)
+    end,
+    winblend = 20,
     highlights = { border = "Pmenu", background = "Normal" },
   },
 }

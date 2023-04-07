@@ -4,9 +4,7 @@ end
 
 cmd("LspDisable", function()
   vim.lsp.stop_client(vim.lsp.get_active_clients())
-end)
-
-cmd("Lf", require("tools").lf_select_current_file)
+end, { desc = "Stop all LSP clients" })
 
 cmd("Gpush", function() -- :: Custom git push
   require("tools").term_run { cmd = "git push", mods = "10" }
@@ -30,17 +28,15 @@ cmd("Run", function(opts) -- :: Simple lua version of AsyncRun
 end, { complete = "shellcmd", nargs = "+", bang = true })
 
 cmd("Redir", function(opts) -- :: Redirect output of command to scratch buffer
-  require("tools").redir { cmd = opts.args, mods = opts.mods, bang = opts.bang }
+  require("tools").redir(opts.args, opts.mods, opts.bang)
 end, { complete = "command", nargs = 1, bang = true })
 
 cmd("Grep", function(opts) -- :: Async grep
   require("grep").grep_for_string(opts.args)
 end, { complete = "file", nargs = "+", desc = "Async grep and show results in quickfix" })
 
-cmd("Synstack", "echo syntax#synstack()", { desc = "Show syntax stack under cursor" })
-
 cmd("Option", function(opts)
-  vim.print(vim.api.nvim_get_option_info(opts.args))
+  vim.print(vim.api.nvim_get_option_info2(opts.args, {}))
 end, { complete = "option", nargs = 1, desc = "Pretty print option info from api" })
 
 cmd("Help", function(opts)
@@ -100,3 +96,33 @@ cmd("Scratchify", function()
   vim.bo.buftype = "nofile"
   vim.bo.bufhidden = true
 end, { desc = "Convert to scratch buffer" })
+
+cmd("LazyGit", function(opts)
+  local ui = vim.api.nvim_list_uis()[1]
+  require("toggleterm.terminal").Terminal
+    :new({
+      cmd = "lazygit",
+      count = opts.count,
+      float_opts = {
+        width = function()
+          return math.floor(ui.width * 0.8)
+        end,
+        height = function()
+          return math.floor(ui.height * 0.6)
+        end,
+      },
+    })
+    :toggle()
+end, { count = true, desc = "Open lazygit in toggleterm" })
+
+cmd("LPrint", function(opts)
+  vim.print(vim.api.nvim_eval(opts.args))
+end, { complete = "expression", nargs = 1, desc = "Pretty-print viml expression using Lua" })
+
+cmd("PPrint", function(opts)
+  print(vim.fn["util#pformat"](vim.api.nvim_eval(opts.args)))
+end, { complete = "expression", nargs = 1, desc = "Pretty-print viml expression using Python" })
+
+cmd("Command", function(opts)
+  vim.print(opts)
+end, { nargs = "*" })

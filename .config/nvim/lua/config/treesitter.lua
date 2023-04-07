@@ -20,6 +20,7 @@ tsconfigs.setup {
     "query",
     "markdown",
     "markdown_inline",
+    "vimdoc",
   },
   highlight = {
     enable = true,

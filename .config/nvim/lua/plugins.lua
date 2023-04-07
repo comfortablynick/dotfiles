@@ -248,7 +248,7 @@ local plugins = {
   },
   -- Vim development
   ["tpope/vim-scriptease"] = { cmd = { "Messages", "Verbose", "Time", "PP" } },
-  ["tweekmonster/startuptime.vim"] = { cmd = "Startup" },
+  ["tweekmonster/startuptime.vim"] = {},
   ["dstein64/vim-startuptime"] = { cmd = "StartupTime" },
   -- Editor appearance
   ["ryanoasis/vim-devicons"] = {},

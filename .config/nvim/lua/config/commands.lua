@@ -51,12 +51,6 @@ end, { desc = "Change to root dir" })
 
 cmd("S", "AsyncTask file-run", { desc = "Use asynctasks task runner to determine command based on filetype" })
 
-cmd("CopyMode", function()
-  vim.opt.signcolumn = "no"
-  vim.opt.number = false
-  vim.opt.relativenumber = false
-end, { desc = "Get rid of window decorations for easy coping from hterm" })
-
 cmd("BufOnly", function(opts)
   vim.fn["buffer#only"] { bang = opts.bang }
 end, { desc = "Delete all buffers but the current one" })
@@ -71,7 +65,7 @@ cmd(
   "Rg",
   -- Call telescope with the first argument (if nil, it's just empty no crash)
   function(args)
-    require("telescope.builtin").grep_string { search = args.fargs[1] }
+    require("telescope.builtin").grep_string { search = args.args }
   end,
   -- Take 0 or 1 arg
   { nargs = "?", desc = "Grep using Telescope" }
@@ -125,4 +119,4 @@ end, { complete = "expression", nargs = 1, desc = "Pretty-print viml expression 
 
 cmd("Command", function(opts)
   vim.print(opts)
-end, { nargs = "*" })
+end, { nargs = "*", desc = "Show output of parsed command in Lua" })

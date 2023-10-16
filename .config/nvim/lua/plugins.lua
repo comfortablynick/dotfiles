@@ -334,7 +334,7 @@ local plugins = {
     dependencies = {
       "nvim-lua/lsp-status.nvim",
       "nvim-lua/lsp_extensions.nvim",
-      "j-hui/fidget.nvim",
+      { "j-hui/fidget.nvim", branch = "legacy" },
       "folke/neodev.nvim",
     },
   },

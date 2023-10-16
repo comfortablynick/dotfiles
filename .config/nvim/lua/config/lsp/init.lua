@@ -3,7 +3,7 @@ local M = {}
 local api = vim.api
 local util = vim.lsp.util
 local lsp = vim.F.npcall(require, "lspconfig")
-local lsp_status = require "lsp-status"
+local lsp_status = vim.F.npcall(require, "lsp-status")
 
 if lsp == nil then
   return

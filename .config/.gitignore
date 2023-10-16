@@ -22,6 +22,7 @@
 /lazygit/state.yml
 
 /.xmake
+/nvim/.luarc.json
 /nvim/plugin/packer_compiled.lua
 
 /nushell/history.txt

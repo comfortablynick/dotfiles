@@ -37,10 +37,11 @@
       when: ansible_facts['os_family'] == 'Archlinux'
 
     - name: Build and install mosh
-      command: "{{ item }}"
+      shell: "{{ item }}" # use shell for export workaround
       args:
         chdir: "{{ mosh_source_dir }}"
       loop:
+        - export CPPFLAGS=-std=c++17
         - sh autogen.sh
         - >-
           ./configure --prefix={{ install_path }}

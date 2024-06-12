@@ -1,5 +1,5 @@
 _fd() {
-    local i cur prev opts cmds
+    local i cur prev opts cmd
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -167,4 +167,4 @@ _fd() {
     esac
 }
 
-complete -F _fd -o bashdefault -o default fd
+complete -F _fd -o nosort -o bashdefault -o default fd

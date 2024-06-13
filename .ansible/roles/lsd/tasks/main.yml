@@ -2,7 +2,7 @@
 # tasks file for lsd
 - name: Lsd | Get latest release
   uri:
-    url: https://api.github.com/repos/Peltoche/lsd/releases/latest
+    url: https://api.github.com/repos/lsd-rs/lsd/releases/latest
     return_content: true
   run_once: true
   register: lsd_latest
@@ -17,7 +17,7 @@
 - name: Lsd | Set version strings
   set_fact:
     lsd_installed_version: "{% if lsd_installed.stdout|length > 1 %}{{ lsd_installed.stdout.split(' ')[1] }}{% else %}0.0.1{% endif %}"
-    lsd_latest_version: "{{ lsd_latest.json.tag_name }}"
+    lsd_latest_version: "{{ lsd_latest.json.tag_name[1:] }}"
     lsd_releases: "{{ lsd_latest.json.assets }}"
   changed_when: false
 

@@ -17,7 +17,7 @@ set ifs "\n"
 
 # leave some space at the top and the bottom of the screen
 set scrolloff 10
-set icons on
+set icons true
 # set hidden on
 # set hiddenfiles = 
 map zh set hidden!

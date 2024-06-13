@@ -13,9 +13,14 @@
     - ansible_facts.system == 'Linux'
     - ansible_facts.architecture.startswith('arm')
 
+- name: lsd | Set release filename
+  set_fact:
+    lsd_filename: lsd-v{{ lsd_latest_version }}-{{ lsd_arch }}
+    lsd_suffix: tar.gz
+
 - name: lsd | Set release url
   set_fact:
-    lsd_release_url: https://github.com/Peltoche/lsd/releases/download/{{ lsd_latest_version }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}.tar.gz
+    lsd_release_url: https://github.com/lsd-rs/lsd/releases/download/v{{ lsd_latest_version }}/{{ lsd_filename }}.{{ lsd_suffix }}
 
 - name: lsd | Create temp dl dir
   tempfile:
@@ -25,7 +30,7 @@
 
 - name: lsd | Set downloaded folder path
   set_fact:
-    lsd_dl_path: "{{ lsd_dl_dir.path }}/lsd-{{ lsd_latest_version }}-{{ lsd_arch }}"
+    lsd_dl_path: "{{ lsd_dl_dir.path }}/{{ lsd_filename }}"
 
 - name: lsd | Get latest binary
   unarchive:

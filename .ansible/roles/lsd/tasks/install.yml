@@ -27,3 +27,10 @@
     dest: "{{ lsd_home }}/.config/bash/completions/lsd.bash"
     mode: 0644
     remote_src: true
+
+- name: Lsd | Copy man page
+  copy:
+    src: "{{ lsd_dl_path }}/lsd.1"
+    dest: "{{ lsd_prefix }}/share/man/man1/lsd.1"
+    mode: 0644
+    remote_src: true

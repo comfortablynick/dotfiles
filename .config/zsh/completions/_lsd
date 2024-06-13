@@ -15,65 +15,74 @@ _lsd() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" \
-'*--color=[When to use terminal colours]: :(always auto never)' \
-'*--icon=[When to print the icons]: :(always auto never)' \
-'*--icon-theme=[Whether to use fancy or unicode icons]: :(fancy unicode)' \
-'--config-file=[Provide a custom lsd configuration file]:config-file: ' \
-'*--depth=[Stop recursing into directories after reaching specified depth]:num: ' \
-'*--permission=[How to display permissions]: :(rwx octal)' \
-'*--size=[How to display size]: :(default short bytes)' \
-'*--date=[How to display date \[possible values: date, relative, +date-time-format\]]: : ' \
-'*--sort=[sort by WORD instead of name]:WORD:(size time version extension none)' \
-'*--group-dirs=[Sort the directories then the files]: :(none first last)' \
-'*--blocks=[Specify the blocks that will be displayed and in what order]: :(permission user group context size date name inode links)' \
-'*-I+[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]:pattern: ' \
-'*--ignore-glob=[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]:pattern: ' \
-'*--hyperlink=[Attach hyperlink to filenames]: :(always auto never)' \
-'--help[Print help information]' \
-'-V[Print version information]' \
-'--version[Print version information]' \
-'*-a[Do not ignore entries starting with .]' \
-'*--all[Do not ignore entries starting with .]' \
-'*-A[Do not list implied . and ..]' \
-'*--almost-all[Do not list implied . and ..]' \
-'*-F[Append indicator (one of */=>@|) at the end of the file names]' \
-'*--classify[Append indicator (one of */=>@|) at the end of the file names]' \
-'*-l[Display extended file metadata as a table]' \
-'*--long[Display extended file metadata as a table]' \
+'--color=[When to use terminal colours \[default\: auto\]]:MODE:(always auto never)' \
+'--icon=[When to print the icons \[default\: auto\]]:MODE:(always auto never)' \
+'--icon-theme=[Whether to use fancy or unicode icons \[default\: fancy\]]:THEME:(fancy unicode)' \
+'--config-file=[Provide a custom lsd configuration file]:PATH:_files' \
+'--depth=[Stop recursing into directories after reaching specified depth]:NUM: ' \
+'--permission=[How to display permissions \[default\: rwx for linux, attributes for windows\]]:MODE:(rwx octal attributes disable)' \
+'--size=[How to display size \[default\: default\]]:MODE:(default short bytes)' \
+'--date=[How to display date \[default\: date\] \[possible values\: date, locale, relative, +date-time-format\]]:DATE: ' \
+'--sort=[Sort by TYPE instead of name]:TYPE:(size time version extension git none)' \
+'--group-dirs=[Sort the directories then the files]:MODE:(none first last)' \
+'*--blocks=[Specify the blocks that will be displayed and in what order]:BLOCKS:(permission user group context size date name inode links git)' \
+'*-I+[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]:PATTERN: ' \
+'*--ignore-glob=[Do not display files/directories with names matching the glob pattern(s). More than one can be specified by repeating the argument]:PATTERN: ' \
+'--hyperlink=[Attach hyperlink to filenames \[default\: never\]]:MODE:(always auto never)' \
+'--truncate-owner-after=[Truncate the user and group names if they exceed a certain number of characters]:NUM: ' \
+'--truncate-owner-marker=[Truncation marker appended to a truncated user or group name]:STR: ' \
+'-a[Do not ignore entries starting with ]' \
+'--all[Do not ignore entries starting with ]' \
+'-A[Do not list implied . and ..]' \
+'--almost-all[Do not list implied . and ..]' \
+'-F[Append indicator (one of */=>@|) at the end of the file names]' \
+'--classify[Append indicator (one of */=>@|) at the end of the file names]' \
+'-l[Display extended file metadata as a table]' \
+'--long[Display extended file metadata as a table]' \
 '--ignore-config[Ignore the configuration file]' \
-'*-1[Display one entry per line]' \
-'*--oneline[Display one entry per line]' \
-'(--tree)*-R[Recurse into directories]' \
-'(--tree)*--recursive[Recurse into directories]' \
-'*-h[For ls compatibility purposes ONLY, currently set by default]' \
-'*--human-readable[For ls compatibility purposes ONLY, currently set by default]' \
-'(-R --recursive)*--tree[Recurse into directories and present the result as a tree]' \
+'-1[Display one entry per line]' \
+'--oneline[Display one entry per line]' \
+'(--tree)-R[Recurse into directories]' \
+'(--tree)--recursive[Recurse into directories]' \
+'-h[For ls compatibility purposes ONLY, currently set by default]' \
+'--human-readable[For ls compatibility purposes ONLY, currently set by default]' \
+'--tree[Recurse into directories and present the result as a tree]' \
 '(--depth -R --recursive)-d[Display directories themselves, and not their contents (recursively when used with --tree)]' \
 '(--depth -R --recursive)--directory-only[Display directories themselves, and not their contents (recursively when used with --tree)]' \
-'*--total-size[Display the total size of directories]' \
-'*-t[Sort by time modified]' \
-'*--timesort[Sort by time modified]' \
-'*-S[Sort by size]' \
-'*--sizesort[Sort by size]' \
-'*-X[Sort by file extension]' \
-'*--extensionsort[Sort by file extension]' \
-'*-v[Natural sort of (version) numbers within text]' \
-'*--versionsort[Natural sort of (version) numbers within text]' \
-'*-U[Do not sort. List entries in directory order]' \
-'*--no-sort[Do not sort. List entries in directory order]' \
-'*-r[Reverse the order of the sort]' \
-'*--reverse[Reverse the order of the sort]' \
+'--total-size[Display the total size of directories]' \
+'-t[Sort by time modified]' \
+'--timesort[Sort by time modified]' \
+'-S[Sort by size]' \
+'--sizesort[Sort by size]' \
+'-X[Sort by file extension]' \
+'--extensionsort[Sort by file extension]' \
+'-G[Sort by git status]' \
+'--gitsort[Sort by git status]' \
+'-v[Natural sort of (version) numbers within text]' \
+'--versionsort[Natural sort of (version) numbers within text]' \
+'-U[Do not sort. List entries in directory order]' \
+'--no-sort[Do not sort. List entries in directory order]' \
+'-r[Reverse the order of the sort]' \
+'--reverse[Reverse the order of the sort]' \
 '--group-directories-first[Groups the directories at the top before the files. Same as --group-dirs=first]' \
 '--classic[Enable classic mode (display output similar to ls)]' \
-'*--no-symlink[Do not display symlink target]' \
-'*-i[Display the index number of each file]' \
-'*--inode[Display the index number of each file]' \
-'*-L[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
-'*--dereference[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
+'--no-symlink[Do not display symlink target]' \
+'-i[Display the index number of each file]' \
+'--inode[Display the index number of each file]' \
+'-g[Show git status on file and directory" Only when used with --long option]' \
+'--git[Show git status on file and directory" Only when used with --long option]' \
+'-L[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
+'--dereference[When showing file information for a symbolic link, show information for the file the link references rather than for the link itself]' \
 '-Z[Print security context (label) of each file]' \
 '--context[Print security context (label) of each file]' \
 '--header[Display block headers]' \
-'*::FILE:_files' \
+'--system-protected[Includes files with the windows system protection flag set. This is the same as --all on other platforms]' \
+'-N[Print entry names without quoting]' \
+'--literal[Print entry names without quoting]' \
+'--help[Print help information]' \
+'-V[Print version]' \
+'--version[Print version]' \
+'*::inputs:_files' \
 && ret=0
 }
 
@@ -83,4 +92,8 @@ _lsd_commands() {
     _describe -t commands 'lsd commands' commands "$@"
 }
 
-_lsd "$@"
+if [ "$funcstack[1]" = "_lsd" ]; then
+    _lsd "$@"
+else
+    compdef _lsd lsd
+fi

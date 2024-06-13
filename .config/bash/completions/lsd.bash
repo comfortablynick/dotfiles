@@ -1,5 +1,5 @@
 _lsd() {
-    local i cur prev opts cmds
+    local i cur prev opts cmd
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -8,8 +8,8 @@ _lsd() {
 
     for i in ${COMP_WORDS[@]}
     do
-        case "${i}" in
-            "$1")
+        case "${cmd},${i}" in
+            ",$1")
                 cmd="lsd"
                 ;;
             *)
@@ -19,7 +19,7 @@ _lsd() {
 
     case "${cmd}" in
         lsd)
-            opts="-V -a -A -F -l -1 -R -h -d -t -S -X -v -U -r -I -i -L -Z --help --version --all --almost-all --color --icon --icon-theme --classify --long --ignore-config --config-file --oneline --recursive --human-readable --tree --depth --directory-only --permission --size --total-size --date --timesort --sizesort --extensionsort --versionsort --sort --no-sort --reverse --group-dirs --group-directories-first --blocks --classic --no-symlink --ignore-glob --inode --dereference --context --hyperlink --header <FILE>..."
+            opts="-a -A -F -l -1 -R -h -d -t -S -X -G -v -U -r -I -i -g -L -Z -N -V --all --almost-all --color --icon --icon-theme --classify --long --ignore-config --config-file --oneline --recursive --human-readable --tree --depth --directory-only --permission --size --total-size --date --timesort --sizesort --extensionsort --gitsort --versionsort --sort --no-sort --reverse --group-dirs --group-directories-first --blocks --classic --no-symlink --ignore-glob --inode --git --dereference --context --hyperlink --header --truncate-owner-after --truncate-owner-marker --system-protected --literal --help --version [FILE]..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -46,7 +46,7 @@ _lsd() {
                     return 0
                     ;;
                 --permission)
-                    COMPREPLY=($(compgen -W "rwx octal" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "rwx octal attributes disable" -- "${cur}"))
                     return 0
                     ;;
                 --size)
@@ -58,7 +58,7 @@ _lsd() {
                     return 0
                     ;;
                 --sort)
-                    COMPREPLY=($(compgen -W "size time version extension none" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "size time version extension git none" -- "${cur}"))
                     return 0
                     ;;
                 --group-dirs)
@@ -66,7 +66,7 @@ _lsd() {
                     return 0
                     ;;
                 --blocks)
-                    COMPREPLY=($(compgen -W "permission user group context size date name inode links" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "permission user group context size date name inode links git" -- "${cur}"))
                     return 0
                     ;;
                 --ignore-glob)
@@ -81,6 +81,14 @@ _lsd() {
                     COMPREPLY=($(compgen -W "always auto never" -- "${cur}"))
                     return 0
                     ;;
+                --truncate-owner-after)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --truncate-owner-marker)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
                 *)
                     COMPREPLY=()
                     ;;
@@ -91,4 +99,8 @@ _lsd() {
     esac
 }
 
-complete -F _lsd -o bashdefault -o default lsd
+if [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -ge 4 || "${BASH_VERSINFO[0]}" -gt 4 ]]; then
+    complete -F _lsd -o nosort -o bashdefault -o default lsd
+else
+    complete -F _lsd -o bashdefault -o default lsd
+fi

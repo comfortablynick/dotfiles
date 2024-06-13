@@ -61,6 +61,7 @@ cmp.setup {
     { name = "ultisnips", keyword_length = 2 },
     { name = "buffer" },
     { name = "path" },
+    { name = "lazydev", group_index = 0 }
   },
   mapping = {
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),

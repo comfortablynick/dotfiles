@@ -22,18 +22,16 @@ gitsigns.setup {
     -- Navigation
     vim.keymap.set("n", "]c", function()
       if vim.wo.diff then
-        return "]c"
+        vim.cmd.normal { "]c", bang = true }
       end
-        gs.next_hunk()
-      return "<Ignore>"
-    end, { expr = true, buffer = bufnr, desc = "Git next hunk" })
+      gs.nav_hunk "next"
+    end, { buffer = bufnr, desc = "Git next hunk" })
     vim.keymap.set("n", "[c", function()
       if vim.wo.diff then
-        return "[c"
+        vim.cmd.normal { "[c", bang = true }
       end
-        gs.prev_hunk()
-      return "<Ignore>"
-    end, { expr = true, buffer = bufnr, desc = "Git prev hunk" })
+      gs.nav_hunk "prev"
+    end, { buffer = bufnr, desc = "Git prev hunk" })
 
     -- Actions
     vim.keymap.set("n", "gs", gs.preview_hunk, { desc = "Git show hunk", buffer = bufnr })

@@ -62,8 +62,7 @@ rust_toolchains_all:
 cargo_packages_all:
   - name: ripgrep
     binary: rg
-  - name: exa
-    args: --git https://github.com/ogham/exa.git
+  - name: eza
   - name: sysinfo
     binary: sysinfo
     args: --git https://github.com/comfortablynick/sysinfo.git

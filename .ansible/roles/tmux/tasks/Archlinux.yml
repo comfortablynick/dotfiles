@@ -2,7 +2,7 @@
 # tmux
 - name: Install tmux
   pacman:
-    name: tmux-git
+    name: tmux
     state: latest
     executable: "{{ pkg_aur_helper }}"
   become: true

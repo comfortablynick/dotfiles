@@ -87,7 +87,7 @@ cargo_packages_dev:
   - name: watchexec-cli
   - name: hyperfine
   - name: stylua --features lua52
-  - name: nu --features extra
+  - name: nu  # --features extra
   - name: starship
   - name: genact
   - name: taplo-cli

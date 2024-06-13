@@ -235,7 +235,7 @@ M.job_status = function()
 end
 
 M.lsp_clients = function()
-  local clients = vim.lsp.buf_get_clients()
+  local clients = vim.lsp.get_clients { bufnr = 0 }
   if vim.tbl_isempty(clients) then
     return ""
   end

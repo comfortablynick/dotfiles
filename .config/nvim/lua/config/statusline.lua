@@ -1,5 +1,5 @@
 local api = vim.api
-local uv = vim.loop
+local uv = vim.uv
 local npcall = vim.F.npcall
 local winwidth = api.nvim_win_get_width
 local util = require "util"

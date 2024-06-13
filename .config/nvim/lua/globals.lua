@@ -23,7 +23,7 @@ _G.p = vim.print
 function _G.d(...)
   local info = debug.getinfo(2, "S")
   local source = info.source:sub(2)
-  source = vim.loop.fs_realpath(source) or source
+  source = vim.uv.fs_realpath(source) or source
   source = vim.fn.fnamemodify(source, ":~:.") .. ":" .. info.linedefined
   local what = { ... }
   if vim.tbl_islist(what) and vim.tbl_count(what) <= 1 then

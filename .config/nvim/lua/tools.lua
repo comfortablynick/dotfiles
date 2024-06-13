@@ -1,5 +1,5 @@
 local api = vim.api
-local uv = vim.loop
+local uv = vim.uv
 local util = require "util"
 local win = require "window"
 local M = {}

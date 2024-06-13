@@ -1,7 +1,7 @@
 -- General autocmds
 local api = vim.api
 local map = vim.keymap
-local uv = vim.loop
+local uv = vim.uv
 local aug = api.nvim_create_augroup("config_autocmds", { clear = true })
 
 api.nvim_create_autocmd("BufReadPost", { -- :: Restore cursor when opening buffer

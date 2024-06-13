@@ -1,5 +1,5 @@
 -- Utility functions, not necessarily integral to vim
-local uv = vim.loop
+local uv = vim.uv
 local ffi = vim.F.npcall(require, "ffi")
 local api = vim.api
 local Job = vim.F.npcall(require, "plenary.job")

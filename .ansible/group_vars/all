@@ -9,6 +9,7 @@ pkg_apt_packages_all:
   - unzip
   - python-setuptools
   - libssl-dev
+  - eza
 
 pkg_pacman_packages_all:
   - pacman-contrib
@@ -21,6 +22,7 @@ pkg_aur_packages_all:
   - todotxt
   - ugrep
   - needrestart
+  - eza
 
 pkg_python_packages_all: []
 
@@ -62,7 +64,6 @@ rust_toolchains_all:
 cargo_packages_all:
   - name: ripgrep
     binary: rg
-  - name: eza
   - name: sysinfo
     binary: sysinfo
     args: --git https://github.com/comfortablynick/sysinfo.git

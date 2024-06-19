@@ -42,7 +42,7 @@
 [pull]
     rebase = false
 [credential]
-    helper = lastpass -l comfortablynick@gmail.com
+	helper = op
 [init]
     defaultBranch = main
 [hub]

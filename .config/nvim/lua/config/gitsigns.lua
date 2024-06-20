@@ -5,13 +5,6 @@ if not installed then
 end
 
 gitsigns.setup {
-  signs = {
-    add = { hl = "DiffAdd", text = "│" },
-    change = { hl = "DiffChange", text = "│" },
-    delete = { hl = "DiffDelete", text = "_" },
-    topdelete = { hl = "DiffDelete", text = "‾" },
-    changedelete = { hl = "DiffChange", text = "~" },
-  },
   signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
   numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
   linehl = false, -- Toggle with `:Gitsigns toggle_linehl`

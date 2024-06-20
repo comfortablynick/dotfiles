@@ -32,7 +32,7 @@ cmd("Redir", function(opts) -- :: Redirect output of command to scratch buffer
 end, { complete = "command", nargs = 1, bang = true })
 
 cmd("Grep", function(opts) -- :: Async grep
-  require("grep").grep_for_string(opts.args)
+  require("tools").async_grep(opts.fargs)
 end, { complete = "file", nargs = "+", desc = "Async grep and show results in quickfix" })
 
 cmd("Option", function(opts)

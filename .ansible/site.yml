@@ -15,7 +15,6 @@
 - import_playbook: playbooks/rust.yml
 - import_playbook: playbooks/ssh.yml
 - import_playbook: playbooks/tmux.yml
-- import_playbook: playbooks/vim.yml
 - import_playbook: playbooks/lsd.yml
 - import_playbook: playbooks/zoxide.yml
 - import_playbook: playbooks/just.yml

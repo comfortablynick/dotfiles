@@ -173,9 +173,12 @@ abbr -a p ' fzf_cdhst'
 abbr -a funced 'funced -s'
 abbr -a fcf '$EDITOR $XDG_CONFIG_HOME/fish/config.fish'
 abbr -a dl ' history delete $history[1] -eC'
-abbr -a ppath 'set -S path'
+abbr -a ppath 'set -S PATH'
 
 # Dirs {{{2
 abbr -a fc '$EDITOR $XDG_CONFIG_HOME/fish'
+
+# Other Settings {{{1
+set -g fish_sequence_key_delay_ms 100
 
 # End config {{{1

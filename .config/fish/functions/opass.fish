@@ -4,7 +4,7 @@ function opass --description 'fuzzy find passwords from 1password cli (op)'
         echo "\
 Fuzzy find passwords from 1password
 
-Usage: opass [{-h|--help}{-p|--password}] PATTERN
+Usage: opass [{-h|--help}{-l|--login}{-p|--password}] PATTERN
 
 PATTERN    Search string to query `op item list`
 
@@ -14,9 +14,8 @@ Flags:
 " 1>&2
         return 1
     end
-    if not op whoami > /dev/null
-        echo (set_color brred)'error: '(set_color -o brblue)'must log in to op cli first'(set_color normal) 1>&2
-        return 1
+    if not op whoami &>/dev/null
+        eval (op signin)
     end
     set result (op item list | _fzf_wrapper -1 -q "$argv")
     test -z $result; and return 1

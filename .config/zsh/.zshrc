@@ -78,7 +78,6 @@ if [[ ! -d ${ZSH_CACHE_DIR} ]] command mkdir -p ${ZSH_CACHE_DIR}
 
 # Shell opts {{{1
 # General {{{2
-typeset -U path
 setopt auto_cd    auto_list           pushd_ignore_dups
 setopt auto_pushd interactivecomments pushdsilent
 HYPHEN_INSENSITIVE="true"            # Hyphen and dash will be interchangeable
@@ -260,6 +259,7 @@ autoload -Uz list_all
 chpwd_functions+=("list_all")
 
 # Shell startup {{{1
+typeset -U path # Deduplicate PATH; needs to be after we add to PATH
 # Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
 

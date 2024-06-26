@@ -4,6 +4,7 @@ mars
 pollux
 uranus
 nova
+gemini
 
 [dev]
 mars
@@ -20,6 +21,7 @@ uranus
 [macos]
 pollux
 nova
+gemini
 
 [rpi]
 titan

@@ -4,7 +4,7 @@
 # Python must have tomlkit installed
 env_file="$HOME/.env_toml_sha_$CURRENT_SHELL"
 env_toml_file="$HOME/env.toml"
-sha_cmd="$(command -v sha1sum || command -v gsha1sum)"
+sha_cmd="$HOME/bin/sha1"
 env_sha="$(eval "$sha_cmd" "$env_toml_file" | cut -d' ' -f1)"
 
 if [ ! -f "$env_file" ] || [ "$env_sha" != "$(cat "$env_file")" ]; then

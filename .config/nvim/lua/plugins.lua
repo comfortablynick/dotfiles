@@ -385,6 +385,7 @@ local plugins = {
   },
   ["altermo/ultimate-autopair.nvim"] = {
     event = { "InsertEnter", "CmdlineEnter" },
+    enabled = false,
     config = function()
       require("ultimate-autopair").setup {
         default_pairs = {

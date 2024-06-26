@@ -1,19 +1,21 @@
-# shellcheck shell=bash
+# shellcheck shell={{ shell }}
 
-{% for item in path %}
-{% if item|is_dir() %}
+# PATH
+{% for item in path if item|is_dir() %}
 export PATH={{ item }}:$PATH
-{% endif %}
 {% endfor %}
 
-{% for key,value in env.items() %}
-{% if value %}
-export {{ key }}={{ value }}
-{% endif %}
+# Environment
+{% for item in env if ((shell in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+{% set value = value | q() if item.quote | d(true) else value %}
+export {{ item.key }}={{ value }}
 {% endfor %}
 
-{% for key,value in alias.items() %}
-{% if value %}
-alias {{ key }}={{ value }}
-{% endif %}
+# Aliases
+{% for item in aliases if ((shell in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+alias {{ item.key }}={{ value|q() }}
 {% endfor %}

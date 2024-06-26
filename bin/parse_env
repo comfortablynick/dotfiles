@@ -132,7 +132,7 @@ def is_shell_match(var_shell, target_shell) -> bool:  # {{{1
 
 def do_shell_eval(v: str) -> subprocess.CompletedProcess:  # {{{1
     """Do shell eval."""
-    result = subprocess.run(v, shell=True, capture_output=True, timeout=0.5)
+    result = subprocess.run(v, shell=True, text=True, capture_output=True, timeout=0.5)
     LOG.debug("Shell eval called on: %s; result: %s", v, result)
     return result
 
@@ -220,7 +220,7 @@ def get_shell_vars(  # {{{1
                     v = repr(v)
 
             if eval:
-                v = do_shell_eval(v).stdout.rstrip().decode("utf-8")
+                v = do_shell_eval(v).stdout.rstrip()
 
             # Convert posix subshell `$()` to fish `()`
             # Convert posix `&&` to fish `; and`

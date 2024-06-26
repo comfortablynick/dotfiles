@@ -12,11 +12,13 @@ def sort_versions(value):
 def do_shell_eval(value):
     """Use shell to evaluate value and return result."""
     res = subprocess.run(value, shell=True, text=True, capture_output=True)
-    return res.stdout
+    return res.stdout.rstrip()
 
 
 def do_shell_test(value):
     """Use shell to evaluate value and return status code."""
+    if value is True:
+        return True
     res = subprocess.run(value, shell=True, text=True, capture_output=True)
     return res.returncode == 0
 

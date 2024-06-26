@@ -14,34 +14,15 @@
         var: ansible_facts
         verbosity: 1
 
-
 - name: Set vars
   hosts: uranus
-  vars:
-    path:
-      - $HOME/bin
-      - $HOME/.local/bin
-      - $HOME/.cargo/bin
-      - $HOME/go/bin
-      - $HOME/noexist
-    env:
-      FZF_DEFAULT_OPTS: "\"--ansi --border --reverse --height='$FZF_TMUX_HEIGHT'\""
-      NVIM_PY3_DIR: "{{ '$HOME/.env/nvim3'|if_is_dir() }}"
-      NOEXIST: ""
-    alias:
-      gs: git status
-      g: git
-      vid: $HOME/.config/nvim
-      e: "eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file"
-    aliases:
-      - key: gs
-        val: git status
-      - key: e
-        val: "eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file"
-    bash_env:
-      PATH: >-
-        $(echo -n $PATH | awk -v RS=: -v ORS=: '!x[$0]++' | sed "s/\(.*\).\{1\}/\1/")
+  vars_files: env.yml
   tasks:
+    # - name: Get vars from file
+    #   ansible.builtin.include_vars:
+    #     file: env.yml
+    #     name: env
+
     - name: Debug path vars
       debug:
         var: path
@@ -50,14 +31,30 @@
       debug:
         var: env
 
-    - name: Create posix file from template
+    - name: Create out directory
+      file:
+        path: ~/.ansible/test/out
+        state: directory
+        mode: "755"
+
+    - name: Create bash file from template
       template:
-        dest: ~/.ansible/test/out/env.sh
+        dest: ~/.ansible/test/out/env.bash
         src: ~/.ansible/test/posix.j2
-        mode: 0644
+        mode: "644"
+      vars:
+        shell: bash
+
+    - name: Create zsh file from template
+      template:
+        dest: ~/.ansible/test/out/env.zsh
+        src: ~/.ansible/test/posix.j2
+        mode: "644"
+      vars:
+        shell: zsh
 
     - name: Create fish file from template
       template:
         dest: ~/.ansible/test/out/env.fish
         src: ~/.ansible/test/fish.j2
-        mode: 0644
+        mode: "644"

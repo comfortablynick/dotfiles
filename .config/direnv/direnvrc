@@ -1,7 +1,6 @@
 # vim:ft=sh:
 # shellcheck shell=bash
 # shellcheck source=/dev/null
-source "$(asdf direnv hook asdf)"
 
 realpath() {
     [[ $1 == /* ]] && echo "$1" || echo "$PWD/${1#./}"

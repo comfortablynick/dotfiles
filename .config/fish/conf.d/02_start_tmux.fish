@@ -5,7 +5,7 @@ if status is-interactive
     set -gx RSEP ''
     set -gx RSUB '|'
     set -l no_tmux_login 0
-    test -f "$HOME/.no_tmux_login"; and set no_tmux_login 1
+    # Set $no_tmux_login as universal variable to disable it indefinitely
     if type -qf tmux; and test -z "$TMUX"; and test $no_tmux_login -eq 0
         begin
             if not set -q no_tmux_next_login

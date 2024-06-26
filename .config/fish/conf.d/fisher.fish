@@ -3,6 +3,7 @@ if set -q _fisher_path_initialized
 end
 set -g _fisher_path_initialized
 
+set fisher_path $XDG_DATA_HOME/fisher
 if test -z "$fisher_path" -o "$fisher_path" = "$__fish_config_dir"
     exit
 end

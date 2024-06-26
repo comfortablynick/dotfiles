@@ -9,6 +9,8 @@ env.zsh
 01_env.*
 10_env.*
 .zcompdump
+.zprofile
+.zsh_sessions/
 *.log
 .env_toml_sha*
 .mypy_cache/
@@ -83,7 +85,6 @@ wg*.conf
 /.vim/
 /.w3m/
 /.zinit*/
-/.zsh_sessions/
 
 /.ansible_galaxy
 /.ansible/tmp/

@@ -24,7 +24,7 @@ local plugins = {
     end,
   },
   ["skywind3000/asynctasks.vim"] = {
-    build = "ln -sf $(pwd)/bin/asynctask ~/.local/bin",
+    build = "ln -sf $(pwd)/bin/asynctask ~/.local/bin/",
     cmd = "AsyncTask",
     init = function()
       vim.g.asynctasks_extra_config = {
@@ -180,6 +180,8 @@ local plugins = {
     event = lazy_load_event,
     build = {
       "./install --bin",
+			"mkdir -p ~/.local/bin",
+			"mkdir -p ~/.local/share/man/man1",
       "ln -sf $(pwd)/bin/* ~/.local/bin",
       "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
     },
@@ -288,7 +290,7 @@ local plugins = {
     end,
   },
   -- Syntax/filetype
-  ["vhdirk/vim-cmake"] = { lazy = false },
+  ["vhdirk/vim-cmake"] = { lazy = false, enabled = vim.fn.executable "cmake" == 1 },
   ["cespare/vim-toml"] = { lazy = false },
   ["lervag/vimtex"] = { lazy = false },
   ["ron-rs/ron.vim"] = { lazy = false },
@@ -328,6 +330,7 @@ local plugins = {
       require "config.ultisnips"
     end,
     event = lazy_load_event,
+    enabled = vim.g.python3_host_prog ~= nil,
   },
   ["honza/vim-snippets"] = { event = lazy_load_event },
   ["neovim/nvim-lspconfig"] = {
@@ -377,7 +380,7 @@ local plugins = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
-      "quangnguyen30192/cmp-nvim-ultisnips",
+      {"quangnguyen30192/cmp-nvim-ultisnips", enabled = vim.g.python3_host_prog ~= nil},
     },
   },
   ["altermo/ultimate-autopair.nvim"] = {

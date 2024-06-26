@@ -15,7 +15,7 @@ vim.opt.runtimepath:prepend(lazypath)
 -- load lazy
 require("lazy").setup("plugins", {
   defaults = { lazy = true },
-  install = { missing = false, colorscheme = { "gruvbox" } },
+  install = { missing = true, colorscheme = { "gruvbox" } },
   diff = { cmd = "diffview.nvim" },
   checker = { enabled = false, nofity = false, concurrency = 1 },
   change_detection = { enabled = true, nofity = true },

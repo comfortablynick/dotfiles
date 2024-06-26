@@ -39,7 +39,7 @@ shopt -s autocd        # Auto cd if entering dir name at prompt
 
 # Environment variables {{{2
 export CURRENT_SHELL=bash
-BASEDIR="${HOME}/dotfiles"             # Location of includes dir
+BASEDIR="${HOME}"             # Location of includes dir
 export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look her
 
 # Functions {{{1
@@ -86,6 +86,9 @@ fh() {
 
 # Includes {{{1
 # Source posix .sh config snippets {{{2
+# shellcheck source=/dev/null
+source "${XDG_CONFIG_HOME}/asdf-direnv/bashrc"
+
 if [[ -d ${BASEDIR}/.config/shell/conf.d ]]; then
     for file in "${BASEDIR}"/.config/shell/conf.d/*.sh; do
         $DEBUG_MODE && echo "$(date +"%T.%3N"): Sourcing shell snippet: ${file}"
@@ -265,7 +268,7 @@ elif [[ $USE_GITPR_GIT_PROMPT -eq 1 ]]; then
     }
 
 # Starship prompt {{{2
-elif [[ $USE_STARSHIP_PROMPT -eq 1 ]] && command -v starship; then
+elif [[ $USE_STARSHIP_PROMPT -eq 1 ]] && command -v starship &>/dev/null; then
     eval "$(starship init bash)"
 
 # Default git color prompt {{{2

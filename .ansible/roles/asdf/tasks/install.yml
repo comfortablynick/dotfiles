@@ -5,7 +5,7 @@
   include_tasks: "{{ ansible_facts.os_family }}.yml"
 
 - name: Clone asdf repository
-  git:
+  ansible.builtin.git:
     repo: "{{ asdf_git_repo }}"
     dest: "{{ asdf_dir }}"
     version: "{{ asdf_version }}"

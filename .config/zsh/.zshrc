@@ -73,7 +73,7 @@ export UPDATE_ZSH_DAYS=7
 export ZSH_THEME=powerlevel10k
 export ZSH_PLUGIN_MANAGER=zinit
 
-if [[ ! -d ${ZSH_CACHE_DIR} ]] command mkdir -p ${ZSH_CACHE_DIR}
+if [[ ! -d ${ZSH_CACHE_DIR} ]] && [[ -n ${ZSH_CACHE_DIR} ]] command mkdir -p ${ZSH_CACHE_DIR}
 
 
 # Shell opts {{{1
@@ -242,6 +242,8 @@ export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
 
 # Source files {{{1
+source "${XDG_CONFIG_HOME}/asdf-direnv/zshrc"
+
 # Config snippets {{{2
 for shfile (${XDG_CONFIG_HOME}/shell/conf.d/*.sh) sh_source $shfile
 for config (${XDG_CONFIG_HOME}/zsh/conf.d/*.zsh) source $config

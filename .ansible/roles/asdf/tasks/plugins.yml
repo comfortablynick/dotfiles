@@ -1,42 +1,47 @@
 ---
 # asdf plugins
-- name: asdf | Debug all plugins list
-  debug:
+- name: Asdf | Debug all plugins list
+  ansible.builtin.debug:
     msg: |
-      {{ asdf_plugins|flatten(levels=1)|to_nice_yaml(indent=2) }}
+      {{ asdf_plugins | flatten(levels=1) | to_nice_yaml(indent=2) }}
     verbosity: 1
 
-- name: asdf | Install asdf plugins
-  command:
-    cmd: "{{ asdf_bin }} plugin-add {{ item.name }} {{ item.repository|d() }}"
+- name: Asdf | Install plugins
+  ansible.builtin.command:
+    cmd: "{{ asdf_bin }} plugin-add {{ item.name }} {{ item.repository | d() }}"
     creates: "{{ asdf_dir }}/plugins/{{ item.name }}"
     chdir: "{{ asdf_home }}"
-  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  loop: "{{ asdf_plugins | flatten(levels=1) }}"
+
+- name: Asdf | Update all plugins
+  ansible.builtin.command: "{{ asdf_bin }} plugin-update --all"
+  register: asdf_plugin_update
+  changed_when: '"->" in asdf_plugin_update.stdout'
 
 # Install binaries using plugins
-- name: asdf | Install asdf packages
-  command:
+- name: Asdf | Install plugin packages
+  ansible.builtin.command:
     cmd: "{{ asdf_bin }} install {{ item.0.name }} {{ item.1 }}"
     creates: "{{ asdf_dir }}/installs/{{ item.0.name }}/{{ item.1 }}"
     chdir: "{{ asdf_home }}"
-  environment: "{{ item.0.environment|d({}) }}"
-  loop: "{{ asdf_plugins|subelements('versions', {'skip_missing': True}) }}"
+  environment: "{{ item.0.environment | d({}) }}"
+  loop: "{{ asdf_plugins | subelements('versions', {'skip_missing': True}) }}"
 
-- name: asdf | Set global asdf package versions
-  command:
-    cmd: "{{ asdf_bin }} global {{ item.name }} {{ item.global| d(item.versions[0]) }}"
+- name: Asdf | Set global package versions
+  ansible.builtin.command:
+    cmd: "{{ asdf_bin }} global {{ item.name }} {{ item.global | d(item.versions[0]) }}"
     chdir: "{{ asdf_home }}"
-  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  loop: "{{ asdf_plugins | flatten(levels=1) }}"
   when: item.versions is defined
   changed_when: false
 
 # Plugin-specific tasks go here
-- name: asdf | Include tasks for nodejs
+- name: Asdf | Include tasks for nodejs
   include_tasks: plugins/nodejs.yml
-  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  loop: "{{ asdf_plugins | flatten(levels=1) }}"
   when: '"nodejs" in item["name"]'
 
-- name: asdf | Include tasks for python
+- name: Asdf | Include tasks for python
   include_tasks: plugins/python.yml
-  loop: "{{ asdf_plugins|flatten(levels=1) }}"
+  loop: "{{ asdf_plugins | flatten(levels=1) }}"
   when: '"python" in item["name"]'

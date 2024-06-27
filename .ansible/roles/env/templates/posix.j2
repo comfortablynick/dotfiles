@@ -1,0 +1,21 @@
+# shellcheck shell={{ shell }}
+
+# PATH
+{% for item in path if item|is_dir() %}
+export PATH={{ item }}:$PATH
+{% endfor %}
+
+# Environment
+{% for item in env if ((shell in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+{% set value = value | q() if item.quote | d(true) else value %}
+export {{ item.key }}={{ value }}
+{% endfor %}
+
+# Aliases
+{% for item in aliases if ((shell in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+alias {{ item.key }}={{ value|q() }}
+{% endfor %}

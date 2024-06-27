@@ -1,0 +1,33 @@
+---
+# tasks file for env
+- name: Env | Debug path vars
+  ansible.builtin.debug:
+    var: path
+    verbosity: 1
+
+- name: Env | Debug env vars
+  ansible.builtin.debug:
+    var: env
+    verbosity: 1
+
+- name: Env | Create bash file from template
+  template:
+    src: posix.j2
+    dest: "{{ bash_env_file }}"
+    mode: "644"
+  vars:
+    shell: bash
+
+- name: Env | Create zsh file from template
+  template:
+    src: posix.j2
+    dest: "{{ zsh_env_file }}"
+    mode: "644"
+  vars:
+    shell: zsh
+
+- name: Env | Create fish file from template
+  template:
+    src: fish.j2
+    dest: "{{ fish_env_file }}"
+    mode: "644"

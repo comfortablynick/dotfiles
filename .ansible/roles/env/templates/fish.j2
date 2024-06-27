@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+# PATH
+{% for item in path if item|is_dir() %}
+fish_add_path {{ item }}
+{% endfor %}
+
+# Environment
+{% for item in env if (('fish' in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+{% set value = value | q() if item.quote | d(true) else value %}
+set {{ item.args | d('-gx') }} {{ item.key }} {{ value }}
+{% endfor %}
+
+# Abbreviations
+{% for item in aliases if (('fish' in item.shell | d(['fish', 'zsh', 'bash']))
+                            and (item.if | d(true) | shell_if())) %}
+{% set value = item.val | shell_eval() if item.eval | d(false) else item.val %}
+{% set value = value | replace(' &&', '; and') %}
+{% set value = value | replace('$(', '(') %}
+abbr -a {{ item.key }} {{ value | q() if item.quote | d(true) else value }}
+{% endfor %}

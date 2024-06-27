@@ -1,0 +1,834 @@
+---
+# defaults file for env
+# vim:ft=yaml.ansible:
+fish_env_file: $XDG_CONFIG_HOME/fish/conf.d/01_env.fish
+bash_env_file: $XDG_CONFIG_HOME/bash/conf.d/01_env.bash
+zsh_env_file: $XDG_CONFIG_HOME/zsh/conf.d/01_env.zsh
+
+path:
+  - /opt/homebrew/bin
+  - /usr/local/go/bin
+  - $HOME/go/bin
+  - $HOME/.cargo/bin
+  - $HOME/.fzf/bin
+  - $HOME/.asdf/bin
+  - $HOME/.luarocks/bin
+  - $HOME/.gem/ruby/2.7.0/bin
+  - $HOME/.local/bin
+  - $HOME/bin
+env:
+  - key: PATH
+    val: '$(echo -n $PATH | awk -v RS=: -v ORS=: ''!x[$0]++'' | sed "s/\(.*\).\{1\}/\1/")'
+    shell:
+      - bash
+    quote: false
+    desc: De-duplicate path variable
+  - key: LD_LIBRARY_PATH
+    val: $HOME/.local/lib
+    cat: install
+  - key: MANPATH
+    val: '$HOME/.local/share/man:'
+    cat: install
+    desc: Add user man pages
+  - key: MANPATH
+    args: -p
+    val: $__fish_data_dir/man
+    cat: install
+    desc: Add fish man pages to beginning of $MANPATH
+    quote: false
+    shell:
+      - fish
+  - key: PKG_CONFIG_PATH
+    val: $HOME/.local/lib/pkgconfig
+    cat: install
+  - key: LANG
+    val: en_US.utf8
+    cat: system
+    desc: Locale setting
+  - key: XDG_CONFIG_HOME
+    val: $HOME/.config
+    cat: system
+  - key: XDG_CACHE_HOME
+    val: $HOME/.cache
+    cat: system
+  - key: XDG_DATA_HOME
+    val: $HOME/.local/share
+    cat: system
+  - key: LC_ALL
+    val: en_US.utf-8
+    cat: system
+    desc: Default encoding
+  - key: BROWSER
+    val: w3m
+    cat: system
+    desc: Text-based browser
+  - key: ARCH
+    val: uname -m
+    cat: system
+    eval: true
+    desc: System cpu architecture
+  - key: CLICOLOR
+    val: "1"
+    cat: preferences
+    desc: Use colors in prompt
+  - key: LS_AFTER_CD
+    val: "0"
+    cat: preferences
+    desc: Use snippet in conf.d to echo dir after $PWD change
+  - key: LS_AFTER_CD_COMMAND
+    val: eza -a --group-directories-first
+    cat: preferences
+    desc: Command to execute as `ls` on cd
+  - key: LS_COLORS
+    val: |
+      file="$HOME/.dircolors"
+      if [ -f "$file" ]; then
+      dircolors -c "$file" | sed s/"setenv LS_COLORS "//
+      fi
+    eval: true
+    desc: Exports $LS_COLORS for ls/eza/lsd (zsh has a plugin)
+    shell:
+      - bash
+      - fish
+      - nu
+  - key: TODOTXT_CFG_FILE
+    val: $HOME/Dropbox/todo/todo.cfg
+    cat: todo.txt
+    desc: todo.txt config directory
+  - key: LPASS_HOME
+    val: $XDG_DATA_HOME/lpass
+    cat: lpass
+    desc: data dir
+  - key: fzf_fish_custom_keybindings
+    val: "1"
+    cat: fish
+    desc: Prevent default bindings
+    shell:
+      - fish
+  - key: ZDOTDIR
+    val: $XDG_CONFIG_HOME/zsh
+    cat: zsh
+    desc: Home dir for zsh config files
+  - key: VIRTUAL_ENV_DISABLE_PROMPT
+    val: "1"
+    cat: python
+    shell:
+      - fish
+    desc: Disable default venv prompt
+  - key: NVIM_PY2_DIR
+    val: $HOME/.env/nvim2/bin/python
+    cat: python
+    desc: Neovim Python 2 venv
+    if: '[ -d $HOME/.env/nvim2 ]'
+  - key: NVIM_PY3_DIR
+    val: $HOME/.env/nvim3/bin/python
+    cat: python
+    desc: Neovim Python 3 venv
+    if: '[ -d $HOME/.env/nvim3 ]'
+  - key: NVIM_PY3_DIR
+    val: which python3
+    cat: python
+    eval: true
+    desc: Neovim Python 3 venv
+    if: '[ ! -d $HOME/.env/nvim3 ]'
+  - key: PIPX_BIN_DIR
+    val: $HOME/.local/bin
+    cat: python
+    desc: Install root of pipx binaries
+  - key: PIPENV_VENV_IN_PROJECT
+    val: "1"
+    cat: python
+    desc: Create pipenv virtualenv inside project directory
+  - key: EDITOR
+    val: which nvim >/dev/null && echo "nvim" || echo "vim"
+    cat: vim
+    desc: Default text editor; nvim if installed or fall back to vim
+    eval: true
+  - key: VISUAL
+    val: $EDITOR
+    cat: vim
+    desc: Default visual text editor
+  - key: VIM_COLOR
+    val: PaperColor-dark
+    cat: vim
+    desc: Vim color theme
+  - key: NVIM_COLOR
+    val: PaperColor-dark
+    cat: vim
+    desc: Neovim color theme
+  - key: FZF_TMUX
+    val: "1"
+    cat: fuzzy
+    desc: Use FZF for TMUX
+  - key: FZF_TMUX_HEIGHT
+    val: 40%
+    cat: fuzzy
+    desc: Panel height for fzf-tmux
+  - key: FZF_LEGACY_KEYBINDINGS
+    val: "0"
+    cat: fuzzy
+    shell:
+      - fish
+    desc: Use legacy Fish FZF keybindings
+  - key: FZF_DEFAULT_COMMAND
+    val: fd -t f -HL --color=always --strip-cwd-prefix
+    cat: fuzzy
+  - key: FZF_DEFAULT_OPTS
+    val: --ansi --border --reverse --height='$FZF_TMUX_HEIGHT'
+    cat: fuzzy
+  - key: FZF_PREVIEW_OPTS
+    val: --ansi --bind='?:toggle-preview' --bind='ctrl-u:preview-page-up' --bind='ctrl-d:preview-page-down' --preview-window='right:60%:wrap' --preview='bat --color=always --style=full --line-range :300 {} 2>/dev/null || tree -C {}'
+    cat: fuzzy
+    desc: Default colors and options
+  - key: FZF_FIND_FILE_COMMAND
+    val: $FZF_DEFAULT_COMMAND
+    cat: fuzzy
+  - key: FZF_FIND_FILE_OPTS
+    val: $FZF_PREVIEW_OPTS
+    cat: fuzzy
+  - key: FZF_OPEN_COMMAND
+    val: $FZF_DEFAULT_COMMAND
+    cat: fuzzy
+    desc: Command used to open files with key shortcut
+  - key: FZF_OPEN_OPTS
+    val: $FZF_PREVIEW_OPTS
+    cat: fuzzy
+    desc: Options used to open files with key shortcut
+  - key: FZF_PREVIEW_FILE_CMD
+    val: $FZF_PREVIEW_OPTS
+    cat: fuzzy
+  - key: FZF_PREVIEW_DIR_CMD
+    val: eza --color=always
+    cat: fuzzy
+  - key: FZF_ENABLE_OPEN_PREVIEW
+    val: "1"
+    cat: fuzzy
+    desc: Use preview for file open command
+  - key: FZF_CD_COMMAND
+    val: fd -L -t d --color=always
+    cat: fuzzy
+    desc: Used to fuzzy cd
+  - key: FZF_CD_WITH_HIDDEN_COMMAND
+    val: '"$FZF_CD_COMMAND -H"'
+    cat: fuzzy
+    desc: Used to fuzzy cd with hidden dirs
+    quote: false
+  - key: FZF_CD_OPTS
+    val: --ansi --preview-window right:60% --preview '$FZF_PREVIEW_DIR_CMD {}' -p 60%,60%
+    cat: fuzzy
+    desc: Display dir contents when using fzf to cd
+  - key: FZF_CTRL_T_COMMAND
+    val: $FZF_DEFAULT_COMMAND
+    cat: fuzzy
+  - key: FZF_CTRL_T_OPTS
+    val: $FZF_PREVIEW_OPTS
+    cat: fuzzy
+  - key: FZF_COMPLETION_OPTS
+    val: $FZF_PREVIEW_OPTS
+    cat: fuzzy
+  - key: fzf_shell_vars_opts
+    val: -p 60%,60%
+    cat: fuzzy
+    shell:
+      - fish
+  - key: SKIM_DEFAULT_COMMAND
+    val: rg --files --no-messages --hidden
+    cat: fuzzy
+  - key: FZY_DEFAULT_COMMAND
+    val: fd -t f -HL --strip-cwd-prefix
+    cat: fuzzy
+  - key: GOPATH
+    val: $HOME/go
+    cat: go
+    desc: golang path folder
+  - key: GOBIN
+    val: $HOME/go/bin
+    cat: go
+    desc: golang binaries
+  - key: GO111MODULE
+    val: "on"
+    cat: go
+    desc: Enable module support
+  - key: RIPGREP_CONFIG_PATH
+    val: $XDG_CONFIG_HOME/ripgrep/ripgreprc
+    cat: ripgrep
+    desc: Config file for rg
+  - key: CARGO_HOME
+    val: $HOME/.cargo
+    cat: rust
+    desc: cargo home
+  - key: NVM_DIR
+    val: $HOME/.nvm
+    cat: node
+    desc: nvm home
+  - key: VCPROMPT_FORMAT
+    val: '%b@%r %m %u'
+    cat: vcprompt
+    desc: default format string
+  - key: VCP_FORMAT
+    val: '%n %b@%c%B%A%o|%s%m%u'
+    cat: vcprompt-rs
+    desc: default format string
+  - key: ANSIBLE_CONFIG
+    val: $HOME/.ansible/ansible.cfg
+    cat: ansible
+    desc: User config file
+  - key: ASDF_SKIP_RESHIM
+    val: "1"
+    cat: asdf
+    desc: No automatic reshim during npm install
+  - key: TIGRC_USER
+    val: $XDG_CONFIG_HOME/tig/tigrc
+    cat: tig
+    desc: Custom location for tig config
+  - key: LF_ICONS
+    val: '''tw=:st=:ow=:dt=:di=:fi=:ln=:or=:ex=:*.c=:*.cc=:*.clj=:*.coffee=:*.cpp=:*.css=:*.d=:*.dart=:*.erl=:*.exs=:*.fs=:*.go=:*.h=:*.hh=:*.hpp=:*.hs=:*.html=:*.java=:*.jl=:*.js=:*.json=:*.lua=:*.md=:*.php=:*.pl=:*.pro=:*.py=:*.rb=:*.rs=:*.scala=:*.ts=:*.vim=:*.cmd=:*.ps1=:*.sh=:*.bash=:*.zsh=:*.fish=:*.tar=:*.tgz=:*.arc=:*.arj=:*.taz=:*.lha=:*.lz4=:*.lzh=:*.lzma=:*.tlz=:*.txz=:*.tzo=:*.t7z=:*.zip=:*.z=:*.dz=:*.gz=:*.lrz=:*.lz=:*.lzo=:*.xz=:*.zst=:*.tzst=:*.bz2=:*.bz=:*.tbz=:*.tbz2=:*.tz=:*.deb=:*.rpm=:*.jar=:*.war=:*.ear=:*.sar=:*.rar=:*.alz=:*.ace=:*.zoo=:*.cpio=:*.7z=:*.rz=:*.cab=:*.wim=:*.swm=:*.dwm=:*.esd=:*.jpg=:*.jpeg=:*.mjpg=:*.mjpeg=:*.gif=:*.bmp=:*.pbm=:*.pgm=:*.ppm=:*.tga=:*.xbm=:*.xpm=:*.tif=:*.tiff=:*.png=:*.svg=:*.svgz=:*.mng=:*.pcx=:*.mov=:*.mpg=:*.mpeg=:*.m2v=:*.mkv=:*.webm=:*.ogm=:*.mp4=:*.m4v=:*.mp4v=:*.vob=:*.qt=:*.nuv=:*.wmv=:*.asf=:*.rm=:*.rmvb=:*.flc=:*.avi=:*.fli=:*.flv=:*.gl=:*.dl=:*.xcf=:*.xwd=:*.yuv=:*.cgm=:*.emf=:*.ogv=:*.ogx=:*.aac=:*.au=:*.flac=:*.m4a=:*.mid=:*.midi=:*.mka=:*.mp3=:*.mpc=:*.ogg=:*.ra=:*.wav=:*.oga=:*.opus=:*.spx=:*.xspf=:*.pdf=:*.nix='''
+    cat: lf
+    desc: Icons for filetypes
+  - key: _ZO_FZF_OPTS
+    val: --select-1
+    cat: zoxide
+    desc: Zoxide interactive filter opts
+  - key: THEFUCK_OVERRIDDEN_ALIASES
+    val: git,cat
+    cat: fuck
+    desc: Add aliases here so thefuck knows about them
+aliases:
+  - key: weahter
+    val: weather
+    cat: autocorrect
+    desc: Correct misspelling
+  - key: g
+    val: git
+    cat: git
+  - key: ga
+    val: fgit add
+    cat: git
+    desc: Select files to stage using fzf with diff in preview
+  - key: gc
+    val: git commit
+    cat: git
+  - key: gca
+    val: git commit -a
+    cat: git
+  - key: gpl
+    val: git pull
+    cat: git
+  - key: gpa
+    val: fd -HIg0 -t d .git | fzf-tmux -m --read0 --print0 | xargs -P8 -0I{} git --git-dir={} pull
+    cat: git
+    desc: Select from all git repos under current directory and pull selected
+  - key: gph
+    val: git push
+    cat: git
+  - key: gs
+    val: git status -s
+    cat: git
+  - key: gcp
+    val: git commit && git push
+    cat: git
+  - key: gac
+    val: fgit add && git commit
+    cat: git
+  - key: gsync
+    val: git pull && git add . && git commit && git push
+    cat: git
+  - key: gco
+    val: git checkout
+    cat: git
+  - key: gcom
+    val: git checkout master
+    cat: git
+  - key: gcol
+    val: git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+    cat: git
+  - key: gd
+    val: git diff
+    cat: git
+  - key: gdf
+    val: fgit diff
+    cat: git
+    desc: Open git diff in interactive fzf window
+  - key: gst
+    val: fgit status
+    cat: git
+    desc: Show modified files and diff in fzf preview window
+  - key: vg
+    val: $EDITOR +"packadd vim-fugitive" +G +"wincmd o"
+    cat: git
+    desc: Open fugitive and in (n)vim
+  - key: glog
+    val: git log --oneline --decorate --graph --all
+    cat: git
+    desc: Show git log in terminal
+  - key: grst
+    val: git reset --hard origin/master
+    cat: git
+    desc: Overwrite local repo with remote
+  - key: gsub
+    val: git submodule foreach --recursive git pull origin master
+    cat: git
+    desc: Update all submodules recursively
+  - key: gu
+    val: __git_fzf_git_unstage
+    cat: git
+    desc: Unstage file using fzf with diff preview
+  - key: grmi
+    val: git rm --cached
+    cat: git
+    desc: Remove from git index but keep local filesystem copy
+  - key: gsp
+    val: git stash && git pull && git stash pop
+    cat: git
+    desc: Save local changes, pull remote changes, and add local changes on top
+  - key: vid
+    val: $XDG_CONFIG_HOME/nvim
+    cat: dirs
+  - key: ffn
+    val: $XDG_CONFIG_HOME/fish/functions
+    cat: dirs
+    desc: Fish user functions dir
+  - key: fcm
+    val: $XDG_CONFIG_HOME/fish/completions
+    cat: dirs
+    desc: Fish user completions dir
+  - key: fcd
+    val: $XDG_CONFIG_HOME/fish/conf.d
+    cat: dirs
+    desc: Fish user config snippets
+  - key: bcd
+    val: $XDG_CONFIG_HOME/bash/conf.d
+    cat: dirs
+    desc: Bash snippets dir
+  - key: bfd
+    val: $XDG_CONFIG_HOME/bash/functions
+    cat: dirs
+    desc: Bash functions dir
+  - key: zcd
+    val: $XDG_CONFIG_HOME/zsh/conf.d
+    cat: dirs
+    desc: Zsh snippet dir
+  - key: zfd
+    val: $XDG_CONFIG_HOME/zsh/functions
+    cat: dirs
+    desc: Zsh functions dir
+  - key: sfd
+    val: $XDG_CONFIG_HOME/shell/functions
+    cat: dirs
+    desc: Common shell functions dir
+    if: '[ -d $XDG_CONFIG_HOME/shell/functions ]'
+  - key: ssd
+    val: $XDG_CONFIG_HOME/shell/scripts
+    cat: dirs
+    desc: Common shell scripts dir (not on PATH)
+  - key: scd
+    val: $XDG_CONFIG_HOME/shell/conf.d
+    cat: dirs
+    desc: Common shell snippets dir
+  - key: bup
+    val: brew update && brew upgrade
+    cat: brew
+    if: '[ "$(uname)" = "Darwin" ]'
+    desc: Update homebrew
+  - key: xo
+    val: xonsh
+    cat: misc
+    desc: Open xonsh shell
+    if: which xonsh
+  - key: lp
+    val: lpass
+    cat: misc
+    desc: LastPass cli
+    if: which lpass
+  - key: vc
+    val: vcprompt-rs
+    cat: misc
+    desc: Rust impl of vcprompt
+    if: which vcprompt-rs
+  - key: vcp
+    val: vcprompt -f "%b %r %p %u %m"
+    cat: misc
+    desc: Fast git status using C
+    if: which vcprompt
+  - key: vct
+    val: vctest -f "%b %r %p %u %m"
+    cat: misc
+    desc: My fork of vctest
+  - key: vw
+    val: view
+    cat: misc
+    desc: Call view function
+  - key: lg
+    val: lazygit
+    cat: misc
+    desc: Terminal interface for git status
+    if: which lazygit
+  - key: ts
+    val: tig status
+    cat: misc
+    if: which tig
+  - key: c
+    val: cd
+    cat: cd
+    shell:
+      - bash
+      - zsh
+  - key: h
+    val: $HOME
+    cat: nav
+  - key: pd
+    val: pushd
+    cat: nav
+    shell:
+      - zsh
+    desc: cd to previous dir
+  - key: nd
+    val: popd
+    cat: nav
+    shell:
+      - zsh
+    desc: cd to next dir
+  - key: rmdir
+    val: rm -rf
+    cat: nav
+    desc: Remove directory and contents recursively
+  - key: version
+    val: cat /etc/os-release
+    cat: cmds
+    desc: View linux version
+  - key: lookbusy
+    val: command cat /dev/urandom | hexdump -C | grep "ca fe"
+    cat: cmds
+    desc: Displays a lot of TV-like code on the screen
+  - key: mntp
+    val: 'sudo mount -t drvfs P: /mnt/p'
+    cat: cmds
+    desc: 'Mount P: drive'
+  - key: mv
+    val: mv -v
+    cat: cmds
+    desc: Move files in verbose mode
+  - key: rmlink
+    val: find -maxdepth 1 -xtype l -print0 | xargs -0p rm
+    cat: cmds
+    desc: Remove dead symlinks but ask for confirmation
+  - key: upd
+    val: ansible-playbook -l $(uname -n) $HOME/.ansible/site.yml
+    cat: ansible
+    desc: Update current machine using ansible
+  - key: ans
+    val: ansible-playbook -l $(uname -n)
+    cat: category
+    desc: description
+    shell:
+      - bash
+      - zsh
+      - fish
+  - key: ls
+    val: command ls -h --color=auto
+    cat: ls
+    shell:
+      - bash
+      - zsh
+    desc: List all files
+  - key: ll
+    val: ls -lah --color=auto
+    cat: ls
+    desc: List files in long format
+    if: '! which eza'
+  - key: ll
+    val: eza
+    cat: ls
+    desc: List files in long format
+    if: which eza
+  - key: lso
+    val: stat -c "%a %A %3h %5U %5G %n" *
+    cat: ls
+    desc: List octal permissions
+    if: '! which eza && ! which lsd'
+  - key: lso
+    val: eza --octal-permissions
+    cat: ls
+    desc: List octal permissions
+    if: which eza && ! which lsd
+  - key: lso
+    val: lsd -l --git --permission octal
+    cat: ls
+    desc: List octal permissions
+    if: which lsd
+  - key: d
+    val: ls -lah --color=auto
+    cat: ls
+    desc: list files with ls if lsd is not installed
+    if: '! which lsd'
+  - key: d
+    val: lsd -l --git
+    cat: lsd
+    desc: fancy ls replacement with colors and icons; uses config file to control behavior
+    if: which lsd
+  - key: x
+    val: eza -F -G -T
+    cat: eza
+    desc: List as a tree, 1 level deep
+    if: which eza
+  - key: l
+    val: eza --git --octal-permissions
+    cat: eza
+    desc: another fancy ls replacement written in rust -- with git status per file
+    if: which eza && ! which lsd
+  - key: l
+    val: lsd -l --git --permission octal
+    cat: ls
+    desc: List octal permissions
+    if: which lsd
+  - key: xx
+    val: eza -F -G -TL2
+    cat: eza
+    desc: List as a tree, 2 levels deep
+    if: which eza
+  - key: xxx
+    val: eza -F -G -TL3
+    cat: eza
+    desc: List as a tree, 3 levels deep
+    if: which eza
+  - key: q
+    val: exit
+    cat: cmds
+  - key: quit
+    val: exit
+    cat: cmds
+  - key: che
+    val: chmod +x
+    cat: cmds
+    desc: Assign execute permission for current user to file
+  - key: db
+    val: dropbox
+    cat: cmds
+    desc: Dropbox CLI
+    if: which dropbox.py
+  - key: dbr
+    val: dropbox stop; sleep 3; dropbox start
+    cat: cmds
+    desc: Dropbox CLI restart
+    if: which dropbox.py
+  - key: e
+    val: eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file
+    cat: cmds
+    shell:
+      - bash
+  - key: e
+    val: ' eval $FZY_DEFAULT_COMMAND | fzy | read file && print -z $EDITOR $(printf %q $file)'
+    cat: cmds
+    shell:
+      - zsh
+  - key: fe
+    val: fzf-edit
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: Helper script to open result in $EDITOR
+  - key: frg
+    val: fzf_rg
+    cat: cmds
+    desc: Use FZF to dynamically search with rg
+  - key: t
+    val: todo
+    cat: cmds
+    desc: todo.txt
+  - key: tt
+    val: todo.sh -d ~/git/todors/tests/todo.cfg
+    cat: cmds
+    desc: todo.sh
+  - key: td
+    val: todors
+    cat: cmds
+    desc: todors rust app
+  - key: tp
+    val: topydo
+    cat: cmds
+    desc: topydo.py
+  - key: te
+    val: $EDITOR $XDG_CONFIG_HOME/tmux/tmux.conf
+    cat: cmds
+    desc: Open tmux.conf and reload after editing
+  - key: "n"
+    val: nvim
+    cat: cmds
+    if: which nvim
+  - key: ns
+    val: nvim -S
+    cat: cmds
+    desc: Open nvim with default session
+    if: which nvim
+  - key: vim
+    val: which vim >/dev/null && echo "vim" || echo "nvim"
+    cat: cmds
+    eval: true
+  - key: vvim
+    val: command vim
+    cat: cmds
+    desc: Open vim executable regardless of $EDITOR
+    if: which vim
+  - key: vv
+    val: command vim
+    cat: cmds
+    desc: Open vim executable regardless of $EDITOR
+    if: which vim
+  - key: sv
+    val: sudo -E env PATH="$PATH" $EDITOR
+    cat: cmds
+    desc: Open editor with root privileges but maintaining environment
+  - key: vet
+    val: $EDITOR $HOME/env.toml
+    cat: cmds
+    desc: Open env.toml in vim
+  - key: dl
+    val: ' remove_last_history_entry'
+    cat: cmds
+    shell:
+      - zsh
+    desc: Delete last history item (prefixed with space to exclude this cmd from history)
+  - key: brc
+    val: $EDITOR $HOME/.bashrc
+    cat: cmds
+    desc: Open bashrc in vim
+  - key: mc
+    val: . mkdir_cd
+    cat: cmds
+    desc: Create dir and cd into it
+    shell:
+      - bash
+  - key: zshc
+    val: $EDITOR $ZDOTDIR/.zshrc
+    cat: cmds
+    desc: Open zshrc in vim
+  - key: rel
+    val: ' exec $CURRENT_SHELL -l'
+    cat: cmds
+    desc: Reload shell and replace current instance
+  - key: cup
+    val: rustup update && cargo install-update --all --git
+    cat: cmds
+    desc: Update rust toolchains all packages installed by cargo
+  - key: dotgit
+    val: git -C $HOME
+    cat: cmds
+    desc: Run git in dotfiles directory
+  - key: j
+    val: just
+    cat: cmds
+    desc: Run just
+  - key: ta
+    val: task
+    cat: cmds
+    desc: Run task command runner
+    if: which task
+  - key: ma
+    val: mask
+    cat: cmds
+    desc: Run tasks with mask
+    if: which mask
+  - key: gp
+    val: git-prompt
+    cat: cmds
+    desc: git prompt written in c
+  - key: git
+    val: hub
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: Wrapper for git with extra GitHub features
+    if: which hub
+  - key: gv
+    val: nvim +"packadd vim-fugitive" +"packadd gv.vim" +GV +"autocmd BufWipeout <buffer> qall"
+    if: which nvim
+    cat: git
+    desc: Open interactive git log in nvim
+    shell:
+      - bash
+      - zsh
+  - key: grep
+    val: grep -R --color=auto
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: Color default for grep
+  - key: fgrep
+    val: fgrep --color=auto
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: Color default for fgrep
+  - key: egrep
+    val: egrep --color=auto
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: Color default for grep
+  - key: todo
+    val: todo.sh
+    cat: cmds
+    shell:
+      - bash
+      - zsh
+    desc: todo.txt cli
+  - key: eza
+    val: command eza -la --group-directories-first --icons --color-scale
+    cat: cmds
+    desc: Run eza with defaults
+    shell:
+      - bash
+      - zsh
+  - key: '...'
+    val: cd ../..
+    cat: cd
+    shell:
+      - bash
+      - zsh
+  - key: '....'
+    val: cd ../../..
+    cat: cd
+    shell:
+      - bash
+      - zsh
+  - key: '.....'
+    val: cd ../../../..
+    cat: cd
+    shell:
+      - bash
+      - zsh
+  - key: '......'
+    val: cd ../../../../..
+    cat: cd
+    shell:
+      - bash
+      - zsh
+  - key: cat
+    val: ccat
+    cat: cmds
+    desc: Use ccat if installed
+    if: which ccat
+    shell:
+      - bash
+      - zsh
+  - key: cat
+    val: gcat
+    cat: cmds
+    desc: Use gcat if installed
+    if: which gcat
+    shell:
+      - bash
+      - zsh
+  - key: cat
+    val: bat
+    cat: cmds
+    desc: Use bat if installed
+    if: which bat
+    shell:
+      - bash
+      - zsh

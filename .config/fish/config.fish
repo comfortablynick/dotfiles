@@ -179,5 +179,6 @@ abbr -a fc '$EDITOR $XDG_CONFIG_HOME/fish'
 
 # Other Settings {{{1
 set -g fish_sequence_key_delay_ms 100
+set -gx CURRENT_SHELL fish
 
 # End config {{{1

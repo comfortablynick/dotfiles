@@ -17,7 +17,7 @@ RSUB="${RSUB:-|}"
 
 TMUX_TOP="$HOME/go/bin/tmux-top"
 SYSINFO="$HOME/.cargo/bin/sysinfo"
-# TMUX_MEM_CPU="$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load"
+TMUX_MEM_CPU="$HOME/.tmux/plugins/tmux-mem-cpu-load/tmux-mem-cpu-load"
 UP=$("$HOME/.config/tmux/_uptime")
 
 # Status commands

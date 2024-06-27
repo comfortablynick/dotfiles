@@ -7,60 +7,62 @@ realpath() {
 }
 
 # Use python3 venv instead of virtualenv
-layout_python-venv() {
-    local python=${1:-python3}
-    [[ $# -gt 0 ]] && shift
-    unset PYTHONHOME
-    if [[ -n $VIRTUAL_ENV ]]; then
-        VIRTUAL_ENV=$(realpath "${VIRTUAL_ENV}")
-    else
-        local python_version
-        python_version=$("$python" -c "import platform; print(platform.python_version())")
-        if [[ -z $python_version ]]; then
-            log_error "Could not detect Python version"
-            return 1
-        fi
-        VIRTUAL_ENV=$PWD/.direnv/python-venv-$python_version
-    fi
-    export VIRTUAL_ENV
-    if [[ ! -d $VIRTUAL_ENV ]]; then
-        log_status "no venv found; creating $VIRTUAL_ENV"
-        "$python" -m venv "$VIRTUAL_ENV"
-    fi
-    PATH_add "$VIRTUAL_ENV/bin"
-}
+# Commenting out because this appears to be included in default lib now
+# layout_python-venv() {
+#     local python=${1:-python3}
+#     [[ $# -gt 0 ]] && shift
+#     unset PYTHONHOME
+#     if [[ -n $VIRTUAL_ENV ]]; then
+#         VIRTUAL_ENV=$(realpath "${VIRTUAL_ENV}")
+#     else
+#         local python_version
+#         python_version=$("$python" -c "import platform; print(platform.python_version())")
+#         if [[ -z $python_version ]]; then
+#             log_error "Could not detect Python version"
+#             return 1
+#         fi
+#         VIRTUAL_ENV=$PWD/.direnv/python-venv-$python_version
+#     fi
+#     export VIRTUAL_ENV
+#     if [[ ! -d $VIRTUAL_ENV ]]; then
+#         log_status "no venv found; creating $VIRTUAL_ENV"
+#         "$python" -m venv "$VIRTUAL_ENV"
+#     fi
+#     PATH_add "$VIRTUAL_ENV/bin"
+# }
 
 # Usage: layout pipenv
 #
 # Similar to layout_python, but uses Pipenv to build a
 # virtualenv from the Pipfile located in the same directory.
 #
-layout_pipenv() {
-    PIPENV_PIPFILE="${PIPENV_PIPFILE:-Pipfile}"
-    if [[ ! -f $PIPENV_PIPFILE ]]; then
-        log_error "No Pipfile found.  Use \`pipenv\` to create a \`$PIPENV_PIPFILE\` first."
-        exit 2
-    fi
-
-    VIRTUAL_ENV=$(
-        pipenv --venv 2>/dev/null
-        true
-    )
-
-    if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
-        pipenv install --dev
-        VIRTUAL_ENV=$(pipenv --venv)
-
-        # install current directory as editable
-        if [[ -n ${PIPENV_INSTALL_EDITABLE+x} ]]; then
-            pipenv install -e .
-        fi
-    fi
-
-    PATH_add "$VIRTUAL_ENV/bin"
-    export PIPENV_ACTIVE=1
-    export VIRTUAL_ENV
-}
+# Commenting out because this appears to be included in default lib now
+# layout_pipenv() {
+#     PIPENV_PIPFILE="${PIPENV_PIPFILE:-Pipfile}"
+#     if [[ ! -f $PIPENV_PIPFILE ]]; then
+#         log_error "No Pipfile found.  Use \`pipenv\` to create a \`$PIPENV_PIPFILE\` first."
+#         exit 2
+#     fi
+#
+#     VIRTUAL_ENV=$(
+#         pipenv --venv 2>/dev/null
+#         true
+#     )
+#
+#     if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
+#         pipenv install --dev
+#         VIRTUAL_ENV=$(pipenv --venv)
+#
+#         # install current directory as editable
+#         if [[ -n ${PIPENV_INSTALL_EDITABLE+x} ]]; then
+#             pipenv install -e .
+#         fi
+#     fi
+#
+#     PATH_add "$VIRTUAL_ENV/bin"
+#     export PIPENV_ACTIVE=1
+#     export VIRTUAL_ENV
+# }
 
 find_up_all() {
     (

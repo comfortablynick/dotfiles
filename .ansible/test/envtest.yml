@@ -1,7 +1,7 @@
 ---
 # vim:ft=yaml.ansible:
 - name: Test environment variables
-  hosts: uranus
+  hosts: all
   tasks:
     - name: Debug env output
       debug:
@@ -15,7 +15,7 @@
         verbosity: 1
 
 - name: Set vars
-  hosts: uranus
+  hosts: all
   vars_files: env.yml
   tasks:
     # - name: Get vars from file

@@ -567,7 +567,7 @@ aliases:
     desc: fancy ls replacement with colors and icons; uses config file to control behavior
     if: which lsd
   - key: x
-    val: eza -F -G -T
+    val: eza -F -G -T -L 1
     cat: eza
     desc: List as a tree, 1 level deep
     if: which eza

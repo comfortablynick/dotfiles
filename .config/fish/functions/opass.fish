@@ -15,7 +15,11 @@ Flags:
         return 1
     end
     if not op whoami &>/dev/null
-        eval (op signin)
+        if set -q OP_ACCOUNT_PASSWORD
+            eval (echo $OP_ACCOUNT_PASSWORD | op signin)
+        else
+            eval (op signin)
+        end
     end
     set result (op item list | _fzf_wrapper -1 -q "$argv")
     test -z $result; and return 1

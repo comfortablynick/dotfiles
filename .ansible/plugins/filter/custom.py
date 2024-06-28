@@ -31,7 +31,7 @@ def is_dir(value):
 
 def quote(value):
     """Quote value if there is whitespace."""
-    if re.compile(r"\s").search(value) is not None:
+    if re.compile(r"\s").search(str(value)) is not None:
         return repr(value)
     return value
 

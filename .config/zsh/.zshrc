@@ -13,6 +13,7 @@
 export DEBUG_MODE=false
 export PROFILE=0
 export CURRENT_SHELL=zsh
+export ZDOTDIR=$XDG_CONFIG_HOME/zsh
 
 # Check for debug mode {{{2
 [[ $DEBUG_MODE = true ]] && echo "Sourcing .zshrc"
@@ -115,6 +116,12 @@ bindkey -M vicmd '!' edit-command-line
 autoload -Uz fzy-edit
 zle -N fzy-edit
 bindkey '^E' fzy-edit
+
+# Aliases {{{2
+alias pd=pushd
+alias nd=popd
+alias e=' eval $FZY_DEFAULT_COMMAND | fzy | read file && print -z $EDITOR $(printf %q $file)'
+alias dl=' remove_last_history_entry'
 
 # Plugins {{{1
 # zinit {{{2

@@ -42,6 +42,10 @@ export CURRENT_SHELL=bash
 BASEDIR="${HOME}"             # Location of includes dir
 export XDG_CONFIG_HOME="$HOME/.config" # Some scripts look her
 
+# Aliases {{{2
+alias e='eval $FZY_DEFAULT_COMMAND | fzy | xargs -r $EDITOR $file'
+alias mc='. mkdir_cd'
+
 # Functions {{{1
 # cd :: wrapper for ls on cd {{{2
 cd() {
@@ -319,4 +323,6 @@ else
     export PS1="$venv_name$BOLDGREEN\u@\h$DEFAULT: $YELLOW\w $CYAN\$git_branch$RED\$git_dirty$DEFAULT\n\$ "
 fi
 
+# De-duplicate PATH
+export PATH="$(echo -n $PATH | awk -v RS=: -v ORS=: '!x[$0]++' | sed "s/\(.*\).\{1\}/\1/")"
 $DEBUG_MODE && echo "$(date +"%T.%3N"): Leaving .bashrc"

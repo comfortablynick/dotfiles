@@ -178,6 +178,11 @@ abbr -a ppath 'set -S PATH'
 abbr -a fc '$EDITOR $XDG_CONFIG_HOME/fish'
 
 # Other Settings {{{1
+set -p MANPATH $__fish_data_dir/man
+set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+set -g FZF_LEGACY_KEYBINDINGS 0 # Is this needed?
+set -g fzf_fish_custom_keybindings 1
+set -g fzf_shell_vars_opts '-p 60%,60%'
 set -g fish_sequence_key_delay_ms 100
 set -gx CURRENT_SHELL fish
 

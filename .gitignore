@@ -106,6 +106,7 @@ wg*.conf
 /.no_tmux_next_login
 /package.json
 /package-lock.json
+/Peaks
 /.python_history
 /.sudo_as_admin_successful
 /.tig_history

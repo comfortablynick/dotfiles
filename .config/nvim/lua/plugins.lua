@@ -369,7 +369,19 @@ local plugins = {
   -- },
   ["folke/trouble.nvim"] = {
     dependencies = { "kyazdani42/nvim-web-devicons" },
-    cmd = { "Trouble", "TroubleToggle" },
+    cmd = "Trouble",
+    keys = {
+        {
+          "<leader>d",
+          "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+          desc = "Buffer diagnostics (Trouble)",
+        },
+        {
+          "gR",
+          "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+          desc = "LSP references (Trouble)",
+        },
+    },
     config = function()
       require "config.trouble"
     end,

@@ -176,7 +176,7 @@ languages:
 
   yaml.ansible:
     - <<: *yaml-yamllint
-    - <<: *yaml-ansible-lint
+    # - <<: *yaml-ansible-lint
 
   toml:
     - <<: *toml-taplo-lint

@@ -18,7 +18,6 @@ return function(on_attach)
       "markdown",
       "toml",
       "yaml",
-      "yaml.ansible",
     },
     init_options = { documentFormatting = true },
     root_dir = function(fname)

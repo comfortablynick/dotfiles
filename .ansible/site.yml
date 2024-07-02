@@ -3,6 +3,7 @@
 - import_playbook: playbooks/dotfiles.yml
 - import_playbook: playbooks/pkg.yml
 - import_playbook: playbooks/asdf.yml
+- import_playbook: playbooks/env.yml
 - import_playbook: playbooks/fish.yml
 - import_playbook: playbooks/fzy.yml
 - import_playbook: playbooks/fd.yml

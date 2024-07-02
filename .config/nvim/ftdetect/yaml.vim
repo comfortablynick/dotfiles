@@ -1,9 +1,9 @@
-" Don't need this if ansible ftplugin is installed
 " vint: -ProhibitAutocmdWithNoGroup
+autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=yaml.ansible
 " autocmd BufRead,BufNewFile .clang-format,.prettierrc,.yamllint,.ansible-lint setfiletype yaml
 " autocmd BufNewFile,BufRead *.yml,*.yaml,*/{group,host}_vars/* if s:is_ansible() | set ft=yaml.ansible | endif
-"
-"
+
+" Don't need this if ansible ftplugin is installed
 " function s:is_ansible()
 "     if &filetype =~# 'ansible' | return | endif
 "     let l:filepath = expand('%:p')

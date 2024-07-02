@@ -12,6 +12,7 @@ skip_list:
   - git-latest
   - package-latest
   - fqcn-builtins
+  - name[play]
 
 # This makes the linter display but not fail for rules/tags listed below:
 warn_list:

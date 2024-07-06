@@ -25,10 +25,10 @@ tsconfigs.setup {
   highlight = {
     enable = true,
     disable = function(lang, buf)
-      if lang == "vim" then
-        local bufname = vim.api.nvim_buf_get_name(buf)
-        return string.match(bufname, "%[Command Line%]")
-      end
+      -- if lang == "vim" then
+      --   local bufname = vim.api.nvim_buf_get_name(buf)
+      --   return string.match(bufname, "%[Command Line%]")
+      -- end
       if lang == "yaml" then
         return true
       end

@@ -99,9 +99,11 @@ local plugins = {
     event = lazy_load_event,
     config = function()
       require("leap").add_default_mappings()
-      -- I don't want the visual mode mappings
-      vim.keymap.del({ "x", "o" }, "x")
-      vim.keymap.del({ "x", "o" }, "X")
+      -- Remove visual mode mappings
+      local maps = { "s", "S", "x", "X" }
+      for _, v in ipairs(maps) do
+        vim.keymap.del({ "x", "o" }, v)
+      end
     end,
   },
   ["ggandor/flit.nvim"] = {
@@ -180,8 +182,8 @@ local plugins = {
     event = lazy_load_event,
     build = {
       "./install --bin",
-			"mkdir -p ~/.local/bin",
-			"mkdir -p ~/.local/share/man/man1",
+      "mkdir -p ~/.local/bin",
+      "mkdir -p ~/.local/share/man/man1",
       "ln -sf $(pwd)/bin/* ~/.local/bin",
       "ln -sf $(pwd)/man/man1/* ~/.local/share/man/man1",
     },
@@ -371,16 +373,16 @@ local plugins = {
     dependencies = { "kyazdani42/nvim-web-devicons" },
     cmd = "Trouble",
     keys = {
-        {
-          "<leader>d",
-          "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-          desc = "Buffer diagnostics (Trouble)",
-        },
-        {
-          "gR",
-          "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-          desc = "LSP references (Trouble)",
-        },
+      {
+        "<leader>d",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer diagnostics (Trouble)",
+      },
+      {
+        "gR",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP references (Trouble)",
+      },
     },
     config = function()
       require "config.trouble"
@@ -392,7 +394,7 @@ local plugins = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
-      {"quangnguyen30192/cmp-nvim-ultisnips", enabled = vim.g.python3_host_prog ~= nil},
+      { "quangnguyen30192/cmp-nvim-ultisnips", enabled = vim.g.python3_host_prog ~= nil },
     },
   },
   ["altermo/ultimate-autopair.nvim"] = {
@@ -469,7 +471,9 @@ local plugins = {
     build = "make",
   },
   ["crispgm/telescope-heading.nvim"] = {},
-  ["LinArcX/telescope-scriptnames.nvim"] = { dir = "~/git/telescope-scriptnames.nvim" },
+  ["comfortablynick/telescope-scriptnames.nvim"] = {
+    branch = "add-preview",
+  },
   -- Training/Vim help
   ["tjdevries/train.nvim"] = {},
   ["folke/which-key.nvim"] = {

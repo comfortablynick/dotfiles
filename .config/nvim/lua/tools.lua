@@ -240,7 +240,7 @@ function M.redir(cmd, mods, bang)
   win.create_scratch(lines, mods or "", bang or false)
 end
 
-function M.scriptnames(filter)
+function M.scriptnames()
   local files =
     vim.split(vim.api.nvim_exec2("scriptnames", { output = true }).output, "%s*%d+%:%s*", { trimempty = true })
   return vim.tbl_map(function(e)

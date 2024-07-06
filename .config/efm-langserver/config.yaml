@@ -149,7 +149,7 @@ tools:
     format-stdin: true
 
   lua-luacheck: &lua-luacheck
-    lint-command: 'luacheck --formatter=plain --codes --filename ${INPUT} -'
+    lint-command: 'luacheck --config ~/.config/luacheck/.luacheckrc --formatter=plain --codes --filename ${INPUT} -'
     lint-stdin: true
     lint-ignore-exit-code: true
     lint-formats:

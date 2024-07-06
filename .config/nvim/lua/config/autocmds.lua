@@ -1,7 +1,6 @@
 -- General autocmds
 local api = vim.api
 local map = vim.keymap
-local uv = vim.uv
 local aug = api.nvim_create_augroup("config_autocmds", { clear = true })
 
 api.nvim_create_autocmd("BufReadPost", { -- :: Restore cursor when opening buffer
@@ -47,7 +46,7 @@ api.nvim_create_autocmd("FileType", { -- :: Load local .vimrc
   group = aug,
   desc = "Load local .vimrc",
   callback = function()
-    if uv.os_getenv "LOCAL_VIMRC" then
+    if vim.uv.os_getenv "LOCAL_VIMRC" then
       require("tools").load_lvimrc()
     end
   end,
@@ -64,6 +63,12 @@ api.nvim_create_autocmd("CmdwinEnter", { -- :: Custom Cmdwin settings
     vim.wo.number = true
     vim.wo.relativenumber = false
     vim.wo.signcolumn = "no"
+
+    -- (Ugly) workaround for getting TS syntax highlight working in cmdwin
+    vim.cmd [[setfiletype python]]
+    vim.schedule(function()
+      vim.cmd [[setfiletype vim]]
+    end)
   end,
 })
 

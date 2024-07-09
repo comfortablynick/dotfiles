@@ -300,7 +300,7 @@ local plugins = {
   ["blankname/vim-fish"] = { lazy = false },
   ["habamax/vim-asciidoctor"] = { lazy = false },
   ["benknoble/gitignore-vim"] = { lazy = false },
-  ["comfortablynick/todo.txt-vim"] = { dir = "~/git/todo.txt-vim", lazy = false },
+  ["comfortablynick/todo.txt-vim"] = { lazy = false },
   ["pearofducks/ansible-vim"] = {
     lazy = false,
     build = "./UltiSnips/generate.sh",

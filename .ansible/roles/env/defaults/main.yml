@@ -139,9 +139,10 @@ env_aliases:
   - {key: version, val: cat /etc/os-release}
   - {key: lookbusy, val: command cat /dev/urandom | hexdump -C | grep "ca fe"}
   - {key: mv, val: mv -v}
+  - {key: rm, val: safe-rm, if: which safe-rm}
   - {key: rmlink, val: find -maxdepth 1 -xtype l -print0 | xargs -0p rm}
-  - {key: upd, val: ansible-playbook -l $(uname -n) $HOME/.ansible/site.yml}
-  - {key: ans, val: ansible-playbook -l $(uname -n), shell: [bash, zsh, fish]}
+  - {key: upd, val: ansible-playbook -c local $HOME/.ansible/site.yml}
+  - {key: ans, val: ansible-playbook -c local}
   - {key: ls, val: command ls -h --color=auto, shell: [bash, zsh]}
   - {key: ll, val: ls -lah --color=auto, if: ! which eza}
   - {key: ll, val: eza, if: which eza}

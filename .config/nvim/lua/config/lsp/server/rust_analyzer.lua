@@ -23,7 +23,6 @@ return function(on_attach)
     settings = {
       ["rust-analyzer"] = {
         diagnostics = { disabled = { "inactive-code" } },
-        rustfmt = { extraArgs = { "+nightly" } },
         trace = { server = "off" },
       },
     },

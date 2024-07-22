@@ -87,7 +87,6 @@ map.set("n", "<Leader>w", "<Cmd>update\\|bwipeout<CR>", { desc = "Update + wipeo
 map.set("n", "<Leader>u", "<Cmd>update\\|Bdelete<CR>", { desc = "Update + delete buffer" })
 map.set("n", "<Leader>q", "<Cmd>Bdelete<CR>", { desc = "Delete buffer" })
 map.set("n", "<Leader>x", "<Cmd>call window#close_term()<CR>", { desc = "Close open terminal" })
-map.set("n", "<Leader>xx", "<Cmd>BufOnly<CR>", { desc = "BufOnly" })
 
 -- Quickfix
 map.set("n", "cq", "<Cmd>call qf#toggle()<CR>", { desc = "Toggle quickfix window" })

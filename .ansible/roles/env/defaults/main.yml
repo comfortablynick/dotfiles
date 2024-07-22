@@ -135,14 +135,17 @@ env_aliases:
   - {key: lg, val: lazygit, if: which lazygit}
   - {key: ts, val: tig status, if: which tig}
   - {key: h, val: $HOME}
-  - {key: rmdir, val: rm -rf}
+  - {key: rmdir, val: safe-rm -rf, if: which safe-rm}
+  - {key: rmdir, val: rm -rf, if: ! which safe-rm}
+  - {key: rm, val: safe-rm, if: which safe-rm}
   - {key: version, val: cat /etc/os-release}
   - {key: lookbusy, val: command cat /dev/urandom | hexdump -C | grep "ca fe"}
   - {key: mv, val: mv -v}
-  - {key: rm, val: safe-rm, if: which safe-rm}
   - {key: rmlink, val: find -maxdepth 1 -xtype l -print0 | xargs -0p rm}
-  - {key: upd, val: ansible-playbook -c local $HOME/.ansible/site.yml}
-  - {key: ans, val: ansible-playbook -c local}
+  - {key: upd, val: ansible-playbook -c local -l $(uname -n) $HOME/.ansible/site.yml, if: '[ $(uname -s) != "Darwin" ]'}
+  - {key: ans, val: ansible-playbook -c local -l $(uname -n), if: '[ $(uname -s) != "Darwin" ]'}
+  - {key: upd, val: ansible-playbook -c local -l $(hostname -s) $HOME/.ansible/site.yml, if: '[ $(uname -s) == "Darwin" ]'}
+  - {key: ans, val: ansible-playbook -c local -l $(hostname -s), if: '[ $(uname -s) == "Darwin" ]'}
   - {key: ls, val: command ls -h --color=auto, shell: [bash, zsh]}
   - {key: ll, val: ls -lah --color=auto, if: ! which eza}
   - {key: ll, val: eza, if: which eza}

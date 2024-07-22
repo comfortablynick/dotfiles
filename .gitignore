@@ -83,6 +83,7 @@ wg*.conf
 /.vcpkg/
 /vim-test/
 /.vim/
+/.vscode/
 /.w3m/
 /.zinit*/
 

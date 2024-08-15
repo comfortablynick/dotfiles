@@ -168,6 +168,7 @@ env_aliases:
   - {key: fe, val: fzf-edit, shell: [bash, zsh]}
   - {key: frg, val: fzf_rg}
   - {key: t, val: todo}
+  - {key: tc, val: TODOTXT_FINAL_FILTER=cat todo}
   - {key: tt, val: todo.sh -d ~/git/todors/tests/todo.cfg}
   - {key: td, val: todors}
   - {key: te, val: $EDITOR $XDG_CONFIG_HOME/tmux/tmux.conf}

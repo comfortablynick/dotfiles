@@ -76,6 +76,7 @@ wg*.conf
 /src/
 /saturn/
 /.tmux/
+/Torrent/
 /.Trash/
 /.tldrc/
 /.terminfo/

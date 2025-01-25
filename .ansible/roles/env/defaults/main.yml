@@ -125,7 +125,7 @@ env_aliases:
   - {key: sfd, val: $XDG_CONFIG_HOME/shell/functions}
   - {key: ssd, val: $XDG_CONFIG_HOME/shell/scripts}
   - {key: scd, val: $XDG_CONFIG_HOME/shell/conf.d}
-  - {key: bup, val: brew update && brew upgrade, if: which brew}
+  - {key: bup, val: brew update && brew upgrade && brew cleanup, if: which brew}
   - {key: brewdesc, val: brew leaves | xargs brew desc --eval-all, if: which brew}
   - {key: xo, val: xonsh, if: which xonsh}
   - {key: lp, val: lpass, if: which lpass}

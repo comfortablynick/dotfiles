@@ -32,6 +32,7 @@ env_vars:
   - {key: LS_AFTER_CD, val: 0}
   - {key: LS_AFTER_CD_COMMAND, val: eza -a --group-directories-first}
   - {key: TODOTXT_CFG_FILE, val: $HOME/Dropbox/todo/todo.cfg}
+  - {key: TODORS_CFG_FILE, val: $HOME/Dropbox/todo/todo.toml}
   - {key: NVIM_PY3_DIR, val: $HOME/.env/nvim3/bin/python, if: '[ -d $HOME/.env/nvim3 ]'}
   - {key: NVIM_PY3_DIR, val: which python3, eval: true, if: '[ ! -d $HOME/.env/nvim3 ]'}
   - {key: PIPX_BIN_DIR, val: $HOME/.local/bin}

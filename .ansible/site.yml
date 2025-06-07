@@ -7,6 +7,7 @@
 - import_playbook: playbooks/fish.yml
 - import_playbook: playbooks/fzy.yml
 - import_playbook: playbooks/fd.yml
+# todo: don't need to use this on mac. Best way?
 - import_playbook: playbooks/gh-cli.yml
 - import_playbook: playbooks/hub.yml
 - import_playbook: playbooks/luals.yml

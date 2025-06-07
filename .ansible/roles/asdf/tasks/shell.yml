@@ -7,7 +7,7 @@
 
 - name: Copy fish completions
   copy:
-    src: "{{ asdf_dir }}/completions/asdf.fish"
+    src: "{{ asdf_dir }}/internal/completions/asdf.fish"
     dest: "{{ asdf_home }}/.config/fish/completions/asdf.fish"
     remote_src: true
   when:

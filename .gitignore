@@ -8,6 +8,7 @@ env.bash
 env.zsh
 01_env.*
 10_env.*
+id_*
 .zcompdump
 .zprofile
 .zsh_sessions/

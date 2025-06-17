@@ -26,7 +26,7 @@ Flags:
     set result (string split ' ' -f 1 -- $result)
     set -l op_args
     if set -q _flag_password
-        set op_args --fields label=password
+        set op_args --reveal --fields label=password
     end
     op item get $op_args $result
 end

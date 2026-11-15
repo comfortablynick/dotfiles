@@ -1,4 +1,5 @@
 .ansible-console_history
+.claude*
 fish_universal_variables
 fish_variables*
 .envrc
@@ -15,6 +16,7 @@ id_*
 *.log
 .env_toml_sha*
 .mypy_cache/
+Artcraft/
 node_modules/
 yarn.lock
 .netrwhist
@@ -24,6 +26,8 @@ tags
 .config/nvim/spell
 vifminfo*
 */asciinema/install-id
+/Applications*
+/OneDrive*
 /src
 Session.vim
 wg*.conf
@@ -47,6 +51,8 @@ wg*.conf
 /go/
 /c3cms/
 /.cargo/
+/.claude/
+/.codex/
 /certificates/
 /.asdf/
 /.cache/
@@ -118,6 +124,7 @@ wg*.conf
 /.todoist.*.json
 /.tool-versions
 /.viminfo
+/.warp
 /.wget-hsts
 /.yarnrc
 /.zcompdump*

@@ -30,3 +30,5 @@ log/
 
 # Task
 .task/
+
+**/.claude/settings.local.json

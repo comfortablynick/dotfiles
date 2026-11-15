@@ -247,6 +247,10 @@ export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
 export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
 export LESS_TERMCAP_mr=$(tput rev)
 export LESS_TERMCAP_mh=$(tput dim)
+# asdf 0.16+ migration setup {{{2
+export ASDF_DATA_DIR="$HOME/.asdf"
+path=(${path:#$HOME/.asdf/bin})
+path=("$ASDF_DATA_DIR/shims" $path)
 
 # Source files {{{1
 source "${XDG_CONFIG_HOME}/asdf-direnv/zshrc"
@@ -268,6 +272,8 @@ autoload -Uz list_all
 chpwd_functions+=("list_all")
 
 # Shell startup {{{1
+path=(${path:#$HOME/.asdf/bin})
+path=("/opt/homebrew/bin" "$ASDF_DATA_DIR/shims" $path)
 typeset -U path # Deduplicate PATH; needs to be after we add to PATH
 # Debug end {{{2
 [[ $DEBUG_MODE = true ]] && echo "Exiting .zshrc"
